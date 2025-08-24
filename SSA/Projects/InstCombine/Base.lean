@@ -409,7 +409,7 @@ instance : ToString (MTy φ) where
   toString t := repr t |>.pretty
 instance : ToString LLVM.Ty := by unfold LLVM; infer_instance
 
-instance : DialectPrint (LLVM) where
+instance : ToPrint (LLVM) where
   printOpName
   | op => "llvm." ++ toString op
   printTy := toString

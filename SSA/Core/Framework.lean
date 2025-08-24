@@ -141,9 +141,9 @@ impurely.
 -/
 
 /--
-DialectPrint includes the functions to print the components of a dialect.
+ToPrint includes the functions to print the components of a dialect.
 -/
-class DialectPrint (d : Dialect) where
+class ToPrint (d : Dialect) where
   /-- Prints the operation in the dialect. -/
   printOpName : d.Op → String
   /-- Prints the type in the dialect. -/
@@ -319,20 +319,20 @@ instance : ToString (Expr d Γ eff t) where toString := Expr.toString
 end ToString
 
 /- # ToPrint instances for Com and Expr  -/
-section DialectPrint
+section ToPrint
 
 open Std (Format)
-variable {d} [DialectPrint d][DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
+variable {d} [ToPrint d][DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
 
 /-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
 partial def formatFormalArgListTuplePrint [ToString d.Ty] (ts : List d.Ty) : String :=
   let args := (List.range ts.length).zip ts |>.map
-    (fun (i, t) => s!"%{i} : {DialectPrint.printTy t}")
+    (fun (i, t) => s!"%{i} : {ToPrint.printTy t}")
   "(" ++ String.intercalate ", " args ++ ")"
 
 -- Format a sequence of types as `(t₁, ..., tₙ)` using toString instances -/
 private def formatTypeTuplePrint [ToString d.Ty] (xs : List d.Ty) : String :=
-  "(" ++ String.intercalate ", " (xs.map DialectPrint.printTy) ++ ")"
+  "(" ++ String.intercalate ", " (xs.map ToPrint.printTy) ++ ")"
 
 /-- Parenthesize and separate with 'separator' if the list is nonempty, and return
 the "()" if the list is empty. -/
@@ -357,24 +357,24 @@ where
 /--
 Converts an expression within a dialect to its MLIR string representation.
 Since MLIR generic syntax uses double quotes (`"..."`) to print operations, this function uses
-the DialectPrint typeclass of each dialect to print the various parts of an expressiom such as
+the ToPrint typeclass of each dialect to print the various parts of an expressiom such as
 operation and types. Lastly, it arranges the expression printing according to MLIR syntax.
 -/
 partial def Expr.toPrint [ToString d.Op] : Expr d Γ eff t → String
   | Expr.mk (op : d.Op) _ _ args _regArgs =>
     let outTy : d.Ty := DialectSignature.outTy op
     let argTys := DialectSignature.sig op
-    s!"\"{DialectPrint.printOpName op}\"{formatArgTupleForPrint args}{DialectPrint.printAttributes op} : {formatTypeTuplePrint argTys} -> ({DialectPrint.printTy outTy})"
+    s!"\"{ToPrint.printOpName op}\"{formatArgTupleForPrint args}{ToPrint.printAttributes op} : {formatTypeTuplePrint argTys} -> ({ToPrint.printTy outTy})"
 
 /--
   This function recursively converts the body of a `Com` into its string representation.
   Each bound variable is printed with its index and corresponding expression.
 -/
 partial def Com.toPrintBody : Com d Γ eff t → String
-  | .ret v => s!"  \"{DialectPrint.printReturn t}\"({_root_.repr v }) : ({DialectPrint.printTy t}) -> ()"
+  | .ret v => s!"  \"{ToPrint.printReturn t}\"({_root_.repr v }) : ({ToPrint.printTy t}) -> ()"
   | .var e body =>
     s!"  %{_root_.repr <|(Γ.length)} = {Expr.toPrint e }" ++ "\n" ++
-    Com.ToPrintBody body
+    Com.toPrintBody body
 
 /--
   `Com.toPrint` implements a `toPrint` instance for the type `Com`.
@@ -383,11 +383,11 @@ partial def Com.toPrintBody : Com d Γ eff t → String
 -/
 partial def Com.toPrint (com : Com d Γ eff t) : String :=
    "builtin.module { \n"
-  ++ DialectPrint.printFunc t ++ ((formatFormalArgListTuplePrint Γ.toList)) ++ ":" ++ "\n"
+  ++ ToPrint.printFunc t ++ ((formatFormalArgListTuplePrint Γ.toList)) ++ ":" ++ "\n"
   ++ (Com.toPrintBody com) ++
    "\n }"
 
-end DialectPrint
+end ToPrint
 
 /-! ### DecidableEq instance -/
 --TODO: this should be derived later on when a derive handler is implemented
