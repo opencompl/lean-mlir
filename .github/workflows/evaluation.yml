@@ -13,6 +13,7 @@ permissions:
 jobs:
   build:
     name: Evaluation of Tactics & Decision Procedures
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
     steps:
