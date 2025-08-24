@@ -18,7 +18,7 @@ from xdsl.dialects import riscv_func
 from xdsl.transforms.reconcile_unrealized_casts import ReconcileUnrealizedCastsPass
 
 
-ROOT_DIR = (
+ROOT_DIR_PATH = (
     subprocess.check_output(["git", "rev-parse", "--show-toplevel"])
     .decode("utf-8")
     .strip()
@@ -70,12 +70,13 @@ def setup_benchmarking_directories():
         os.makedirs(directory)
 
 
-def run_command(cmd, log_file, timeout=TIMEOUT):
+def run_command(cmd, log_file, timeout=TIMEOUT_SEC):
     try:
         print(cmd)
-        subprocess.Popen(
-            cmd, cwd=ROOT_DIR, stdout=log_file, stderr=log_file, shell=True
+        ret_code = subprocess.Popen(
+            cmd, cwd=ROOT_DIR_PATH, stdout=log_file, stderr=log_file, shell=True
         ).wait(timeout=timeout)
+        return ret_code
     except subprocess.TimeoutExpired:
         log_file.truncate(0)
         log_file.write(f"timeout of {timeout} seconds reached\n")
@@ -126,7 +127,7 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
                 continue
 
 
-def MLIR_opt_arith_llvm(input_file, output_file, log_file):
+def MLIR_opt_arith_llvm(input_file, output_file, log_file, pass_dict):
     """
     Run mlir-opt and convert a file into LLVM dialect.
     """
@@ -134,35 +135,36 @@ def MLIR_opt_arith_llvm(input_file, output_file, log_file):
     cmd_base = (
         "mlir-opt -convert-arith-to-llvm -convert-func-to-llvm --mlir-print-op-generic "
     )
-    cmd = LLVM_BUILD_DIR + cmd_base + input_file + " -o " + output_file
-    run_command(cmd, log_file)
+    cmd = LLVM_BUILD_DIR_PATH + cmd_base + input_file + " -o " + output_file
+    ret_code = run_command(cmd, log_file)
+    pass_dict[output_file] = ret_code
 
-
-def MLIR_translate_llvmir(input_file, output_file, log_file):
+def MLIR_translate_llvmir(input_file, output_file, log_file, pass_dict):
     """
     Run mlir-translate and translate a file from LLVM dialect to LLVMIR.
     """
     print(f"Compiling '{input_file}' to LLVM IR. ")
     cmd_base = "mlir-translate --mlir-to-llvmir "
-    cmd = LLVM_BUILD_DIR + cmd_base + input_file + " -o " + output_file
-    run_command(cmd, log_file)
+    cmd = LLVM_BUILD_DIR_PATH + cmd_base + input_file + " -o " + output_file
+    ret_code = run_command(cmd, log_file)
+    pass_dict[output_file] = ret_code
 
-
-def LLC_compile_riscv(input_file, output_file, log_file):
+def LLC_compile_riscv(input_file, output_file, log_file, pass_dict):
     """
     Compile LLVMIR to RISCV assembly with llc.
     """
     print(f"Compiling '{input_file}' to RISC-V assembly using llc.")
     cmd_base = (
-        LLVM_BUILD_DIR
+        LLVM_BUILD_DIR_PATH
         + "llc -march=riscv64 -mcpu=generic-rv64 -mattr=+m,+b -filetype=asm "
     )
     cmd = cmd_base + input_file + " -o " + output_file
-    run_command(cmd, log_file)
+    ret_code = run_command(cmd, log_file)
+    pass_dict[output_file] = ret_code
 
 
 
-def extract_bb0(input_file, output_file):
+def extract_bb0(input_file, output_file, log_file):
     """
     Extract the first basic block from the MLIR file.
     """
@@ -185,51 +187,51 @@ def extract_bb0(input_file, output_file):
                         return
 
     except FileNotFoundError:
-        print(f"Error: The file '{input_file}' was not found.", file=sys.stderr)
+        print(f"Error: The file '{input_file}' was not found.", file=log_file)
         sys.exit(1)
 
 
-def LAKE_compile_riscv64(jobs):
+def LAKE_compile_riscv64(jobs, pass_dict):
     """
     Lower the input file to RISCV with Lean-MLIR, using multiple threads.
     """
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
         futures = {}
 
-        for filename in os.listdir(MLIR_bb0_DIR):
-            input_file = os.path.join(MLIR_bb0_DIR, filename)
+        for filename in os.listdir(MLIR_bb0_DIR_PATH):
+            input_file = os.path.join(MLIR_bb0_DIR_PATH, filename)
             basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(LEANMLIR_ASM_DIR, basename + '.mlir')
-            log_file = open(LOGS_DIR + "lake_" + basename + ".mlir", "w")
-            # todo: cmd_base is very sneaky and should be corrected, I could not find a way
+            output_file = os.path.join(LEANMLIR_ASM_DIR_PATH, basename + '.mlir')
+            log_file = open(LOGS_DIR_PATH + basename + "_lake.mlir", "w")
             print(f"Compiling '{input_file}' to RISC-V assembly in Lean-MLIR..")
-            cmd_base = "cd; cd lean-mlir; lake exe opt --passriscv64 "
+            cmd_base = f"cd {ROOT_DIR_PATH}; lake exe opt --passriscv64 "
             cmd = cmd_base + input_file + " > " + output_file
             future = executor.submit(run_command, cmd, log_file)
-            futures[future] = input_file
-
+            futures[future] = output_file
 
         total = len(futures)
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
             file_path = futures[future]
-            future.result()
+            ret_code = future.result()
+            pass_dict[file_path] = ret_code
             percentage = ((float(idx) + float(1)) / float(total)) * 100
             print(f"{file_path} completed, {percentage:.2f}%")
     
 
 # this is just a temporary solution because I don't understand python classes.
-def XDSL_remove_casts(input_file, output_file, log_file):
+def XDSL_remove_casts(input_file, output_file, log_file, pass_dict):
     """
     Remove unrealized casts from the RISCV64 dialect MLIR files with xdsl.
     """
     print(f"Removing unrealize casts from '{input_file}'.")
     cmd_base = (
-        f"python3 {ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/remove_casts.py "
+        f"python3 {ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/remove_casts.py "
     )
     cmd = cmd_base + input_file + " > " + output_file
-    run_command(cmd, log_file)
+    ret_code = run_command(cmd, log_file)
+    pass_dict[output_file] = ret_code
 
-def XDSL_reg_alloc(input_file, output_file, log_file):
+def XDSL_reg_alloc(input_file, output_file, log_file, pass_dict):
     """
     Remove unrealized casts from the RISCV64 dialect MLIR files with xdsl.
     """
@@ -238,9 +240,10 @@ def XDSL_reg_alloc(input_file, output_file, log_file):
         "xdsl-opt -p riscv-allocate-registers "
     )
     cmd = cmd_base + input_file + " > " + output_file
-    run_command(cmd, log_file)
+    ret_code = run_command(cmd, log_file)
+    pass_dict[output_file] = ret_code
 
-def XDSL_compile_riscv(input_file, output_file, log_file):
+def XDSL_compile_riscv(input_file, output_file, log_file, pass_dict):
     """
     Remove unrealized casts from the RISCV64 dialect MLIR files with xdsl.
     """
@@ -249,140 +252,88 @@ def XDSL_compile_riscv(input_file, output_file, log_file):
         "xdsl-opt -t riscv-asm "
     )
     cmd = cmd_base + input_file + " > " + output_file
-    run_command(cmd, log_file)
-
-def clear_folders():
-    clear_folder(LLVM_DIR)
-    clear_folder(LLVMIR_DIR)
-    clear_folder(MLIR_bb0_DIR)
-    clear_folder(MLIR_single_DIR)
-    clear_folder(LLC_ASM_DIR)
-    clear_folder(LEANMLIR_ASM_DIR)
-    clear_folder(LOGS_DIR)
-    clear_folder(XDSL_no_casts_DIR)
-    clear_folder(XDSL_reg_alloc_DIR)
-    clear_folder(XDSL_ASM_DIR)
-
-
-def clear_empty_logs():
-    """
-    Only leave in the logs folder the files that contain something meaningful.
-    """
-    for filename in os.listdir(LOGS_DIR):
-        file_path = os.path.join(LOGS_DIR, filename)
-        if os.path.getsize(file_path) == 0:
-            try:
-                if os.path.isfile(file_path) or os.path.islink(file_path):
-                    os.unlink(file_path)
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
-            except Exception:
-                print("Failed to delete {filename}")
-        elif "lake" in filename:
-            lines = open(file_path).readlines()
-            meaningful_lines = 0
-            for line in lines:
-                if "warning" in line:
-                    continue
-                elif "Replayed" in line:
-                    continue
-                else:
-                    meaningful_lines += 1
-            if meaningful_lines == 0:
-                try:
-                    if os.path.isfile(file_path) or os.path.islink(file_path):
-                        os.unlink(file_path)
-                    elif os.path.isdir(file_path):
-                        shutil.rmtree(file_path)
-                except Exception:
-                    print("Failed to delete {filename}")
-
+    ret_code = run_command(cmd, log_file)
+    pass_dict[output_file] = ret_code
 
 def generate_benchmarks(file_name, num, jobs):
     setup_benchmarking_directories()
-    input_file = MLIR_multi_DIR + file_name
+    input_file = MLIR_multi_DIR_PATH + file_name
 
     # extract mlir blocks and put them all in separate files
-    extract_mlir_blocks(input_file, MLIR_single_DIR, num)
+    extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, num)
 
+    MLIR_opt_file2ret = dict()
     # Run mlir-opt and convert into LLVM dialect
-    for filename in os.listdir(MLIR_single_DIR):
-        input_file = os.path.join(MLIR_single_DIR, filename)
+    for filename in os.listdir(MLIR_single_DIR_PATH):
+        input_file = os.path.join(MLIR_single_DIR_PATH, filename)
         basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(LLVM_DIR, basename + '.ll')
-        log_file = open(os.path.join(LOGS_DIR, basename + '_mlir_opt.log'), 'w')
-        MLIR_opt_arith_llvm(input_file, output_file, log_file)
-        if os.path.exists(output_file):
-            delete_if_malformed(output_file)
+        output_file = os.path.join(LLVM_DIR_PATH, basename + '.ll')
+        log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_mlir_opt.log'), 'w')
+        MLIR_opt_arith_llvm(input_file, output_file, log_file, MLIR_opt_file2ret)
 
+    MLIR_translate_file2ret = dict()
     # Run mlir-translate and convert LLVM into LLVMIR
-    for filename in os.listdir(LLVM_DIR):
-        input_file = os.path.join(LLVM_DIR, filename)
-        basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(LLVMIR_DIR, basename + '.mlir')
-        log_file = open(os.path.join(LOGS_DIR, basename + '_mlir_translate.log'), 'w')
-        MLIR_translate_llvmir(input_file, output_file, log_file)
-        if os.path.exists(output_file):
-            delete_if_malformed(output_file)
+    for filename in os.listdir(LLVM_DIR_PATH):
+        input_file = os.path.join(LLVM_DIR_PATH, filename)
+        # only run the lowering if the previous pass was successful: 
+        if MLIR_opt_file2ret[input_file] == 0: 
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(LLVMIR_DIR_PATH, basename + '.mlir')
+            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_mlir_translate.log'), 'w')
+            MLIR_translate_llvmir(input_file, output_file, log_file, MLIR_translate_file2ret)
 
+    LLC_file2ret = dict()
     # Use llc to compile LLVMIR into RISCV
-    for filename in os.listdir(LLVMIR_DIR):
-        input_file = os.path.join(LLVMIR_DIR, filename)
-        basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(LLC_ASM_DIR, basename + '.s')
-        log_file = open(os.path.join(LOGS_DIR, basename + '_llc.log'), 'w')
-        LLC_compile_riscv(input_file, output_file, log_file)
-        if os.path.exists(output_file):
-            delete_if_malformed(output_file)
+    for filename in os.listdir(LLVMIR_DIR_PATH):
+        input_file = os.path.join(LLVMIR_DIR_PATH, filename)
+        # only run the lowering if the previous pass was successful: 
+        if MLIR_translate_file2ret[input_file] == 0: 
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(LLC_ASM_DIR_PATH, basename + '.s')
+            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_llc.log'), 'w')
+            LLC_compile_riscv(input_file, output_file, log_file, LLC_file2ret)
 
     # Extract bb0
-    for filename in os.listdir(LLVM_DIR):
-        input_file = os.path.join(LLVM_DIR, filename)
+    for filename in os.listdir(LLVM_DIR_PATH):
+        input_file = os.path.join(LLVM_DIR_PATH, filename)
         basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(MLIR_bb0_DIR, basename + '.mlir')
-        extract_bb0(input_file, output_file)
-        if os.path.exists(output_file):
-            delete_if_malformed(output_file)
+        output_file = os.path.join(MLIR_bb0_DIR_PATH, basename + '.mlir')
+        log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_bb0_extract.log'), 'w')
+        extract_bb0(input_file, output_file, log_file)
 
+    LAKE_file2ret = dict()
     # Run the lean pass in parallel
-    LAKE_compile_riscv64(jobs)
-    for filename in os.listdir(LEANMLIR_ASM_DIR):
-        delete_if_malformed(os.path.join(LEANMLIR_ASM_DIR, filename))
+    LAKE_compile_riscv64(jobs, LAKE_file2ret)
 
+    XDSL_remove_casts_file2ret = dict()
     # Remove unrealized casts 
-    for filename in os.listdir(LEANMLIR_ASM_DIR):
-        input_file = os.path.join(LEANMLIR_ASM_DIR, filename)
-        basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(XDSL_no_casts_DIR, basename + '.mlir')
-        log_file = open(os.path.join(LOGS_DIR, basename + '_xdsl_remove_casts.log'), 'w')
-        XDSL_remove_casts(input_file, output_file, log_file)
-        #this is not good but I got a weird error and wnated to finish the pipeline
-        try: 
-            delete_if_malformed(output_file)
-        finally: 
-            continue
+    for filename in os.listdir(LEANMLIR_ASM_DIR_PATH):
+        input_file = os.path.join(LEANMLIR_ASM_DIR_PATH, filename)
+        if LAKE_file2ret[input_file] == 0: 
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(XDSL_no_casts_DIR_PATH, basename + '.mlir')
+            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_xdsl_remove_casts.log'), 'w')
+            XDSL_remove_casts(input_file, output_file, log_file, XDSL_remove_casts_file2ret)
 
-    # Perform register allocation with XDSL 
-    for filename in os.listdir(XDSL_no_casts_DIR):
-        input_file = os.path.join(XDSL_no_casts_DIR, filename)
-        basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(XDSL_reg_alloc_DIR, basename + '.mlir')
-        log_file = open(os.path.join(LOGS_DIR, basename + '_xdsl_reg_alloc.log'), 'w')
-        XDSL_reg_alloc(input_file, output_file, log_file)
-        if os.path.exists(output_file):
-            delete_if_malformed(output_file)
+    XDSL_reg_alloc_file2ret = dict()
+    for filename in os.listdir(XDSL_no_casts_DIR_PATH):
+        input_file = os.path.join(XDSL_no_casts_DIR_PATH, filename)
+        if XDSL_remove_casts_file2ret[input_file] == 0: 
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(XDSL_reg_alloc_DIR_PATH, basename + '.mlir')
+            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_xdsl_reg_alloc.log'), 'w')
+            XDSL_reg_alloc(input_file, output_file, log_file, XDSL_reg_alloc_file2ret)
 
+    XDSL_riscv_file2ret = dict()
     # Compile to RISCV asm with XDSL 
-    for filename in os.listdir(XDSL_reg_alloc_DIR):
-        input_file = os.path.join(XDSL_reg_alloc_DIR, filename)
-        basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(XDSL_ASM_DIR, basename + '.s')
-        log_file = open(os.path.join(LOGS_DIR, basename + '_xdsl_riscv.log'), 'w')
-        XDSL_compile_riscv(input_file, output_file, log_file)
-        if os.path.exists(output_file):
-            delete_if_malformed(output_file)
+    for filename in os.listdir(XDSL_reg_alloc_DIR_PATH):
+        input_file = os.path.join(XDSL_reg_alloc_DIR_PATH, filename)
+        if XDSL_reg_alloc_file2ret[input_file] == 0: 
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(XDSL_ASM_DIR_PATH, basename + '.s')
+            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_xdsl_riscv.log'), 'w')
+            XDSL_compile_riscv(input_file, output_file, log_file, XDSL_riscv_file2ret)
 
-    clear_empty_logs()
 
 def main():
     parser = argparse.ArgumentParser(
