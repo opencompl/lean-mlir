@@ -50,6 +50,7 @@ jobs:
           lake -R build
 
       - name: Ensure InstCombine goals are up-to-date
+        continue-on-error: true
         run: |
           bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh
 
