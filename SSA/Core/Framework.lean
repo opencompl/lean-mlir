@@ -370,7 +370,7 @@ partial def Expr.toPrint [ToString d.Op] : Expr d Γ eff t → String
   This function recursively converts the body of a `Com` into its string representation.
   Each bound variable is printed with its index and corresponding expression.
 -/
-partial def Com.ToPrintBody : Com d Γ eff t → String
+partial def Com.toPrintBody : Com d Γ eff t → String
   | .ret v => s!"  \"{DialectPrint.printReturn t}\"({_root_.repr v }) : ({DialectPrint.printTy t}) -> ()"
   | .var e body =>
     s!"  %{_root_.repr <|(Γ.length)} = {Expr.toPrint e }" ++ "\n" ++
@@ -384,7 +384,7 @@ partial def Com.ToPrintBody : Com d Γ eff t → String
 partial def Com.toPrint (com : Com d Γ eff t) : String :=
    "builtin.module { \n"
   ++ DialectPrint.printFunc t ++ ((formatFormalArgListTuplePrint Γ.toList)) ++ ":" ++ "\n"
-  ++ (Com.ToPrintBody com) ++
+  ++ (Com.toPrintBody com) ++
    "\n }"
 
 end DialectPrint
