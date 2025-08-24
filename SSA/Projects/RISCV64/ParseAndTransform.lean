@@ -42,4 +42,12 @@ private def test_simple := [RV64_com| {
   %1 = add %e1, %e2 : !i64
        ret %1 : !i64
 }]
-#eval! test_simple
+
+/--
+info: {
+  ^entry(%0 : RISCV64.Ty.bv, %1 : RISCV64.Ty.bv):
+    %2 = RISCV64.Op.add(%0, %1) : (RISCV64.Ty.bv, RISCV64.Ty.bv) → (RISCV64.Ty.bv)
+    return %2 : (RISCV64.Ty.bv) → ()
+}
+-/
+#guard_msgs in #eval! test_simple
