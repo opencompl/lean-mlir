@@ -50,4 +50,4 @@ SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_ASM/*
 SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_ASM/*
 SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_no_casts/*
 SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_reg_alloc/*
-SSA/Projects/LLVMRiscV/Evaluation/mca-results/*
+SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/*
