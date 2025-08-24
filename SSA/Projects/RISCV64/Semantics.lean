@@ -1,7 +1,6 @@
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.RISCV64.Tactic.SimpRiscVAttr
-set_option maxHeartbeats 1000000000000000000
 
 open BitVec
 /-!

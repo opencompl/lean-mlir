@@ -1,11 +1,8 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
---import SSA.Core.WellTypedFramework
-import SSA.Core.Framework
+import SSA.Core
 import SSA.Core.Tactic.SimpSet
-import SSA.Core.Util
-import SSA.Core.Util.ConcreteOrMVar
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.LLVM.Semantics
 
