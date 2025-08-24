@@ -24,12 +24,12 @@ XDSL_ASM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_ASM/"
 )
 MCA_LEANMLIR_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-results/Lean-MLIR/"
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/Lean-MLIR/"
 )
 MCA_LLVM_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-results/LLVM/"
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM/"
 )
-LOGS_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-results/logs/"
+LOGS_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/logs/"
 
 def create_missing_folders(): 
     if not os.path.exists(MCA_LEANMLIR_DIR):
