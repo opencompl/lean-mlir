@@ -25,6 +25,8 @@ deriving Repr, DecidableEq
 
 structure Config where
   outputType : Config.OutputType := .text
+  /-- Number of samples to run each tactic. -/
+  nSamples : Nat := 1
 /-- Allow elaboration of `bv_automata_circuit's config` arguments to tactics. -/
 declare_config_elab elabTacBenchConfig Config
 
@@ -54,9 +56,10 @@ structure Item where
  tac : Syntax
 
 
+/-- TODO: convert to a structure with a field. -/
 inductive Result
-| ok (item : Item) (time : Float)
-| err (item : Item) (time : Float) (e : Exception)
+| ok (item : Item) (time : Float) (nSamples : Nat) (iSample: Nat)
+| err (item : Item) (time : Float) (e : Exception) (nSamples : Nat) (iSample: Nat)
 
 
 def csvEscapeString (s : String) : String :=
@@ -64,6 +67,17 @@ def csvEscapeString (s : String) : String :=
   let s := s.replace "," " "
   let s := s.replace "\t" " "
   s
+
+
+def Result.nSamples (r : Result) : Nat :=
+  match r with
+  | .ok (nSamples := nSamples) .. => nSamples
+  | .err (nSamples := nSamples) .. => nSamples
+
+def Result.iSample (r : Result) : Nat :=
+  match r with
+  | .ok (iSample := iSample) .. => iSample
+  | .err (iSample := iSample) .. => iSample
 
 def Result.errorMessage (r : Result) : MessageData :=
   match r with
@@ -87,14 +101,14 @@ def Result.item (r : Result) : Item :=
 
 
 def Result.toMessageData : Result → MessageData
-| .ok item timeMs => m!"TACBENCH {item.name} PASS, TIME_ELAPSED {timeMs} ms, "
-| .err item timeMs e => m!"TACBENCH {item.name} FAIL, TIME_ELAPSED {timeMs} ms, MSGSTART {indentD e.toMessageData} MSGEND"
+| .ok item timeMs _nSamples _iSample => m!"TACBENCH {item.name} PASS, TIME_ELAPSED {timeMs} ms, "
+| .err item timeMs e _nSamples _iSample => m!"TACBENCH {item.name} FAIL, TIME_ELAPSED {timeMs} ms, MSGSTART {indentD e.toMessageData} MSGEND"
 
 instance : ToMessageData Result where
   toMessageData := Result.toMessageData
 
 
-def hermeticRun (g : MVarId) (item : Item) : TacticM Result := g.withContext do
+def hermeticRun (g : MVarId) (item : Item) (nSamples : Nat) (iSample : Nat) : TacticM Result := g.withContext do
   let t1 ← IO.monoNanosNow
   try
     -- TODO: think if we need this, I'm just stealing from Henrik at this point.
@@ -103,10 +117,10 @@ def hermeticRun (g : MVarId) (item : Item) : TacticM Result := g.withContext do
       withoutRecover do
         evalTactic item.tac
       let t2 ← IO.monoNanosNow
-      return .ok item (Nat.deltaInMs t2 t1)
+      return .ok item (Nat.deltaInMs t2 t1) nSamples iSample
   catch e =>
     let t2 ← IO.monoNanosNow
-    return .err item (Nat.deltaInMs t2 t1) e
+    return .err item (Nat.deltaInMs t2 t1) e nSamples iSample
 
 
 
@@ -130,6 +144,8 @@ structure RecordRow where
   isOk : Bool
   errorMessage : String
   timeElapsed : Float
+  nSamples : Nat
+  iSample : Nat
 deriving Repr, Inhabited, ToJson
 
 @[tactic tacBench]
@@ -146,9 +162,10 @@ def evalTacBench : Tactic := fun
       let mut msg := m!""
       let mut results : Array Result := #[]
       for item in items do
-        let out ← hermeticRun g item
-        results := results.push out
-        msg := msg ++ m!"\n" ++ out.toMessageData
+        for iSample in [0:cfg.nSamples] do
+          let out ← hermeticRun g item cfg.nSamples iSample
+          results := results.push out
+          msg := msg ++ m!"\n" ++ out.toMessageData
       -- Produce output.
       match cfg.outputType with
       | Config.OutputType.text =>
@@ -172,6 +189,8 @@ def evalTacBench : Tactic := fun
             isOk := result.isOk
             errorMessage := errMsgStr
             timeElapsed := result.timeElapsed
+            nSamples := result.nSamples
+            iSample := result.iSample
           }
           logInfo <| record |> toJson |>.compress
 
