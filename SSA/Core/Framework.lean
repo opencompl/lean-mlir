@@ -318,7 +318,7 @@ instance : ToString (Expr d Γ eff t) where toString := Expr.toString
 
 end ToString
 
-/- # ToString instances for Com and Expr  -/
+/- # ToPrint instances for Com and Expr  -/
 section DialectPrint
 
 open Std (Format)
