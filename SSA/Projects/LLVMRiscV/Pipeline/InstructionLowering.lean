@@ -21,6 +21,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.zext
 import SSA.Projects.LLVMRiscV.Pipeline.const
 import SSA.Projects.LLVMRiscV.Pipeline.select
 import SSA.Projects.LLVMRiscV.Pipeline.pseudo
+import SSA.Projects.LLVMRiscV.Pipeline.Combiners
 import SSA.Projects.DCE.DCE
 import SSA.Projects.CSE.CSE
 
@@ -50,10 +51,7 @@ def rewritingPatterns0 :
     icmp_match,
     mul_match,
     or_match,
-    -- rem_match_8,
-    -- rem_match_16,
-    -- rem_,match_32,
-    sdiv_match, -- to do fix the casts
+    sdiv_match,
     add_match_1,
     add_match_8,
     add_match_16,
@@ -101,6 +99,13 @@ def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ t
 
 def const_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty)
   := List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x)) all_const_llvm_const_lower_riscv_li
+
+-- both combiner passes are defined in Combiner.lean, which we import.
+def globalISelopt_O0Prelegalizer : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  GLobalISel_In_Lean_RISCVO0PreLegalizerCombiner
+def globalISelopt_PostLegalizerCombiner : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  GLobalISel_In_Lean_PostLegalizerCombiner
+
 /-
 Pipeline structure:
  DCE (avoid lowering unnecessary instructions)
@@ -169,7 +174,38 @@ def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusR
   let out2 := (DCE.dce' out).val;
   out2
 
+def selectionPipeFuelWithCSEWithOpt {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
+    (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) (pseudo : Bool):=
+  let rmInitialDeadCode :=  (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
+  let rmInitialDeadCode :=
+    if pseudo then
+      multiRewritePeephole 100 pseudo_match rmInitialDeadCode
+    else
+      rmInitialDeadCode -- no change if not pseudo
 
+  let optimize_initial_1 := multiRewritePeephole 150
+    globalISelopt_O0Prelegalizer rmInitialDeadCode;
+  let optimize_initial_2 := multiRewritePeephole 150
+    globalISelopt_O0Prelegalizer optimize_initial_1;
+
+  let loweredConst := multiRewritePeephole 100
+    const_match optimize_initial_2; -- Lower the instructions in the first array.
+  let lowerPart1 := multiRewritePeephole 100
+    rewritingPatterns1  loweredConst;
+  let lowerPart2 := multiRewritePeephole 100
+    rewritingPatterns0 lowerPart1;
+  let postLoweringDCE := (DCE.dce' lowerPart2).val;
+  let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
+  let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
+  let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val; -- Rerun it to ensure that all dead code is removed.
+  let optimize_eq_cast := (CSE.cse' remove_dead_Cast2).val;
+  let out := (DCE.dce' optimize_eq_cast).val;
+  let out2 := (DCE.dce' out).val;
+  let optimize_final_1 := multiRewritePeephole 100
+    globalISelopt_O0Prelegalizer out2;
+  let optimize_final_2 := multiRewritePeephole 100
+    globalISelopt_O0Prelegalizer optimize_final_1;
+  optimize_final_2
 
 /- Below are two example programs to test our instruction selector.-/
 def llvm00:=
@@ -197,3 +233,5 @@ def llvm02:=
     %2 = llvm.sub %X, %X : i64
     llvm.return %1 : i64
   }]
+  
+#eval selectionPipeFuelWithCSEWithOpt llvm02 true

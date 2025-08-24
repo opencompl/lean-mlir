@@ -53,3 +53,22 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       IO.println s!" debug: WRONG EFFECT KIND : expected pure program "
       return 1
 
+def passriscv64_optimized (fileName : String) : IO UInt32 := do
+    let icom? ← parseComFromFile_LLVMRiscV fileName
+    match icom? with
+    | none => return 1
+    | some (Sigma.mk _Γ ⟨eff, ⟨retTy, c⟩⟩) =>
+      match eff with
+      | EffectKind.pure =>
+        match retTy with
+        | Ty.llvm (.bitvec _w)  =>
+          let lowered := selectionPipeFuelWithCSEWithOpt c true /- calls the instruction selector defined in `
+                                                  InstructionLowering`, true indicates pseudo variable lowering-/
+          IO.println s!"{Com.toPrint (lowered) }"
+          return 0
+        | _ =>
+        IO.println s!" debug: WRONG RETURN TYPE : expected Ty.llvm (Ty.bitvec 64) "
+        return 1
+      | _ =>
+      IO.println s!" debug: WRONG EFFECT KIND : expected pure program "
+      return 1
