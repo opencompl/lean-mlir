@@ -33,7 +33,8 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
   if args.hasFlag "riscv" then -- parsing as riscv
     let code ←  parseAsRiscv fileName
     return code
-  if args.hasFlag "passriscv64_optimized" then -- lowering pass to a RISC-V 64 SSA-assembly IR
+  if args.hasFlag "passriscv64_optimized" then -- optimized ISel pass including GlobalISel combiners and pseudoops
+
     let code ← passriscv64 fileName
     return code
   if args.hasFlag "passriscv64" then -- lowering pass to a RISC-V 64 SSA-assembly IR

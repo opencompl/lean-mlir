@@ -53,6 +53,9 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       IO.println s!" debug: WRONG EFFECT KIND : expected pure program "
       return 1
 
+/- This is the slightly optimized selector that integrates pattern from LLVM GlobalISel on the LLVM IR
+as well as RISC-V ISA level depending on the pattern in LLVM. It includes pseudovariable lowering
+as well as SSA-based optimizations CSE and DCE -/
 def passriscv64_optimized (fileName : String) : IO UInt32 := do
     let icom? ← parseComFromFile_LLVMRiscV fileName
     match icom? with
