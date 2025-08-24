@@ -23,95 +23,51 @@ ROOT_DIR = (
     .decode("utf-8")
     .strip()
 )
-TIMEOUT = 1800  # seconds
 
-LLVM_BUILD_DIR = "~/llvm-project/build/bin/"
+TIMEOUT_SEC = 1800
 
-LLVM_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLVM/"
-LLVMIR_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLVMIR/"
-)
-MLIR_bb0_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_bb0/"
-)
-MLIR_single_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_single/"
-)
-MLIR_multi_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_multi/"
-)
-LLC_ASM_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/"
-)
-LEANMLIR_ASM_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM/"
-)
-XDSL_no_casts_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_no_casts/"
-)
-XDSL_reg_alloc_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_reg_alloc/"
-)
-XDSL_ASM_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_ASM/"
-)
-LOGS_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/logs/"
+LLVM_BUILD_DIR_PATH = "~/llvm-project/build/bin/"
 
-def create_missing_folders(): 
-    if not os.path.exists(LLVM_DIR):
-        os.makedirs(LLVM_DIR)
-    if not os.path.exists(LLVMIR_DIR):
-        os.makedirs(LLVMIR_DIR)
-    if not os.path.exists(MLIR_bb0_DIR):
-        os.makedirs(MLIR_bb0_DIR)
-    if not os.path.exists(MLIR_single_DIR):
-        os.makedirs(MLIR_single_DIR)
-    if not os.path.exists(LLC_ASM_DIR):
-        os.makedirs(LLC_ASM_DIR)
-    if not os.path.exists(LEANMLIR_ASM_DIR):
-        os.makedirs(LEANMLIR_ASM_DIR)
-    if not os.path.exists(XDSL_no_casts_DIR):
-        os.makedirs(XDSL_no_casts_DIR)
-    if not os.path.exists(XDSL_reg_alloc_DIR):
-        os.makedirs(XDSL_reg_alloc_DIR)
-    if not os.path.exists(XDSL_ASM_DIR):
-        os.makedirs(XDSL_ASM_DIR)
-    if not os.path.exists(LOGS_DIR):
-        os.makedirs(LOGS_DIR)
+LLVM_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLVM/"
+LLVMIR_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLVMIR/"
+)
+MLIR_bb0_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_bb0/"
+)
+MLIR_single_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_single/"
+)
+MLIR_multi_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_multi/"
+)
+LLC_ASM_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/"
+)
+LEANMLIR_ASM_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM/"
+)
+XDSL_no_casts_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_no_casts/"
+)
+XDSL_reg_alloc_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_reg_alloc/"
+)
+XDSL_ASM_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_ASM/"
+)
+LOGS_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/logs/"
 
-def delete_if_malformed(file_path): 
+AUTOGEN_DIR_PATHS = [LLVM_DIR_PATH, LLVMIR_DIR_PATH, MLIR_bb0_DIR_PATH, MLIR_single_DIR_PATH, 
+            LLC_ASM_DIR_PATH, LEANMLIR_ASM_DIR_PATH, XDSL_no_casts_DIR_PATH,XDSL_reg_alloc_DIR_PATH, XDSL_ASM_DIR_PATH, LOGS_DIR_PATH]
+
+def setup_benchmarking_directories(): 
     """
-    Check if the content of a file is empty, delete if it is.
+    Create clean directories to store the benchmarks.
     """
-    if os.path.getsize(file_path) == 0: 
-        if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-        elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-    file = open(file_path,'r')
-    lines = file.readlines()
-    for line in lines: 
-        # brittle: what if a variable is called "Error"?
-        if 'Error' in line: 
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-            return
-
-def clear_folder(folder):
-    """
-    Delete all the files in `folder`
-    """
-    for filename in os.listdir(folder):
-        file_path = os.path.join(folder, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print("Failed to delete %s. Reason: %s" % (file_path, e))
+    for directory  in AUTOGEN_DIR_PATHS:
+        shutil.rmtree(directory)
+        os.makedirs(directory)
 
 
 def run_command(cmd, log_file, timeout=TIMEOUT):
@@ -343,8 +299,7 @@ def clear_empty_logs():
 
 
 def generate_benchmarks(file_name, num, jobs):
-    create_missing_folders()
-    clear_folders()
+    setup_benchmarking_directories()
     input_file = MLIR_multi_DIR + file_name
 
     # extract mlir blocks and put them all in separate files
