@@ -18,7 +18,7 @@ theorem test1_thm (e e_1 : IntW 17) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -28,7 +28,7 @@ theorem test3_thm (e e_1 : IntW 49) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -38,7 +38,7 @@ theorem test4_thm (e e_1 : IntW 67) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -47,7 +47,7 @@ theorem or_test1_thm (e : IntW 231) : LLVM.or (LLVM.and e (const? 231 1)) (const
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -56,5 +56,5 @@ theorem or_test2_thm (e : IntW 7) : LLVM.or (shl e (const? 7 6)) (const? 7 (-64)
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

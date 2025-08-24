@@ -16,7 +16,7 @@ theorem and_sel_op0_thm (e : IntW 1) : LLVM.and (select e (const? 32 25) (const?
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -27,7 +27,7 @@ theorem mul_sel_op0_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -38,7 +38,7 @@ theorem sub_sel_op1_thm (e : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -48,5 +48,5 @@ theorem ashr_sel_op1_thm (e : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

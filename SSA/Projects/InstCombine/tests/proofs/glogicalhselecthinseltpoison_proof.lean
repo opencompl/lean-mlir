@@ -19,7 +19,7 @@ theorem foo_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -31,7 +31,7 @@ theorem bar_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -43,7 +43,7 @@ theorem goo_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -55,7 +55,7 @@ theorem poo_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -68,7 +68,7 @@ theorem fold_inverted_icmp_preds_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -81,7 +81,7 @@ theorem fold_inverted_icmp_preds_reverse_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -93,7 +93,7 @@ theorem par_thm (e e_1 e_2 e_3 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -103,7 +103,7 @@ theorem bools_thm (e e_1 e_2 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -114,7 +114,7 @@ theorem bools_logical_thm (e e_1 e_2 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -126,7 +126,7 @@ theorem bools_multi_uses1_thm (e e_1 e_2 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -138,7 +138,7 @@ theorem bools_multi_uses1_logical_thm (e e_1 e_2 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -150,7 +150,7 @@ theorem bools_multi_uses2_thm (e e_1 e_2 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -163,7 +163,7 @@ theorem bools_multi_uses2_logical_thm (e e_1 e_2 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -175,5 +175,5 @@ theorem allSignBits_thm (e e_1 e_2 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
