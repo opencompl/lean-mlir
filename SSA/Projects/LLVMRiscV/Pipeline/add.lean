@@ -136,7 +136,6 @@ def add_match_1 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   llvm_add_lower_riscv_nuw_nsw_flag_1]
 
 
-
 /-! ### i8  -/
 
 @[simp_denote]

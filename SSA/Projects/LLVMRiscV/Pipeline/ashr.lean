@@ -6,9 +6,8 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 open LLVMRiscV
 
 /- !
-  This file implements the lowering for the llvm ashr instructions for types i8, 16, i32.
+  This file implements the lowering for the llvm ashr instruction for types i8, 16, i32.
 -/
-
 
 @[simp_denote]
 def ashr_llvm_no_flag := [LV| {
@@ -45,7 +44,6 @@ def llvm_ashr_lower_riscv_flag : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 
 def ashr_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
   [llvm_ashr_lower_riscv_no_flag,llvm_ashr_lower_riscv_flag]
-
 
 
 /-! ### i8 -/

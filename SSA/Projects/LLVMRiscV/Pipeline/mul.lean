@@ -4,20 +4,20 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 open LLVMRiscV
 
+/- !
+  This file implements the lowering for the llvm mul instruction for types i8, i16, i32.
+-/
 
-
-/- # MUL RISCV  -/
 @[simp_denote]
 def mul_riscv := [LV| {
     ^entry (%r1: i64, %r2: i64 ):
     %0 = "builtin.unrealized_conversion_cast"(%r1) : (i64) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast"(%r2) : (i64) -> (!i64)
-    %2 = mul  %1, %0 : !i64 -- this is because the semanitcs specify mul rs1 rs2 to be passed as multiplication rs2 rs1 which is defined as rs2 * rs1, hence to keep correct assembly syntax and semanitcs.
+    %2 = mul  %1, %0 : !i64
     %3= "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i64)
     llvm.return %3 : i64
   }]
 
-/- # MUL NO FLAG  -/
 @[simp_denote]
 def mul_llvm_noflag := [LV| {
     ^entry (%x: i64, %amount: i64):
@@ -25,19 +25,20 @@ def mul_llvm_noflag := [LV| {
     llvm.return %1 : i64
   }]
 
-/- # MUL FLAGS -/
 @[simp_denote]
 def mul_llvm_nsw := [LV| {
     ^entry (%x: i64, %amount: i64):
     %1 = llvm.mul %x, %amount overflow<nsw> : i64
     llvm.return %1 : i64
   }]
+
 @[simp_denote]
 def mul_llvm_nuw := [LV| {
     ^entry (%x: i64, %amount: i64):
     %1 = llvm.mul %x, %amount overflow<nuw> : i64
     llvm.return %1 : i64
   }]
+
 @[simp_denote]
 def mul_llvm_flags := [LV| {
     ^entry (%x: i64, %amount: i64):
@@ -66,67 +67,71 @@ def mul_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   [llvm_mul_lower_riscv_noflag, llvm_mul_lower_riscv_flags, llvm_mul_lower_riscv_nsw_flag,
     llvm_mul_lower_riscv_nuw_flag]
 
-  /- # MUL i32 RISCV  -/
+
+/-! ### i8 -/
+
 @[simp_denote]
-def mul_riscv_32 := [LV| {
-    ^entry (%r1: i32, %r2: i32 ):
-    %0 = "builtin.unrealized_conversion_cast"(%r1) : (i32) -> (!i64)
-    %1 = "builtin.unrealized_conversion_cast"(%r2) : (i32) -> (!i64)
+def mul_riscv_8 := [LV| {
+    ^entry (%r1: i8, %r2: i8 ):
+    %0 = "builtin.unrealized_conversion_cast"(%r1) : (i8) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%r2) : (i8) -> (!i64)
     %2 = mul  %1, %0 : !i64 -- this is because the semanitcs specify mul rs1 rs2 to be passed as multiplication rs2 rs1 which is defined as rs2 * rs1, hence to keep correct assembly syntax and semanitcs.
-    %3= "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i32)
-    llvm.return %3 : i32
+    %3= "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i8)
+    llvm.return %3 : i8
   }]
 
-/- # MUL i32 NO FLAG  -/
 @[simp_denote]
-def mul_llvm_noflag_32 := [LV| {
-    ^entry (%x: i32, %amount: i32):
-    %1 = llvm.mul %x, %amount : i32
-    llvm.return %1 : i32
+def mul_llvm_noflag_8 := [LV| {
+    ^entry (%x: i8, %amount: i8):
+    %1 = llvm.mul %x, %amount : i8
+    llvm.return %1 : i8
   }]
 
-/- # MUL FLAGS -/
 @[simp_denote]
-def mul_llvm_nsw_32 := [LV| {
-    ^entry (%x: i32, %amount: i32):
-    %1 = llvm.mul %x, %amount overflow<nsw> : i32
-    llvm.return %1 : i32
+def mul_llvm_nsw_8 := [LV| {
+    ^entry (%x: i8, %amount: i8):
+    %1 = llvm.mul %x, %amount overflow<nsw> : i8
+    llvm.return %1 : i8
   }]
+
 @[simp_denote]
-def mul_llvm_nuw_32 := [LV| {
-    ^entry (%x: i32, %amount: i32):
-    %1 = llvm.mul %x, %amount overflow<nuw> : i32
-    llvm.return %1 : i32
+def mul_llvm_nuw_8 := [LV| {
+    ^entry (%x: i8, %amount: i8):
+    %1 = llvm.mul %x, %amount overflow<nuw> : i8
+    llvm.return %1 : i8
   }]
+
 @[simp_denote]
-def mul_llvm_flags_32 := [LV| {
-    ^entry (%x: i32, %amount: i32):
-    %1 = llvm.mul %x, %amount overflow<nsw,nuw> : i32
-    llvm.return %1 : i32
+def mul_llvm_flags_8 := [LV| {
+    ^entry (%x: i8, %amount: i8):
+    %1 = llvm.mul %x, %amount overflow<nsw,nuw> : i8
+    llvm.return %1 : i8
   }]
 
-def llvm_mul_lower_riscv_noflag_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
-  lhs := mul_llvm_noflag_32
-  rhs := mul_riscv_32
+def llvm_mul_lower_riscv_noflag_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
+  lhs := mul_llvm_noflag_8
+  rhs := mul_riscv_8
 
-def llvm_mul_lower_riscv_flags_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
-  lhs := mul_llvm_flags_32
-  rhs := mul_riscv_32
+def llvm_mul_lower_riscv_flags_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
+  lhs := mul_llvm_flags_8
+  rhs := mul_riscv_8
 
-def llvm_mul_lower_riscv_nsw_flag_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
-  lhs := mul_llvm_nsw_32
-  rhs := mul_riscv_32
+def llvm_mul_lower_riscv_nsw_flag_8: LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
+  lhs := mul_llvm_nsw_8
+  rhs := mul_riscv_8
 
-def llvm_mul_lower_riscv_nuw_flag_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
-  lhs := mul_llvm_nuw_32
-  rhs := mul_riscv_32
+def llvm_mul_lower_riscv_nuw_flag_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
+  lhs := mul_llvm_nuw_8
+  rhs := mul_riscv_8
 
-def mul_match_32 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+def mul_match_8 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_mul_lower_riscv_noflag_32, llvm_mul_lower_riscv_flags_32, llvm_mul_lower_riscv_nsw_flag_32,
-    llvm_mul_lower_riscv_nuw_flag_32]
+  [llvm_mul_lower_riscv_noflag_8, llvm_mul_lower_riscv_flags_8, llvm_mul_lower_riscv_nsw_flag_8,
+    llvm_mul_lower_riscv_nuw_flag_8]
 
- /- # MUL i16 RISCV  -/
+
+/-! ### i16-/
+
 @[simp_denote]
 def mul_riscv_16 := [LV| {
     ^entry (%r1: i16, %r2: i16 ):
@@ -137,7 +142,6 @@ def mul_riscv_16 := [LV| {
     llvm.return %3 : i16
   }]
 
-/- # MUL i16 NO FLAG  -/
 @[simp_denote]
 def mul_llvm_noflag_16 := [LV| {
     ^entry (%x: i16, %amount: i16):
@@ -145,19 +149,20 @@ def mul_llvm_noflag_16 := [LV| {
     llvm.return %1 : i16
   }]
 
-/- # MUL FLAGS -/
 @[simp_denote]
 def mul_llvm_nsw_16 := [LV| {
     ^entry (%x: i16, %amount: i16):
     %1 = llvm.mul %x, %amount overflow<nsw> : i16
     llvm.return %1 : i16
   }]
+
 @[simp_denote]
 def mul_llvm_nuw_16 := [LV| {
     ^entry (%x: i16, %amount: i16):
     %1 = llvm.mul %x, %amount overflow<nuw> : i16
     llvm.return %1 : i16
   }]
+
 @[simp_denote]
 def mul_llvm_flags_16 := [LV| {
     ^entry (%x: i16, %amount: i16):
@@ -186,62 +191,64 @@ def mul_match_16 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   [llvm_mul_lower_riscv_noflag_16, llvm_mul_lower_riscv_flags_16, llvm_mul_lower_riscv_nsw_flag_16,
     llvm_mul_lower_riscv_nuw_flag_16]
 
- /- # MUL i8 RISCV  -/
+
+/-! ### i32-/
+
 @[simp_denote]
-def mul_riscv_8 := [LV| {
-    ^entry (%r1: i8, %r2: i8 ):
-    %0 = "builtin.unrealized_conversion_cast"(%r1) : (i8) -> (!i64)
-    %1 = "builtin.unrealized_conversion_cast"(%r2) : (i8) -> (!i64)
+def mul_riscv_32 := [LV| {
+    ^entry (%r1: i32, %r2: i32 ):
+    %0 = "builtin.unrealized_conversion_cast"(%r1) : (i32) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%r2) : (i32) -> (!i64)
     %2 = mul  %1, %0 : !i64 -- this is because the semanitcs specify mul rs1 rs2 to be passed as multiplication rs2 rs1 which is defined as rs2 * rs1, hence to keep correct assembly syntax and semanitcs.
-    %3= "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i8)
-    llvm.return %3 : i8
+    %3= "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i32)
+    llvm.return %3 : i32
   }]
 
-/- # MUL i16 NO FLAG  -/
 @[simp_denote]
-def mul_llvm_noflag_8 := [LV| {
-    ^entry (%x: i8, %amount: i8):
-    %1 = llvm.mul %x, %amount : i8
-    llvm.return %1 : i8
+def mul_llvm_noflag_32 := [LV| {
+    ^entry (%x: i32, %amount: i32):
+    %1 = llvm.mul %x, %amount : i32
+    llvm.return %1 : i32
   }]
 
-/- # MUL FLAGS -/
 @[simp_denote]
-def mul_llvm_nsw_8 := [LV| {
-    ^entry (%x: i8, %amount: i8):
-    %1 = llvm.mul %x, %amount overflow<nsw> : i8
-    llvm.return %1 : i8
+def mul_llvm_nsw_32 := [LV| {
+    ^entry (%x: i32, %amount: i32):
+    %1 = llvm.mul %x, %amount overflow<nsw> : i32
+    llvm.return %1 : i32
   }]
+
 @[simp_denote]
-def mul_llvm_nuw_8 := [LV| {
-    ^entry (%x: i8, %amount: i8):
-    %1 = llvm.mul %x, %amount overflow<nuw> : i8
-    llvm.return %1 : i8
+def mul_llvm_nuw_32 := [LV| {
+    ^entry (%x: i32, %amount: i32):
+    %1 = llvm.mul %x, %amount overflow<nuw> : i32
+    llvm.return %1 : i32
   }]
+
 @[simp_denote]
-def mul_llvm_flags_8 := [LV| {
-    ^entry (%x: i8, %amount: i8):
-    %1 = llvm.mul %x, %amount overflow<nsw,nuw> : i8
-    llvm.return %1 : i8
+def mul_llvm_flags_32 := [LV| {
+    ^entry (%x: i32, %amount: i32):
+    %1 = llvm.mul %x, %amount overflow<nsw,nuw> : i32
+    llvm.return %1 : i32
   }]
 
-def llvm_mul_lower_riscv_noflag_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
-  lhs := mul_llvm_noflag_8
-  rhs := mul_riscv_8
+def llvm_mul_lower_riscv_noflag_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := mul_llvm_noflag_32
+  rhs := mul_riscv_32
 
-def llvm_mul_lower_riscv_flags_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
-  lhs := mul_llvm_flags_8
-  rhs := mul_riscv_8
+def llvm_mul_lower_riscv_flags_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := mul_llvm_flags_32
+  rhs := mul_riscv_32
 
-def llvm_mul_lower_riscv_nsw_flag_8: LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
-  lhs := mul_llvm_nsw_8
-  rhs := mul_riscv_8
+def llvm_mul_lower_riscv_nsw_flag_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := mul_llvm_nsw_32
+  rhs := mul_riscv_32
 
-def llvm_mul_lower_riscv_nuw_flag_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
-  lhs := mul_llvm_nuw_8
-  rhs := mul_riscv_8
+def llvm_mul_lower_riscv_nuw_flag_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := mul_llvm_nuw_32
+  rhs := mul_riscv_32
 
-def mul_match_8 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+def mul_match_32 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_mul_lower_riscv_noflag_8, llvm_mul_lower_riscv_flags_8, llvm_mul_lower_riscv_nsw_flag_8,
-    llvm_mul_lower_riscv_nuw_flag_8]
+  [llvm_mul_lower_riscv_noflag_32, llvm_mul_lower_riscv_flags_32, llvm_mul_lower_riscv_nsw_flag_32,
+    llvm_mul_lower_riscv_nuw_flag_32]

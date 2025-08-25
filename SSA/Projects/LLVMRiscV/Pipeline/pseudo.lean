@@ -3,16 +3,16 @@ import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
-
-import SSA.Projects.LLVMRiscV.Pipeline.icmp -- because we implement a lowering onto pseudoinstruction as llvm does.
+import SSA.Projects.LLVMRiscV.Pipeline.icmp
 
 open LLVMRiscV
 
-/- ! This file implements lowering patterns targeting pseudoinstructions. For each pattern we only
- redefine the lowering, the source language pattern stays the same. -/
+/- !
+  This file implements the lowering for the llvm pseudo-instructions for types i8, i16, i32.
+  For each pattern we only redefine the lowering, the source language pattern stays the same.
+-/
 
 
--- # ICMP EQ lowering to RISCV pseudo-instruction
 @[simp_denote]
 def icmp_eq_riscv_i64_pseudo := [LV| {
   ^entry (%lhs: i64, %rhs: i64):

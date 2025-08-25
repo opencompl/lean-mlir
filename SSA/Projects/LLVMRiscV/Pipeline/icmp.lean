@@ -6,7 +6,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 open LLVMRiscV
 
 /- !
-  This file implements the lowering for the llvm compare instructions for types i32 and i64.
+  This file implements the lowering for the llvm icmp instruction for types i32 and i64.
   We implement `eq` adn `neq` both as an architectural instruction and as a pseudo-instructions
   (see `pseudo.lean`)
 -/

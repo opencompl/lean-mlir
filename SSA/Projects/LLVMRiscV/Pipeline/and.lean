@@ -4,7 +4,7 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 /- !
-  This file implements the lowering for the llvm and instructions for types i1, i8, 16, i32.
+  This file implements the lowering for the llvm and instruction for types i1, i8, 16, i32.
 -/
 
 

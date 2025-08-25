@@ -28,12 +28,6 @@ structure RISCVPeepholeRewrite (Γ : Ctxt Ty) where
   We implement post-legalization optimizations from LLVM's `GlobalISel` instructor selector.
   Our naming conventions are consistent with the RISC-V backend.
 
-  LLVM's post-legalization pass is part of the combine passes described in:
-  https://github.com/llvm/llvm-project/blob/d5ac1b5e2872fdafca7804d486c55334b228aaf6/llvm/lib/Target/RISCV/RISCVCombine.td
-
-  The combine passes concerned with the RISC-V backend are described in:
-  https://github.com/llvm/llvm-project/blob/d5ac1b5e2872fdafca7804d486c55334b228aaf6/llvm/include/llvm/Target/GlobalISel/Combine.td#L353
-
   We do not support known-bits analysis nor matching on values, and therefore do not implement the
   patterns relying on this infrastructure (e.g. `shift_immed_chain`).
 -/
