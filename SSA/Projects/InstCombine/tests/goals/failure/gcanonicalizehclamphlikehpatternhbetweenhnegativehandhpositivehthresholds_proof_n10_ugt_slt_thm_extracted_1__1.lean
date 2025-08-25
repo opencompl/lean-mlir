@@ -1,9 +1,0 @@
-
-/-
--- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
--/
-open BitVec
-
-theorem n10_ugt_slt_thm.extracted_1._1 : ∀ (x x_1 : BitVec 32),
-  ¬ofBool (128#32 <ᵤ x_1) = 1#1 → ofBool (x_1 <ₛ 0#32) = 1#1 → False :=
-sorry

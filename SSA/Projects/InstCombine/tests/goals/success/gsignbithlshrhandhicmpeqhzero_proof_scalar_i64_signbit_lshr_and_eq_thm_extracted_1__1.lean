@@ -4,6 +4,22 @@
 -/
 open BitVec
 
+notation:50 x " ≥ᵤ " y => BitVec.ule y x
+notation:50 x " >ᵤ " y => BitVec.ult y x
+notation:50 x " ≤ᵤ " y => BitVec.ule x y
+notation:50 x " <ᵤ " y => BitVec.ult x y
+
+notation:50 x " ≥ₛ " y => BitVec.sle y x
+notation:50 x " >ₛ " y => BitVec.slt y x
+notation:50 x " ≤ₛ " y => BitVec.sle x y
+notation:50 x " <ₛ " y => BitVec.slt x y
+
+instance {n} : ShiftLeft (BitVec n) := ⟨fun x y => x <<< y.toNat⟩
+
+instance {n} : ShiftRight (BitVec n) := ⟨fun x y => x >>> y.toNat⟩
+
+infixl:75 ">>>ₛ" => fun x y => BitVec.sshiftRight x (BitVec.toNat y)
+
 theorem scalar_i64_signbit_lshr_and_eq_thm.extracted_1._1 : ∀ (x x_1 : BitVec 64),
   ¬x_1 ≥ ↑64 →
     True ∧ BitVec.ofInt 64 (-9223372036854775808) >>> x_1 <<< x_1 ≠ BitVec.ofInt 64 (-9223372036854775808) ∨ x_1 ≥ ↑64 →
