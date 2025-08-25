@@ -249,6 +249,8 @@ def Op.sig : Op → List Ty
   | rori (_shamt : BitVec 5) =>[Ty.bv]
   | roriw (_shamt : BitVec 5) =>[Ty.bv]
   | .rorw => [Ty.bv, Ty.bv]
+  -- orc.b
+  -- rev8
 
 /--
 Specifing the `outTy` of each `RISCV64` operation.
@@ -341,6 +343,8 @@ def Op.outTy : Op  → Ty
   | .rori (_shamt : BitVec 5) => Ty.bv
   | .roriw (_shamt : BitVec 5) => Ty.bv
   | .rorw => Ty.bv
+  -- orc.b
+  -- rev8
 
 /-- Combine `outTy` and `sig` together into a `Signature`. -/
 @[simp, reducible]
@@ -444,7 +448,8 @@ def opToString (op : RISCV64.Op) : String :=
   | .rori (_shamt : BitVec 5) => "rori"
   | .roriw (_shamt : BitVec 5) => "roriw"
   | .rorw => "rorw"
-
+  -- orc.b
+  -- rev8
 
   s!"\"riscv.{op}\""
 
@@ -582,6 +587,7 @@ instance : DialectDenote (RV64) where
   | .rori shamt, regs, _ => ZBB_pure64_RISCV_RORI shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .roriw shamt, regs, _ => ZBB_pure64_RISCV_RORIW shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .rorw, regs, _ => ZBB_RTYPEW_pure64_RISCV_RORW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-
+  -- orc.b
+  -- rev8
 
 end RISCV64
