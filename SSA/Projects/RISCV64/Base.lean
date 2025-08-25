@@ -654,6 +654,7 @@ abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
   | .sltz, regs => SLTZ_pure64_pseudo (regs.getN 0)
   | .sgtz, regs => SGZT_pure64_pseudo (regs.getN 0)
 
+@[simp, reducible]
 instance : DialectDenote RV64 where
   denote o args _ := o.denote args
 

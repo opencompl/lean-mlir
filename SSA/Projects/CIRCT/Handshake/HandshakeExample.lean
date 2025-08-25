@@ -1,11 +1,7 @@
 import SSA.Projects.CIRCT.Handshake.Handshake
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.Tactic
-import SSA.Core.ErasedContext
-import SSA.Core.HVector
-import SSA.Core.EffectKind
-import SSA.Core.Util
+import SSA.Core
 
 namespace CIRCTStream
 
