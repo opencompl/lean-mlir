@@ -554,7 +554,7 @@ The `RISCV64` semantics are defined to first process the second operand
 then the first. Therefore we first pass `.get 1` then `.get 0` into the
 functions that define our semantics.
 -/
-@[simp]
+@[simp, simp_denote]
 abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
   | .li imm, _  => imm
   | .addiw imm, regs => pure64_RISCV_ADDIW imm (regs.getN 0)
