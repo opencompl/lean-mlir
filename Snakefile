@@ -1,0 +1,158 @@
+#!/usr/bin/env python3
+import argparse
+import os
+import random
+import subprocess
+import concurrent.futures
+import shutil
+import multiprocessing
+import psutil
+import time
+import threading
+import platform
+from functools import partial
+from pathlib import Path
+import sys
+
+configfile: "config.yaml"
+
+# get Git root
+GIT_ROOT = Path(subprocess.check_output(
+    ["git", "rev-parse", "--show-toplevel"]
+).decode().strip())
+
+print("Git root:", GIT_ROOT)
+
+HACKERSDELIGHT_FILE_NAMES, = glob_wildcards(GIT_ROOT / "SSA/Projects/InstCombine/HackersDelight/{file}.lean")
+seed = config.get("seed", 42) # random seed for shuffling
+random.seed(seed)
+random.shuffle(HACKERSDELIGHT_FILE_NAMES)
+
+print(f"Seed: {seed}")
+print(f"Selected hacker's delight goals '{HACKERSDELIGHT_FILE_NAMES}'")
+
+SSA_built = GIT_ROOT / ".lake/build/lib/lean/SSA.olean"
+
+SED = "gsed" if platform.system() == "Darwin" else "sed"
+
+hdel_nreps = config["hdel_nreps"]
+
+def kill_process_tree(pid):
+    try:
+        parent = psutil.Process(pid)
+        for child in parent.children(recursive=True):
+            child.kill()
+        parent.kill()
+    except psutil.NoSuchProcess:
+        pass
+
+def monitor_memory(pid, memout_mb, flag):
+    try:
+        proc = psutil.Process(pid)
+        while not flag["done"]:
+            mem = proc.memory_info().rss
+            for child in proc.children(recursive=True):
+                try:
+                    mem += child.memory_info().rss
+                except psutil.NoSuchProcess:
+                    continue
+            if mem > memout_mb * 1024 * 1024:
+                flag["memout"] = True
+                kill_process_tree(pid)
+                return
+            time.sleep(5)
+    except psutil.NoSuchProcess:
+        pass
+
+def run_with_limits(cmd, timeout, memout_mb):
+    try:
+        proc = subprocess.Popen(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            preexec_fn=os.setsid,
+        )
+        flag = {"done": False, "memout": False}
+        monitor_thread = threading.Thread(
+            target=monitor_memory, args=(proc.pid, memout_mb, flag)
+        )
+        monitor_thread.start()
+
+        try:
+            stdout, stderr = proc.communicate(timeout=timeout)
+            flag["done"] = True
+            monitor_thread.join()
+            if flag["memout"]:
+                return "MEMOUT", stdout, stderr
+            return proc.returncode, stdout, stderr
+        except subprocess.TimeoutExpired:
+            flag["done"] = True
+            kill_process_tree(proc.pid)
+            stdout, stderr = proc.communicate()
+            monitor_thread.join()
+            return "TIMEOUT", stdout, stderr
+    except Exception as e:
+        return "ERROR", "", str(e)
+
+rule venv:
+  output:
+    GIT_ROOT / "venv/bin/activate"
+  shell:
+    """
+    python3 -m venv venv
+    venv/bin/pip install -r {GIT_ROOT}/requirements.txt
+    """
+
+rule hdel_compare_make_lean:
+  input:
+    GIT_ROOT / "SSA/Projects/InstCombine/HackersDelight/{file}.lean"
+  output:
+     GIT_ROOT / "bv-evaluation/results/HackersDelight/{file}_{width}_{hdel_nreps}.lean"
+  shell:
+    "cp {input} {output} && "
+    "{SED} -i  -e \"s/all_goals sorry/all_goals bv_compare'/g\" -e \"s/WIDTH/{wildcards.width}/g\" {output} "
+
+rule hdel_compare_make_output:
+  input:  
+    lambda wc: GIT_ROOT / f"bv-evaluation/results/HackersDelight/{wc.file}_{wc.width}_{config['hdel_nreps']}.lean"
+  output:
+    GIT_ROOT / "bv-evaluation/results/HackersDelight/{file}_{width}_r{r}.txt"
+  resources:
+    # TODO: actually impose memory and time limit, using a python script.
+  run:
+    status, stdout, stderr = run_with_limits(cmd=["lake", "lean", input[0]], timeout=int(config["hdel_timeout_sec"]), memout_mb=int(config["hdel_memout_mb"]))
+    with open(output[0], "w") as f:
+        f.write(stdout)
+        f.write(stderr)
+    if not isinstance(status, int) or status != 0:
+        raise Exception(f"rule failed with status '{status}'. See {output[0]} for possible more details.")
+
+# We can eventually split these, if we carefully understand the naming convention
+# of 'collect' for hacker's delight.
+# We currently make a monolithic job that runs both collect and plot,
+# Since the naming convention is a little opaque to @bollu.
+rule hdel_collect_and_plot:
+  input:
+    rules.venv.output,
+    expand(GIT_ROOT / "bv-evaluation/results/HackersDelight/{file}_{width}_r{r}.txt", 
+      file=HACKERSDELIGHT_FILE_NAMES,
+      width=config["hdel_bv_widths"],
+      r=range(config["hdel_nreps"]))
+  params:
+    nreps = lambda wc: config["hdel_nreps"],
+    nthreads = lambda wc: config["hdel_nthreads"]
+  output:
+    tex=GIT_ROOT  / "bv-evaluation/performance-hackersdelight.tex",
+    pdf_stacked=GIT_ROOT / "bv-evaluation/plots/bv_decide_stacked_perc_HackersDelight_bvw64.pdf"
+    # TODO: track the exact files generated by 'collect.py'.
+    # We currently just bother asking for the two outputs we care for.
+  shell:
+    "bash -c 'source venv/bin/activate && cd bv-evaluation && python3 collect.py hackersdelight' && "
+    "bash -c 'source venv/bin/activate && cd bv-evaluation && python3 plot.py hackersdelight'"
+    
+rule all:
+  input:
+    rules.hdel_collect_and_plot.output
+  
+
