@@ -378,7 +378,7 @@ instance : DialectSignature RV64 := ⟨Op.signature⟩
 
 def opToString (op : RISCV64.Op) : String :=
   let op  : String := match op with
-  | .li imm => s! "li \{immediate = { imm.toInt } : i20 }"
+  | .li imm => s! "li \{immediate = { imm.toInt } : i64 }"
   | .mulh => "mulh"
   | .mulhu => "mulhu"
   | .mulhsu => "mulhsu"
