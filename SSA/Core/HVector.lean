@@ -273,4 +273,49 @@ def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
                         (fun i => by simpa using h_elem i.succ)
       (h₀ ▸ x) ::ₕ xs
 
+/-! ## Meta helpers & simprocs -/
+section Meta
+open Lean Meta Qq
+
+structure HVectorLiteral where
+  u : Level
+  v : Level
+  α : Q(Type $u)
+  A : Q($α → Type $v)
+  elems : Array ((a : Q($α)) × Q($A $a))
+
+/-- Given a Lean expression of type `HVector _ _`, try to decompose it into an
+array of element expressions.
+Returns `none` if the passed expression is not a literal. -/
+def litExpr? : Expr → Option HVectorLiteral
+  | mkApp6 (.const ``HVector.cons _) _α _A _as a x xs => do
+      let ret ← litExpr? xs
+      some { ret with elems := ret.elems.push ⟨ a, x ⟩ }
+  | mkApp2 (.const ``HVector.nil [u, v]) α A => some { u, v, α, A, elems := #[] }
+  | _ => none
+
+dsimproc reduceGetN (HVector.getN (_ ::ₕ _) _ _) := fun e => do
+  let_expr HVector.getN _α _A _as xs i _hi := e
+    | return .continue
+  let some lit := litExpr? xs
+    | trace[LeanMLIR.Elab] "{crossEmoji} Expected an HVector literal, found: {xs}"
+      return .continue
+  let some i ← getNatValue? i
+    | trace[LeanMLIR.Elab] "{crossEmoji} Expected a Nat literal, found: {i}"
+      return .continue
+
+  let some ⟨_a, x⟩ := lit.elems[i]?
+    | let errMsg := m!"Index {i} out of bounds for elements:\n\t{lit.elems}\
+        \nIn expression:\n\t{e}\
+        \n\nNote: this probably indicates a mall-formed expression!"
+      try
+        Meta.check e
+      catch checkErr =>
+        throwError "{errMsg}\n\nWhile typechecking {e}:\n{checkErr.toMessageData}"
+      throwError errMsg
+
+  return .visit x
+
+end Meta
+
 end HVector
