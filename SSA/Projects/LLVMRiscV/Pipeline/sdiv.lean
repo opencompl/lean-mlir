@@ -53,11 +53,6 @@ def llvm_sdiv_lower_riscv_exact_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bit
   lhs := sdiv_llvm_exact_32
   rhs := sdiv_riscv_32
 
-def sdiv_match_32 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_sdiv_lower_riscv_no_flag_32, llvm_sdiv_lower_riscv_exact_32]
-
-
 /-! ### i64 -/
 
 @[simp_denote]
@@ -92,6 +87,9 @@ def llvm_sdiv_lower_riscv_exact_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bit
   lhs := sdiv_llvm_exact_64
   rhs := sdiv_riscv_64
 
-def sdiv_match_64 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_sdiv_lower_riscv_no_flag_64, llvm_sdiv_lower_riscv_exact_64]
+def sdiv_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sdiv_lower_riscv_exact_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sdiv_lower_riscv_no_flag_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sdiv_lower_riscv_exact_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sdiv_lower_riscv_no_flag_64)
+]
