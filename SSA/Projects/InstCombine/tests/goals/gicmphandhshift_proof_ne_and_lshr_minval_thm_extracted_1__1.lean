@@ -14,11 +14,5 @@ set_option Elab.async false
 -/
 
 theorem ne_and_lshr_minval_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8),
-  ¬(x ≥ ↑8 ∨ x ≥ ↑8) →
-    True ∧ BitVec.ofInt 8 (-128) >>> x <<< x ≠ BitVec.ofInt 8 (-128) ∨ x ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool (x_1 * x_1 &&& BitVec.ofInt 8 (-128) >>> x != BitVec.ofInt 8 (-128) >>> x)))
-        PoisonOr.poison :=
+  ¬(x ≥ ↑8 ∨ x ≥ ↑8) → True ∧ BitVec.ofInt 8 (-128) >>> x <<< x ≠ BitVec.ofInt 8 (-128) ∨ x ≥ ↑8 → False :=
 sorry

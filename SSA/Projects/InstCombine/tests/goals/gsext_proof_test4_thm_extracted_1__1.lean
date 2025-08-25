@@ -13,11 +13,5 @@ set_option maxRecDepth 1000000
 set_option Elab.async false
 -/
 
-theorem test4_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬3#32 = 0 →
-    3#32 = 0 ∨ True ∧ (x / 3#32).msb = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (signExtend 64 (x / 3#32))) PoisonOr.poison :=
+theorem test4_thm.extracted_1._1 : ∀ (x : BitVec 32), ¬3#32 = 0 → 3#32 = 0 ∨ True ∧ (x / 3#32).msb = true → False :=
 sorry

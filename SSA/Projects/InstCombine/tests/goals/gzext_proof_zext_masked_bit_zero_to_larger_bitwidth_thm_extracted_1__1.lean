@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem zext_masked_bit_zero_to_larger_bitwidth_thm.extracted_1._1 : ∀ (x x_1 : BitVec 32),
-  ¬x_1 ≥ ↑32 →
-    x_1 ≥ ↑32 ∨ True ∧ ((x ^^^ -1#32) >>> x_1 &&& 1#32).msb = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (zeroExtend 64 (ofBool (1#32 <<< x_1 &&& x == 0#32)))) PoisonOr.poison :=
+  ¬x_1 ≥ ↑32 → x_1 ≥ ↑32 ∨ True ∧ ((x ^^^ -1#32) >>> x_1 &&& 1#32).msb = true → False :=
 sorry

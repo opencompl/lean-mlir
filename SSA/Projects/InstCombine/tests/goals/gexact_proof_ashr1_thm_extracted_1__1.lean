@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem ashr1_thm.extracted_1._1 : ∀ (x : BitVec 64),
-  ¬(8#64 ≥ ↑64 ∨ 2#64 ≥ ↑64) →
-    8#64 ≥ ↑64 ∨ True ∧ x <<< 8#64 >>> 2#64 <<< 2#64 ≠ x <<< 8#64 ∨ 2#64 ≥ ↑64 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x <<< 8#64).sshiftRight' 2#64)) PoisonOr.poison :=
+  ¬(8#64 ≥ ↑64 ∨ 2#64 ≥ ↑64) → 8#64 ≥ ↑64 ∨ True ∧ x <<< 8#64 >>> 2#64 <<< 2#64 ≠ x <<< 8#64 ∨ 2#64 ≥ ↑64 → False :=
 sorry

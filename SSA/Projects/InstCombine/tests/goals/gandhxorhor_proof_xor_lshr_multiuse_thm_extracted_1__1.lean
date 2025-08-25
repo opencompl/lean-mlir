@@ -25,8 +25,5 @@ theorem xor_lshr_multiuse_thm.extracted_1._1 : ∀ (x x_1 x_2 x_3 : BitVec 8),
           ((x_3 ^^^ x) >>> x_2 ^^^ x_1 == 0 ||
               8 != 1 && x_3 >>> x_2 ^^^ x_1 == intMin 8 && (x_3 ^^^ x) >>> x_2 ^^^ x_1 == -1) =
             true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x_3 >>> x_2 ^^^ x_1).sdiv (x_3 >>> x_2 ^^^ x_1 ^^^ x >>> x_2))) PoisonOr.poison :=
+      False :=
 sorry

@@ -24,10 +24,5 @@ theorem multiuse3_thm.extracted_1._1 : ∀ (x : BitVec 32),
           True ∧ (x >>> 1#32 &&& 48#32 &&& (x >>> 1#32 &&& 15#32) != 0) = true ∨
             6#32 ≥ ↑32 ∨
               True ∧ ((x >>> 1#32 &&& 48#32 ||| x >>> 1#32 &&& 15#32) &&& (x <<< 6#32 &&& 8064#32) != 0) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value
-          ((x &&& 96#32) >>> 1#32 ||| x >>> 1#32 &&& 15#32 ||| ((x &&& 96#32) <<< 6#32 ||| x <<< 6#32 &&& 1920#32)))
-        PoisonOr.poison :=
+      False :=
 sorry

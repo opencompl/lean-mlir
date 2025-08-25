@@ -14,9 +14,5 @@ set_option Elab.async false
 -/
 
 theorem p_constmask_commutative_thm.extracted_1._1 : ∀ (x x_1 : BitVec 32),
-  True ∧ (x_1 &&& BitVec.ofInt 32 (-65281) &&& (x &&& 65280#32) != 0) = true →
-    HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-      @instHRefinementOfRefinement _
-        (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-      (PoisonOr.value (x_1 &&& BitVec.ofInt 32 (-65281) ^^^ x &&& 65280#32)) PoisonOr.poison :=
+  True ∧ (x_1 &&& BitVec.ofInt 32 (-65281) &&& (x &&& 65280#32) != 0) = true → False :=
 sorry

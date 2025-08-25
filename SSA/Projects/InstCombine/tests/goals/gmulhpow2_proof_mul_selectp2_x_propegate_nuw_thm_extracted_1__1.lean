@@ -16,9 +16,5 @@ set_option Elab.async false
 theorem mul_selectp2_x_propegate_nuw_thm.extracted_1._1 : ∀ (x : BitVec 8) (x_1 : BitVec 1),
   x_1 = 1#1 →
     ¬(True ∧ (2#8).smulOverflow x = true ∨ True ∧ (2#8).umulOverflow x = true) →
-      True ∧ x <<< 1#8 >>> 1#8 ≠ x ∨ 1#8 ≥ ↑8 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (2#8 * x)) PoisonOr.poison :=
+      True ∧ x <<< 1#8 >>> 1#8 ≠ x ∨ 1#8 ≥ ↑8 → False :=
 sorry

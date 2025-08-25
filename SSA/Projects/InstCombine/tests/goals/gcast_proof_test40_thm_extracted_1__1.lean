@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem test40_thm.extracted_1._1 : ∀ (x : BitVec 16),
-  ¬(9#32 ≥ ↑32 ∨ 8#32 ≥ ↑32) →
-    9#16 ≥ ↑16 ∨ 8#16 ≥ ↑16 ∨ True ∧ (x >>> 9#16 &&& x <<< 8#16 != 0) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 16)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (truncate 16 (zeroExtend 32 x >>> 9#32 ||| zeroExtend 32 x <<< 8#32))) PoisonOr.poison :=
+  ¬(9#32 ≥ ↑32 ∨ 8#32 ≥ ↑32) → 9#16 ≥ ↑16 ∨ 8#16 ≥ ↑16 ∨ True ∧ (x >>> 9#16 &&& x <<< 8#16 != 0) = true → False :=
 sorry

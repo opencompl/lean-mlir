@@ -15,10 +15,5 @@ set_option Elab.async false
 
 theorem eq_21_logical_thm.extracted_1._2 : ∀ (x x_1 : BitVec 32),
   ¬(16#32 ≥ ↑32 ∨ 16#32 ≥ ↑32) →
-    ¬ofBool (truncate 8 (x_1 >>> 16#32) == truncate 8 (x >>> 16#32)) = 1#1 →
-      8#32 ≥ ↑32 ∨ 8#32 ≥ ↑32 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value 0#1) PoisonOr.poison :=
+    ¬ofBool (truncate 8 (x_1 >>> 16#32) == truncate 8 (x >>> 16#32)) = 1#1 → 8#32 ≥ ↑32 ∨ 8#32 ≥ ↑32 → False :=
 sorry

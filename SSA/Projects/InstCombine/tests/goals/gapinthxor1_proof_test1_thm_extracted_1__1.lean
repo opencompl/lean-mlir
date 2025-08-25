@@ -14,9 +14,5 @@ set_option Elab.async false
 -/
 
 theorem test1_thm.extracted_1._1 : ∀ (x x_1 : BitVec 47),
-  True ∧ (x_1 &&& BitVec.ofInt 47 (-70368744177664) &&& (x &&& 70368744177661#47) != 0) = true →
-    HRefinement.IsRefinedBy (β := PoisonOr (BitVec 47)) (self :=
-      @instHRefinementOfRefinement _
-        (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-      (PoisonOr.value (x_1 &&& BitVec.ofInt 47 (-70368744177664) ^^^ x &&& 70368744177661#47)) PoisonOr.poison :=
+  True ∧ (x_1 &&& BitVec.ofInt 47 (-70368744177664) &&& (x &&& 70368744177661#47) != 0) = true → False :=
 sorry

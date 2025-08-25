@@ -24,12 +24,5 @@ theorem foo_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8),
                   ((x &&& 33#8 ||| 40#8 - (x &&& 84#8) &&& 84#8) &&& (x_1 <<< 7#8 ^^^ x &&& BitVec.ofInt 8 (-118)) !=
                       0) =
                     true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value
-          ((x_1 <<< 7#8 ^^^ x &&& BitVec.ofInt 8 (-118)) >>> 7#8 <<< 5#8 ^^^
-            (x &&& 33#8 ||| BitVec.ofInt 8 (-88) - (x &&& 84#8) &&& 84#8 |||
-              x_1 <<< 7#8 ^^^ x &&& BitVec.ofInt 8 (-118))))
-        PoisonOr.poison :=
+      False :=
 sorry

@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem shl_fold_or_disjoint_cnt_thm.extracted_1._1 : ∀ (x : BitVec 8),
-  ¬(True ∧ (x &&& 3#8 != 0) = true ∨ x ||| 3#8 ≥ ↑8) →
-    x ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (2#8 <<< (x ||| 3#8))) PoisonOr.poison :=
+  ¬(True ∧ (x &&& 3#8 != 0) = true ∨ x ||| 3#8 ≥ ↑8) → x ≥ ↑8 → False :=
 sorry

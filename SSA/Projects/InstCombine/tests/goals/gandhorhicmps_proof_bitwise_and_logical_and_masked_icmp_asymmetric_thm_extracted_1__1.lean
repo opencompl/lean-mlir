@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem bitwise_and_logical_and_masked_icmp_asymmetric_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬ofBool (x &&& 255#32 != 0#32) = 1#1 →
-    ofBool (x &&& 11#32 == 11#32) = 1#1 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (0#1 &&& ofBool (x &&& 11#32 == 11#32))) PoisonOr.poison :=
+  ¬ofBool (x &&& 255#32 != 0#32) = 1#1 → ofBool (x &&& 11#32 == 11#32) = 1#1 → False :=
 sorry

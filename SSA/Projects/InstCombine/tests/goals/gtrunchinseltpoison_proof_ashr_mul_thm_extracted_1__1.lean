@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem ashr_mul_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8),
-  ¬8#20 ≥ ↑20 →
-    True ∧ (signExtend 16 x_1).smulOverflow (signExtend 16 x) = true ∨ 8#16 ≥ ↑16 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 16)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (truncate 16 ((signExtend 20 x_1 * signExtend 20 x).sshiftRight' 8#20))) PoisonOr.poison :=
+  ¬8#20 ≥ ↑20 → True ∧ (signExtend 16 x_1).smulOverflow (signExtend 16 x) = true ∨ 8#16 ≥ ↑16 → False :=
 sorry

@@ -14,11 +14,5 @@ set_option Elab.async false
 -/
 
 theorem ashr_lshr2_i128_thm.extracted_1._2 : ∀ (x x_1 : BitVec 128),
-  ¬ofBool (5#128 <ₛ x_1) = 1#1 →
-    ¬(True ∧ x_1 >>> x <<< x ≠ x_1 ∨ x ≥ ↑128) →
-      x ≥ ↑128 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 128)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (x_1.sshiftRight' x)) PoisonOr.poison :=
+  ¬ofBool (5#128 <ₛ x_1) = 1#1 → ¬(True ∧ x_1 >>> x <<< x ≠ x_1 ∨ x ≥ ↑128) → x ≥ ↑128 → False :=
 sorry

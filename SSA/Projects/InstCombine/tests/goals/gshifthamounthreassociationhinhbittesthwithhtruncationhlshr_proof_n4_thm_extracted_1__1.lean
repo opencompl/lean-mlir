@@ -24,11 +24,5 @@ theorem n4_thm.extracted_1._1 : ∀ (x x_1 : BitVec 32),
               True ∧
                 zeroExtend 64 (truncate 32 (262143#64 >>> zeroExtend 64 (x + BitVec.ofInt 32 (-16)))) ≠
                   262143#64 >>> zeroExtend 64 (x + BitVec.ofInt 32 (-16)) →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value
-          (ofBool
-            (x_1 <<< (32#32 - x) &&& truncate 32 (262143#64 >>> zeroExtend 64 (x + BitVec.ofInt 32 (-16))) != 0#32)))
-        PoisonOr.poison :=
+      False :=
 sorry

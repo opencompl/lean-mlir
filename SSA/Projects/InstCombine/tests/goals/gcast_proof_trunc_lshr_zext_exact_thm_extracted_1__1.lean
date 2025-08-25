@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem trunc_lshr_zext_exact_thm.extracted_1._1 : ∀ (x : BitVec 8),
-  ¬(True ∧ zeroExtend 32 x >>> 6#32 <<< 6#32 ≠ zeroExtend 32 x ∨ 6#32 ≥ ↑32) →
-    6#8 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (truncate 8 (zeroExtend 32 x >>> 6#32))) PoisonOr.poison :=
+  ¬(True ∧ zeroExtend 32 x >>> 6#32 <<< 6#32 ≠ zeroExtend 32 x ∨ 6#32 ≥ ↑32) → 6#8 ≥ ↑8 → False :=
 sorry

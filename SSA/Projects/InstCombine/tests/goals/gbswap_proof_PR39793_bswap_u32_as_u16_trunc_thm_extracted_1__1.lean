@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem PR39793_bswap_u32_as_u16_trunc_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬(8#32 ≥ ↑32 ∨ 8#32 ≥ ↑32) →
-    8#32 ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (truncate 8 (x >>> 8#32 &&& 255#32 ||| x <<< 8#32 &&& 65280#32))) PoisonOr.poison :=
+  ¬(8#32 ≥ ↑32 ∨ 8#32 ≥ ↑32) → 8#32 ≥ ↑32 → False :=
 sorry

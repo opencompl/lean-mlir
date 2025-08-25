@@ -20,8 +20,5 @@ theorem select_or_disjoint_or_thm.extracted_1._1 : ∀ (x : BitVec 32) (x_1 : Bi
           True ∧ (0#32 &&& x <<< 4#32 != 0) = true ∨
             True ∧ (0#32 ||| x <<< 4#32).saddOverflow 4#32 = true ∨
               True ∧ (0#32 ||| x <<< 4#32).uaddOverflow 4#32 = true →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value ((0#32 ||| x <<< 4#32) + 4#32)) PoisonOr.poison :=
+        False :=
 sorry

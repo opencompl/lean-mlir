@@ -14,12 +14,5 @@ set_option Elab.async false
 -/
 
 theorem src_x_and_nmask_eq_thm.extracted_1._4 : ∀ (x x_1 : BitVec 8) (x_2 : BitVec 1),
-  x_2 = 1#1 →
-    ¬x_1 ≥ ↑8 →
-      ¬x_2 ^^^ 1#1 = 1#1 →
-        True ∧ ((-1#8) <<< x_1).sshiftRight' x_1 ≠ -1#8 ∨ x_1 ≥ ↑8 →
-          HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-            @instHRefinementOfRefinement _
-              (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-            (PoisonOr.value (ofBool ((-1#8) <<< x_1 == x &&& (-1#8) <<< x_1))) PoisonOr.poison :=
+  x_2 = 1#1 → ¬x_1 ≥ ↑8 → ¬x_2 ^^^ 1#1 = 1#1 → True ∧ ((-1#8) <<< x_1).sshiftRight' x_1 ≠ -1#8 ∨ x_1 ≥ ↑8 → False :=
 sorry

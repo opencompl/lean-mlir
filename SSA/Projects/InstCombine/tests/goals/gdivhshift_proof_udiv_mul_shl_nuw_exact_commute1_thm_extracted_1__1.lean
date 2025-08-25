@@ -16,9 +16,5 @@ set_option Elab.async false
 theorem udiv_mul_shl_nuw_exact_commute1_thm.extracted_1._1 : ∀ (x x_1 x_2 : BitVec 5),
   ¬(True ∧ x_2.umulOverflow x_1 = true ∨
         True ∧ x_1 <<< x >>> x ≠ x_1 ∨ x ≥ ↑5 ∨ True ∧ (x_2 * x_1).umod (x_1 <<< x) ≠ 0 ∨ x_1 <<< x = 0) →
-    True ∧ x_2 >>> x <<< x ≠ x_2 ∨ x ≥ ↑5 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 5)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x_2 * x_1 / x_1 <<< x)) PoisonOr.poison :=
+    True ∧ x_2 >>> x <<< x ≠ x_2 ∨ x ≥ ↑5 → False :=
 sorry

@@ -14,11 +14,5 @@ set_option Elab.async false
 -/
 
 theorem select_of_symmetric_selects_commuted_thm.extracted_1._3 : ∀ (x : BitVec 32) (x_1 x_2 : BitVec 1),
-  x_2 = 1#1 →
-    ¬x_1 = 1#1 →
-      ¬x_1 ^^^ x_2 = 1#1 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value x) PoisonOr.poison :=
+  x_2 = 1#1 → ¬x_1 = 1#1 → ¬x_1 ^^^ x_2 = 1#1 → False :=
 sorry

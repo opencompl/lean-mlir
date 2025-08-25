@@ -18,6 +18,7 @@ attribute [simp_llvm_case_bash]
 
 attribute [simp_llvm_split]
   PoisonOr.isRefinedBy_self PoisonOr.value_isRefinedBy_value PoisonOr.poison_isRefinedBy
+  PoisonOr.not_value_isRefinedBy_poison
   PoisonOr.value_bind PoisonOr.poison_bind PoisonOr.bind_poison PoisonOr.pure_def
   PoisonOr.value_inj
   if_if_eq_if_and if_if_eq_if_or

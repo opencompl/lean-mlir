@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem trunc_sel_equal_sext_thm.extracted_1._2 : ∀ (x : BitVec 32) (x_1 : BitVec 1),
-  x_1 = 1#1 →
-    16#32 ≥ ↑32 ∨ True ∧ x <<< 16#32 >>> 16#32 <<< 16#32 ≠ x <<< 16#32 ∨ 16#32 ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (signExtend 32 (truncate 16 x))) PoisonOr.poison :=
+  x_1 = 1#1 → 16#32 ≥ ↑32 ∨ True ∧ x <<< 16#32 >>> 16#32 <<< 16#32 ≠ x <<< 16#32 ∨ 16#32 ≥ ↑32 → False :=
 sorry

@@ -17,8 +17,5 @@ theorem canonicalize_logic_first_and0_nswnuw_thm.extracted_1._1 : ∀ (x : BitVe
   ¬(True ∧ x.saddOverflow 48#8 = true ∨ True ∧ x.uaddOverflow 48#8 = true) →
     True ∧ (x &&& BitVec.ofInt 8 (-10)).saddOverflow 48#8 = true ∨
         True ∧ (x &&& BitVec.ofInt 8 (-10)).uaddOverflow 48#8 = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x + 48#8 &&& BitVec.ofInt 8 (-10))) PoisonOr.poison :=
+      False :=
 sorry

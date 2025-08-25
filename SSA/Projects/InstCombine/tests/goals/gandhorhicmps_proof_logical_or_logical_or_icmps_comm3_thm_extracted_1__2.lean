@@ -17,9 +17,5 @@ theorem logical_or_logical_or_icmps_comm3_thm.extracted_1._2 : ∀ (x x_1 : BitV
   ¬x ≥ ↑8 →
     ofBool (x_1 &&& 1#8 <<< x == 0#8) = 1#1 ∨ ofBool (x_1 &&& 1#8 == 0#8) = 1#1 →
       ¬(True ∧ 1#8 <<< x >>> x ≠ 1#8 ∨ x ≥ ↑8 ∨ True ∧ 1#8 <<< x >>> x ≠ 1#8 ∨ x ≥ ↑8) →
-        ¬ofBool (x_1 &&& (1#8 <<< x ||| 1#8) != 1#8 <<< x ||| 1#8) = 1#1 →
-          HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-            @instHRefinementOfRefinement _
-              (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-            (PoisonOr.value 1#1) PoisonOr.poison :=
+        ¬ofBool (x_1 &&& (1#8 <<< x ||| 1#8) != 1#8 <<< x ||| 1#8) = 1#1 → False :=
 sorry

@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem lshr_lshr_pow2_const_negative_nopow2_2_thm.extracted_1._1 : ∀ (x : BitVec 16),
-  ¬(x ≥ ↑16 ∨ 6#16 ≥ ↑16) →
-    x ≥ ↑16 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 16)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (8192#16 >>> x >>> 6#16 &&& 3#16)) PoisonOr.poison :=
+  ¬(x ≥ ↑16 ∨ 6#16 ≥ ↑16) → x ≥ ↑16 → False :=
 sorry

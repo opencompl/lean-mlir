@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem test_const_shr_exact_and_1_ne_0_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬(True ∧ 42#32 >>> x <<< x ≠ 42#32 ∨ x ≥ ↑32) →
-    True ∧ 1#32 <<< x >>> x ≠ 1#32 ∨ x ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool (42#32 >>> x &&& 1#32 != 0#32))) PoisonOr.poison :=
+  ¬(True ∧ 42#32 >>> x <<< x ≠ 42#32 ∨ x ≥ ↑32) → True ∧ 1#32 <<< x >>> x ≠ 1#32 ∨ x ≥ ↑32 → False :=
 sorry
