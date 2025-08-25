@@ -4,20 +4,15 @@ open BitVec
 
 /-!
   ## Dialect Pseudo-operation semantics
-  This file contains the semantics for each modelled `RISCV-64` standard pseudoinstruction
-  as defined by : https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc
-  Unlike Semantics.lean these semantics are derived from the Sail semantics does not modell
-  all pseudoinstructions. To be precise, Sail only models pseudoinstructions if they are actually
-  native instructions when certain extensions are enabled.
-  If any instruction can be pseudoinstruction in some processor configurations and a pseud instruction
-  in others, then we implemented their semantics in the Semantics.lean file where we modell all architectural
-  instructions
-  The semantic definitions reuse the semantics of their underlying base instructions.
-  The following list of instructions are hardware or pseudo ops depending the processor :
-  sext.b
-  sext.h
-  zext.h
-  zext.w
+  This file contains the semantics for each modeled `RISCV-64` standard pseudo-instruction
+  as defined by: https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc.
+  Unlike `Semantics.lean` these semantics are not derived from the Sail semantics, as Sail does not
+  model all pseudo-instructions. In particular, Sail only models pseudo-instructions if they are
+  actually native instructions when certain extensions are enabled.
+  If an instruction can be an architectural instruction in certain processor configurations and a
+  pseudo-instruction in others (e.g., `sext.b`, `sext.h`, `zext.h`, `zext.w`), then we implement its
+  semantics in `Semantics.lean`, where we model all architectural instructions.
+  The semantic of pseudo-instructions reuse the semantics of their underlying base instructions.
 -/
 
 namespace RV64PseudoOpSemantics
