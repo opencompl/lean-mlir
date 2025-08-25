@@ -72,8 +72,9 @@ def rewritingPatterns1 :
   ]
 def enable_pseudo_instr_pass := pseudo_match
 
-def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty)
-  := List.cons ⟨[Ty.riscv RISCV64.Ty.bv], (Ty.riscv RISCV64.Ty.bv), cast_eliminiation_riscv⟩ <| List.cons ⟨[Ty.llvm _], (Ty.llvm _), cast_eq_cast_cast_eliminiation_riscv⟩ <| List.nil
+def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+    List.cons ⟨[Ty.riscv RISCV64.Ty.bv], (Ty.riscv RISCV64.Ty.bv), cast_eliminiation_riscv⟩
+  <| List.cons ⟨[Ty.llvm _], (Ty.llvm _), cast_eq_cast_cast_eliminiation_riscv⟩ <| List.nil
 
 /- We increase `maxRecDepth` to avoid the recursion depth error when using the peephole rewriter. -/
 set_option maxRecDepth 10000000
