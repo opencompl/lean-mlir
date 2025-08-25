@@ -95,14 +95,14 @@ set_option maxRecDepth 10000000
   - DCE (dead code due to casting removal)
 -/
 def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
-  (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
+  (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) :=
   let rmInitialDeadCode :=  (DCE.dce' prog).val;
   let loweredConst := multiRewritePeephole 100
-  const_match rmInitialDeadCode;
+    const_match rmInitialDeadCode;
   let lowerPart1 := multiRewritePeephole 100
-  rewritingPatterns1  loweredConst;
+    rewritingPatterns1  loweredConst;
   let lowerPart2 := multiRewritePeephole 100
-  rewritingPatterns0 lowerPart1;
+    rewritingPatterns0 lowerPart1;
   let postLoweringDCE := (DCE.dce' lowerPart2).val;
   let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
   let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
@@ -133,11 +133,11 @@ def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusR
   else
     rmInitialDeadCode
   let loweredConst := multiRewritePeephole 100
-  const_match rmInitialDeadCode;
+    const_match rmInitialDeadCode;
   let lowerPart1 := multiRewritePeephole 100
-  rewritingPatterns1  loweredConst;
+    rewritingPatterns1  loweredConst;
   let lowerPart2 := multiRewritePeephole 100
-  rewritingPatterns0 lowerPart1;
+    rewritingPatterns0 lowerPart1;
   let postLoweringDCE := (DCE.dce' lowerPart2).val;
   let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
   let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
