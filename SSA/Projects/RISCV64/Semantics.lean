@@ -974,4 +974,8 @@ def ZBA_RTYPE_pure64_RISCV_SH2ADD (rs2_val : BitVec 64) (rs1_val : BitVec 64) : 
 def ZBA_RTYPE_pure64_RISCV_SH3ADD (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.add (rs1_val <<< 3#2) rs2_val
 
+@[simp_riscv]
+def ZBA_pure64_RISCV_SLLIUW (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
+  (BitVec.setWidth 64 (BitVec.extractLsb 31 0 rs1_val)) <<< shamt
+
 end RV64Semantics
