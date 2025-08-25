@@ -126,7 +126,8 @@ inductive Op
   /- RISC-V `Zicond` conditional operations extension  -/
   | czero.eqz
   | czero.nez
-    -- adding RISC-V standart pseudo-instructions according to : https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc
+    -- RISC-V standard pseudo-instructions according to:
+    -- https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc
   | mv
   | not
   | neg
