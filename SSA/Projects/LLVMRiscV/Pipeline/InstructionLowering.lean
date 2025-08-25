@@ -83,7 +83,7 @@ set_option maxRecDepth 10000000
   Run the instruction selector on a given `Com`, by calling several times `multiRewritePeephole`
   with limited fuel (100).
   This means that at most 100 steps are performed per-program and per-rewrite-location.
-  The limit prevents us from causing stack overflow.
+  The limit ensure that there is no stack overflow.
 
   The structure of this instruction selection pipeline is as follows:
   - DCE
