@@ -239,7 +239,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           congr
           rcases hsa with ⟨-, rfl⟩
           simp [FSM.carryBV]
-          · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
+          · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVecSext]
             rw [ite_cond_eq_true]
             on_goal 2 => simp; omega
             rw [ite_cond_eq_true]
@@ -251,7 +251,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           have hlt : i < w := by omega
           rcases hsa with ⟨hsa, -⟩; simp [inFSMRel] at hsa
           simp [hsa, FSM.evalBV]
-          apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
+          apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVecSext]
           rw [ite_cond_eq_true]
           on_goal 2 => simp; omega
           rw [ite_cond_eq_true]
@@ -261,7 +261,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
       · rw [hq]
         rcases hsa with ⟨-, rfl⟩
         simp [FSM.carryBV, FSM.carry]; congr 2
-        · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
+        · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVecSext]
           rw [ite_cond_eq_true]
           on_goal 2 => simp; omega
           rw [ite_cond_eq_true]
@@ -283,7 +283,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
         rw [hrel]
         simp only [FSM.evalBV]
         repeat rw [BitVec.ofFn_getElem _ (by omega)]
-        apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
+        apply FSM.eval_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVecSext]
         rw [ite_cond_eq_true]
         on_goal 2 => simp; omega
         rw [ite_cond_eq_true]
@@ -293,7 +293,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
       · rw [hcar]; simp [NFA.ofFSM]
         constructor
         · simp [FSM.carryBV, FSM.carry]; congr 2
-          · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
+          · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVecSext]
             rw [ite_cond_eq_true]
             on_goal 2 => simp; omega
             rw [ite_cond_eq_true]
@@ -306,7 +306,7 @@ def NFA'.ofFSM_correct (p : FSM arity) :
           specialize hrel (Fin.last w)
           simp [BitVec.getElem_cons, heq] at hrel
           rw [hrel]; simp [FSM.evalBV, FSM.eval, FSM.carryBV]; congr 2
-          · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVec]
+          · apply FSM.carry_eq_up_to; rintro ar k hk; simp [BitStream.ofBitVecSext]
             rw [ite_cond_eq_true]
             on_goal 2 => simp; omega
             rw [ite_cond_eq_true]
@@ -320,18 +320,18 @@ def _root_.NFA'.ofFSM  (p : FSM arity) : NFA' (FinEnum.card arity + 1) :=
 
 open BitStream in
 lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.arity → BitVec w) :
-    EqualUpTo w (t.evalFin (fun ar => BitStream.ofBitVec (vars ar))) (ofBitVec $ t.evalFinBV vars) := by
+    EqualUpTo w (t.evalFin (fun ar => BitStream.ofBitVecSext (vars ar))) (BitStream.ofBitVecSext $ t.evalFinBV vars) := by
   induction t <;> simp
   case var => rfl
-  case zero => unfold BitStream.ofBitVec; rintro _ _; simp
+  case zero => unfold BitStream.ofBitVecSext; rintro _ _; simp
   case negOne =>
-    unfold BitStream.ofBitVec; rintro _ _; simp [BitVec.neg_one_eq_allOnes]; left; assumption
+    unfold BitStream.ofBitVecSext; rintro _ _; simp [BitVec.neg_one_eq_allOnes]; left; assumption
   case one =>
-    unfold BitStream.ofBitVec; rintro k hk; simp
+    unfold BitStream.ofBitVecSext; rintro k hk; simp
     cases k <;> simp_all
   case ofNat =>
     intros i hi
-    simp_all only [ofNat, ofBitVec, BitVec.getLsbD_eq_getElem, ite_true]
+    simp_all only [ofNat, BitStream.ofBitVecSext, BitVec.getLsbD_eq_getElem, ite_true]
     -- TODO: should there be a BitVec.getElem_ofNat ?
     rw [←BitVec.getLsbD_eq_getElem]
     rw [BitVec.getLsbD_ofNat]
@@ -356,7 +356,7 @@ lemma evalFinStream_evalFin {t : Term} {k : Nat} (hlt : k < w) (vars : Fin t.ari
     intros i hi
     have hik : i - k < w := by omega
     specialize ih vars (i-k) hik
-    simp_all [ofBitVec]
+    simp_all [BitStream.ofBitVecSext]
 
 @[simp]
 lemma FSM.eval_bv (bvn : List.Vector (BitVec w) (t.arity + 1)) :

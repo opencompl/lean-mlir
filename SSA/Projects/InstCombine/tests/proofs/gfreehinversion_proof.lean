@@ -18,7 +18,7 @@ theorem xor_1_thm (e e_1 e_2 : IntW 8) (e_3 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -29,7 +29,7 @@ theorem xor_2_thm (e e_1 : IntW 8) (e_2 : IntW 1) (e_3 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -40,7 +40,7 @@ theorem add_1_thm (e e_1 e_2 : IntW 8) (e_3 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -51,7 +51,7 @@ theorem add_2_thm (e e_1 : IntW 8) (e_2 : IntW 1) (e_3 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -62,7 +62,7 @@ theorem sub_1_thm (e e_1 e_2 : IntW 8) (e_3 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -73,7 +73,7 @@ theorem sub_2_thm (e e_1 : IntW 8) (e_2 : IntW 1) (e_3 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -84,7 +84,7 @@ theorem sub_3_thm (e e_1 : IntW 128) (e_2 : IntW 1) (e_3 : IntW 128) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -95,7 +95,7 @@ theorem ashr_1_thm (e e_1 e_2 : IntW 8) (e_3 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -109,7 +109,7 @@ theorem select_1_thm (e e_1 : IntW 8) (e_2 : IntW 1) (e_3 e_4 : IntW 8) (e_5 : I
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -122,7 +122,7 @@ theorem select_2_thm (e e_1 e_2 : IntW 8) (e_3 e_4 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -133,5 +133,5 @@ theorem lshr_not_nneg2_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
