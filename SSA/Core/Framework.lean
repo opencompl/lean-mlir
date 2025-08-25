@@ -155,9 +155,9 @@ class ToPrint (d : Dialect) where
   /-- Prints the name of the dialect. -/
   printDialect : String
   /-- Prints the return instruction of the dialect. -/
-  printReturn : d.Ty → String
+  printReturn : List d.Ty → String
   /-- Prints the function header of the dialect. -/
-  printFunc : d.Ty → String
+  printFunc : List d.Ty → String
 
 /- # Datastructures -/
 section DataStructures
@@ -351,7 +351,7 @@ end ToString
 section ToPrint
 
 open Std (Format)
-variable {d} [ToPrint d][DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
+variable {d} [ToPrint d] [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
 
 /-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
 partial def formatFormalArgListTuplePrint [ToString d.Ty] (ts : List d.Ty) : String :=
@@ -391,16 +391,22 @@ operation and types. Lastly, it arranges the expression printing according to ML
 -/
 partial def Expr.toPrint [ToString d.Op] : Expr d Γ eff t → String
   | Expr.mk (op : d.Op) _ _ args _regArgs =>
-    let outTy : d.Ty := DialectSignature.outTy op
+    let returnTypes := DialectSignature.returnTypes op
+    let returnTypes := ", ".intercalate <| returnTypes.map ToPrint.printTy
     let argTys := DialectSignature.sig op
-    s!"\"{ToPrint.printOpName op}\"{formatArgTupleForPrint args}{ToPrint.printAttributes op} : {formatTypeTuplePrint argTys} -> ({ToPrint.printTy outTy})"
+    s!"\"{ToPrint.printOpName op}\"{formatArgTupleForPrint args}{ToPrint.printAttributes op} : {formatTypeTuplePrint argTys} -> ({returnTypes})"
 
 /--
   This function recursively converts the body of a `Com` into its string representation.
   Each bound variable is printed with its index and corresponding expression.
 -/
-partial def Com.toPrintBody : Com d Γ eff t → String
-  | .ret v => s!"  \"{ToPrint.printReturn t}\"({_root_.repr v }) : ({ToPrint.printTy t}) -> ()"
+partial def Com.toPrintBody : Com d Γ eff ts → String
+  | .rets vs =>
+      let vs := (vs.map fun _ v => s!"{_root_.repr v}").toListOf String (by intros; rfl)
+      let vs := ", ".intercalate vs
+      let ret := ToPrint.printReturn ts
+      let ts := ", ".intercalate <| ts.map ToPrint.printTy
+      s!"  \"{ret}\"({vs}) : ({ts}) -> ()"
   | .var e body =>
     s!"  %{_root_.repr <|(Γ.length)} = {Expr.toPrint e }" ++ "\n" ++
     Com.toPrintBody body
@@ -410,9 +416,9 @@ partial def Com.toPrintBody : Com d Γ eff t → String
   This has a more general behaviour than `toString` and allows customizing the
   printing of dialect objects.
 -/
-partial def Com.toPrint (com : Com d Γ eff t) : String :=
+partial def Com.toPrint (com : Com d Γ eff ts) : String :=
    "builtin.module { \n"
-  ++ ToPrint.printFunc t ++ ((formatFormalArgListTuplePrint Γ.toList)) ++ ":" ++ "\n"
+  ++ ToPrint.printFunc ts ++ ((formatFormalArgListTuplePrint Γ.toList)) ++ ":" ++ "\n"
   ++ (Com.toPrintBody com) ++
    "\n }"
 
