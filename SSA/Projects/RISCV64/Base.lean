@@ -1,12 +1,6 @@
 import SSA.Projects.RISCV64.Semantics
 import SSA.Projects.RISCV64.PseudoOpSemantics
 import SSA.Core.Framework
-/- This file has a number of very large inductive types, which seem to cause Lean to run out of heartbeats.
-We avoid the issue by increasing the heartbeats. Since this applies to most inductives in this file, we do so globally.
-Additionally, this file contains definitions that match on these large inductive types. These also causes Lean to require
-more heartbeats.  -/
-set_option maxHeartbeats 1000000000000000000
-set_option maxRecDepth 10000000000000
 
 open RV64Semantics
 open RV64PseudoOpSemantics
@@ -15,6 +9,10 @@ namespace RISCV64
 /-! ## The `RISCV64` dialect -/
 
 /-! ## Dialect operation definitions -/
+
+-- Options needed for `Deriving DecidableEQ` on large inductives:
+set_option maxHeartbeats 1000000000000000000 in
+set_option maxRecDepth 10000000000000 in
 /--
 `Op` models the RV64I base instruction set [1] plus selected RISC-V ISA extensions:
 `M` for standard integer division and multiplication [2],
