@@ -44,11 +44,11 @@ open LLVMRiscV\n
     proof = f"""def llvm_const_lower_riscv_li{name_suffix} : LLVMPeepholeRewriteRefine 64 [] :=
   {{lhs := constLLVM{name_suffix}, rhs:= liRiscv{name_suffix},
    correct := by
-  unfold constLLVM{name_suffix} liRiscv{name_suffix}
-  simp_peephole
-  simp_riscv
-  simp_alive_ops
-  simp
+      unfold constLLVM{name_suffix} liRiscv{name_suffix}
+      simp_peephole
+      simp_riscv
+      simp_alive_ops
+      simp
   }}\n"""
     rewrite_names.append(f"llvm_const_lower_riscv_li{name_suffix}") 
     body += li_def + llvm_def + proof + "\n"

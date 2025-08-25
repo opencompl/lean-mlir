@@ -33,14 +33,14 @@ def llvm_sdiv_lower_riscv_no_flag_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.b
   rhs := sdiv_riscv_32
   correct :=
   by
-  simp_peephole
-  simp_alive_undef
-  simp_riscv
-  simp_alive_ops
-  simp_alive_case_bash
-  simp_alive_split
-  · sorry
-  · sorry
+    simp_peephole
+    simp_alive_undef
+    simp_riscv
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    · sorry
+    · sorry
 
 @[simp_denote]
 def sdiv_llvm_exact_32 := [LV| {

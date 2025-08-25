@@ -27,10 +27,11 @@ def cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.riscv (.bv)] (Ty
     ret %arg : !i64
   }]
   correct := by
-  simp_peephole
-  intro e
-  simp_riscv
-  simp
+    simp_peephole
+    intro e
+    simp_riscv
+    simp
+
 
 def cast_eq_cast_cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.llvm (.bitvec 64)] (Ty.llvm (.bitvec 64)) where
   lhs := [LV| {

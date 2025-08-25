@@ -33,10 +33,9 @@ def udiv_riscv_32: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)
 def llvm_udiv_lower_riscv_no_flag_32: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
   {lhs := udiv_llvm_no_exact_32, rhs := udiv_riscv_32, correct :=
   by
-  simp_lowering
-  ·sorry
-  ·sorry
-
+    simp_lowering
+    ·sorry
+    ·sorry
   }
 
 /-! # UDIV exact   -/
