@@ -25,7 +25,7 @@ def SourceEg := [DC_com| {
 #print axioms SourceEg
 
 def test1 : DCOp.TokenStream :=
-  SourceEg.denote (Ctxt.Valuation.nil)
+  SourceEg.denote (Ctxt.Valuation.nil) |>.getN 0
 
 #eval test1
 
@@ -55,6 +55,6 @@ def x : DCOp.ValueStream (BitVec 8) := ofList [some 1, none, some 2, some 3, non
 def u : DCOp.TokenStream := ofList [some (), none, some (), some (), none]
 
 def test2 : DCOp.TokenStream :=
-  BranchEg.denote (Ctxt.Valuation.ofHVector (.cons c <| .cons x <| .cons u <| .nil))
+  BranchEg.denote (Ctxt.Valuation.ofHVector (.cons c <| .cons x <| .cons u <| .nil)) |>.getN 0
 
 #eval test2
