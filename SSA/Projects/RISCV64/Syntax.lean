@@ -40,91 +40,81 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       match ty₁, opStx.name with
       -- parsing pseudo ops
       | .bv, "mv" => do
-        return ⟨.pure, .bv, ⟨
+        return ⟨.pure, [.bv], ⟨
                   .mv,
-                  by
-                  simp [DialectSignature.outTy, signature],
+                  rfl,
                   by constructor,
                    .cons v₁ <| .nil,
                   .nil
                 ⟩⟩
       | .bv, "not" => do
-        return ⟨.pure, .bv, ⟨
+        return ⟨.pure, [.bv], ⟨
                   .not,
-                  by
-                  simp [DialectSignature.outTy, signature],
+                  rfl,
                   by constructor,
                    .cons v₁ <| .nil,
                   .nil
                 ⟩⟩
       | .bv, "neg" => do
-        return ⟨.pure, .bv, ⟨
+        return ⟨.pure, [.bv], ⟨
                   .neg,
-                  by
-                  simp [DialectSignature.outTy, signature],
+                  rfl,
                   by constructor,
                    .cons v₁ <| .nil,
                   .nil
                 ⟩⟩
       | .bv, "negw" => do
-        return ⟨.pure, .bv, ⟨
+        return ⟨.pure, [.bv], ⟨
                   .negw,
-                  by
-                  simp [DialectSignature.outTy, signature],
+                  rfl,
                   by constructor,
                    .cons v₁ <| .nil,
                   .nil
                 ⟩⟩
       | .bv, "sext.w" => do
-        return ⟨.pure, .bv, ⟨
+        return ⟨.pure, [.bv], ⟨
                   RISCV64.Op.sext.w,
-                  by
-                  simp [DialectSignature.outTy, signature],
+                  rfl,
                   by constructor,
                    .cons v₁ <| .nil,
                   .nil
                 ⟩⟩
       | .bv, "zext.b" => do
-        return ⟨.pure, .bv, ⟨
+        return ⟨.pure, [.bv], ⟨
                   RISCV64.Op.zext.b,
-                  by
-                  simp [DialectSignature.outTy, signature],
+                  rfl,
                   by constructor,
                    .cons v₁ <| .nil,
                   .nil
                 ⟩⟩
       | .bv, "seqz" => do
-        return ⟨.pure, .bv, ⟨
+        return ⟨.pure, [.bv], ⟨
                   .seqz,
-                  by
-                  simp [DialectSignature.outTy, signature],
+                  rfl,
                   by constructor,
                    .cons v₁ <| .nil,
                   .nil
                 ⟩⟩
       | .bv, "snez" => do
-        return ⟨.pure, .bv, ⟨
+        return ⟨.pure, [.bv], ⟨
                   .snez,
-                  by
-                  simp [DialectSignature.outTy, signature],
+                  rfl,
                   by constructor,
                    .cons v₁ <| .nil,
                   .nil
                 ⟩⟩
       | .bv, "sltz" => do
-        return ⟨.pure, .bv, ⟨
+        return ⟨.pure, [.bv], ⟨
                   .sltz,
-                  by
-                  simp [DialectSignature.outTy, signature],
+                  rfl,
                   by constructor,
                    .cons v₁ <| .nil,
                   .nil
                 ⟩⟩
       | .bv, "sgtz" => do
-        return ⟨.pure, .bv, ⟨
+        return ⟨.pure, [.bv], ⟨
                   .sgtz,
-                  by
-                  simp [DialectSignature.outTy, signature],
+                  rfl,
                   by constructor,
                    .cons v₁ <| .nil,
                   .nil
@@ -413,10 +403,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         match att with
         | .int val ty =>
             let opTy@(.bv) ← mkTy ty
-            return ⟨.pure, opTy, ⟨
+            return ⟨.pure, [opTy], ⟨
               .roriw (BitVec.ofInt 5 val),
-              by
-              simp[DialectSignature.outTy, signature],
+              rfl,
               by constructor,
               .cons v₁ <| .nil,
               .nil
@@ -428,10 +417,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         match att with
         | .int val ty =>
             let opTy@(.bv) ← mkTy ty
-            return ⟨.pure, opTy, ⟨
+            return ⟨.pure, [opTy], ⟨
               .rori (BitVec.ofInt 5 val),
-              by
-              simp[DialectSignature.outTy, signature],
+              rfl,
               by constructor,
               .cons v₁ <| .nil,
               .nil
@@ -443,10 +431,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         match att with
         | .int val ty =>
             let opTy@(.bv) ← mkTy ty
-            return ⟨.pure, opTy, ⟨
+            return ⟨.pure, [opTy], ⟨
               RISCV64.Op.slli.uw (BitVec.ofInt 6 val),
-              by
-              simp[DialectSignature.outTy, signature],
+              rfl,
               by constructor,
               .cons v₁ <| .nil,
               .nil
@@ -638,31 +625,31 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "xnor" =>
-              return ⟨ .pure, .bv ,⟨ .xnor, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .xnor, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "orn" =>
-              return ⟨ .pure, .bv ,⟨ .xnor, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .xnor, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "andn" =>
-              return ⟨ .pure, .bv ,⟨ .andn, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .andn, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "min" =>
-              return ⟨ .pure, .bv ,⟨ .min, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .min, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "minu" =>
-              return ⟨ .pure, .bv ,⟨ .minu, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .minu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "maxu" =>
-              return ⟨ .pure, .bv ,⟨ .maxu, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .maxu, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "max" =>
-              return ⟨ .pure, .bv ,⟨ .max, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .max, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | _, _ , _ => throw <| .unsupportedOp s!"type mismatch  for 2 reg operation  {repr opStx}"
