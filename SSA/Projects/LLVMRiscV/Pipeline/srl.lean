@@ -66,8 +66,6 @@ def srl_riscv_64 := [LV| {
     llvm.return %y : i64
   }]
 
-/- # SRL, exact  -/
-
 @[simp_denote]
 def llvm_srl_lower_riscv_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := lshr_llvm_no_flag_64
