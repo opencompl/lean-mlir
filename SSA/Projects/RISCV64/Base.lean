@@ -85,23 +85,30 @@ inductive Op
   | sh3add
   | slli.uw (shamt : BitVec 6)
   -- part of the RISC-V `Zbb` & `Zbkb` extension
-  | rol
-  | ror
-  | rolw
-  | rorw
-  | sext.b
-  | sext.h
-  | zext.h
-  -- new featuring complete ZBB extensions
-  | rori (_shamt : BitVec 5)
-  | roriw (_shamt : BitVec 5)
   | andn
   | orn
   | xnor
+  -- | clz
+  -- | clzw
+  -- | ctz
+  -- | ctzw
+  -- | cpop
+  -- | cpopw
   | max
   | maxu
   | min
   | minu
+  | sext.b
+  | sext.h
+  | zext.h
+  | rol
+  | rolw
+  | ror
+  | rori (_shamt : BitVec 5)
+  | roriw (_shamt : BitVec 5)
+  | rorw
+  -- | orc.b
+  -- | rev8
   /-
   in the future:
   |pack
@@ -177,8 +184,6 @@ def Op.sig : Op → List Ty
   | .mulhu  => [Ty.bv, Ty.bv]
   | .mulhsu  => [Ty.bv, Ty.bv]
   | .divu =>  [Ty.bv, Ty.bv]
-  | .rol => [Ty.bv, Ty.bv]
-  | .ror => [Ty.bv, Ty.bv]
   | .remuw  => [Ty.bv, Ty.bv]
   | .remu  =>  [Ty.bv, Ty.bv]
   | .addiw (_imm : BitVec 12) => [Ty.bv]
@@ -220,9 +225,6 @@ def Op.sig : Op → List Ty
   | .xori (_imm : BitVec 12) => [Ty.bv]
   | RISCV64.Op.czero.eqz =>  [Ty.bv, Ty.bv]
   | RISCV64.Op.czero.nez =>  [Ty.bv, Ty.bv]
-  | RISCV64.Op.sext.b => [Ty.bv]
-  | RISCV64.Op.sext.h => [Ty.bv]
-  | RISCV64.Op.zext.h => [Ty.bv]
   | .bclr => [Ty.bv, Ty.bv]
   | .bext => [Ty.bv, Ty.bv]
   | .binv => [Ty.bv, Ty.bv]
@@ -231,8 +233,6 @@ def Op.sig : Op → List Ty
   | .bexti (_shamt : BitVec 6) => [Ty.bv]
   | .binvi (_shamt : BitVec 6) => [Ty.bv]
   | .bseti (_shamt : BitVec 6) => [Ty.bv]
-  | .rolw => [Ty.bv, Ty.bv]
-  | .rorw => [Ty.bv, Ty.bv]
   | RISCV64.Op.add.uw => [Ty.bv, Ty.bv]
   | RISCV64.Op.sh1add.uw => [Ty.bv, Ty.bv]
   | RISCV64.Op.sh2add.uw => [Ty.bv, Ty.bv]
@@ -241,16 +241,30 @@ def Op.sig : Op → List Ty
   | .sh2add => [Ty.bv, Ty.bv]
   | .sh3add => [Ty.bv, Ty.bv]
   | RISCV64.Op.slli.uw (_shamt : BitVec 6) => [Ty.bv]
-  -- newly added
-  | rori (_shamt : BitVec 5) =>[Ty.bv]
-  | roriw (_shamt : BitVec 5) =>[Ty.bv]
   | andn => [Ty.bv, Ty.bv]
   | orn => [Ty.bv, Ty.bv]
   | xnor => [Ty.bv, Ty.bv]
+  -- | clz
+  -- | clzw
+  -- | ctz
+  -- | ctzw
+  -- | cpop
+  -- | cpopw
   | max => [Ty.bv, Ty.bv]
   | maxu => [Ty.bv, Ty.bv]
   | min  => [Ty.bv, Ty.bv]
   | minu  => [Ty.bv, Ty.bv]
+  | RISCV64.Op.sext.b => [Ty.bv]
+  | RISCV64.Op.sext.h => [Ty.bv]
+  | RISCV64.Op.zext.h => [Ty.bv]
+  | .rol => [Ty.bv, Ty.bv]
+  | .rolw => [Ty.bv, Ty.bv]
+  | .ror => [Ty.bv, Ty.bv]
+  | rori (_shamt : BitVec 5) =>[Ty.bv]
+  | roriw (_shamt : BitVec 5) =>[Ty.bv]
+  | .rorw => [Ty.bv, Ty.bv]
+  -- orc.b
+  -- rev8
   -- pseudo-instructions
   | mv => [Ty.bv]
   | not => [Ty.bv]
@@ -274,8 +288,7 @@ def Op.outTy : Op  → Ty
   | .mulhu => Ty.bv
   | .mulhsu => Ty.bv
   | .divu => Ty.bv
-  | .rol => Ty.bv
-  | .ror => Ty.bv
+
   | .remuw => Ty.bv
   | .remu =>  Ty.bv
   | .addiw (_imm : BitVec 12) => Ty.bv
@@ -317,9 +330,6 @@ def Op.outTy : Op  → Ty
   | .xori (_imm : BitVec 12) => Ty.bv
   | RISCV64.Op.czero.eqz => Ty.bv
   | RISCV64.Op.czero.nez => Ty.bv
-  | RISCV64.Op.sext.b => Ty.bv
-  | RISCV64.Op.sext.h => Ty.bv
-  | RISCV64.Op.zext.h => Ty.bv
   | .bclr => Ty.bv
   | .bext => Ty.bv
   | .binv => Ty.bv
@@ -328,8 +338,6 @@ def Op.outTy : Op  → Ty
   | .bexti (_shamt : BitVec 6) => Ty.bv
   | .binvi (_shamt : BitVec 6) => Ty.bv
   | .bseti (_shamt : BitVec 6) => Ty.bv
-  | .rolw => Ty.bv
-  | .rorw => Ty.bv
   | RISCV64.Op.add.uw => Ty.bv
   | RISCV64.Op.sh1add.uw => Ty.bv
   | RISCV64.Op.sh2add.uw => Ty.bv
@@ -338,15 +346,30 @@ def Op.outTy : Op  → Ty
   | .sh2add => Ty.bv
   | .sh3add => Ty.bv
   | RISCV64.Op.slli.uw (_shamt : BitVec 6) => Ty.bv
-  | .rori (_shamt : BitVec 5) => Ty.bv
-  | .roriw (_shamt : BitVec 5) => Ty.bv
   | .andn =>  Ty.bv
   | .orn =>  Ty.bv
   | .xnor =>  Ty.bv
+  -- | clz
+  -- | clzw
+  -- | ctz
+  -- | ctzw
+  -- | cpop
+  -- | cpopw
   | .max =>  Ty.bv
   | .maxu =>  Ty.bv
   | .min  =>  Ty.bv
   | .minu  =>  Ty.bv
+  | RISCV64.Op.sext.b => Ty.bv
+  | RISCV64.Op.sext.h => Ty.bv
+  | RISCV64.Op.zext.h => Ty.bv
+  | .rol => Ty.bv
+  | .rolw => Ty.bv
+  | .ror => Ty.bv
+  | .rori (_shamt : BitVec 5) => Ty.bv
+  | .roriw (_shamt : BitVec 5) => Ty.bv
+  | .rorw => Ty.bv
+  -- orc.b
+  -- rev8
   --pseudo-instructions
   | mv => Ty.bv
   | not => Ty.bv
@@ -382,8 +405,6 @@ def opToString (op : RISCV64.Op) : String :=
   | .mulhu => "mulhu"
   | .mulhsu => "mulhsu"
   | .divu => "divu"
-  | .rol => "rol"
-  | .ror => "ror"
   | .remuw => "remuw"
   | .remu => "remu"
   | .addiw (_imm : BitVec 12) => "addiw"
@@ -425,9 +446,6 @@ def opToString (op : RISCV64.Op) : String :=
   | .xori (_imm : BitVec 12) => "xori"
   | RISCV64.Op.czero.eqz => "czero.eqz"
   | RISCV64.Op.czero.nez => "czero.nez"
-  | RISCV64.Op.sext.b => "sext.b"
-  | RISCV64.Op.sext.h => "sext.h"
-  | RISCV64.Op.zext.h => "zext.h"
   | .bclr => "bclr"
   | .bext => "bext"
   | .binv => "binv"
@@ -436,8 +454,6 @@ def opToString (op : RISCV64.Op) : String :=
   | .bexti (_shamt : BitVec 6) => "bexti"
   | .binvi (_shamt : BitVec 6) => "binvi"
   | .bseti (_shamt : BitVec 6) => "bseti"
-  | .rolw => "rolw"
-  | .rorw => "rorw"
   | RISCV64.Op.add.uw => "add.uw"
   | RISCV64.Op.sh1add.uw => "sh1add.uw"
   | RISCV64.Op.sh2add.uw => "sh2add.uw"
@@ -446,16 +462,31 @@ def opToString (op : RISCV64.Op) : String :=
   | .sh2add => "sh2add"
   | .sh3add => "sh3add"
   | RISCV64.Op.slli.uw (_shamt : BitVec 6) => "slli.uw"
-  | .rori (_shamt : BitVec 5) => "rori"
-  | .roriw (_shamt : BitVec 5) => "roriw"
   | .andn => "andn"
   | .orn => "orn"
   | .xnor => "xnor"
+  -- | clz
+  -- | clzw
+  -- | ctz
+  -- | ctzw
+  -- | cpop
+  -- | cpopw
   | .max => "max"
   | .maxu => "maxu"
   | .min  => "min"
   | .minu  => "minu"
-    --pseudo-instructions
+  | RISCV64.Op.sext.b => "sext.b"
+  | RISCV64.Op.sext.h => "sext.h"
+  | RISCV64.Op.zext.h => "zext.h"
+  | .rol => "rol"
+  | .rolw => "rolw"
+  | .ror => "ror"
+  | .rori (_shamt : BitVec 5) => "rori"
+  | .roriw (_shamt : BitVec 5) => "roriw"
+  | .rorw => "rorw"
+  -- orc.b
+  -- rev8
+  --pseudo-instructions
   | .mv => "mv"
   | .not => "not"
   | .neg => "neg"
@@ -564,10 +595,7 @@ instance : DialectDenote (RV64) where
   | .ori imm, reg, _ => ITYPE_pure64_RISCV_ORI  imm (reg.getN 0 (by simp [DialectSignature.sig, signature]))
   | .xori imm, reg, _ => ITYPE_pure64_RISCV_XORI  imm (reg.getN 0 (by simp [DialectSignature.sig, signature]))
   | RISCV64.Op.czero.eqz, regs, _ => ZICOND_RTYPE_pure64_RISCV_CZERO_EQZ (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | RISCV64.Op.czero.nez, regs, _ => ZICOND_RTYPE_pure64_RISCV_CZERO_NEZ (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | RISCV64.Op.sext.b, reg, _ => ZBB_EXTOP_pure64_RISCV_SEXTB (reg.getN 0 (by simp [DialectSignature.sig, signature]))
-  | RISCV64.Op.sext.h, reg, _ => ZBB_EXTOP_pure64_RISCV_SEXTH (reg.getN 0 (by simp [DialectSignature.sig, signature]))
-  | RISCV64.Op.zext.h, reg, _ => ZBB_EXTOP_pure64_RISCV_ZEXTH (reg.getN 0 (by simp [DialectSignature.sig, signature]))
+  | RISCV64.Op.czero.nez, regs, _ => ZICOND_RTYPE_pure64_RISCV_CZERO_NEZ (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .bclr, regs, _ => ZBS_RTYPE_pure64_RISCV_BCLR_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .bext, regs, _ => ZBS_RTYPE_pure64_RISCV_BEXT_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .binv, regs, _ => ZBS_RTYPE_pure64_BINV_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -576,10 +604,6 @@ instance : DialectDenote (RV64) where
   | .bexti shamt, reg, _ => ZBS_IOP_pure64_RISCV_BEXTI_bv shamt (reg.getN 0 (by simp [DialectSignature.sig, signature]))
   | .binvi shamt, reg, _ => ZBS_IOP_pure64_RISCV_BINVI_bv shamt (reg.getN 0 (by simp [DialectSignature.sig, signature]))
   | .bseti shamt, reg, _ => ZBS_IOP_pure64_RISCV_BSETI_bv shamt (reg.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .rolw, regs, _ => ZBB_RTYPEW_pure64_RISCV_ROLW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .rorw, regs, _ => ZBB_RTYPEW_pure64_RISCV_RORW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .rol, regs, _ => ZBB_RTYPE_pure64_RISCV_ROL_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .ror, regs, _ => ZBB_RTYPE_pure64_RISCV_ROR_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | RISCV64.Op.add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | RISCV64.Op.sh1add.uw , regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH1ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | RISCV64.Op.sh2add.uw, regs, _ => ZBA_RTYPEUW_pure64_RISCV_SH2ADDUW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -588,15 +612,30 @@ instance : DialectDenote (RV64) where
   | .sh2add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH2ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sh3add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH3ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | RISCV64.Op.slli.uw shamt, regs, _ => ZBA_pure64_RISCV_SLLIUW shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .rori shamt, regs, _ => ZBB_pure64_RISCV_RORI shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  | .roriw shamt, regs, _ => ZBB_pure64_RISCV_RORIW shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .andn, regs, _ => ZBB_RTYPE_pure_RISCV_ANDN (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .orn, regs, _ => ZBB_RTYPE_pure_RISCV_ORN (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .xnor, regs, _ => ZBB_RTYPE_pure_RISCV_XNOR (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  -- | clz
+  -- | clzw
+  -- | ctz
+  -- | ctzw
+  -- | cpop
+  -- | cpopw
   | .max, regs, _ => ZBB_RTYPE_pure_RISCV_MAX (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .maxu, regs, _ => ZBB_RTYPE_pure_RISCV_MAXU (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .min, regs, _ => ZBB_RTYPE_pure_RISCV_MIN (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .minu, regs, _ => ZBB_RTYPE_pure_RISCV_MINU (regs.getN 1 (by simp [DialectSignature.sig, signature])) (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | RISCV64.Op.sext.b, reg, _ => ZBB_EXTOP_pure64_RISCV_SEXTB (reg.getN 0 (by simp [DialectSignature.sig, signature]))
+  | RISCV64.Op.sext.h, reg, _ => ZBB_EXTOP_pure64_RISCV_SEXTH (reg.getN 0 (by simp [DialectSignature.sig, signature]))
+  | RISCV64.Op.zext.h, reg, _ => ZBB_EXTOP_pure64_RISCV_ZEXTH (reg.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .rol, regs, _ => ZBB_RTYPE_pure64_RISCV_ROL_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .rolw, regs, _ => ZBB_RTYPEW_pure64_RISCV_ROLW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .ror, regs, _ => ZBB_RTYPE_pure64_RISCV_ROR_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .rori shamt, regs, _ => ZBB_pure64_RISCV_RORI shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .roriw shamt, regs, _ => ZBB_pure64_RISCV_RORIW shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | .rorw, regs, _ => ZBB_RTYPEW_pure64_RISCV_RORW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  -- orc.b
+  -- rev8
   --pseudo-instructions
   | .mv, regs, _  => MV_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .not, regs, _ => NOT_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -608,4 +647,5 @@ instance : DialectDenote (RV64) where
   | .snez, regs, _ => SNEZ_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sltz, regs, _ => SLTZ_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sgtz, regs, _ => SGZT_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+
 end RISCV64
