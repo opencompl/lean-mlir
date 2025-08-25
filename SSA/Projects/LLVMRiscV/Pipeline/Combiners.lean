@@ -28,7 +28,7 @@ structure RISCVPeepholeRewrite (Γ : Ctxt Ty) where
   Our naming conventions are consistent with the RISC-V backend.
 
   We do not support known-bits analysis nor matching on values, and therefore do not implement the
-  patterns relying on this infrastructure (e.g. `shift_immed_chain`).
+  patterns relying on this infrastructure (e.g., `shift_immed_chain`).
 -/
 
 /-- ### sub_to_add
