@@ -5,7 +5,15 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
-/- # sext instruction lowering-/
+/-!
+  This file implements the lowering for the `llvm.sext` instruction for the extension of
+  types:
+  - i1 to i8, i16, i32, i64
+  - i8 to i16, i32, i64
+  - i16 to i32, i64
+-/
+
+/-! ### i1 to i8 -/
 
 @[simp_denote]
 def sext_riscv_i1_to_i8 := [LV| {
@@ -27,6 +35,9 @@ def sext_llvm_i1_to_i8 := [LV| {
 def llvm_sext_lower_riscv_i1_to_i8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 1)] :=
   {lhs:= sext_llvm_i1_to_i8, rhs:= sext_riscv_i1_to_i8 }
 
+
+/-! ### i1 to i8 -/
+
 @[simp_denote]
 def sext_riscv_i1_to_i16 := [LV| {
   ^entry (%arg: i1):
@@ -46,6 +57,9 @@ def sext_llvm_i1_to_i16 := [LV| {
 
 def llvm_sext_lower_riscv_i1_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 1)] :=
   {lhs:= sext_llvm_i1_to_i16, rhs:= sext_riscv_i1_to_i16}
+
+
+/-! ### i1 to i32 -/
 
 @[simp_denote]
 def sext_riscv_i1_to_i32 := [LV| {
@@ -67,6 +81,9 @@ def sext_llvm_i1_to_i32 := [LV| {
 def llvm_sext_lower_riscv_i1_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 1)] :=
   {lhs:= sext_llvm_i1_to_i32, rhs:= sext_riscv_i1_to_i32}
 
+
+/-! ### i1 to i64 -/
+
 @[simp_denote]
 def sext_riscv_i1_to_i64 := [LV| {
   ^entry (%arg: i1):
@@ -87,25 +104,8 @@ def sext_llvm_i1_to_i64 := [LV| {
 def llvm_sext_lower_riscv_i1_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1)] :=
   {lhs:= sext_llvm_i1_to_i64, rhs:= sext_riscv_i1_to_i64}
 
-@[simp_denote]
-def sext_riscv_i8_to_i64 := [LV| {
-  ^entry (%arg: i8):
-    %0 = "builtin.unrealized_conversion_cast"(%arg) : (i8) -> (!i64)
-    %1 = slli %0, 56 : !i64
-    %2 = srai %1, 56 : !i64
-    %res = "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i64)
-    llvm.return %res : i64
-  }]
 
-@[simp_denote]
-def sext_llvm_i8_to_i64 := [LV| {
-  ^entry (%arg: i8):
-    %0 = llvm.sext %arg: i8 to i64
-    llvm.return %0: i64
-  }]
-
-def llvm_sext_lower_riscv_i8_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 8)] :=
-  {lhs:=sext_llvm_i8_to_i64, rhs:= sext_riscv_i8_to_i64}
+/-! ### i8 to i16 -/
 
 @[simp_denote]
 def sext_riscv_i8_to_i16 := [LV| {
@@ -127,6 +127,9 @@ def sext_llvm_i8_to_i16 := [LV| {
 def llvm_sext_lower_riscv_i8_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 8)] :=
   {lhs:= sext_llvm_i8_to_i16, rhs:= sext_riscv_i8_to_i16}
 
+
+/-! ### i8 to i32 -/
+
 @[simp_denote]
 def sext_riscv_i8_to_i32 := [LV| {
   ^entry (%arg: i8):
@@ -147,6 +150,32 @@ def sext_llvm_i8_to_i32 := [LV| {
 def llvm_sext_lower_riscv_i8_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 8)] :=
   {lhs:= sext_llvm_i8_to_i32, rhs:= sext_riscv_i8_to_i32}
 
+
+/-! ### i8 to i64 -/
+
+@[simp_denote]
+def sext_riscv_i8_to_i64 := [LV| {
+  ^entry (%arg: i8):
+    %0 = "builtin.unrealized_conversion_cast"(%arg) : (i8) -> (!i64)
+    %1 = slli %0, 56 : !i64
+    %2 = srai %1, 56 : !i64
+    %res = "builtin.unrealized_conversion_cast"(%2) : (!i64) -> (i64)
+    llvm.return %res : i64
+  }]
+
+@[simp_denote]
+def sext_llvm_i8_to_i64 := [LV| {
+  ^entry (%arg: i8):
+    %0 = llvm.sext %arg: i8 to i64
+    llvm.return %0: i64
+  }]
+
+def llvm_sext_lower_riscv_i8_to_i64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 8)] :=
+  {lhs:=sext_llvm_i8_to_i64, rhs:= sext_riscv_i8_to_i64}
+
+
+/-! ### i16 to i32 -/
+
 @[simp_denote]
 def sext_riscv_i16_to_i32 := [LV| {
   ^entry (%arg: i16):
@@ -166,6 +195,9 @@ def sext_llvm_i16_to_i32 := [LV| {
 
 def llvm_sext_lower_riscv_i16_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 16)] :=
   {lhs:= sext_llvm_i16_to_i32, rhs:= sext_riscv_i16_to_i32}
+
+
+/-! ### i16 to i64 -/
 
 @[simp_denote]
 def sext_riscv_i16_to_i64 := [LV| {
