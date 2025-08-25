@@ -10,8 +10,8 @@ open LLVMRiscV
   The rewrites below are registered to fold-away pairs of unrealized conversion casts.
 
   An `unrealized conversion cast` in MLIR is an operation inserted during the lowering
-  from one dialect to another dialect to temporary guarantee compatible between type
-  systems. It is stating that an element should be casted to type B from type A.
+  from one dialect to another dialect to temporarily guarantee compatibility between types.
+  It is stating that an element should be casted to type B from type A.
 -/
 
 @[simp_denote]

@@ -5,7 +5,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
-/- This file implements `DAGCombiner` patterns extrcted from the LLVM Risc-V backend.
+/- This file implements `DAGCombiner` patterns extracted from the LLVM Risc-V backend.
   First, we implement the Lean structure that implements the rewrite patterns and then we implement
   optimizations for LLVM IR and RISC-V.
   In particular, we implement the patterns supported by LLVM's `GlobalIsel` for RISC-V.
@@ -28,7 +28,7 @@ structure RISCVPeepholeRewrite (Γ : Ctxt Ty) where
   Our naming conventions are consistent with the RISC-V backend.
 
   We do not support known-bits analysis nor matching on values, and therefore do not implement the
-  patterns relying on this infrastructure (e.g. `shift_immed_chain`).
+  patterns relying on this infrastructure (e.g., `shift_immed_chain`).
 -/
 
 /-- ### sub_to_add
