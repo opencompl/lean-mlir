@@ -35,7 +35,7 @@ def cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.riscv (.bv)] (Ty
 
 def cast_eq_cast_cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.llvm (.bitvec 64)] (Ty.llvm (.bitvec 64)) where
   lhs:= [LV| {
-      ^entry (%lhs: i64): -- this is a refinement
+      ^entry (%lhs: i64):
       %0 = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
       %1 = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> !i64
       %2= "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)

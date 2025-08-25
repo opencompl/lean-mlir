@@ -3,39 +3,12 @@ import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
-/- !
-  This file implements the lowering for the llvm and instruction for types i1, i8, 16, i32.
+/-!
+  This file implements the lowering for the `llvm.and` instruction for types i1, i8, i16 i32, i64.
 -/
 
 
 open LLVMRiscV
-
-@[simp_denote]
-def and_llvm := [LV| {
-  ^entry (%lhs: i64, %rhs: i64 ):
-  %1 = llvm.and %lhs, %rhs : i64
-  llvm.return %1 : i64
-  }]
-
-@[simp_denote]
-def and_riscv := [LV| {
-  ^entry (%lhs: i64, %rhs: i64 ):
-  %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i64) -> (!i64)
-  %rhsr = "builtin.unrealized_conversion_cast" (%rhs) : (i64) -> (!i64)
-  %0 = and %lhsr, %rhsr : !i64
-  %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
-  llvm.return %1 : i64
-  }]
-
-def llvm_and_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)]
-where
-  lhs:= and_llvm
-  rhs:= and_riscv
-
-def and_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_and_lower_riscv]
-
 
 /-! ### i1 -/
 
@@ -147,3 +120,32 @@ def llvm_and_lower_riscv_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)
 def and_match_32 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
   [llvm_and_lower_riscv_32]
+
+
+/-! ### i64-/
+
+@[simp_denote]
+def and_llvm_64 := [LV| {
+  ^entry (%lhs: i64, %rhs: i64 ):
+  %1 = llvm.and %lhs, %rhs : i64
+  llvm.return %1 : i64
+  }]
+
+@[simp_denote]
+def and_riscv_64 := [LV| {
+  ^entry (%lhs: i64, %rhs: i64 ):
+  %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i64) -> (!i64)
+  %rhsr = "builtin.unrealized_conversion_cast" (%rhs) : (i64) -> (!i64)
+  %0 = and %lhsr, %rhsr : !i64
+  %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
+  llvm.return %1 : i64
+  }]
+
+def llvm_and_lower_riscv_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)]
+where
+  lhs:= and_llvm_64
+  rhs:= and_riscv_64
+
+def and_match_64 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
+  [llvm_and_lower_riscv_64]
