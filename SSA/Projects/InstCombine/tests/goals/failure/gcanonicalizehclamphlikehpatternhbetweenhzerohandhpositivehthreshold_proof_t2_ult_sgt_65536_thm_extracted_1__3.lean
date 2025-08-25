@@ -5,10 +5,5 @@
 open BitVec
 
 theorem t2_ult_sgt_65536_thm.extracted_1._3 : ∀ (x x_1 : BitVec 32),
-  ofBool (x_1 <ᵤ 65536#32) = 1#1 →
-    ¬ofBool (65535#32 <ₛ x_1) = 1#1 →
-      ofBool (x_1 <ₛ 0#32) = 1#1 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-          @PoisonOr.instHRefinement _ _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec))
-          (PoisonOr.value x_1) PoisonOr.poison :=
+  ofBool (x_1 <ᵤ 65536#32) = 1#1 → ¬ofBool (65535#32 <ₛ x_1) = 1#1 → ofBool (x_1 <ₛ 0#32) = 1#1 → False :=
 sorry
