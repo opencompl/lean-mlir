@@ -14,9 +14,5 @@ set_option Elab.async false
 -/
 
 theorem sextinreg_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  16#32 ≥ ↑32 ∨ True ∧ x <<< 16#32 >>> 16#32 <<< 16#32 ≠ x <<< 16#32 ∨ 16#32 ≥ ↑32 →
-    HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-      @instHRefinementOfRefinement _
-        (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-      (PoisonOr.value ((x &&& 65535#32 ^^^ BitVec.ofInt 32 (-32768)) + 32768#32)) PoisonOr.poison :=
+  16#32 ≥ ↑32 ∨ True ∧ x <<< 16#32 >>> 16#32 <<< 16#32 ≠ x <<< 16#32 ∨ 16#32 ≥ ↑32 → False :=
 sorry

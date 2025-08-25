@@ -14,11 +14,5 @@ set_option Elab.async false
 -/
 
 theorem bitwise_or_bitwise_or_icmps_comm1_thm.extracted_1._1 : ∀ (x x_1 x_2 : BitVec 8),
-  ¬x_1 ≥ ↑8 →
-    True ∧ 1#8 <<< x_1 >>> x_1 ≠ 1#8 ∨ x_1 ≥ ↑8 ∨ True ∧ 1#8 <<< x_1 >>> x_1 ≠ 1#8 ∨ x_1 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool (x_2 &&& 1#8 <<< x_1 == 0#8) ||| (ofBool (x == 42#8) ||| ofBool (x_2 &&& 1#8 == 0#8))))
-        PoisonOr.poison :=
+  ¬x_1 ≥ ↑8 → True ∧ 1#8 <<< x_1 >>> x_1 ≠ 1#8 ∨ x_1 ≥ ↑8 ∨ True ∧ 1#8 <<< x_1 >>> x_1 ≠ 1#8 ∨ x_1 ≥ ↑8 → False :=
 sorry

@@ -15,9 +15,5 @@ set_option Elab.async false
 
 theorem reassoc_mul_nuw_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ¬(True ∧ x.umulOverflow 4#32 = true ∨ True ∧ (x * 4#32).umulOverflow 65#32 = true) →
-    True ∧ x.umulOverflow 260#32 = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x * 4#32 * 65#32)) PoisonOr.poison :=
+    True ∧ x.umulOverflow 260#32 = true → False :=
 sorry

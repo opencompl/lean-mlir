@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem mismatched_shifts_thm.extracted_1._1 : ∀ (x : BitVec 8),
-  ¬(x ≥ ↑8 ∨ x + 1#8 ≥ ↑8) →
-    x ≥ ↑8 ∨ x + 1#8 ≥ ↑8 ∨ True ∧ (16#8 <<< x &&& 3#8 >>> (x + 1#8) != 0) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (16#8 <<< x ||| 3#8 >>> (x + 1#8))) PoisonOr.poison :=
+  ¬(x ≥ ↑8 ∨ x + 1#8 ≥ ↑8) → x ≥ ↑8 ∨ x + 1#8 ≥ ↑8 ∨ True ∧ (16#8 <<< x &&& 3#8 >>> (x + 1#8) != 0) = true → False :=
 sorry

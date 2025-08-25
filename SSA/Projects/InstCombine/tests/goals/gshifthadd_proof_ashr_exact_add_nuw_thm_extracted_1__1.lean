@@ -16,9 +16,5 @@ set_option Elab.async false
 theorem ashr_exact_add_nuw_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ¬(True ∧ x.uaddOverflow 1#32 = true ∨
         True ∧ BitVec.ofInt 32 (-4) >>> (x + 1#32) <<< (x + 1#32) ≠ BitVec.ofInt 32 (-4) ∨ x + 1#32 ≥ ↑32) →
-    True ∧ BitVec.ofInt 32 (-2) >>> x <<< x ≠ BitVec.ofInt 32 (-2) ∨ x ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((BitVec.ofInt 32 (-4)).sshiftRight' (x + 1#32))) PoisonOr.poison :=
+    True ∧ BitVec.ofInt 32 (-2) >>> x <<< x ≠ BitVec.ofInt 32 (-2) ∨ x ≥ ↑32 → False :=
 sorry

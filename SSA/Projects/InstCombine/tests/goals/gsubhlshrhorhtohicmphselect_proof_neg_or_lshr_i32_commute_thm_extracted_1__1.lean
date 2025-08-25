@@ -16,9 +16,5 @@ set_option Elab.async false
 theorem neg_or_lshr_i32_commute_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ¬((x == 0 || 32 != 1 && 42#32 == intMin 32 && x == -1) = true ∨
         (x == 0 || 32 != 1 && 42#32 == intMin 32 && x == -1) = true ∨ 31#32 ≥ ↑32) →
-    (x == 0 || 32 != 1 && 42#32 == intMin 32 && x == -1) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (((42#32).sdiv x ||| 0#32 - (42#32).sdiv x) >>> 31#32)) PoisonOr.poison :=
+    (x == 0 || 32 != 1 && 42#32 == intMin 32 && x == -1) = true → False :=
 sorry

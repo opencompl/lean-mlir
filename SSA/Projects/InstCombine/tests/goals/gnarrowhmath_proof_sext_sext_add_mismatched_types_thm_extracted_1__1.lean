@@ -18,9 +18,5 @@ theorem sext_sext_add_mismatched_types_thm.extracted_1._1 : ∀ (x : BitVec 32) 
     7#16 ≥ ↑16 ∨
         9#32 ≥ ↑32 ∨
           True ∧ (signExtend 64 (x_1.sshiftRight' 7#16)).saddOverflow (signExtend 64 (x.sshiftRight' 9#32)) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (signExtend 64 (x_1.sshiftRight' 7#16) + signExtend 64 (x.sshiftRight' 9#32)))
-        PoisonOr.poison :=
+      False :=
 sorry

@@ -13,11 +13,5 @@ set_option maxRecDepth 1000000
 set_option Elab.async false
 -/
 
-theorem shl_and_add_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8),
-  ¬(1#8 ≥ ↑8 ∨ 1#8 ≥ ↑8) →
-    1#8 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x_1 <<< 1#8 + (x <<< 1#8 &&& 119#8))) PoisonOr.poison :=
+theorem shl_and_add_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8), ¬(1#8 ≥ ↑8 ∨ 1#8 ≥ ↑8) → 1#8 ≥ ↑8 → False :=
 sorry

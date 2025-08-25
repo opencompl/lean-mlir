@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem test19_thm.extracted_1._1 : ∀ (x : BitVec 10),
-  ¬(2#3 ≥ ↑3 ∨ 2#3 ≥ ↑3) →
-    True ∧ (0#3).ssubOverflow (truncate 3 x &&& 1#3) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 10)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (signExtend 10 ((truncate 3 x <<< 2#3).sshiftRight' 2#3))) PoisonOr.poison :=
+  ¬(2#3 ≥ ↑3 ∨ 2#3 ≥ ↑3) → True ∧ (0#3).ssubOverflow (truncate 3 x &&& 1#3) = true → False :=
 sorry

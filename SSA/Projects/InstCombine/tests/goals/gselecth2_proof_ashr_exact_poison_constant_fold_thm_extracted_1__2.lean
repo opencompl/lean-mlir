@@ -14,11 +14,5 @@ set_option Elab.async false
 -/
 
 theorem ashr_exact_poison_constant_fold_thm.extracted_1._2 : ∀ (x : BitVec 8) (x_1 : BitVec 1),
-  x_1 = 1#1 →
-    3#8 ≥ ↑8 →
-      ¬(True ∧ x >>> 3#8 <<< 3#8 ≠ x ∨ 3#8 ≥ ↑8) →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (x.sshiftRight' 3#8)) PoisonOr.poison :=
+  x_1 = 1#1 → 3#8 ≥ ↑8 → ¬(True ∧ x >>> 3#8 <<< 3#8 ≠ x ∨ 3#8 ≥ ↑8) → False :=
 sorry

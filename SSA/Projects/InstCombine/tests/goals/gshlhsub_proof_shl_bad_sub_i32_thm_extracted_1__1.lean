@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem shl_bad_sub_i32_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬32#32 - x ≥ ↑32 →
-    True ∧ 1#32 <<< (32#32 - x) >>> (32#32 - x) ≠ 1#32 ∨ 32#32 - x ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (1#32 <<< (32#32 - x))) PoisonOr.poison :=
+  ¬32#32 - x ≥ ↑32 → True ∧ 1#32 <<< (32#32 - x) >>> (32#32 - x) ≠ 1#32 ∨ 32#32 - x ≥ ↑32 → False :=
 sorry

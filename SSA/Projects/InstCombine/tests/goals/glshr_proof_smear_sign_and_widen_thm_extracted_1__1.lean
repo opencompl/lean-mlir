@@ -13,11 +13,5 @@ set_option maxRecDepth 1000000
 set_option Elab.async false
 -/
 
-theorem smear_sign_and_widen_thm.extracted_1._1 : ∀ (x : BitVec 8),
-  ¬24#32 ≥ ↑32 →
-    7#8 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (signExtend 32 x >>> 24#32)) PoisonOr.poison :=
+theorem smear_sign_and_widen_thm.extracted_1._1 : ∀ (x : BitVec 8), ¬24#32 ≥ ↑32 → 7#8 ≥ ↑8 → False :=
 sorry

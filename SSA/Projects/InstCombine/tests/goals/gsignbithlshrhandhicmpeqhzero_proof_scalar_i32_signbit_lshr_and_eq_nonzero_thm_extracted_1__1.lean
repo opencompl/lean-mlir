@@ -15,9 +15,5 @@ set_option Elab.async false
 
 theorem scalar_i32_signbit_lshr_and_eq_nonzero_thm.extracted_1._1 : ∀ (x x_1 : BitVec 32),
   ¬x_1 ≥ ↑32 →
-    True ∧ BitVec.ofInt 32 (-2147483648) >>> x_1 <<< x_1 ≠ BitVec.ofInt 32 (-2147483648) ∨ x_1 ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool (BitVec.ofInt 32 (-2147483648) >>> x_1 &&& x == 1#32))) PoisonOr.poison :=
+    True ∧ BitVec.ofInt 32 (-2147483648) >>> x_1 <<< x_1 ≠ BitVec.ofInt 32 (-2147483648) ∨ x_1 ≥ ↑32 → False :=
 sorry

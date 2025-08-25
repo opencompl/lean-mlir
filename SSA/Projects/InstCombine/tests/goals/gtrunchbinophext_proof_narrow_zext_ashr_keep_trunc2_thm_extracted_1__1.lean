@@ -17,8 +17,5 @@ theorem narrow_zext_ashr_keep_trunc2_thm.extracted_1._1 : ∀ (x x_1 : BitVec 9)
   ¬(True ∧ (signExtend 64 x_1).saddOverflow (signExtend 64 x) = true ∨ 1#64 ≥ ↑64) →
     True ∧ (zeroExtend 16 x_1).saddOverflow (zeroExtend 16 x) = true ∨
         True ∧ (zeroExtend 16 x_1).uaddOverflow (zeroExtend 16 x) = true ∨ 1#16 ≥ ↑16 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (truncate 8 ((signExtend 64 x_1 + signExtend 64 x).sshiftRight' 1#64))) PoisonOr.poison :=
+      False :=
 sorry

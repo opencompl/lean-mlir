@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem shl_sub_no_commute_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8),
-  ¬(3#8 ≥ ↑8 ∨ 2#8 ≥ ↑8) →
-    2#8 ≥ ↑8 ∨ 5#8 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x_1 - x <<< 3#8) <<< 2#8)) PoisonOr.poison :=
+  ¬(3#8 ≥ ↑8 ∨ 2#8 ≥ ↑8) → 2#8 ≥ ↑8 ∨ 5#8 ≥ ↑8 → False :=
 sorry

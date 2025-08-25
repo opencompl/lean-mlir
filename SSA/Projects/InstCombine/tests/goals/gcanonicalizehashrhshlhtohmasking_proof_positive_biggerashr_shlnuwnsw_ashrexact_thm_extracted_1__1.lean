@@ -18,9 +18,5 @@ theorem positive_biggerashr_shlnuwnsw_ashrexact_thm.extracted_1._1 : ∀ (x : Bi
         6#8 ≥ ↑8 ∨
           True ∧ (x.sshiftRight' 6#8 <<< 3#8).sshiftRight' 3#8 ≠ x.sshiftRight' 6#8 ∨
             True ∧ x.sshiftRight' 6#8 <<< 3#8 >>> 3#8 ≠ x.sshiftRight' 6#8 ∨ 3#8 ≥ ↑8) →
-    True ∧ x >>> 3#8 <<< 3#8 ≠ x ∨ 3#8 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x.sshiftRight' 6#8 <<< 3#8)) PoisonOr.poison :=
+    True ∧ x >>> 3#8 <<< 3#8 ≠ x ∨ 3#8 ≥ ↑8 → False :=
 sorry

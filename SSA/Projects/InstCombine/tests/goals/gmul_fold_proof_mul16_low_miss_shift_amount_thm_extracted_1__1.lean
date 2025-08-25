@@ -25,11 +25,5 @@ theorem mul16_low_miss_shift_amount_thm.extracted_1._1 : ∀ (x x_1 : BitVec 16)
                     8#16 ≥ ↑16 ∨
                       True ∧ (x_1 &&& 127#16).smulOverflow (x &&& 127#16) = true ∨
                         True ∧ (x_1 &&& 127#16).umulOverflow (x &&& 127#16) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 16)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value
-          ((x_1 >>> 8#16 * (x &&& 127#16) + (x_1 &&& 127#16) * x >>> 8#16) <<< 8#16 +
-            (x_1 &&& 127#16) * (x &&& 127#16)))
-        PoisonOr.poison :=
+      False :=
 sorry

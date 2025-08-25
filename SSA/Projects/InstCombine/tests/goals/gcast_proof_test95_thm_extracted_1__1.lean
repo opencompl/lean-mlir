@@ -18,8 +18,5 @@ theorem test95_thm.extracted_1._1 : ∀ (x : BitVec 32),
     6#8 ≥ ↑8 ∨
         True ∧ (truncate 8 x >>> 6#8 &&& 2#8 &&& 40#8 != 0) = true ∨
           True ∧ (truncate 8 x >>> 6#8 &&& 2#8 ||| 40#8).msb = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (zeroExtend 32 (truncate 8 x >>> 6#8 &&& 2#8 ||| 40#8))) PoisonOr.poison :=
+      False :=
 sorry

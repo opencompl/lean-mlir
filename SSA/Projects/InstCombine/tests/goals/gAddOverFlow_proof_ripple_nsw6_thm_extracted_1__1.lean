@@ -14,9 +14,5 @@ set_option Elab.async false
 -/
 
 theorem ripple_nsw6_thm.extracted_1._1 : ∀ (x x_1 : BitVec 16),
-  True ∧ (x_1 ||| BitVec.ofInt 16 (-10923)).saddOverflow (x ||| BitVec.ofInt 16 (-21845)) = true →
-    HRefinement.IsRefinedBy (β := PoisonOr (BitVec 16)) (self :=
-      @instHRefinementOfRefinement _
-        (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-      (PoisonOr.value ((x_1 ||| BitVec.ofInt 16 (-10923)) + (x ||| BitVec.ofInt 16 (-21845)))) PoisonOr.poison :=
+  True ∧ (x_1 ||| BitVec.ofInt 16 (-10923)).saddOverflow (x ||| BitVec.ofInt 16 (-21845)) = true → False :=
 sorry

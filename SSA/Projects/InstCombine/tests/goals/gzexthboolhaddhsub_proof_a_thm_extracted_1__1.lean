@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem a_thm.extracted_1._1 : ∀ (x x_1 : BitVec 1),
-  x_1 = 1#1 →
-    True ∧ (2#32).saddOverflow (signExtend 32 x) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (zeroExtend 32 x_1 + 1#32 + (0#32 - zeroExtend 32 x))) PoisonOr.poison :=
+  x_1 = 1#1 → True ∧ (2#32).saddOverflow (signExtend 32 x) = true → False :=
 sorry

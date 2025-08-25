@@ -18,8 +18,5 @@ theorem test6_thm.extracted_1._1 : ∀ (x : BitVec 32),
     3#32 ≥ ↑32 ∨
         True ∧ (x >>> 3#32).smulOverflow 3#32 = true ∨
           True ∧ (x >>> 3#32).umulOverflow 3#32 = true ∨ True ∧ (x >>> 3#32 * 3#32).msb = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (signExtend 64 (x >>> 3#32 * 3#32))) PoisonOr.poison :=
+      False :=
 sorry

@@ -14,12 +14,5 @@ set_option Elab.async false
 -/
 
 theorem icmp_select_var_select_thm.extracted_1._4 : ∀ (x : BitVec 8) (x_1 : BitVec 1),
-  x_1 = 1#1 →
-    ofBool (x == 0#8) = 1#1 ∧ x_1 = 1#1 →
-      ¬ofBool (x == 0#8) = 1#1 →
-        ¬x_1 ^^^ 1#1 = 1#1 →
-          HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-            @instHRefinementOfRefinement _
-              (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-            (PoisonOr.value (ofBool (x == x))) PoisonOr.poison :=
+  x_1 = 1#1 → ofBool (x == 0#8) = 1#1 ∧ x_1 = 1#1 → ¬ofBool (x == 0#8) = 1#1 → ¬x_1 ^^^ 1#1 = 1#1 → False :=
 sorry

@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem n15_variable_shamts_thm.extracted_1._1 : ∀ (x x_1 : BitVec 32) (x_2 x_3 : BitVec 64),
-  ¬(x_2 ≥ ↑64 ∨ x ≥ ↑32) →
-    x ≥ ↑32 ∨ x_2 ≥ ↑64 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool (truncate 32 (x_3 <<< x_2) &&& x_1 >>> x != 0#32))) PoisonOr.poison :=
+  ¬(x_2 ≥ ↑64 ∨ x ≥ ↑32) → x ≥ ↑32 ∨ x_2 ≥ ↑64 → False :=
 sorry

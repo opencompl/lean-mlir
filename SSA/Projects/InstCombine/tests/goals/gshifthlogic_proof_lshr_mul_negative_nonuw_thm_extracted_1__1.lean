@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem lshr_mul_negative_nonuw_thm.extracted_1._1 : ∀ (x : BitVec 64),
-  ¬2#64 ≥ ↑64 →
-    True ∧ (x * 52#64) >>> 2#64 <<< 2#64 ≠ x * 52#64 ∨ 2#64 ≥ ↑64 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x * 52#64) >>> 2#64)) PoisonOr.poison :=
+  ¬2#64 ≥ ↑64 → True ∧ (x * 52#64) >>> 2#64 <<< 2#64 ≠ x * 52#64 ∨ 2#64 ≥ ↑64 → False :=
 sorry

@@ -15,9 +15,5 @@ set_option Elab.async false
 
 theorem shl_lshr_eq_amt_multi_use_thm.extracted_1._1 : ∀ (x : BitVec 44),
   ¬(33#44 ≥ ↑44 ∨ 33#44 ≥ ↑44 ∨ 33#44 ≥ ↑44) →
-    33#44 ≥ ↑44 ∨ True ∧ (x <<< 33#44 &&& (x &&& 2047#44) != 0) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 44)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x <<< 33#44 + x <<< 33#44 >>> 33#44)) PoisonOr.poison :=
+    33#44 ≥ ↑44 ∨ True ∧ (x <<< 33#44 &&& (x &&& 2047#44) != 0) = true → False :=
 sorry

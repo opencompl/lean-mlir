@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem bitwise_and_logical_and_masked_icmp_allones_poison1_thm.extracted_1._1 : ∀ (x x_1 : BitVec 32),
-  ¬ofBool (x_1 &&& x == x) = 1#1 →
-    ofBool (x_1 &&& (x ||| 7#32) == x ||| 7#32) = 1#1 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (0#1 &&& ofBool (x_1 &&& 7#32 == 7#32))) PoisonOr.poison :=
+  ¬ofBool (x_1 &&& x == x) = 1#1 → ofBool (x_1 &&& (x ||| 7#32) == x ||| 7#32) = 1#1 → False :=
 sorry

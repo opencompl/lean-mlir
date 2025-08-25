@@ -17,8 +17,5 @@ theorem src_srem_shl_demand_max_signbit_mask_hit_first_demand_thm.extracted_1._1
   ¬((4#32 == 0 || 32 != 1 && x == intMin 32 && 4#32 == -1) = true ∨ 29#32 ≥ ↑32) →
     (4#32 == 0 || 32 != 1 && x == intMin 32 && 4#32 == -1) = true ∨
         True ∧ (x.srem 4#32 <<< 29#32).sshiftRight' 29#32 ≠ x.srem 4#32 ∨ 29#32 ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x.srem 4#32 <<< 29#32 &&& BitVec.ofInt 32 (-1073741824))) PoisonOr.poison :=
+      False :=
 sorry

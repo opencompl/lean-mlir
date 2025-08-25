@@ -34,14 +34,5 @@ theorem mullo_thm.extracted_1._1 : ∀ (x x_1 : BitVec 64),
                           ((x_1 &&& 4294967295#64) * (x &&& 4294967295#64) &&& 4294967295#64) !=
                         0) =
                       true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value
-          (((((x_1 &&& 4294967295#64) * (x &&& 4294967295#64)) >>> 32#64 + (x_1 &&& 4294967295#64) * x >>> 32#64 &&&
-                  4294967295#64) +
-                x_1 >>> 32#64 * (x &&& 4294967295#64)) <<<
-              32#64 |||
-            (x_1 &&& 4294967295#64) * (x &&& 4294967295#64) &&& 4294967295#64))
-        PoisonOr.poison :=
+      False :=
 sorry
