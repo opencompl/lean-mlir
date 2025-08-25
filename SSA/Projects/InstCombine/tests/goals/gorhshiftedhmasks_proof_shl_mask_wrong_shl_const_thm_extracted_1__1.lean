@@ -17,8 +17,5 @@ theorem shl_mask_wrong_shl_const_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ¬7#32 ≥ ↑32 →
     True ∧ ((x &&& 255#32) <<< 7#32).sshiftRight' 7#32 ≠ x &&& 255#32 ∨
         True ∧ (x &&& 255#32) <<< 7#32 >>> 7#32 ≠ x &&& 255#32 ∨ 7#32 ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x &&& 255#32 ||| (x &&& 255#32) <<< 7#32)) PoisonOr.poison :=
+      False :=
 sorry

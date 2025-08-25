@@ -20,8 +20,5 @@ theorem PR30273_three_bools_thm.extracted_1._9 : ∀ (x x_1 x_2 : BitVec 1),
         ¬x = 1#1 →
           True ∧ (1#32).saddOverflow (zeroExtend 32 x_2) = true ∨
               True ∧ (1#32).uaddOverflow (zeroExtend 32 x_2) = true →
-            HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-              @instHRefinementOfRefinement _
-                (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-              (PoisonOr.value (zeroExtend 32 x + 1#32)) PoisonOr.poison :=
+            False :=
 sorry

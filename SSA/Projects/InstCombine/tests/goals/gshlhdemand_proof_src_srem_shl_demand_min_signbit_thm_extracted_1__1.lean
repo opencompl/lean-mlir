@@ -15,9 +15,5 @@ set_option Elab.async false
 
 theorem src_srem_shl_demand_min_signbit_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ¬((1073741823#32 == 0 || 32 != 1 && x == intMin 32 && 1073741823#32 == -1) = true ∨ 1#32 ≥ ↑32) →
-    (1073741823#32 == 0 || 32 != 1 && x == intMin 32 && 1073741823#32 == -1) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x.srem 1073741823#32 <<< 1#32 &&& BitVec.ofInt 32 (-2147483648))) PoisonOr.poison :=
+    (1073741823#32 == 0 || 32 != 1 && x == intMin 32 && 1073741823#32 == -1) = true → False :=
 sorry

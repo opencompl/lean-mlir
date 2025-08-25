@@ -15,10 +15,5 @@ set_option Elab.async false
 
 theorem t3_ult_sgt_neg1_thm.extracted_1._3 : ∀ (x x_1 : BitVec 32),
   ofBool (x_1 + 16#32 <ᵤ 144#32) = 1#1 →
-    ¬ofBool (127#32 <ₛ x_1) = 1#1 →
-      ofBool (x_1 <ₛ BitVec.ofInt 32 (-16)) = 1#1 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value x_1) PoisonOr.poison :=
+    ¬ofBool (127#32 <ₛ x_1) = 1#1 → ofBool (x_1 <ₛ BitVec.ofInt 32 (-16)) = 1#1 → False :=
 sorry

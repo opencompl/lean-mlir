@@ -17,8 +17,5 @@ theorem lshr_32_add_zext_basic_multiuse_thm.extracted_1._1 : ∀ (x x_1 : BitVec
   ¬32#64 ≥ ↑64 →
     True ∧ (zeroExtend 64 x_1).saddOverflow (zeroExtend 64 x) = true ∨
         True ∧ (zeroExtend 64 x_1).uaddOverflow (zeroExtend 64 x) = true ∨ 32#64 ≥ ↑64 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((zeroExtend 64 x_1 + zeroExtend 64 x) >>> 32#64 ||| zeroExtend 64 x)) PoisonOr.poison :=
+      False :=
 sorry

@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem shl1_trunc_sgt0_thm.extracted_1._1 : ∀ (x : BitVec 9),
-  ¬x ≥ ↑9 →
-    True ∧ 1#9 <<< x >>> x ≠ 1#9 ∨ x ≥ ↑9 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool (0#6 <ₛ truncate 6 (1#9 <<< x)))) PoisonOr.poison :=
+  ¬x ≥ ↑9 → True ∧ 1#9 <<< x >>> x ≠ 1#9 ∨ x ≥ ↑9 → False :=
 sorry

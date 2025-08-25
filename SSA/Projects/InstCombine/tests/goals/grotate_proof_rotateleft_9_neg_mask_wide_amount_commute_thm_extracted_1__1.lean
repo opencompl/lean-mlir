@@ -18,9 +18,5 @@ theorem rotateleft_9_neg_mask_wide_amount_commute_thm.extracted_1._1 : ∀ (x : 
     True ∧ (zeroExtend 33 x_1 <<< (x &&& 8#33)).sshiftRight' (x &&& 8#33) ≠ zeroExtend 33 x_1 ∨
         True ∧ zeroExtend 33 x_1 <<< (x &&& 8#33) >>> (x &&& 8#33) ≠ zeroExtend 33 x_1 ∨
           x &&& 8#33 ≥ ↑33 ∨ 0#33 - x &&& 8#33 ≥ ↑33 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 9)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (truncate 9 (zeroExtend 33 x_1 <<< (x &&& 8#33) ||| zeroExtend 33 x_1 >>> (0#33 - x &&& 8#33))))
-        PoisonOr.poison :=
+      False :=
 sorry

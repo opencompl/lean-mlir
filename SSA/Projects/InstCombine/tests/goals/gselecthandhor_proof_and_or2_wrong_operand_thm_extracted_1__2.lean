@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem and_or2_wrong_operand_thm.extracted_1._2 : ∀ (x x_1 x_2 : BitVec 1),
-  ¬(x_2 ^^^ 1#1) &&& x_1 = 1#1 →
-    x_1 &&& (x_2 ^^^ 1#1) = 1#1 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value x) PoisonOr.poison :=
+  ¬(x_2 ^^^ 1#1) &&& x_1 = 1#1 → x_1 &&& (x_2 ^^^ 1#1) = 1#1 → False :=
 sorry

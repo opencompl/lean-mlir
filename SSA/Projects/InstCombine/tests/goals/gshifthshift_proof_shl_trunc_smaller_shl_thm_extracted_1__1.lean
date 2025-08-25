@@ -13,11 +13,5 @@ set_option maxRecDepth 1000000
 set_option Elab.async false
 -/
 
-theorem shl_trunc_smaller_shl_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬(2#32 ≥ ↑32 ∨ 4#8 ≥ ↑8) →
-    6#8 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (truncate 8 (x <<< 2#32) <<< 4#8)) PoisonOr.poison :=
+theorem shl_trunc_smaller_shl_thm.extracted_1._1 : ∀ (x : BitVec 32), ¬(2#32 ≥ ↑32 ∨ 4#8 ≥ ↑8) → 6#8 ≥ ↑8 → False :=
 sorry

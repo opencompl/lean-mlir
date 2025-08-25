@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem one_side_fold_sgt_thm.extracted_1._3 : ∀ (x x_1 : BitVec 32) (x_2 : BitVec 1),
-  x_2 = 1#1 →
-    x_2 ^^^ 1#1 = 1#1 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool (x_1 <ₛ x_1))) PoisonOr.poison :=
+  x_2 = 1#1 → x_2 ^^^ 1#1 = 1#1 → False :=
 sorry

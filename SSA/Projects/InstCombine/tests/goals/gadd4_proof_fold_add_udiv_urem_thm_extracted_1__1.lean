@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem fold_add_udiv_urem_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬(10#32 = 0 ∨ 4#32 ≥ ↑32 ∨ 10#32 = 0) →
-    10#32 = 0 ∨ True ∧ (x / 10#32).umulOverflow 6#32 = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x / 10#32) <<< 4#32 + x % 10#32)) PoisonOr.poison :=
+  ¬(10#32 = 0 ∨ 4#32 ≥ ↑32 ∨ 10#32 = 0) → 10#32 = 0 ∨ True ∧ (x / 10#32).umulOverflow 6#32 = true → False :=
 sorry

@@ -19,8 +19,5 @@ theorem sext_zext_add_mismatched_exts_thm.extracted_1._1 : ∀ (x : BitVec 32),
         9#32 ≥ ↑32 ∨
           True ∧ (x >>> 9#32).msb = true ∨
             True ∧ (signExtend 64 (x.sshiftRight' 7#32)).saddOverflow (zeroExtend 64 (x >>> 9#32)) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (signExtend 64 (x.sshiftRight' 7#32) + zeroExtend 64 (x >>> 9#32))) PoisonOr.poison :=
+      False :=
 sorry

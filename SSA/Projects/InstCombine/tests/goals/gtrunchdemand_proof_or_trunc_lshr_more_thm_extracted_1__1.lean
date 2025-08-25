@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem or_trunc_lshr_more_thm.extracted_1._1 : ∀ (x : BitVec 8),
-  ¬4#8 ≥ ↑8 →
-    4#6 ≥ ↑6 ∨ True ∧ (truncate 6 x >>> 4#6 &&& BitVec.ofInt 6 (-4) != 0) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 6)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (truncate 6 (x >>> 4#8) ||| BitVec.ofInt 6 (-4))) PoisonOr.poison :=
+  ¬4#8 ≥ ↑8 → 4#6 ≥ ↑6 ∨ True ∧ (truncate 6 x >>> 4#6 &&& BitVec.ofInt 6 (-4) != 0) = true → False :=
 sorry

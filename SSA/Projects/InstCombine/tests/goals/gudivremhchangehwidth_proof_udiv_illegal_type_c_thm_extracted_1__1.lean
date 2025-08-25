@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem udiv_illegal_type_c_thm.extracted_1._1 : ∀ (x : BitVec 9),
-  ¬10#32 = 0 →
-    10#9 = 0 ∨ True ∧ (x / 10#9).msb = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (zeroExtend 32 x / 10#32)) PoisonOr.poison :=
+  ¬10#32 = 0 → 10#9 = 0 ∨ True ∧ (x / 10#9).msb = true → False :=
 sorry

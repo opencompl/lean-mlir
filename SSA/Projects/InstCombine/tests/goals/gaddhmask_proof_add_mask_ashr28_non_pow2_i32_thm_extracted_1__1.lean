@@ -16,8 +16,5 @@ set_option Elab.async false
 theorem add_mask_ashr28_non_pow2_i32_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ¬(28#32 ≥ ↑32 ∨ 28#32 ≥ ↑32) →
     28#32 ≥ ↑32 ∨ 28#32 ≥ ↑32 ∨ True ∧ (x.sshiftRight' 28#32 &&& 9#32).saddOverflow (x.sshiftRight' 28#32) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x.sshiftRight' 28#32 &&& 9#32) + x.sshiftRight' 28#32)) PoisonOr.poison :=
+      False :=
 sorry

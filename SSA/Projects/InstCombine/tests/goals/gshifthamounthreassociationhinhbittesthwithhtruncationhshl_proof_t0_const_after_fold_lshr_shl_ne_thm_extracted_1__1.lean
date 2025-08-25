@@ -14,11 +14,5 @@ set_option Elab.async false
 -/
 
 theorem t0_const_after_fold_lshr_shl_ne_thm.extracted_1._1 : ∀ (x : BitVec 64) (x_1 x_2 : BitVec 32),
-  ¬(32#32 - x_1 ≥ ↑32 ∨ zeroExtend 64 (x_1 + -1#32) ≥ ↑64) →
-    31#32 ≥ ↑32 ∨ True ∧ (x_2 >>> 31#32).msb = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool (x_2 >>> (32#32 - x_1) &&& truncate 32 (x <<< zeroExtend 64 (x_1 + -1#32)) != 0#32)))
-        PoisonOr.poison :=
+  ¬(32#32 - x_1 ≥ ↑32 ∨ zeroExtend 64 (x_1 + -1#32) ≥ ↑64) → 31#32 ≥ ↑32 ∨ True ∧ (x_2 >>> 31#32).msb = true → False :=
 sorry

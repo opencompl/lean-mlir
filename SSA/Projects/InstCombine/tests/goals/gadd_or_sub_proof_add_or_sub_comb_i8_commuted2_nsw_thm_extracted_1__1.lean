@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem add_or_sub_comb_i8_commuted2_nsw_thm.extracted_1._1 : ∀ (x : BitVec 8),
-  ¬(True ∧ (x * x).saddOverflow (0#8 - x * x ||| x * x) = true) →
-    True ∧ (x * x).saddOverflow (-1#8) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x * x + (0#8 - x * x ||| x * x))) PoisonOr.poison :=
+  ¬(True ∧ (x * x).saddOverflow (0#8 - x * x ||| x * x) = true) → True ∧ (x * x).saddOverflow (-1#8) = true → False :=
 sorry

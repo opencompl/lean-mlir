@@ -17,9 +17,5 @@ theorem test1_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ¬(1#32 ≥ ↑32 ∨
         True ∧ (x.sshiftRight' 1#32 &&& 1431655765#32 ^^^ -1#32).saddOverflow 1#32 = true ∨
           True ∧ x.saddOverflow ((x.sshiftRight' 1#32 &&& 1431655765#32 ^^^ -1#32) + 1#32) = true) →
-    1#32 ≥ ↑32 ∨ True ∧ x.ssubOverflow (x >>> 1#32 &&& 1431655765#32) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x + ((x.sshiftRight' 1#32 &&& 1431655765#32 ^^^ -1#32) + 1#32))) PoisonOr.poison :=
+    1#32 ≥ ↑32 ∨ True ∧ x.ssubOverflow (x >>> 1#32 &&& 1431655765#32) = true → False :=
 sorry

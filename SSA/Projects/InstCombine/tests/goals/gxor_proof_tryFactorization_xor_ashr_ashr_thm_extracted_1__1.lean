@@ -13,12 +13,5 @@ set_option maxRecDepth 1000000
 set_option Elab.async false
 -/
 
-theorem tryFactorization_xor_ashr_ashr_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬(x ≥ ↑32 ∨ x ≥ ↑32) →
-    x ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((BitVec.ofInt 32 (-3)).sshiftRight' x ^^^ (BitVec.ofInt 32 (-5)).sshiftRight' x))
-        PoisonOr.poison :=
+theorem tryFactorization_xor_ashr_ashr_thm.extracted_1._1 : ∀ (x : BitVec 32), ¬(x ≥ ↑32 ∨ x ≥ ↑32) → x ≥ ↑32 → False :=
 sorry

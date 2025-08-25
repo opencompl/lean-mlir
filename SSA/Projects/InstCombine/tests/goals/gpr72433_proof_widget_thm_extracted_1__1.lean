@@ -29,11 +29,5 @@ theorem widget_thm.extracted_1._1 : ∀ (x : BitVec 32),
                       zeroExtend 32 (ofBool (x != 0#32)) ≠
                     20#32 <<< zeroExtend 32 (ofBool (x != 0#32)) ||| zeroExtend 32 (ofBool (x != 0#32)) ∨
                 zeroExtend 32 (ofBool (x != 0#32)) ≥ ↑32 →
-    HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-      @instHRefinementOfRefinement _
-        (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-      (PoisonOr.value
-        ((20#32 * (2#32 - zeroExtend 32 (ofBool (x == 0#32))) + (zeroExtend 32 (ofBool (x == 0#32)) ^^^ 1#32)) *
-          (2#32 - zeroExtend 32 (ofBool (x == 0#32)))))
-      PoisonOr.poison :=
+    False :=
 sorry

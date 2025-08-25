@@ -14,11 +14,5 @@ set_option Elab.async false
 -/
 
 theorem ashr_lshr_shift_amt_mismatch_thm.extracted_1._2 : ∀ (x x_1 : BitVec 32),
-  ¬(ofBool (0#32 ≤ₛ x_1) = 1#1 ∨ x ≥ ↑32) →
-    ofBool (x_1 <ₛ 0#32) = 1#1 →
-      x ≥ ↑32 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (x_1.sshiftRight' x)) PoisonOr.poison :=
+  ¬(ofBool (0#32 ≤ₛ x_1) = 1#1 ∨ x ≥ ↑32) → ofBool (x_1 <ₛ 0#32) = 1#1 → x ≥ ↑32 → False :=
 sorry

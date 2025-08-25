@@ -15,9 +15,5 @@ set_option Elab.async false
 
 theorem ashr_mul_times_3_div_2_exact_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ¬(True ∧ x.smulOverflow 3#32 = true ∨ True ∧ (x * 3#32) >>> 1#32 <<< 1#32 ≠ x * 3#32 ∨ 1#32 ≥ ↑32) →
-    True ∧ x >>> 1#32 <<< 1#32 ≠ x ∨ 1#32 ≥ ↑32 ∨ True ∧ x.saddOverflow (x.sshiftRight' 1#32) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x * 3#32).sshiftRight' 1#32)) PoisonOr.poison :=
+    True ∧ x >>> 1#32 <<< 1#32 ≠ x ∨ 1#32 ≥ ↑32 ∨ True ∧ x.saddOverflow (x.sshiftRight' 1#32) = true → False :=
 sorry

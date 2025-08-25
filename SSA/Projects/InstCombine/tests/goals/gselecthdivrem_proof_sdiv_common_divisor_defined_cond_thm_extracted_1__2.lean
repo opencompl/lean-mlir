@@ -15,10 +15,5 @@ set_option Elab.async false
 
 theorem sdiv_common_divisor_defined_cond_thm.extracted_1._2 : ∀ (x x_1 : BitVec 5) (x_2 : BitVec 1),
   ¬(x_2 = 1#1 ∨ (x_1 == 0 || 5 != 1 && x == intMin 5 && x_1 == -1) = true) →
-    ¬x_2 = 1#1 →
-      (x_1 == 0 || 5 != 1 && x == intMin 5 && x_1 == -1) = true →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 5)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (x.sdiv x_1)) PoisonOr.poison :=
+    ¬x_2 = 1#1 → (x_1 == 0 || 5 != 1 && x == intMin 5 && x_1 == -1) = true → False :=
 sorry

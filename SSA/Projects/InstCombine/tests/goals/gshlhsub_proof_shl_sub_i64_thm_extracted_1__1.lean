@@ -16,8 +16,5 @@ set_option Elab.async false
 theorem shl_sub_i64_thm.extracted_1._1 : ∀ (x : BitVec 64),
   ¬63#64 - x ≥ ↑64 →
     True ∧ BitVec.ofInt 64 (-9223372036854775808) >>> x <<< x ≠ BitVec.ofInt 64 (-9223372036854775808) ∨ x ≥ ↑64 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (1#64 <<< (63#64 - x))) PoisonOr.poison :=
+      False :=
 sorry

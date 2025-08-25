@@ -20,8 +20,5 @@ theorem badimm1_thm.extracted_1._1 : ∀ (x : BitVec 16),
           9#16 ≥ ↑16 ∨
             True ∧ signExtend 16 (truncate 8 (x >>> 9#16)) ≠ x >>> 9#16 ∨
               True ∧ zeroExtend 16 (truncate 8 (x >>> 9#16)) ≠ x >>> 9#16 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (truncate 8 x)) PoisonOr.poison :=
+        False :=
 sorry

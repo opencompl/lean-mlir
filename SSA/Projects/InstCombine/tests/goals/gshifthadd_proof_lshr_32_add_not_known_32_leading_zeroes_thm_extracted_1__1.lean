@@ -17,8 +17,5 @@ theorem lshr_32_add_not_known_32_leading_zeroes_thm.extracted_1._1 : ∀ (x x_1 
   ¬32#64 ≥ ↑64 →
     True ∧ (x_1 &&& 8589934591#64).saddOverflow (x &&& 4294967295#64) = true ∨
         True ∧ (x_1 &&& 8589934591#64).uaddOverflow (x &&& 4294967295#64) = true ∨ 32#64 ≥ ↑64 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (((x_1 &&& 8589934591#64) + (x &&& 4294967295#64)) >>> 32#64)) PoisonOr.poison :=
+      False :=
 sorry

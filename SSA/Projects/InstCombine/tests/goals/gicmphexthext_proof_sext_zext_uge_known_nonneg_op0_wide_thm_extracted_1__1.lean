@@ -14,9 +14,5 @@ set_option Elab.async false
 -/
 
 theorem sext_zext_uge_known_nonneg_op0_wide_thm.extracted_1._1 : ∀ (x : BitVec 8) (x_1 : BitVec 16),
-  True ∧ (x &&& 12#8).msb = true →
-    HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-      @instHRefinementOfRefinement _
-        (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-      (PoisonOr.value (ofBool (zeroExtend 32 (x &&& 12#8) ≤ᵤ signExtend 32 x_1))) PoisonOr.poison :=
+  True ∧ (x &&& 12#8).msb = true → False :=
 sorry

@@ -16,8 +16,5 @@ set_option Elab.async false
 theorem test15_thm.extracted_1._1 : ∀ (x x_1 : BitVec 32),
   ¬(x ≥ ↑32 ∨ zeroExtend 64 (1#32 <<< x) = 0) →
     True ∧ ((-1#32) <<< x).sshiftRight' x ≠ -1#32 ∨ x ≥ ↑32 ∨ True ∧ (x_1 &&& ((-1#32) <<< x ^^^ -1#32)).msb = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (zeroExtend 64 x_1 % zeroExtend 64 (1#32 <<< x))) PoisonOr.poison :=
+      False :=
 sorry

@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem shl_trunc_smaller_ashr_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬(10#32 ≥ ↑32 ∨ 13#24 ≥ ↑24) →
-    3#24 ≥ ↑24 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 24)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (truncate 24 (x.sshiftRight' 10#32) <<< 13#24)) PoisonOr.poison :=
+  ¬(10#32 ≥ ↑32 ∨ 13#24 ≥ ↑24) → 3#24 ≥ ↑24 → False :=
 sorry

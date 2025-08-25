@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem shl_add_nuw_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8),
-  ¬x &&& 2#8 ≥ ↑8 →
-    True ∧ (x_1 &&& 63#8) <<< (x &&& 2#8) >>> (x &&& 2#8) ≠ x_1 &&& 63#8 ∨ x &&& 2#8 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x_1 &&& 63#8) <<< (x &&& 2#8))) PoisonOr.poison :=
+  ¬x &&& 2#8 ≥ ↑8 → True ∧ (x_1 &&& 63#8) <<< (x &&& 2#8) >>> (x &&& 2#8) ≠ x_1 &&& 63#8 ∨ x &&& 2#8 ≥ ↑8 → False :=
 sorry

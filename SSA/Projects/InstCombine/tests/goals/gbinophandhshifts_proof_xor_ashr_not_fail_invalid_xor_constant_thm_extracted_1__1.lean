@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem xor_ashr_not_fail_invalid_xor_constant_thm.extracted_1._1 : ∀ (x x_1 x_2 : BitVec 8),
-  ¬(x_1 ≥ ↑8 ∨ x_1 ≥ ↑8) →
-    x_1 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x_2.sshiftRight' x_1 ^^^ (x.sshiftRight' x_1 ^^^ BitVec.ofInt 8 (-2)))) PoisonOr.poison :=
+  ¬(x_1 ≥ ↑8 ∨ x_1 ≥ ↑8) → x_1 ≥ ↑8 → False :=
 sorry

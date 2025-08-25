@@ -28,6 +28,7 @@ structure Config where
   outputPath : Option System.FilePath := .none
   /-- Number of samples to run each tactic. -/
   nSamples : Nat := 1
+
 /-- Allow elaboration of `bv_automata_circuit's config` arguments to tactics. -/
 declare_config_elab elabTacBenchConfig Config
 
@@ -59,8 +60,8 @@ structure Item where
 
 /-- TODO: convert to a structure with a field. -/
 inductive Result
-| ok (item : Item) (time : Float) (nSamples : Nat) (iSample: Nat)
-| err (item : Item) (time : Float) (e : Exception) (nSamples : Nat) (iSample: Nat)
+| ok (item : Item) (time : Float) (nSamples : Nat) (iSample: Nat) (trace : String)
+| err (item : Item) (time : Float) (e : Exception) (nSamples : Nat) (iSample: Nat) (trace : String)
 
 
 def csvEscapeString (s : String) : String :=
@@ -95,6 +96,11 @@ def Result.timeElapsed (r : Result) : Float :=
   | .ok (time := time) ..  => time
   | .err (time := time) .. => time
 
+def Result.trace (r : Result) : String :=
+  match r with
+  | .ok (trace := trace) ..  => trace
+  | .err (trace := trace) .. => trace
+
 def Result.item (r : Result) : Item :=
   match r with
   | .ok item .. => item
@@ -102,28 +108,35 @@ def Result.item (r : Result) : Item :=
 
 
 def Result.toMessageData : Result → MessageData
-| .ok item timeMs _nSamples _iSample => m!"TACBENCH {item.name} PASS, TIME_ELAPSED {timeMs} ms, "
-| .err item timeMs e _nSamples _iSample => m!"TACBENCH {item.name} FAIL, TIME_ELAPSED {timeMs} ms, MSGSTART {indentD e.toMessageData} MSGEND"
+| .ok item timeMs .. => m!"TACBENCH {item.name} PASS, TIME_ELAPSED {timeMs} ms, "
+| .err item timeMs e .. => m!"TACBENCH {item.name} FAIL, TIME_ELAPSED {timeMs} ms, MSGSTART {indentD e.toMessageData} MSGEND"
 
 instance : ToMessageData Result where
   toMessageData := Result.toMessageData
 
+/-- format the messages emitted by a tactic. -/
+def formatTraces : TacticM String := do
+  Lean.addTraceAsMessages
+  -- let traceState ← getTraceState
+  let msgs ← Core.getMessageLog
+  let mut traces := #[]
+  for msg in msgs.toArray do
+    traces := traces.push <| ← msg.toString
+  let trace := Format.joinSep traces.toList Format.line
+  return trace.pretty (width := 80)
 
 def hermeticRun (g : MVarId) (item : Item) (nSamples : Nat) (iSample : Nat) : TacticM Result := g.withContext do
   let t1 ← IO.monoNanosNow
-  try
-    -- TODO: think if we need this, I'm just stealing from Henrik at this point.
-    -- We can configure more options here to enable/disable tracing as needed.
-    withOptions setTraceOptions <| withoutModifyingEnv <| withoutModifyingState <| withFreshTraceState do
-      withoutRecover do
-        evalTactic item.tac
+  -- TODO: think if we need this, I'm just stealing from Henrik at this point.
+  -- We can configure more options here to enable/disable tracing as needed.
+  withOptions setTraceOptions <| withoutModifyingEnv <| withoutModifyingState <| withFreshTraceState do
+    try
+      withoutRecover <| evalTactic item.tac
       let t2 ← IO.monoNanosNow
-      return .ok item (Nat.deltaInMs t2 t1) nSamples iSample
-  catch e =>
-    let t2 ← IO.monoNanosNow
-    return .err item (Nat.deltaInMs t2 t1) e nSamples iSample
-
-
+      return .ok item (Nat.deltaInMs t2 t1) nSamples iSample (← formatTraces)
+    catch e =>
+      let t2 ← IO.monoNanosNow
+      return .err item (Nat.deltaInMs t2 t1) e nSamples iSample (← formatTraces)
 
 def parseTacBenchItem : TSyntax ``tacBenchItem → TacticM Item
 | `(tacBenchItem| $name:str : $tac:tacticSeq) =>
@@ -139,14 +152,24 @@ private def toMessageDataToCsvString [ToMessageData α] (a : α) : MetaM String 
 structure RecordRow where
   /-- The name of the theorem being benchmarked. -/
   fileName : String
+  /-- Name of theorem being benchmarked. -/
   thmName : String
+  /-- Goal state. -/
   goal : String
+  /-- name of tactic that was run. -/
   tacName : String
+  /-- Whether tactic succeeded. -/
   isOk : Bool
+  /-- Error message string. -/
   errorMessage : String
+  /-- Total time elapsed in running. -/
   timeElapsed : Float
+  /-- Total #of samples. -/
   nSamples : Nat
+  /-- Index of sample. -/
   iSample : Nat
+  /-- Trace string. -/
+  trace : String
 deriving Repr, Inhabited, ToJson
 
 @[tactic tacBench]
@@ -192,13 +215,12 @@ def evalTacBench : Tactic := fun
             timeElapsed := result.timeElapsed
             nSamples := result.nSamples
             iSample := result.iSample
+            trace := result.trace
           }
           let outStr := record |> toJson |>.compress
           logInfo <| outStr
           if let some path := cfg.outputPath then
             IO.FS.writeFile path outStr
-
-
 | _ => throwUnsupportedSyntax
 end TacBench
 

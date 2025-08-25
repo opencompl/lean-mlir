@@ -15,9 +15,5 @@ set_option Elab.async false
 
 theorem wrongimm2_thm.extracted_1._1 : ∀ (x : BitVec 16),
   ¬(6#8 ≥ ↑8 ∨ 8#16 ≥ ↑16) →
-    6#8 ≥ ↑8 ∨ 8#16 ≥ ↑16 ∨ True ∧ zeroExtend 16 (truncate 8 (x >>> 8#16)) ≠ x >>> 8#16 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool ((truncate 8 x).sshiftRight' 6#8 == truncate 8 (x >>> 8#16)))) PoisonOr.poison :=
+    6#8 ≥ ↑8 ∨ 8#16 ≥ ↑16 ∨ True ∧ zeroExtend 16 (truncate 8 (x >>> 8#16)) ≠ x >>> 8#16 → False :=
 sorry

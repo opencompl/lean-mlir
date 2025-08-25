@@ -16,7 +16,6 @@ they are automatically simplified when `simp_riscv` is invoked.
 
 The purpose of this tactic is to reduce proof size when reasoning about instruction lowerings.
 -/
-syntax "simp_riscv" : tactic
 macro "simp_riscv" : tactic =>
   `(tactic|(
       simp (config := {failIfUnchanged := false}) only [
