@@ -539,7 +539,7 @@ instance : ToPrint (RV64) where
   printFunc _ := "riscv_func.func @f"
 
 -- We extend `hvector_get_elem_tactic` so that `HVector.getN` can automatically
--- proof that indices are in-bounds when defining the semantics of RV64.
+-- prove that indices are in-bounds when defining the semantics of RV64.
 macro_rules
 | `(tactic| hvector_get_elem_tactic) =>
     `(tactic| simp [DialectSignature.sig, signature])
