@@ -391,7 +391,7 @@ def opToString (op : RISCV64.Op) : String :=
   | .lui (_imm : BitVec 20) => "lui"
   | .auipc (_imm : BitVec 20) => "auipc"
   | .slliw (_shamt : BitVec 5) => "slliw"
-  | .srliw (_shamt : BitVec 5) => "srliw "
+  | .srliw (_shamt : BitVec 5) => "srliw"
   | .sraiw (_shamt : BitVec 5) => "sraiw"
   | .slli (_shamt : BitVec 6) => "slli"
   | .srli (_shamt : BitVec 6) => "srli"
@@ -434,7 +434,7 @@ def opToString (op : RISCV64.Op) : String :=
   | .binv => "binv"
   | .bset => "bset"
   | .bclri (_shamt : BitVec 6) => "bclri"
-  | .bexti (_shamt : BitVec 6) =>"bexti"
+  | .bexti (_shamt : BitVec 6) => "bexti"
   | .binvi (_shamt : BitVec 6) => "binvi"
   | .bseti (_shamt : BitVec 6) => "bseti"
   | .rolw => "rolw"
@@ -495,6 +495,29 @@ def attributesToPrint: RISCV64.Op → String
   | .roriw (_shamt : BitVec 5) => s!"\{immediate = { _shamt.toInt} : i5 }"
   | _ => ""
 
+def attributesToPrint: RISCV64.Op → String
+  | .li imm => s! "\{immediate = { imm.toInt } : i64 }"
+  | .addiw (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt} : i12 }"
+  | .lui (_imm : BitVec 20) => s!"\{immediate = { _imm.toInt} : i20 } "
+  | .auipc (_imm : BitVec 20) => s!"\{imm = { _imm.toInt} : si20 }" -- adding a s such that xdsl can parsee it, double-check when needed and when not
+  | .slliw (_shamt : BitVec 5) => s!"\{shamt = { _shamt.toInt} : i5 }"
+  | .srliw (_shamt : BitVec 5) => s!"\{shamt = { _shamt.toInt} : i5 }"
+  | .sraiw (_shamt : BitVec 5) => s!"\{shamt = { _shamt.toInt} :i5 }"
+  | .slli (_shamt : BitVec 6) => s!"\{shamt = { _shamt.toInt} : i6 }"
+  | .srli (_shamt : BitVec 6) => s!"\{shamt = { _shamt.toInt} : i6 }"
+  | .srai (_shamt : BitVec 6) => s!"\{shamt = { _shamt.toInt} : i6 }"
+  | .addi (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .slti (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .sltiu (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .andi (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .ori (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : i12 }"
+  | .xori (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt } : si12 }"
+  | .bclri (_shamt : BitVec 6) => s!"\{immediate = { _shamt.toInt} : i6 }"
+  | .bexti (_shamt : BitVec 6) =>s!"\{immediate = { _shamt.toInt} : i6 }"
+  | .binvi (_shamt : BitVec 6) => s!"\{immediate = { _shamt.toInt} : i6 }"
+  | .bseti (_shamt : BitVec 6) => s!"\{immediate = { _shamt.toInt} : i6 }"
+  | _ => ""
+
 instance : ToString (Op) where
   toString := opToString
 
@@ -506,6 +529,7 @@ instance : ToPrint (RV64) where
   printDialect:= "riscv"
   printReturn _ := "riscv.ret"
   printFunc _ := "riscv_func.func @f"
+
 /--
 ## Dialect semantics
 We assign semantics defined in `RV64` to each operation.
