@@ -63,7 +63,6 @@ inductive Op
   | sltu
   -- RISC-V `M` extension instructions (multiply & divide)
   | mul    -- performs signed multiplication on 64 x 64 bits and returns the lower 64 bits of the result .
- -- | mulu   -- performs unsigned multiplication on 64 x 64 bits and returns the lower 64 bits of the result .
   | mulw
   | mulh   -- performs signed multiplication on 64 x 64 bits and returns the upper 64 bits of the result.
   | mulhu  -- performs unsigned multiplication on 64 x 64 bits and returns the upper 64 bits of the result.
@@ -175,7 +174,6 @@ encounters a `sig` it can replace it by its definition.
 @[simp, reducible]
 def Op.sig : Op → List Ty
   | .li _ => []
-  --| .mulu  => [Ty.bv, Ty.bv]
   | .mulh  => [Ty.bv, Ty.bv]
   | .mulhu  => [Ty.bv, Ty.bv]
   | .mulhsu  => [Ty.bv, Ty.bv]
@@ -273,7 +271,6 @@ Again, we mark  it as `simp` and `reducible`.
 @[simp, reducible]
 def Op.outTy : Op  → Ty
   | .li _ => Ty.bv
- -- | .mulu => Ty.bv
   | .mulh => Ty.bv
   | .mulhu => Ty.bv
   | .mulhsu => Ty.bv
@@ -381,8 +378,7 @@ instance : DialectSignature RV64 := ⟨Op.signature⟩
 
 def opToString (op : RISCV64.Op) : String :=
   let op  : String := match op with
-  | .li _imm => s! "li"
-  --| .mulu => "mulu"
+  | .li imm => s! "li \{immediate = { imm.toInt } : i20 }"
   | .mulh => "mulh"
   | .mulhu => "mulhu"
   | .mulhsu => "mulhsu"
@@ -552,7 +548,6 @@ instance : DialectDenote (RV64) where
   | .remuw, regs, _ => UNSIGNED_pure64_REMW_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .rem, regs, _ => SIGNED_pure64_REM_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .remu, regs, _ => UNSIGNED_pure64_REM_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
-  --| .mulu, regs, _ => MUL_pure64_fff_bv (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .mulhu,regs, _ => pure64_MUL_bv_tff (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .mul ,regs, _ => pure64_MUL_ftt (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .mulhsu ,regs, _ => pure64_MUL_bv_ttf (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
