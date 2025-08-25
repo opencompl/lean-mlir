@@ -5,6 +5,10 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
+/- !
+  This file implements the lowering for the llvm add instructions for types i1, i8, 16, i32.
+-/
+
 /-
 Disabled due to simproc implementation not being re-evaluated correctly
 on Lean version "4.20.0-nightly-2025-04-21" -/

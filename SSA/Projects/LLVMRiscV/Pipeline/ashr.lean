@@ -5,6 +5,10 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
+/- !
+  This file implements the lowering for the llvm ashr instructions for types i8, 16, i32.
+-/
+
 
 @[simp_denote]
 def ashr_llvm_no_flag := [LV| {

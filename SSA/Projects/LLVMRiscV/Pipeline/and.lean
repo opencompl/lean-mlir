@@ -3,6 +3,11 @@ import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
+/- !
+  This file implements the lowering for the llvm and instructions for types i1, i8, 16, i32.
+-/
+
+
 open LLVMRiscV
 
 @[simp_denote]
