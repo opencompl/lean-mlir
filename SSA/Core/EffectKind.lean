@@ -17,7 +17,8 @@ def toMonad (e : EffectKind) (m : Type → Type) : Type → Type :=
 
 section Lemmas
 
-@[simp_denote] theorem toMonad_pure   : pure.toMonad m = Id := rfl
+@[deprecated] theorem toMonad_pure : pure.toMonad m = Id := rfl
+@[simp_denote] theorem toMonad_pure_apply : pure.toMonad m α = α := rfl
 @[simp_denote] theorem toMonad_impure : impure.toMonad m = m := rfl
 
 end Lemmas

@@ -867,7 +867,7 @@ end Lemmas
   induction c using Com.rec'
   · simp; rfl
   · rename_i a
-    simp only [denoteLets, EffectKind.toMonad_pure, outContext_var, Valuation.cast_rfl, Id.pure_eq',
+    simp only [denoteLets, outContext_var, Valuation.cast_rfl, Id.pure_eq',
       Id.bind_eq', returnVar_var, a, denote]
 
 @[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
@@ -1099,7 +1099,7 @@ assignment of that variable in the input valuation -/
   · simp; rfl
   case var e body ih =>
     rw [outContextHom_var]
-    simp only [Ctxt.Hom.unSnoc_apply, denoteLets_var, EffectKind.toMonad_pure]
+    simp only [Ctxt.Hom.unSnoc_apply, denoteLets_var]
     show body.denoteLets (e.denote V) _ = _
     simp [ih]
 

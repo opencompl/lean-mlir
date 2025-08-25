@@ -469,7 +469,7 @@ theorem denote_matchVar
     match w with
     | ⟨w+1, h⟩ =>
       simp only [Option.mem_def, Var.succ_eq_toSnoc, Lets.denote,
-        EffectKind.toMonad_pure, Id.bind_eq', Expr.denote_snoc] at *
+        Id.bind_eq', Expr.denote_snoc] at *
       rw [Var.toSnoc, matchVar_var_succ_eq] at h_matchVar
       apply ih h_matchVar h_sub
 
