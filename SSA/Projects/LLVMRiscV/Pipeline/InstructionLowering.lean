@@ -26,7 +26,8 @@ import SSA.Projects.CSE.CSE
 open LLVMRiscV
 
 
-/-! # Instruction selection
+/-!
+  # Instruction selection
 
   This file contains the infrastructure for our verified instruction selection.
   We collect all the rewrite and instruction selection patterns into arrays and pass the arrays

@@ -21,7 +21,8 @@ structure RISCVPeepholeRewrite (Γ : Ctxt Ty) where
   rhs : Com LLVMPlusRiscV Γ .pure (Ty.riscv (.bv))
   correct : (lhs.denote) = (rhs.denote) := by simp_lowering <;> bv_decide
 
-/-! # Post-legalization optimizations
+/-!
+  # Post-legalization optimizations
 
   We implement post-legalization optimizations from LLVM's `GlobalISel` instructor selector.
   Our naming conventions are consistent with the RISC-V backend.
