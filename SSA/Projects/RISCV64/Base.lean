@@ -662,6 +662,6 @@ abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
 
 @[simp, reducible]
 instance : DialectDenote RV64 where
-  denote o args _ := o.denote args
+  denote o args _ := [o.denote args]ₕ
 
 end RISCV64
