@@ -32,7 +32,7 @@ structure RISCVPeepholeRewrite (Γ : Ctxt Ty) where
   patterns relying on this infrastructure (e.g. `shift_immed_chain`).
 -/
 
-/-! ### sub_to_add
+/-- ### sub_to_add
   (sub x, C) → (add x, -C)
 -/
 def sub_to_add_pat : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -52,7 +52,7 @@ def sub_to_add_pat : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 example (e : BitVec 64) : e.add 0#64 = e := by bv_decide
 example : ∀ (e : BitVec 64), e.add 0#64 = e := by intros; bv_decide
 
-/-! ### redundant_and
+/-- ### redundant_and
   (x & y) → x
   (x & y) → y
 -/
@@ -68,7 +68,7 @@ def redundant_and : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   llvm.return %x : i64
   }]
 
-/-! ### select_same_val
+/-- ### select_same_val
   (cond ? x : x) → x
 -/
 def select_same_val : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1), Ty.llvm (.bitvec 64) ] where
@@ -82,7 +82,7 @@ def select_same_val : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1), Ty.llvm
   llvm.return %x : i64
   }]
 
-/-! ### right_identity_zero
+/-- ### right_identity_zero
   (x op 0) → x
 -/
 def right_identity_zero_sub : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
@@ -181,7 +181,7 @@ def right_identity_zero_pat_ror : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   ret %x : !riscv.reg
   }]
 
-/-! ### binop_same_val
+/-- ### binop_same_val
   (x op x) → x
 -/
 def binop_same_val_and : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
@@ -206,7 +206,7 @@ def binop_same_val_or : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   ret %x : !riscv.reg
   }]
 
-/-! ### binop_left_to_zero
+/-- ### binop_left_to_zero
   (0 op x) → 0
 -/
 def binop_left_to_zero_shl : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
@@ -300,7 +300,7 @@ def binop_left_to_zero_urem : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   ret %c : !riscv.reg
   }]
 
-/-! ### binop_right_to_zero
+/-- ### binop_right_to_zero
   (x op 0) → 0
 -/
 def binop_left_to_zero_mul : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
@@ -316,7 +316,7 @@ def binop_left_to_zero_mul : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   ret %c : !riscv.reg
   }]
 
-/-! ### anyext_trunc_fold
+/-- ### anyext_trunc_fold
   (anyext (trunc x)) → x
 -/
 def anyext_trunc_fold_sext_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
@@ -343,7 +343,7 @@ def anyext_trunc_fold_zext_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 3
   llvm.return %x : i32
   }]
 
-/-! ### right_identity_one
+/-- ### right_identity_one
   (x op 1) → x
 -/
 def right_identity_one : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
@@ -358,7 +358,7 @@ def right_identity_one : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   ret %x : !riscv.reg
   }]
 
-/-! ### add_sub_reg_frags
+/-- ### add_sub_reg_frags
   (add x, (sub y, x)) → y
   (add (sub y, x), x) → y
 -/
@@ -387,7 +387,7 @@ def add_sub_reg_frags_right : RISCVPeepholeRewrite [Ty.riscv (.bv), Ty.riscv (.b
   }]
 
 
-/-! ### simplify_neg_minmax
+/-- ### simplify_neg_minmax
   (neg (min x (neg x))) → (max x (neg x))
   (neg (max x (neg x))) → (min x (neg x))
 -/
@@ -411,7 +411,7 @@ def simplify_neg_minmax : RISCVPeepholeRewrite [Ty.riscv (.bv) ] where
       BitVec.extractLsb'_eq_setWidth]
     sorry
 
-/-! ### mul_to_shl
+/-- ### mul_to_shl
   (x * 2) → x >>> 1
 -/
 def mul_to_shl_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -428,7 +428,7 @@ def mul_to_shl_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   llvm.return %0 : i64
   }]
 
-/-! ### mul_by_neg_one
+/-- ### mul_by_neg_one
   (mul x -1) → (sub 0 x)
 -/
 def mul_by_neg_one : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where

@@ -5,14 +5,9 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
-/-
-Removing bitvec lemmas from the simp-set that simplify bitvector operations into toNat operations.
+/-!
+  This file implements the lowering for the `llvm.shl` instruction for types: i8, i16, i32, i64.
 -/
-attribute [-simp] BitVec.ushiftRight_eq' BitVec.shiftLeft_eq' BitVec.sshiftRight_eq'
-
-/- # SRL, not exact
-Logical right shift operation in LLVM: if exact flag is set,
-then returns poison if any nonzero bit is shifted  -/
 
 @[simp_denote]
 def lshr_llvm_no_flag := [LV| {
