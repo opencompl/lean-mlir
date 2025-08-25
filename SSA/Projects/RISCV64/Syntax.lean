@@ -337,6 +337,51 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             return ⟨ .pure, .bv ,⟨ RISCV64.Op.zext.h, by rfl, by constructor,
                .cons v₁ <| .nil,
                 .nil⟩⟩
+      | .bv, "roriw" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in roriw {repr opStx}"
+        match att with
+        | .int val ty =>
+            let opTy@(.bv) ← mkTy ty
+            return ⟨.pure, opTy, ⟨
+              .roriw (BitVec.ofInt 5 val),
+              by
+              simp[DialectSignature.outTy, signature],
+              by constructor,
+              .cons v₁ <| .nil,
+              .nil
+            ⟩⟩
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "rori" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in roriw {repr opStx}"
+        match att with
+        | .int val ty =>
+            let opTy@(.bv) ← mkTy ty
+            return ⟨.pure, opTy, ⟨
+              .rori (BitVec.ofInt 5 val),
+              by
+              simp[DialectSignature.outTy, signature],
+              by constructor,
+              .cons v₁ <| .nil,
+              .nil
+            ⟩⟩
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+      | .bv, "slli.uw" => do
+        let some att := opStx.attrs.getAttr "imm"
+            | throw <| .generic s!"no attribute in roriw {repr opStx}"
+        match att with
+        | .int val ty =>
+            let opTy@(.bv) ← mkTy ty
+            return ⟨.pure, opTy, ⟨
+              RISCV64.Op.slli.uw (BitVec.ofInt 6 val),
+              by
+              simp[DialectSignature.outTy, signature],
+              by constructor,
+              .cons v₁ <| .nil,
+              .nil
+            ⟩⟩
+        | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
       |_ , _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
   | v₁Stx::v₂Stx:: [] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -520,6 +565,34 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                 .nil⟩⟩
       | .bv, .bv, "sh3add" =>
             return ⟨ .pure, .bv ,⟨ .sh3add, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+      | .bv , .bv , "xnor" =>
+              return ⟨ .pure, .bv ,⟨ .xnor, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+      | .bv , .bv , "orn" =>
+              return ⟨ .pure, .bv ,⟨ .xnor, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+      | .bv , .bv , "andn" =>
+              return ⟨ .pure, .bv ,⟨ .andn, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+      | .bv , .bv , "min" =>
+              return ⟨ .pure, .bv ,⟨ .min, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+      | .bv , .bv , "minu" =>
+              return ⟨ .pure, .bv ,⟨ .minu, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+      | .bv , .bv , "maxu" =>
+              return ⟨ .pure, .bv ,⟨ .maxu, by rfl, by constructor,
+               .cons v₁ <| .cons v₂ <| .nil,
+                .nil⟩⟩
+      | .bv , .bv , "max" =>
+              return ⟨ .pure, .bv ,⟨ .max, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | _, _ , _ => throw <| .unsupportedOp s!"type mismatch  for 2 reg operation  {repr opStx}"
