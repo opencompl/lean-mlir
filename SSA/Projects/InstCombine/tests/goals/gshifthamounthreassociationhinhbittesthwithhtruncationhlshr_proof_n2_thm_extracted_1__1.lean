@@ -17,11 +17,5 @@ theorem n2_thm.extracted_1._1 : ∀ (x : BitVec 64) (x_1 : BitVec 32),
   ¬(32#32 - x_1 ≥ ↑32 ∨ zeroExtend 64 (x_1 + BitVec.ofInt 32 (-16)) ≥ ↑64) →
     32#32 - x_1 ≥ ↑32 ∨
         True ∧ (x_1 + BitVec.ofInt 32 (-16)).msb = true ∨ zeroExtend 64 (x_1 + BitVec.ofInt 32 (-16)) ≥ ↑64 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value
-          (ofBool
-            (131071#32 <<< (32#32 - x_1) &&& truncate 32 (x >>> zeroExtend 64 (x_1 + BitVec.ofInt 32 (-16))) != 0#32)))
-        PoisonOr.poison :=
+      False :=
 sorry

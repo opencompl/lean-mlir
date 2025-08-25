@@ -14,11 +14,5 @@ set_option Elab.async false
 -/
 
 theorem udiv_common_divisor_thm.extracted_1._1 : ∀ (x x_1 : BitVec 5) (x_2 : BitVec 1),
-  ¬(x_2 = 1#1 ∨ x_1 = 0) →
-    x_2 = 1#1 →
-      x_1 = 0 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 5)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (x / x_1)) PoisonOr.poison :=
+  ¬(x_2 = 1#1 ∨ x_1 = 0) → x_2 = 1#1 → x_1 = 0 → False :=
 sorry

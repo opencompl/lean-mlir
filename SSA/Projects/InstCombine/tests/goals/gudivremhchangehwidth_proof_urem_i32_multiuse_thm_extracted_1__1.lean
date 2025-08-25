@@ -20,9 +20,5 @@ theorem urem_i32_multiuse_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8),
           True ∧ (zeroExtend 32 x_1).uaddOverflow (zeroExtend 32 x) = true ∨
             True ∧ (zeroExtend 32 x_1 % zeroExtend 32 x).smulOverflow (zeroExtend 32 x_1 + zeroExtend 32 x) = true ∨
               True ∧ (zeroExtend 32 x_1 % zeroExtend 32 x).umulOverflow (zeroExtend 32 x_1 + zeroExtend 32 x) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (zeroExtend 32 x_1 % zeroExtend 32 x * (zeroExtend 32 x_1 + zeroExtend 32 x)))
-        PoisonOr.poison :=
+      False :=
 sorry

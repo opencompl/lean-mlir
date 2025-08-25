@@ -15,9 +15,5 @@ set_option Elab.async false
 
 theorem negate_sdiv_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8),
   ¬(42#8 == 0 || 8 != 1 && x == intMin 8 && 42#8 == -1) = true →
-    (BitVec.ofInt 8 (-42) == 0 || 8 != 1 && x == intMin 8 && BitVec.ofInt 8 (-42) == -1) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x_1 - x.sdiv 42#8)) PoisonOr.poison :=
+    (BitVec.ofInt 8 (-42) == 0 || 8 != 1 && x == intMin 8 && BitVec.ofInt 8 (-42) == -1) = true → False :=
 sorry

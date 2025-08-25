@@ -14,11 +14,5 @@ set_option Elab.async false
 -/
 
 theorem main5c_like_logical_thm.extracted_1._2 : ∀ (x : BitVec 32),
-  ofBool (x &&& 7#32 != 7#32) = 1#1 →
-    ofBool (x &&& 7#32 == 7#32) = 1#1 →
-      ¬True →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value 0#32) PoisonOr.poison :=
+  ofBool (x &&& 7#32 != 7#32) = 1#1 → ofBool (x &&& 7#32 == 7#32) = 1#1 → ¬True → False :=
 sorry

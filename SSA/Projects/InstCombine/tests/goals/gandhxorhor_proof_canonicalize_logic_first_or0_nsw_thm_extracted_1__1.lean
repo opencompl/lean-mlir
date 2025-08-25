@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem canonicalize_logic_first_or0_nsw_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬(True ∧ x.saddOverflow 112#32 = true) →
-    True ∧ (x ||| 15#32).saddOverflow 112#32 = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x + 112#32 ||| 15#32)) PoisonOr.poison :=
+  ¬(True ∧ x.saddOverflow 112#32 = true) → True ∧ (x ||| 15#32).saddOverflow 112#32 = true → False :=
 sorry

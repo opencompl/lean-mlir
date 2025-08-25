@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem multiuse_lshr_lshr_thm.extracted_1._1 : ∀ (x : BitVec 9),
-  ¬(2#9 ≥ ↑9 ∨ 2#9 ≥ ↑9 ∨ 3#9 ≥ ↑9) →
-    2#9 ≥ ↑9 ∨ 5#9 ≥ ↑9 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 9)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x >>> 2#9 * x >>> 2#9 >>> 3#9)) PoisonOr.poison :=
+  ¬(2#9 ≥ ↑9 ∨ 2#9 ≥ ↑9 ∨ 3#9 ≥ ↑9) → 2#9 ≥ ↑9 ∨ 5#9 ≥ ↑9 → False :=
 sorry

@@ -16,8 +16,5 @@ set_option Elab.async false
 theorem select_zext_different_condition_thm.extracted_1._1 : ∀ (x x_1 : BitVec 1),
   x_1 = 1#1 →
     True ∧ (64#64).saddOverflow (zeroExtend 64 x) = true ∨ True ∧ (64#64).uaddOverflow (zeroExtend 64 x) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (64#64 + zeroExtend 64 x)) PoisonOr.poison :=
+      False :=
 sorry

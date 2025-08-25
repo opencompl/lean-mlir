@@ -14,13 +14,5 @@ set_option Elab.async false
 -/
 
 theorem eq_21_thm.extracted_1._1 : ∀ (x x_1 : BitVec 32),
-  ¬(16#32 ≥ ↑32 ∨ 16#32 ≥ ↑32 ∨ 8#32 ≥ ↑32 ∨ 8#32 ≥ ↑32) →
-    8#32 ≥ ↑32 ∨ 8#32 ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value
-          (ofBool (truncate 8 (x_1 >>> 16#32) == truncate 8 (x >>> 16#32)) &&&
-            ofBool (truncate 8 (x_1 >>> 8#32) == truncate 8 (x >>> 8#32))))
-        PoisonOr.poison :=
+  ¬(16#32 ≥ ↑32 ∨ 16#32 ≥ ↑32 ∨ 8#32 ≥ ↑32 ∨ 8#32 ≥ ↑32) → 8#32 ≥ ↑32 ∨ 8#32 ≥ ↑32 → False :=
 sorry

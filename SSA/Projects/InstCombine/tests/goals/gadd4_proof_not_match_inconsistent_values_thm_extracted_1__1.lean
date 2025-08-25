@@ -21,8 +21,5 @@ theorem not_match_inconsistent_values_thm.extracted_1._1 : ∀ (x : BitVec 64),
             True ∧ (x / 29#64 &&& 63#64).umulOverflow 299#64 = true ∨
               True ∧ (x % 299#64).saddOverflow ((x / 29#64 &&& 63#64) * 299#64) = true ∨
                 True ∧ (x % 299#64).uaddOverflow ((x / 29#64 &&& 63#64) * 299#64) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x % 299#64 + x / 29#64 % 64#64 * 299#64)) PoisonOr.poison :=
+      False :=
 sorry

@@ -16,9 +16,5 @@ set_option Elab.async false
 theorem icmp_shl_ne_2_thm.extracted_1._1 : ∀ (x : BitVec 8),
   ¬((x == 0 || 8 != 1 && 42#8 == intMin 8 && x == -1) = true ∨
         (x == 0 || 8 != 1 && 42#8 == intMin 8 && x == -1) = true ∨ 1#8 ≥ ↑8) →
-    (x == 0 || 8 != 1 && 42#8 == intMin 8 && x == -1) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool ((42#8).sdiv x != (42#8).sdiv x <<< 1#8))) PoisonOr.poison :=
+    (x == 0 || 8 != 1 && 42#8 == intMin 8 && x == -1) = true → False :=
 sorry

@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem scalar_i8_signbit_lshr_and_eq_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8),
-  ¬x_1 ≥ ↑8 →
-    True ∧ BitVec.ofInt 8 (-128) >>> x_1 <<< x_1 ≠ BitVec.ofInt 8 (-128) ∨ x_1 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool (BitVec.ofInt 8 (-128) >>> x_1 &&& x == 0#8))) PoisonOr.poison :=
+  ¬x_1 ≥ ↑8 → True ∧ BitVec.ofInt 8 (-128) >>> x_1 <<< x_1 ≠ BitVec.ofInt 8 (-128) ∨ x_1 ≥ ↑8 → False :=
 sorry

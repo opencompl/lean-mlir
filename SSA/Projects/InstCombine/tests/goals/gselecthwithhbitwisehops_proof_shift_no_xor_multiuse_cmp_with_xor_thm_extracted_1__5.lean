@@ -17,8 +17,5 @@ theorem shift_no_xor_multiuse_cmp_with_xor_thm.extracted_1._5 : ∀ (x x_1 x_2 x
   ofBool (x_3 &&& 1#32 == 0#32) = 1#1 →
     True ∧ ((x_3 &&& 1#32) <<< 1#32).sshiftRight' 1#32 ≠ x_3 &&& 1#32 ∨
         True ∧ (x_3 &&& 1#32) <<< 1#32 >>> 1#32 ≠ x_3 &&& 1#32 ∨ 1#32 ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x_2 * x_1)) PoisonOr.poison :=
+      False :=
 sorry

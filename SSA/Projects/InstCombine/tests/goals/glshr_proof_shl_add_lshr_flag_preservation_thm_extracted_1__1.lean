@@ -21,8 +21,5 @@ theorem shl_add_lshr_flag_preservation_thm.extracted_1._1 : ∀ (x x_1 x_2 : Bit
               True ∧ (x_2 <<< x_1 + x) >>> x_1 <<< x_1 ≠ x_2 <<< x_1 + x ∨ x_1 ≥ ↑32) →
     True ∧ x >>> x_1 <<< x_1 ≠ x ∨
         x_1 ≥ ↑32 ∨ True ∧ (x >>> x_1).saddOverflow x_2 = true ∨ True ∧ (x >>> x_1).uaddOverflow x_2 = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x_2 <<< x_1 + x) >>> x_1)) PoisonOr.poison :=
+      False :=
 sorry

@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem trunc_lshr_big_mask_thm.extracted_1._1 : ∀ (x : BitVec 8),
-  ¬2#8 ≥ ↑8 →
-    2#8 ≥ ↑8 ∨ True ∧ zeroExtend 8 (truncate 6 (x >>> 2#8)) ≠ x >>> 2#8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 6)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (truncate 6 (x >>> 2#8) &&& 31#6)) PoisonOr.poison :=
+  ¬2#8 ≥ ↑8 → 2#8 ≥ ↑8 ∨ True ∧ zeroExtend 8 (truncate 6 (x >>> 2#8)) ≠ x >>> 2#8 → False :=
 sorry

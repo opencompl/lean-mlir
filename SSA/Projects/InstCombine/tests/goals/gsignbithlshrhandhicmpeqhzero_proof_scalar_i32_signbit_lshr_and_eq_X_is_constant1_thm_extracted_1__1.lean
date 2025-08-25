@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem scalar_i32_signbit_lshr_and_eq_X_is_constant1_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬x ≥ ↑32 →
-    True ∧ BitVec.ofInt 32 (-2147483648) >>> x <<< x ≠ BitVec.ofInt 32 (-2147483648) ∨ x ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (ofBool (BitVec.ofInt 32 (-2147483648) >>> x &&& 12345#32 == 0#32))) PoisonOr.poison :=
+  ¬x ≥ ↑32 → True ∧ BitVec.ofInt 32 (-2147483648) >>> x <<< x ≠ BitVec.ofInt 32 (-2147483648) ∨ x ≥ ↑32 → False :=
 sorry

@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem shl_xor_lshr_thm.extracted_1._1 : ∀ (x x_1 x_2 : BitVec 32),
-  ¬(True ∧ x_2 <<< x_1 >>> x_1 ≠ x_2 ∨ x_1 ≥ ↑32 ∨ x_1 ≥ ↑32) →
-    x_1 ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x_2 <<< x_1 ^^^ x) >>> x_1)) PoisonOr.poison :=
+  ¬(True ∧ x_2 <<< x_1 >>> x_1 ≠ x_2 ∨ x_1 ≥ ↑32 ∨ x_1 ≥ ↑32) → x_1 ≥ ↑32 → False :=
 sorry

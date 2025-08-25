@@ -18,8 +18,5 @@ theorem shl_nsw_add_negative_invalid_constant3_thm.extracted_1._1 : ∀ (x : Bit
         x + BitVec.ofInt 4 (-8) ≥ ↑4) →
     True ∧ (2#4 <<< (x ^^^ BitVec.ofInt 4 (-8))).sshiftRight' (x ^^^ BitVec.ofInt 4 (-8)) ≠ 2#4 ∨
         x ^^^ BitVec.ofInt 4 (-8) ≥ ↑4 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 4)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (2#4 <<< (x + BitVec.ofInt 4 (-8)))) PoisonOr.poison :=
+      False :=
 sorry

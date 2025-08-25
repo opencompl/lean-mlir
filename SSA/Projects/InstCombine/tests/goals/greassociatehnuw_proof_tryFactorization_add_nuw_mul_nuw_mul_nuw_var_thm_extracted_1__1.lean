@@ -16,9 +16,5 @@ set_option Elab.async false
 theorem tryFactorization_add_nuw_mul_nuw_mul_nuw_var_thm.extracted_1._1 : ∀ (x x_1 x_2 : BitVec 32),
   ¬(True ∧ x_2.umulOverflow x_1 = true ∨
         True ∧ x_2.umulOverflow x = true ∨ True ∧ (x_2 * x_1).uaddOverflow (x_2 * x) = true) →
-    True ∧ x_2.umulOverflow (x_1 + x) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x_2 * x_1 + x_2 * x)) PoisonOr.poison :=
+    True ∧ x_2.umulOverflow (x_1 + x) = true → False :=
 sorry

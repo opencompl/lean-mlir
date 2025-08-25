@@ -18,8 +18,5 @@ theorem n10_thm.extracted_1._1 : ∀ (x : BitVec 64),
     63#64 ≥ ↑64 ∨
         True ∧ signExtend 64 (truncate 32 (x.sshiftRight' 63#64)) ≠ x.sshiftRight' 63#64 ∨
           True ∧ (truncate 32 (x.sshiftRight' 63#64)).saddOverflow 1#32 = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (1#32 - truncate 32 (x >>> 63#64))) PoisonOr.poison :=
+      False :=
 sorry

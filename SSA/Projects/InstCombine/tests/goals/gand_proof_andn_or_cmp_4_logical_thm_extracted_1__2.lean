@@ -14,11 +14,5 @@ set_option Elab.async false
 -/
 
 theorem andn_or_cmp_4_logical_thm.extracted_1._2 : ∀ (x x_1 : BitVec 32),
-  ofBool (x_1 == x) = 1#1 →
-    ofBool (x_1 != x) = 1#1 →
-      ¬True →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 1)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (ofBool (x_1 != x))) PoisonOr.poison :=
+  ofBool (x_1 == x) = 1#1 → ofBool (x_1 != x) = 1#1 → ¬True → False :=
 sorry

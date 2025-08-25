@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem p13_commutativity0_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ofBool (x <ᵤ 65536#32) = 1#1 →
-    ofBool (65535#32 <ᵤ x) = 1#1 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value 65535#32) PoisonOr.poison :=
+  ofBool (x <ᵤ 65536#32) = 1#1 → ofBool (65535#32 <ᵤ x) = 1#1 → False :=
 sorry

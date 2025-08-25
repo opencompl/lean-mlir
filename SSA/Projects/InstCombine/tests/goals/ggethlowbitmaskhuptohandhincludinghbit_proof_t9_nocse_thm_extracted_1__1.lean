@@ -15,9 +15,5 @@ set_option Elab.async false
 
 theorem t9_nocse_thm.extracted_1._1 : ∀ (x : BitVec 8),
   ¬(x ≥ ↑8 ∨ x ≥ ↑8) →
-    True ∧ 1#8 <<< x >>> x ≠ 1#8 ∨ x ≥ ↑8 ∨ True ∧ ((-1#8) <<< x).sshiftRight' x ≠ -1#8 ∨ x ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (1#8 <<< x + -1#8 ||| 1#8 <<< x)) PoisonOr.poison :=
+    True ∧ 1#8 <<< x >>> x ≠ 1#8 ∨ x ≥ ↑8 ∨ True ∧ ((-1#8) <<< x).sshiftRight' x ≠ -1#8 ∨ x ≥ ↑8 → False :=
 sorry

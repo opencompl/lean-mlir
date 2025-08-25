@@ -15,9 +15,5 @@ set_option Elab.async false
 
 theorem mul_add_to_mul_2_thm.extracted_1._1 : ∀ (x : BitVec 16),
   ¬(True ∧ x.smulOverflow 8#16 = true ∨ True ∧ (x * 8#16).saddOverflow x = true) →
-    True ∧ x.smulOverflow 9#16 = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 16)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (x * 8#16 + x)) PoisonOr.poison :=
+    True ∧ x.smulOverflow 9#16 = true → False :=
 sorry
