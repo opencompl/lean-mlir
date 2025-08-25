@@ -70,11 +70,6 @@ def llvm_add_lower_riscv_nuw_nsw_flag_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
   lhs:= add_llvm_nsw_nuw_flags_1
   rhs:= add_riscv_1
 
-def add_match_1 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_add_lower_riscv_noflags_1,llvm_add_lower_riscv_nsw_flag_1, llvm_add_lower_riscv_nuw_flag_1,
-  llvm_add_lower_riscv_nuw_nsw_flag_1]
-
 
 /-! ### i8  -/
 
@@ -134,11 +129,6 @@ def llvm_add_lower_riscv_nuw_nsw_flag_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (
   lhs:= add_llvm_nsw_nuw_flags_8
   rhs:= add_riscv_8
 
-def add_match_8 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_add_lower_riscv_noflags_8,llvm_add_lower_riscv_nsw_flag_8, llvm_add_lower_riscv_nuw_flag_8,
-  llvm_add_lower_riscv_nuw_nsw_flag_8]
-
 
 /-! ### i16  -/
 
@@ -197,11 +187,6 @@ def llvm_add_lower_riscv_nuw_flag_16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.b
 def llvm_add_lower_riscv_nuw_nsw_flag_16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16)] where
   lhs:= add_llvm_nsw_nuw_flags_16
   rhs:= add_riscv_16
-
-def add_match_16 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_add_lower_riscv_noflags_16,llvm_add_lower_riscv_nsw_flag_16, llvm_add_lower_riscv_nuw_flag_16,
-  llvm_add_lower_riscv_nuw_nsw_flag_16]
 
 
 /-! ### i32  -/
@@ -266,11 +251,6 @@ where
   lhs:= add_llvm_nsw_nuw_flags_32
   rhs:= add_riscv_32
 
-def add_match_32 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_add_lower_riscv_noflags_32,llvm_add_lower_riscv_nsw_flag_32, llvm_add_lower_riscv_nuw_flag_32,
-  llvm_add_lower_riscv_nuw_nsw_flag_32]
-
 
 /-! ### i64 -/
 
@@ -328,7 +308,25 @@ def llvm_add_lower_riscv_nuw_nsw_flag_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm
   lhs:= add_llvm_nsw_nuw_flags_64
   rhs:= add_riscv_64
 
-def add_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_add_lower_riscv_noflags_64,llvm_add_lower_riscv_nsw_flag_64, llvm_add_lower_riscv_nuw_flag_64,
-  llvm_add_lower_riscv_nuw_nsw_flag_64]
+def add_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=[
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_noflags_1),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nsw_flag_1),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_flag_1),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_nsw_flag_1),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_noflags_8),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nsw_flag_8),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_flag_8),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_nsw_flag_8),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_noflags_16),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nsw_flag_16),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_flag_16),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_nsw_flag_16),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_noflags_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nsw_flag_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_flag_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_nsw_flag_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_noflags_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nsw_flag_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_flag_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_add_lower_riscv_nuw_nsw_flag_64),
+]
