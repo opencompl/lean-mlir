@@ -1,0 +1,9 @@
+
+/-
+-- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
+-/
+open BitVec
+
+theorem or_xor_xor_normal_variant4_thm.extracted_1._1 : ∀ (x x_1 : BitVec 64),
+  x_1 &&& x ^^^ x_1 ||| x_1 &&& x ^^^ x = x_1 ^^^ x :=
+sorry

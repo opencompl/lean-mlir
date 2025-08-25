@@ -18,10 +18,14 @@ import re
 import logging
 import random
 import json
+import shutil
+import os
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
-GOALS_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/goals/'
+GOALS_PROCESSING_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/goals/processing'
+GOALS_SUCCESS_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/goals/success'
+GOALS_FAILURE_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/goals/failure'
 
 STATUS_FAIL = "❌"
 STATUS_GREEN_CHECK = "✅"
@@ -34,17 +38,8 @@ SCRIPT_PATH = os.path.relpath(os.path.abspath(__file__), ROOT_DIR)
 PREAMBLE = f"""
 /-
 -- auto-generated from '{SCRIPT_PATH}'
-import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.LLVM.Semantics
-open BitVec
-open LLVM
-
-set_option linter.unusedTactic false
-set_option linter.unreachableTactic false
-set_option maxHeartbeats 5000000
-set_option maxRecDepth 1000000
-set_option Elab.async false
 -/
+open BitVec
 
 """
 
@@ -119,16 +114,36 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
                 "theorem_text": t.text,
                 }) + "\n")
 
+    # write file to 'processsing', then run 'lean' on it.
+    # if success, move to 'GOALS_SUCCESS_DIR'.
+    # if failure, move to 'GOALS_FAILURE_DIR'.
     for t in theorems:
-        path = Path(GOALS_DIR) / t.get_file_name(fileTitle)
+        path = Path(GOALS_PROCESSING_DIR) / t.get_file_name(fileTitle)
         logging.info(f"{fileTitle}({file_num}/{nfiles}): Writing '{path}'...")
         with open(path, 'w') as f:
             f.write(PREAMBLE)
             f.write(t.text)
-            logging.info(f"{fileTitle}({file_num}/{nfiles}): {STATUS_GREEN_CHECK} Written to '{path}'")
+            logging.info(f"{fileTitle}({file_num}/{nfiles}): Written processing file to '{path}'")
+
+        logging.info(f"{fileTitle}({file_num}/{nfiles}): Running lake to check file is well-formed")
+        result = subprocess.run(["lake", "env", "lean", path])
+        if result.returncode == 0:
+            logging.info(f"{fileTitle}({file_num}/{nfiles}): {STATUS_SUCCESS} Successfully created clean Lean file.")
+            shutil.move(path, GOALS_SUCCESS_DIR)
+        else:
+            logging.info(f"{fileTitle}({file_num}/{nfiles}): {STATUS_FAIL} Failed to create clean lean file.")
+            shutil.move(path, GOALS_FAILURE_DIR)
     return True
 
+def make_clean_dir(dir_path : str):
+    if os.path.exists(dir_path):
+        shutil.rmtree(dir_path)  # deletes dir and all contents
+    os.makedirs(dir_path)
+
 def process(db : str, jobs: int, nfiles: int, timeout : int):
+    make_clean_dir(GOALS_PROCESSING_DIR)
+    make_clean_dir(GOALS_SUCCESS_DIR)
+    make_clean_dir(GOALS_FAILURE_DIR)
     tactic_auto_path = f'{ROOT_DIR}/SSA/Projects/InstCombine/TacticAuto.lean'
 
     if os.path.exists(db):
@@ -194,7 +209,7 @@ if __name__ == "__main__":
   default_db = f'extract-goals-{current_time}.jsonl'
   parser.add_argument('--db', default=default_db, help='path to jsonl database')
   parser.add_argument('-j', '--jobs', type=int, default=4)
-  parser.add_argument('--nfiles', type=int, default=4, help="number of files to extract")
+  parser.add_argument('--nfiles', type=int, default=90000, help="number of files to extract")
   parser.add_argument('--timeout', type=int, default=600, help="timeout in seconds for each file processing")
   args = parser.parse_args()
   setup_logging(args.db)

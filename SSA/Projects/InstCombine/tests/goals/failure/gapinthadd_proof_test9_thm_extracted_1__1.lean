@@ -1,0 +1,12 @@
+
+/-
+-- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
+-/
+open BitVec
+
+theorem test9_thm.extracted_1._1 : ∀ (x : BitVec 77),
+  True ∧ (x &&& 562949953421310#77 &&& 1#77 != 0) = true →
+    HRefinement.IsRefinedBy (β := PoisonOr (BitVec 77)) (self :=
+      @PoisonOr.instHRefinement _ _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec))
+      (PoisonOr.value ((x &&& 562949953421310#77) + 1#77)) PoisonOr.poison :=
+sorry

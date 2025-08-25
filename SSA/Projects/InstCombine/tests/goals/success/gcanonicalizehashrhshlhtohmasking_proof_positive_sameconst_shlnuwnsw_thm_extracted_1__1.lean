@@ -1,0 +1,12 @@
+
+/-
+-- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
+-/
+open BitVec
+
+theorem positive_sameconst_shlnuwnsw_thm.extracted_1._1 : ∀ (x : BitVec 8),
+  ¬(3#8 ≥ ↑8 ∨
+        True ∧ (x.sshiftRight' 3#8 <<< 3#8).sshiftRight' 3#8 ≠ x.sshiftRight' 3#8 ∨
+          True ∧ x.sshiftRight' 3#8 <<< 3#8 >>> 3#8 ≠ x.sshiftRight' 3#8 ∨ 3#8 ≥ ↑8) →
+    x.sshiftRight' 3#8 <<< 3#8 = x &&& BitVec.ofInt 8 (-8) :=
+sorry

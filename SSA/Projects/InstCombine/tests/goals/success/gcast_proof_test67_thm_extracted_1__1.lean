@@ -1,0 +1,20 @@
+
+/-
+-- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
+-/
+open BitVec
+
+theorem test67_thm.extracted_1._1 : ∀ (x : BitVec 1) (x_1 : BitVec 32),
+  ¬(True ∧ ((x_1 &&& (zeroExtend 32 x ^^^ 1#32)) <<< 24#32).sshiftRight' 24#32 ≠ x_1 &&& (zeroExtend 32 x ^^^ 1#32) ∨
+        True ∧ (x_1 &&& (zeroExtend 32 x ^^^ 1#32)) <<< 24#32 >>> 24#32 ≠ x_1 &&& (zeroExtend 32 x ^^^ 1#32) ∨
+          24#32 ≥ ↑32 ∨
+            True ∧
+                ((x_1 &&& (zeroExtend 32 x ^^^ 1#32)) <<< 24#32 ^^^ BitVec.ofInt 32 (-16777216)) >>> 24#32 <<< 24#32 ≠
+                  (x_1 &&& (zeroExtend 32 x ^^^ 1#32)) <<< 24#32 ^^^ BitVec.ofInt 32 (-16777216) ∨
+              24#32 ≥ ↑32) →
+    ofBool
+        (truncate 8
+            (((x_1 &&& (zeroExtend 32 x ^^^ 1#32)) <<< 24#32 ^^^ BitVec.ofInt 32 (-16777216)).sshiftRight' 24#32) ==
+          0#8) =
+      0#1 :=
+sorry
