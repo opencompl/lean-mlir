@@ -6,7 +6,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 open LLVMRiscV
 
 /-!
-  This file implements the lowering for the `llvm.shl` instruction for types:
+  This file implements the lowering for the `llvm.shl` instruction for types: i8, i16, i32, i64.
 -/
 
 /-! ### i8 -/
