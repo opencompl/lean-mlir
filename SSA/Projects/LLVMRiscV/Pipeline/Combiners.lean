@@ -36,16 +36,16 @@ structure RISCVPeepholeRewrite (Γ : Ctxt Ty) where
 -/
 def sub_to_add_pat : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant 1 : i64
-      %1 = llvm.sub %x, %c : i64
-      llvm.return %1 : i64
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant 1 : i64
+    %1 = llvm.sub %x, %c : i64
+    llvm.return %1 : i64
   }]
   rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant -1 : i64
-      %1 = llvm.add %x, %c : i64
-      llvm.return %1 : i64
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant -1 : i64
+    %1 = llvm.add %x, %c : i64
+    llvm.return %1 : i64
   }]
 
 example (e : BitVec 64) : e.add 0#64 = e := by bv_decide
@@ -58,13 +58,13 @@ example : ∀ (e : BitVec 64), e.add 0#64 = e := by intros; bv_decide
 
 def redundant_and : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
-    ^entry (%x: i64):
-      %0 = llvm.and %x, %x : i64
-      llvm.return %0 : i64
+  ^entry (%x: i64):
+    %0 = llvm.and %x, %x : i64
+    llvm.return %0 : i64
   }]
   rhs := [LV| {
-    ^entry (%x: i64):
-      llvm.return %x : i64
+  ^entry (%x: i64):
+    llvm.return %x : i64
   }]
 
 /-- ### select_same_val
@@ -72,13 +72,13 @@ def redundant_and : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 -/
 def select_same_val : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1), Ty.llvm (.bitvec 64) ] where
   lhs := [LV| {
-    ^entry (%x: i64, %c: i1):
-      %0 = llvm.select %c, %x, %x : i64
-      llvm.return %0 : i64
+  ^entry (%x: i64, %c: i1):
+    %0 = llvm.select %c, %x, %x : i64
+    llvm.return %0 : i64
   }]
   rhs := [LV| {
-    ^entry (%x: i64, %c: i1):
-      llvm.return %x : i64
+  ^entry (%x: i64, %c: i1):
+    llvm.return %x : i64
   }]
 
 /-- ### right_identity_zero
@@ -86,97 +86,97 @@ def select_same_val : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1), Ty.llvm
 -/
 def right_identity_zero_sub : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = sub %x, %c : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = sub %x, %c : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
 def right_identity_zero_add : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = add %x, %c : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = add %x, %c : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
 def right_identity_zero_xor : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = xor %x, %c : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = xor %x, %c : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
 def right_identity_zero_shl : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = sll %x, %c : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = sll %x, %c : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
 def right_identity_zero_ashr : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = sra %x, %c : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = sra %x, %c : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
 def right_identity_zero_lshr : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = srl %x, %c : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = srl %x, %c : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
 def right_identity_zero_rol : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = rol %x, %c : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = rol %x, %c : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
 def right_identity_zero_pat_ror : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = ror %x, %c : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = ror %x, %c : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
@@ -185,23 +185,23 @@ def right_identity_zero_pat_ror : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
 -/
 def binop_same_val_and : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %0 = and %x, %x : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %0 = and %x, %x : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
 def binop_same_val_or : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %0 = or %x, %x : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %0 = or %x, %x : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
@@ -210,92 +210,92 @@ def binop_same_val_or : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
 -/
 def binop_left_to_zero_shl : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = sll %c, %x : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = sll %c, %x : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
   ret %c : !riscv.reg
   }]
 
 def binop_left_to_zero_lshr : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = srl %c, %x : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = srl %c, %x : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
   ret %c : !riscv.reg
   }]
 
 def binop_left_to_zero_ashr : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = sra %c, %x : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = sra %c, %x : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
   ret %c : !riscv.reg
   }]
 
 def binop_left_to_zero_sdiv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.sdiv %c, %x : i64
-      llvm.return %0 : i64
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant (0) : i64
+    %0 = llvm.sdiv %c, %x : i64
+    llvm.return %0 : i64
   }]
   rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant (0) : i64
+    llvm.return %c : i64
   }]
 
 def binop_left_to_zero_udiv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.udiv %c, %x : i64
-      llvm.return %0 : i64
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant (0) : i64
+    %0 = llvm.udiv %c, %x : i64
+    llvm.return %0 : i64
   }]
   rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant (0) : i64
+    llvm.return %c : i64
   }]
 
 def binop_left_to_zero_srem : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = rem %c, %x : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = rem %c, %x : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
   ret %c : !riscv.reg
   }]
 
 def binop_left_to_zero_urem : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = remu %c, %x : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = remu %c, %x : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
   ret %c : !riscv.reg
   }]
 
@@ -304,14 +304,14 @@ def binop_left_to_zero_urem : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
 -/
 def binop_left_to_zero_mul : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = mul %c, %x : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = mul %c, %x : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
   ret %c : !riscv.reg
   }]
 
@@ -320,26 +320,26 @@ def binop_left_to_zero_mul : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
 -/
 def anyext_trunc_fold_sext_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := [LV| {
-    ^entry (%x: i32):
-      %0 = llvm.sext %x: i32 to i64
-      %1 = llvm.trunc %0: i64 to i32
-      llvm.return %1 : i32
+  ^entry (%x: i32):
+    %0 = llvm.sext %x: i32 to i64
+    %1 = llvm.trunc %0: i64 to i32
+    llvm.return %1 : i32
   }]
   rhs := [LV| {
-    ^entry (%x: i32):
-      llvm.return %x : i32
+  ^entry (%x: i32):
+    llvm.return %x : i32
   }]
 
 def anyext_trunc_fold_zext_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := [LV| {
-    ^entry (%x: i32):
-      %0 = llvm.zext %x: i32 to i64
-      %1 = llvm.trunc %0: i64 to i32
-      llvm.return %1 : i32
+  ^entry (%x: i32):
+    %0 = llvm.zext %x: i32 to i64
+    %1 = llvm.trunc %0: i64 to i32
+    llvm.return %1 : i32
   }]
   rhs := [LV| {
-    ^entry (%x: i32):
-      llvm.return %x : i32
+  ^entry (%x: i32):
+    llvm.return %x : i32
   }]
 
 /-- ### right_identity_one
@@ -347,13 +347,13 @@ def anyext_trunc_fold_zext_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 3
 -/
 def right_identity_one : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (1) : !riscv.reg
-      %0 = mul %c, %x : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %c = li (1) : !riscv.reg
+    %0 = mul %c, %x : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
-    ^entry (%x: !riscv.reg):
+  ^entry (%x: !riscv.reg):
   ret %x : !riscv.reg
   }]
 
@@ -363,9 +363,9 @@ def right_identity_one : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
 -/
 def add_sub_reg_frags_left : RISCVPeepholeRewrite [Ty.riscv (.bv), Ty.riscv (.bv) ] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg, %y: !riscv.reg ):
-      %0 = sub %y, %x : !riscv.reg
-      %1 = add %x, %0 : !riscv.reg
+  ^entry (%x: !riscv.reg, %y: !riscv.reg ):
+    %0 = sub %y, %x : !riscv.reg
+    %1 = add %x, %0 : !riscv.reg
   ret %1 : !riscv.reg
   }]
   rhs := [LV| {
@@ -375,9 +375,9 @@ def add_sub_reg_frags_left : RISCVPeepholeRewrite [Ty.riscv (.bv), Ty.riscv (.bv
 
 def add_sub_reg_frags_right : RISCVPeepholeRewrite [Ty.riscv (.bv), Ty.riscv (.bv) ] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg, %y: !riscv.reg ):
-      %0 = sub %y, %x : !riscv.reg
-      %1 = add %0, %x : !riscv.reg
+  ^entry (%x: !riscv.reg, %y: !riscv.reg ):
+    %0 = sub %y, %x : !riscv.reg
+    %1 = add %0, %x : !riscv.reg
   ret %1 : !riscv.reg
   }]
   rhs := [LV| {
@@ -392,10 +392,10 @@ def add_sub_reg_frags_right : RISCVPeepholeRewrite [Ty.riscv (.bv), Ty.riscv (.b
 -/
 def simplify_neg_minmax : RISCVPeepholeRewrite [Ty.riscv (.bv) ] where
   lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %0 = neg %x : !riscv.reg
-      %1 = min %x, %0 : !riscv.reg
-      %2 = neg %1 : !riscv.reg
+  ^entry (%x: !riscv.reg):
+    %0 = neg %x : !riscv.reg
+    %1 = min %x, %0 : !riscv.reg
+    %2 = neg %1 : !riscv.reg
   ret %2 : !riscv.reg
   }]
   rhs := [LV| {
@@ -405,26 +405,26 @@ def simplify_neg_minmax : RISCVPeepholeRewrite [Ty.riscv (.bv) ] where
  ret %1 : !riscv.reg
   }]
   correct := by
-    simp_lowering
-    simp only [BitVec.ofNat_eq_ofNat, BitVec.sub_eq, BitVec.zero_sub,
-      BitVec.extractLsb'_eq_setWidth]
-    sorry
+  simp_lowering
+  simp only [BitVec.ofNat_eq_ofNat, BitVec.sub_eq, BitVec.zero_sub,
+    BitVec.extractLsb'_eq_setWidth]
+  sorry
 
 /-- ### mul_to_shl
   (x * 2) → x >>> 1
 -/
 def mul_to_shl_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (2) : i64
-      %0 = llvm.mul %x, %c : i64
-      llvm.return %0 : i64
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant (2) : i64
+    %0 = llvm.mul %x, %c : i64
+    llvm.return %0 : i64
   }]
   rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (1) : i64
-      %0 = llvm.shl %x, %c : i64
-      llvm.return %0 : i64
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant (1) : i64
+    %0 = llvm.shl %x, %c : i64
+    llvm.return %0 : i64
   }]
 
 /-- ### mul_by_neg_one
@@ -432,14 +432,14 @@ def mul_to_shl_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 -/
 def mul_by_neg_one : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (-1) : i64
-      %0 = llvm.mul %x, %c : i64
-      llvm.return %0 : i64
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant (-1) : i64
+    %0 = llvm.mul %x, %c : i64
+    llvm.return %0 : i64
   }]
   rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.sub %c, %x : i64
-      llvm.return %0 : i64
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant (0) : i64
+    %0 = llvm.sub %c, %x : i64
+    llvm.return %0 : i64
   }]

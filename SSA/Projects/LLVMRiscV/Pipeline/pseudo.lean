@@ -19,8 +19,8 @@ def icmp_ne_riscv_32_pseudo := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!riscv.reg)
     %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i32) -> (!riscv.reg)
-    %0 = xor  %lhsr, %rhsr : !riscv.reg
-    %1 = snez  %0 : !riscv.reg
+    %0 = xor    %lhsr, %rhsr : !riscv.reg
+    %1 = snez    %0 : !riscv.reg
     %2 = "builtin.unrealized_conversion_cast"(%1) : (!riscv.reg) -> (i1)
     llvm.return %2 : i1
   }]
@@ -30,8 +30,8 @@ def icmp_eq_riscv_32_pseudo := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!riscv.reg)
     %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i32) -> (!riscv.reg)
-    %0 = xor  %lhsr, %rhsr : !riscv.reg
-    %1 = seqz  %0 : !riscv.reg
+    %0 = xor    %lhsr, %rhsr : !riscv.reg
+    %1 = seqz    %0 : !riscv.reg
     %2 = "builtin.unrealized_conversion_cast"(%1) : (!riscv.reg) -> (i1)
     llvm.return %2 : i1
   }]
@@ -50,8 +50,8 @@ def icmp_eq_riscv_64_pseudo := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!riscv.reg)
     %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i64) -> (!riscv.reg)
-    %0 = xor  %lhsr, %rhsr : !riscv.reg
-    %1 = seqz  %0 : !riscv.reg
+    %0 = xor    %lhsr, %rhsr : !riscv.reg
+    %1 = seqz    %0 : !riscv.reg
     %2 = "builtin.unrealized_conversion_cast"(%1) : (!riscv.reg) -> (i1)
     llvm.return %2 : i1
   }]
@@ -65,8 +65,8 @@ def icmp_ne_riscv_64_pseudo := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!riscv.reg)
     %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i64) -> (!riscv.reg)
-    %0 = xor  %lhsr, %rhsr : !riscv.reg
-    %1 = snez  %0 : !riscv.reg
+    %0 = xor    %lhsr, %rhsr : !riscv.reg
+    %1 = snez    %0 : !riscv.reg
     %2 = "builtin.unrealized_conversion_cast"(%1) : (!riscv.reg) -> (i1)
     llvm.return %2 : i1
   }]

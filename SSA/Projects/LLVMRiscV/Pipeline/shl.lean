@@ -13,35 +13,35 @@ open LLVMRiscV
 
 @[simp_denote]
 def shl_llvm_8 := [LV| {
-    ^entry (%x: i8, %y: i8):
+  ^entry (%x: i8, %y: i8):
     %1 = llvm.shl %x, %y : i8
     llvm.return %1 : i8
   }]
 
 @[simp_denote]
 def shl_llvm_nsw_8 := [LV| {
-    ^entry (%x: i8, %y: i8):
+  ^entry (%x: i8, %y: i8):
     %1 = llvm.shl %x, %y overflow<nsw> : i8
     llvm.return %1 : i8
   }]
 
 @[simp_denote]
 def shl_llvm_nuw_8 := [LV| {
-    ^entry (%x: i8, %y: i8):
+  ^entry (%x: i8, %y: i8):
     %1 = llvm.shl %x, %y overflow<nuw> : i8
     llvm.return %1 : i8
   }]
 
 @[simp_denote]
 def shl_llvm_nsw_nuw_8 := [LV| {
-    ^entry (%x: i8, %y: i8):
-    %1 = llvm.shl  %x, %y overflow<nsw,nuw> : i8
+  ^entry (%x: i8, %y: i8):
+    %1 = llvm.shl    %x, %y overflow<nsw,nuw> : i8
     llvm.return %1 : i8
   }]
 
 @[simp_denote]
 def shl_riscv_8 := [LV| {
-    ^entry (%reg1: i8, %reg2: i8 ):
+  ^entry (%reg1: i8, %reg2: i8 ):
     %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i8) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast"(%reg2) : (i8) -> (!i64)
     %2 = sll %0, %1 : !i64
@@ -71,35 +71,35 @@ def llvm_shl_lower_riscv_nsw_nuw_8: LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitve
 
 @[simp_denote]
 def shl_llvm_16 := [LV| {
-    ^entry (%x: i16, %y: i16):
+  ^entry (%x: i16, %y: i16):
     %1 = llvm.shl %x, %y : i16
     llvm.return %1 : i16
   }]
 
 @[simp_denote]
 def shl_llvm_nsw_16 := [LV| {
-    ^entry (%x: i16, %y: i16):
+  ^entry (%x: i16, %y: i16):
     %1 = llvm.shl %x, %y overflow<nsw> : i16
     llvm.return %1 : i16
   }]
 
 @[simp_denote]
 def shl_llvm_nuw_16 := [LV| {
-    ^entry (%x: i16, %y: i16):
+  ^entry (%x: i16, %y: i16):
     %1 = llvm.shl %x, %y overflow<nuw> : i16
     llvm.return %1 : i16
   }]
 
 @[simp_denote]
 def shl_llvm_nsw_nuw_16 := [LV| {
-    ^entry (%x: i16, %y: i16):
-    %1 = llvm.shl  %x, %y overflow<nsw,nuw> : i16
+  ^entry (%x: i16, %y: i16):
+    %1 = llvm.shl    %x, %y overflow<nsw,nuw> : i16
     llvm.return %1 : i16
   }]
 
 @[simp_denote]
 def shl_riscv_16 := [LV| {
-    ^entry (%reg1: i16, %reg2: i16 ):
+  ^entry (%reg1: i16, %reg2: i16 ):
     %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i16) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast"(%reg2) : (i16) -> (!i64)
     %2 = sll %0, %1 : !i64
@@ -129,35 +129,35 @@ def llvm_shl_lower_riscv_nsw_nuw_16: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bit
 
 @[simp_denote]
 def shl_llvm_32 := [LV| {
-    ^entry (%x: i32, %y: i32):
+  ^entry (%x: i32, %y: i32):
     %1 = llvm.shl %x, %y : i32
     llvm.return %1 : i32
   }]
 
 @[simp_denote]
 def shl_llvm_nsw_32 := [LV| {
-    ^entry (%x: i32, %y: i32):
+  ^entry (%x: i32, %y: i32):
     %1 = llvm.shl %x, %y overflow<nsw> : i32
     llvm.return %1 : i32
   }]
 
 @[simp_denote]
 def shl_llvm_nuw_32 := [LV| {
-    ^entry (%x: i32, %y: i32):
+  ^entry (%x: i32, %y: i32):
     %1 = llvm.shl %x, %y overflow<nuw> : i32
     llvm.return %1 : i32
   }]
 
 @[simp_denote]
 def shl_llvm_nsw_nuw_32 := [LV| {
-    ^entry (%x: i32, %y: i32):
-    %1 = llvm.shl  %x, %y overflow<nsw,nuw> : i32
+  ^entry (%x: i32, %y: i32):
+    %1 = llvm.shl    %x, %y overflow<nsw,nuw> : i32
     llvm.return %1 : i32
   }]
 
 @[simp_denote]
 def shl_riscv_32 := [LV| {
-    ^entry (%reg1: i32, %reg2: i32 ):
+  ^entry (%reg1: i32, %reg2: i32 ):
     %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i32) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast"(%reg2) : (i32) -> (!i64)
     %2 = sll %0, %1 : !i64
@@ -187,14 +187,14 @@ def llvm_shl_lower_riscv_nsw_nuw_32: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bit
 
 @[simp_denote]
 def shl_llvm_64 := [LV| {
-    ^entry (%x: i64, %y: i64):
+  ^entry (%x: i64, %y: i64):
     %1 = llvm.shl %x, %y : i64
     llvm.return %1 : i64
   }]
 
 @[simp_denote]
 def shl_llvm_nsw_64 := [LV| {
-    ^entry (%x: i64, %y: i64):
+  ^entry (%x: i64, %y: i64):
     %1 = llvm.shl %x, %y overflow<nsw> : i64
     llvm.return %1 : i64
   }]
@@ -202,21 +202,21 @@ def shl_llvm_nsw_64 := [LV| {
 
 @[simp_denote]
 def shl_llvm_nuw_64 := [LV| {
-    ^entry (%x: i64, %y: i64):
+  ^entry (%x: i64, %y: i64):
     %1 = llvm.shl %x, %y overflow<nuw> : i64
     llvm.return %1 : i64
   }]
 
 @[simp_denote]
 def shl_llvm_nsw_nuw_64 := [LV| {
-    ^entry (%x: i64, %y: i64):
-    %1 = llvm.shl  %x, %y overflow<nsw,nuw> : i64
+  ^entry (%x: i64, %y: i64):
+    %1 = llvm.shl    %x, %y overflow<nsw,nuw> : i64
     llvm.return %1 : i64
   }]
 
 @[simp_denote]
 def shl_riscv_64 := [LV| {
-    ^entry (%reg1: i64, %reg2: i64 ):
+  ^entry (%reg1: i64, %reg2: i64 ):
     %0 = "builtin.unrealized_conversion_cast"(%reg1) : (i64) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast"(%reg2) : (i64) -> (!i64)
     %2 = sll %0, %1 : !i64

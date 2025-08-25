@@ -78,8 +78,8 @@ def trunc_llvm_32_to_8_nsw_nuw := [LV| {
 @[simp_denote]
 def trunc_riscv_32_to_8_nsw_nuw := [LV| {
   ^entry (%lhs: i32):
-  %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
-  %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i8)
+    %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
+    %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i8)
     llvm.return %2 : i8
   }]
 
@@ -175,8 +175,8 @@ def trunc_llvm_64_to_32_nsw_nuw := [LV| {
 @[simp_denote]
 def trunc_riscv_to_32_nsw_nuw := [LV| {
   ^entry (%lhs: i64):
-  %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
-  %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
+    %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
+    %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
     llvm.return %2 : i32
   }]
 

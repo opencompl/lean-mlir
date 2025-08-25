@@ -13,14 +13,14 @@ open LLVMRiscV
 
 @[simp_denote]
 def lshr_llvm_no_flag_32 := [LV| {
-    ^entry (%x: i32, %amount: i32):
+  ^entry (%x: i32, %amount: i32):
     %1 = llvm.lshr %x, %amount : i32
     llvm.return %1 : i32
   }]
 
 @[simp_denote]
 def srl_riscv_32 := [LV| {
-    ^entry (%x: i32, %amount: i32):
+  ^entry (%x: i32, %amount: i32):
     %base = "builtin.unrealized_conversion_cast"(%x) : (i32) -> (!i64)
     %shamt = "builtin.unrealized_conversion_cast"(%amount) : (i32) -> (!i64)
     %res = srl %base, %shamt : !i64
@@ -36,7 +36,7 @@ def llvm_srl_lower_riscv_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)
 
 @[simp_denote]
 def lshr_llvm_exact_32 := [LV| {
-    ^entry (%x: i32, %amount: i32):
+  ^entry (%x: i32, %amount: i32):
     %1 = llvm.lshr exact %x, %amount : i32
     llvm.return %1 : i32
   }]
@@ -51,14 +51,14 @@ def llvm_srl_lower_riscv_exact_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitv
 
 @[simp_denote]
 def lshr_llvm_no_flag_64 := [LV| {
-    ^entry (%x: i64, %amount: i64):
+  ^entry (%x: i64, %amount: i64):
     %1 = llvm.lshr %x, %amount : i64
     llvm.return %1 : i64
   }]
 
 @[simp_denote]
 def srl_riscv_64 := [LV| {
-    ^entry (%x: i64, %amount: i64):
+  ^entry (%x: i64, %amount: i64):
     %base = "builtin.unrealized_conversion_cast"(%x) : (i64) -> (!i64)
     %shamt = "builtin.unrealized_conversion_cast"(%amount) : (i64) -> (!i64)
     %res = srl %base, %shamt : !i64
@@ -73,7 +73,7 @@ def llvm_srl_lower_riscv_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)
 
 @[simp_denote]
 def lshr_llvm_exact_64 := [LV| {
-    ^entry (%x: i64, %amount: i64):
+  ^entry (%x: i64, %amount: i64):
     %1 = llvm.lshr exact %x, %amount : i64
     llvm.return %1 : i64
   }]

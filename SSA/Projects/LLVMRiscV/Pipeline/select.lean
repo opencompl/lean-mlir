@@ -38,13 +38,13 @@ def select_riscv_8 := [LV| {
 
 @[simp_denote]
 def select_llvm_8 := [LV| {
-    ^entry (%cond : i1, %arg0: i8, %arg1: i8):
+  ^entry (%cond : i1, %arg0: i8, %arg1: i8):
     %0 = "llvm.select"(%cond, %arg0, %arg1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i8, i8) -> i8
     llvm.return %0 : i8
   }]
 
 def select_riscv_select_llvm_8 : LLVMPeepholeRewriteRefine 8
-    [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 1)] where
+  [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 1)] where
   lhs := select_llvm_8
   rhs := select_riscv_8
 
@@ -70,13 +70,13 @@ def select_riscv_16 := [LV| {
 
 @[simp_denote]
 def select_llvm_16 := [LV| {
-    ^entry (%cond : i1, %arg0: i16, %arg1: i16):
+  ^entry (%cond : i1, %arg0: i16, %arg1: i16):
     %0 = "llvm.select"(%cond, %arg0, %arg1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i16, i16) -> i16
     llvm.return %0 : i16
   }]
 
 def select_riscv_select_llvm_16 : LLVMPeepholeRewriteRefine 16
-    [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 1)] where
+  [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 1)] where
   lhs := select_llvm_16
   rhs := select_riscv_16
 
@@ -102,13 +102,13 @@ def select_riscv_32 := [LV| {
 
 @[simp_denote]
 def select_llvm_32 := [LV| {
-    ^entry (%cond : i1, %arg0: i32, %arg1: i32):
+  ^entry (%cond : i1, %arg0: i32, %arg1: i32):
     %0 = "llvm.select"(%cond, %arg0, %arg1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i32, i32) -> i32
     llvm.return %0 : i32
   }]
 
 def select_riscv_select_llvm_32 : LLVMPeepholeRewriteRefine 32
-    [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 1)] where
+  [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 1)] where
   lhs := select_llvm_32
   rhs := select_riscv_32
 
@@ -134,7 +134,7 @@ def select_riscv_64 := [LV| {
 
 @[simp_denote]
 def select_llvm_64 := [LV| {
-    ^entry (%cond : i1, %arg0: i64, %arg1: i64):
+  ^entry (%cond : i1, %arg0: i64, %arg1: i64):
     %0 = "llvm.select"(%cond, %arg0, %arg1) <{"fastmathFlags" = #llvm.fastmath<none>}> : (i1, i64, i64) -> i64
     llvm.return %0 : i64
   }]

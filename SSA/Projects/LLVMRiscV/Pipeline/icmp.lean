@@ -176,7 +176,7 @@ def icmp_sle_riscv_32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
     %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i32) -> (!i64)
-    %0 = slt  %rhsr, %lhsr : !i64
+    %0 = slt    %rhsr, %lhsr : !i64
     %1 = xori %0, 1 : !i64
     %2 = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i1)
     llvm.return %2 : i1
@@ -199,7 +199,7 @@ def icmp_eq_riscv_32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
     %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i32) -> (!i64)
-    %0 = xor  %lhsr, %rhsr : !i64
+    %0 = xor    %lhsr, %rhsr : !i64
     %1 = sltiu %0, 1 : !i64
     %2 = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i1)
     llvm.return %2 : i1
@@ -221,7 +221,7 @@ def icmp_neq_riscv_32 := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i32) -> (!i64)
     %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i32) -> (!i64)
-    %0 = xor  %lhsr, %rhsr : !i64
+    %0 = xor    %lhsr, %rhsr : !i64
     %c0 = li (0) : !i64
     %1 = sltu %c0, %0 : !i64
     %2 = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i1)
@@ -255,15 +255,15 @@ def icmp_ugt_riscv_64 := [LV| {
 def icmp_ugt_riscv_eq_icmp_ugt_llvm_64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs:= icmp_ugt_llvm_64, rhs:= icmp_ugt_riscv_64,
    correct := by
-    unfold icmp_ugt_llvm_64 icmp_ugt_riscv_64
-    simp_peephole
-    simp_alive_undef
-    simp_riscv
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals
-    bv_decide
+  unfold icmp_ugt_llvm_64 icmp_ugt_riscv_64
+  simp_peephole
+  simp_alive_undef
+  simp_riscv
+  simp_alive_ops
+  simp_alive_case_bash
+  simp_alive_split
+  all_goals
+  bv_decide
   }
 
 @[simp_denote]
@@ -430,7 +430,7 @@ def icmp_eq_riscv_64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
     %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i64) -> (!i64)
-    %0 = xor  %lhsr, %rhsr : !i64
+    %0 = xor    %lhsr, %rhsr : !i64
     %1 = sltiu %0, 1 : !i64
     %2 = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i1)
     llvm.return %2 : i1
@@ -452,7 +452,7 @@ def icmp_neq_riscv_64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
     %rhsr = "builtin.unrealized_conversion_cast"(%rhs) : (i64) -> (!i64)
-    %0 = xor  %lhsr, %rhsr : !i64
+    %0 = xor    %lhsr, %rhsr : !i64
     %c0 = li (0) : !i64
     %1 = sltu %c0, %0 : !i64
     %2 = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i1)

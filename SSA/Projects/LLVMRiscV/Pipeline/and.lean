@@ -39,14 +39,14 @@ def llvm_and_lower_riscv_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 1), T
 @[simp_denote]
 def and_llvm_8 := [LV| {
   ^entry (%lhs: i8, %rhs: i8 ):
-  %1 = llvm.and %lhs, %rhs : i8
-  llvm.return %1 : i8
+    %1 = llvm.and %lhs, %rhs : i8
+    llvm.return %1 : i8
   }]
 
 @[simp_denote]
 def and_riscv_8 := [LV| {
   ^entry (%lhs: i8, %rhs: i8):
-  %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i8) -> (!i64)
+  lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i8) -> (!i64)
   %rhsr = "builtin.unrealized_conversion_cast" (%rhs) : (i8) -> (!i64)
   %0 = and %lhsr, %rhsr : !i64
   %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i8)
@@ -63,8 +63,8 @@ def llvm_and_lower_riscv_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), T
 @[simp_denote]
 def and_llvm_16 := [LV| {
   ^entry (%lhs: i16, %rhs: i16 ):
-  %1 = llvm.and %lhs, %rhs : i16
-  llvm.return %1 : i16
+    %1 = llvm.and %lhs, %rhs : i16
+    llvm.return %1 : i16
   }]
 
 @[simp_denote]
@@ -111,8 +111,8 @@ def llvm_and_lower_riscv_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)
 @[simp_denote]
 def and_llvm_64 := [LV| {
   ^entry (%lhs: i64, %rhs: i64 ):
-  %1 = llvm.and %lhs, %rhs : i64
-  llvm.return %1 : i64
+    %1 = llvm.and %lhs, %rhs : i64
+    llvm.return %1 : i64
   }]
 
 @[simp_denote]

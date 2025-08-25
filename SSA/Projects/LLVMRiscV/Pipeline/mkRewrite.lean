@@ -10,6 +10,6 @@ open LLVMRiscV
    the input types, output type, and the rewrite itself.
 -/
 def mkRewrite {Γ ty}
-    (rw : PeepholeRewrite LLVMPlusRiscV Γ ty) :
-    Σ Γ ty, PeepholeRewrite LLVMPlusRiscV Γ ty :=
+  (rw : PeepholeRewrite LLVMPlusRiscV Γ ty) :
+  Σ Γ ty, PeepholeRewrite LLVMPlusRiscV Γ ty :=
   ⟨_, _, rw⟩

@@ -28,21 +28,21 @@ def add_riscv_1 := [LV| {
 
 @[simp_denote]
 def add_llvm_no_flags_1 := [LV| {
-    ^entry (%lhs: i1, %rhs: i1):
+  ^entry (%lhs: i1, %rhs: i1):
     %1 = llvm.add %lhs, %rhs : i1
     llvm.return %1 : i1
   }]
 
 @[simp_denote]
 def add_llvm_nsw_flags_1 := [LV| {
-    ^entry (%lhs: i1, %rhs: i1):
+  ^entry (%lhs: i1, %rhs: i1):
     %1 = llvm.add %lhs, %rhs overflow<nsw> : i1
     llvm.return %1 : i1
   }]
 
 @[simp_denote]
 def add_llvm_nuw_flags_1 := [LV| {
-    ^entry (%lhs: i1, %rhs: i1):
+  ^entry (%lhs: i1, %rhs: i1):
     %1 = llvm.add %lhs, %rhs overflow<nuw> : i1
     llvm.return %1 : i1
   }]
@@ -76,7 +76,7 @@ def llvm_add_lower_riscv_nuw_nsw_flag_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (
 @[simp_denote]
 def add_riscv_8 := [LV| {
   ^entry (%lhs: i8, %rhs: i8):
-    %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i8) -> (!i64)
+      %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i8) -> (!i64)
     %rhsr = "builtin.unrealized_conversion_cast" (%rhs) : (i8) -> (!i64)
     %0 = add %lhsr, %rhsr : !i64
     %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i8)
@@ -85,21 +85,21 @@ def add_riscv_8 := [LV| {
 
 @[simp_denote]
 def add_llvm_no_flags_8 := [LV| {
-    ^entry (%lhs: i8, %rhs: i8):
+  ^entry (%lhs: i8, %rhs: i8):
     %1 = llvm.add %lhs, %rhs : i8
     llvm.return %1 : i8
   }]
 
 @[simp_denote]
 def add_llvm_nsw_flags_8 := [LV| {
-    ^entry (%lhs: i8, %rhs: i8):
+  ^entry (%lhs: i8, %rhs: i8):
     %1 = llvm.add %lhs, %rhs overflow<nsw> : i8
     llvm.return %1 : i8
   }]
 
 @[simp_denote]
 def add_llvm_nuw_flags_8 := [LV| {
-    ^entry (%lhs: i8, %rhs: i8):
+  ^entry (%lhs: i8, %rhs: i8):
     %1 = llvm.add %lhs, %rhs overflow<nuw> : i8
     llvm.return %1 : i8
   }]
@@ -144,21 +144,21 @@ def add_riscv_16 := [LV| {
 
 @[simp_denote]
 def add_llvm_no_flags_16 := [LV| {
-    ^entry (%lhs: i16, %rhs: i16):
+  ^entry (%lhs: i16, %rhs: i16):
     %1 = llvm.add %lhs, %rhs : i16
     llvm.return %1 : i16
   }]
 
 @[simp_denote]
 def add_llvm_nsw_flags_16 := [LV| {
-    ^entry (%lhs: i16, %rhs: i16):
+  ^entry (%lhs: i16, %rhs: i16):
     %1 = llvm.add %lhs, %rhs overflow<nsw> : i16
     llvm.return %1 : i16
   }]
 
 @[simp_denote]
 def add_llvm_nuw_flags_16 := [LV| {
-    ^entry (%lhs: i16, %rhs: i16):
+  ^entry (%lhs: i16, %rhs: i16):
     %1 = llvm.add %lhs, %rhs overflow<nuw> : i16
     llvm.return %1 : i16
   }]
@@ -203,21 +203,21 @@ def add_riscv_32 := [LV| {
 
 @[simp_denote]
 def add_llvm_no_flags_32 := [LV| {
-    ^entry (%lhs: i32, %rhs: i32):
+  ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.add %lhs, %rhs : i32
     llvm.return %1 : i32
   }]
 
 @[simp_denote]
 def add_llvm_nsw_flags_32 := [LV| {
-    ^entry (%lhs: i32, %rhs: i32):
+  ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.add %lhs, %rhs overflow<nsw> : i32
     llvm.return %1 : i32
   }]
 
 @[simp_denote]
 def add_llvm_nuw_flags_32 := [LV| {
-    ^entry (%lhs: i32, %rhs: i32):
+  ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.add %lhs, %rhs overflow<nuw> : i32
     llvm.return %1 : i32
   }]
@@ -266,21 +266,21 @@ def add_riscv_64 := [LV| {
 
 @[simp_denote]
 def add_llvm_no_flags_64 := [LV| {
-    ^entry (%lhs: i64, %rhs: i64):
+  ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.add %lhs, %rhs : i64
     llvm.return %1 : i64
   }]
 
 @[simp_denote]
 def add_llvm_nsw_flags_64 := [LV| {
-    ^entry (%lhs: i64, %rhs: i64):
+  ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.add %lhs, %rhs overflow<nsw> : i64
     llvm.return %1 : i64
   }]
 
 @[simp_denote]
 def add_llvm_nuw_flags_64 := [LV| {
-    ^entry (%lhs: i64, %rhs: i64):
+  ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.add %lhs, %rhs overflow<nuw> : i64
     llvm.return %1 : i64
   }]

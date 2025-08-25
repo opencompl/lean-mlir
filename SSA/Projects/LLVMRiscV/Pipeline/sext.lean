@@ -220,13 +220,13 @@ def llvm_sext_lower_riscv_i16_to_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bi
   {lhs:= sext_llvm_i16_to_64, rhs:= sext_riscv_i16_to_64}
 
 def sext_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-    [  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i8),
-       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i16),
-       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_32),
-       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_64),
-       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_64),
-       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_i16),
-       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_32),
-       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i16_to_32),
-       mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i16_to_64),
+  [  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i8),
+     mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_i16),
+     mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_32),
+     mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i1_to_64),
+     mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_64),
+     mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_i16),
+     mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i8_to_32),
+     mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i16_to_32),
+     mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_sext_lower_riscv_i16_to_64),
    ]

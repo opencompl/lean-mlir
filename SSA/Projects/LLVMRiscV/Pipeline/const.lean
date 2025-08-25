@@ -7,2327 +7,2327 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
-    def liRiscv_50 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -50 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  def liRiscv_50 := [LV| {
+  ^entry ():
+    %0 = "li"() {imm = -50 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_50 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-50) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-50) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_50 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_50, rhs:= liRiscv_50,
    correct := by
-    unfold constLLVM_50 liRiscv_50
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_50 liRiscv_50
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_49 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -49 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -49 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_49 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-49) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-49) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_49 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_49, rhs:= liRiscv_49,
    correct := by
-    unfold constLLVM_49 liRiscv_49
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_49 liRiscv_49
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_48 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -48 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -48 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_48 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-48) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-48) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_48 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_48, rhs:= liRiscv_48,
    correct := by
-    unfold constLLVM_48 liRiscv_48
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_48 liRiscv_48
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_47 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -47 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -47 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_47 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-47) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-47) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_47 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_47, rhs:= liRiscv_47,
    correct := by
-    unfold constLLVM_47 liRiscv_47
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_47 liRiscv_47
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_46 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -46 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -46 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_46 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-46) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-46) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_46 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_46, rhs:= liRiscv_46,
    correct := by
-    unfold constLLVM_46 liRiscv_46
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_46 liRiscv_46
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_45 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -45 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -45 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_45 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-45) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-45) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_45 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_45, rhs:= liRiscv_45,
    correct := by
-    unfold constLLVM_45 liRiscv_45
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_45 liRiscv_45
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_44 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -44 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -44 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_44 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-44) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-44) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_44 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_44, rhs:= liRiscv_44,
    correct := by
-    unfold constLLVM_44 liRiscv_44
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_44 liRiscv_44
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_43 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -43 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -43 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_43 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-43) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-43) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_43 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_43, rhs:= liRiscv_43,
    correct := by
-    unfold constLLVM_43 liRiscv_43
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_43 liRiscv_43
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_42 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -42 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -42 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_42 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-42) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-42) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_42 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_42, rhs:= liRiscv_42,
    correct := by
-    unfold constLLVM_42 liRiscv_42
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_42 liRiscv_42
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_41 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -41 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -41 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_41 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-41) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-41) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_41 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_41, rhs:= liRiscv_41,
    correct := by
-    unfold constLLVM_41 liRiscv_41
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_41 liRiscv_41
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_40 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -40 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -40 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_40 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-40) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-40) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_40 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_40, rhs:= liRiscv_40,
    correct := by
-    unfold constLLVM_40 liRiscv_40
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_40 liRiscv_40
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_39 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -39 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -39 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_39 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-39) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-39) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_39 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_39, rhs:= liRiscv_39,
    correct := by
-    unfold constLLVM_39 liRiscv_39
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_39 liRiscv_39
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_38 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -38 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -38 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_38 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-38) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-38) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_38 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_38, rhs:= liRiscv_38,
    correct := by
-    unfold constLLVM_38 liRiscv_38
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_38 liRiscv_38
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_37 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -37 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -37 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_37 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-37) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-37) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_37 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_37, rhs:= liRiscv_37,
    correct := by
-    unfold constLLVM_37 liRiscv_37
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_37 liRiscv_37
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_36 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -36 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -36 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_36 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-36) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-36) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_36 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_36, rhs:= liRiscv_36,
    correct := by
-    unfold constLLVM_36 liRiscv_36
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_36 liRiscv_36
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_35 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -35 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -35 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_35 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-35) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-35) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_35 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_35, rhs:= liRiscv_35,
    correct := by
-    unfold constLLVM_35 liRiscv_35
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_35 liRiscv_35
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_34 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -34 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -34 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_34 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-34) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-34) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_34 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_34, rhs:= liRiscv_34,
    correct := by
-    unfold constLLVM_34 liRiscv_34
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_34 liRiscv_34
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_33 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -33 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -33 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_33 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-33) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-33) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_33 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_33, rhs:= liRiscv_33,
    correct := by
-    unfold constLLVM_33 liRiscv_33
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_33 liRiscv_33
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_32 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -32 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -32 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_32 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-32) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-32) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_32 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_32, rhs:= liRiscv_32,
    correct := by
-    unfold constLLVM_32 liRiscv_32
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_32 liRiscv_32
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_31 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -31 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -31 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_31 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-31) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-31) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_31 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_31, rhs:= liRiscv_31,
    correct := by
-    unfold constLLVM_31 liRiscv_31
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_31 liRiscv_31
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_30 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -30 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -30 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_30 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-30) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-30) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_30 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_30, rhs:= liRiscv_30,
    correct := by
-    unfold constLLVM_30 liRiscv_30
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_30 liRiscv_30
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_29 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -29 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -29 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_29 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-29) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-29) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_29 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_29, rhs:= liRiscv_29,
    correct := by
-    unfold constLLVM_29 liRiscv_29
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_29 liRiscv_29
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_28 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -28 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -28 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_28 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-28) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-28) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_28 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_28, rhs:= liRiscv_28,
    correct := by
-    unfold constLLVM_28 liRiscv_28
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_28 liRiscv_28
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_27 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -27 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -27 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_27 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-27) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-27) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_27 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_27, rhs:= liRiscv_27,
    correct := by
-    unfold constLLVM_27 liRiscv_27
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_27 liRiscv_27
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_26 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -26 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -26 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_26 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-26) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-26) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_26 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_26, rhs:= liRiscv_26,
    correct := by
-    unfold constLLVM_26 liRiscv_26
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_26 liRiscv_26
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_25 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -25 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -25 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_25 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-25) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-25) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_25 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_25, rhs:= liRiscv_25,
    correct := by
-    unfold constLLVM_25 liRiscv_25
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_25 liRiscv_25
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_24 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -24 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -24 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_24 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-24) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-24) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_24 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_24, rhs:= liRiscv_24,
    correct := by
-    unfold constLLVM_24 liRiscv_24
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_24 liRiscv_24
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_23 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -23 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -23 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_23 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-23) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-23) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_23 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_23, rhs:= liRiscv_23,
    correct := by
-    unfold constLLVM_23 liRiscv_23
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_23 liRiscv_23
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_22 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -22 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -22 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_22 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-22) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-22) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_22 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_22, rhs:= liRiscv_22,
    correct := by
-    unfold constLLVM_22 liRiscv_22
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_22 liRiscv_22
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_21 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -21 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -21 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_21 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-21) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-21) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_21 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_21, rhs:= liRiscv_21,
    correct := by
-    unfold constLLVM_21 liRiscv_21
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_21 liRiscv_21
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_20 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -20 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -20 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_20 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-20) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-20) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_20 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_20, rhs:= liRiscv_20,
    correct := by
-    unfold constLLVM_20 liRiscv_20
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_20 liRiscv_20
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_19 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -19 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -19 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_19 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-19) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-19) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_19 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_19, rhs:= liRiscv_19,
    correct := by
-    unfold constLLVM_19 liRiscv_19
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_19 liRiscv_19
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_18 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -18 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -18 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_18 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-18) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-18) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_18 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_18, rhs:= liRiscv_18,
    correct := by
-    unfold constLLVM_18 liRiscv_18
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_18 liRiscv_18
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_17 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -17 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -17 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_17 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-17) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-17) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_17 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_17, rhs:= liRiscv_17,
    correct := by
-    unfold constLLVM_17 liRiscv_17
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_17 liRiscv_17
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_16 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -16 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -16 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_16 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-16) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-16) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_16 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_16, rhs:= liRiscv_16,
    correct := by
-    unfold constLLVM_16 liRiscv_16
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_16 liRiscv_16
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_15 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -15 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -15 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_15 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-15) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-15) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_15 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_15, rhs:= liRiscv_15,
    correct := by
-    unfold constLLVM_15 liRiscv_15
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_15 liRiscv_15
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_14 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -14 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -14 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_14 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-14) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-14) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_14 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_14, rhs:= liRiscv_14,
    correct := by
-    unfold constLLVM_14 liRiscv_14
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_14 liRiscv_14
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_13 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -13 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -13 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_13 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-13) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-13) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_13 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_13, rhs:= liRiscv_13,
    correct := by
-    unfold constLLVM_13 liRiscv_13
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_13 liRiscv_13
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_12 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -12 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -12 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_12 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-12) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-12) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_12 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_12, rhs:= liRiscv_12,
    correct := by
-    unfold constLLVM_12 liRiscv_12
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_12 liRiscv_12
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_11 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -11 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -11 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_11 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-11) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-11) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_11 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_11, rhs:= liRiscv_11,
    correct := by
-    unfold constLLVM_11 liRiscv_11
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_11 liRiscv_11
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_10 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -10 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -10 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_10 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-10) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-10) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_10 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_10, rhs:= liRiscv_10,
    correct := by
-    unfold constLLVM_10 liRiscv_10
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_10 liRiscv_10
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_9 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -9 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -9 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_9 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-9) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-9) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_9 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_9, rhs:= liRiscv_9,
    correct := by
-    unfold constLLVM_9 liRiscv_9
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_9 liRiscv_9
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_8 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -8 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -8 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_8 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-8) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-8) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_8 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_8, rhs:= liRiscv_8,
    correct := by
-    unfold constLLVM_8 liRiscv_8
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_8 liRiscv_8
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_7 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -7 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -7 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_7 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-7) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-7) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_7 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_7, rhs:= liRiscv_7,
    correct := by
-    unfold constLLVM_7 liRiscv_7
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_7 liRiscv_7
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_6 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -6 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -6 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_6 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-6) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-6) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_6 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_6, rhs:= liRiscv_6,
    correct := by
-    unfold constLLVM_6 liRiscv_6
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_6 liRiscv_6
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_5 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -5 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -5 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_5 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-5) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-5) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_5 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_5, rhs:= liRiscv_5,
    correct := by
-    unfold constLLVM_5 liRiscv_5
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_5 liRiscv_5
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_4 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -4 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -4 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_4 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-4) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-4) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_4 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_4, rhs:= liRiscv_4,
    correct := by
-    unfold constLLVM_4 liRiscv_4
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_4 liRiscv_4
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_3 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -3 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -3 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_3 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-3) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-3) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_3 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_3, rhs:= liRiscv_3,
    correct := by
-    unfold constLLVM_3 liRiscv_3
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_3 liRiscv_3
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_2 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -2 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -2 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_2 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-2) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-2) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_2 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_2, rhs:= liRiscv_2,
    correct := by
-    unfold constLLVM_2 liRiscv_2
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_2 liRiscv_2
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv_1 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = -1 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = -1 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM_1 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (-1) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (-1) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li_1 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM_1, rhs:= liRiscv_1,
    correct := by
-    unfold constLLVM_1 liRiscv_1
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM_1 liRiscv_1
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv0 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 0 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 0 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM0 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (0) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (0) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li0 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM0, rhs:= liRiscv0,
    correct := by
-    unfold constLLVM0 liRiscv0
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM0 liRiscv0
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv1 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 1 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 1 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM1 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (1) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (1) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li1 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM1, rhs:= liRiscv1,
    correct := by
-    unfold constLLVM1 liRiscv1
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM1 liRiscv1
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv2 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 2 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 2 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM2 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (2) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (2) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li2 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM2, rhs:= liRiscv2,
    correct := by
-    unfold constLLVM2 liRiscv2
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM2 liRiscv2
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv3 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 3 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 3 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM3 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (3) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (3) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li3 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM3, rhs:= liRiscv3,
    correct := by
-    unfold constLLVM3 liRiscv3
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM3 liRiscv3
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv4 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 4 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 4 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM4 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (4) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (4) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li4 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM4, rhs:= liRiscv4,
    correct := by
-    unfold constLLVM4 liRiscv4
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM4 liRiscv4
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv5 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 5 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 5 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM5 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (5) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (5) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li5 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM5, rhs:= liRiscv5,
    correct := by
-    unfold constLLVM5 liRiscv5
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM5 liRiscv5
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv6 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 6 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 6 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM6 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (6) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (6) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li6 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM6, rhs:= liRiscv6,
    correct := by
-    unfold constLLVM6 liRiscv6
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM6 liRiscv6
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv7 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 7 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 7 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM7 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (7) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (7) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li7 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM7, rhs:= liRiscv7,
    correct := by
-    unfold constLLVM7 liRiscv7
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM7 liRiscv7
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv8 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 8 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 8 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM8 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (8) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (8) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li8 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM8, rhs:= liRiscv8,
    correct := by
-    unfold constLLVM8 liRiscv8
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM8 liRiscv8
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv9 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 9 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 9 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM9 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (9) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (9) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li9 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM9, rhs:= liRiscv9,
    correct := by
-    unfold constLLVM9 liRiscv9
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM9 liRiscv9
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv10 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 10 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 10 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM10 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (10) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (10) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li10 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM10, rhs:= liRiscv10,
    correct := by
-    unfold constLLVM10 liRiscv10
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM10 liRiscv10
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv11 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 11 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 11 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM11 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (11) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (11) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li11 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM11, rhs:= liRiscv11,
    correct := by
-    unfold constLLVM11 liRiscv11
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM11 liRiscv11
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv12 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 12 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 12 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM12 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (12) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (12) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li12 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM12, rhs:= liRiscv12,
    correct := by
-    unfold constLLVM12 liRiscv12
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM12 liRiscv12
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv13 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 13 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 13 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM13 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (13) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (13) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li13 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM13, rhs:= liRiscv13,
    correct := by
-    unfold constLLVM13 liRiscv13
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM13 liRiscv13
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv14 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 14 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 14 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM14 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (14) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (14) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li14 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM14, rhs:= liRiscv14,
    correct := by
-    unfold constLLVM14 liRiscv14
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM14 liRiscv14
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv15 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 15 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 15 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM15 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (15) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (15) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li15 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM15, rhs:= liRiscv15,
    correct := by
-    unfold constLLVM15 liRiscv15
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM15 liRiscv15
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv16 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 16 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 16 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM16 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (16) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (16) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li16 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM16, rhs:= liRiscv16,
    correct := by
-    unfold constLLVM16 liRiscv16
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM16 liRiscv16
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv17 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 17 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 17 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM17 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (17) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (17) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li17 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM17, rhs:= liRiscv17,
    correct := by
-    unfold constLLVM17 liRiscv17
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM17 liRiscv17
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv18 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 18 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 18 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM18 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (18) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (18) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li18 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM18, rhs:= liRiscv18,
    correct := by
-    unfold constLLVM18 liRiscv18
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM18 liRiscv18
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv19 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 19 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 19 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM19 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (19) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (19) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li19 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM19, rhs:= liRiscv19,
    correct := by
-    unfold constLLVM19 liRiscv19
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM19 liRiscv19
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv20 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 20 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 20 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM20 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (20) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (20) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li20 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM20, rhs:= liRiscv20,
    correct := by
-    unfold constLLVM20 liRiscv20
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM20 liRiscv20
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv21 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 21 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 21 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM21 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (21) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (21) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li21 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM21, rhs:= liRiscv21,
    correct := by
-    unfold constLLVM21 liRiscv21
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM21 liRiscv21
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv22 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 22 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 22 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM22 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (22) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (22) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li22 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM22, rhs:= liRiscv22,
    correct := by
-    unfold constLLVM22 liRiscv22
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM22 liRiscv22
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv23 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 23 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 23 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM23 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (23) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (23) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li23 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM23, rhs:= liRiscv23,
    correct := by
-    unfold constLLVM23 liRiscv23
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM23 liRiscv23
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv24 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 24 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 24 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM24 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (24) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (24) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li24 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM24, rhs:= liRiscv24,
    correct := by
-    unfold constLLVM24 liRiscv24
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM24 liRiscv24
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv25 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 25 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 25 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM25 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (25) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (25) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li25 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM25, rhs:= liRiscv25,
    correct := by
-    unfold constLLVM25 liRiscv25
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM25 liRiscv25
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv26 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 26 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 26 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM26 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (26) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (26) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li26 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM26, rhs:= liRiscv26,
    correct := by
-    unfold constLLVM26 liRiscv26
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM26 liRiscv26
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv27 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 27 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 27 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM27 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (27) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (27) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li27 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM27, rhs:= liRiscv27,
    correct := by
-    unfold constLLVM27 liRiscv27
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM27 liRiscv27
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv28 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 28 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 28 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM28 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (28) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (28) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li28 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM28, rhs:= liRiscv28,
    correct := by
-    unfold constLLVM28 liRiscv28
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM28 liRiscv28
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv29 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 29 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 29 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM29 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (29) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (29) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li29 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM29, rhs:= liRiscv29,
    correct := by
-    unfold constLLVM29 liRiscv29
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM29 liRiscv29
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv30 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 30 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 30 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM30 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (30) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (30) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li30 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM30, rhs:= liRiscv30,
    correct := by
-    unfold constLLVM30 liRiscv30
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM30 liRiscv30
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv31 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 31 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 31 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM31 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (31) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (31) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li31 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM31, rhs:= liRiscv31,
    correct := by
-    unfold constLLVM31 liRiscv31
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM31 liRiscv31
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv32 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 32 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 32 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM32 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (32) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (32) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li32 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM32, rhs:= liRiscv32,
    correct := by
-    unfold constLLVM32 liRiscv32
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM32 liRiscv32
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv33 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 33 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 33 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM33 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (33) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (33) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li33 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM33, rhs:= liRiscv33,
    correct := by
-    unfold constLLVM33 liRiscv33
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM33 liRiscv33
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv34 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 34 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 34 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM34 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (34) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (34) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li34 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM34, rhs:= liRiscv34,
    correct := by
-    unfold constLLVM34 liRiscv34
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM34 liRiscv34
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv35 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 35 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 35 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM35 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (35) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (35) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li35 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM35, rhs:= liRiscv35,
    correct := by
-    unfold constLLVM35 liRiscv35
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM35 liRiscv35
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv36 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 36 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 36 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM36 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (36) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (36) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li36 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM36, rhs:= liRiscv36,
    correct := by
-    unfold constLLVM36 liRiscv36
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM36 liRiscv36
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv37 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 37 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 37 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM37 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (37) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (37) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li37 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM37, rhs:= liRiscv37,
    correct := by
-    unfold constLLVM37 liRiscv37
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM37 liRiscv37
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv38 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 38 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 38 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM38 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (38) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (38) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li38 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM38, rhs:= liRiscv38,
    correct := by
-    unfold constLLVM38 liRiscv38
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM38 liRiscv38
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv39 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 39 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 39 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM39 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (39) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (39) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li39 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM39, rhs:= liRiscv39,
    correct := by
-    unfold constLLVM39 liRiscv39
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM39 liRiscv39
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv40 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 40 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 40 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM40 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (40) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (40) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li40 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM40, rhs:= liRiscv40,
    correct := by
-    unfold constLLVM40 liRiscv40
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM40 liRiscv40
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv41 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 41 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 41 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM41 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (41) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (41) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li41 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM41, rhs:= liRiscv41,
    correct := by
-    unfold constLLVM41 liRiscv41
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM41 liRiscv41
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv42 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 42 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 42 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM42 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (42) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (42) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li42 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM42, rhs:= liRiscv42,
    correct := by
-    unfold constLLVM42 liRiscv42
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM42 liRiscv42
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv43 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 43 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 43 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM43 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (43) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (43) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li43 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM43, rhs:= liRiscv43,
    correct := by
-    unfold constLLVM43 liRiscv43
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM43 liRiscv43
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv44 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 44 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 44 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM44 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (44) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (44) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li44 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM44, rhs:= liRiscv44,
    correct := by
-    unfold constLLVM44 liRiscv44
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM44 liRiscv44
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv45 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 45 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 45 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM45 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (45) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (45) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li45 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM45, rhs:= liRiscv45,
    correct := by
-    unfold constLLVM45 liRiscv45
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM45 liRiscv45
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv46 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 46 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 46 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM46 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (46) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (46) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li46 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM46, rhs:= liRiscv46,
    correct := by
-    unfold constLLVM46 liRiscv46
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM46 liRiscv46
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv47 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 47 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 47 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM47 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (47) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (47) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li47 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM47, rhs:= liRiscv47,
    correct := by
-    unfold constLLVM47 liRiscv47
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM47 liRiscv47
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv48 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 48 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 48 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM48 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (48) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (48) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li48 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM48, rhs:= liRiscv48,
    correct := by
-    unfold constLLVM48 liRiscv48
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM48 liRiscv48
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv49 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 49 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 49 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM49 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (49) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (49) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li49 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM49, rhs:= liRiscv49,
    correct := by
-    unfold constLLVM49 liRiscv49
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM49 liRiscv49
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def liRiscv50 := [LV| {
-    ^entry ():
-      %0 = "li"() {imm = 50 : !i64} : (!i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
-      llvm.return %1 : i64
+  ^entry ():
+    %0 = "li"() {imm = 50 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
+    llvm.return %1 : i64
   }]
 
 def constLLVM50 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
-    ^entry ():
-      %1 = llvm.mlir.constant (50) : i64
-      llvm.return %1 : i64
+  ^entry ():
+    %1 = llvm.mlir.constant (50) : i64
+    llvm.return %1 : i64
   }]
 
 def llvm_const_lower_riscv_li50 : LLVMPeepholeRewriteRefine 64 [] :=
   {lhs := constLLVM50, rhs:= liRiscv50,
    correct := by
-    unfold constLLVM50 liRiscv50
-    simp_peephole
-    simp_riscv
-    simp_alive_ops
-    simp
+  unfold constLLVM50 liRiscv50
+  simp_peephole
+  simp_riscv
+  simp_alive_ops
+  simp
   }
 
 def const_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
