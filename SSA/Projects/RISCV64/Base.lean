@@ -487,7 +487,7 @@ def opToString (op : RISCV64.Op) : String :=
   | .rorw => "rorw"
   -- orc.b
   -- rev8
-  --pseudo-instructions
+  -- pseudo-instructions
   | .mv => "mv"
   | .not => "not"
   | .neg => "neg"
