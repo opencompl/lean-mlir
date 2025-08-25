@@ -8,6 +8,7 @@ import SSA.Core.Tactic
 import SSA.Core.ErasedContext
 import SSA.Core.Util
 
+open LeanMLIR
 open Ctxt(Var)
 
 namespace ScfFunctor
@@ -67,15 +68,15 @@ instance [TyDenote d.Ty] [DialectSignature d] [DialectDenote d]
     [B : HasBool d] [N : HasNat d] [I : HasInt d] : DialectSignature (Scf d) where
    signature
    | .coe o => signature (d:=d) o
-    | .if t t' => ⟨[B.ty, t], [(⟨[t]⟩, t'), (⟨[t]⟩, t')], t', .impure⟩
-      --    /----------------------------------------------^^^^^^
+    | .if t t' => ⟨[B.ty, t], [(⟨[t]⟩, [t']), (⟨[t]⟩, [t'])], [t'], .impure⟩
+      --    /--------------------------------------------------------^^^^^^
       --    | Morally, an `if` should be pure, so long as its regions are pure, and impure otherwise
       --    | However, with the current setup,
       --    | only impure operations are able to access their regions,
       --    | thus we make `if` (together with the other SCF operations) unconditionally impure
-    | .for t => ⟨[/-start-/I.ty, /-step-/I.ty, /-niters-/N.ty, t], [(⟨[I.ty, t]⟩, t)], t, .impure⟩
-    | .run t => ⟨[t], [(⟨[t]⟩, t)], t, .impure⟩
-    | .iterate _k => ⟨[I.ty], [(⟨[I.ty]⟩, I.ty)], I.ty, .impure⟩
+    | .for t => ⟨[/-start-/I.ty, /-step-/I.ty, /-niters-/N.ty, t], [(⟨[I.ty, t]⟩, [t])], [t], .impure⟩
+    | .run t => ⟨[t], [(⟨[t]⟩, [t])], [t], .impure⟩
+    | .iterate _k => ⟨[I.ty], [(⟨[I.ty]⟩, [I.ty])], [I.ty], .impure⟩
 
 
 /-- A loop body receives the current value of the loop induction variable, and
@@ -233,31 +234,36 @@ instance [Monad d.m] : DialectDenote (Scf d) where
         by
          exact denote' args' regArgs'
     | .if t t', (.cons (cond ) (.cons v .nil)),
-         (.cons (f : Ctxt.Valuation ⟨[t]⟩ → d.m ⟦t'⟧) (.cons (g : _ → _) .nil)) =>
+         (.cons (f : Ctxt.Valuation ⟨[t]⟩ → d.m (HVector toType [t'])) (.cons (g : _ → _) .nil)) =>
          let body := if B.denote_eq ▸ cond then f else g
       body (Ctxt.Valuation.nil.snoc v)
     | .run _t, (.cons v .nil), (.cons (f : _ → _) .nil) =>
         f (Ctxt.Valuation.nil.snoc v)
     | .for ty, (.cons istart (.cons istep (.cons niter (.cons vstart .nil)))),
-        (.cons (f : _  → _) .nil) =>
+        (.cons (f : _  → _) .nil) => do
         let istart : ℤ := Z.denote_eq ▸ istart
         let istep : ℤ := Z.denote_eq ▸ istep
         let niter : ℕ := N.denote_eq ▸ niter
         let f' : LoopBody (d.m ⟦ty⟧) := fun i v => do
           let v ← v
           let i := Z.denote_eq.symm ▸ i
-          f (Valuation.ofPair i v)
+          let xs ← f (Valuation.ofPair i v)
+          return xs.get (0 : Fin 1)
         let to_iterate := f'.counterDecorator (α := d.m ⟦ty⟧) (δ := istep)
         let loop_fn := niter.iterate (op := to_iterate)
-        (loop_fn (istart, pure vstart)).2
+        let x ← (loop_fn (istart, pure vstart)).2
+        return [x]ₕ
 
-    | .iterate k, (.cons (x) .nil), (.cons (f : _ → _) .nil) =>
+    | .iterate k, (.cons (x) .nil), (.cons (f : _ → _) .nil) => do
       let x : ℤ := Z.denote_eq ▸ x
       let coe : ℤ = toType Z.ty := Z.denote_eq.symm
       let f' (v : d.m ℤ) : d.m ℤ := do
         let v ← v
-        coe ▸ f (Ctxt.Valuation.nil.snoc (cast coe v))
-      Z.denote_eq ▸ (k.iterate f' (pure x))
+        let xs ← f (Ctxt.Valuation.nil.snoc (cast coe v))
+        let x := xs.getN 0
+        return coe ▸ x
+      let y ← (k.iterate f' (pure x))
+      return [cast Z.denote_eq.symm y]ₕ
 end Scf
 
 namespace Arith
@@ -288,23 +294,23 @@ abbrev Arith : Dialect := {Op, Ty}
 @[reducible]
 instance : DialectSignature Arith where
   signature
-    | .axpy => ⟨[.int, .nat, .int], [], .int, .pure⟩
-    | .neg => ⟨[.int], [], .int, .pure⟩
-    | .const _ => ⟨[], [], .int, .pure⟩
-    | .const_nat _ => ⟨[], [], .nat, .pure⟩
-    | .add   => ⟨[.int, .int], [], .int, .pure⟩
-    | .add_nat   => ⟨[.nat, .nat], [], .nat, .pure⟩
+    | .axpy => ⟨[.int, .nat, .int], [], [.int], .pure⟩
+    | .neg => ⟨[.int], [], [.int], .pure⟩
+    | .const _ => ⟨[], [], [.int], .pure⟩
+    | .const_nat _ => ⟨[], [], [.nat], .pure⟩
+    | .add   => ⟨[.int, .int], [], [.int], .pure⟩
+    | .add_nat   => ⟨[.nat, .nat], [], [.nat], .pure⟩
 
 
 @[reducible]
 instance : DialectDenote Arith where
   denote
-    | .const n, _, _ => n
-    | .const_nat n, _, _ => n
-    | .neg, .cons (a : ℤ ) .nil, _ => -a
-    | .axpy, .cons (a : ℤ) (.cons (x : ℕ) (.cons (b : ℤ) .nil)), _ => a * (x : ℤ) + b
-    | .add, .cons (a : ℤ) (.cons (b : ℤ) .nil), _ => a + b
-    | .add_nat, .cons (a : ℕ) (.cons (b : ℕ) .nil), _ => a + b
+    | .const n, _, _ => [n]ₕ
+    | .const_nat n, _, _ => [n]ₕ
+    | .neg, .cons (a : ℤ ) .nil, _ => [-a]ₕ
+    | .axpy, .cons (a : ℤ) (.cons (x : ℕ) (.cons (b : ℤ) .nil)), _ => [a * (x : ℤ) + b]ₕ
+    | .add, .cons (a : ℤ) (.cons (b : ℤ) .nil), _ => [a + b]ₕ
+    | .add_nat, .cons (a : ℕ) (.cons (b : ℕ) .nil), _ => [a + b]ₕ
 
 
 instance : HasBool Arith where ty := .bool
@@ -316,6 +322,8 @@ export Arith (Arith)
 
 /-- Compose Scf on top of Arith -/
 abbrev ScfArith := Scf Arith
+
+open LeanMLIR.SingleReturnCompat (Com Expr)
 
 @[simp_denote] def cst (n : ℤ) : Expr ScfArith Γ .pure .int  :=
   Expr.mk
@@ -433,7 +441,7 @@ theorem if_false' {t : Arith.Ty} (cond : Var Γ Arith.Ty.bool) (hcond : Γv cond
   just fetching the loop variable. -/
 theorem for_return {t : Arith.Ty} (istart istep: Var Γ Arith.Ty.int)
     (niters : Var Γ .nat) (v : Var Γ t) :
-    Expr.denoteOp (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = Γv v := by
+    Expr.denoteOp (for_ (t := t) istart istep niters v (RegionRet t ⟨1, by simp⟩)) Γv = [Γv v]ₕ := by
   simp_peephole
   simp [Scf.LoopBody.counterDecorator.constant_iterate]
 
@@ -471,12 +479,12 @@ def lhs (vincrement : ℤ) : Com ScfArith ⟨[/- nsteps -/ .nat, /- vstart -/ .i
       Com.letPure (cst vincrement) <|
       Com.letPure (add ⟨0, rfl⟩ ⟨2, rfl⟩) -- fun v => (v + increment)
       <| Com.ret ⟨0, rfl⟩)) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨0, rfl⟩
 
 def rhs (vincrement : ℤ) : Com ScfArith ⟨[/- nsteps -/ .nat, /- vstart -/ .int]⟩ .pure .int :=
   Com.var (cst vincrement) <|
-  Com.var (axpy ⟨0, by simp [Ctxt.snoc]⟩ ⟨1, by simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.var (axpy ⟨0, rfl⟩ ⟨1, rfl⟩ ⟨2, rfl⟩) <|
+  Com.ret ⟨0, rfl⟩
 
 abbrev instHadd : HAdd ⟦ScfFunctor.Arith.Ty.int⟧ ⟦ScfFunctor.Arith.Ty.int⟧
   ⟦ScfFunctor.Arith.Ty.int⟧ := @instHAdd ℤ Int.instAdd
@@ -504,8 +512,12 @@ variable {t : Arith.Ty}
 variable (rgn : Com ScfArith ⟨[Arith.Ty.int, t]⟩ .impure t)
 /- region semantics does not depend on trip count. That is, the region is trip count invariant.
   In such cases, a region can be reversed. -/
-variable (hrgn : Scf.LoopBody.IndexInvariant (fun i v => Com.denote rgn <|
-    Ctxt.Valuation.ofPair i v))
+variable (hrgn : Scf.LoopBody.IndexInvariant (fun i v =>
+    Com.denote rgn <|
+      let v : HVector _ _ := v
+      let v := v.getN 0
+      Ctxt.Valuation.ofPair i v)
+  )
 
 def lhs :
     let Γ := ⟨[/- start-/ Arith.Ty.int, /- delta -/Arith.Ty.int,
@@ -517,19 +529,19 @@ def lhs :
                         ⟨/- delta -/1, by rfl⟩
                         ⟨/- steps -/ 2, by simp⟩
                         ⟨/- v0 -/ 3, by simp⟩  rgn) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.rets [⟨0, rfl⟩]ₕ
 
 def rhs : Com ScfArith ⟨[/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /- v0 -/ t]⟩ .impure t :=
   /- delta * steps + start-/
   Com.letPure (axpy ⟨1, by simp⟩ ⟨2, by simp⟩ ⟨0, by simp⟩) <|
   /- -delta -/
-  Com.letPure (neg ⟨2, by simp [Ctxt.snoc]⟩) <|
+  Com.letPure (neg ⟨2, rfl⟩) <|
   Com.var (for_ (t := t)
-                        ⟨/- end -/ 2, by simp [Ctxt.snoc]⟩
-                        ⟨/- -delta -/ 3, by simp [Ctxt.snoc]⟩
-                        ⟨/- steps -/ 4, by simp [Ctxt.snoc]⟩
-                        ⟨/- v0 -/ 5, by simp [Ctxt.snoc]⟩  rgn) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+                        ⟨/- end -/ 2, rfl⟩
+                        ⟨/- -delta -/ 3, rfl⟩
+                        ⟨/- steps -/ 4, rfl⟩
+                        ⟨/- v0 -/ 5, rfl⟩  rgn) <|
+  Com.rets [⟨0, rfl⟩]ₕ
 
 
 /-- rewrite a variable whose index is '> 0' to a new variable which is the
@@ -579,16 +591,15 @@ def lhs : Com ScfArith ⟨[/- v0 -/ t]⟩ .impure t :=
   /- start2 = -/ Com.letPure (cst <| niters1 + start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
   Com.var (for_ (t := t) ⟨1, by rfl⟩ ⟨0, by rfl⟩ ⟨2, by rfl⟩ ⟨3, by rfl⟩ rgn) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨0, rfl⟩
 
 def rhs : Com ScfArith ⟨[/- v0 -/ t]⟩ .impure t :=
   /- niters1 + niters2 = -/ Com.letPure (cst_nat <| niters1 + niters2) <|
   /- start1 = -/ Com.letPure (cst start1) <|
   /- c1 = -/ Com.letPure (cst 1) <|
   -- start step niter v
-  Com.var (for_ (t := t) ⟨1, by simp [Ctxt.snoc]⟩ ⟨0, by
-      simp [Ctxt.snoc]⟩ ⟨2, by simp [Ctxt.snoc]⟩ ⟨3, by simp [Ctxt.snoc]⟩ rgn) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.var (for_ (t := t) ⟨1, rfl⟩ ⟨0, rfl⟩ ⟨2, rfl⟩ ⟨3, rfl⟩ rgn) <|
+  Com.ret ⟨0, rfl⟩
 
 
 open Scf in

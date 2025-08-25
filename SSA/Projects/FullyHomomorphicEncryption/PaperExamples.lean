@@ -55,7 +55,7 @@ def rhs :=
 
 open MLIR AST in
 noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike, .polynomialLike]
-    .polynomialLike :=
+    [.polynomialLike] :=
   { lhs := lhs, rhs := rhs, correct :=
     by
       rw [lhs, rhs]
@@ -109,7 +109,7 @@ def rhs := [poly q, n, hq | {
 
 /-  `x^(2^n) + a = a`, since we quotient the polynomial ring with x^(2^n) -/
 open MLIR AST in
-noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] .polynomialLike :=
+noncomputable def p1 : PeepholeRewrite (FHE q n) [.polynomialLike] [.polynomialLike] :=
   { lhs := a_plus_generator_eq_a,
      rhs := rhs
   , correct :=

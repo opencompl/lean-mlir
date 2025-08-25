@@ -96,6 +96,9 @@ def elabIntoCom' (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
     [TransformTy d φ] [TransformExpr d φ] [TransformReturn d φ] :
     TermElabM Expr := withRef region <| do
   let ⟨_Γ, _eff, _ty, com⟩ ← elabIntoComObj region d
-  com.toExprM
+  let c ← com.toExprM
+  trace[LeanMLIR.Elab] "Elaborated Com:\n{c}"
+  Meta.check c
+  return c
 
 end SSA

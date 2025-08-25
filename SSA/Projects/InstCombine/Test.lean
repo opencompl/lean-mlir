@@ -99,38 +99,38 @@ def opRet : Op 0 := [mlir_op| llvm.return %4 : i32]
 -/
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 1) op0    ["arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31 : () → (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 2) op1    ["0", "arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
     (InstCombine.MOp.BinaryOp.ashr)(%0, %2) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 3) op2    ["1", "0", "arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
     (InstCombine.MOp.BinaryOp.and)(%3, %1) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 4) op3    ["2", "1", "0", "arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
     (InstCombine.MOp.BinaryOp.add)(%4, %3) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, {
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], {
     ^entry(%0 : i32, %1 : i32, %2 : i32, %3 : i32, %4 : i32, %5 : i32):
       return %5 : (i32) → ()
   }⟩⟩
@@ -148,36 +148,36 @@ def ops : List (Op 0) := [mlir_ops|
 def ops' := [op0, op1, op2, op3, op4]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 1)  (ops[0]) ["arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31 : () → (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 2)  (ops[1]) ["0", "arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
     (InstCombine.MOp.BinaryOp.ashr)(%0, %2) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 3)  (ops[2]) ["1", "0", "arg0"]
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
     (InstCombine.MOp.BinaryOp.and)(%3, %1) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 4)  (ops[3]) ["2", "1", "0", "arg0"]
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, InstCombine.MOp.binary
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
     (ConcreteOrMVar.concrete 32)
     (InstCombine.MOp.BinaryOp.add)(%4, %3) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 5)  (ops[4]) ["3", "2", "1", "0", "arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨i32, {
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], {
     ^entry(%0 : i32, %1 : i32, %2 : i32, %3 : i32, %4 : i32, %5 : i32):
       return %5 : (i32) → ()
   }⟩⟩
@@ -206,7 +206,7 @@ def com := mkCom (d := InstCombine.MetaLLVM 0) bb0 |>.toOption |>.get (by rfl)
 -- #guard_msgs in #reduce com
 
 theorem com_Γ : com.1 = (Γn 1) := by rfl
-theorem com_ty : com.2.2.1 = .bitvec 32 := by rfl
+theorem com_ty : com.2.2.1 = [.bitvec 32] := by rfl
 
 def bb0IcomConcrete := [llvm()|
 {
@@ -248,7 +248,7 @@ example : bb0IcomGeneric 32 = bb0IcomConcrete := rfl
   can use `denote`. In this way, we indirectly give semantics to the family of programs that
   `GenericWidth` represents.
 -/
-example (w Γv) : (GenericWidth w).denote Γv = .value (BitVec.ofNat w 0) := rfl
+example (w Γv) : (GenericWidth w).denote Γv = [.value (BitVec.ofNat w 0)]ₕ := rfl
 
 open ComWrappers
 
@@ -260,9 +260,9 @@ def one_inst_macro (w: Nat) :=
   }]
 
 def one_inst_com (w : ℕ) :
-    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure [LLVM.Ty.bitvec w] :=
   Com.var (not w 0) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨0, rfl⟩
 
 def one_inst_stmt (e : LLVM.IntW w) :
     (LLVM.not e) ⊑ (LLVM.not e) := by
@@ -289,10 +289,10 @@ def two_inst_macro (w: Nat) :=
   }]
 
 def two_inst_com (w : ℕ) :
-    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure [LLVM.Ty.bitvec w] :=
   Com.var (not w 0) <|
   Com.var (not w 1) <|
-  Com.ret ⟨1, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨1, rfl⟩
 
 def two_inst_stmt (e : LLVM.IntW w) :
     (LLVM.not e) ⊑ (LLVM.not e) := by
@@ -320,11 +320,11 @@ def three_inst_macro (w: Nat) :=
   }]
 
 def three_inst_com (w : ℕ) :
-    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure [LLVM.Ty.bitvec w] :=
   Com.var (not w 0) <|
   Com.var (not w 0) <|
   Com.var (not w 0) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨0, rfl⟩
 
 def three_inst_stmt (e : LLVM.IntW w) :
     (LLVM.not (LLVM.not (LLVM.not e)))
@@ -351,9 +351,9 @@ def one_inst_concrete_macro :=
   }]
 
 def one_inst_concrete_com :
-    Com InstCombine.LLVM [LLVM.Ty.bitvec 1] .pure (LLVM.Ty.bitvec 1) :=
+    Com InstCombine.LLVM [LLVM.Ty.bitvec 1] .pure [LLVM.Ty.bitvec 1] :=
   Com.var (not 1 0) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨0, rfl⟩
 
 def one_inst_concrete_stmt :
     (LLVM.not e) ⊑ (LLVM.not e) := by
@@ -380,10 +380,10 @@ def two_inst_concrete_macro :=
   }]
 
 def two_inst_concrete_com (w : ℕ) :
-  Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
+  Com InstCombine.LLVM [LLVM.Ty.bitvec w] .pure [LLVM.Ty.bitvec w] :=
   Com.var (not w 0) <|
   Com.var (not w 1) <|
-  Com.ret ⟨1, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨1, rfl⟩
 
 def two_inst_concrete_stmt (e : LLVM.IntW w) :
     (LLVM.not e) ⊑ (LLVM.not e) := by
@@ -411,11 +411,11 @@ def three_inst_concrete_macro :=
   }]
 
 def three_inst_concrete_com :
-  Com InstCombine.LLVM [LLVM.Ty.bitvec 1] .pure (LLVM.Ty.bitvec 1) :=
+  Com InstCombine.LLVM [LLVM.Ty.bitvec 1] .pure [LLVM.Ty.bitvec 1] :=
   Com.var (not 1 0) <|
   Com.var (not 1 0) <|
   Com.var (not 1 0) <|
-  Com.ret ⟨0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨0, rfl⟩
 
 def three_inst_concrete_stmt (e : LLVM.IntW 1) :
     (LLVM.not (LLVM.not (LLVM.not e)))

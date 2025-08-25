@@ -442,9 +442,9 @@ def MOp.outTy : MOp φ → MTy φ
 | .icmp _ _ => .bitvec 1
 
 instance {φ} : DialectSignature (MetaLLVM φ) where
-  signature op := ⟨op.sig, [], op.outTy, .pure⟩
+  signature op := ⟨op.sig, [], [op.outTy], .pure⟩
 instance : DialectSignature LLVM where
-  signature op := ⟨op.sig, [], op.outTy, .pure⟩
+  signature op := ⟨op.sig, [], [op.outTy], .pure⟩
 
 /-! ### Type Semantics -/
 
@@ -490,7 +490,7 @@ end LLVM.Ty
 
 @[simp]
 def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
-    (TyDenote.toType <| DialectSignature.outTy o) :=
+    (TyDenote.toType (β := LLVM.Ty) o.outTy) :=
   match o with
   | LLVM.Op.const _ val    => const? _ val
   | LLVM.Op.copy _         =>               (op.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -516,7 +516,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | LLVM.Op.select _       => LLVM.select   (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) (op.getN 2 (by simp [DialectSignature.sig, signature]))
 
 instance : DialectDenote LLVM := ⟨
-  fun o args _ => Op.denote o args
+  fun o args _ => [Op.denote o args]ₕ
 ⟩
 
 end InstCombine

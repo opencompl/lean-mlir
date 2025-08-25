@@ -3485,7 +3485,6 @@ theorem alive_Select_1100 : alive_Select_1100_src ⊑ alive_Select_1100_tgt := b
   simp_sllvm
   simp_sllvm_case_bash
   simp_sllvm_split
-  all_goals bv_decide
 
 
 -- Name:Select:1105
@@ -3517,7 +3516,6 @@ theorem alive_Select_1105 : alive_Select_1105_src ⊑ alive_Select_1105_tgt := b
   simp_sllvm
   simp_sllvm_case_bash
   simp_sllvm_split
-  all_goals bv_decide
 
 
 -- Name:InstCombineShift: 239

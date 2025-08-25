@@ -764,22 +764,22 @@ def Op.outTy : Op q n → Ty q n
 
 @[simp, reducible]
 def Op.signature : Op q n → Signature (Ty q n) :=
-  fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
+  fun o => {sig := Op.sig o, returnTypes := [Op.outTy o], regSig := []}
 
 instance : DialectSignature (FHE q n) := ⟨Op.signature⟩
 
 @[simp]
 noncomputable instance : DialectDenote (FHE q n) where
     denote
-    | Op.add, arg, _ => (fun args : R q n × R q n => args.1 + args.2) arg.toPair
-    | Op.sub, arg, _ => (fun args : R q n × R q n => args.1 - args.2) arg.toPair
-    | Op.mul, arg, _ => (fun args : R q n × R q n => args.1 * args.2) arg.toPair
-    | Op.mul_constant, arg, _ => (fun args : R q n × Int => args.1 * ↑(args.2)) arg.toPair
-    | Op.leading_term, arg, _ => R.leadingTerm arg.toSingle
-    | Op.monomial, arg, _ => (fun args => R.monomial ↑(args.1) args.2) arg.toPair
-    | Op.monomial_mul, arg, _ => (fun args : R q n × Nat => args.1 * R.monomial 1 args.2) arg.toPair
-    | Op.from_tensor, arg, _ => R.fromTensor arg.toSingle
-    | Op.to_tensor, arg, _ => R.toTensor' arg.toSingle
-    | Op.const c, _arg, _ => c
-    | Op.const_int c, _, _ => c
-    | Op.const_idx c, _, _ => c
+    | Op.add, arg, _ => [(fun args : R q n × R q n => args.1 + args.2) arg.toPair]ₕ
+    | Op.sub, arg, _ => [(fun args : R q n × R q n => args.1 - args.2) arg.toPair]ₕ
+    | Op.mul, arg, _ => [(fun args : R q n × R q n => args.1 * args.2) arg.toPair]ₕ
+    | Op.mul_constant, arg, _ => [(fun args : R q n × Int => args.1 * ↑(args.2)) arg.toPair]ₕ
+    | Op.leading_term, arg, _ => [R.leadingTerm arg.toSingle]ₕ
+    | Op.monomial, arg, _ => [(fun args => R.monomial ↑(args.1) args.2) arg.toPair]ₕ
+    | Op.monomial_mul, arg, _ => [(fun args : R q n × Nat => args.1 * R.monomial 1 args.2) arg.toPair]ₕ
+    | Op.from_tensor, arg, _ => [R.fromTensor arg.toSingle]ₕ
+    | Op.to_tensor, arg, _ => [R.toTensor' arg.toSingle]ₕ
+    | Op.const c, _arg, _
+    | Op.const_int c, _, _
+    | Op.const_idx c, _, _ => [c]ₕ

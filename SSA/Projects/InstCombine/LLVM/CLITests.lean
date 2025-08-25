@@ -37,7 +37,7 @@ structure CliTest where
   context : MContext mvars
   ty : MTy mvars
   eff : EffectKind
-  code : MCom mvars context eff ty
+  code : MCom mvars context eff [ty]
 
 def CliTest.signature (test : CliTest) :
   Ctxt (InstCombine.MTy test.mvars) × (InstCombine.MTy test.mvars) :=
@@ -78,7 +78,7 @@ structure ConcreteCliTest where
   context : Context
   ty : LLVM.Ty
   -- TODO: add support for impure CLI tests
-  code : Com LLVM context .pure ty
+  code : Com LLVM context .pure [ty]
 
 def InstCombine.MTy.cast_concrete (mvars : Nat) (ty : InstCombine.MTy mvars)
     (hMvars : mvars = 0) : InstCombine.MTy 0 :=
@@ -192,7 +192,8 @@ def ConcreteCliTest.eval (test : ConcreteCliTest)
  IO ⟦test.ty⟧ := do
   let valuesStack := values.reverse -- we reverse values since context is a stack
   let valuation := InstCombine.mkValuation test.context valuesStack
-  return test.code.denote valuation
+  let x : HVector _ _ := test.code.denote valuation
+  return x.getN 0
 
 def ConcreteCliTest.eval? (test : ConcreteCliTest) (values : Array (Option Int)) :
   IO (Except String ⟦test.ty⟧) := do

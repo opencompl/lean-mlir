@@ -44,7 +44,7 @@ partial def comNf (com : Expr) : MetaM Expr := do
         let e ← whnf e
         let body ← comNf body
         return mkAppN (.const ``Com.var []) #[d, opSig, Γ, eff, α, β, e, body]
-    | Com.ret _d _inst _Γ _eff _t _ => return com
+    | Com.rets _d _inst _Γ _eff _t _ => return com
     | _ => throwError "Expected `Com.var _ _` or `Com.ret _`, found:\n\t{com}"
 
 /--
@@ -85,7 +85,7 @@ def elabIntoCom (region : TSyntax `mlir_region) (d : Q(Dialect)) {φ : Q(Nat)}
           match expr.app4? ``Sigma.mk with
           | .some (_αexpr, _βexpr, (_eff : Q(EffectKind)), expr) =>
             match expr.app4? ``Sigma.mk with
-            | .some (_αexpr, _βexpr, (_ty : Q(($d).Ty)), (com : Q(Com $d $_Γ $_eff $_ty))) =>
+            | .some (_αexpr, _βexpr, (_ty : Q(List ($d).Ty)), (com : Q(Com $d $_Γ $_eff $_ty))) =>
                 /- Finally, use `comNf` to ensure the resulting expression is of the form
                     `Com.var (Expr.mk ...) <| Com.var (Expr.mk ...) ... <| Com.rete _`,
                   where the arguments to `Expr.mk` are not reduced -/
