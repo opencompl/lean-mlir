@@ -4,6 +4,7 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
+
 /- This file implements `DAGCombiner` patterns extrcted from the LLVM Risc-V backend.
   First, we implement the Lean structure that implements the rewrite patterns and then we implement
   optimizations for LLVM IR and RISC-V.
@@ -11,6 +12,7 @@ open LLVMRiscV
   Because `GlobalIsel` is hybrid, some of these patterns regard generic IR,
   while some are target-dependent.
 -/
+
 @[simp_riscv] lemma toType_bv : TyDenote.toType (Ty.riscv (.bv)) = BitVec 64 := rfl
 @[simp_riscv] lemma id_eq1 {α : Type} (x y : α) :  @Eq (Id α) x y = (x = y):= by simp only
 
@@ -20,7 +22,6 @@ structure RISCVPeepholeRewrite (Γ : Ctxt Ty) where
   correct :  (lhs.denote) = (rhs.denote) := by
     simp_lowering
     bv_decide
-
 
 /-! # Post-legalization optimizations
 

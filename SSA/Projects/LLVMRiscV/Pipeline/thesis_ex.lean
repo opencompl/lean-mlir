@@ -256,3 +256,65 @@ def urem_riscv: Com  LLVMPlusRiscV âŸ¨[.llvm (.bitvec 64), .llvm (.bitvec 64)]âŸ
   }]
   def llvm_urem_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs := llvm_urem, rhs := urem_riscv }
+
+
+def intro_example_lhs := [LV| {
+    ^entry (%arg: i64, %amount: i64):
+    %0 = llvm.shl %arg, %amount : i64
+    %1 = llvm.lshr %0, %amount : i64
+    llvm.return %1 : i64
+  }]
+
+def intro_example_rhs := [LV| {
+    ^entry (%arg: i64, %amount: i64):
+    llvm.return %arg : i64
+  }]
+
+def rewrite00 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs:= [LV| {
+    ^entry (%arg: i64, %amount: i64):
+    %0 = llvm.shl %arg, %amount : i64
+    %1 = llvm.lshr %0, %amount : i64
+    llvm.return %1 : i64
+  }]
+
+  rhs:= [LV| {
+    ^entry (%arg: i64, %amount: i64):
+    llvm.return %arg : i64
+  }]
+  correct := by
+    simp_lowering
+    sorry
+    --bv_decide
+
+@[simp_denote]
+def intro_example_correct_lhs := [LV| {
+  ^entry (%arg0: i64):
+    %c = llvm.mlir.constant (4) : i64
+    %1 = llvm.mul %arg0, %c : i64
+    llvm.return %1 : i64
+  }]
+
+@[simp_denote]
+def intro_example_correct_rhs := [LV| {
+  ^entry (%arg0: i64):
+    %r1 = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!riscv.reg)
+    %c = slli %r1, 2 : !riscv.reg
+    %rd = "builtin.unrealized_conversion_cast" (%c) : (!riscv.reg) -> (i64)
+    llvm.return %rd : i64
+  }]
+
+def selection00 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs:= [LV| {
+  ^entry (%arg0: i64):
+    %c = llvm.mlir.constant (4) : i64
+    %1 = llvm.mul %arg0, %c : i64
+    llvm.return %1 : i64
+  }]
+  rhs:= [LV| {
+  ^entry (%arg0: i64):
+    %r1 = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!riscv.reg)
+    %c = slli %r1, 2 : !riscv.reg
+    %rd = "builtin.unrealized_conversion_cast" (%c) : (!riscv.reg) -> (i64)
+    llvm.return %rd : i64
+  }]

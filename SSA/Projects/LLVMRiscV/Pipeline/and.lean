@@ -5,7 +5,6 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
-/- # AND -/
 @[simp_denote]
 def and_llvm := [LV| {
   ^entry (%lhs: i64, %rhs: i64 ):
@@ -23,7 +22,8 @@ def and_riscv := [LV| {
   llvm.return %1 : i64
   }]
 
-def llvm_and_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def llvm_and_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)]
+where
   lhs:= and_llvm
   rhs:= and_riscv
 
@@ -31,7 +31,8 @@ def and_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
   [llvm_and_lower_riscv]
 
-/- # AND i1 -/
+
+/-! ### i1 -/
 
 @[simp_denote]
 def and_llvm_1 := [LV| {
@@ -58,7 +59,8 @@ def and_match_1 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
   [llvm_and_lower_riscv_1]
 
-/- # AND i8 -/
+
+/-! ### i8 -/
 
 @[simp_denote]
 def and_llvm_8 := [LV| {
@@ -85,7 +87,8 @@ def and_match_8 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
   [llvm_and_lower_riscv_8]
 
-  /- # AND i16 -/
+
+/-! ### i16 -/
 
 @[simp_denote]
 def and_llvm_16 := [LV| {
@@ -112,7 +115,8 @@ def and_match_16 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
   [llvm_and_lower_riscv_16]
 
-  /- # AND i32 -/
+
+/-! ### i32 -/
 
 @[simp_denote]
 def and_llvm_32 := [LV| {
