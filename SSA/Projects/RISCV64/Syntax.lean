@@ -39,6 +39,97 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
   | v₁Stx::[] =>
      let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, opStx.name with
+      -- parsing pseudo ops
+      | .bv, "mv" => do
+        return ⟨.pure, .bv, ⟨
+                  .mv,
+                  by
+                  simp [DialectSignature.outTy, signature],
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
+      | .bv, "not" => do
+        return ⟨.pure, .bv, ⟨
+                  .not,
+                  by
+                  simp [DialectSignature.outTy, signature],
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
+      | .bv, "neg" => do
+        return ⟨.pure, .bv, ⟨
+                  .neg,
+                  by
+                  simp [DialectSignature.outTy, signature],
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
+      | .bv, "negw" => do
+        return ⟨.pure, .bv, ⟨
+                  .negw,
+                  by
+                  simp [DialectSignature.outTy, signature],
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
+      | .bv, "sext.w" => do
+        return ⟨.pure, .bv, ⟨
+                  RISCV64.Op.sext.w,
+                  by
+                  simp [DialectSignature.outTy, signature],
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
+      | .bv, "zext.b" => do
+        return ⟨.pure, .bv, ⟨
+                  RISCV64.Op.zext.b,
+                  by
+                  simp [DialectSignature.outTy, signature],
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
+      | .bv, "seqz" => do
+        return ⟨.pure, .bv, ⟨
+                  .seqz,
+                  by
+                  simp [DialectSignature.outTy, signature],
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
+      | .bv, "snez" => do
+        return ⟨.pure, .bv, ⟨
+                  .snez,
+                  by
+                  simp [DialectSignature.outTy, signature],
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
+      | .bv, "sltz" => do
+        return ⟨.pure, .bv, ⟨
+                  .sltz,
+                  by
+                  simp [DialectSignature.outTy, signature],
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
+      | .bv, "sgtz" => do
+        return ⟨.pure, .bv, ⟨
+                  .sgtz,
+                  by
+                  simp [DialectSignature.outTy, signature],
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
       | .bv, "srai" => do
         let some att := opStx.attrs.getAttr "shamt"
             | throw <| .generic s!"no attribute in srai {repr opStx}"
