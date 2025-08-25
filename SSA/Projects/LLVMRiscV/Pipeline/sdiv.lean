@@ -52,6 +52,7 @@ def sdiv_llvm_exact_32 := [LV| {
 def llvm_sdiv_lower_riscv_exact_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
   lhs := sdiv_llvm_exact_32
   rhs := sdiv_riscv_32
+  correct := sorry
 
 /-! ### i64 -/
 
