@@ -81,7 +81,7 @@ inductive Op
   | sh1add
   | sh2add
   | sh3add
-  -- slli.uw missing
+  | slli.uw (shamt : BitVec 6)
   -- part of the RISC-V `Zbb` & `Zbkb` extension
   | rol
   | ror
@@ -216,6 +216,7 @@ def Op.sig : Op → List Ty
   | .sh1add => [Ty.bv, Ty.bv]
   | .sh2add => [Ty.bv, Ty.bv]
   | .sh3add => [Ty.bv, Ty.bv]
+  | RISCV64.Op.slli.uw (_shamt : BitVec 6) => [Ty.bv]
 
 /--
 Specifing the `outTy` of each `RISCV64` operation.
@@ -291,6 +292,7 @@ def Op.outTy : Op  → Ty
   | .sh1add => Ty.bv
   | .sh2add => Ty.bv
   | .sh3add => Ty.bv
+  | RISCV64.Op.slli.uw (_shamt : BitVec 6) => Ty.bv
 
 /-- Combine `outTy` and `sig` together into a `Signature`. -/
 @[simp, reducible]
@@ -378,6 +380,7 @@ def opToString (op : RISCV64.Op) : String :=
   | .sh1add => "sh1add"
   | .sh2add => "sh2add"
   | .sh3add => "sh3add"
+  | RISCV64.Op.slli.uw (_shamt : BitVec 6) => "slli.uw"
   s!"\"riscv.{op}\""
 
 def attributesToPrint: RISCV64.Op → String
@@ -496,5 +499,6 @@ instance : DialectDenote (RV64) where
   | .sh1add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH1ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sh2add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH2ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .sh3add, regs, _ => ZBA_RTYPE_pure64_RISCV_SH3ADD (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
+  | RISCV64.Op.slli.uw shamt, regs, _ => ZBA_pure64_RISCV_SLLIUW shamt (regs.getN 0 (by simp [DialectSignature.sig, signature]))
 
 end RISCV64
