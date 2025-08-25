@@ -16,7 +16,7 @@ theorem test_thm (e : IntW 32) : ashr (ashr e (const? 32 17)) (const? 32 17) ⊑
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -25,5 +25,5 @@ theorem test2_thm (e : IntW 32) : shl (shl e (const? 32 17)) (const? 32 17) ⊑ 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

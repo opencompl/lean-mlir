@@ -76,6 +76,10 @@ syntax "sh3add.uw" : MLIR.Pretty.uniform_op
 syntax "sh1add" : MLIR.Pretty.uniform_op
 syntax "sh2add" :  MLIR.Pretty.uniform_op
 syntax "sh3add" :  MLIR.Pretty.uniform_op
+syntax "max" : MLIR.Pretty.uniform_op
+syntax "min" : MLIR.Pretty.uniform_op
+syntax "minu" : MLIR.Pretty.uniform_op
+syntax "maxu" : MLIR.Pretty.uniform_op
 syntax "mv" : MLIR.Pretty.uniform_op
 syntax "not" :  MLIR.Pretty.uniform_op
 syntax "neg" : MLIR.Pretty.uniform_op
@@ -86,10 +90,6 @@ syntax "seqz" : MLIR.Pretty.uniform_op
 syntax "snez" : MLIR.Pretty.uniform_op
 syntax "sltz" : MLIR.Pretty.uniform_op
 syntax "sgtz" : MLIR.Pretty.uniform_op
-syntax "max" : MLIR.Pretty.uniform_op
-syntax "min" : MLIR.Pretty.uniform_op
-syntax "minu" : MLIR.Pretty.uniform_op
-syntax "maxu" : MLIR.Pretty.uniform_op
 
 private def test_simple := [RV64_com| {
   ^bb0(%e1 : !i64, %e2 : !i64 ):

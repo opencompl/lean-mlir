@@ -16,7 +16,7 @@ theorem test6_thm (e : IntW 55) : mul (shl e (const? 55 1)) (const? 55 3) ⊑ mu
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -25,7 +25,7 @@ theorem test6a_thm (e : IntW 55) : shl (mul e (const? 55 3)) (const? 55 1) ⊑ m
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -34,7 +34,7 @@ theorem test7_thm (e : IntW 8) : ashr (const? 29 (-1)) (zext 29 e) ⊑ const? 29
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -43,7 +43,7 @@ theorem test8_thm (e : IntW 7) : shl (shl e (const? 7 4)) (const? 7 3) ⊑ const
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -52,7 +52,7 @@ theorem test9_thm (e : IntW 17) : lshr (shl e (const? 17 16)) (const? 17 16) ⊑
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -62,7 +62,7 @@ theorem test10_thm (e : IntW 19) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -73,7 +73,7 @@ theorem multiuse_lshr_lshr_thm (e : IntW 9) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -84,7 +84,7 @@ theorem multiuse_shl_shl_thm (e : IntW 42) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -95,7 +95,7 @@ theorem test11_thm (e : IntW 23) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -104,7 +104,7 @@ theorem test12_thm (e : IntW 47) : shl (ashr e (const? 47 8)) (const? 47 8) ⊑ 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -115,7 +115,7 @@ theorem test13_thm (e : IntW 18) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -126,7 +126,7 @@ theorem test14_thm (e : IntW 35) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -136,7 +136,7 @@ theorem test14a_thm (e : IntW 79) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -146,7 +146,7 @@ theorem test15_thm (e : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -156,7 +156,7 @@ theorem test15a_thm (e : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -167,7 +167,7 @@ theorem test16_thm (e : IntW 84) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -178,7 +178,7 @@ theorem test17_thm (e : IntW 106) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -187,7 +187,7 @@ theorem test18_thm (e : IntW 11) : icmp IntPred.eq (lshr e (const? 11 10)) (cons
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -197,7 +197,7 @@ theorem test19_thm (e : IntW 37) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -207,7 +207,7 @@ theorem test19a_thm (e : IntW 39) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -216,7 +216,7 @@ theorem test20_thm (e : IntW 13) : icmp IntPred.eq (ashr e (const? 13 12)) (cons
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -227,7 +227,7 @@ theorem test21_thm (e : IntW 12) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -238,7 +238,7 @@ theorem test22_thm (e : IntW 14) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -247,7 +247,7 @@ theorem test23_thm (e : IntW 44) : trunc 11 (ashr (shl e (const? 44 33)) (const?
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -258,7 +258,7 @@ theorem shl_lshr_eq_amt_multi_use_thm (e : IntW 44) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -269,7 +269,7 @@ theorem lshr_shl_eq_amt_multi_use_thm (e : IntW 43) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -280,5 +280,5 @@ theorem test25_thm (e e_1 : IntW 37) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

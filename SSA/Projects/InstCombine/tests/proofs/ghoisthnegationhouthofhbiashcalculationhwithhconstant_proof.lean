@@ -17,7 +17,7 @@ theorem t0_thm (e : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -26,5 +26,5 @@ theorem n5_thm (e : IntW 8) : sub e (LLVM.and e (const? 8 42)) ⊑ LLVM.and e (c
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

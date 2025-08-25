@@ -26,20 +26,29 @@ def regionTransform_RISCV (region : Region 0) : Except ParseError
 `RiscV`. It uses the parsing infrastructure provided by the framework, which is
 also used for parsing LLVM `Com`s. -/
 def parseComFromFile_LLVMRISCV(fileName : String) :
- IO (Option (Σ (Γ' :  Ctxt RISCV64.Ty ) (eff : EffectKind)
- (ty :  RISCV64.Ty), Com RV64 Γ' eff ty)) := do
- parseRegionFromFile fileName regionTransform_RISCV
+  IO (Option (Σ (Γ' :  Ctxt RISCV64.Ty ) (eff : EffectKind)
+  (ty :  RISCV64.Ty), Com RV64 Γ' eff ty)) := do
+  parseRegionFromFile fileName regionTransform_RISCV
 
 def parseAsRiscv (fileName : String ) : IO UInt32 := do
-    let icom? ← parseComFromFile_LLVMRISCV fileName
-    match icom? with
-    | none => return 1
-    | some (Sigma.mk _Γ ⟨_eff, ⟨_retTy, c⟩⟩) => do
-      IO.println s!"{Com.toPrint c}"
-      return 0
+  let icom? ← parseComFromFile_LLVMRISCV fileName
+  match icom? with
+  | none => return 1
+  | some (Sigma.mk _Γ ⟨_eff, ⟨_retTy, c⟩⟩) => do
+    IO.println s!"{Com.toPrint c}"
+    return 0
 
 private def test_simple := [RV64_com| {
   ^bb0(%e1 : !i64, %e2 : !i64 ):
   %1 = add %e1, %e2 : !i64
        ret %1 : !i64
 }]
+
+/--
+info: {
+  ^entry(%0 : RISCV64.Ty.bv, %1 : RISCV64.Ty.bv):
+    %2 = RISCV64.Op.add(%0, %1) : (RISCV64.Ty.bv, RISCV64.Ty.bv) → (RISCV64.Ty.bv)
+    return %2 : (RISCV64.Ty.bv) → ()
+}
+-/
+#guard_msgs in #eval! test_simple

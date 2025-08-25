@@ -16,7 +16,7 @@ theorem sub_to_xor_thm (e e_1 : IntW 32) : sub (LLVM.or e_1 e) (LLVM.and e_1 e) 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -25,7 +25,7 @@ theorem sub_to_xor_or_commuted_thm (e e_1 : IntW 32) : sub (LLVM.or e_1 e) (LLVM
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -34,5 +34,5 @@ theorem sub_to_xor_and_commuted_thm (e e_1 : IntW 32) : sub (LLVM.or e_1 e) (LLV
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
