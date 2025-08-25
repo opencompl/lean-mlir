@@ -16,6 +16,7 @@ def rem_llvm_8 := [LV| {
     %1 = llvm.srem %x, %y : i8
     llvm.return %1 : i8
   }]
+
 @[simp_denote]
 def rem_riscv_8 := [LV| {
     ^entry (%reg1: i8, %reg2: i8):
@@ -26,6 +27,10 @@ def rem_riscv_8 := [LV| {
     llvm.return %3 : i8
   }]
 
+def llvm_rem_lower_riscv_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
+  lhs := rem_llvm_8
+  rhs := rem_riscv_8
+  correct := by sorry
 
 /-! ### i16 -/
 
@@ -48,10 +53,7 @@ def rem_riscv_16 := [LV| {
 def llvm_rem_lower_riscv_16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16)] where
   lhs := rem_llvm_16
   rhs := rem_riscv_16
-
-def rem_match_16 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-   List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_rem_lower_riscv_16]
+  correct := by sorry
 
 
 /-! ### i32 -/
@@ -75,10 +77,7 @@ def rem_riscv_32 := [LV| {
 def llvm_rem_lower_riscv_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
   lhs := rem_llvm_32
   rhs := rem_riscv_32
-
-def rem_match_32 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-   List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_rem_lower_riscv_32]
+  correct := by sorry
 
 
 /-! ### i64 -/
@@ -104,6 +103,9 @@ def llvm_rem_lower_riscv_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)
   lhs := rem_llvm_64
   rhs := rem_riscv_64
 
-def rem_match_64 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-   List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_rem_lower_riscv_64]
+def rem_match_64 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_rem_lower_riscv_8),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_rem_lower_riscv_16),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_rem_lower_riscv_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_rem_lower_riscv_64)
+]
