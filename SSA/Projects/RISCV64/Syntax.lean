@@ -454,10 +454,6 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             return ⟨ .pure, .bv ,⟨ .mul, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-      | .bv , .bv , "mulu" =>
-            return ⟨ .pure, .bv ,⟨ .mulu, by rfl, by constructor,
-               .cons v₁ <| .cons v₂ <| .nil,
-                .nil⟩⟩
       | .bv , .bv , "mulh" =>
             return ⟨ .pure, .bv ,⟨ .mulh, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
