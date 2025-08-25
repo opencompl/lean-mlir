@@ -50,7 +50,7 @@ instance instHRefinementOfRefinement [Refinement α] : HRefinement α α where
 def Refinement.ofHRefinement (inst : HRefinement α α) : Refinement α where
   IsRefinedBy x y := x ⊑ y
 
-/-! ### Trivial Refinement -/
+/-! #### Trivial Refinement -/
 
 section OfEq
 
@@ -70,35 +70,14 @@ instance (priority := low) [DecidableEq α] :
 
 end OfEq
 
-/-!
-## Monad Refinement
--/
-
-class MRefinement (m n : Type → Type) where
-  MIsRefinedBy : {α β : Type} → HRefinement α β → HRefinement (m α) (n β)
-
-@[simp, simp_denote]
-instance [MRefinement m n] [i : HRefinement α β] : HRefinement (m α) (n β) :=
-  MRefinement.MIsRefinedBy i
-
-class LawfulMRefinement (m n) [MRefinement m n] [Monad m] [Monad n] where
-  pure_isRefinedBy_pure : ∀ {α β} (x : α) (y : β) [HRefinement α β],
-    (pure x : m α) ⊑ (pure y : n β) ↔ x ⊑ y
-
-attribute [simp, simp_denote (high)] LawfulMRefinement.pure_isRefinedBy_pure
--- ^^ this is high priority so that this is tried before the `reduceIsRefinedBy`
---    simproc, which is particularly important when `m, n = Id`
-
 /-! ### Id Refinement -/
 namespace Id
+variable {α β} [inst : HRefinement α β]
 
-instance instRefinement : MRefinement Id Id where
-  MIsRefinedBy := @fun _ _ inst => inst
+instance instRefinement : HRefinement (Id α) (Id β) := inst
 
-instance : Lawful
-
-@[simp_denote (high)]
-lemma pure_isRefinedBy_pure (x : α) (y : β) [HRefinement α β] :
+@[simp_denote (high)] -- high priority so that this is tried before the `reduceIsRefinedBy` simproc
+lemma pure_isRefinedBy_pure (x : α) (y : β) :
   (pure x : Id _) ⊑ (pure y : Id _) ↔ x ⊑ y := by rfl
 
 end Id
@@ -117,7 +96,7 @@ class DialectHRefinement (d : Dialect) (d' : Dialect) [TyDenote d.Ty] [TyDenote 
   /--
   Define refinement of monadic values (of arbitrary underlying types)
   -/
-  MonadIsRefinedBy : MRefinement (d.m) (d'.m) := by
+  MonadIsRefinedBy {α β} [inst : HRefinement α β] : HRefinement (d.m α) (d'.m β) := by
     solve
     | exact @Id.instRefinement
   /--
@@ -176,9 +155,6 @@ where
     withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying refinement instance: {inst}") <| do
       Meta.check e
       let res? ← reduceIsRefinedByAux inst.consumeMData a b
-      let res? : Option Expr := res?.map fun res =>
-        let ⟨fn, args⟩ := res.withApp Prod.mk
-        mkAppN fn <| args.map stripId
       if let some res := res? then
         trace[LeanMLIR.Elab] "Simplified to: {res}"
       else
@@ -188,12 +164,11 @@ where
     Meta.check inst
     throwError "Error: unexpected number of arguments to instance. \
                 This could be an internal bug, or expression is mall-formed: {inst}"
-  stripId : Expr → Expr
-    | mkApp (.const ``Id _) e => stripId e
-    | e => e
   isRefinedByAppN args :=
-    let args := args.map stripId
     loop <| mkAppN (mkConst ``HRefinement.IsRefinedBy) args
+  isRefinedByAppOptM args : SimpM _ := do
+    let e ← mkAppOptM ``HRefinement.IsRefinedBy args
+    loop e
   /--
   Simplifier for `instEffToMonadRefinement`.
   -/
@@ -272,12 +247,12 @@ end SimpDenote
 -/
 
 /--
-A lawful homogenous refinement instance is one
+A lawful homogenous (i.e., within a single dialect) refinement instance is one
 where refinement is reflexive and transitive (i.e., it is a preorder).
 -/
-class PreorderRefinement (α) [HRefinement α α] where
-  isRefinedBy_rfl : ∀ (x : α), x ⊑ x
-  isRefinedBy_trans : ∀ {x y z : α},
+class PreorderDialectRefinement (d : Dialect) [TyDenote d.Ty] [DialectHRefinement d d] where
+  isRefinedBy_rfl : ∀ {t : d.Ty} (x : d.m ⟦t⟧), x ⊑ x
+  isRefinedBy_trans : ∀ {t u v : d.Ty} (x : d.m ⟦t⟧) (y : d.m ⟦u⟧) (z : d.m ⟦v⟧),
     x ⊑ y → y ⊑ z → x ⊑ z
 
 
@@ -316,6 +291,10 @@ but this really was a bug. The intention of LLVM semantics is that they are mono
 Note that regardless, the statement of this property requires a notion of semantics,
 and thus cannot be stated in the current file, unless we re-order the imports,
 which might not actually be a bad idea.
+-/
+
+/-!
+## Monad Refinement
 -/
 
 /-!
@@ -366,30 +345,15 @@ end Prod
 
 /-! ### StateT -/
 namespace StateT
-variable {m n : Type → Type} [MRefinement m n] [HRefinement σ σ]
+variable {m n : Type → Type} [HRefinement (m (α × σ)) (n (β × σ))]
 
-instance : MRefinement (StateT σ m) (StateT σ n) where
-  MIsRefinedBy := @fun _ _ _ => {
-      IsRefinedBy f g := ∀ s, f s ⊑ g s
-    }
-
-variable {α β} [HRefinement α β]
+instance : HRefinement (StateT σ m α) (StateT σ n β) where
+  IsRefinedBy f g := ∀ s, f s ⊑ g s
 
 -- @[simp] -- I'm not sure if this ought to be simp, as it unfolds the monad
 theorem isRefinedBy_iff (f : StateT σ m α) (g : StateT σ n β) :
     f ⊑ g ↔ ∀ s, f s ⊑ g s := by
   rfl
-
-theorem isRefinedBy_iff_run (f : StateT σ m α) (g : StateT σ n β) :
-    f ⊑ g ↔ ∀ s, f.run s ⊑ g.run s := by
-  rfl
-
-variable [Monad m] [Monad n] [LawfulMRefinement m n] [PreorderRefinement σ] [Nonempty σ] in
-instance : LawfulMRefinement (StateT σ m) (StateT σ n) where
-  pure_isRefinedBy_pure := by
-    intro α β x y _
-    rw [StateT.isRefinedBy_iff_run]
-    simp [LawfulMRefinement.pure_isRefinedBy_pure, PreorderRefinement.isRefinedBy_rfl]
 
 end StateT
 

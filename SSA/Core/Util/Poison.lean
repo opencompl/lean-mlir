@@ -85,14 +85,6 @@ section Lemmas
 @[simp] theorem bind_poison : a? >>= (fun _ => @poison β) = poison := by
   cases a? <;> rfl
 
-section Map
-variable {f : α → β}
-
-@[simp] theorem map_poison : f <$> poison = poison := rfl
-@[simp] theorem map_value : f <$> value x = value (f x) := rfl
-
-end Map
-
 @[simp]
 theorem bind_if_then_poison_eq_ite_bind (p : Prop) [Decidable p] (x : PoisonOr α) :
     (if p then poison else x : no_index _) >>= f = if p then poison else x >>= f := by
@@ -163,11 +155,10 @@ inductive IsRefinedBy [HRefinement α β] : PoisonOr α → PoisonOr β → Prop
   | bothValues : a ⊑ b → IsRefinedBy (value a) (value b)
 
 section Refinement
-
-instance : MRefinement PoisonOr PoisonOr where
-  MIsRefinedBy := ⟨IsRefinedBy⟩
-
 variable [HRefinement α β] (a? : PoisonOr α) (b? : PoisonOr β) (a : α) (b : β)
+
+instance : HRefinement (PoisonOr α) (PoisonOr β) where
+  IsRefinedBy := IsRefinedBy
 
 @[simp] theorem poison_isRefinedBy : (@poison α) ⊑ b? :=
   IsRefinedBy.poisonLeft
@@ -192,11 +183,6 @@ theorem isRefinedBy_iff [Inhabited α] [Inhabited β] :
       ∧ (a?.isPoison = false → a?.getValue ⊑ b?.getValue) := by
   cases a? <;> cases b? <;> simp
 
-/-- Alternative characterization of `IsRefinedBy` which does not require `Inhabited` assumptions. -/
-theorem isRefinedBy_iff' :
-    a? ⊑ b? ↔ ∀ a, a? = value a → ∃ b, b? = value b ∧ a ⊑ b := by
-  cases a? <;> cases b? <;> simp [poison_ne_value]
-
 @[simp, simp_denote]
 theorem eq_squb : PoisonOr.IsRefinedBy a? b? ↔ a? ⊑ b? := by rfl
 
@@ -209,7 +195,7 @@ Refinement on poison values is reflexive, when the underlying refinement is refl
 instance [Std.Refl (· ⊑ · : α → α → _)] : Std.Refl (· ⊑ · : PoisonOr α → PoisonOr α → _) where
   refl a? := by cases a? <;> simp [Std.Refl.refl]
 
-@[simp, refl] theorem isRefinedBy_self [Std.Refl (· ⊑ · : α → α → _)] : a? ⊑ a? := Std.Refl.refl _
+@[simp] theorem isRefinedBy_self [Std.Refl (· ⊑ · : α → α → _)] : a? ⊑ a? := Std.Refl.refl _
 
 /--
 Refinement on poison values is transitive, when the underlying refinement is transitive
@@ -227,13 +213,7 @@ Refinement on poison values is transitive
 theorem isRefinedBy_trans [IsTrans α (· ⊑ ·)] (a? b? c? : PoisonOr α) :
     a? ⊑ b? → b? ⊑ c? → a? ⊑ c? := IsTrans.trans _ _ _
 
--- TODO: should we actually implement the `PreorderRefinement` class here?
-
 end PreOrder
-
-/-! ### Lawful -/
-instance : LawfulMRefinement PoisonOr PoisonOr where
-  pure_isRefinedBy_pure := by simp
 
 /--
 Refinement on poison values is decidable if equality of the underlying values is decidable.

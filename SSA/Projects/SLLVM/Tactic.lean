@@ -3,8 +3,6 @@ import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.Tactic.SimpLLVM
 import SSA.Projects.SLLVM.Tactic.SimpSet
 
-open LeanMLIR
-
 macro "simp_sllvm" : tactic => `(tactic|(
   simp -failIfUnchanged only [simp_sllvm, simp_llvm, simp_llvm_option]
 ))
