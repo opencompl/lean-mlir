@@ -83,7 +83,6 @@ inductive Op
   | sh1add
   | sh2add
   | sh3add
-  -- new addition to complete ZBA
   | slli.uw (shamt : BitVec 6)
   -- part of the RISC-V `Zbb` & `Zbkb` extension
   | rol
