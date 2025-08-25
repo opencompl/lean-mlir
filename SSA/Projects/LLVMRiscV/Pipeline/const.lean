@@ -7,7 +7,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
-  def liRiscv_50 := [LV| {
+def liRiscv_50 := [LV| {
   ^entry ():
     %0 = "li"() {imm = -50 : !i64} : (!i64) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
