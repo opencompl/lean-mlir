@@ -254,16 +254,16 @@ def icmp_ugt_riscv_64 := [LV| {
 
 def icmp_ugt_riscv_eq_icmp_ugt_llvm_64 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs:= icmp_ugt_llvm_64, rhs:= icmp_ugt_riscv_64,
-   correct := by
-  unfold icmp_ugt_llvm_64 icmp_ugt_riscv_64
-  simp_peephole
-  simp_alive_undef
-  simp_riscv
-  simp_alive_ops
-  simp_alive_case_bash
-  simp_alive_split
-  all_goals
-  bv_decide
+    correct := by
+      unfold icmp_ugt_llvm_64 icmp_ugt_riscv_64
+      simp_peephole
+      simp_alive_undef
+      simp_riscv
+      simp_alive_ops
+      simp_alive_case_bash
+      simp_alive_split
+      all_goals
+      bv_decide
   }
 
 @[simp_denote]
