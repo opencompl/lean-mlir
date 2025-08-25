@@ -378,7 +378,7 @@ instance : DialectSignature RV64 := ⟨Op.signature⟩
 
 def opToString (op : RISCV64.Op) : String :=
   let op  : String := match op with
-  | .li imm => s! "li \{immediate = { imm.toInt } : i64 }"
+  | .li imm => "li"
   | .mulh => "mulh"
   | .mulhu => "mulhu"
   | .mulhsu => "mulhsu"
@@ -470,7 +470,7 @@ def opToString (op : RISCV64.Op) : String :=
   op
 
 def attributesToPrint: RISCV64.Op → String
-  | .li imm => s! "\{immediate = { imm.toInt } : i32 }"
+  | .li imm => s! "\{immediate = { imm.toInt } : i64 }"
   | .addiw (_imm : BitVec 12) => s!"\{immediate = { _imm.toInt} : i12 }"
   | .lui (_imm : BitVec 20) => s!"\{immediate = { _imm.toInt} : i20 } "
   | .auipc (_imm : BitVec 20) => s!"\{imm = { _imm.toInt} : si20 }" -- adding a s such that xdsl can parsee it, double-check when needed and when not
