@@ -51,10 +51,6 @@ def udiv_llvm_exact_32 : Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitv
 def llvm_udiv_lower_riscv_flag_32: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
   {lhs := udiv_llvm_exact_32, rhs := udiv_riscv_32, correct := sorry }
 
-def udiv_match_32 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_udiv_lower_riscv_flag_32, llvm_udiv_lower_riscv_no_flag_32]
-
 
 /-! ### i64 -/
 
@@ -91,6 +87,9 @@ def udiv_llvm_exact_64 : Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitv
 def llvm_udiv_lower_riscv_flag_64: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs := udiv_llvm_exact_64, rhs := udiv_riscv_64}
 
-def udiv_match_64 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_udiv_lower_riscv_flag_64, llvm_udiv_lower_riscv_no_flag_64]
+def udiv_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_udiv_lower_riscv_flag_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_udiv_lower_riscv_no_flag_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_udiv_lower_riscv_flag_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_udiv_lower_riscv_no_flag_64),
+]

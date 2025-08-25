@@ -74,11 +74,9 @@ def icmp_ne_riscv_i64_pseudo := [LV| {
 def icmp_ne_riscv_eq_icmp_ne_llvm_i64_pseudo : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs:= icmp_neq_llvm_i64, rhs:= icmp_ne_riscv_i64_pseudo}
 
-def pseudo_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-   List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-   [icmp_eq_riscv_eq_icmp_eq_llvm_i64_pseudo,
-    icmp_ne_riscv_eq_icmp_ne_llvm_i64_pseudo]
-    ++
-       List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-    [icmp_eq_riscv_eq_icmp_eq_llvm_i32_pseudo,
-    icmp_ne_riscv_eq_icmp_ne_llvm_i32_pseudo]
+def pseudo_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
+   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_eq_riscv_eq_icmp_eq_llvm_i64_pseudo),
+   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ne_riscv_eq_icmp_ne_llvm_i64_pseudo),
+   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_eq_riscv_eq_icmp_eq_llvm_i32_pseudo),
+   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ne_riscv_eq_icmp_ne_llvm_i32_pseudo),
+]

@@ -6,13 +6,12 @@ import Lean
 open LLVMRiscV
 
 /-!
-## Functionality
-This file contains rewrites for the Peephole Rewriter to eliminate unrealized conversion casts.
-The rewrites below are registered to fold-away pairs of unrealized conversion casts.
+  This file contains rewrites for the Peephole Rewriter to eliminate unrealized conversion casts.
+  The rewrites below are registered to fold-away pairs of unrealized conversion casts.
 
-An `unrealized conversion cast` in MLIR is an operation inserted during the lowering
-from one dialect to another dialect to temporary guarantee compatible between type
-systems. It is stating that an element should be casted to type B from type A.
+  An `unrealized conversion cast` in MLIR is an operation inserted during the lowering
+  from one dialect to another dialect to temporary guarantee compatible between type
+  systems. It is stating that an element should be casted to type B from type A.
 -/
 
 @[simp_denote]
