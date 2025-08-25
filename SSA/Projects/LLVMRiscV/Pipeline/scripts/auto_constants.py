@@ -7,9 +7,9 @@ range [-max_val, max_val].
 Additionally, it generates a proof that the two are equivalent as follows :
 
 def llvm_const_lower_riscv_li0 : LLVMPeepholeRewriteRefine 64 [] :=
-  {lhs:= constLlvm_0, rhs:= liRiscv_0,
+  {lhs:= constLLVM_0, rhs:= liRiscv_0,
    correct := by
-    unfold constLlvm_0 liRiscv_0
+    unfold constLLVM_0 liRiscv_0
     simp_peephole
     simp_riscv
     simp_alive_ops
@@ -28,7 +28,7 @@ open LLVMRiscV\n
     body = ""
     rewrite_names = []
     for i in range(-max_val, max_val + 1):
-        name_suffix = f"N{-i}" if i < 0 else str(i)
+        name_suffix = f"_{-i}" if i < 0 else str(i)
         li_def = f"""def liRiscv{name_suffix} := [LV| {{
     ^entry ():
       %0 = "li"() {{imm = {i} : !i64}} : (!i64) -> (!i64)
@@ -36,21 +36,21 @@ open LLVMRiscV\n
       llvm.return %1 : i64
   }}]\n\n"""
 
-        llvm_def = f"""def constLlvm{name_suffix} : Com LLVMPlusRiscV [] .pure (.llvm (.bitvec 64)) := [LV| {{
+        llvm_def = f"""def constLLVM{name_suffix} : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {{
     ^entry ():
       %1 = llvm.mlir.constant ({i}) : i64
       llvm.return %1 : i64
   }}]\n\n"""
         proof = f"""def llvm_const_lower_riscv_li{name_suffix} : LLVMPeepholeRewriteRefine 64 [] :=
-  {{lhs := constLlvm{name_suffix}, rhs:= liRiscv{name_suffix},
+  {{lhs := constLLVM{name_suffix}, rhs:= liRiscv{name_suffix},
    correct := by
-    unfold constLlvm{name_suffix} liRiscv{name_suffix}
+    unfold constLLVM{name_suffix} liRiscv{name_suffix}
     simp_peephole
     simp_riscv
     simp_alive_ops
     simp
   }}\n"""
-        rewrite_names.append(f"llvm_const_lower_riscv_li{name_suffix}")
+        rewrite_names.append(f"llvm_const_lower_riscv_li{name_suffix}") 
         body += li_def + llvm_def + proof + "\n"
     #create an array to hold all the rewrites to later pass to the rewriter 
     array_definition = "def const_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=\n List.map (fun x =>  ⟨[], Ty.llvm (.bitvec 64), (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x)⟩)\n [\n"

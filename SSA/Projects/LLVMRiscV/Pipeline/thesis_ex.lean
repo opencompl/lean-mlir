@@ -318,3 +318,31 @@ def selection00 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     %rd = "builtin.unrealized_conversion_cast" (%c) : (!riscv.reg) -> (i64)
     llvm.return %rd : i64
   }]
+
+
+/- Below are two example programs to test our instruction selector.-/
+def llvm00:=
+  [LV|{
+    ^bb0(%X : i64, %Y : i64 ):
+    %1 = llvm.add %X, %Y : i64
+    %2 = llvm.sub %X, %X : i64
+    %3 = llvm.add %1, %Y : i64
+    %4 = llvm.add %3, %Y : i64
+    %5 = llvm.add %3, %4 : i64
+    llvm.return %5 : i64
+  }]
+def llvm01:=
+  [LV|{
+    ^bb0(%X : i64, %Y : i64 ):
+    %1 = llvm.icmp.eq %X, %Y : i64
+    %2 = llvm.sub %X, %X : i64
+    llvm.return %1 : i1
+  }]
+
+def llvm02:=
+  [LV|{
+    ^bb0(%X : i64, %Y : i64 ):
+    %1 = llvm.mlir.constant 9 : i64
+    %2 = llvm.sub %X, %X : i64
+    llvm.return %1 : i64
+  }]
