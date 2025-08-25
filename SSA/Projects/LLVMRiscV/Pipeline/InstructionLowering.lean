@@ -113,7 +113,7 @@ def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRisc
   Run the instruction selector on a given `Com`, by calling several times `multiRewritePeephole`
   with limited fuel (100), concluding with CSE.
   This means that at most 100 steps are performed per-program and per-rewrite-location.
-  The limit prevents us from causing stack overflow.
+  The limit ensures that there is no stack overflow.
 
   The structure of this instruction selection pipeline is as follows:
   - DCE
