@@ -17,6 +17,8 @@ instance : ToString (Stream (BitVec w)) where
     let l := Stream.toList 100 s
     toString l
 
+namespace HandshakeExample
+
 unseal String.splitOnAux in
 def BranchEg1 := [handshake_com| {
   ^entry(%0: !Stream_BitVec_1, %1: !Stream_BitVec_1):
@@ -67,7 +69,7 @@ def testSync : Stream (BitVec 8) :=
 
 #eval testSync
 
-namespace Stream
+open Stream
 
 
 open Ctxt in
