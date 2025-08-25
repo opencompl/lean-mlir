@@ -27,7 +27,7 @@ However, any other attributes (e.g., flags or immediate values) are still encode
 [4] https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
 -/
 inductive Op
-  | li : (val : BitVec 20) → Op
+  | li : (val : BitVec 64) → Op
   | lui (imm : BitVec 20)
   | auipc (imm : BitVec 20)
   | addi (imm : BitVec 12)
@@ -310,7 +310,7 @@ instance : DialectSignature RV64 := ⟨Op.signature⟩
 
 def opToString (op : RISCV64.Op) : String :=
   let op  : String := match op with
-  | .li imm => s! "li \{immediate = { imm.toInt } : i20 }"
+  | .li imm => s! "li \{immediate = { imm.toInt } : i64 }"
   | .mulh => "mulh"
   | .mulhu => "mulhu"
   | .mulhsu => "mulhsu"
@@ -396,7 +396,7 @@ functions that define our semantics.
 @[simp, reducible]
 instance : DialectDenote (RV64) where
   denote
-  | .li imm, _ , _ =>  BitVec.signExtend 64 (imm)
+  | .li imm, _ , _ => imm
   | .addiw imm, regs, _ => pure64_RISCV_ADDIW imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .lui imm, regs , _ => UTYPE_pure64_RISCV_LUI imm
   | .auipc imm, regs, _ => UTYPE_pure64_RISCV_AUIPC imm (regs.getN 0 (by simp [DialectSignature.sig, signature]))
