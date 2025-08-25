@@ -1,9 +1,8 @@
-
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 
 open LLVMRiscV
 
-/- This file defines helper functions/wrapper to simplify the creation of
+/- This file defines helper a wrapper to simplify the creation of
    `PeepholeRewrite` instances for the instruction selection pipeline.
    The functions are used to create rewrites for binary and unary operations
    that take two or one input operands, respectively, and produce an output
