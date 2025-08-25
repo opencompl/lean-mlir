@@ -307,11 +307,8 @@ lemma worklistRun'_init_wf inits hinits final? :
       simp [m2]; split
       · apply wf_addFinal; assumption; simp [m1]
       · assumption
-    have hst' : ∀ (sa : S) s, map[sa]? = some s → s ∈ m1.states := by
-      intros sa s hmap; simp [m1]; left
-      apply hst _ _ hmap
-    have hst' : ∀ (sa : S) s, map[sa]? = some s → s ∈ m2.states := by
-      intros sa s hmap; simp [m2]; split <;> apply hst' _ _ hmap
+    have hst' : ∀ (sa : S) s, map[sa]? = some s → s ∈ m1.states := by grind
+    have hst' : ∀ (sa : S) s, map[sa]? = some s → s ∈ m2.states := by grind
     have hnew : ∀ sa, sa ∈ map → inits[i] ≠ sa := by
       rintro sa hin rfl; simp_all
       rw [Array.mem_take_iff_getElem?] at hin
@@ -327,7 +324,9 @@ lemma worklistRun'_init_wf inits hinits final? :
       split at hmap
       · simp_all
       · apply hst' _ _ hmap
-    · rw [hsts]; simp; rintro s hin
+    · rw [hsts]
+      simp only [Subtype.forall, Finset.union_singleton, Finset.mem_insert]
+      rintro s hin
       by_cases heq : s = m.stateMax
       · use inits[i]; rw [heq]
         exact Std.HashMap.getElem?_insert_self
@@ -345,13 +344,7 @@ lemma worklistRun'_init_wf inits hinits final? :
         split_ifs at hsa
         · simp at hsa; simp [hsa]
         · apply hst at hsa; simp [hsa]
-      simp at hs; rcases hs with hs | rfl
-      · have _ : m.stateMax ≠ s := by
-          rintro rfl; simp [RawCNFA.states] at hs
-        rw [Std.HashMap.getElem?_insert] at hsa hsa'
-        split at hsa <;> split at hsa' <;> try simp at hsa hsa' <;> try contradiction
-        simp only at hinj
-        apply hinj hsa hsa'
+      simp at hs; rcases hs with rfl | hs
       · rw [Std.HashMap.getElem?_insert] at hsa hsa'
         have himp : ∀ (sa : S), map[sa]? ≠ some m.stateMax := by
           rintro sa hc; apply hst at hc; simp [RawCNFA.states] at hc
@@ -360,6 +353,12 @@ lemma worklistRun'_init_wf inits hinits final? :
         · exfalso; apply himp; assumption
         · exfalso; apply himp; assumption
         · exfalso; apply himp; assumption
+      · have _ : m.stateMax ≠ s := by
+          rintro rfl; simp [RawCNFA.states] at hs
+        rw [Std.HashMap.getElem?_insert] at hsa hsa'
+        split at hsa <;> split at hsa' <;> try simp at hsa hsa' <;> try contradiction
+        simp only at hinj
+        apply hinj hsa hsa'
     split_ands
     · rintro s; simp [Array.mem_take_get_succ, ←hmi]
     · rintro s a; aesop
@@ -435,18 +434,10 @@ lemma worklistRun'_go_wf :
             · simp
           · apply wf_addTrans
             · simp; apply wf_newState; assumption
-            · simp; left; assumption
+            · grind
             · simp
-        · split <;> simp_all
-        · simp; intros sa s hmap
-          rw [Std.HashMap.getElem?_insert] at hmap
-          split
-          · simp; split at hmap
-            · simp_all
-            · left; apply hst _ _ hmap
-          · simp_all; split at hmap
-            · simp_all
-            · left; apply hst _ _ hmap
+        · grind
+        · grind
 
 lemma worklistRun'_wf :
     (worklistRun' A S final inits hinits f).WF := by
@@ -517,7 +508,7 @@ omit [LawfulBEq A] [Fintype S] [DecidableEq S] in
 lemma processOneElem_mem_states (st : worklist.St A S) (final : S → Bool) (a : A) (sa : S) (s : State) :
     s ∈ (processOneElem A S final s st (a, sa)).m.states →
     s ∈ st.m.states ∨ s = st.m.stateMax := by
-  simp [processOneElem_states]; split <;> simp_all
+  grind [processOneElem_states]
 
 omit [LawfulBEq A] [Fintype S] in
 lemma processOneElem_map (st : worklist.St A S) (final : S → Bool) (a : A) (sa sa' : S) (s : State) :
@@ -662,26 +653,20 @@ def processOneElem_inv {st : worklist.St A S} (s : State) (sa : S) (k : ℕ) :
         · simp
       · apply wf_addTrans
         · simp; apply wf_newState; assumption
-        · simp; left; apply hmem <;> assumption
+        · grind
         · simp }
-  { simp only [processOneElem, worklist.St.addOrCreateState]; split
-    { simp; intros; apply hmem <;> assumption }
-    { dsimp only; intros sa s hin
-      by_cases hnew? : sa' = sa
-      { subst_eqs; simp at hin; subst_eqs; split <;> simp }
-      { have _ : s ∈ st.m.states := by rw [Std.HashMap.getElem?_insert] at hin; simp_all; apply hmem <;> assumption
-        split <;> simp <;> left <;> assumption } } }
+  { simp only [processOneElem, worklist.St.addOrCreateState]; grind }
   { simp only [processOneElem, worklist.St.addOrCreateState]; split
     { simp; intros s hs; apply inv.map_surj ⟨s, hs⟩ }
     { simp; intros s' hs'
       have hs' : s' ∈ st.m.newState.2.states := by split at hs' <;> simp_all
       simp at hs'
-      rcases hs' with hold | rfl
+      rcases hs' with rfl | hold
+      { use sa'; simp_all }
       { obtain ⟨sa, hsa⟩ := inv.map_surj ⟨_, hold⟩; use sa
         rw [Std.HashMap.getElem?_insert]
         simp_all only [ge_iff_le, Prod.mk.eta, beq_iff_eq, ite_eq_right_iff, Option.some.injEq]
-        rintro rfl; simp_all }
-      { use sa'; simp_all } } }
+        rintro rfl; simp_all } } }
   { rintro s' sa1 sa2
     rw [processOneElem_map]
     rw [processOneElem_map]

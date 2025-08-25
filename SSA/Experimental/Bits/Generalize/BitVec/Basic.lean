@@ -15,7 +15,7 @@ open Std.Tactic.BVDecide
 
 namespace Generalize
 /--
-Custom BVExpr for generalization incoroporating all supported expressions involving `BitVec` and operations on them.
+Custom BVExpr for generalization incorporating all supported expressions involving `BitVec` and operations on them.
 -/
 inductive GenBVExpr : Nat → Type where
   /--
@@ -58,6 +58,7 @@ inductive GenBVExpr : Nat → Type where
   shift right arithmetically by another BitVec expression. For constant shifts there exists a `BVUnop`.
   -/
   | arithShiftRight (lhs : GenBVExpr m) (rhs : GenBVExpr n) : GenBVExpr m
+  | signExtend (v : Nat) (expr : GenBVExpr w) : GenBVExpr v
   | zeroExtend (v : Nat) (expr : GenBVExpr w) : GenBVExpr v
   | truncate (v : Nat) (expr : GenBVExpr w) : GenBVExpr v
 with
@@ -81,14 +82,16 @@ with
       mixHash 31 <| mixHash (hash w) <| mixHash (hashCode _ lhs) (hashCode _ rhs)
     | w, .arithShiftRight lhs rhs =>
       mixHash 37 <| mixHash (hash w) <| mixHash (hashCode _ lhs) (hashCode _ rhs)
-    | w, .zeroExtend _ expr =>
+    | w, .signExtend _ expr =>
       mixHash 41 <| mixHash (hash w) (hashCode _ expr)
-    | w, .truncate _ expr =>
+    | w, .zeroExtend _ expr =>
       mixHash 43 <| mixHash (hash w) (hashCode _ expr)
+    | w, .truncate _ expr =>
+      mixHash 47 <| mixHash (hash w) (hashCode _ expr)
 namespace GenBVExpr
 
 def toString : GenBVExpr w → String
-  | .var idx => s!"var{idx}"
+  | .var idx => s!"var{idx}#{w}"
   | .const val => ToString.toString val
   | .extract start len expr => s!"{expr.toString}[{start}, {len}]"
   | .bin lhs op rhs => s!"({lhs.toString} {op.toString} {rhs.toString})"
@@ -98,6 +101,7 @@ def toString : GenBVExpr w → String
   | .shiftLeft lhs rhs => s!"({lhs.toString} << {rhs.toString})"
   | .shiftRight lhs rhs => s!"({lhs.toString} >> {rhs.toString})"
   | .arithShiftRight lhs rhs => s!"({lhs.toString} >>a {rhs.toString})"
+  | .signExtend v expr => s!"(signExtend {v} {toString expr}})"
   | .zeroExtend v expr => s!"(zeroExtend {v} {toString expr}})"
   | .truncate v expr => s!"(truncate {v} {toString expr}})"
 
@@ -112,6 +116,7 @@ def size : GenBVExpr w → Nat
   | .shiftLeft lhs rhs => 1 + lhs.size + rhs.size
   | .shiftRight lhs rhs => 1 + lhs.size + rhs.size
   | .arithShiftRight lhs rhs => 1 + lhs.size + rhs.size
+  | .signExtend v expr => 1 + expr.size
   | .zeroExtend v expr => 1 + expr.size
   | .truncate v expr => 1 + expr.size
 
@@ -149,6 +154,7 @@ def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : GenBVExpr w → BitVec
   | .shiftLeft lhs rhs => (eval assign lhs) <<< (eval assign rhs)
   | .shiftRight lhs rhs => (eval assign lhs) >>> (eval assign rhs)
   | .arithShiftRight lhs rhs => BitVec.sshiftRight' (eval assign lhs) (eval assign rhs)
+  | .signExtend n expr => BitVec.signExtend n (eval assign expr)
   | .zeroExtend n expr => BitVec.zeroExtend n (eval assign expr)
   | .truncate n expr => BitVec.truncate n (eval assign expr)
 end GenBVExpr
@@ -221,12 +227,26 @@ structure BVExprWrapper where
   width : Nat
   bvExpr: GenBVExpr width
 
+instance : BEq BVExprWrapper where
+  beq := fun a b => if h : a.width = b.width then
+                      a.bvExpr == h ▸ b.bvExpr
+                    else false
+
+instance : Hashable BVExprWrapper where
+  hash a := hash a.bvExpr
+
 instance : ToString BVExprWrapper where
   toString w :=
       s!" BVExprWrapper \{width: {w.width}, bvExpr: {w.bvExpr}}"
 
 instance : Inhabited BVExprWrapper where
   default := {bvExpr := GenBVExpr.const (BitVec.ofNat 0 0), width := 0}
+
+
+def getWidth (expr : Expr) : MetaM (Option Nat) := do
+  match_expr expr with
+  | BitVec n => getNatValue? n
+  | _ => pure none
 
 def changeBVExprWidth (bvExpr: GenBVExpr w) (target: Nat) : GenBVExpr target := Id.run do
   if h : w = target then
@@ -241,7 +261,10 @@ def changeBVExprWidth (bvExpr: GenBVExpr w) (target: Nat) : GenBVExpr target := 
   | .shiftLeft lhs rhs =>  GenBVExpr.shiftLeft (changeBVExprWidth lhs target)  (changeBVExprWidth rhs target)
   | .shiftRight lhs rhs =>  GenBVExpr.shiftRight (changeBVExprWidth lhs target) (changeBVExprWidth rhs target)
   | .arithShiftRight lhs rhs => GenBVExpr.arithShiftRight (changeBVExprWidth lhs target) (changeBVExprWidth rhs target)
-  | _ => GenBVExpr.const (BitVec.zero target) -- TODO: How to handle zeroextend, trunc, ?
+  | .signExtend v expr => GenBVExpr.signExtend target (changeBVExprWidth expr target)
+  | .zeroExtend v expr => GenBVExpr.zeroExtend target (changeBVExprWidth expr target)
+  | .truncate v expr => GenBVExpr.truncate target (changeBVExprWidth expr target)
+  | _ => GenBVExpr.const (BitVec.zero target)
 
 def changeBVLogicalExprWidth (bvLogicalExpr: GenBVLogicalExpr) (target: Nat): GenBVLogicalExpr :=
   match bvLogicalExpr with
@@ -254,13 +277,13 @@ def changeBVLogicalExprWidth (bvLogicalExpr: GenBVLogicalExpr) (target: Nat): Ge
       BoolExpr.ite (changeBVLogicalExprWidth constVar target) (changeBVLogicalExprWidth auxVar target) (changeBVLogicalExprWidth op3 target)
   | _ => bvLogicalExpr
 
-def bvExprToSubstitutionValue (map: Std.HashMap Nat (GenBVExpr w)) : Std.HashMap Nat
-  (SubstitutionValue GenBVExpr) :=
-      Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.genExpr item.snd)) map.toList)
+def bvExprToSubstitutionValue (map: Std.HashMap Nat BVExprWrapper) : Std.HashMap Nat (SubstitutionValue GenBVExpr) :=
+      Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.genExpr item.snd.bvExpr)) map.toList)
 
 def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) : Std.HashMap Nat (SubstitutionValue GenBVExpr) :=
   Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
 
+set_option warn.sorry false in
 def substituteBVExpr (bvExpr: GenBVExpr w) (assignment: Std.HashMap Nat (SubstitutionValue GenBVExpr)) : GenBVExpr w :=
     match bvExpr with
     | .var idx =>
@@ -268,9 +291,8 @@ def substituteBVExpr (bvExpr: GenBVExpr w) (assignment: Std.HashMap Nat (Substit
           let value := assignment[idx]!
           match value with
           | .genExpr (w := wbv) bv =>
-            if h : w = wbv
-            then h ▸ bv
-            else GenBVExpr.extract 0 w bv
+            let h : w = wbv := sorry
+            h ▸ bv
           | .packedBV packedBitVec =>  GenBVExpr.const (BitVec.ofNat w packedBitVec.bv.toNat)
       else GenBVExpr.var idx
     | .bin lhs op rhs =>
@@ -283,6 +305,8 @@ def substituteBVExpr (bvExpr: GenBVExpr w) (assignment: Std.HashMap Nat (Substit
         GenBVExpr.shiftRight (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
     | .arithShiftRight lhs rhs =>
         GenBVExpr.arithShiftRight (substituteBVExpr lhs assignment) (substituteBVExpr rhs assignment)
+    | .signExtend w expr =>
+        GenBVExpr.signExtend w (substituteBVExpr expr assignment)
     | .zeroExtend w expr =>
         GenBVExpr.zeroExtend w (substituteBVExpr expr assignment)
     | .truncate w expr =>
@@ -397,20 +421,12 @@ def sameBothSides (bvLogicalExpr : GenBVLogicalExpr) : Bool :=
   | .literal (GenBVPred.bin lhs _ rhs) => lhs == rhs
   | _ => false
 
-/-
-This function expects that targetWidth >= w
--/
-def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: GenBVExpr w) : BitVec targetWidth :=
-  let newWidthExpr := changeBVExprWidth expr targetWidth
-  let substitutedBvExpr := substituteBVExpr newWidthExpr (packedBitVecToSubstitutionValue assignments)
-
+def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenBVExpr w) : BitVec w :=
+  let substitutedBvExpr := substituteBVExpr expr (packedBitVecToSubstitutionValue assignments)
   GenBVExpr.eval assignments substitutedBvExpr
 
-
-def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (targetWidth: Nat) (expr: GenBVLogicalExpr) : Bool :=
-  let newWidthExpr := changeBVLogicalExprWidth expr targetWidth
-  let substitutedBvExpr := substitute newWidthExpr (packedBitVecToSubstitutionValue assignments)
-
+def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenBVLogicalExpr) : Bool :=
+  let substitutedBvExpr := substitute expr (packedBitVecToSubstitutionValue assignments)
   GenBVLogicalExpr.eval assignments substitutedBvExpr
 
 def add (op1 : GenBVExpr w) (op2 : GenBVExpr w) : GenBVExpr w :=
@@ -450,7 +466,7 @@ def shiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
 def arithShiftRight (op1 : GenBVExpr w) (op2: GenBVExpr w) : GenBVExpr w :=
   GenBVExpr.arithShiftRight op1 op2
 
-def zero (w: Nat) := GenBVExpr.const (BitVec.ofNat w 0)
+def zero (w: Nat)  := GenBVExpr.const (BitVec.ofNat w 0)
 def one (w: Nat) := GenBVExpr.const (BitVec.ofNat w 1)
 def minusOne (w: Nat) := GenBVExpr.const (BitVec.ofInt w (-1))
 

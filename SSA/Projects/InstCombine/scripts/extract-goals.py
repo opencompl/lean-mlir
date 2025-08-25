@@ -31,7 +31,9 @@ STATUS_PROCESSING = "🕒"
 SCRIPT_PATH = os.path.relpath(os.path.abspath(__file__), ROOT_DIR)
 
 
-PREAMBLE = f""" -- auto-generated from '{SCRIPT_PATH}'
+PREAMBLE = f"""
+/-
+-- auto-generated from '{SCRIPT_PATH}'
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
@@ -42,6 +44,7 @@ set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
 set_option Elab.async false
+-/
 
 """
 

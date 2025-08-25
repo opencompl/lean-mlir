@@ -16,7 +16,7 @@ theorem test1_thm (e : IntW 23) : LLVM.or e (LLVM.xor (const? 23 (-1)) e) ‚äë co
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -29,7 +29,7 @@ theorem test2_thm (e e_1 : IntW 39) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -38,7 +38,7 @@ theorem test4_thm (e : IntW 1023) : LLVM.or e (LLVM.xor (const? 1023 (-1)) e) ‚ä
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -52,5 +52,5 @@ theorem test5_thm (e e_1 : IntW 399) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
