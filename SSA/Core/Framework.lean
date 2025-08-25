@@ -142,6 +142,22 @@ Another option, which would be more complicated, but correct by construction, is
 impurely.
 -/
 
+/--
+ToPrint includes the functions to print the components of a dialect.
+-/
+class ToPrint (d : Dialect) where
+  /-- Prints the operation in the dialect. -/
+  printOpName : d.Op → String
+  /-- Prints the type in the dialect. -/
+  printTy : d.Ty → String
+  /-- Prints the attributes of the operation. -/
+  printAttributes : d.Op → String
+  /-- Prints the name of the dialect. -/
+  printDialect : String
+  /-- Prints the return instruction of the dialect. -/
+  printReturn : d.Ty → String
+  /-- Prints the function header of the dialect. -/
+  printFunc : d.Ty → String
 
 /- # Datastructures -/
 section DataStructures
@@ -330,6 +346,77 @@ instance : ToString (Com d Γ eff t)  where toString := Com.toString
 instance : ToString (Expr d Γ eff t) where toString := Expr.toString
 
 end ToString
+
+/- # ToPrint instances for Com and Expr  -/
+section ToPrint
+
+open Std (Format)
+variable {d} [ToPrint d][DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
+
+/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
+partial def formatFormalArgListTuplePrint [ToString d.Ty] (ts : List d.Ty) : String :=
+  let args := (List.range ts.length).zip ts |>.map
+    (fun (i, t) => s!"%{i} : {ToPrint.printTy t}")
+  "(" ++ String.intercalate ", " args ++ ")"
+
+-- Format a sequence of types as `(t₁, ..., tₙ)` using toString instances -/
+private def formatTypeTuplePrint [ToString d.Ty] (xs : List d.Ty) : String :=
+  "(" ++ String.intercalate ", " (xs.map ToPrint.printTy) ++ ")"
+
+/-- Parenthesize and separate with 'separator' if the list is nonempty, and return
+the "()" if the list is empty. -/
+private def Format.parenIfNonemptyForPrint (l : String) (r : String) (separator : Format)
+    (xs : List Format) : Format :=
+  match xs with
+  | [] => "() "
+  | _  =>  l ++ (Format.joinSep xs separator) ++ r
+
+/-- Format a tuple of arguments as `a₁, ..., aₙ`. -/
+private def formatArgTupleForPrint [Repr Ty] {Γ : List Ty}
+    (args : HVector (fun t => Var Γ₂ t) Γ) : Format :=
+  Format.parenIfNonemptyForPrint "(" ")" ", " (formatArgTupleAux args)
+where
+  formatArgTupleAux [Repr Ty] {Γ : List Ty} (args : HVector (fun t => Var Γ₂ t) Γ) : List Format :=
+    match Γ with
+    | .nil => []
+    | .cons .. =>
+      match args with
+      | .cons a as => (repr a) :: (formatArgTupleAux as)
+
+/--
+Converts an expression within a dialect to its MLIR string representation.
+Since MLIR generic syntax uses double quotes (`"..."`) to print operations, this function uses
+the ToPrint typeclass of each dialect to print the various parts of an expressiom such as
+operation and types. Lastly, it arranges the expression printing according to MLIR syntax.
+-/
+partial def Expr.toPrint [ToString d.Op] : Expr d Γ eff t → String
+  | Expr.mk (op : d.Op) _ _ args _regArgs =>
+    let outTy : d.Ty := DialectSignature.outTy op
+    let argTys := DialectSignature.sig op
+    s!"\"{ToPrint.printOpName op}\"{formatArgTupleForPrint args}{ToPrint.printAttributes op} : {formatTypeTuplePrint argTys} -> ({ToPrint.printTy outTy})"
+
+/--
+  This function recursively converts the body of a `Com` into its string representation.
+  Each bound variable is printed with its index and corresponding expression.
+-/
+partial def Com.toPrintBody : Com d Γ eff t → String
+  | .ret v => s!"  \"{ToPrint.printReturn t}\"({_root_.repr v }) : ({ToPrint.printTy t}) -> ()"
+  | .var e body =>
+    s!"  %{_root_.repr <|(Γ.length)} = {Expr.toPrint e }" ++ "\n" ++
+    Com.toPrintBody body
+
+/--
+  `Com.toPrint` implements a `ToPrint` instance for the type `Com`.
+  This has a more general behaviour than `toString` and allows customizing the
+  printing of dialect objects.
+-/
+partial def Com.toPrint (com : Com d Γ eff t) : String :=
+   "builtin.module { \n"
+  ++ ToPrint.printFunc t ++ ((formatFormalArgListTuplePrint Γ.toList)) ++ ":" ++ "\n"
+  ++ (Com.toPrintBody com) ++
+   "\n }"
+
+end ToPrint
 
 /-! ### DecidableEq instance -/
 --TODO: this should be derived later on when a derive handler is implemented

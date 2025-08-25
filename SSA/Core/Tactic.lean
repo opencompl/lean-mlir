@@ -48,7 +48,6 @@ attribute [simp_denote]
   Expr.op_mk Expr.args_mk Expr.regArgs_mk
   Expr.op_castPureToEff Expr.args_castPureToEff
   /- Effect massaging -/
-  EffectKind.toMonad_pure EffectKind.toMonad_impure
   EffectKind.liftEffect_rfl
   Id.pure_eq Id.bind_eq id_eq
   pure_bind
