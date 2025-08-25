@@ -52,14 +52,15 @@ def alive_AddSub_1043_tgt := [sllvm| {
   %v7 = llvm.sub %RHS, %v2 : i64
   llvm.return %v7 : i64
 }]
+
 theorem alive_AddSub_1043 : alive_AddSub_1043_src  ⊑ alive_AddSub_1043_tgt  := by
   unfold alive_AddSub_1043_src alive_AddSub_1043_tgt
   simp_peephole
+  simp only [LawfulMRefinement.pure_isRefinedBy_pure]
   simp_sllvm
   simp_sllvm_case_bash
   simp_sllvm_split
   all_goals bv_decide
-
 
 -- Name:AddSub:1152
 -- precondition: true
@@ -3061,7 +3062,8 @@ def alive_275_tgt  :=
   llvm.return %v3 : i5
 }]
 
--- attribute [simp_denote] bind_pure bind_pure_comp map_pure pure_bind
+-- attribute [simp_denote] bind_pure_comp Functor.map_map bind_map_left
+attribute [simp_denote] bind_map_left
 
 theorem alive_275   : alive_275_src ⊑ alive_275_tgt := by
   unfold alive_275_src alive_275_tgt
