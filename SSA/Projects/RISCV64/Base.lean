@@ -450,8 +450,7 @@ def opToString (op : RISCV64.Op) : String :=
   | .rorw => "rorw"
   -- orc.b
   -- rev8
-
-  s!"\"riscv.{op}\""
+  op
 
 def attributesToPrint: RISCV64.Op → String
   | .li imm => s! "\{immediate = { imm.toInt } : i64 }"
