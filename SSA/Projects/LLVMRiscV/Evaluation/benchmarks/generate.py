@@ -65,9 +65,12 @@ def setup_benchmarking_directories():
     """
     Create clean directories to store the benchmarks.
     """
-    for directory  in AUTOGEN_DIR_PATHS:
-        shutil.rmtree(directory)
-        os.makedirs(directory)
+    for directory in AUTOGEN_DIR_PATHS:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        else:       
+            shutil.rmtree(directory)
+            os.makedirs(directory)
 
 
 def run_command(cmd, log_file, timeout=TIMEOUT_SEC):
