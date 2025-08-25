@@ -126,8 +126,8 @@ inductive Op
   /- RISC-V `Zicond` conditional operations extension  -/
   | czero.eqz
   | czero.nez
-    -- RISC-V standard pseudo-instructions according to:
-    -- https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc
+  -- RISC-V standard pseudo-instructions according to:
+  -- https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc
   | mv
   | not
   | neg
@@ -371,7 +371,7 @@ def Op.outTy : Op  → Ty
   | .rorw => Ty.bv
   -- orc.b
   -- rev8
-  --pseudo-instructions
+  -- pseudo-instructions
   | mv => Ty.bv
   | not => Ty.bv
   | neg => Ty.bv
@@ -637,7 +637,7 @@ instance : DialectDenote (RV64) where
   | .rorw, regs, _ => ZBB_RTYPEW_pure64_RISCV_RORW (regs.getN 1 (by simp [DialectSignature.sig, signature]))  (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   -- orc.b
   -- rev8
-  --pseudo-instructions
+  -- pseudo-instructions
   | .mv, regs, _  => MV_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .not, regs, _ => NOT_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
   | .neg, regs, _ => NEG_pure64_pseudo (regs.getN 0 (by simp [DialectSignature.sig, signature]))
