@@ -36,6 +36,7 @@ inductive Op
 | parity (w : Nat)
 | replicate (w : Nat) (n : Nat)
 | shl (w : Nat)
+| shlPar (w n : Nat)
 | shrs (w : Nat)
 | shru (w : Nat)
 | sub (w : Nat)
@@ -65,6 +66,7 @@ def_signature for Comb where
   | .parity w => (Ty.bitvec w) → (Ty.bitvec 1)
   | .replicate w n => (Ty.bitvec w) → (Ty.bitvec (w * n))
   | .shl w => (Ty.bitvec w, Ty.bitvec w) → (Ty.bitvec w)
+  | .shlPar w _ => (Ty.bitvec w) → (Ty.bitvec w)
   | .shrs w => (Ty.bitvec w, Ty.bitvec w) → (Ty.bitvec w)
   | .shru w => (Ty.bitvec w, Ty.bitvec w) → (Ty.bitvec w)
   | .sub w => (Ty.bitvec w, Ty.bitvec w) → (Ty.bitvec w)
@@ -109,6 +111,7 @@ def_denote for Comb where
   | .parity _ => fun x => CombOp.parity x
   | .replicate _ n => fun xs => CombOp.replicate xs n
   | .shl _ => fun x y => CombOp.shl x y
+  | .shlPar _ n => fun x => CombOp.shl x n
   | .shrs _ => BitVec.sshiftRight'
   | .shru _ => fun x y => CombOp.shru x y
   | .sub _ => BitVec.sub
@@ -195,6 +198,11 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     | ["Comb.mul"] => mkExprOf <| .mul (← nnW) args.toList.length
     | ["Comb.or"] => mkExprOf <| .or (← nnW) args.toList.length
     | ["Comb.xor"] => mkExprOf <| .xor (← nnW) args.toList.length
+    -- parametric
+    | ["Comb.shlPar", n] =>
+      match n.toNat? with
+      | some n' => mkExprOf <| .shlPar n' (← unW)
+      | _  => throw <| .generic s!"type mismatch"
     | _ => throw <| .unsupportedOp s!"{repr opStx}"
 
 def mkReturn (Γ : Ctxt Comb.Ty) (opStx : MLIR.AST.Op 0) :

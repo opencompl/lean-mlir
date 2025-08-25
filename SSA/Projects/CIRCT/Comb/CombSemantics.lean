@@ -90,6 +90,10 @@ def replicate (x : BitVec w) (n : Nat) : BitVec (w * n) :=
 def shl (x y : BitVec w) : BitVec w :=
   x <<< y
 
+/-- Shift left -/
+def shlPar (x : BitVec w) (n : Nat) : BitVec w :=
+  x <<< n
+
 /-- Unsigned shift right -/
 def shru (x y : BitVec w) : BitVec w :=
   BitVec.ushiftRight x y.toNat
