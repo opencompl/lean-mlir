@@ -36,6 +36,8 @@ attribute [simp_sllvm]
   Id
   -- Refinement
   StateT.isRefinedBy_iff Prod.isRefinedBy_iff
+  HVector.cons_isRefinedBy_cons HVector.nil_isRefinedBy_nil
+  reduceIsRefinedBy
   -- Other general simp lemmas
   reduceIte bind_assoc
 
