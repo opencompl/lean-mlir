@@ -6,7 +6,7 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
- 
+
     def liRiscv_50 := [LV| {
     ^entry ():
       %0 = "li"() {imm = -50 : !i64} : (!i64) -> (!i64)
@@ -2435,4 +2435,3 @@ llvm_const_lower_riscv_li_50,
   llvm_const_lower_riscv_li49,
   llvm_const_lower_riscv_li50
   ]
-

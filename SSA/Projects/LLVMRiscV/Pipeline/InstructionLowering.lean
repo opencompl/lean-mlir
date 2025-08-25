@@ -51,30 +51,9 @@ def rewritingPatterns0 :
     icmp_match,
     mul_match,
     or_match,
-    -- rem_match_8,
-    -- rem_match_16,
-    -- rem_,match_32,
+    rem_match,
     sdiv_match, -- TODO: fix the casts
-    add_match_1,
-    add_match_8,
-    add_match_16,
-    add_match_32,
-    and_match_1,
-    and_match_8,
-    and_match_16,
-    and_match_32,
-    ashr_match_8,
-    ashr_match_16,
-    ashr_match_32,
-    mul_match_8,
-    mul_match_16,
-    mul_match_32,
-    or_match_8,
-    or_match_16,
-    or_match_32,
-    sub_match,
-    sub_match_16,
-    sub_match_32,
+    sub_match
     ]
 
 def rewritingPatterns1 :
@@ -82,9 +61,6 @@ def rewritingPatterns1 :
   List.flatten [
     sext_match,
     shl_match,
-    shl_match_8,
-    shl_match_16,
-    shl_match_32,
     srl_match,
     trunc_match,
     udiv_match,
@@ -98,11 +74,7 @@ def enable_pseudo_instr_pass := pseudo_match
 def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty)
   := List.cons ⟨[Ty.riscv RISCV64.Ty.bv], (Ty.riscv RISCV64.Ty.bv), cast_eliminiation_riscv⟩ <| List.cons ⟨[Ty.llvm _], (Ty.llvm _), cast_eq_cast_cast_eliminiation_riscv⟩ <| List.nil
 
-def const_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty)
-  := List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x)) all_const_llvm_const_lower_riscv_li
-
-
-/-- We increase `maxRecDepth` to avoid the recursion depth error when using the peephole rewriter. -/
+/- We increase `maxRecDepth` to avoid the recursion depth error when using the peephole rewriter. -/
 set_option maxRecDepth 10000000
 
 

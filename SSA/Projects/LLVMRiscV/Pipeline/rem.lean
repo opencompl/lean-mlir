@@ -103,7 +103,7 @@ def llvm_rem_lower_riscv_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)
   lhs := rem_llvm_64
   rhs := rem_riscv_64
 
-def rem_match_64 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
+def rem_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_rem_lower_riscv_8),
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_rem_lower_riscv_16),
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_rem_lower_riscv_32),
