@@ -5,81 +5,14 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
+/-!
+  This file implements the lowering for the `llvm.trunc` instruction for truncation:
+  - from i32 to i8
+  - from i32 to i16
+  - from i64 to i32
+-/
 
-/- # trunc operation from i64 to i32 incl. nuw and nsw flags -/
-@[simp_denote]
-def trunc_llvm_i64_to_i32 := [LV| {
-  ^entry (%lhs: i64):
-    %0 = llvm.trunc %lhs : i64 to i32
-    llvm.return %0 : i32
-  }]
-
-@[simp_denote]
-def trunc_riscv_to_i32 := [LV| {
-  ^entry (%lhs: i64):
-    %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
-    %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
-    llvm.return %2 : i32
-  }]
-
-def llvm_trunc_riscv_i64_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] :=
-  {lhs:= trunc_llvm_i64_to_i32, rhs:= trunc_riscv_to_i32}
-
-@[simp_denote]
-def trunc_llvm_i64_to_i32_nuw := [LV| {
-  ^entry (%lhs: i64):
-    %0 = llvm.trunc %lhs overflow<nuw> : i64 to i32
-    llvm.return %0 : i32
-  }]
-
-@[simp_denote]
-def trunc_riscv_to_i32_nuw := [LV| {
-  ^entry (%lhs: i64 ):
-    %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
-    %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
-    llvm.return %2 : i32
-  }]
-
-def llvm_trunc_riscv_i64_to_i32_nuw : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] :=
-  {lhs:= trunc_llvm_i64_to_i32_nuw, rhs:= trunc_riscv_to_i32_nuw }
-
-@[simp_denote]
-def trunc_llvm_i64_to_i32_nsw := [LV| {
-  ^entry (%lhs: i64):
-    %0 = llvm.trunc %lhs overflow<nsw> : i64 to i32
-    llvm.return %0 : i32
-  }]
-
-@[simp_denote]
-def trunc_riscv_to_i32_nsw := [LV| {
-  ^entry (%lhs: i64):
-    %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
-    %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
-    llvm.return %2 : i32
-  }]
-
-def llvm_trunc_riscv_i64_to_i32_nsw : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] :=
-  {lhs:= trunc_llvm_i64_to_i32_nsw, rhs:= trunc_riscv_to_i32_nsw }
-
-@[simp_denote]
-def trunc_llvm_i64_to_i32_nsw_nuw := [LV| {
-  ^entry (%lhs: i64):
-    %0 = llvm.trunc %lhs overflow<nsw,nuw> : i64 to i32
-    llvm.return %0 : i32
-  }]
-
-@[simp_denote]
-def trunc_riscv_to_i32_nsw_nuw := [LV| {
-  ^entry (%lhs: i64):
-  %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
-  %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
-    llvm.return %2 : i32
-  }]
-
-def llvm_trunc_riscv_i64_to_i32_nuw_nsw : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] :=
-  {lhs:= trunc_llvm_i64_to_i32_nsw_nuw, rhs:= trunc_riscv_to_i32_nsw_nuw}
-
-/- # trunc operation from i32 to i8 incl. nuw and nsw flags -/
+/-! ### i32 to i8 -/
 
 @[simp_denote]
 def trunc_llvm_i32_to_i8 := [LV| {
@@ -153,8 +86,8 @@ def trunc_riscv_i32_to_i8_nsw_nuw := [LV| {
 def llvm_trunc_riscv_i32_to_i8_nuw_nsw : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 32)] :=
   {lhs:= trunc_llvm_i32_to_i8_nsw_nuw, rhs:= trunc_riscv_i32_to_i8_nsw_nuw}
 
-/- # trunc operation from i32 to i16 without nuw and nsw flags yet
- The flag support will be added in the future. The proof structure is exact the same as above. -/
+
+/-! ### i32 to i16 -/
 
 @[simp_denote]
 def trunc_llvm_i32_to_i16 := [LV| {
@@ -174,6 +107,82 @@ def trunc_riscv_i32_to_i16 := [LV| {
 def llvm_trunc_riscv_i32_to_i16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 32)] :=
   {lhs:=  trunc_llvm_i32_to_i16, rhs:= trunc_riscv_i32_to_i16
   }
+
+
+/-! ### i64 to i32 -/
+
+@[simp_denote]
+def trunc_llvm_i64_to_i32 := [LV| {
+  ^entry (%lhs: i64):
+    %0 = llvm.trunc %lhs : i64 to i32
+    llvm.return %0 : i32
+  }]
+
+@[simp_denote]
+def trunc_riscv_to_i32 := [LV| {
+  ^entry (%lhs: i64):
+    %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
+    %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
+    llvm.return %2 : i32
+  }]
+
+def llvm_trunc_riscv_i64_to_i32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] :=
+  {lhs:= trunc_llvm_i64_to_i32, rhs:= trunc_riscv_to_i32}
+
+@[simp_denote]
+def trunc_llvm_i64_to_i32_nuw := [LV| {
+  ^entry (%lhs: i64):
+    %0 = llvm.trunc %lhs overflow<nuw> : i64 to i32
+    llvm.return %0 : i32
+  }]
+
+@[simp_denote]
+def trunc_riscv_to_i32_nuw := [LV| {
+  ^entry (%lhs: i64 ):
+    %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
+    %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
+    llvm.return %2 : i32
+  }]
+
+def llvm_trunc_riscv_i64_to_i32_nuw : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] :=
+  {lhs:= trunc_llvm_i64_to_i32_nuw, rhs:= trunc_riscv_to_i32_nuw }
+
+@[simp_denote]
+def trunc_llvm_i64_to_i32_nsw := [LV| {
+  ^entry (%lhs: i64):
+    %0 = llvm.trunc %lhs overflow<nsw> : i64 to i32
+    llvm.return %0 : i32
+  }]
+
+@[simp_denote]
+def trunc_riscv_to_i32_nsw := [LV| {
+  ^entry (%lhs: i64):
+    %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
+    %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
+    llvm.return %2 : i32
+  }]
+
+def llvm_trunc_riscv_i64_to_i32_nsw : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] :=
+  {lhs:= trunc_llvm_i64_to_i32_nsw, rhs:= trunc_riscv_to_i32_nsw }
+
+@[simp_denote]
+def trunc_llvm_i64_to_i32_nsw_nuw := [LV| {
+  ^entry (%lhs: i64):
+    %0 = llvm.trunc %lhs overflow<nsw,nuw> : i64 to i32
+    llvm.return %0 : i32
+  }]
+
+@[simp_denote]
+def trunc_riscv_to_i32_nsw_nuw := [LV| {
+  ^entry (%lhs: i64):
+  %lhsr = "builtin.unrealized_conversion_cast"(%lhs) : (i64) -> (!i64)
+  %2= "builtin.unrealized_conversion_cast"(%lhsr) : (!i64) -> (i32)
+    llvm.return %2 : i32
+  }]
+
+def llvm_trunc_riscv_i64_to_i32_nuw_nsw : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] :=
+  {lhs:= trunc_llvm_i64_to_i32_nsw_nuw, rhs:= trunc_riscv_to_i32_nsw_nuw}
+
 
 def trunc_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
     [ mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_trunc_riscv_i32_to_i16),
