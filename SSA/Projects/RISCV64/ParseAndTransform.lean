@@ -35,7 +35,7 @@ def parseAsRiscv (fileName : String ) : IO UInt32 := do
   match icom? with
   | none => return 1
   | some (Sigma.mk _Γ ⟨_eff, ⟨_retTy, c⟩⟩) => do
-    IO.println s!"{toPrint c}"
+    IO.println s!"{Com.toPrint c}"
     return 0
 
 private def test_simple := [RV64_com| {
