@@ -165,7 +165,7 @@ open Lean Meta
 open Simp (SimpM)
 
 /-- Implementation of `reduceIsRefinedBy` simproc -/
-partial def reduceIsRefinedByAux (α β inst lhs rhs : Expr) : SimpM (Option Expr) := do
+partial def reduceIsRefinedByAux (inst lhs rhs : Expr) : SimpM (Option Expr) := do
   let ⟨instFn, instArgs⟩ := inst.withApp Prod.mk
   trace[LeanMLIR.Elab] "Refinement instance is an application of: {instFn}"
   match instFn.constName with
@@ -177,11 +177,11 @@ partial def reduceIsRefinedByAux (α β inst lhs rhs : Expr) : SimpM (Option Exp
 where
   loop (e : Expr) (returnArgOnFail := true) : SimpM (Option Expr) :=
     let e? := if returnArgOnFail then some e else none
-    let_expr HRefinement.IsRefinedBy α β inst a b := e.consumeMData
+    let_expr HRefinement.IsRefinedBy _α _β inst a b := e.consumeMData
       | return e?
     withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying refinement instance: {inst}") <| do
       Meta.check e
-      let res? ← reduceIsRefinedByAux α β inst.consumeMData a b
+      let res? ← reduceIsRefinedByAux inst.consumeMData a b
       if let some res := res? then
         trace[LeanMLIR.Elab] "Simplified to: {res}"
       else
@@ -219,6 +219,13 @@ where
   simpInfer instArgs := do
     let some self := instArgs[1]? | throwUnexpectedArgs
     trace[LeanMLIR.Elab] "actual instance: {self}"
+    let selfType ← inferType self
+    let α ← mkFreshExprMVar (Expr.sort 1)
+    let β ← mkFreshExprMVar (Expr.sort 1)
+    let e := mkApp2 (mkConst ``HRefinement) α β
+    unless ← isDefEq selfType e do
+      throwError "Error: instance: {self}\n{← mkHasTypeButIsExpectedMsg selfType e}\
+        \n\nIn instance:\n\t{inst}"
     isRefinedByAppN #[α, β, self, lhs, rhs]
 
 open Lean Meta in
