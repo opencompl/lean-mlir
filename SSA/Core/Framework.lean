@@ -337,11 +337,6 @@ def Expr.regArgs {Γ ts} (e : Expr d Γ eff ts) :
     Regions d (DialectSignature.regSig e.op) :=
   Expr.casesOn e (fun _ _ _ _ regArgs => regArgs)
 
--- TODO: I don't think `returnVar` is used, remove it
-/-- `e.returnVar` is the variable in `e.outContext` which is bound by `e`. -/
-def Expr.returnVar (e : Expr d Γ eff [ty]) : e.outContext.Var ty :=
-  Var.last _ _
-
 /-- `e.returnVars` is the vector of variables in `e.outContext` which are bound by `e`. -/
 def Expr.returnVars (e : Expr d Γ eff tys) : HVector e.outContext.Var tys :=
   .ofFn _ _ <| fun i => (Var.ofFin i).appendInr
@@ -448,10 +443,6 @@ def Com.returnVars : (com : Com d Γ eff ts) → HVector (Var com.outContext) ts
   | .rets vs => vs
   | .var _ body => body.returnVars
 
-/-- The return variable of a program with exactly one return. -/
-def Com.returnVar (com : Com d Γ eff [t]) : Var com.outContext t :=
-  com.returnVars.get (0 : Fin 1)
-
 abbrev Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
   Hom.id.appendCodomain
 
@@ -475,11 +466,6 @@ section Lemmas
 @[simp] lemma Com.returnVars_rets : returnVars (rets vs : Com d Γ eff t) = vs := rfl
 @[simp] lemma Com.returnVars_var :
     returnVars (var (d:=d) (eff:=eff) e body) = body.returnVars := rfl
-
-@[simp] lemma Com.returnVar_rets :
-    returnVar (rets v : Com d Γ eff [t]) = v.get (0 : Fin 1) := rfl
-@[simp] lemma Com.returnVar_var :
-    returnVar (var (d:=d) (eff:=eff) e body) = body.returnVar := rfl
 
 end Lemmas
 
@@ -889,10 +875,6 @@ section Lemmas
 @[simp] lemma Com.returnVars_castPureToEff (eff : _) (com : Com d Γ .pure tys) :
     (com.castPureToEff eff).returnVars = com.returnVars.map (fun _ v => v.castCtxt (by simp)) := by
   induction com <;> simp_all
-
-@[simp] lemma Com.returnVar_castPureToEff {com : Com d Γ .pure [ty]} :
-    (com.castPureToEff eff).returnVar = com.returnVar.castCtxt (by simp) := by
-  simp [returnVar]
 
 /-! denotations of `castPureToEff` -/
 
