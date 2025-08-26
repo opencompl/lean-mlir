@@ -307,15 +307,6 @@ noncomputable instance :
          MatchArgResult lets matchLets args matchExpr.args mapIn) where
   coe := mapOut.toArgResult
 
--- noncomputable def toArgResult :
---     MatchVarResult lets v (.var matchLets matchExpr) w.appendInr mapIn
---     → Σ (ts : _) (ePure : { ePure //
---           lets.getPureExpr v = some ⟨ts, ePure⟩
---           ∧ ePure.op = matchExpr.op
---         }),
---         MatchArgResult lets matchLets ePure.val.args (cast (by rw[ePure.prop.2]) matchExpr.args) mapIn := by
---   rintro ⟨mapOut, h⟩
-
 @[simp] lemma val_toArgResult (mapOut : MatchVarResult lets v (.var matchLets matchExpr) w.appendInr mapIn) :
     mapOut.toArgResult.val = mapOut.val := rfl
 
@@ -662,7 +653,7 @@ theorem denote_matchArg
   apply HVector.map_eq_map_of_matchArg mapOut
   intro t v₁ v₂ mapOut' mapOut_eq
   simp [← mapOut_eq, denote_matchVar]
-  -- TODO: there is a little bit of duplication between the last bit of the `denote_matchVar` proof
+  -- NOTE: there is a little bit of duplication between the last bit of the `denote_matchVar` proof
   --       and the `denote_matchArg` proof, but resolving it is not worth the hassle of introducing
   --       a mutual theorem block.
 
@@ -745,7 +736,7 @@ theorem mem_matchVar {Δ_out}
 end
 
 /--
-`matchVarRes` is an alternative version of `matchVar'` which wraps the returned
+`matchArgRes` is an alternative version of `matchArg` which wraps the returned
 map as a `MatchVarResult`, and drops the accumulator map input (instead setting
 it to the default empty map).
 -/
