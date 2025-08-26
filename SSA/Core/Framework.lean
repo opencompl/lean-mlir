@@ -1053,13 +1053,6 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
   have := v.val_lt
   simp; grind
 
--- TODO: not sure if we actually need this, if not drop it
-@[simp] lemma Lets.getPureExpr_var_last (lets : Lets d Γ_in eff Γ_out)
-    (e : Expr d Γ_out eff [ty]) :
-    getPureExpr (lets.var e) (Var.last _ _)
-    = e.toPure?.map (fun e => ⟨_, Var.last _ _, e.changeVars <| e.contextHom⟩) := by
-  show getPureExpr _ (Var.last ⟨[]⟩ ty).appendInr = _
-  exact getPureExpr_var_appendInr ..
 
 @[simp] lemma Lets.getPureExprAux_var_appendInl (lets : Lets d Γ_in eff Γ_out)
     (e : Expr d Γ_out eff ty₁) (v : Var Γ_out ty₂) :
