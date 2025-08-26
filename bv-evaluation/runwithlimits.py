@@ -91,6 +91,3 @@ def run_with_limits(cmd: List[str], timeout: int, memout_mb: int) -> (str, str, 
             return "TIMEOUT", stdout, stderr
     except Exception as e:
         return "ERROR", "", str(e)
-
-
-
