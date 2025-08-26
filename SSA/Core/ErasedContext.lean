@@ -496,17 +496,17 @@ def Hom.comp : Hom Γ Ξ :=
 end Comp
 
 /--
-  `map.with v₁ v₂` adjusts a single variable of a Context map, so that in the resulting map
-   * `v₁` now maps to `v₂`
+  `map.with v₁ v₂` adjusts a vector of variables of a Context map, so that in
+  the resulting map:
+   * `v₁[i]` now maps to `v₂[i]`
    * all other variables `v` still map to `map v` as in the original map
 -/
-def Hom.with [DecidableEq Ty] {Γ₁ Γ₂ : Ctxt Ty} (f : Γ₁.Hom Γ₂) {t : Ty}
-    (v₁ : Γ₁.Var t) (v₂ : Γ₂.Var t) : Γ₁.Hom Γ₂ :=
-  fun t' w =>
-    if h : ∃ ty_eq : t = t', ty_eq ▸ w = v₁ then
-      v₂.cast h.fst
-    else
-      f w
+def Hom.with [DecidableEq Ty] {Γ₁ Γ₂ : Ctxt Ty} (f : Γ₁.Hom Γ₂) {ts}
+    (v₁ : HVector Γ₁.Var ts) (v₂ : HVector Γ₂.Var ts) : Γ₁.Hom Γ₂ :=
+  fun _ w =>
+    match v₁.idxOf? w with
+    | none => f w
+    | some ⟨i, h⟩ => (v₂.get i).cast h
 
 def Hom.snocMap {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} :
     (Γ.snoc t).Hom (Γ'.snoc t) := by
@@ -793,26 +793,39 @@ def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γ
 /-! ### Reassign Variables-/
 
 /-- Reassign the variable var to value val in context ctxt -/
-def Valuation.reassignVar [DecidableEq Ty] {t : Ty} {Γ : Ctxt Ty}
-    (V : Γ.Valuation) (var : Var Γ t) (val : toType t) : Γ.Valuation :=
-  fun tneedle vneedle =>
-    if h : ∃ h : t = tneedle, h ▸ vneedle = var
-    then h.fst ▸ val
-    else V vneedle
+def Valuation.reassignVars [DecidableEq Ty] {ts : List Ty} {Γ : Ctxt Ty}
+    (V : Γ.Valuation) (var : HVector Γ.Var ts) (val : HVector toType ts) : Γ.Valuation :=
+  fun _ vneedle =>
+    match var.idxOf? vneedle with
+    | none => V vneedle
+    | some ⟨i, h⟩ => h ▸ val.get i
 
-@[simp] lemma Valuation.reassignVar_eq [DecidableEq Ty] (V : Γ.Valuation) :
-    V.reassignVar v (V v) = V := by
-  funext t v
-  simp only [reassignVar, dite_eq_right_iff, forall_exists_index]
-  rintro rfl rfl
-  rfl
+@[simp] lemma Valuation.reassignVars_eq [DecidableEq Ty] (V : Γ.Valuation) :
+    V.reassignVars vs (vs.map V) = V := by
+  funext t w
+  unfold reassignVars
+  induction vs
+  case nil => rfl
+  case cons v vs ih =>
+    by_cases h_eq : w.eq v
+    · have := h_eq.ty_eq
+      subst this
+      have := h_eq.to_eq
+      subst this
+      simp
+    · unfold Var.eq at h_eq
+      simp only [HVector.idxOf?, h_eq, ↓reduceDIte, List.get_eq_getElem, List.length_cons,
+        HVector.map_cons]
+      split at ih <;> simp_all
 
 @[simp] lemma Valuation.comap_with [DecidableEq Ty] {Γ Δ : Ctxt Ty}
-    {Γv : Valuation Γ} {map : Δ.Hom Γ} {v : Var Δ ty} {w : Var Γ ty} :
-    Γv.comap (map.with v w) = (Γv.comap map).reassignVar v (Γv w) := by
+    {V : Valuation Γ} {map : Δ.Hom Γ} {vs : HVector Δ.Var ty} {ws : HVector Γ.Var ty} :
+    V.comap (map.with vs ws) = (V.comap map).reassignVars vs (ws.map V) := by
   funext t' v'
-  simp only [comap, Hom.with, reassignVar]
-  split_ifs <;> aesop
+  simp only [comap, Hom.with, reassignVars]
+  split <;> aesop
+
+/-! ### Recursion -/
 
 /-- Recursion principle for valuations in terms of `Valuation.nil` and `Valuation.snoc` -/
 @[elab_as_elim, induction_eliminator]
@@ -834,17 +847,6 @@ def Valuation.cast {Γ Δ : Ctxt Ty} (h : Γ = Δ) (V : Valuation Γ) : Valuatio
 
 @[simp] lemma Valuation.cast_apply {Γ : Ctxt Ty} (h : Γ = Δ) (V : Γ.Valuation) (v : Δ.Var t) :
     V.cast h v = V (v.castCtxt h.symm) := rfl
-
-/-- reassigning a variable to the same value that has been looked up is identity. -/
-theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
-    {Γ : Ctxt Ty} {V : Γ.Valuation} {var : Var Γ t} :
-    (V.reassignVar var (V var)) = V := by
-  funext t' v
-  simp only [reassignVar, dite_eq_right_iff, forall_exists_index]
-  intros h x
-  subst h
-  subst x
-  rfl
 
 /-- Show that a valuation is equivalent to a `HVector` -/
 def Valuation.equivHVector {Γ : List Ty} : Valuation ⟨Γ⟩ ≃ HVector toType Γ where

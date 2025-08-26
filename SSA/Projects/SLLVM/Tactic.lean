@@ -43,6 +43,7 @@ attribute [simp_sllvm]
   -- Valuation append & accesses
   Valuation.append_nil Valuation.append_cons
   Valuation.snoc_last Valuation.snoc_toSnoc
+  SSA.simpValuationApply
   -- Other general simp lemmas
   reduceIte bind_assoc
 

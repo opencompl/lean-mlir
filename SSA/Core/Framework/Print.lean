@@ -9,7 +9,6 @@ This file defines `Repr` and `ToString` instances for the core data-structures
 
 open Ctxt (Var)
 
-
 /-! ### Repr instance -/
 section Repr
 open Std (Format)
@@ -43,9 +42,16 @@ private def formatFormalArgListTuple [Repr Ty] (ts : List Ty) : Format :=
   Format.paren <| Format.joinSep ((List.range ts.length).zip ts |>.map
     (fun it => f!"%{it.fst} : {repr it.snd}")) ", "
 
+private def Expr.formatBoundVariables : Expr d Γ eff ts → String
+  | ⟨op, _, _, _, _⟩ =>
+    (DialectSignature.returnTypes op).length
+    |> List.range
+    |>.map (s!"%{· + Γ.length}")
+    |> ", ".intercalate
+
 mutual
   /-- Convert a HVector of region arguments into a List of format strings. -/
-  partial def reprRegArgsAux [Repr d.Ty] {ts : List (Ctxt d.Ty × d.Ty)}
+  partial def reprRegArgsAux [Repr d.Ty] {ts : RegionSignature d.Ty}
     (regArgs : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts) : List Format :=
     match ts with
     | [] => []
@@ -58,10 +64,10 @@ mutual
 
   partial def Expr.repr (_ : Nat) : Expr d Γ eff t → Format
     | ⟨op, _, _, args, regArgs⟩ =>
-        let outTy := DialectSignature.outTy op
+        let returnTypes := DialectSignature.returnTypes op
         let argTys := DialectSignature.sig op
         let regArgs := Format.parenIfNonempty " (" ")" Format.line (reprRegArgsAux regArgs)
-        f!"{repr op}{formatArgTuple args}{regArgs} : {formatTypeTuple argTys} → ({repr outTy})"
+        f!"{repr op}{formatArgTuple args}{regArgs} : {formatTypeTuple argTys} → {formatTypeTuple returnTypes}"
 
   /-- Format string for a Com, with the region parentheses and formal argument list. -/
   partial def Com.repr (prec : Nat) (com : Com d Γ eff t) : Format :=
@@ -73,9 +79,13 @@ mutual
 
   /-- Format string for sequence of assignments and return in a Com. -/
   partial def comReprAux (prec : Nat) : Com d Γ eff t → Format
-    | .ret v => f!"return {reprPrec v prec} : ({repr t}) → ()"
+    | .rets vs =>
+      let vs := (vs.map fun _ v => s!"{_root_.repr v}").toListOf String
+      let vs := ", ".intercalate vs
+      f!"return {vs} : {formatTypeTuple t} → ()"
     | .var e body =>
-      f!"%{repr <| Γ.length} = {e.repr prec}" ++ Format.line ++
+      let vs := e.formatBoundVariables
+      f!"{vs} = {e.repr prec}" ++ Format.line ++
       comReprAux prec body
 end
 
@@ -111,16 +121,22 @@ their types, and the resulting output type.
 -/
 partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
   | Expr.mk (op : d.Op) _ _ args _regArgs =>
-    let outTy : d.Ty := DialectSignature.outTy op
+    let returnTypes := DialectSignature.returnTypes op
+    let returnTypes := ", ".intercalate <| returnTypes.map ToString.toString
     let argTys := DialectSignature.sig op
-    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTupleToString argTys} -> ({ToString.toString outTy})"
+    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTupleToString argTys} -> ({returnTypes})"
 
 /-- This function recursivly converts the body of a `Com` into its string representation.
 Each bound variable is printed with its index and corresponding expression. -/
-partial def Com.ToStringBody : Com d Γ eff t → String
-  | .ret v => s!"  \"return\"({_root_.repr v }) : ({toString t}) -> ()"
-  | .var e body =>
-    s!"  %{_root_.repr <|(Γ.length)} = {Expr.toString e }" ++ "\n" ++
+partial def Com.ToStringBody : Com d Γ eff ts → String
+  | .rets vs =>
+    let vs := (vs.map fun _ v => s!"{_root_.repr v}").toListOf String (by intros; rfl)
+    let vs := ", ".intercalate vs
+    let ts := ", ".intercalate <| ts.map ToString.toString
+    s!"  \"return\"({vs}) : ({ts}) -> ()"
+  | .var e@⟨op, _ , _,_ , _⟩ body =>
+    let vs := e.formatBoundVariables
+    s!"  {vs} = {Expr.toString e}" ++ "\n" ++
     Com.ToStringBody body
 
 /- `Com.toString` implements a toString instance for the type `Com`.  -/
@@ -139,7 +155,7 @@ end ToString
 section ToPrint
 
 open Std (Format)
-variable {d} [ToPrint d][DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
+variable {d} [ToPrint d] [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
 
 /-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
 partial def formatFormalArgListTuplePrint [ToString d.Ty] (ts : List d.Ty) : String :=
@@ -179,16 +195,22 @@ operation and types. Lastly, it arranges the expression printing according to ML
 -/
 partial def Expr.toPrint [ToString d.Op] : Expr d Γ eff t → String
   | Expr.mk (op : d.Op) _ _ args _regArgs =>
-    let outTy : d.Ty := DialectSignature.outTy op
+    let returnTypes := DialectSignature.returnTypes op
+    let returnTypes := ", ".intercalate <| returnTypes.map ToPrint.printTy
     let argTys := DialectSignature.sig op
-    s!"\"{ToPrint.printOpName op}\"{formatArgTupleForPrint args}{ToPrint.printAttributes op} : {formatTypeTuplePrint argTys} -> ({ToPrint.printTy outTy})"
+    s!"\"{ToPrint.printOpName op}\"{formatArgTupleForPrint args}{ToPrint.printAttributes op} : {formatTypeTuplePrint argTys} -> ({returnTypes})"
 
 /--
   This function recursively converts the body of a `Com` into its string representation.
   Each bound variable is printed with its index and corresponding expression.
 -/
-partial def Com.toPrintBody : Com d Γ eff t → String
-  | .ret v => s!"  \"{ToPrint.printReturn t}\"({_root_.repr v }) : ({ToPrint.printTy t}) -> ()"
+partial def Com.toPrintBody : Com d Γ eff ts → String
+  | .rets vs =>
+      let vs := (vs.map fun _ v => s!"{_root_.repr v}").toListOf String (by intros; rfl)
+      let vs := ", ".intercalate vs
+      let ret := ToPrint.printReturn ts
+      let ts := ", ".intercalate <| ts.map ToPrint.printTy
+      s!"  \"{ret}\"({vs}) : ({ts}) -> ()"
   | .var e body =>
     s!"  %{_root_.repr <|(Γ.length)} = {Expr.toPrint e }" ++ "\n" ++
     Com.toPrintBody body
@@ -198,9 +220,9 @@ partial def Com.toPrintBody : Com d Γ eff t → String
   This has a more general behaviour than `toString` and allows customizing the
   printing of dialect objects.
 -/
-partial def Com.toPrint (com : Com d Γ eff t) : String :=
+partial def Com.toPrint (com : Com d Γ eff ts) : String :=
    "builtin.module { \n"
-  ++ ToPrint.printFunc t ++ ((formatFormalArgListTuplePrint Γ.toList)) ++ ":" ++ "\n"
+  ++ ToPrint.printFunc ts ++ ((formatFormalArgListTuplePrint Γ.toList)) ++ ":" ++ "\n"
   ++ (Com.toPrintBody com) ++
    "\n }"
 

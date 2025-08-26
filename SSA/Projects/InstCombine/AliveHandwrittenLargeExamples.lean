@@ -96,11 +96,13 @@ Proof:
  Thus, LHS and RHS agree on values.
 -/
 open ComWrappers
+open LeanMLIR.SingleReturnCompat
+
 def MulDivRem805_lhs (w : ℕ) : Com InstCombine.LLVM
     [/- %X -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
   /- c1 = -/ Com.var (const w 1) <|
   /- r = -/ Com.var (sdiv w /- c1-/ 0 /-%X -/ 1) <|
-  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨/-r-/0, rfl⟩
 
 def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM
     [/- %X -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
@@ -110,7 +112,7 @@ def MulDivRem805_rhs (w : ℕ) : Com InstCombine.LLVM
   /- c = -/ Com.var (icmp w .ult /-inc -/ 1 /-c3-/ 0) <|
   /- c0 = -/ Com.var (const w 0) <|
   /- r = -/ Com.var (select w /-%c-/ 1 /-X-/ 5 /-c0-/ 0) <|
-  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨/-r-/0, rfl⟩
 
 def alive_simplifyMulDivRem805 (w : Nat) :
   MulDivRem805_lhs w ⊑ MulDivRem805_rhs w := by
@@ -332,14 +334,14 @@ def MulDivRem290_lhs (w : ℕ) :
   /- c1 = -/ Com.var (const w 1) <|
   /- poty = -/ Com.var (shl w /- c1 -/ 0 /-%Y -/ 1) <|
   /- r = -/ Com.var (mul w /- poty -/ 0 /-%X -/ 3) <|
-  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨/-r-/0, rfl⟩
 
 def MulDivRem290_rhs (w : ℕ) :
     Com InstCombine.LLVM
     [/- %X -/ LLVM.Ty.bitvec w, /- %Y -/ LLVM.Ty.bitvec w]
     .pure (LLVM.Ty.bitvec w) :=
   /- r = -/ Com.var (shl w /-X-/ 1 /-Y-/ 0) <|
-  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨/-r-/0, rfl⟩
 
 def alive_simplifyMulDivRem290 (w : Nat) :
   MulDivRem290_lhs w ⊑ MulDivRem290_rhs w := by
@@ -369,6 +371,7 @@ Name: AndOrXor:2515   ((X^C1) >> C2)^C3 = (X>>C2) ^ ((C1>>C2)^C3)
 -/
 
 open ComWrappers
+open LeanMLIR.SingleReturnCompat
 
 def AndOrXor2515_lhs (w : ℕ):
   Com InstCombine.LLVM
@@ -379,7 +382,7 @@ def AndOrXor2515_lhs (w : ℕ):
   /- e1  = -/ Com.var (xor w /-x-/ 0 /-C1-/ 3) <|
   /- op0 = -/ Com.var (lshr w /-e1-/ 0 /-C2-/ 3) <|
   /- r   = -/ Com.var (xor w /-op0-/ 0 /-C3-/ 3) <|
-  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨/-r-/0, rfl⟩
 
 def AndOrXor2515_rhs (w : ℕ) :
   Com InstCombine.LLVM
@@ -391,7 +394,7 @@ def AndOrXor2515_rhs (w : ℕ) :
   /- p = -/ Com.var (lshr w /-C1-/ 4 /-C2-/ 3) <|
   /- q = -/ Com.var (xor w /-p-/ 0 /-C3-/ 3) <|
   /- r = -/ Com.var (xor w /-o-/ 2 /-q-/ 0) <|
-  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨/-r-/0, rfl⟩
 
 def alive_simplifyAndOrXor2515 (w : Nat) :
   AndOrXor2515_lhs w ⊑ AndOrXor2515_rhs w := by
@@ -452,6 +455,8 @@ Name: Select:746
 -/
 
 open ComWrappers
+open LeanMLIR.SingleReturnCompat
+
 def Select746_lhs (w : ℕ):
   Com InstCombine.LLVM
     [/- A -/ LLVM.Ty.bitvec w] .pure (LLVM.Ty.bitvec w) :=
@@ -462,7 +467,7 @@ def Select746_lhs (w : ℕ):
   /- c2     = -/ Com.var (icmp w .sgt /-abs-/ 0 /-c0-/ 3) <|
   /- minus2 = -/ Com.var (sub w /-c0-/ 4 /-abs-/ 1) <|
   /- abs2   = -/ Com.var (select w /-c2-/ 1/-abs-/ 2 /-minus2-/ 0) <|
-  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨/-r-/0, rfl⟩
 
 def Select746_rhs (w : ℕ):
   Com InstCombine.LLVM
@@ -473,7 +478,7 @@ def Select746_rhs (w : ℕ):
   /- abs    = -/ Com.var (select w /-c-/ 1/-A-/ 3 /-minus-/ 0) <|
   /- c3     = -/ Com.var (icmp w .sgt /-A-/ 4 /-c0-/ 3) <|
   /- abs2   = -/ Com.var (select w /-c3-/ 0/-A-/ 5 /-minus-/ 2) <|
-  Com.ret ⟨/-r-/0, by simp [Ctxt.snoc]⟩
+  Com.ret ⟨/-r-/0, rfl⟩
 
 --TODO: upstream (some of) these lemmas
 private theorem ofBool_eq_one (x : Bool) :

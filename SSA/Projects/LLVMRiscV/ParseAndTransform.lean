@@ -13,7 +13,7 @@ open LLVMRiscV
   It throws an error if the transformation fails. -/
 def regionTransform_LLVMRiscV (region : Region 0) : Except ParseError
   (Σ (Γ' : Ctxt LLVMPlusRiscV.Ty ) (eff : EffectKind)
-  (ty : LLVMPlusRiscV.Ty ), Com LLVMPlusRiscV Γ' eff ty) :=
+  (ty : List LLVMPlusRiscV.Ty ), Com LLVMPlusRiscV Γ' eff ty) :=
   let res := mkCom (d:= LLVMPlusRiscV) region
   match res with
   | Except.error e => Except.error s!"Error:\n{reprStr e}"
@@ -24,7 +24,7 @@ def regionTransform_LLVMRiscV (region : Region 0) : Except ParseError
   also used for parsing LLVM `Com`s. -/
 def parseComFromFile_LLVMRiscV(fileName : String) :
  IO (Option (Σ (Γ' :  Ctxt LLVMPlusRiscV.Ty ) (eff : EffectKind)
- (ty :  LLVMPlusRiscV.Ty), Com LLVMPlusRiscV Γ' eff ty)) := do
+ (ty : List LLVMPlusRiscV.Ty), Com LLVMPlusRiscV Γ' eff ty)) := do
  parseRegionFromFile fileName regionTransform_LLVMRiscV
 
 /-- `passriscv64` parses a `Com` from the file with name `fileName` as a `Com` of type `LLVMAndRiscV`.
@@ -39,7 +39,7 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       match eff with
       | EffectKind.pure =>
         match retTy with
-        | Ty.llvm (.bitvec _w)  =>
+        | [Ty.llvm (.bitvec _w)]  =>
           /- calls to the instruction selector defined in `InstructionLowering`,
             `true` indicates pseudo variable lowering, `fuel` is 150-/
           let lowered := selectionPipeFuelWithCSE 150 c true
@@ -66,7 +66,7 @@ def passriscv64_optimized (fileName : String) : IO UInt32 := do
       match eff with
       | EffectKind.pure =>
         match retTy with
-        | Ty.llvm (.bitvec _w)  =>
+        | [Ty.llvm (.bitvec _w)]  =>
           /- calls to the optimized instruction selector defined in `InstructionLowering`,
           `true` indicates pseudo variable lowering, `fuel` is 150 -/
           let lowered := selectionPipeFuelWithCSEWithOpt 150 c true
