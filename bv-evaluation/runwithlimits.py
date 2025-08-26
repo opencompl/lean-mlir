@@ -6,7 +6,7 @@ import multiprocessing
 import psutil
 import time
 import threading
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 def kill_process_tree(pid: int):
     """
@@ -48,7 +48,7 @@ def monitor_memory(pid: int, memout_mb: int, flag: Dict[str, str]):
         pass
 
 
-def run_with_limits(cmd: List[str], timeout: int, memout_mb: int) -> (str, str, str):
+def run_with_limits(cmd: List[str], timeout: int, memout_mb: int, cwd : Optional[str] = None) -> (str, str, str):
     """
     Run the process 'cmd' with timeout 'timeout' in seconds,
     and memout 'memout_mb' in megabyte.
@@ -69,6 +69,7 @@ def run_with_limits(cmd: List[str], timeout: int, memout_mb: int) -> (str, str, 
             stderr=subprocess.PIPE,
             text=True,
             preexec_fn=os.setsid,
+            cwd=cwd
         )
         flag = {"done": False, "memout": False}
         monitor_thread = threading.Thread(
