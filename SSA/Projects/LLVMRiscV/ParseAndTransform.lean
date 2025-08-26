@@ -66,7 +66,7 @@ def passriscv64_optimized (fileName : String) : IO UInt32 := do
       match eff with
       | EffectKind.pure =>
         match retTy with
-        | Ty.llvm (.bitvec _w)  =>
+        | [Ty.llvm (.bitvec _w)]  =>
           /- calls to the optimized instruction selector defined in `InstructionLowering`,
           `true` indicates pseudo variable lowering, `fuel` is 150 -/
           let lowered := selectionPipeFuelWithCSEWithOpt 150 c true
