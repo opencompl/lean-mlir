@@ -77,13 +77,16 @@ def bind₂ (a : PoisonOr α) (b : PoisonOr β) (f : α → β → PoisonOr γ) 
   (a >>= fun x => b >>= f x)
 
 section Lemmas
---TODO: these lemmas should all be tagged `simp_denote` once that simpset is merged to main
+
 @[simp] theorem pure_def : pure = @value α := rfl
 
 @[simp] theorem poison_bind : poison >>= f = poison := rfl
 @[simp] theorem value_bind : value a >>= f = f a := rfl
 @[simp] theorem bind_poison : a? >>= (fun _ => @poison β) = poison := by
   cases a? <;> rfl
+
+@[simp] theorem map_poison : f <$> poison = poison := rfl
+@[simp] theorem map_value : f <$> value a = value (f a) := rfl
 
 @[simp]
 theorem bind_if_then_poison_eq_ite_bind (p : Prop) [Decidable p] (x : PoisonOr α) :
