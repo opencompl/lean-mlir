@@ -12,6 +12,13 @@ permissions:
 
 jobs:
   build:
+    name: Build Lean MLIR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+  evaluation:
     name: Evaluation of Tactics & Decision Procedures
     runs-on: ubuntu-latest
     permissions:
