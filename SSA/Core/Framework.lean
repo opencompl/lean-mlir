@@ -793,11 +793,6 @@ theorem FlatCom.denoteLets_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_o
   funext Γv
   simp [denoteLets]
 
--- theorem FlatCom.denote_eq [DialectDenote d] (flatCom : FlatCom d Γ eff Γ_out ts) :
---     flatCom.denote = fun Γv => flatCom.lets.denote Γv >>= fun Γ'v => return (Γ'v flatCom.rets) := by
---   funext Γv
---   simp [denote]
-
 /-!
 ## casting of expressions and purity
 -/
@@ -1004,31 +999,11 @@ assignment of that variable in the input valuation -/
     Valuation.comap (com.denoteLets V) com.outContextHom = V := by
   unfold comap; simp
 
--- TODO: This theorem is currently not used yet. The hope is that it might replace/simplify the
---       subtype reasoning (`denoteIntoSubtype`) currently used when reasoning about `matchVar`
--- theorem Zipper.denote_insertPureCom_eq_of {zip : Zipper d Γ_in eff Γ_mid ty₁}
---     {newCom : Com d _ _ newTy} {V_in : Valuation Γ_in} [LawfulMonad d.m]
---     (h : ∀ V_mid ∈ Functor.supp (zip.top.denote V_in),
---             newCom.denote V_mid = V_mid v) :
---     (zip.insertPureCom v newCom).denote V_in = zip.denote V_in := by
---   rcases zip with ⟨lets, com⟩
---   simp only [denote_insertPureCom, Valuation.comap_with,
---   Valuation.comap_outContextHom_denoteLets, Com.denoteLets_returnVar_pure,
---   denote_mk]
---   unfold Valuation.reassignVar
---   congr; funext V_mid; congr
---   funext t' v'
---   simp only [dite_eq_right_iff, forall_exists_index]
---   rintro rfl rfl
---   simpa using h _ (sorry : V_mid ∈ Functor.supp (lets.denote V_in))
-
 end DenoteInsert
 
 /-!
 ### Inserting multiple programs with `Zipper.foldInsert`
 -/
-
--- def Zipper.foldInsert
 
 /-!
 ## Random Access for `Lets`
@@ -1100,11 +1075,6 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
   | some ⟨_, _, e⟩ =>
     simp only [Option.map_some, cast_eq_iff_heq]
     congr 3 <;> simp [Expr.changeVars_castCodomain]
-
--- @[simp] lemma Lets.getPureExprAux_var_toSnoc (lets : Lets d Γ_in eff Γ_out)
---     (e : Expr d Γ_out eff ty₁) (v : Var Γ_out ty₂) :
---     getPureExprAux (lets.var e) (v.toSnoc) = getPureExprAux lets v :=
---   rfl
 
 @[simp] lemma Lets.getPureExpr_var_appendInl (lets : Lets d Γ_in eff Γ_out) (e : Expr d Γ_out _ ty₁)
     (v : Var Γ_out ty₂):
@@ -1200,9 +1170,6 @@ def HVector.changeDialect : ∀ {regSig : RegionSignature d.Ty},
 termination_by _ vs => sizeOf vs
 
 end
-
--- @[simp] lemma Expr.outContext_changeDialect :
---
 
 def Lets.changeDialect : Lets d Γ_in eff Γ_out → Lets d' (f.mapTy <$> Γ_in) eff (f.mapTy <$> Γ_out)
   | nil => nil
