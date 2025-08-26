@@ -18,7 +18,7 @@ theorem test1_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -27,7 +27,7 @@ theorem shrink_xor_thm (e : IntW 64) : trunc 32 (LLVM.xor e (const? 64 1)) ⊑ L
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -36,7 +36,7 @@ theorem shrink_or_thm (e : IntW 6) : trunc 3 (LLVM.or e (const? 6 (-31))) ⊑ LL
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -46,5 +46,5 @@ theorem shrink_and_thm (e : IntW 64) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

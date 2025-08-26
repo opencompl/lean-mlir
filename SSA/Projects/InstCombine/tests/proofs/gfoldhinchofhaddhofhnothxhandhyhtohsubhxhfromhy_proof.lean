@@ -16,7 +16,7 @@ theorem t0_thm (e e_1 : IntW 32) : add (add (LLVM.xor e_1 (const? 32 (-1))) e) (
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -27,5 +27,5 @@ theorem n12_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

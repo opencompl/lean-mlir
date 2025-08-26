@@ -1,4 +1,6 @@
- -- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
+
+/-
+-- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
@@ -9,6 +11,7 @@ set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
 set_option Elab.async false
+-/
 
 theorem andn_or_cmp_2_partial_logical_thm.extracted_1._2 : ∀ (x : BitVec 1) (x_1 x_2 : BitVec 16),
   ¬ofBool (x_1 ≤ₛ x_2) ||| x = 1#1 → 0#1 = x &&& ofBool (x_2 <ₛ x_1) :=

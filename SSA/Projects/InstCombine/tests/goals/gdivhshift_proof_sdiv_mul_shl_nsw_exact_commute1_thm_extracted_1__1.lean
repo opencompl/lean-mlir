@@ -1,4 +1,6 @@
- -- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
+
+/-
+-- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
@@ -9,6 +11,7 @@ set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
 set_option Elab.async false
+-/
 
 theorem sdiv_mul_shl_nsw_exact_commute1_thm.extracted_1._1 : ∀ (x x_1 x_2 : BitVec 5),
   ¬(True ∧ x_2.smulOverflow x_1 = true ∨
@@ -19,8 +22,5 @@ theorem sdiv_mul_shl_nsw_exact_commute1_thm.extracted_1._1 : ∀ (x x_1 x_2 : Bi
     True ∧ 1#5 <<< x >>> x ≠ 1#5 ∨
         x ≥ ↑5 ∨
           True ∧ x_2.smod (1#5 <<< x) ≠ 0 ∨ (1#5 <<< x == 0 || 5 != 1 && x_2 == intMin 5 && 1#5 <<< x == -1) = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 5)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x_2 * x_1).sdiv (x_1 <<< x))) PoisonOr.poison :=
+      False :=
 sorry

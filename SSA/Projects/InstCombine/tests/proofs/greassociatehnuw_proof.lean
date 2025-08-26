@@ -18,7 +18,7 @@ theorem reassoc_add_nuw_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -29,7 +29,7 @@ theorem reassoc_sub_nuw_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -40,7 +40,7 @@ theorem reassoc_mul_nuw_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -50,7 +50,7 @@ theorem no_reassoc_add_nuw_none_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -60,7 +60,7 @@ theorem no_reassoc_add_none_nuw_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -72,7 +72,7 @@ theorem reassoc_x2_add_nuw_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -84,7 +84,7 @@ theorem reassoc_x2_mul_nuw_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -96,7 +96,7 @@ theorem reassoc_x2_sub_nuw_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -107,7 +107,7 @@ theorem tryFactorization_add_nuw_mul_nuw_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -118,7 +118,7 @@ theorem tryFactorization_add_nuw_mul_nuw_int_max_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -128,7 +128,7 @@ theorem tryFactorization_add_mul_nuw_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -138,7 +138,7 @@ theorem tryFactorization_add_nuw_mul_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -150,7 +150,7 @@ theorem tryFactorization_add_nuw_mul_nuw_mul_nuw_var_thm (e e_1 e_2 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -161,7 +161,7 @@ theorem tryFactorization_add_nuw_mul_mul_nuw_var_thm (e e_1 e_2 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -172,7 +172,7 @@ theorem tryFactorization_add_nuw_mul_nuw_mul_var_thm (e e_1 e_2 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -183,5 +183,5 @@ theorem tryFactorization_add_mul_nuw_mul_var_thm (e e_1 e_2 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

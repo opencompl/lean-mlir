@@ -213,7 +213,7 @@ partial def dce_ {Γ : Ctxt d.Ty} {t : d.Ty}
           com.denote V = com'.denote (V.comap hom)} :=
         ⟨Γ, Hom.id, ⟨body', by -- NOTE: we deleted the `let` binding.
           intros V
-          simp [EffectKind.toMonad_pure, HCOM, Com.denote_var,
+          simp [HCOM, Com.denote_var,
             Ctxt.Valuation.comap_id, hbody, Id.bind_eq']
         ⟩⟩
       let ⟨Γ'', hom'', ⟨com'', hcom''⟩⟩

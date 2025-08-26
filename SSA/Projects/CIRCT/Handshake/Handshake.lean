@@ -1,10 +1,7 @@
+import SSA.Core
+
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.Framework
-import SSA.Core.Framework.Macro
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.EDSL2
-import SSA.Core.Tactic.SimpSet
 import Init.Data.String.Basic
 
 open MLIR AST Ctxt
@@ -319,6 +316,14 @@ def snd {Γ : Ctxt _} (a : Var Γ (.stream2 r)) : Expr (Handshake) Γ .pure (.st
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
+def sync {Γ : Ctxt _} (a b : Var Γ (.stream r)) : Expr (Handshake) Γ .pure (.stream2 r)  :=
+  Expr.mk
+    (op := .sync r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (Handshake) (Σ eff ty, Expr (Handshake) Γ eff ty) := do
   match opStx.name with
@@ -341,6 +346,20 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .stream2 r, "handshake.fst" => return ⟨_, .stream r, fst v₁⟩
       | .stream2 r, "handshake.snd"  => return ⟨_, .stream r, snd v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
+    | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+  | op@"handshake.sync" =>
+    match opStx.args with
+    | v₁Stx::v₂Stx::[] =>
+      let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+      match ty₁, ty₂, op with
+      | .stream r₁, .stream r₂, "handshake.sync" =>
+        if h : r₁ = r₂ then
+          have h': Γ.Var (Ty.stream r₁) = Γ.Var (Ty.stream r₂) := by simp_all
+          return ⟨_, .stream2 r₁, sync v₁ (h'▸v₂)⟩
+        else
+          throw <| .generic s!"type mismatch"
+      | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
 

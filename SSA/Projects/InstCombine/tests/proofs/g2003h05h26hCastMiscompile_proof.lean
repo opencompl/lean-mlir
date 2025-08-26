@@ -16,5 +16,5 @@ theorem test_thm (e : IntW 64) : zext 64 (trunc 32 e) ⊑ LLVM.and e (const? 64 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

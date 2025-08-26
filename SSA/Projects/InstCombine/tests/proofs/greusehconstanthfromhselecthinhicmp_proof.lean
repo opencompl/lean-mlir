@@ -18,7 +18,7 @@ theorem p0_ult_65536_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -29,7 +29,7 @@ theorem p1_ugt_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -40,7 +40,7 @@ theorem p2_slt_65536_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -51,7 +51,7 @@ theorem p3_sgt_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -62,7 +62,7 @@ theorem p13_commutativity0_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -73,7 +73,7 @@ theorem p14_commutativity1_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -84,7 +84,7 @@ theorem p15_commutativity2_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -95,7 +95,7 @@ theorem t22_sign_check_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -106,5 +106,5 @@ theorem t22_sign_check2_thm (e e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
