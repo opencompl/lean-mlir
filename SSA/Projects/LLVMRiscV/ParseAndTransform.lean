@@ -27,7 +27,7 @@ def parseComFromFile_LLVMRiscV(fileName : String) :
  (ty :  LLVMPlusRiscV.Ty), Com LLVMPlusRiscV Γ' eff ty)) := do
  parseRegionFromFile fileName regionTransform_LLVMRiscV
 
-/-- This function parses a `Com` from the file with name `fileName` as a `Com` of type `LLVMAndRiscV`.
+/-- `passriscv64` parses a `Com` from the file with name `fileName` as a `Com` of type `LLVMAndRiscV`.
   Next, it calls the instruction lowering function `selectionPipeFuelSafe` on the parsed `Com` and
   prints it to standart output.
   If any of the steps fails, we print an error message and return exit code 1. -/
@@ -53,10 +53,10 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       IO.println s!" debug: WRONG EFFECT KIND : expected pure program "
       return 1
 
-/-- This function parses a `Com` from the file with name `fileName` as a `Com` of type `LLVMAndRiscV`.
-  Next, it calls the optimized instruction selection lowering function `selectionPipeFuelWithCSEWithOpt`
-  on the parsed `Com` and prints it to standart output. This pass applies the optimization
-  patterns from `GlobalISel` on both LLVM and RISCV.
+/-- `passriscv64_optimized` parses a `Com` from the file with name `fileName` as a `Com` of type
+  `LLVMAndRiscV`. Next, it calls the optimized instruction selection lowering function
+  `selectionPipeFuelWithCSEWithOpt` on the parsed `Com` and prints it to standart output.
+  This pass applies the optimization patterns from `GlobalISel` on both LLVM and RISCV.
   If any of the steps fails, we print an error message and return exit code 1. -/
 def passriscv64_optimized (fileName : String) : IO UInt32 := do
     let icom? ← parseComFromFile_LLVMRiscV fileName
