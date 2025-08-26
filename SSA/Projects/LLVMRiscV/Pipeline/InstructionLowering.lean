@@ -77,13 +77,6 @@ def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ t
     List.cons ⟨[Ty.riscv RISCV64.Ty.bv], (Ty.riscv RISCV64.Ty.bv), cast_eliminiation_riscv⟩
   <| List.cons ⟨[Ty.llvm _], (Ty.llvm _), cast_eq_cast_cast_eliminiation_riscv⟩ <| List.nil
 
-/-- We import the combiner passes from `Combiners.lean`-/
-def globalISelopt_O0Prelegalizer : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  GLobalISel_In_Lean_RISCVO0PreLegalizerCombiner
-
-def globalISelopt_PostLegalizerCombiner : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  GLobalISel_In_Lean_PostLegalizerCombiner
-
 /- We increase `maxRecDepth` to avoid the recursion depth error when using the peephole rewriter. -/
 set_option maxRecDepth 10000000
 
@@ -178,9 +171,9 @@ def selectionPipeFuelWithCSEWithOpt {Γl : List LLVMPlusRiscV.Ty} (prog : Com LL
     else
       rmInitialDeadCode
   let optimize_initial_1 := multiRewritePeephole 150
-    globalISelopt_O0Prelegalizer rmInitialDeadCode;
+    GLobalISelO0PreLegalizerCombiner rmInitialDeadCode;
   let optimize_initial_2 := multiRewritePeephole 150
-    globalISelopt_O0Postlegalizer optimize_initial_1;
+    GLobalISelPostLegalizerCombiner optimize_initial_1;
   let loweredConst := multiRewritePeephole 100
     const_match optimize_initial_2;
   let lowerPart1 := multiRewritePeephole 100
@@ -195,7 +188,7 @@ def selectionPipeFuelWithCSEWithOpt {Γl : List LLVMPlusRiscV.Ty} (prog : Com LL
   let out := (DCE.dce' optimize_eq_cast).val;
   let out2 := (DCE.dce' out).val;
   let optimize_final_1 := multiRewritePeephole 100
-    globalISelopt_O0Prelegalizer out2;
+    GLobalISelO0PreLegalizerCombiner out2;
   let optimize_final_2 := multiRewritePeephole 100
-    globalISelopt_O0Prelegalizer optimize_final_1;
+    GLobalISelPostLegalizerCombiner optimize_final_1;
   optimize_final_2
