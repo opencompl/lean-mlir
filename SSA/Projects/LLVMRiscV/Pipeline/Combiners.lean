@@ -896,7 +896,7 @@ def not_cmp_fold_sge : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llv
   }]
 
 
-def LLVMIR_not_cmp_fold : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
+def not_cmp_fold : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
   [⟨_, not_cmp_fold_eq⟩,
   ⟨_, not_cmp_fold_ne⟩,
   ⟨_, not_cmp_fold_ge⟩,
@@ -920,9 +920,9 @@ def LLVMIR_identity_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) 
 
 /-- Post-legalization combine pass for RISCV -/
 def PostLegalizerCombiner_RISCV: List (Σ Γ,RISCVPeepholeRewrite  Γ) :=
-  RISCV_identity_combines ++
-  commute_int_constant_to_rhs ++
-  simplify_neg
+    RISCV_identity_combines ++
+    commute_int_constant_to_rhs ++
+    simplify_neg
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
@@ -939,7 +939,7 @@ def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 
 def GLobalISelO0PreLegalizerCombiner :
     List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-  LLVMIR_not_cmp_fold)
+  not_cmp_fold)
   ++
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
    mul_by_neg_one)
