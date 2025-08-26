@@ -56,7 +56,7 @@ jobs:
 
       - name: Cache `.lake` folder
         id: cache-lake
-        uses: actions/restore@v4
+        uses: actions/cache-restore@v4
         with:
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
