@@ -69,6 +69,7 @@ def passriscv64_optimized (fileName : String) : IO UInt32 := do
           /- calls to the optimized instruction selector defined in `InstructionLowering`,
           `true` indicates pseudo variable lowering-/
           let lowered := selectionPipeFuelWithCSEWithOpt c true
+
           IO.println s!"{Com.toPrint (lowered) }"
           return 0
         | _ =>
