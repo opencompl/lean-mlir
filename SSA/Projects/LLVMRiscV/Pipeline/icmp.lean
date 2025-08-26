@@ -4,6 +4,7 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
+open LeanMLIR.SingleReturnCompat
 
 /- ! This file implements the lowering for the llvm compare instructions.
 Currently all flags except for eq ad neq are supported.-/
@@ -18,8 +19,8 @@ def icmp_ugt_riscv_i64 := [LV| {
   }]
 
 @[simp_denote]
-def icmp_ugt_llvm_i64 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩
-  .pure (.llvm (.bitvec 1))  := [LV| {
+def icmp_ugt_llvm_i64 :
+    Com LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]⟩ .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i64, %rhs: i64):
     %1 = llvm.icmp.ugt %lhs, %rhs  : i64
     llvm.return %1 : i1

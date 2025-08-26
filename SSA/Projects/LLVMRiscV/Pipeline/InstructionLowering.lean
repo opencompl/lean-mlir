@@ -71,7 +71,7 @@ def rewritingPatterns1 :
 
 /-- Defines an array containing only the rewrite pattern which eliminates cast.-/
 def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty)
-  := List.cons ⟨[Ty.riscv RISCV64.Ty.bv], (Ty.riscv RISCV64.Ty.bv), cast_eliminiation_riscv⟩ <| List.nil
+  := List.cons ⟨[Ty.riscv RISCV64.Ty.bv], [Ty.riscv RISCV64.Ty.bv], cast_eliminiation_riscv⟩ <| List.nil
 
 def const_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty)
   := List.map (fun x => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x)) all_const_llvm_const_lower_riscv_li
@@ -100,7 +100,7 @@ to `multiRewritePeephole` and limits the fuel to 100. This means per program and
 a maximal of 100 steps is performed. Currently we need to set this limit to avoid a stackoverflow in LeanMLIR.
 -/
  def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
-    (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))):=
+    (Ctxt.ofList Γl) .pure [.llvm (.bitvec w)]):=
   let rmInitialDeadCode :=  (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
   let loweredConst := multiRewritePeephole 100
     const_match rmInitialDeadCode; -- Lower the instructions in the first array.

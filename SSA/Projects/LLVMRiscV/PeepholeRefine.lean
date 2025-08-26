@@ -35,10 +35,10 @@ throw an corresponding error message to indicate failure. Important for the unfo
 avoid manual unfolding the implementor of the rewrite must tag the lhs and rhs of the
 as simp_denote such that the unfolding is performed by simp_peephole. -/
 structure LLVMPeepholeRewriteRefine (w : Nat) (Γ : List Ty) where
-  lhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
-  rhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
+  lhs : Com LLVMPlusRiscV Γ .pure [Ty.llvm (.bitvec w)]
+  rhs : Com LLVMPlusRiscV Γ .pure [Ty.llvm (.bitvec w)]
   correct : ∀ V,
-    PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V) := by
+    PoisonOr.IsRefinedBy (lhs.denote V |>.getN 0) (rhs.denote V |>.getN 0) := by
       simp_lowering <;> bv_decide
 
 /-!
@@ -56,7 +56,7 @@ provided until the Peephole Rewriter accepts refinements.
  -/
 def LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND
   (self : LLVMPeepholeRewriteRefine w Γ) :
-   PeepholeRewrite LLVMPlusRiscV Γ (Ty.llvm (.bitvec w))  :=
+   PeepholeRewrite LLVMPlusRiscV Γ [Ty.llvm (.bitvec w)] :=
   {
     lhs := self.lhs
     rhs := self.rhs

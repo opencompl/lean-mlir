@@ -6,6 +6,7 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
+open LeanMLIR.SingleReturnCompat
 
 def liRiscvN50 := [LV| {
     ^entry ():
