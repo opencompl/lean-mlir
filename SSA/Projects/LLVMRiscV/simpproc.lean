@@ -8,22 +8,20 @@ import Lean
 open LLVMRiscV
 open RV64Semantics
 open InstCombine(LLVM)
-/-
-This file contains simplification procedures to simplify proof goals within the
-LLVMAndRiscV dialect.
-These simpprocs are needed because the usual simplifier fails to remove the framework overhead
-given the new additional mappings used for the hybrid dialect.
 
-llvmArgsFromHybrid _ = .bitvec 64, similar
-totype _  = BitVec 64
+/-!
+  This file contains simplification procedures to simplify proof goals within the `LLVMPlusRiscV` dialect.
+  These simpprocs are needed because the usual simplifier fails to remove the framework overhead
+  given the new additional mappings used for the hybrid dialect.
+  As an example, consider the following:
 
-To a human reader, it's obvious that these two sides should be equal by substituting a value of type
-(.llvm (.bitvec 64)) (or simply (.bv) in the latter case) for _. However, Lean cannot determine what
-value to substitute for the _ during unification. As a result, the simplifier fails to simplify such
-statements in a proof goal. With the simpprocs we explicitly tell the simplfier how to simplify such
-patterns specificaly for riscvArgsFromHybrid and llvmArgsFromHybrid.
+  `toType _ = BitVec 64`
 
- -/
+  To a human reader, it's obvious that these two sides should be equal by substituting `_` with
+  .bv 64. However, Lean can not infer this, meaning that the standard simplifier fails to simplify such
+  statements in a proof goal. With the simpprocs we explicitly tell the tactic how to simplify such
+  patterns for `riscvArgsFromHybrid` and `llvmArgsFromHybrid`.
+-/
 
 /-
 Disabled due to simproc implementation not being re-evaluated correctly
@@ -100,6 +98,7 @@ def riscvArgsFromHybrid_cons_eq.lemma {ty  : RISCV64.RV64.Ty} {tys : List RISCV6
    := rfl
 
 open Lean Meta Elab in
+
 /-- Extracting out the raw LLVM type. -/
 def extractRiscvTy (x : Expr) : SimpM Expr := do
   let_expr Ty.riscv xRealTy := (← reduce x)
@@ -116,28 +115,20 @@ simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun
   let some (_, xsRealTys) := Expr.listLit? (← reduce as)
     | return .continue
   let xsRealTys ←  xsRealTys.mapM extractRiscvTy
-  -- logInfo m!"found (llvmArgsFromHybrid (HVector.cons ({x} : {xRealTy}) ({xs} : {xsRealTys})"
   let llvmTypeType := mkApp (mkConst ``Dialect.Ty []) (mkConst ``RISCV64.RV64 [])
   let xsRealTys ←  Lean.Meta.mkListLit llvmTypeType xsRealTys
-  -- logInfo m!"calling {``riscvArgsFromHybrid_cons_eq.lemma} with {xRealTy}, {xsRealTys}, {x}, {xs}"
-  -- logInfo m!"XXXX"
   let proof := mkAppN (mkConst ``riscvArgsFromHybrid_cons_eq.lemma []) #[xRealTy, xsRealTys, x, xs]
-  -- logInfo m!"YYYY"
-  -- logInfo m!"built proof {proof}"
   let proof ← reduce proof
-  -- logInfo m!"reduced proof to {proof}"
   let eq ← reduce (← inferType proof)
-  -- logInfo m!"reduced type of proof (i.e. the equality) to {eq}"
   let .some (_ty, _lhs, rhs) := eq.eq?
     | throwError "unable to reduce application of riscvArgsFromHybrid_cons_eq.lemma to an
       equality, only reduced to '{eq}'."
-  -- logInfo m!"final right-hand-side of equality is: {rhs}"
   return .visit {
     expr := rhs,
     proof? := .some proof
   }
 
-/- The following additional lemmas are needed to simplify the proof goals for the hybrid dialect.-/
+/-- Simplify the proof goals for the hybrid dialect.-/
 @[simp_denote]
 theorem valuation_var_snoc_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t t' : Ty}
   {s : Γ.Valuation} {x : TyDenote.toType t} {v : Γ.Var t'} :

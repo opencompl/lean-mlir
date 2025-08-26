@@ -127,7 +127,7 @@ RUN cd bv-evaluation/solvers && git clone https://github.com/abdoo8080/Leanwuzla
 # Install Lean-MLIR (tag: oopsla25-bv-decide)
 # Note: copying contents of lean-mlir-temp to lean-mlir is much faster than doing the opposite
 RUN cd .. && git clone https://github.com/opencompl/lean-mlir lean-mlir-temp && \
-    cd lean-mlir-temp && git checkout 9ed595567e409513d6063e54f88223ac0c80d8d9 && \
+    cd lean-mlir-temp && git checkout 73200fedf24db052cb7eac755d32d7e17c30cc4a && \
     cd .. && cp -r lean-mlir-temp/. lean-mlir && \
     rm -rf lean-mlir-temp
 RUN MATHLIB_NO_CACHE_ON_UPDATE=1 LAKE_NO_CACHE=1 lake update --no-cache

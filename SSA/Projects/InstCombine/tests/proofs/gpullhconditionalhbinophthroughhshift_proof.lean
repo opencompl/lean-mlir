@@ -18,7 +18,7 @@ theorem and_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -29,7 +29,7 @@ theorem and_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -40,7 +40,7 @@ theorem or_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -51,7 +51,7 @@ theorem or_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -62,7 +62,7 @@ theorem xor_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -73,7 +73,7 @@ theorem xor_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -84,7 +84,7 @@ theorem add_signbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -95,7 +95,7 @@ theorem add_nosignbit_select_shl_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -106,7 +106,7 @@ theorem and_signbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -117,7 +117,7 @@ theorem and_nosignbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -128,7 +128,7 @@ theorem or_signbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -139,7 +139,7 @@ theorem or_nosignbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -150,7 +150,7 @@ theorem xor_signbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -161,7 +161,7 @@ theorem xor_nosignbit_select_lshr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -172,7 +172,7 @@ theorem and_signbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -183,7 +183,7 @@ theorem and_nosignbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -194,7 +194,7 @@ theorem or_signbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -205,7 +205,7 @@ theorem or_nosignbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -216,7 +216,7 @@ theorem xor_signbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -227,5 +227,5 @@ theorem xor_nosignbit_select_ashr_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

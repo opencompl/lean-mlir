@@ -345,8 +345,8 @@ def State.cseCom {α : d.Ty}
         let ⟨body', hbody'⟩ := s'.cseCom body
         ⟨.var e' body',  by
             intros VΓ
-            simp only [EffectKind.toMonad_pure, Com.denote]
-            simp only [EffectKind.toMonad_pure, Lets.denote_var, Id.bind_eq'] at hbody' ⊢
+            simp only [Com.denote]
+            simp only [Lets.denote_var, Id.bind_eq'] at hbody' ⊢
             rw [← hbody']
             rw [he']⟩
       | .some ⟨v', hv'⟩ =>
@@ -358,8 +358,8 @@ def State.cseCom {α : d.Ty}
         ⟨.var e body' -- we still keep the `e` for now. In the next version, we will delete the `e`
         , by
             intros V
-            simp only [EffectKind.toMonad_pure, Com.denote]
-            simp only [EffectKind.toMonad_pure, Lets.denote_var, Id.bind_eq'] at hbody' ⊢
+            simp only [Com.denote]
+            simp only [Lets.denote_var, Id.bind_eq'] at hbody' ⊢
             specialize (hbody' V)
             specialize (he' V)
             rw [he'] at hbody'
@@ -376,7 +376,7 @@ def cse' [DecidableEq d.Ty] [DecidableEq d.Op]
     ⟨com', by {
       intros V
       specialize (hcom' V)
-      simp only [EffectKind.toMonad_pure, Lets.denote] at hcom'
+      simp only [Lets.denote] at hcom'
       assumption
     }⟩
 

@@ -160,7 +160,7 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
       if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
         throwError m!"expected width to be a Nat, found: {indentD e}"
     let (wix, wToIx) := state.wToIx.findOrInsertVal e
-    return (.ofNat wix, { state with wToIx := wToIx })
+    return (.var wix, { state with wToIx := wToIx })
 
 /-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
 #guard_msgs in #check Fin.mk
@@ -176,10 +176,35 @@ private def mkFinLit (n : Nat) (i : Nat) : SolverM Expr := do
 /-- info: MultiWidth.WidthExpr.var {wcard : ℕ} (v : Fin wcard) : WidthExpr wcard -/
 #guard_msgs in #check MultiWidth.WidthExpr.var
 
-def mkWidthExpr (wcard : Nat) (w : MultiWidth.Nondep.WidthExpr) : SolverM Expr := do
-  let out := mkAppN (mkConst ``MultiWidth.WidthExpr.var) #[mkNatLit wcard, ← mkFinLit wcard w.toNat]
-  debugCheck out
-  return out
+/-- info: MultiWidth.WidthExpr.min {wcard : ℕ} (v w : WidthExpr wcard) : WidthExpr wcard -/
+#guard_msgs in #check MultiWidth.WidthExpr.min
+
+/-- info: MultiWidth.WidthExpr.max {wcard : ℕ} (v w : WidthExpr wcard) : WidthExpr wcard -/
+#guard_msgs in #check MultiWidth.WidthExpr.max
+
+/-- info: MultiWidth.WidthExpr.addK {wcard : ℕ} (v : WidthExpr wcard) (k : ℕ) : WidthExpr wcard -/
+#guard_msgs in #check MultiWidth.WidthExpr.addK
+
+def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
+    SolverM Expr := do
+  match ve with
+  | .var v =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.var)
+      #[mkNatLit wcard, ← mkFinLit wcard v]
+    debugCheck out
+    return out
+  | .min v w =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.min)
+      #[mkNatLit wcard, ← mkWidthExpr wcard v, ← mkWidthExpr wcard w]
+    return out
+  | .max v w =>
+      let out := mkAppN (mkConst ``MultiWidth.WidthExpr.max)
+        #[mkNatLit wcard, ← mkWidthExpr wcard v, ← mkWidthExpr wcard w]
+      return out
+  | .addK v k =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.addK)
+      #[mkNatLit wcard, ← mkWidthExpr wcard v, mkNatLit k]
+    return out
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : Term.Ctx wcard 0 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.empty
@@ -305,10 +330,10 @@ partial def collectTerm (state : CollectState) (e : Expr) :
   | HAdd.hAdd _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
-      let (_w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthAtom state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
-      return (.add ta tb, state)
+      return (.add w ta tb, state)
     | _ => mkAtom
   | BitVec.zeroExtend _w v x =>
       let (v, state) ← collectWidthAtom state v
@@ -338,7 +363,7 @@ def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
       #[mkNatLit wcard, mkNatLit tcard, tctx, ← mkFinLit tcard v]
     debugCheck out
     return out
-  | .add a b =>
+  | .add _w a b =>
      let out ← mkAppM ``MultiWidth.Term.add
         #[← mkTermExpr wcard tcard tctx a,
         ← mkTermExpr wcard tcard tctx b]
@@ -356,6 +381,38 @@ def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
       #[← mkTermExpr wcard tcard tctx a, vExpr]
     debugCheck out
     return out
+  | .band w a b =>
+      let wExpr ← mkWidthExpr wcard w
+      let aExpr ← mkTermExpr wcard tcard tctx a
+      let bExpr ← mkTermExpr wcard tcard tctx b
+      let out := mkAppN (mkConst ``MultiWidth.Term.band)
+        #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+      debugCheck out
+      return out
+  | .bor w a b =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard tctx a
+    let bExpr ← mkTermExpr wcard tcard tctx b
+    let out := mkAppN (mkConst ``MultiWidth.Term.bor)
+      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+    debugCheck out
+    return out
+  | .bxor w a b =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard tctx a
+    let bExpr ← mkTermExpr wcard tcard tctx b
+    let out := mkAppN (mkConst ``MultiWidth.Term.bxor)
+      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+    debugCheck out
+    return out
+  | .bnot w a =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard tctx a
+    let out := mkAppN (mkConst ``MultiWidth.Term.bnot)
+      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr]
+    debugCheck out
+    return out
+
 
 set_option pp.explicit true in
 /--
@@ -384,8 +441,8 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
      throwError m!"expected predicate over bitvectors (no quantification), found:  {indentD e}"
 
 /--
-info: MultiWidth.Predicate.binRel {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} {w : WidthExpr wcard}
-  (k : BinaryRelationKind) (a b : Term ctx w) : Predicate ctx
+info: MultiWidth.Predicate.binRel {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (k : BinaryRelationKind)
+  (w : WidthExpr wcard) (a b : Term ctx w) : Predicate ctx
 -/
 #guard_msgs in #check MultiWidth.Predicate.binRel
 
@@ -404,8 +461,8 @@ def Expr.mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
     let bExpr ← mkTermExpr wcard tcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
       #[mkNatLit wcard, mkNatLit tcard, tctx,
-        wExpr,
         mkConst ``MultiWidth.BinaryRelationKind.eq,
+        wExpr,
         aExpr, bExpr]
     debugCheck out
     return out

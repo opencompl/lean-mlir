@@ -16,7 +16,7 @@ theorem and_sext_to_sel_thm (e : IntW 32) (e_1 : IntW 1) : LLVM.and (sext 32 e_1
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -25,7 +25,7 @@ theorem or_sext_to_sel_thm (e : IntW 32) (e_1 : IntW 1) : LLVM.or (sext 32 e_1) 
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -34,7 +34,7 @@ theorem xor_sext_to_sel_thm (e : IntW 32) (e_1 : IntW 1) : LLVM.xor (sext 32 e_1
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -44,7 +44,7 @@ theorem and_add_bool_to_select_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -55,7 +55,7 @@ theorem and_add_bool_no_fold_thm (e : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -66,5 +66,5 @@ theorem and_add_bool_to_select_multi_use_thm (e : IntW 32) (e_1 : IntW 1) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

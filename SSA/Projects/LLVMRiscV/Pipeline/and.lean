@@ -3,35 +3,14 @@ import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
+/-!
+  This file implements the lowering for the `llvm.and` instruction for types i1, i8, i16 i32, i64.
+-/
+
+
 open LLVMRiscV
 
-/- # AND -/
-@[simp_denote]
-def and_llvm := [LV| {
-  ^entry (%lhs: i64, %rhs: i64 ):
-  %1 = llvm.and %lhs, %rhs : i64
-  llvm.return %1 : i64
-  }]
-
-@[simp_denote]
-def and_riscv := [LV| {
-  ^entry (%lhs: i64, %rhs: i64 ):
-  %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i64) -> (!i64)
-  %rhsr = "builtin.unrealized_conversion_cast" (%rhs) : (i64) -> (!i64)
-  %0 = and %lhsr, %rhsr : !i64
-  %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
-  llvm.return %1 : i64
-  }]
-
-def llvm_and_lower_riscv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
-  lhs:= and_llvm
-  rhs:= and_riscv
-
-def and_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_and_lower_riscv]
-
-/- # AND i1 -/
+/-! ### i1 -/
 
 @[simp_denote]
 def and_llvm_1 := [LV| {
@@ -54,44 +33,38 @@ def llvm_and_lower_riscv_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 1), T
   lhs:= and_llvm_1
   rhs:= and_riscv_1
 
-def and_match_1 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_and_lower_riscv_1]
 
-/- # AND i8 -/
+/-! ### i8 -/
 
 @[simp_denote]
 def and_llvm_8 := [LV| {
   ^entry (%lhs: i8, %rhs: i8 ):
-  %1 = llvm.and %lhs, %rhs : i8
-  llvm.return %1 : i8
+    %1 = llvm.and %lhs, %rhs : i8
+    llvm.return %1 : i8
   }]
 
 @[simp_denote]
 def and_riscv_8 := [LV| {
   ^entry (%lhs: i8, %rhs: i8):
-  %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i8) -> (!i64)
-  %rhsr = "builtin.unrealized_conversion_cast" (%rhs) : (i8) -> (!i64)
-  %0 = and %lhsr, %rhsr : !i64
-  %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i8)
-  llvm.return %1 : i8
+    %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i8) -> (!i64)
+    %rhsr = "builtin.unrealized_conversion_cast" (%rhs) : (i8) -> (!i64)
+    %0 = and %lhsr, %rhsr : !i64
+    %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i8)
+    llvm.return %1 : i8
   }]
 
 def llvm_and_lower_riscv_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
   lhs:= and_llvm_8
   rhs:= and_riscv_8
 
-def and_match_8 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_and_lower_riscv_8]
 
-  /- # AND i16 -/
+/-! ### i16 -/
 
 @[simp_denote]
 def and_llvm_16 := [LV| {
-  ^entry (%lhs: i16, %rhs: i16 ):
-  %1 = llvm.and %lhs, %rhs : i16
-  llvm.return %1 : i16
+  ^entry (%lhs: i16, %rhs: i16):
+    %1 = llvm.and %lhs, %rhs : i16
+    llvm.return %1 : i16
   }]
 
 @[simp_denote]
@@ -108,11 +81,8 @@ def llvm_and_lower_riscv_16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)
   lhs:= and_llvm_16
   rhs:= and_riscv_16
 
-def and_match_16 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_and_lower_riscv_16]
 
-  /- # AND i32 -/
+/-! ### i32 -/
 
 @[simp_denote]
 def and_llvm_32 := [LV| {
@@ -135,6 +105,35 @@ def llvm_and_lower_riscv_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)
   lhs:= and_llvm_32
   rhs:= and_riscv_32
 
-def and_match_32 : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  List.map (fun x =>  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x))
-  [llvm_and_lower_riscv_32]
+
+/-! ### i64-/
+
+@[simp_denote]
+def and_llvm_64 := [LV| {
+  ^entry (%lhs: i64, %rhs: i64 ):
+    %1 = llvm.and %lhs, %rhs : i64
+    llvm.return %1 : i64
+  }]
+
+@[simp_denote]
+def and_riscv_64 := [LV| {
+  ^entry (%lhs: i64, %rhs: i64 ):
+  %lhsr = "builtin.unrealized_conversion_cast" (%lhs) : (i64) -> (!i64)
+  %rhsr = "builtin.unrealized_conversion_cast" (%rhs) : (i64) -> (!i64)
+  %0 = and %lhsr, %rhsr : !i64
+  %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
+  llvm.return %1 : i64
+  }]
+
+def llvm_and_lower_riscv_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)]
+where
+  lhs:= and_llvm_64
+  rhs:= and_riscv_64
+
+def and_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=[
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_and_lower_riscv_1),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_and_lower_riscv_8),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_and_lower_riscv_16),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_and_lower_riscv_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_and_lower_riscv_64),
+]

@@ -23,9 +23,6 @@ To enable this proof automation, rewrite implementors must tag their rewrite rul
 
 The purpose of this tactic is to maximize proof automation for instruction lowering rewrite patterns
 -/
-
-syntax "simp_lowering" : tactic
-
 macro "simp_lowering" : tactic => `(tactic|(
     simp_peephole
     simp_alive_undef
