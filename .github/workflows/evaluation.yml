@@ -99,14 +99,14 @@ jobs:
         id: cache-lake
         uses: actions/cache/restore@v4
         with:
+          path: |
+            .lake/packages
+            .lake/build
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Build
         continue-on-error: true
         run: |
-          path: |
-            .lake/packages
-            .lake/build
           lake -R build
 
       - name: Install Python Modules
