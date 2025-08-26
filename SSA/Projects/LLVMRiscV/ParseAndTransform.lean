@@ -40,8 +40,9 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       | EffectKind.pure =>
         match retTy with
         | Ty.llvm (.bitvec _w)  =>
-          let lowered := selectionPipeFuelWithCSE c true /- calls the instruction selector defined in `
-                                                  InstructionLowering`, true indicates pseudo variable lowering-/
+          /- calls to the instruction selector defined in `InstructionLowering`,
+          `true` indicates pseudo variable lowering-/
+          let lowered := selectionPipeFuelWithCSE c true
           IO.println s!"{Com.toPrint (lowered) }"
           return 0
         | _ =>
@@ -51,9 +52,11 @@ def passriscv64 (fileName : String) : IO UInt32 := do
       IO.println s!" debug: WRONG EFFECT KIND : expected pure program "
       return 1
 
-/- This is the slightly optimized selector that integrates pattern from LLVM GlobalISel on the LLVM IR
-as well as RISC-V ISA level depending on the pattern in LLVM. It includes pseudovariable lowering
-as well as SSA-based optimizations CSE and DCE -/
+/-- This function parses a `Com` from the file with name `fileName` as a `Com` of type `LLVMAndRiscV`.
+  Next, it calls the optimized instruction selection lowering function `selectionPipeFuelWithCSEWithOpt`
+  on the parsed `Com` and prints it to standart output. This pass applies the optimization
+  patterns from `GlobalISel` on both LLVM and RISCV.
+  If any of the steps fails, we print an error message and return exit code 1. -/
 def passriscv64_optimized (fileName : String) : IO UInt32 := do
     let icom? ← parseComFromFile_LLVMRiscV fileName
     match icom? with
@@ -63,11 +66,9 @@ def passriscv64_optimized (fileName : String) : IO UInt32 := do
       | EffectKind.pure =>
         match retTy with
         | Ty.llvm (.bitvec _w)  =>
-          let lowered := selectionPipeFuelWithCSEWithOpt c true /- calls the instruction selector defined in `
-                                                  InstructionLowering`, true indicates pseudo variable lowering-/
-          /- calls to the instruction selector defined in `InstructionLowering`,
-            `true` indicates pseudo variable lowering-/
-          let lowered := selectionPipeFuelWithCSE c true
+          /- calls to the optimized instruction selector defined in `InstructionLowering`,
+          `true` indicates pseudo variable lowering-/
+          let lowered := selectionPipeFuelWithCSEWithOpt c true
           IO.println s!"{Com.toPrint (lowered) }"
           return 0
         | _ =>
