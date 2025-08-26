@@ -8,11 +8,13 @@ open LLVMRiscV
 
 /-!
   This file contains the definitions of the Peephole Rewrite structures for LLVM and RISCV `Com`s.
-  Additionally this file defines the wrapper structures used to pass our hybrid dialect rewrites to the Peephole Rewriter.
+  Additionally this file defines the wrapper structures used to pass our hybrid dialect rewrites to
+  the Peephole Rewriter.
 
   The current Peephole Rewriter requires a proof that the return values of the source and target
-  programs are equal. Because we are working with refinement semantics (e.g., poison), we cannot provide such a proof and therefore leave the proof as `sorry`. This will no longer be required once the
-  rewriter supports refinement.
+  programs are equal. Because we are working with refinement semantics (e.g., poison), we cannot
+  provide such a proof and therefore leave the proof as `sorry`.
+  This will no longer be required once the rewriter supports refinement.
 -/
 
 instance : Refinement (BitVec w) := .ofEq
