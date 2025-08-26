@@ -25,7 +25,7 @@ import SSA.Projects.DCE.DCE
 import SSA.Projects.CSE.CSE
 
 open LLVMRiscV
-
+open LeanMLIR.SingleReturnCompat
 
 /-!
   # Instruction selection
@@ -58,13 +58,24 @@ def rewritingPatterns0 :
   sub_match
   ]
 
-/-- Defines an array containing only the rewrite pattern which eliminates cast.-/
-def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty)
-  := List.cons ⟨[Ty.riscv RISCV64.Ty.bv], [Ty.riscv RISCV64.Ty.bv], cast_eliminiation_riscv⟩ <| List.nil
+def rewritingPatterns1 :
+  List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  List.flatten [
+  sext_match,
+  shl_match,
+  srl_match,
+  trunc_match,
+  udiv_match,
+  urem_match,
+  xor_match,
+  zext_match,
+  select_match
+  ]
+def enable_pseudo_instr_pass := pseudo_match
 
 def reconcile_cast_pass : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-    List.cons ⟨[Ty.riscv RISCV64.Ty.bv], (Ty.riscv RISCV64.Ty.bv), cast_eliminiation_riscv⟩
-  <| List.cons ⟨[Ty.llvm _], (Ty.llvm _), cast_eq_cast_cast_eliminiation_riscv⟩ <| List.nil
+  [⟨[Ty.riscv RISCV64.Ty.bv], [Ty.riscv RISCV64.Ty.bv], cast_eliminiation_riscv⟩]
+
 
 /- We increase `maxRecDepth` to avoid the recursion depth error when using the peephole rewriter. -/
 set_option maxRecDepth 10000000

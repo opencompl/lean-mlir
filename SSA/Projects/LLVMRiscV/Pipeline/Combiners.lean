@@ -17,18 +17,15 @@ open LLVMRiscV
 @[simp_riscv] lemma id_eq1 {α : Type} (x y : α) :  @Eq (Id α) x y = (x = y):= by simp only
 
 structure RISCVPeepholeRewrite (Γ : List Ty) where
-  lhs : Com LLVMPlusRiscV Γ .pure (Ty.riscv (.bv))
-  rhs : Com LLVMPlusRiscV Γ .pure (Ty.riscv (.bv))
-  correct : (lhs.denote) = (rhs.denote) := by simp_lowering <;> bv_decide
+  lhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
+  rhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
+  correct : lhs.denote = rhs.denote := by simp_lowering <;> bv_decide
 
-def RISCVPeepholeRewriteToRiscvPeephole
-  (self : RISCVPeepholeRewrite Γ) :
-   PeepholeRewrite LLVMPlusRiscV Γ (Ty.riscv (.bv))  :=
-  {
-    lhs := self.lhs
-    rhs := self.rhs
-    correct := self.correct
-  }
+def RISCVPeepholeRewriteToRiscvPeephole (self : RISCVPeepholeRewrite Γ) :
+    PeepholeRewrite LLVMPlusRiscV Γ [Ty.riscv .bv] where
+  lhs := self.lhs
+  rhs := self.rhs
+  correct := self.correct
 
 /-!
   # Post-legalization optimizations
