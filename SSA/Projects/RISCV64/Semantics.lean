@@ -546,7 +546,6 @@ theorem pure64_MUL_ttf_eq_pure64_MUL_ttf_bv (rs2_val : BitVec 64) (rs1_val : Bit
 def pure64_MUL_ftt (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   rs2_val * rs1_val
 
-
 @[simp_riscv]
 def pure64_MUL_ttt (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.extractLsb 127 64 (BitVec.extractLsb' 0 128 (BitVec.ofInt 129 (rs1_val.toInt * rs2_val.toInt)))
