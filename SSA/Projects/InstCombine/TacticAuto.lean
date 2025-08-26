@@ -9,7 +9,7 @@ import SSA.Projects.InstCombine.Tactic.SimpLLVM
 import SSA.Experimental.Bits.SingleWidth.Tactic
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Experimental.Bits.AutoStructs.ForLean
-import SSA.Core.Tactic.TacBench
+import TacBench
 import SSA.Core.Tactic.ExtractGoals
 
 open Lean
