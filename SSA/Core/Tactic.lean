@@ -185,7 +185,7 @@ end SimpValuationApply
 /-!
 ### HVector.cons injectivity
 
-WORKAROUND: Simplifying the semantics can yields equalities of the form:
+WORKAROUND: Simplifying the semantics can yield equalities of the form:
   `@Eq (Id <| HVector _ _) (x ::ₕ xs) (y ::ₕ ys)`
 The `Id _` in the type of the equality somehow blocks the injectivity lemma
 for `HVector.cons` from applying, so we first have to clean up the equality.
