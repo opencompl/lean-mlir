@@ -15,7 +15,7 @@ we could reimplement and verify 11/13 test cases  -/
 }
 -/
 def add_positive_low_bound_reject_llvm := [LV| {
-    ^entry (%a: i32):
+  ^entry (%a: i32):
     %0 = llvm.mlir.constant (2047) : i32
     %1 = llvm.add %a, %0 : i32
     llvm.return %1 :i32
@@ -23,7 +23,7 @@ def add_positive_low_bound_reject_llvm := [LV| {
 
 def add_positive_low_bound_reject_riscv :=
   [LV| {
-    ^entry (%arg: i32):
+  ^entry (%arg: i32):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i32) -> (!i64)
     %0 = addiw %a, 2047 : !i64
     %1 =  "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i32)
@@ -55,7 +55,7 @@ define i32 @add_positive_low_bound_accept(i32 %a) nounwind {
 }
 -/
 def add_positive_low_bound_accept_llvm := [LV| {
-    ^entry (%a: i32):
+  ^entry (%a: i32):
     %0 = llvm.mlir.constant (2048) : i32
     %1 = llvm.add %0, %a : i32
     llvm.return %1 :i32
@@ -63,7 +63,7 @@ def add_positive_low_bound_accept_llvm := [LV| {
 
 def add_positive_low_bound_accept_riscv :=
   [LV| {
-    ^entry (%arg: i32):
+  ^entry (%arg: i32):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i32) -> (!i64)
     %0 = addi %a, 2047 : !i64
     %1 = addiw %0, 1 : !i64
@@ -96,7 +96,7 @@ define i32 @add_positive_high_bound_accept(i32 %a) nounwind {
 }
 -/
 def add_positive_high_bound_accept_llvm := [LV| {
-    ^entry (%a: i32):
+  ^entry (%a: i32):
     %0 = llvm.mlir.constant (4094) : i32
     %1 = llvm.add %0, %a : i32
     llvm.return %1 :i32
@@ -104,7 +104,7 @@ def add_positive_high_bound_accept_llvm := [LV| {
 
 def add_positive_high_bound_accept_riscv :=
   [LV| {
-    ^entry (%arg: i32):
+  ^entry (%arg: i32):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i32) -> (!i64)
     %0 = addi %a, 2047 : !i64
     %1 = addiw %0, 2047 : !i64
@@ -138,7 +138,7 @@ define i32 @add_positive_high_bound_reject(i32 %a) nounwind {
 }
 -/
 def add_positive_high_bound_reject_llvm := [LV| {
-    ^entry (%a: i32):
+  ^entry (%a: i32):
     %0 = llvm.mlir.constant (4095) : i32
     %1 = llvm.add %0, %a : i32
     llvm.return %1 :i32
@@ -146,7 +146,7 @@ def add_positive_high_bound_reject_llvm := [LV| {
 
 def add_positive_high_bound_reject_riscv :=
   [LV| {
-    ^entry (%arg: i32):
+  ^entry (%arg: i32):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i32) -> (!i64)
     %0 = li (843949575) : !i64
     %1 = "lui"  (%0) {imm = 1 : !i64} : (!i64) -> (!i64)
@@ -185,7 +185,7 @@ define i32 @add_negative_high_bound_reject(i32 %a) nounwind {
 }
 -/
 def add_negative_high_bound_reject_llvm := [LV| {
-    ^entry (%a: i32):
+  ^entry (%a: i32):
     %0 = llvm.mlir.constant (-2048) : i32
     %1 = llvm.add  %a, %0 : i32
     llvm.return %1 :i32
@@ -193,7 +193,7 @@ def add_negative_high_bound_reject_llvm := [LV| {
 
 def add_negative_high_bound_reject_riscv :=
   [LV| {
-    ^entry (%arg: i32):
+  ^entry (%arg: i32):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i32) -> (!i64)
     %0 = "addiw"  (%a) {imm = -2048 : !i64} : (!i64) -> (!i64)
     %1 =  "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i32)
@@ -215,7 +215,7 @@ def add_negative_high_bound_reject: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitv
 
 def add_positive_high_bound_riscv :=
   [LV| {
-    ^entry (%arg: i64):
+  ^entry (%arg: i64):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i64) -> (!i64)
     %2 = addi %a, 2047 : !i64
     %3 = addi %2, 952 : !i64
