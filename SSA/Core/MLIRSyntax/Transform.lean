@@ -92,19 +92,6 @@ def addValToMapping (Γ : Ctxt d.Ty) (name : String) (ty : d.Ty) :
   set nm
   return ⟨DerivedCtxt.ofCtxt Γ |>.snoc ty, Ctxt.Var.last ..⟩
 
--- /--
---   Add a  new variable to the context, and record its (absolute) index in the name mapping
-
---   Throws an error if the variable name already exists in the mapping, essentially disallowing
---   shadowing
--- -/
--- def addValToMapping (Γ : Ctxt d.Ty) (name : String) (ty : d.Ty) :
---     BuilderM d (Σ (Γ' : DerivedCtxt Γ), Ctxt.Var Γ'.ctxt ty) := do
---   let some nm := (←get).add name
---     | throw <| .nameAlreadyDeclared name
---   set nm
---   return ⟨DerivedCtxt.ofCtxt Γ |>.snoc ty, Ctxt.Var.last ..⟩
-
 variable [ToString d.Ty]
 
 /--
