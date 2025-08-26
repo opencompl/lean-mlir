@@ -22,6 +22,7 @@ jobs:
   evaluation:
     name: Evaluation of Tactics & Decision Procedures
     runs-on: ubuntu-latest
+    debends-on: build
     permissions:
       pull-requests: write
     steps:
