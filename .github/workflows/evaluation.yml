@@ -27,8 +27,45 @@ jobs:
         id: cache-lake
         uses: actions/cache@v4
         with:
-          path: .lake
-          key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
+          path: .lake/packages
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Build
+        continue-on-error: true
+        run: |
+          lake -R build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lean-mlir-build
+          path: .
+
+  build-eval:
+    name: Build Lean MLIR
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache `.lake` folder
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          path: .lake/packages
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Build
+        continue-on-error: true
+        run: |
+          lake -R build
 
       - name: Get Cache
         continue-on-error: true
