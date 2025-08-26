@@ -8,8 +8,7 @@ import SSA.Core.HVector
 import SSA.Core.EffectKind
 import SSA.Core.Framework.Dialect
 
-import Mathlib.Control.Monad.Basic
-import Mathlib.Data.Finset.Piecewise
+import Mathlib.Data.Finset.Union
 
 set_option deprecated.oldSectionVars true
 

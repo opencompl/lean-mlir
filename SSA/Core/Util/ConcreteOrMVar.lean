@@ -1,10 +1,7 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Vector.Basic
--- import Mathlib.Tactic
-
 
 /--
   A general type that is either a concrete known value of type `α`, or one of `φ` metavariables
