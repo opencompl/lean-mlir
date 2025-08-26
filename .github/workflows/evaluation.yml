@@ -12,7 +12,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  build-eval:
     name: Build Lean MLIR
     runs-on: ubuntu-latest
     steps:
@@ -22,7 +22,7 @@ jobs:
   evaluation:
     name: Evaluation of Tactics & Decision Procedures
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-eval
     permissions:
       pull-requests: write
     steps:
