@@ -9,8 +9,9 @@ namespace CIRCTStream
 instance : ToString DCOp.TokenStream where
   toString s := toString (Stream.toList 100 s)
 
-open MLIR AST in
+namespace DCExample
 
+open MLIR AST in
 unseal String.splitOnAux in
 def SourceEg := [DC_com| {
   ^entry():
@@ -58,3 +59,5 @@ def test2 : DCOp.TokenStream :=
   BranchEg.denote (Ctxt.Valuation.ofHVector (.cons c <| .cons x <| .cons u <| .nil))
 
 #eval test2
+
+end DCExample
