@@ -7,11 +7,13 @@ macro "simp_sllvm" : tactic => `(tactic|(
   simp -failIfUnchanged only [simp_sllvm, simp_llvm, simp_llvm_option]
 ))
 
+open Ctxt in
 attribute [simp_sllvm]
   -- Poison lemmas
   PoisonOr.value_isRefinedBy_value PoisonOr.poison_isRefinedBy
   PoisonOr.not_value_isRefinedBy_poison
   PoisonOr.value_bind PoisonOr.bind_poison PoisonOr.poison_bind
+  PoisonOr.map_poison PoisonOr.map_value
   PoisonOr.value_ne_poison PoisonOr.poison_ne_value PoisonOr.value_inj
   PoisonOr.pure_def
   -- Poison ite lemmas
@@ -36,6 +38,11 @@ attribute [simp_sllvm]
   Id
   -- Refinement
   StateT.isRefinedBy_iff Prod.isRefinedBy_iff
+  HVector.cons_isRefinedBy_cons HVector.nil_isRefinedBy_nil
+  reduceIsRefinedBy
+  -- Valuation append & accesses
+  Valuation.append_nil Valuation.append_cons
+  Valuation.snoc_last Valuation.snoc_toSnoc
   -- Other general simp lemmas
   reduceIte bind_assoc
 
