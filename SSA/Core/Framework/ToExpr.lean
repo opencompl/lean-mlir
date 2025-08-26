@@ -153,8 +153,6 @@ partial def Regions.toExprAux {regSig : RegionSignature d.Ty}
 
 end
 
-
-
 variable {Γ : Ctxt d.Ty} {eff : EffectKind} {ty : d.Ty}
 
 /-!
