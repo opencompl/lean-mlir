@@ -150,7 +150,7 @@ def run_tests():
     for filename in os.listdir(LLC_GLOBALISEL_ASM_DIR):
         input_file = os.path.join(LLC_GLOBALISEL_ASM_DIR, filename)
         basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(MCA_LLVM_GLOBALISEL_DIR, basename + 'globalisel.out')
+        output_file = os.path.join(MCA_LLVM_GLOBALISEL_DIR, basename + '.out')
         log_file = open(os.path.join(LOGS_DIR, 'globalisel_llvm_' + filename),'w')
         mca_analysis(input_file, output_file, log_file)
 
