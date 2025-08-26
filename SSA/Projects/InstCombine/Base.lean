@@ -136,7 +136,7 @@ def toStringWithFlags (op : MOp.BinaryOp) : String :=
     | .sdiv ⟨true⟩          => "sdiv exact"
     | .udiv ⟨false⟩         => "udiv"
     | .udiv ⟨true⟩          => "udiv exact"
-  op
+  s!"llvm.{op}"
 
 instance : ToString (MOp.BinaryOp) where
   toString := toStringWithFlags
@@ -147,11 +147,11 @@ instance : ToString (MOp.UnaryOp (φ : Nat)) where
 instance : ToString (MOp 0) where
    toString  op :=
      match op with
-     | .unary _w op => s!"{toString op}"
-     | .binary _w op => s!"{toString  op}"
+     | .unary _w op => s!"\"{toString op}\""
+     | .binary _w op => s!"\"{toString  op}\""
      | .select  _w => "select"
      | .icmp  _pred _w => "icmp"
-     | .const _w _val => s!"mlir.constant"
+     | .const w val => s!"\"llvm.mlir.constant\"() \{value = {val} : {w}}"
 
 /-! ## Dialect -/
 
