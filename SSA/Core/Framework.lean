@@ -1120,20 +1120,6 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
   simp [Hom.castCodomain, Hom.comp, Ctxt.dropUntilHom, Ctxt.dropUntilDiff, Ctxt.Diff.toHom, Var.appendInl]
   omega
 
-  -- simp only [getPureExpr, Ctxt.dropUntil_toSnoc, Ctxt.dropUntilHom_toSnoc,
-  --   getPureExprAux_var_toSnoc, Option.map_eq_map, Option.map_map, Function.comp_def,
-  --   Expr.changeVars_changeVars];
-  -- rfl
-
--- @[simp] lemma Lets.getPureExpr_var_toSnoc (lets : Lets d Γ_in eff Γ_out) (e : Expr d Γ_out _ ty₁)
---     (v : Var Γ_out ty₂):
---     getPureExpr (lets.var e) (v.toSnoc)
---     = (Expr.changeVars <| Ctxt.Hom.id.snocRight) <$> (getPureExpr lets v) := by
---   simp only [getPureExpr, Ctxt.dropUntil_toSnoc, Ctxt.dropUntilHom_toSnoc,
---     getPureExprAux_var_toSnoc, Option.map_eq_map, Option.map_map, Function.comp_def,
---     Expr.changeVars_changeVars];
---   rfl
-
 /-!
 ## Mapping
 We can map between different dialects

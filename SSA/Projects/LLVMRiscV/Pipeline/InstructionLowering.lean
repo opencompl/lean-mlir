@@ -20,6 +20,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.zext
 import SSA.Projects.LLVMRiscV.Pipeline.const
 import SSA.Projects.LLVMRiscV.Pipeline.select
 import SSA.Projects.LLVMRiscV.Pipeline.pseudo
+import SSA.Projects.LLVMRiscV.Pipeline.Combiners
 import SSA.Projects.DCE.DCE
 import SSA.Projects.CSE.CSE
 
@@ -71,7 +72,7 @@ set_option maxRecDepth 10000000
 
 /--
   Run the instruction selector on a given `Com`, by calling several times `multiRewritePeephole`
-  with limited fuel (100).
+  with limited `fuel`.
   This means that at most 100 steps are performed per-program and per-rewrite-location.
   The limit ensure that there is no stack overflow.
 
@@ -83,31 +84,24 @@ set_option maxRecDepth 10000000
   - remove casting operations (`reconcile_casts`)
   - DCE (dead code due to casting removal)
 -/
-set_option maxRecDepth 10000000 -- we set this to avoid the recursion depth error when using the peephole rewriter
-
-
-/-- This function runs the instruction selector on a given `Com`. The functions makes several calls
-to `multiRewritePeephole` and limits the fuel to 100. This means per program and potential rewrite location,
-a maximal of 100 steps is performed. Currently we need to set this limit to avoid a stackoverflow in LeanMLIR.
--/
- def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
-    (Ctxt.ofList Γl) .pure [.llvm (.bitvec w)]):=
-  let rmInitialDeadCode := (DCE.dce' prog).val; -- First we eliminate the inital inefficenices in the code.
-  let loweredConst := multiRewritePeephole 100
+def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : Com LLVMPlusRiscV
+  (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) :=
+  let rmInitialDeadCode :=  (DCE.dce' prog).val;
+  let loweredConst := multiRewritePeephole fuel
     const_match rmInitialDeadCode;
-  let lowerPart1 := multiRewritePeephole 100
+  let lowerPart1 := multiRewritePeephole fuel
     rewritingPatterns1  loweredConst;
-  let lowerPart2 := multiRewritePeephole 100
+  let lowerPart2 := multiRewritePeephole fuel
     rewritingPatterns0 lowerPart1;
   let postLoweringDCE := (DCE.dce' lowerPart2).val;
-  let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
+  let postReconcileCast := multiRewritePeephole fuel (reconcile_cast_pass) postLoweringDCE;
   let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
   let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val;
   remove_dead_Cast2
 
 /--
   Run the instruction selector on a given `Com`, by calling several times `multiRewritePeephole`
-  with limited fuel (100), concluding with CSE.
+  with limited `fuel`, concluding with CSE.
   This means that at most 100 steps are performed per-program and per-rewrite-location.
   The limit ensures that there is no stack overflow.
 
@@ -120,25 +114,70 @@ a maximal of 100 steps is performed. Currently we need to set this limit to avoi
   - DCE (dead code due to casting removal)
   - CSE
 -/
-def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (prog : Com LLVMPlusRiscV
+def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : Com LLVMPlusRiscV
   (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) (pseudo : Bool):=
   let rmInitialDeadCode :=  (DCE.dce' prog).val;
   let rmInitialDeadCode :=
   if pseudo then
-    multiRewritePeephole 100 pseudo_match rmInitialDeadCode
+    multiRewritePeephole fuel pseudo_match rmInitialDeadCode
   else
     rmInitialDeadCode
-  let loweredConst := multiRewritePeephole 100
+  let loweredConst := multiRewritePeephole fuel
     const_match rmInitialDeadCode;
-  let lowerPart1 := multiRewritePeephole 100
+  let lowerPart1 := multiRewritePeephole fuel
     rewritingPatterns1  loweredConst;
-  let lowerPart2 := multiRewritePeephole 100
+  let lowerPart2 := multiRewritePeephole fuel
     rewritingPatterns0 lowerPart1;
   let postLoweringDCE := (DCE.dce' lowerPart2).val;
-  let postReconcileCast := multiRewritePeephole 100 (reconcile_cast_pass) postLoweringDCE;
+  let postReconcileCast := multiRewritePeephole fuel (reconcile_cast_pass) postLoweringDCE;
   let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
   let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val;
   let optimize_eq_cast := (CSE.cse' remove_dead_Cast2).val;
   let out := (DCE.dce' optimize_eq_cast).val;
   let out2 := (DCE.dce' out).val;
   out2
+
+/--
+  Run the instruction selector pipeline with optimizations, resulting in the following pipeline:
+  - DCE
+  - pre-legalization `O0` optimizations from globalISel (on LLVM)
+  - post-legalization `O0` optimizations from globalISel (on LLVM)
+  - lowering instructions in `rewritingPatterns1`
+  - lowering instructions in `rewritingPatterns0`
+  - DCE (to remove LLVM instructions)
+  - remove casting operations (`reconcile_casts`)
+  - DCE (dead code due to casting removal)
+  - CSE
+  - pre-legalization `O0` optimizations from globalISel (on RISCV assembly)
+  - post-legalization `O0` optimizations from globalISel (on RISCV assembly)
+-/
+def selectionPipeFuelWithCSEWithOpt {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : Com LLVMPlusRiscV
+    (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) (pseudo : Bool):=
+  let rmInitialDeadCode :=  (DCE.dce' prog).val;
+  let rmInitialDeadCode :=
+    if pseudo then
+      multiRewritePeephole fuel pseudo_match rmInitialDeadCode
+    else
+      rmInitialDeadCode
+  let optimize_initial_1 := multiRewritePeephole fuel
+    GLobalISelO0PreLegalizerCombiner rmInitialDeadCode;
+  let optimize_initial_2 := multiRewritePeephole fuel
+    GLobalISelPostLegalizerCombiner optimize_initial_1;
+  let loweredConst := multiRewritePeephole fuel
+    const_match optimize_initial_2;
+  let lowerPart1 := multiRewritePeephole fuel
+    rewritingPatterns1  loweredConst;
+  let lowerPart2 := multiRewritePeephole fuel
+    rewritingPatterns0 lowerPart1;
+  let postLoweringDCE := (DCE.dce' lowerPart2).val;
+  let postReconcileCast := multiRewritePeephole fuel (reconcile_cast_pass) postLoweringDCE;
+  let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
+  let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val;
+  let optimize_eq_cast := (CSE.cse' remove_dead_Cast2).val;
+  let out := (DCE.dce' optimize_eq_cast).val;
+  let out2 := (DCE.dce' out).val;
+  let optimize_final_1 := multiRewritePeephole 100
+    GLobalISelO0PreLegalizerCombiner out2;
+  let optimize_final_2 := multiRewritePeephole 100
+    GLobalISelPostLegalizerCombiner optimize_final_1;
+  optimize_final_2
