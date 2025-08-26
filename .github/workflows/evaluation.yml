@@ -27,7 +27,9 @@ jobs:
         id: cache-lake
         uses: actions/cache@v4
         with:
-          path: .lake/packages
+          path: |
+            .lake/packages
+            .lake/build
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Build
@@ -54,15 +56,19 @@ jobs:
 
       - name: Cache `.lake` folder
         id: cache-lake
-        uses: actions/cache@v4
+        uses: actions/restore@v4
         with:
-          path: .lake/packages
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Build
         continue-on-error: true
         run: |
           lake -R build
+
+      - name: Install Python Modules
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-matplotlib python3-pandas python3-num2words python3-psutil ripgrep
 
       - name: Ensure InstCombine goals are up-to-date
         continue-on-error: true
