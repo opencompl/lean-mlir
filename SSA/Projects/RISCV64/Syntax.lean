@@ -610,7 +610,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
           return ⟨ .pure, .bv ,⟨ .divw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-      | .bv, .bv, "divwu" =>
+      | .bv, .bv, "divuw" =>
             return ⟨ .pure, .bv ,⟨ .divuw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
@@ -626,7 +626,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             return ⟨ .pure, .bv ,⟨ .remw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-      | .bv, .bv, "remwu" =>
+      | .bv, .bv, "remuw" =>
             return ⟨ .pure, .bv ,⟨ .remuw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩

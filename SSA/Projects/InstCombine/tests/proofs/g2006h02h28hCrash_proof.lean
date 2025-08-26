@@ -16,5 +16,5 @@ theorem test_thm : zext 32 (icmp IntPred.eq (const? 32 1) (const? 32 2)) ⊑ con
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

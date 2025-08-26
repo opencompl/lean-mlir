@@ -1,11 +1,8 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
---import SSA.Core.WellTypedFramework
-import SSA.Core.Framework
+import SSA.Core
 import SSA.Core.Tactic.SimpSet
-import SSA.Core.Util
-import SSA.Core.Util.ConcreteOrMVar
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.LLVM.Semantics
 
@@ -388,7 +385,7 @@ def attributesToPrint (op : LLVM.Op) : String :=
   match op with
   | .const w v => s!"\{value = {v} : {w}}"
   | .or w ⟨true⟩ => s!"\{disjoint = true : {w}}"
-  | .add _ f |.shl _ f | .sub _ f | .mul _ f => printOverflowFlags f -- overflowflag support
+  | .add _ f |.shl _ f | .sub _ f | .mul _ f => printOverflowFlags f
   | .udiv _ ⟨true⟩ | .sdiv _ ⟨true⟩ | .lshr _ ⟨true⟩ => "<{isExact}> "
   | .icmp ty _ => s!"{ty}"
   |_ => ""
@@ -412,9 +409,9 @@ instance : ToString (MTy φ) where
   toString t := repr t |>.pretty
 instance : ToString LLVM.Ty := by unfold LLVM; infer_instance
 
-instance : DialectPrint (LLVM) where
+instance : ToPrint (LLVM) where
   printOpName
-  | op => "llvm."++toString op
+  | op => "llvm." ++ toString op
   printTy := toString
   printAttributes := attributesToPrint
   printDialect:= "llvm"

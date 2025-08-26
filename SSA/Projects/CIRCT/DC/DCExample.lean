@@ -1,11 +1,8 @@
+import SSA.Core
+
 import SSA.Projects.CIRCT.DC.DC
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.Tactic
-import SSA.Core.ErasedContext
-import SSA.Core.HVector
-import SSA.Core.EffectKind
-import SSA.Core.Util
 
 namespace CIRCTStream
 
@@ -51,7 +48,7 @@ def BranchEg := [DC_com| {
 #print axioms BranchEg
 
 def ofList (vals : List (Option α)) : Stream α :=
-  fun i => (vals.get? i).join
+  fun i => (vals[i]?).join
 
 def c : DCOp.ValueStream (BitVec 1) := ofList [some 1, none, some 0, some 1, some 0]
 def x : DCOp.ValueStream (BitVec 8) := ofList [some 1, none, some 2, some 3, none]

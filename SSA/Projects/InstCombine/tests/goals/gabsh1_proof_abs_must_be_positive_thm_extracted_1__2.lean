@@ -1,4 +1,6 @@
- -- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
+
+/-
+-- auto-generated from 'SSA/Projects/InstCombine/scripts/extract-goals.py'
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
@@ -9,6 +11,7 @@ set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
 set_option Elab.async false
+-/
 
 theorem abs_must_be_positive_thm.extracted_1._2 : ∀ (x : BitVec 32),
   ¬ofBool (0#32 ≤ₛ x) = 1#1 → ¬(True ∧ (0#32).ssubOverflow x = true) → ofBool (0#32 ≤ₛ 0#32 - x) = 1#1 :=

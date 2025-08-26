@@ -18,5 +18,5 @@ theorem PR51351_thm (e : IntW 64) (e_1 : IntW 32) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
