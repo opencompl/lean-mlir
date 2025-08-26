@@ -206,7 +206,7 @@ def MatchVarResult := { mapOut : Mapping _ _ //
   ∃ (mapIn' mapOut' : Mapping _ _),
     mapIn.entries ⊆ mapIn'.entries
     ∧ mapOut'.entries ⊆ mapOut.entries
-    ∧  matchVar lets v matchLets w mapIn' = some ((), mapOut') }
+    ∧ matchVar lets v matchLets w mapIn' = some ((), mapOut') }
 
 variable (lets matchLets) {tys} (vs ws : HVector _ tys) (mapIn : Mapping _ _) in
 def MatchArgResult := { mapOut : Mapping _ _ //
