@@ -274,18 +274,6 @@ end Left
 /-! ### var_appendInr lemmas -/
 variable {w : Var ⟨te⟩ _} {mapIn}
 
--- def elimNil {v : Γ_in.Var t} {w} {α : Sort u} :
---     MatchVarResult (Lets.nil (Γ_in:=Γ_in) (eff:=eff)) v matchLets w mapIn
---     → α
---   | ⟨_, h⟩ => False.elim <| by
---       simp [matchVar] at h
---       sorry
--- def eqvVarRight  :
---     MatchVarResult lets v (.var matchLets matchExpr) w.appendInr ma
---     ≃ MatchVarResult lets v matchLets w ma where
---   toFun := fun ⟨x, h⟩ => ⟨x, by simp_all⟩
---   invFun := fun ⟨x, h⟩ => ⟨x, by simp_all⟩
-
 theorem getPureExpr_eq_some
     (mapOut : MatchVarResult lets v (.var matchLets matchExpr) w.appendInr mapIn) :
     ∃ args, lets.getPureExpr v = some ⟨te, w, ⟨
