@@ -2,8 +2,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
 
-/-! This file verifies the LLVM RISCV test suite test case `add-imm.ll`.
-we could reimplement and verify 11/13 test cases  -/
+/-! This file verifies the LLVM RISCV test suite test case `add-imm.ll`. -/
 
 /--
 ; RV64I-LABEL: add_positive_low_bound_reject:

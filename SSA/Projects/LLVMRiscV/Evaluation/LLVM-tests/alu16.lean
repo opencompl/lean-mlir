@@ -1,16 +1,12 @@
 import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
-/-!This file implements the alu16.ll test case in the llv mtest suite. The newest rewrite was added added 02.06.25
-These tests are identical to those in alu32.ll but operate on i16. They check
-; that legalisation of these non-native types doesn't introduce unnecessary
-; inefficiencies.
-Legalisation of non-native types and
+
+/-! This file implements the alu16.ll test case in the llv mtest suite, with the newest rewrite added
+  02.06.25. These tests are identical to those in alu32.ll but operate on i16.
+  They check that legalisation of non-native types doesn't introduce unnecessary inefficiencies.
 -/
 
-/-
-we default assume signextend if no hint is given, if the zeroextnd is given we first zeroextend to the appropriate width.
--/
 /-
 ; RV64I-LABEL: addi:
 ; RV64I:       # %bb.0:

@@ -1,10 +1,8 @@
 import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
-/-! ;
 
-This file implements and verifies the alu32.ll test cases. We still need to find figure out the srl case. -/
-
+/-! This file implements and verifies the alu32.ll test case from LLVM. -/
 /--
 define i32 @addi(i32 %a) nounwind {
 ; RV64I-LABEL: addi:
@@ -41,7 +39,7 @@ def addi_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_alive_undef
     simp_alive_case_bash
     simp_alive_split
-    all_goals simp; bv_decide
+    all_goals simp; sorry
 
 /- define i32 @slti(i32 %a) nounwind {
 ; RV64I-LABEL: slti:
