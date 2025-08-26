@@ -12,6 +12,7 @@ import threading
 from functools import partial
 from pathlib import Path
 import sys
+from runwithlimits import *
 
 # Common Bit-vector widths for certain benchmarks
 bv_widths = [4, 8, 16, 32, 64]
@@ -46,68 +47,6 @@ SOLVER_COMMANDS = {
 }
 
 TIMEOUT = 1800  # seconds
-
-
-def kill_process_tree(pid):
-    try:
-        parent = psutil.Process(pid)
-        for child in parent.children(recursive=True):
-            child.kill()
-        parent.kill()
-    except psutil.NoSuchProcess:
-        pass
-
-
-def monitor_memory(pid, memout_mb, flag):
-    try:
-        proc = psutil.Process(pid)
-        while not flag["done"]:
-            mem = proc.memory_info().rss
-            for child in proc.children(recursive=True):
-                try:
-                    mem += child.memory_info().rss
-                except psutil.NoSuchProcess:
-                    continue
-            if mem > memout_mb * 1024 * 1024:
-                flag["memout"] = True
-                kill_process_tree(pid)
-                return
-            time.sleep(5)
-    except psutil.NoSuchProcess:
-        pass
-
-
-def run_with_limits(cmd, timeout, memout_mb):
-    try:
-        proc = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            preexec_fn=os.setsid,
-        )
-        flag = {"done": False, "memout": False}
-        monitor_thread = threading.Thread(
-            target=monitor_memory, args=(proc.pid, memout_mb, flag)
-        )
-        monitor_thread.start()
-
-        try:
-            stdout, stderr = proc.communicate(timeout=timeout)
-            flag["done"] = True
-            monitor_thread.join()
-            if flag["memout"]:
-                return "MEMOUT", stdout, stderr
-            return proc.returncode, stdout, stderr
-        except subprocess.TimeoutExpired:
-            flag["done"] = True
-            kill_process_tree(proc.pid)
-            stdout, stderr = proc.communicate()
-            monitor_thread.join()
-            return "TIMEOUT", stdout, stderr
-    except Exception as e:
-        return "ERROR", "", str(e)
-
 
 def save_output(solver, benchmark_path, stdout, stderr, out_dir):
     try:
@@ -261,7 +200,7 @@ def compare(
                 original_file_base = os.path.splitext(original_file_name)[0]
 
                 for width in bv_widths:
-                    
+
 
                     for r in range(reps):
                         # Apply both replacements: 'sorry' to 'bv_compare'' and 'WIDTH' to actual width

@@ -59,7 +59,7 @@ lemma run_map (x : EffectM α) :
 section Refinement
 variable {α β} [HRefinement α β]
 
-instance  : HRefinement (EffectM α) (EffectM β) :=
+instance : HRefinement (EffectM α) (EffectM β) :=
   inferInstanceAs <| HRefinement (StateT _ PoisonOr _) (StateT _ PoisonOr _)
 
 @[simp, simp_denote]
