@@ -979,9 +979,9 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
     (v : Var Γ_out ty₂):
     getPureExpr (lets.var e) (v.toSnoc)
     = (Expr.changeVars <| Ctxt.Hom.id.snocRight) <$> (getPureExpr lets v) := by
-  simp only [getPureExpr, Ctxt.dropUntil_toSnoc, Ctxt.dropUntilHom_toSnoc,
+  simp only [getPureExpr, Ctxt.dropUntilHom_toSnoc,
     getPureExprAux_var_toSnoc, Option.map_eq_map, Option.map_map, Function.comp_def,
-    Expr.changeVars_changeVars];
+    Expr.changeVars_changeVars]
   rfl
 
 /-!
