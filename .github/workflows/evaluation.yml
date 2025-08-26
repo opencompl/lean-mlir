@@ -16,9 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
+    steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
-    steps:
       - name: Install elan 🕑
         run: |
           set -o pipefail
