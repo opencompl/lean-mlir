@@ -10,5 +10,5 @@
     %10 = "llvm.icmp"(%arg5, %arg6) <{predicate = 5 : i64}> : (i64, i64) -> i1
     %11 = "llvm.icmp"(%arg5, %arg6) <{predicate = 2 : i64}> : (i64, i64) -> i1
     %12 = "llvm.icmp"(%arg5, %arg6) <{predicate = 3 : i64}> : (i64, i64) -> i1
-    "llvm.return"(%4) : (i1) -> ()
+    "llvm.return"(%3) : (i1) -> ()
 }
