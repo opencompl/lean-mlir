@@ -9,19 +9,14 @@ namespace LLVMRiscV
 
 
 /-!
-# Hybrid dialect
+  # Hybrid dialect
 
-This file contains a hybrid dialect combining
-SSA.Projects.RISCV64 and SSA.Projects.InstCombine.
-Modelling two dialects within a larger hybrid dialect allows us
-to reuse existing infrastructure such as the Peephole Rewriter which
-currently only operates within one dialect.
+  This file contains a hybrid dialect combining `SSA.Projects.RISCV64` and `SSA.Projects.InstCombine`.
+  Modeling two dialects within a larger hybrid dialect allows to define rewrite patterns that
+  operate on both dialects, such as the ones the instruction selection pipeline relies on.
 
-To make the intermixing of the type system across the dialects work,
-we insert unrealized_conversion_cast like MLIR does during lowering.
-see: section (UnrealizedConversionCastOp)
-https://mlir.llvm.org/docs/Dialects/Builtin/#builtinunrealized_conversion_cast-unrealizedconversioncastop
- -/
+  Like MLIR, we insert `unrealized_conversion_cast` operations to enable using different types.
+-/
 
 inductive Ty where
   | llvm : LLVM.Ty -> Ty
@@ -36,17 +31,14 @@ inductive Op where
   deriving DecidableEq, Repr, Lean.ToExpr
 
 /-- Semantics of an unrealized conversion cast from RISC-V 64 to LLVM.
-We wrap `BitVec 64`in `Option (BitVec 64)` -/
+  We wrap `BitVec 64`in `PoisonOr (BitVec w)`, whose semantics are `Option (BitVec 64)`. -/
 @[simp_riscv]
 def castriscvToLLVM (toCast : BitVec 64) : PoisonOr (BitVec w) :=
   .value (BitVec.signExtend w toCast)
 
-/--
-Semantics of an unrealized conversion cast from LLVM to RISC-V.
-This cast attempts to lower an `(Option (BitVec 64))` to a concrete `(BitVec 64)`.
-If the value is `some`, we extract the underlying `BitVec`.
-If it is `none` (e.g., an LLVM poison value), we default to the zero `BitVec`.
--/
+/-- Semantics of an unrealized conversion cast from LLVM to RISC-V 64.
+  If the casted `(PoisonOr (BitVec 64))` is `some` we lower it to `(BitVec 64)`,
+  otherwise (e.g., LLVM poison value)) we lower to `BitVec 0#w`. -/
 @[simp_riscv]
 def castLLVMToriscv (toCast : PoisonOr (BitVec w)) : BitVec 64 :=
   BitVec.signExtend 64 (toCast.toOption.getD 0#w)
@@ -56,6 +48,7 @@ abbrev LLVMPlusRiscV : Dialect where
   Op := Op
   Ty := Ty
 
+@[simp]
 instance : TyDenote LLVMPlusRiscV.Ty where
   toType := fun
     | .llvm llvmTy => TyDenote.toType llvmTy
@@ -77,6 +70,26 @@ instance : ToString LLVMPlusRiscV.Op  where
   | .riscv riscv  => toString riscv
   | .castLLVM _ => "builtin.unrealized_conversion_cast"
   | .castRiscv _  => "builtin.unrealized_conversion_cast"
+
+instance LLVMAndRiscvPrint : ToPrint (LLVMPlusRiscV) where
+  printOpName
+    |.llvm llvmOp => ToPrint.printOpName llvmOp
+    |.riscv riscvOp => ToPrint.printOpName riscvOp
+    |_ => "builtin.unrealized_conversion_cast"
+  printTy
+    | .llvm llvmTy => ToPrint.printTy llvmTy
+    | .riscv riscvTy => ToPrint.printTy riscvTy
+  printAttributes
+    |.llvm llvmOp => ToPrint.printAttributes llvmOp
+    |.riscv riscvOp => ToPrint.printAttributes riscvOp
+    |_ => ""
+  printDialect := "riscv"
+  printReturn ty := match ty with
+    | .llvm llvmTy => ToPrint.printReturn llvmTy
+    | .riscv riscvTy =>  ToPrint.printReturn riscvTy
+  printFunc ty := match ty with
+    | .llvm llvmTy => ToPrint.printFunc llvmTy
+    | .riscv riscvTy => ToPrint.printFunc riscvTy
 
 instance : ToString LLVMPlusRiscV.Ty where
   toString := fun
@@ -104,7 +117,7 @@ instance : DialectDenote (LLVMPlusRiscV) where
       DialectDenote.denote riscvOp (riscvArgsFromHybrid args) .nil
   | .castRiscv _ , elemToCast, _ =>
     let toCast : BitVec 64 :=
-      elemToCast.getN 0 (by simp [DialectSignature.sig, signature]) -- adapting to the newly introduced PoisonOr wrapper.
+      elemToCast.getN 0 (by simp [DialectSignature.sig, signature])
     castriscvToLLVM toCast
   | .castLLVM _,
     (elemToCast : HVector TyDenote.toType [Ty.llvm (.bitvec _)]), _ =>
@@ -117,7 +130,7 @@ def ctxtTransformToLLVM  (Γ : Ctxt LLVMPlusRiscV.Ty) :=
   Ctxt.map  (fun ty  =>
     match ty with
     | .llvm someLLVMTy => someLLVMTy
-    | .riscv _  => .bitvec 999 -- To identify non llvm type values.
+    | .riscv _  => .bitvec 999
   ) Γ
 
 @[simp_denote]
