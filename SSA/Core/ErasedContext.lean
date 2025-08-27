@@ -1103,7 +1103,7 @@ variable {Γ} {v}
 @[simp] theorem dropUntil_appendInr {v : Var ⟨ts⟩ t} :
     (Γ ++ ts).dropUntil v.appendInr = Γ ++ (ts.drop <| v.1 + 1) := by
   rcases Γ
-  -- TODO: upstream the following as a `List` theorem
+  -- TODO: upstream the following as a `List` lemma
   suffices ∀ {xs} (i : Nat) (hi : i ≤ xs.length) (ys : List Ty),
     List.drop i (xs ++ ys) = List.drop i xs ++ ys
   by

@@ -527,7 +527,7 @@ omit [LawfulMonad d.m] in
 Unfold `Expr.denote` in terms of the field projections and `Expr.denoteOp`.
 
 NOTE: this allows the unfolding of `Expr.denote` applied to arbitrary expressions,
-whereas the built-in unfold theorem only applies when the argument is an application of
+whereas the built-in unfold lemma only applies when the argument is an application of
 `Expr.mk`.
 
 Unfortunately, if we define `Expr.denote` in terms of the projections directly,
@@ -552,15 +552,15 @@ theorem Expr.denote_unfold (e : Expr d Γ eff ty) :
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
-Recall that `simp` lazily generates equation theorems.
-Moreover, recall that `simp only` **does not** generate equation theorems.
-*but* if equation theorems are present, then `simp only` *uses* the equation theorems.
+Recall that `simp` lazily generates equation lemmas.
+Moreover, recall that `simp only` **does not** generate equation lemmas.
+*but* if equation lemmas are present, then `simp only` *uses* the equation lemmas.
 
-Hence, we build the equation theorems by invoking the correct Lean meta magic,
+Hence, we build the equation lemmas by invoking the correct Lean meta magic,
 so that `simp only` (which we use in `simp_peephole`) can find them!
 
 This allows `simp only [HVector.denote]` to correctly simplify `HVector.denote`
-args, since there now are equation theorems for it.
+args, since there now are equation lemmas for it.
 -/
 /--
 info: some #[`HVector.denote.eq_1, `HVector.denote.eq_2]
@@ -600,7 +600,7 @@ the congruence, you can do: `rw [← Lets.denotePure]; congr`
     Com d Γ .pure ty → Γ.Valuation → (HVector toType ty) :=
   Com.denote
 
-/-! ### simp-theorems about `denote` functions -/
+/-! ### simp-lemmas about `denote` functions -/
 section Lemmas
 
 @[simp] theorem Expr.comap_denote_snocRight (e : Expr d Γ .pure ty) (V : Γ.Valuation) :
@@ -661,7 +661,7 @@ def Com.changeVars : Com d Γ eff ty →
   |  .var e body => fun varsMap => .var (e.changeVars varsMap)
       (body.changeVars (fun _ v => varsMap.append v))
 
-/-! simp-theorems about `changeVars`-/
+/-! simp-lemmas about `changeVars`-/
 section Lemmas
 variable {Γ Γ' : Ctxt d.Ty} {t} (f : Γ.Hom Γ') (e : Expr d Γ eff t) (V : Γ'.Valuation)
 
@@ -696,7 +696,7 @@ end Lemmas
     = fun (map : Γ.Hom Δ) => Com.var (e.changeVars map) (body.changeVars map.append) := by
   simp [changeVars]
 
--- TODO: this is implied by simpler simp-theorems, do we need it?
+-- TODO: this is implied by simpler simp-lemmas, do we need it?
 @[simp] theorem Com.outContext_changeVars_rets (varsMap : Γ.Hom Γ') (_ : Com d Γ eff ty) :
   ((Com.rets (d:=d) (eff := eff) v).changeVars varsMap).outContext = Γ' := by simp
 

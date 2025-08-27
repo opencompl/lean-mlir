@@ -226,7 +226,7 @@ def MatchArgResult.mk {mapOut : Mapping _ _}
   ⟨mapOut, mapIn, mapOut, ⟨by rfl, by rfl, h⟩⟩
 
 /-!
-### Subtype-based theorems
+### Subtype-based lemmas
 -/
 
 @[simp] theorem lookup_matchVar_nil (m : MatchVarResult lets v .nil w ma) :
@@ -245,14 +245,14 @@ theorem ofSubsetEntries {varMap₁ : MatchVarResult lets v matchLets w ma} {varM
   refine ⟨⟨varMap₂, mapIn', map', h₁, ?_, h₃⟩, rfl⟩
   trans; exact h₂; exact h_sub
 
-/-! ### nil theorems -/
+/-! ### nil lemmas -/
 
 variable [TyDenote d.Ty] [∀ (t : d.Ty), Inhabited ⟦t⟧] in
 @[simp] theorem mapValuation_nil (mapOut : MatchVarResult lets v .nil w mapIn) (V) :
     mapOut.val.mapValuation V w = V v := by
   simp [Mapping.mapValuation]
 
-/-! ### var_appendInl theorems -/
+/-! ### var_appendInl lemmas -/
 section Left
 variable {w : Δ_out.Var t}
 
@@ -271,7 +271,7 @@ variable {mapIn} (mapOut : MatchVarResult lets v (.var matchLets matchExpr) w.ap
 @[simp, defeq] theorem entries_eqvVar : (eqvVarLeft mapOut).val.entries = mapOut.val.entries := rfl
 
 end Left
-/-! ### var_appendInr theorems -/
+/-! ### var_appendInr lemmas -/
 variable {w : Var ⟨te⟩ _} {mapIn}
 
 theorem getPureExpr_eq_some

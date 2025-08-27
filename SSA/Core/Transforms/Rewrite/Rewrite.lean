@@ -237,7 +237,7 @@ def multiRewritePeephole (fuel : ℕ)
     (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
   multiRewritePeepholeAt fuel prs 0 target
 
-/-- helper theorem for the proof of `denote_rewritePeephole_go_multi`. It proves that folding
+/-- helper lemma for the proof of `denote_rewritePeephole_go_multi`. It proves that folding
 a list of semantics preserving peephole rewrites over the target program does preserve the semantics
 of the target program. -/
 theorem denote_foldl_rewritePeepholeAt

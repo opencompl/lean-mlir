@@ -102,7 +102,7 @@ def insertPureCom (zip : Zipper d Γ_in eff ty)
     (newCom : Com d zip.Γ_mid .pure newTy) : Zipper d Γ_in eff ty :=
   zip.insertCom vs (newCom.castPureToEff eff)
 
-/-! simp-theorems -/
+/-! simp-lemmas -/
 section Lemmas
 variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m]
 

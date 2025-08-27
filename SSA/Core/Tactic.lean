@@ -70,15 +70,15 @@ We've observed `simp [HVector.denote]` not working in such situations.
 According to Zulip (https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/simp.20.5BX.5D.20fails.2C.20rw.20.5BX.5D.20works/near/358861409):
 > simp [(X)] is a standard trick to fix simp [X] not working
 
-By default, it seems that `simp` will synthesize typeclass arguments of a theorem, and then
-use the *default* instance to determine whether a simp-theorem applies to the current goal.
+By default, it seems that `simp` will synthesize typeclass arguments of a lemma, and then
+use the *default* instance to determine whether a simp-lemma applies to the current goal.
 Writing `simp [(X)]`, on the other hand, is equivalent to writing `simp [@X _ _ _]`
   (for as many underscores as `X` takes arguments, implicit or explicit).
 The parentheses seems to enable `simp` to unify typeclass arguments as well, and thus the
-  simp-theorem applies even for non-standard instances.
+  simp-lemma applies even for non-standard instances.
 
 We've replicated this effect by defining `HVector.denote_{nil,cons}'`, as analogues
-to their non-primed theorems, which instead take all instances as regular implicit
+to their non-primed lemmas, which instead take all instances as regular implicit
 arguments, thus guiding `simp` to unify against non-standard instances.
 -/
 section

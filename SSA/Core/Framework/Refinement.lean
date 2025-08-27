@@ -206,7 +206,7 @@ open Lean Meta in
 `reduceIsRefinedBy` simplifies certain `HRefinement` instances.
 
 We tend to have a lot of types which are def-eq, but not *reducibly* def-eq,
-to others. Yet, we often want to write simp-theorems just about the underlying
+to others. Yet, we often want to write simp-lemmas just about the underlying
 types and not have to duplicate those.
 
 In particular, this holds for the denotation of dialect types (i.e., `⟦t⟧` for
@@ -217,7 +217,7 @@ terms of `inferInstance(As)` and mark the instance as `@[simp_denote]`.
 Note that the instances are not problematic, per se, as instances are *not* part
 of the discrtree matching that `simp` uses [1], however, the *types* that are
 passed to `HRefinement.IsRefinedBy` *are* part of the discrtree (unless
-explictly marked `no_index` by a particular simp-theorem). While unfolding the
+explictly marked `no_index` by a particular simp-lemma). While unfolding the
 instances, `reduceIsRefinedBy` will also unfold the *types* into the canonical
 spelling for the unfolded type.
 
