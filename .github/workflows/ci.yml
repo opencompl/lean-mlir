@@ -13,7 +13,7 @@ permissions:
 jobs:
   docker:
     name: Build Docker image for core library
-    runs-on: namespace-profile-default
+    runs-on: 16-core-runner 
     steps:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
