@@ -58,8 +58,10 @@ jobs:
             .lake/build
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
-      - name: Enable elan 🕑
+      - name: Install elan 🕑
         run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
       - name: Build
@@ -97,9 +99,20 @@ jobs:
             .lake/build
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
+      - name: List Directories
+        run: |
+          ls -la
+
       - name: Enable elan 🕑
         run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Install elan 🕑
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
 
       - name: Build
         continue-on-error: true
