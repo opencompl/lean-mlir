@@ -1,30 +1,25 @@
-ARG NIXOS_VERSION="25.05"
-ARG SYSTEM="x86_64-linux"
-FROM nixpkgs/nix:nixos-$NIXOS_VERSION-$SYSTEM
+FROM ubuntu:25.04
 
-# Enable flakes and set up nix configuration
-RUN mkdir -p /etc/nix && \
-    echo "experimental-features = nix-command flakes" >> /etc/nix/nix.conf
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+  apt-get update && \
+  apt-get install -yqq --no-install-recommends \
+    ca-certificates curl \
+    git
 
-# Add the nix profile to path
-ENV PATH="${PATH}:/root/.nix-profile/bin"
+# Ensure CA certificates are up-to-date
+RUN update-ca-certificates -f
 
-# Install busybox, for `adduser`
-RUN nix profile install "nixpkgs#busybox"
+# Install elan and update environment
+RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+ENV PATH=/root/.elan/bin:$PATH
 
-# Install the development environment package
-# To add another package to be installed in the Dockerfile,
-# please modify the `flake.nix` file.
-RUN mkdir -p /code/lean-mlir
-WORKDIR /code/lean-mlir
-
-COPY flake.nix flake.lock ./
-RUN nix profile install ".#"
-
+#
 # Install Lean.
+#
 # We copy only the minimal number of files needed,
 # so that Docker does not invalidate the cached 
 # image layer every time the code changes.
+WORKDIR /code/lean-mlir
 COPY lean-toolchain ./
 RUN lake --version 
 # ^^ Force lake to install the specified version
