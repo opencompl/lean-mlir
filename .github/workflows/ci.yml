@@ -36,17 +36,6 @@ jobs:
           path: .lake
           key: ${{ runner.os }}-lake-${{ hashFiles('lake-manifest.json') }}-4
 
-      # Workaround for properly sharing cache-mounts in GHA found at:
-      #   https://docs.docker.com/build/ci/github-actions/cache/#cache-mounts
-      - name: Inject `.lake` cache
-        uses: reproducible-containers/buildkit-cache-dance@v3.3.0
-        with:
-          builder: ${{ steps.setup-buildx.outputs.name }}
-          cache-map: |
-            { ".lake": "/root/.cache/LeanMLIR" }
-          dockerfile: Dockerfile
-          skip-extraction: ${{ steps.cache-lake.outputs.cache-hit }}
-
       - name: Build and push
         uses: docker/build-push-action@v6
         with:

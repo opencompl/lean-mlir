@@ -36,10 +36,9 @@ COPY . ./
 RUN --mount=type=cache,target=/root/.cache/mathlib \
     --mount=type=cache,target=/root/.cache/LeanMLIR,sharing=private \
   # \
-  # Setup cache \
+  # Symlink cache into place \
   # \
-  ln -s /root/.cache/LeanMLIR .lake && \
-  chmod +x .lake/bin/cache \
+  ln -s /root/.cache/LeanMLIR/ .lake && \
   # \
   # Actual Build \
   # \
@@ -50,10 +49,9 @@ RUN --mount=type=cache,target=/root/.cache/mathlib \
   rm .lake && \
   cp -Ra /root/.cache/LeanMLIR .lake
 
-
 # The previous RUN uses cache-mounts to speed up 
 # builds. Note, however, that the paths which were
-# cache-mounted do *not* get saved in the Docker image.
+# mounted do *not* get saved in the Docker image.
 #
 # For our use-case, we want to cache the .lake folder,
 # since our dependencies and the incremental build outputs
@@ -61,18 +59,18 @@ RUN --mount=type=cache,target=/root/.cache/mathlib \
 # the build outputs (which are stored in .lake) to be 
 # persisted in the image!
 #
-# Thus, to work around this behaviour, we cache-mount a
-# different path (under `/root/.cache`), and symlink
-# `.lake` to this cache-mounted path. 
-# Then, we run the build as usual; this will both use
-# the cached outputs of previous builds and ensures
-# the outputs of the current build are made cached.
-# Finally, we remove the symlink, and *copy* all files,
-# which copies the file from the cached directory into
-# the actual Docker image.
+# Thus, to work around this behaviour, we:
+# - Mount a different path (under `/root/.cache`), and symlink
+#     `.lake` to this cache-mounted path. 
+# - Run the build as usual; this will both use
+#     the cached outputs of previous builds and ensures
+#     the outputs of the current build are made cached.
+# - Finally, we remove the symlink, and *copy* all files,
+#     which copies the file from the cached directory into
+#     the actual Docker image.
 #
 # Because we have this cache setup, we don't have to worry
 # about installing dependencies in a separate layer.
 # Instead, we cache our dependencies the same way 
-# we cache of our incremental build artifacts.
+# we cache our incremental build artifacts.
 
