@@ -37,9 +37,11 @@ rule hdel_compare_make_lean:
      gitroot / "bv-evaluation/results/HackersDelight/{file}_{width}_{hdel_nreps}.lean"
   log:
       "logs/compare_make_lean_{file}_{width}_{hdel_nreps}.log"
+  params:
+      sed=sed,
   shell:
     "cp {input} {output} && "
-    "{sed} -i  -e \"s/all_goals sorry/all_goals bv_compare'/g\" -e \"s/WIDTH/{wildcards.width}/g\" {output} "
+    "{params.sed} -i  -e \"s/all_goals sorry/all_goals bv_compare'/g\" -e \"s/WIDTH/{wildcards.width}/g\" {output} "
 
 
 rule hdel_compare_make_output:
@@ -55,10 +57,11 @@ rule hdel_compare_make_output:
       "logs/hdel_compare_make_output_{file}_{width}_{r}.log"
   resources:
   # TODO: actually impose memory and time limit, using a python script.
-  # shell:
-  #     "lake 2>&1 lean {input[1]} -XXX  | tee {output} | tee {log}"
   shell:
-    "{gitroot}/bv-evaluation/runwithlimits.py --timeout-sec={params.timeout} --memout-mb={params.memout} -- lake 2>&1 lean {input}  | tee {log} > {output}"
+    "{params.gitroot}/bv-evaluation/runwithlimits.py "
+    " --timeout-sec={params.timeout} "
+    " --memout-mb={params.memout} "
+    " -- lake 2>&1 lean {input}  | tee {log} > {output}"
 
 
 # We can eventually split these, if we carefully understand the naming convention
@@ -72,6 +75,7 @@ rule hdel_collect_and_plot:
       width=config["hdel_bv_widths"],
       r=range(hdel_nreps))
   params:
+    gitroot=gitroot,
     nreps = lambda wc: hdel_nreps,
     nthreads = lambda wc: config["hdel_nthreads"]
   output:
@@ -84,7 +88,7 @@ rule hdel_collect_and_plot:
     log_plot="logs/plot.log"
   threads: 1
   shell:
-    "pushd {gitroot}/bv-evaluation && ./collect.py hackersdelight 2>&1 > {log.log_collect} && "
+    "pushd {params.gitroot}/bv-evaluation && ./collect.py hackersdelight 2>&1 > {log.log_collect} && "
     "./plot.py hackersdelight 2>&1 > {log.log_plot}"
 
 rule all:
