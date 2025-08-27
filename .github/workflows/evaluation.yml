@@ -19,6 +19,7 @@ jobs:
       - name: Cache `.lake` folder
         id: cache-lake
         uses: actions/cache@v4
+        lookup-only: true
         with:
           path: |
             .elan
