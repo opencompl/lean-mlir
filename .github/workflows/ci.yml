@@ -43,7 +43,7 @@ jobs:
         with:
           builder: ${{ steps.setup-buildx.outputs.name }}
           cache-map: |
-            { ".lake": "/root/.cache/LeanMLIR" }              
+            { ".lake": "/root/.cache/LeanMLIR" }
           dockerfile: Dockerfile
           skip-extraction: ${{ steps.cache-lake.outputs.cache-hit }}
 

@@ -39,6 +39,7 @@ RUN --mount=type=cache,target=/root/.cache/mathlib \
   # Setup cache \
   # \
   ln -s /root/.cache/LeanMLIR .lake && \
+  chmod +x .lake/bin/cache \
   # \
   # Actual Build \
   # \
