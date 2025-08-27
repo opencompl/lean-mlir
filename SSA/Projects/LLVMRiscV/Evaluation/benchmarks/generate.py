@@ -122,7 +122,11 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
 
         clean_block = block_content.strip()
 
-        if clean_block and "module {" in clean_block:
+        block_lines = len(clean_block.splitlines())
+        print(clean_block)
+        print("length is: "+str(block_lines))
+
+        if clean_block and "module {" in clean_block and 5 < block_lines:
             original_mlir_filename = os.path.join(
                 output_base, f"function_{function_count}.mlir"
             )
