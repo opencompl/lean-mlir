@@ -25,7 +25,7 @@ jobs:
             ~/.elan
             .lake/packages
             .lake/build
-            Tacbench/.lake
+            TacBench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Install elan 🕑
@@ -59,7 +59,7 @@ jobs:
             ~/.elan
             .lake/packages
             .lake/build
-            Tacbench/.lake
+            TacBench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Install elan 🕑
@@ -99,7 +99,7 @@ jobs:
             ~/.elan
             .lake/packages
             .lake/build
-            Tacbench/.lake
+            TacBench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: List Directories
