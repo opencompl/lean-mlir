@@ -1832,6 +1832,8 @@ theorem Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkInd
 /--
 info: 'ReflectVerif.BvDecide.KInductionCircuits.Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking' depends on axioms: [propext,
  Classical.choice,
+ Lean.ofReduceBool,
+ Lean.trustCompiler,
  Quot.sound]
 -/
 #guard_msgs in #print axioms Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking

@@ -8,6 +8,9 @@ import SSA.Experimental.Bits.SingleWidth.Defs
 import SSA.Experimental.Bits.AutoStructs.Constructions
 import SSA.Experimental.Bits.AutoStructs.Defs
 import SSA.Experimental.Bits.AutoStructs.FiniteStateMachine
+import Mathlib.Tactic.Ring
+import Mathlib.Data.Nat.Size -- TODO: remove and get rid of shiftLeft_eq_mul_pow use
+import Mathlib.Data.BitVec
 
 import Mathlib.Tactic.FinCases
 
@@ -102,7 +105,7 @@ theorem BitVec.append_inj {x1 x2 : BitVec w} {y1 y2 : BitVec w'} :
 
 @[simp]
 lemma BitVec.cons_inj : cons b1 bv1 = cons b2 bv2 ↔ (b1 = b2) ∧ bv1 = bv2 := by
-  simp [cons]
+  simp only [cons, cast_inj, append_inj, ofBool_eq_iff_eq]
 
 @[simp] lemma BitVec.lk30 : (3#2 : BitVec 2)[0] = true := by rfl
 @[simp] lemma BitVec.lk31 : (3#2 : BitVec 2)[1] = true := by rfl
@@ -1139,7 +1142,8 @@ def NFA.autWidth_correct : (autWidth wp n).correct (autWidthSA n) (autWidthLang 
             rw [Fin.val_add_one_of_lt hlt]
           · use ⟨q, hq⟩; simp_all
             omega
-        · simp at h
+        · simp only [Language.mem_setOf_eq, List.length_append, List.length_cons, List.length_nil,
+          zero_add] at h
           use q - 1
           have hneq : (q : Fin (n+2)) - 1 ≠ Fin.last (n + 1) := by
             rintro habs
@@ -1154,9 +1158,10 @@ def NFA.autWidth_correct : (autWidth wp n).correct (autWidthSA n) (autWidthLang 
               simp_all only
               have : q ≥ 1 := by omega
               simpa [Fin.le_def, Nat.mod_eq_of_lt hq]
-          simp [hneq]
+          simp only [hneq, ↓reduceIte, Language.mem_setOf_eq, sub_add_cancel,
+            Set.setOf_eq_eq_singleton, Set.mem_singleton_iff]
           nth_rw 1 [←h]
-          simp
+          simp only [Nat.cast_add, Nat.cast_one, add_sub_cancel_right, Fin.val_natCast]
           constructor
           · exact (Nat.mod_eq_of_lt (by omega)).symm
           · ext; simp; exact (Nat.mod_eq_of_lt (by omega)).symm

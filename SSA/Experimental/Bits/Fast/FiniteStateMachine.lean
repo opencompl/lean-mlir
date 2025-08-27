@@ -712,8 +712,8 @@ lemma eval_scanAnd_eq_decide (x : Unit → BitStream) (n : Nat) : scanAnd.eval x
 
 @[simp] lemma eval_nxor (x : Bool → BitStream) : nxor.eval x = ((x true).nxor (x false)) := by
   ext n; cases n
-  · simp [nxor, eval, nextBit]
-  · simp [nxor, eval, nextBit]
+  · simp [nxor, eval, nextBit]; bv_decide
+  · simp [nxor, eval, nextBit]; bv_decide
 
 def scanOr  : FSM Unit :=
   {
@@ -938,7 +938,7 @@ TODO: rewrite with 'induction' to be a clean proof script.
     simp [borrow, BitStream.borrow, BitStream.subAux, eval, nextBit]
   case succ i ih =>
     rw [eval]
-    simp only [carry_borrow, BitStream.borrow_succ, Bool.not_bne']
+    simp only [carry_borrow, BitStream.borrow_succ]
     rw [← ih]
     simp [nextBit, eval, borrow]
 
