@@ -6,7 +6,7 @@ import Mathlib.Algebra.Group.Nat.Range
 import SSA.Experimental.Bits.AutoStructs.BundledNfa
 import SSA.Experimental.Bits.FinEnum
 
-open Rel
+open SetRel
 
 abbrev State := Nat
 
@@ -46,7 +46,7 @@ A simulation between a concrete NFA and an abstract NFA consists in a relation
 between concrete and abstract states which satisfies some properties, as defined
 in Kozen 1997.
 -/
-structure RawCNFA.Simul (m : RawCNFA A) (M : NFA A Q) (R : Rel State Q) (D : Set Q) (T : Set (Q × A × Q)) where
+structure RawCNFA.Simul (m : RawCNFA A) (M : NFA A Q) (R : SetRel State Q) (D : Set Q) (T : Set (Q × A × Q)) where
   accept {s q} : s ~[R] q → (s ∈ m.finals ↔ q ∈ M.accept)
   initial₁ {s} : s ∈ m.initials → ∃ q ∈ M.start, s ~[R] q
   initial₂ {q} : q ∈ M.start → ∃ s ∈ m.initials, s ~[R] q
@@ -280,12 +280,12 @@ lemma addTrans_tr_eq (m : RawCNFA A) [LawfulBEq A] (a : A) (s₁ s₂ : State) :
 @[grind =, simp]
 lemma addTrans_tr_neq (m : RawCNFA A) [LawfulBEq A] {a : A} {s₁ s₁' s₂ : State} (hneq : s₁ ≠ s₁') :
     (m.addTrans a s₁ s₂).tr s₁' a = m.tr s₁' a := by
-  grind [RawCNFA.addTrans, RawCNFA.tr, Std.HashMap.getD_insert]
+  grind [RawCNFA.addTrans, RawCNFA.tr]
 
 @[grind =] -- TODO: should I?
 lemma addTrans_tr (m : RawCNFA A) [LawfulBEq A] {a b : A} {s₁ s₁' s₂ : State} :
     (m.addTrans a s₁ s₂).tr s₁' b = if s₁ = s₁' ∧ a = b then (m.tr s₁ a).insert s₂ else m.tr s₁' b := by
-  grind [RawCNFA.addTrans, RawCNFA.tr, Std.HashMap.getD_insert]
+  grind [RawCNFA.addTrans, RawCNFA.tr]
 
 @[grind, simp]
 lemma mem_addTrans_tr (m : RawCNFA A) [LawfulBEq A] (a : A) (s1 s2 : State) :

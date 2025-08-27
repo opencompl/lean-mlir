@@ -601,7 +601,7 @@ def assignVars [DecidableEq α] :
 theorem _root_.List.length_le_of_subset_of_nodup {l₁ l₂ : List α}
     (hs : l₁ ⊆ l₂) (hnd : l₁.Nodup) : l₁.length ≤ l₂.length := by
   classical
-  refine le_trans ?_ (List.Sublist.length_le (List.dedup_sublist l₂))
+  refine _root_.le_trans ?_ (List.Sublist.length_le (List.dedup_sublist l₂))
   rw [← List.dedup_eq_self.2 hnd]
   rw [← List.card_toFinset, ← List.card_toFinset]
   refine Finset.card_le_card ?_A
