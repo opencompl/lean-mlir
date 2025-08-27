@@ -94,7 +94,6 @@ syntax "sgtz" : MLIR.Pretty.uniform_op
 private def test_simple := [RV64_com| {
   ^bb0(%e1 : !i64, %e2 : !i64 ):
   %1 = add %e1, %e2 : !i64
-  %2 = "sltu" (%1, %e2) : (!i64 ,!i64) -> !i64
        ret %1 : !i64
 }]
 private def test_simple2 := [RV64_com| {
