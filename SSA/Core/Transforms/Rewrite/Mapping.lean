@@ -94,7 +94,7 @@ def mapValuation (m : Mapping Γ Δ) (V : Δ.Valuation) : Γ.Valuation :=
 section Lemmas
 variable {m : Mapping Γ Δ} {V : Δ.Valuation}
 
-lemma toHom_eq_mapValuation (h : m.IsTotal) :
+theorem toHom_eq_mapValuation (h : m.IsTotal) :
     V.comap (m.toHom h) = m.mapValuation V := by
   funext t v
   obtain ⟨_, h_lookup⟩ := Option.isSome_iff_exists.mp <| AList.lookup_isSome.2 (h v)
