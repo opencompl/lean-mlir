@@ -47,6 +47,9 @@ jobs:
     name: Check extracted goals
     runs-on: ubuntu-latest
     needs: eval-build
+    strategy:
+      matrix:
+        subset: [0, 1, 2, 3, 4]
     permissions:
       pull-requests: write
     steps:
@@ -80,7 +83,7 @@ jobs:
       - name: Ensure InstCombine goals are up-to-date
         continue-on-error: true
         run: |
-          bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh
+          bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh 5 ${{matrix.subset}}
 
   evaluation-LLVM:
     name: Evaluate LLVM
