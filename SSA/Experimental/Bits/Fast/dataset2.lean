@@ -2,7 +2,7 @@ import Std.Tactic.BVDecide
 import SSA.Experimental.Bits.KInduction
 import SSA.Experimental.Bits.Fast.MBA
 import SSA.Experimental.Bits.AutoStructs.Tactic
-import SSA.Core.Tactic.TacBench
+import TacBench
 
 set_option maxHeartbeats 0
 

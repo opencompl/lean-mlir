@@ -26,7 +26,7 @@ ROOT_DIR_PATH = (
 
 TIMEOUT_SEC = 1800
 
-LLVM_BUILD_DIR_PATH = "/opt/homebrew/opt/llvm/bin/"
+LLVM_BUILD_DIR_PATH = "~/llvm-project/build/bin/"
 
 #here
 LLC_GLOBALISEL_ASM_DIR_PATH = (
@@ -67,9 +67,9 @@ LLC_GLOBALISEL_ASM_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_GLOBALISEL_ASM/"
 )
 
+
 AUTOGEN_DIR_PATHS = [LLVM_DIR_PATH, LLVMIR_DIR_PATH, MLIR_bb0_DIR_PATH, MLIR_single_DIR_PATH, 
-            LLC_ASM_DIR_PATH, LEANMLIR_ASM_DIR_PATH, XDSL_no_casts_DIR_PATH,XDSL_reg_alloc_DIR_PATH, XDSL_ASM_DIR_PATH,
-              LOGS_DIR_PATH, LLC_GLOBALISEL_ASM_DIR_PATH ]
+            LLC_ASM_DIR_PATH, LEANMLIR_ASM_DIR_PATH, XDSL_no_casts_DIR_PATH,XDSL_reg_alloc_DIR_PATH, XDSL_ASM_DIR_PATH, LOGS_DIR_PATH]
 
 def setup_benchmarking_directories(): 
     """
@@ -187,7 +187,6 @@ def LLC_compile_GLOBALISEL_riscv(input_file, output_file, log_file, pass_dict):
     cmd = cmd_base + input_file + " -o " + output_file
     ret_code = run_command(cmd, log_file)
     pass_dict[output_file] = ret_code
-
 
 def extract_bb0(input_file, output_file, log_file):
     """
@@ -308,7 +307,7 @@ def generate_benchmarks(file_name, num, jobs):
             MLIR_translate_llvmir(input_file, output_file, log_file, MLIR_translate_file2ret)
 
     LLC_file2ret = dict()
-    # Use llc to compile LLVMIR into RISCV
+    # Use llc with selection dag to compile LLVMIR into RISCV
     for filename in os.listdir(LLVMIR_DIR_PATH):
         input_file = os.path.join(LLVMIR_DIR_PATH, filename)
         # only run the lowering if the previous pass was successful: 
@@ -317,9 +316,10 @@ def generate_benchmarks(file_name, num, jobs):
             output_file = os.path.join(LLC_ASM_DIR_PATH, basename + '.s')
             log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_llc.log'), 'w')
             LLC_compile_riscv(input_file, output_file, log_file, LLC_file2ret)
-    
+
+
     LLC_GLOBALISEL_file2ret = dict()
-    # Use llc to compile LLVMIR into RISCV
+    # Use llc with `GlobalISel` to compile LLVMIR into RISCV
     for filename in os.listdir(LLVMIR_DIR_PATH):
         input_file = os.path.join(LLVMIR_DIR_PATH, filename)
         # only run the lowering if the previous pass was successful: 

@@ -21,7 +21,7 @@ namespace MLIR.AST
 
 open Ctxt
 
-instance {d : Dialect} [DialectSignature d] {t : d.Ty} {Γ : Ctxt d.Ty} {Γ' : DerivedCtxt Γ} :
+instance {d : Dialect} [DialectSignature d] {t} {Γ : Ctxt d.Ty} {Γ' : DerivedCtxt Γ} :
     Coe (Expr d Γ eff t) (Expr d Γ'.ctxt eff t) where
   coe e := e.changeVars Γ'.diff.toHom
 
@@ -80,7 +80,7 @@ class TransformReturn (d : Dialect) (φ : outParam Nat) [DialectSignature d] [Tr
 variable {d φ} [DialectSignature d] [DecidableEq d.Ty] [DecidableEq d.Op]
 
 /--
-  Add a new variable to the context, and record it's (absolute) index in the name mapping
+  Add a new variable to the context, and record its (absolute) index in the name mapping
 
   Throws an error if the variable name already exists in the mapping, essentially disallowing
   shadowing
@@ -177,22 +177,22 @@ private def mkComHelper
   | [retStx] => do
       instTransformReturn.mkReturn Γ retStx
   | var::rest => do
-    let ⟨eff₁, ty₁, expr⟩ ← (instTransformExpr.mkExpr Γ var)
-    if h : var.res.length != 1 then
+    let ⟨_eff₁, ty₁, expr⟩ ← (instTransformExpr.mkExpr Γ var)
+    let numExpectedReturns := ty₁.length
+    if var.res.length != numExpectedReturns then
       throw <| .generic
-        (s!"Each let-binding must have exactly one name on the left-hand side." ++
-        s!"Operations with multiple, or no, results are not yet supported.\n\t" ++
-        s!"Expected a list of length one, found `{repr var}`")
+        s!"Expected {numExpectedReturns} return variables, but found {var.res.length}"
     else
-      let _ ← addValToMapping Γ (var.res[0]'(by simp_all only [bne_iff_ne, ne_eq,
-        Decidable.not_not, Nat.lt_succ_self]) |>.fst |> SSAValToString) ty₁
-      let ⟨eff₂, ty₂, body⟩ ← mkComHelper (Γ.snoc ty₁) rest
+      let _ ← (var.res.zip ty₁).foldlM (init:=Γ) fun Γ ⟨var, ty⟩ => do
+        let ⟨Γ', _⟩ ← addValToMapping Γ (SSAValToString var.1) ty
+        return Γ'
+      let ⟨_eff₂, ty₂, body⟩ ← mkComHelper (Γ ++ ty₁) rest
       return ⟨_, ty₂, Com.letSup expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"
 
 def mkCom [TransformTy d φ] [TransformExpr d φ] [TransformReturn d φ]
   (reg : MLIR.AST.Region φ) :
-  ExceptM d (Σ (Γ : Ctxt d.Ty) (eff : EffectKind) (ty : d.Ty), Com d Γ eff ty) :=
+  ExceptM d (Σ (Γ : Ctxt d.Ty) (eff : EffectKind) (ty : _), Com d Γ eff ty) :=
   match reg.ops with
   | [] => throw <| .generic "Ill-formed region (empty)"
   | coms => BuilderM.runWithEmptyMapping <| do

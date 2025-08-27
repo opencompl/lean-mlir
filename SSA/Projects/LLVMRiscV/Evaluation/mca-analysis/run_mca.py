@@ -15,8 +15,7 @@ ROOT_DIR = (
 )
 TIMEOUT = 1800  # seconds
 
-LLVM_BUILD_DIR = "/opt/homebrew/opt/llvm/bin/"
-# "~/llvm-project/build/bin/"
+LLVM_BUILD_DIR = "~/llvm-project/build/bin/"
 
 LLC_GLOBALISEL_ASM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_GLOBALISEL_ASM/"
@@ -33,10 +32,6 @@ MCA_LEANMLIR_DIR = (
 MCA_LLVM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM/"
 )
-MCA_LLVM_GLOBALISEL_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM_GLOBALISEL/"
-)
-
 LOGS_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/logs/"
 
 def create_missing_folders(): 
@@ -44,8 +39,6 @@ def create_missing_folders():
         os.makedirs(MCA_LEANMLIR_DIR)
     if not os.path.exists(MCA_LLVM_DIR):
         os.makedirs(MCA_LLVM_DIR)
-    if not os.path.exists(MCA_LLVM_GLOBALISEL_DIR):
-        os.makedirs(MCA_LLVM_GLOBALISEL_DIR)  
     if not os.path.exists(LOGS_DIR):
         os.makedirs(LOGS_DIR)
 

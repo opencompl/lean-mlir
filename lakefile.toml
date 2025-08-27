@@ -5,6 +5,11 @@ moreLeanArgs = ["--tstack=400000"]
 moreServerArgs = ["--tstack=400000"]
 
 [[require]]
+name = "TacBench"
+path = "TacBench"
+rev = "main"
+
+[[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
 rev = "nightly-testing-2025-08-11"
@@ -62,3 +67,7 @@ root = "SSA.Tests.Tests"
 [[lean_lib]]
 name = "core"
 roots = ["SSA.Core"]
+
+[[lean_lib]]
+name = "CIRCT"
+roots = ["SSA.Projects.CIRCT.CIRCT"]

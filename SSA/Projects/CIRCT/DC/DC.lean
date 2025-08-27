@@ -191,25 +191,25 @@ toType := fun
 
 
 def_denote for DC where
-  | .fst => fun s => s.fst
-  | .fstVal _ => fun s => s.fst
-  | .fstVal' _ => fun s => s.fst.mapOpt (·[0]?)
-  | .snd => fun s => s.snd
-  | .pair _ => fun s₁ s₂ => (s₁, s₂)
-  | .sndVal _ => fun s => s.snd
-  | .sndVal' _ => fun s => s.fst.mapOpt (·[0]?)
-  | .tokVal' _ => fun s => s.snd
-  | .merge => fun s₁ s₂ => CIRCTStream.DCOp.merge s₁ s₂
-  | .branch => fun s => CIRCTStream.DCOp.branch s
-  | .fork => fun s => CIRCTStream.DCOp.fork s
-  | .join => fun s₁ s₂ => CIRCTStream.DCOp.join s₁ s₂
-  | .select => fun s₁ s₂ c => CIRCTStream.DCOp.select s₁ s₂ c
-  | .sink => fun s => CIRCTStream.DCOp.sink s
-  | .source => fun s => CIRCTStream.DCOp.source s
-  | .pack _ => fun s₁ s₂ => CIRCTStream.DCOp.pack s₁ s₂
-  | .pack2 _ => fun s₁ => CIRCTStream.DCOp.pack2 s₁
-  | .unpack _ => fun s => CIRCTStream.DCOp.unpack s
-  | .unpack2 _ => fun s => CIRCTStream.DCOp.unpack2 s
+  | .fst => fun s => [s.fst]ₕ
+  | .fstVal _ => fun s => [s.fst]ₕ
+  | .fstVal' _ => fun s => [s.fst.mapOpt (·[0]?)]ₕ
+  | .snd => fun s => [s.snd]ₕ
+  | .pair _ => fun s₁ s₂ => [(s₁, s₂)]ₕ
+  | .sndVal _ => fun s => [s.snd]ₕ
+  | .sndVal' _ => fun s => [s.fst.mapOpt (·[0]?)]ₕ
+  | .tokVal' _ => fun s => [s.snd]ₕ
+  | .merge => fun s₁ s₂ => [CIRCTStream.DCOp.merge s₁ s₂]ₕ
+  | .branch => fun s => [CIRCTStream.DCOp.branch s]ₕ
+  | .fork => fun s => [CIRCTStream.DCOp.fork s]ₕ
+  | .join => fun s₁ s₂ => [CIRCTStream.DCOp.join s₁ s₂]ₕ
+  | .select => fun s₁ s₂ c => [CIRCTStream.DCOp.select s₁ s₂ c]ₕ
+  | .sink => fun s => [CIRCTStream.DCOp.sink s]ₕ
+  | .source => [CIRCTStream.DCOp.source]ₕ
+  | .pack _ => fun s₁ s₂ => [CIRCTStream.DCOp.pack s₁ s₂]ₕ
+  | .pack2 _ => fun s₁ => [CIRCTStream.DCOp.pack2 s₁]ₕ
+  | .unpack _ => fun s => [CIRCTStream.DCOp.unpack s]ₕ
+  | .unpack2 _ => fun s₁ s₂ => [CIRCTStream.DCOp.unpack2 s₁ s₂]ₕ
 
 end Dialect
 
@@ -241,6 +241,9 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DC DC.Ty
 
 instance instTransformTy : MLIR.AST.TransformTy DC 0 where
   mkTy := mkTy
+
+section Compat
+open LeanMLIR.SingleReturnCompat (Expr)
 
 def source : Expr (DC) Γ .pure (.tokenstream) :=
   Expr.mk
@@ -370,6 +373,8 @@ def snd {Γ : Ctxt _} (a : Γ.Var (.tokenstream2)) : Expr (DC) Γ .pure (.tokens
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
+end Compat
+
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (DC) (Σ eff ty, Expr (DC) Γ eff ty) := do
   match opStx.name with
@@ -377,20 +382,20 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     if opStx.args.length > 0 then
       throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
     else
-      return ⟨_, .tokenstream, source⟩
+      return ⟨_, [.tokenstream], source⟩
   | op@"DC.sink" | op@"DC.unpack" | op@"DC.fork" | op@"DC.branch" | op@"DC.fst" | op@"DC.snd" | op@"DC.fstVal" | op@"DC.sndVal" =>
     match opStx.args with
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
-      | .tokenstream2, "DC.fst" => return ⟨_, .tokenstream, fst v₁⟩
-      | .tokenstream2, "DC.snd"  => return ⟨_, .tokenstream, snd v₁⟩
-      | .valuetokenstream r, "DC.fstVal" => return ⟨_, .valuestream r, fstVal v₁⟩
-      | .valuetokenstream _, "DC.sndVal"  => return ⟨_, .tokenstream, sndVal v₁⟩
-      | .tokenstream, "DC.sink" => return ⟨_, .tokenstream, sink v₁⟩
-      | .valuestream r, "DC.unpack"  => return ⟨_, .valuetokenstream r, unpack v₁⟩
-      | .tokenstream, "DC.fork"  => return ⟨_, .tokenstream2, fork v₁⟩
-      | .valuestream 1, "DC.branch"  => return ⟨_, .tokenstream2, branch v₁⟩
+      | .tokenstream2, "DC.fst" => return ⟨_, [.tokenstream], fst v₁⟩
+      | .tokenstream2, "DC.snd"  => return ⟨_, [.tokenstream], snd v₁⟩
+      | .valuetokenstream r, "DC.fstVal" => return ⟨_, [.valuestream r], fstVal v₁⟩
+      | .valuetokenstream _, "DC.sndVal"  => return ⟨_, [.tokenstream], sndVal v₁⟩
+      | .tokenstream, "DC.sink" => return ⟨_, [.tokenstream], sink v₁⟩
+      | .valuestream r, "DC.unpack"  => return ⟨_, [.valuetokenstream r], unpack v₁⟩
+      | .tokenstream, "DC.fork"  => return ⟨_, [.tokenstream2], fork v₁⟩
+      | .valuestream 1, "DC.branch"  => return ⟨_, [.tokenstream2], branch v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"DC.merge" | op@"DC.join" | op@"DC.pack" | op@"DC.pair" =>
@@ -399,13 +404,13 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
-      | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, .valuestream 1, merge v₁ v₂⟩
-      | .tokenstream, .tokenstream, "DC.join"  => return ⟨_, .tokenstream, join v₁ v₂⟩
-      | .valuestream r, .tokenstream, "DC.pack"  => return ⟨_, .valuestream r, pack v₁ v₂⟩
+      | .tokenstream, .tokenstream, "DC.merge" => return ⟨_, [.valuestream 1], merge v₁ v₂⟩
+      | .tokenstream, .tokenstream, "DC.join"  => return ⟨_, [.tokenstream], join v₁ v₂⟩
+      | .valuestream r, .tokenstream, "DC.pack"  => return ⟨_, [.valuestream r], pack v₁ v₂⟩
       | .valuestream r₁, .valuestream r₂, "DC.pair"  =>
         if h : r₁ = r₂ then
           let v₂' : Γ.Var (Ty.valuestream r₁) := Eq.mp (by rw [h]) v₂
-          return ⟨_, .valuestream2 r₁, pair v₁ v₂'⟩
+          return ⟨_, [.valuestream2 r₁], pair v₁ v₂'⟩
         else throw <| .generic s!"type mismatch, expected same width for pair, got {r₁} and {r₂}"
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
@@ -416,7 +421,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
       match ty₁, ty₂, ty₃, op with
-      | .tokenstream, .tokenstream, .valuestream 1, "DC.select" => return ⟨_, .tokenstream, select v₁ v₂ v₃⟩
+      | .tokenstream, .tokenstream, .valuestream 1, "DC.select" => return ⟨_, [.tokenstream], select v₁ v₂ v₃⟩
       | _, _, _, _=> throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
@@ -430,7 +435,7 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (DC)
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
-    return ⟨.pure, ty, Com.ret v⟩
+    return ⟨.pure, [ty], Com.ret v⟩
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 

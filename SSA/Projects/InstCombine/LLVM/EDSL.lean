@@ -148,7 +148,7 @@ def mkReturn (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
   else
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]
-    return ⟨.pure, ty, Com.ret v⟩
+    return ⟨.pure, [ty], Com.ret v⟩
 
 instance : AST.TransformReturn (MetaLLVM φ) φ := { mkReturn }
 instance : AST.TransformReturn LLVM 0 := { mkReturn }
@@ -228,12 +228,12 @@ section Test
 open InstCombine.LLVM.Ty (bitvec)
 
 /-- Assert that the elaborator respects variable ordering correctly -/
-private def variable_order1 : Com LLVM ⟨[bitvec 2, bitvec 1]⟩  .pure (bitvec 1) := [llvm()| {
+private def variable_order1 : Com LLVM ⟨[bitvec 2, bitvec 1]⟩ .pure [bitvec 1] := [llvm()| {
     ^bb0(%arg1: i1, %arg2 : i2):
       "llvm.return"(%arg1) : (i1) -> ()
   }]
 /-- Assert that the elaborator respects variable ordering correctly -/
-private def variable_order2 : Com LLVM ⟨[bitvec 2, bitvec 1]⟩ .pure (bitvec 2) := [llvm()| {
+private def variable_order2 : Com LLVM ⟨[bitvec 2, bitvec 1]⟩ .pure [bitvec 2] := [llvm()| {
     ^bb0(%arg1: i1, %arg2 : i2):
       "llvm.return"(%arg2) : (i2) -> ()
   }]

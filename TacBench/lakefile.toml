@@ -1,0 +1,6 @@
+name = "TacBench"
+version = "0.1.0"
+defaultTargets = ["TacBench"]
+
+[[lean_lib]]
+name = "TacBench"

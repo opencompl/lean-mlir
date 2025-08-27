@@ -28,11 +28,11 @@ def srl_riscv_32 := [LV| {
     llvm.return %y : i32
   }]
 
-@[simp_denote]
-def llvm_srl_lower_riscv_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
-  lhs := lshr_llvm_no_flag_32
-  rhs := srl_riscv_32
-  correct := sorry
+-- @[simp_denote]
+-- def llvm_srl_lower_riscv_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+--   lhs := lshr_llvm_no_flag_32
+--   rhs := srl_riscv_32
+--   correct := sorry
 
 @[simp_denote]
 def lshr_llvm_exact_32 := [LV| {
@@ -41,10 +41,10 @@ def lshr_llvm_exact_32 := [LV| {
     llvm.return %1 : i32
   }]
 
-def llvm_srl_lower_riscv_exact_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
-  lhs := lshr_llvm_exact_32
-  rhs := srl_riscv_32
-  correct := sorry
+-- def llvm_srl_lower_riscv_exact_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+--   lhs := lshr_llvm_exact_32
+--   rhs := srl_riscv_32
+--   correct := sorry
 
 
 /-! ### i64 -/
@@ -85,8 +85,8 @@ def llvm_srl_lower_riscv_exact_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
   rhs := srl_riscv_64
 
 def srl_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_srl_lower_riscv_exact_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_srl_lower_riscv_32),
+  -- mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_srl_lower_riscv_exact_32),
+  -- mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_srl_lower_riscv_32),
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_srl_lower_riscv_exact_64),
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_srl_lower_riscv_64),
 ]

@@ -2,30 +2,13 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
 
-/-! total exsit 12 test cases, we implement 6 of these because they are supported in our fragemnt
-, where each has 2 version ,the ZBA and the non-ZBA supported version. -/
-/-
-define i64 @add_shl_moreOneUse_sh1add(i64 %x) {
-; NO-ZBA-LABEL: add_shl_moreOneUse_sh1add:
-; NO-ZBA:       # %bb.0:
-; NO-ZBA-NEXT:    ori a1, a0, 1
-; NO-ZBA-NEXT:    slli a0, a0, 1
-; NO-ZBA-NEXT:    ori a0, a0, 2
-; NO-ZBA-NEXT:    add a0, a0, a1
-; NO-ZBA-NEXT:    ret
-;
-; ZBA-LABEL: add_shl_moreOneUse_sh1add:
-; ZBA:       # %bb.0:
-; ZBA-NEXT:    ori a0, a0, 1
-; ZBA-NEXT:    sh1add a0, a0, a0
-; ZBA-NEXT:    ret
-;
-  %or = or i64 %x, 1
-  %mul = shl i64 %or, 1
-  %add = add i64 %mul, %or
-  ret i64 %add
-}
+/-!
+  This file implements the `add_sext_shl_constant.ll` test case in the LLVM test suite:
+  https://github.com/llvm/llvm-project/blob/b424207cdddfa2cbfc9129bbe0a31e47cb04e6dc/llvm/test/CodeGen/RISCV/add_sext_shl_constant.ll
 -/
+
+/-- ###  add_shl_moreOneUse_sh1add -/
+@[simp_denote]
 def add_shl_moreOneUse_sh1add := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (1) : i32
@@ -35,6 +18,7 @@ def add_shl_moreOneUse_sh1add := [LV| {
     llvm.return %3 : i32
   }]
 
+@[simp_denote]
 def add_shl_moreOneUse_sh1add_riscv_no_ZBA := [LV| {
     ^entry (%a: i32):
     %a0 = "builtin.unrealized_conversion_cast" (%a) : (i32) -> (!i64)
@@ -46,6 +30,7 @@ def add_shl_moreOneUse_sh1add_riscv_no_ZBA := [LV| {
     llvm.return %4 : i32
   }]
 
+@[simp_denote]
 def add_shl_moreOneUse_sh1add_riscv_ZBA := [LV| {
     ^entry (%a: i32):
     %a0 = "builtin.unrealized_conversion_cast" (%a) : (i32) -> (!i64)
@@ -55,52 +40,17 @@ def add_shl_moreOneUse_sh1add_riscv_ZBA := [LV| {
     llvm.return %2 : i32
   }]
 
-def add_shl_moreOneUse_sh1add_ZBA : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
+def add_shl_moreOneUse_sh1add_ZBA_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := add_shl_moreOneUse_sh1add
   rhs := add_shl_moreOneUse_sh1add_riscv_ZBA
-  correct := by
-    unfold add_shl_moreOneUse_sh1add add_shl_moreOneUse_sh1add_riscv_ZBA
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
 
-def add_shl_moreOneUse_sh1add_no_ZBA : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
+
+def add_shl_moreOneUse_sh1add_no_ZBA_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := add_shl_moreOneUse_sh1add
   rhs := add_shl_moreOneUse_sh1add_riscv_no_ZBA
-  correct := by
-    unfold add_shl_moreOneUse_sh1add add_shl_moreOneUse_sh1add_riscv_no_ZBA
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-/-
-define i64 @add_shl_moreOneUse_sh2add(i64 %x) {
-; NO-ZBA-LABEL: add_shl_moreOneUse_sh2add:
-; NO-ZBA:       # %bb.0:
-; NO-ZBA-NEXT:    ori a1, a0, 1
-; NO-ZBA-NEXT:    slli a0, a0, 2
-; NO-ZBA-NEXT:    ori a0, a0, 4
-; NO-ZBA-NEXT:    add a0, a0, a1
-; NO-ZBA-NEXT:    ret
-;
-; ZBA-LABEL: add_shl_moreOneUse_sh2add:
-; ZBA:       # %bb.0:
-; ZBA-NEXT:    ori a0, a0, 1
-; ZBA-NEXT:    sh2add a0, a0, a0
-; ZBA-NEXT:    ret
-  %or = or i64 %x, 1
-  %mul = shl i64 %or, 2
-  %add = add i64 %mul, %or
-  ret i64 %add
-}
--/
+
+/-- ### add_shl_moreOneUse_sh2add -/
+@[simp_denote]
 def add_shl_moreOneUse_sh2add := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (1) : i32
@@ -111,6 +61,7 @@ def add_shl_moreOneUse_sh2add := [LV| {
     llvm.return %3 : i32
   }]
 
+@[simp_denote]
 def add_shl_moreOneUse_sh2add_riscv_no_ZBA := [LV| {
     ^entry (%a: i32):
     %a0 = "builtin.unrealized_conversion_cast" (%a) : (i32) -> (!i64)
@@ -122,6 +73,7 @@ def add_shl_moreOneUse_sh2add_riscv_no_ZBA := [LV| {
     llvm.return %4 : i32
   }]
 
+@[simp_denote]
 def add_shl_moreOneUse_sh2add_riscv_ZBA := [LV| {
     ^entry (%a: i32):
     %a0 = "builtin.unrealized_conversion_cast" (%a) : (i32) -> (!i64)
@@ -131,53 +83,16 @@ def add_shl_moreOneUse_sh2add_riscv_ZBA := [LV| {
     llvm.return %2 : i32
   }]
 
-def add_shl_moreOneUse_sh2add_ZBA : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
+def add_shl_moreOneUse_sh2add_ZBA_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := add_shl_moreOneUse_sh2add
   rhs := add_shl_moreOneUse_sh2add_riscv_ZBA
-  correct := by
-    unfold add_shl_moreOneUse_sh2add add_shl_moreOneUse_sh2add_riscv_ZBA
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
 
-def add_shl_moreOneUse_sh2add_no_ZBA : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
+def add_shl_moreOneUse_sh2add_no_ZBA_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := add_shl_moreOneUse_sh2add
   rhs := add_shl_moreOneUse_sh2add_riscv_no_ZBA
-  correct := by
-    unfold add_shl_moreOneUse_sh2add add_shl_moreOneUse_sh2add_riscv_no_ZBA
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-/-
-define i64 @add_shl_moreOneUse_sh3add(i64 %x) {
-; NO-ZBA-LABEL: add_shl_moreOneUse_sh3add:
-; NO-ZBA:       # %bb.0:
-; NO-ZBA-NEXT:    ori a1, a0, 1
-; NO-ZBA-NEXT:    slli a0, a0, 3
-; NO-ZBA-NEXT:    ori a0, a0, 8
-; NO-ZBA-NEXT:    add a0, a0, a1
-; NO-ZBA-NEXT:    ret
-;
-; ZBA-LABEL: add_shl_moreOneUse_sh3add:
-; ZBA:       # %bb.0:
-; ZBA-NEXT:    ori a0, a0, 1
-; ZBA-NEXT:    sh3add a0, a0, a0
-; ZBA-NEXT:    ret
-;
-  %or = or i64 %x, 1
-  %mul = shl i64 %or, 3
-  %add = add i64 %mul, %or
-  ret i64 %add
-}
--/
+
+/-- ### add_shl_moreOneUse_sh3add -/
+@[simp_denote]
 def add_shl_moreOneUse_sh3add := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (1) : i32
@@ -188,6 +103,7 @@ def add_shl_moreOneUse_sh3add := [LV| {
     llvm.return %3 : i32
   }]
 
+@[simp_denote]
 def add_shl_moreOneUse_sh3add_riscv_no_ZBA := [LV| {
     ^entry (%a: i32):
     %a0 = "builtin.unrealized_conversion_cast" (%a) : (i32) -> (!i64)
@@ -199,6 +115,7 @@ def add_shl_moreOneUse_sh3add_riscv_no_ZBA := [LV| {
     llvm.return %4 : i32
   }]
 
+@[simp_denote]
 def add_shl_moreOneUse_sh3add_riscv_ZBA := [LV| {
     ^entry (%a: i32):
     %a0 = "builtin.unrealized_conversion_cast" (%a) : (i32) -> (!i64)
@@ -208,45 +125,17 @@ def add_shl_moreOneUse_sh3add_riscv_ZBA := [LV| {
     llvm.return %2 : i32
   }]
 
-def add_shl_moreOneUse_sh3add_ZBA : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
+def add_shl_moreOneUse_sh3add_ZBA_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := add_shl_moreOneUse_sh3add
   rhs := add_shl_moreOneUse_sh3add_riscv_ZBA
-  correct := by
-    unfold add_shl_moreOneUse_sh3add add_shl_moreOneUse_sh3add_riscv_ZBA
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
 
-def add_shl_moreOneUse_sh3add_no_ZBA : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
+def add_shl_moreOneUse_sh3add_no_ZBA_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := add_shl_moreOneUse_sh3add
   rhs := add_shl_moreOneUse_sh3add_riscv_no_ZBA
-  correct := by
-    unfold add_shl_moreOneUse_sh3add add_shl_moreOneUse_sh3add_riscv_no_ZBA
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-/-
-;; Covers a case which previously crashed (pr119527)
-define i64 @add_shl_sext(i32 %1) {
-; RV64-LABEL: add_shl_sext:
-; RV64:       # %bb.0:
-; RV64-NEXT:    addi a1, a0, 3
-; RV64-NEXT:    sllw a0, a1, a0
-; RV64-NEXT:    ret
-  %3 = add i32 %1, 3
-  %4 = shl i32 %3, %1
-  %5 = sext i32 %4 to i64
-  ret i64 %5
-}
--/
+
+
+/-- ### add_shl_sext -/
+@[simp_denote]
 def add_shl_sext_llvm := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (3) : i32
@@ -256,6 +145,7 @@ def add_shl_sext_llvm := [LV| {
     llvm.return %3 : i64
   }]
 
+@[simp_denote]
 def add_shl_sext_riscv := [LV| {
     ^entry (%a: i32):
     %a0 = "builtin.unrealized_conversion_cast" (%a) : (i32) -> (!i64)
@@ -265,34 +155,12 @@ def add_shl_sext_riscv := [LV| {
     llvm.return %2 : i64
   }]
 
-def add_shl_sext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
+def add_shl_sext_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
   lhs := add_shl_sext_llvm
   rhs := add_shl_sext_riscv
-  correct := by
-    unfold add_shl_sext_llvm add_shl_sext_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-    sorry
-/-
-define i64 @add_shl_moreOneUse_sh4add(i64 %x) {
-; RV64-LABEL: add_shl_moreOneUse_sh4add:
-; RV64:       # %bb.0:
-; RV64-NEXT:    ori a1, a0, 1
-; RV64-NEXT:    slli a0, a0, 4
-; RV64-NEXT:    ori a0, a0, 16
-; RV64-NEXT:    add a0, a0, a1
-; RV64-NEXT:    ret
-  %or = or i64 %x, 1
-  %mul = shl i64 %or, 4
-  %add = add i64 %mul, %or
-  ret i64 %add
-}
--/
+
+/-- ### add_shl_moreOneUse_sh4add -/
+@[simp_denote]
 def add_shl_moreOneUse_sh4add_llvm := [LV| {
     ^entry (%a: i64):
     %0 = llvm.mlir.constant (1) : i64
@@ -303,6 +171,7 @@ def add_shl_moreOneUse_sh4add_llvm := [LV| {
     llvm.return %3 : i64
   }]
 
+@[simp_denote]
 def add_shl_moreOneUse_sh4add_riscv := [LV| {
     ^entry (%a: i64):
     %a0 = "builtin.unrealized_conversion_cast" (%a) : (i64) -> (!i64)
@@ -314,32 +183,12 @@ def add_shl_moreOneUse_sh4add_riscv := [LV| {
     llvm.return %4 : i64
   }]
 
-def add_shl_moreOneUse_sh4add : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def add_shl_moreOneUse_sh4add_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := add_shl_moreOneUse_sh4add_llvm
   rhs :=add_shl_moreOneUse_sh4add_riscv
-  correct := by
-    unfold add_shl_moreOneUse_sh4add_llvm add_shl_moreOneUse_sh4add_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-/-
-define i64 @add_shl_rhs_constant(i64 %x, i64 %y) {
-; RV64-LABEL: add_shl_rhs_constant:
-; RV64:       # %bb.0:
-; RV64-NEXT:    add a0, a0, a1
-; RV64-NEXT:    slli a0, a0, 3
-; RV64-NEXT:    ret
-  %a = add i64 %x, 1
-  %b = add i64 %y, %a
-  %c = shl i64 %b, 3
-  %d = add i64 %c, -8
-  ret i64 %d
-}
--/
+
+/-- ###  add_shl_rhs_constant -/
+@[simp_denote]
 def add_shl_rhs_constant_llvm := [LV| {
     ^entry (%a0: i64, %a1: i64):
     %0 = llvm.mlir.constant (1) : i64
@@ -352,6 +201,7 @@ def add_shl_rhs_constant_llvm := [LV| {
     llvm.return %4 : i64
   }]
 
+@[simp_denote]
 def add_shl_rhs_constant_riscv := [LV| {
     ^entry (%a: i64, %b: i64):
     %a0 = "builtin.unrealized_conversion_cast" (%a) : (i64) -> (!i64)
@@ -362,15 +212,6 @@ def add_shl_rhs_constant_riscv := [LV| {
     llvm.return %2 : i64
   }]
 
-def add_shl_rhs_constant : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64),Ty.llvm (.bitvec 64) ] where
+def add_shl_rhs_constant_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64),Ty.llvm (.bitvec 64) ] where
   lhs := add_shl_rhs_constant_llvm
   rhs := add_shl_rhs_constant_riscv
-  correct := by
-    unfold  add_shl_rhs_constant_llvm add_shl_rhs_constant_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
