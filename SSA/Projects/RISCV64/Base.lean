@@ -140,6 +140,15 @@ inductive Op
   | sgtz
 
   deriving DecidableEq, Repr, Lean.ToExpr
+-- ^^ **NOTE:** this deriving clause is prone to causing stack overflows in the
+--    lsp while interactively editing. This is not surprising, given the quadratic
+--    nature of `deriving DecidableEq`, but annoying nonetheless.
+--    However, nothing in the current file actually depends on these derives, so
+--    the workaround is to comment out the line above while editing.
+--    Once satisfied, uncommment, and build via the CLI (which does not seem to
+--    trigger the stack overflow)!
+
+
 
 /--
 ## Dialect type definitions
@@ -383,11 +392,6 @@ def Op.outTy : Op  → Ty
   | sltz => Ty.bv
   | sgtz => Ty.bv
 
-/-- Combine `outTy` and `sig` together into a `Signature`. -/
-@[simp, reducible]
-def Op.signature : Op → Signature (Ty) :=
-  fun o => {sig := Op.sig o, outTy := Op.outTy o, regSig := []}
-
 /--
 Bundling the `Ops`and `Ty`into a dialect and abbreviating `RISCV64`
 into a dialect named `RV64`.
@@ -397,7 +401,9 @@ abbrev RV64 : Dialect where
   Op := Op
   Ty := Ty
 
-instance : DialectSignature RV64 := ⟨Op.signature⟩
+/-- Combine `outTy` and `sig` together into a `Signature`. -/
+instance : DialectSignature RV64 where
+  signature o := {sig := Op.sig o, returnTypes := [Op.outTy o], regSig := []}
 
 def opToString (op : RISCV64.Op) : String :=
   let op  : String := match op with
@@ -656,6 +662,6 @@ abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
 
 @[simp, reducible]
 instance : DialectDenote RV64 where
-  denote o args _ := o.denote args
+  denote o args _ := [o.denote args]ₕ
 
 end RISCV64

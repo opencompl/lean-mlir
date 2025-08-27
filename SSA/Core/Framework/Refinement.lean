@@ -132,40 +132,13 @@ open EffectKind (impure) in
 
 end EffectKind
 
-/-! ### HVector Refinement -/
-namespace HVector
-variable {A : α → Type} {B : β → Type} [∀ a b, HRefinement (A a) (B b)]
-
-/--
-We say that a vector of values `xs` is refined by another vector `ys` (written
-`xs ⊑ ys`) when `xs` and `ys` have the same number of elements, and each element
-of `xs` is refined by the corresponding element of `ys` at the same index.
--/
-def IsRefinedBy {as} {bs} : HVector A as → HVector B bs → Prop
-  | .nil, .nil => True
-  | .cons x xs, .cons y ys => x ⊑ y ∧ xs.IsRefinedBy ys
-  | _, _ => False
-
-instance  : HRefinement (HVector A as) (HVector B bs) where
-  IsRefinedBy := HVector.IsRefinedBy
-
-variable {x : A a} {xs : HVector A as} {y : B b} {ys : HVector B bs}
-
-@[simp, simp_denote] lemma cons_isRefinedBy_cons  : ((x ::ₕ xs) ⊑ (y ::ₕ ys)) ↔ (x ⊑ y ∧ xs ⊑ ys) := by rfl
-@[simp, simp_denote] lemma nil_isRefinedBy_nil    : (nil : HVector A _) ⊑ (nil : HVector B _)     := True.intro
-
-@[simp, simp_denote] lemma not_nil_isRefinedBy_cons : ¬((nil : HVector A _) ⊑ (y ::ₕ ys)) := by rintro ⟨⟩
-@[simp, simp_denote] lemma not_cons_isRefinedBy_nil : ¬((x ::ₕ xs) ⊑ (nil : HVector B _)) := by rintro ⟨⟩
-
-end HVector
-
 /-! ## Canonicalization -/
 section SimpDenote
 open Lean Meta
 open Simp (SimpM)
 
 /-- Implementation of `reduceIsRefinedBy` simproc -/
-partial def reduceIsRefinedByAux (α β inst lhs rhs : Expr) : SimpM (Option Expr) := do
+partial def reduceIsRefinedByAux (inst lhs rhs : Expr) : SimpM (Option Expr) := do
   let ⟨instFn, instArgs⟩ := inst.withApp Prod.mk
   trace[LeanMLIR.Elab] "Refinement instance is an application of: {instFn}"
   match instFn.constName with
@@ -177,11 +150,11 @@ partial def reduceIsRefinedByAux (α β inst lhs rhs : Expr) : SimpM (Option Exp
 where
   loop (e : Expr) (returnArgOnFail := true) : SimpM (Option Expr) :=
     let e? := if returnArgOnFail then some e else none
-    let_expr HRefinement.IsRefinedBy α β inst a b := e.consumeMData
+    let_expr HRefinement.IsRefinedBy _α _β inst a b := e.consumeMData
       | return e?
     withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying refinement instance: {inst}") <| do
       Meta.check e
-      let res? ← reduceIsRefinedByAux α β inst.consumeMData a b
+      let res? ← reduceIsRefinedByAux inst.consumeMData a b
       if let some res := res? then
         trace[LeanMLIR.Elab] "Simplified to: {res}"
       else
@@ -219,6 +192,13 @@ where
   simpInfer instArgs := do
     let some self := instArgs[1]? | throwUnexpectedArgs
     trace[LeanMLIR.Elab] "actual instance: {self}"
+    let selfType ← inferType self
+    let α ← mkFreshExprMVar (Expr.sort 1)
+    let β ← mkFreshExprMVar (Expr.sort 1)
+    let e := mkApp2 (mkConst ``HRefinement) α β
+    unless ← isDefEq selfType e do
+      throwError "Error: instance: {self}\n{← mkHasTypeButIsExpectedMsg selfType e}\
+        \n\nIn instance:\n\t{inst}"
     isRefinedByAppN #[α, β, self, lhs, rhs]
 
 open Lean Meta in
@@ -323,6 +303,34 @@ We provide some generic refinement instances
 -/
 section Instances
 
+/-! ### HVector Refinement -/
+namespace HVector
+variable {A : α → Type} {B : β → Type} [∀ a b, HRefinement (A a) (B b)]
+
+/--
+We say that a vector of values `xs` is refined by another vector `ys` (written
+`xs ⊑ ys`) when `xs` and `ys` have the same number of elements, and each element
+of `xs` is refined by the corresponding element of `ys` at the same index.
+-/
+def IsRefinedBy {as} {bs} : HVector A as → HVector B bs → Prop
+  | .nil, .nil => True
+  | .cons x xs, .cons y ys => x ⊑ y ∧ xs.IsRefinedBy ys
+  | _, _ => False
+
+instance  : HRefinement (HVector A as) (HVector B bs) where
+  IsRefinedBy := HVector.IsRefinedBy
+
+variable {x : A a} {xs : HVector A as} {y : B b} {ys : HVector B bs}
+
+@[simp, simp_denote] lemma cons_isRefinedBy_cons  : ((x ::ₕ xs) ⊑ (y ::ₕ ys)) ↔ (x ⊑ y ∧ xs ⊑ ys) := by rfl
+@[simp, simp_denote] lemma nil_isRefinedBy_nil    : (nil : HVector A _) ⊑ (nil : HVector B _)     := True.intro
+
+@[simp, simp_denote] lemma not_nil_isRefinedBy_cons : ¬((nil : HVector A _) ⊑ (y ::ₕ ys)) := by rintro ⟨⟩
+@[simp, simp_denote] lemma not_cons_isRefinedBy_nil : ¬((x ::ₕ xs) ⊑ (nil : HVector B _)) := by rintro ⟨⟩
+
+end HVector
+
+/-! ### Prod -/
 namespace Prod
 
 instance [HRefinement α γ] [HRefinement β δ] : HRefinement (α × β) (γ × δ) where
@@ -335,6 +343,7 @@ theorem isRefinedBy_iff [HRefinement α γ] [HRefinement β δ]
   rfl
 end Prod
 
+/-! ### StateT -/
 namespace StateT
 variable {m n : Type → Type} [HRefinement (m (α × σ)) (n (β × σ))]
 

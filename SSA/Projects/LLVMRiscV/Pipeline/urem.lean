@@ -4,6 +4,7 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
+open LeanMLIR.SingleReturnCompat
 
 /-!
   This file implements the lowering for the `llvm.udiv` instruction for type i64.

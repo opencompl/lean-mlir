@@ -347,7 +347,7 @@ def Op.sig : Op → List Ty
 
 @[reducible, simp]
 def Op.regSig : Op → RegionSignature Ty
-  | .map1d => [([Ty.int], .int)]
+  | .map1d => [([Ty.int], [.int])]
   | _ => []
 
 set_option linter.dupNamespace false in
@@ -356,7 +356,7 @@ def Tensor1D : Dialect where
   Ty := Ty
 
 instance : DialectSignature Tensor1D where
-  signature op := { sig := op.sig, regSig := op.regSig, outTy := op.outTy, effectKind := .pure }
+  signature op := { sig := op.sig, regSig := op.regSig, returnTypes := [op.outTy], effectKind := .pure }
 
 /-
 -- Error: unknown free variable: _kernel_fresh.459
