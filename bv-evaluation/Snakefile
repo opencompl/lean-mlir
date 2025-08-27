@@ -14,62 +14,70 @@ from functools import partial
 from pathlib import Path
 import sys
 from runwithlimits import *
+from snakelib import *
 
 configfile: "config.yaml"
-
-# get Git root
-GIT_ROOT = Path(subprocess.check_output(
-    ["git", "rev-parse", "--show-toplevel"]
-).decode().strip())
-print("Git root:", GIT_ROOT)
-
 workdir: "../"
 
-HACKERSDELIGHT_FILE_NAMES, = glob_wildcards(GIT_ROOT / "SSA/Projects/InstCombine/HackersDelight/{file}.lean")
-
-SED = "gsed" if platform.system() == "Darwin" else "sed"
+HACKERSDELIGHT_FILE_NAMES, = glob_wildcards(git_root() / "SSA/Projects/InstCombine/HackersDelight/{file}.lean")
 hdel_nreps = config["hdel_nreps"]
 
-rule lakefresh:
-  input:
-    glob_wildcards(GIT_ROOT / "**.lean"),
-    glob_wildcards(GIT_ROOT / "lakefile.*")
-  output:
-      GIT_ROOT / ".lake/build/lib/lean/SSA.olean"
-  threads: 1
-  shell:
-    "echo 'Checking that lake is already built,If not, use \'lake exe cache get\' / \'lake build\'' && "
-    "lake build --no-build"
+
+onstart:
+    shell("elan --version")
+    shell("cd {git_root()} && lake exe cache get && lake build")
+    shell("uv --version")
+    shell("bitwuzla --version")
 
 rule hdel_compare_make_lean:
+  params:
+      sed=sed(),
+      git_root=git_root(),
   input:
-    GIT_ROOT / "SSA/Projects/InstCombine/HackersDelight/{file}.lean"
+    git_root() / "SSA/Projects/InstCombine/HackersDelight/{file}.lean"
   output:
-     GIT_ROOT / "bv-evaluation/results/HackersDelight/{file}_{width}_{hdel_nreps}.lean"
+     git_root() / "bv-evaluation/results/HackersDelight/{file}_{width}_{hdel_nreps}.lean"
+  log:
+      "logs/compare_make_lean_{file}_{width}_{hdel_nreps}.log"
   shell:
     "cp {input} {output} && "
-    "{SED} -i  -e \"s/all_goals sorry/all_goals bv_compare'/g\" -e \"s/WIDTH/{wildcards.width}/g\" {output} "
+    "{params.sed} -i  -e \"s/all_goals sorry/all_goals bv_compare'/g\" -e \"s/WIDTH/{wildcards.width}/g\" {output} "
 
 
 rule hdel_compare_make_output:
+  params:
+      git_root=git_root(),
   input:
-    olean=rules.lakefresh.output,
-    infile=lambda wc: GIT_ROOT / f"bv-evaluation/results/HackersDelight/{wc.file}_{wc.width}_{hdel_nreps}.lean",
+    infile=lambda wc: git_root / f"bv-evaluation/results/HackersDelight/{wc.file}_{wc.width}_{hdel_nreps}.lean",
   output:
-    GIT_ROOT / "bv-evaluation/results/HackersDelight/{file}_{width}_r{r}.txt"
+    git_root() / "bv-evaluation/results/HackersDelight/{file}_{width}_r{r}.txt"
+  log:
+      "logs/hdel_compare_make_output_{file}_{width}_{r}.log"
   resources:
-    # TODO: actually impose memory and time limit, using a python script.
+  # TODO: actually impose memory and time limit, using a python script.
+  # shell:
+  #     "lake 2>&1 lean {input[1]} -XXX  | tee {output} | tee {log}"
   run:
-    cmd = ["lake", "lean", input["infile"]]
-    status, stdout, stderr = run_with_limits(cmd=cmd,
-        cwd=GIT_ROOT,
-        timeout=int(config["hdel_timeout_sec"]),
-        memout_mb=int(config["hdel_memout_mb"]))
-    if not isinstance(status, int) or status != 0:
-        raise Exception(f"Running hackersdelight file (command '{cmd}') failed with status '{status}', stdout '{stdout}', stderr '{stderr}'.")
-    with open(output[0], "w") as f:
-        f.write(stdout)
-        f.write(stderr)
+    cmd = ["lake", "lean", "-XX",  input["infile"]]
+    try:
+      status, stdout, stderr = run_with_limits(cmd=cmd,
+          cwd=params.git_root,
+          timeout=int(config["hdel_timeout_sec"]),
+          memout_mb=int(config["hdel_memout_mb"]))
+      if not isinstance(status, int) or status != 0:
+          with open(log[0], "w") as logf:
+            logf.write(f"Running hackersdelight file (command '{cmd}') failed with status '{status}'")
+            logf.write(stdout)
+            logf.write(stderr)
+          sys.exit(1)
+      with open(output[0], "w") as f:
+          f.write(stdout)
+          f.write(stderr)
+    except Exception as e:
+      with open(log[0], "w") as logf:
+        logf.write(str(e))
+      sys.exit(1)
+
 
 # We can eventually split these, if we carefully understand the naming convention
 # of 'collect' for hacker's delight.
@@ -77,7 +85,7 @@ rule hdel_compare_make_output:
 # Since the naming convention is a little opaque to @bollu.
 rule hdel_collect_and_plot:
   input:
-    expand(GIT_ROOT / "bv-evaluation/results/HackersDelight/{file}_{width}_r{r}.txt",
+    expand(git_root() / "bv-evaluation/results/HackersDelight/{file}_{width}_r{r}.txt",
       file=HACKERSDELIGHT_FILE_NAMES,
       width=config["hdel_bv_widths"],
       r=range(hdel_nreps))
@@ -85,18 +93,18 @@ rule hdel_collect_and_plot:
     nreps = lambda wc: hdel_nreps,
     nthreads = lambda wc: config["hdel_nthreads"]
   output:
-    tex=GIT_ROOT  / "bv-evaluation/performance-hackersdelight.tex",
-    pdf_stacked=GIT_ROOT / "bv-evaluation/plots/bv_decide_stacked_perc_HackersDelight_bvw64.pdf"
+    tex=git_root() / "bv-evaluation/performance-hackersdelight.tex",
+    pdf_stacked=git_root() / "bv-evaluation/plots/bv_decide_stacked_perc_HackersDelight_bvw64.pdf"
     # TODO: track the exact files generated by 'collect.py'.
     # We currently just bother asking for the two outputs we care for.
+  log:
+    "logs/collect.log"
   shell:
-    "bash -c 'source {GIT_ROOT}/.venv/bin/activate && cd bv-evaluation && python3 collect.py hackersdelight' && "
-    "bash -c 'source {GIT_ROOT}/.venv/bin/activate && cd bv-evaluation && python3 plot.py hackersdelight'"
+    "./collect.py hackersdelight ./plot.py hackersdelight 2>&1 > {log}"
 
 
 rule all:
   input:
-    rules.lakefresh.output,
     rules.hdel_collect_and_plot.output
   default_target: True
 

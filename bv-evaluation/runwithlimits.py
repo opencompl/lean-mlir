@@ -1,11 +1,11 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run
 import os
 import subprocess
-import shutil
-import multiprocessing
 import psutil
 import time
 import threading
+import argparse
+import sys
 from typing import List, Dict, Optional
 
 def kill_process_tree(pid: int):
@@ -43,7 +43,7 @@ def monitor_memory(pid: int, memout_mb: int, flag: Dict[str, bool]):
                 flag["memout"] = True
                 kill_process_tree(pid)
                 return
-            time.sleep(5)
+            time.sleep(0.1)
     except psutil.NoSuchProcess:
         pass
 
@@ -92,4 +92,36 @@ def run_with_limits(cmd: List[str], timeout: int, memout_mb: int, cwd : Optional
             return "TIMEOUT", stdout, stderr
     except Exception as e:
         return "ERROR", "", str(e)
+
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Run a command with timeout and memory limits.")
+    parser.add_argument("--timeout", type=int, required=True, help="Timeout in seconds")
+    parser.add_argument("--memout", type=int, required=True, help="Memory limit in MB")
+    parser.add_argument("cmd", nargs=argparse.REMAINDER, help="Command to run with arguments")
+    return parser.parse_args()
+
+def main():
+    args = parse_args()
+
+    if args.cmd and args.cmd[0] == "--":
+        cmd_args = args.cmd[1:]
+    else:
+        cmd_args = args.cmd
+
+    err, stdout, stderr = run_with_limits(cmd_args, args.timeout, args.memout)
+    print(stdout, file=sys.stdout, end="")
+    print(stderr, file=sys.stderr, end="")
+
+    if err == "":
+        sys.exit(0)
+    elif err == "TIMEOUT":
+        sys.exit(10)
+    elif err == "MEMOUT":
+        sys.exit(20)
+    else:
+        sys.exit(30)
+
+if __name__ == "__main__":
+    main()
 
