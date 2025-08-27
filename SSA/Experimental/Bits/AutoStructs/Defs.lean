@@ -2,8 +2,8 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import BvDecideParametric.AutoStructs.ForMathlib
-import BvDecideParametric.SingleWidth.Defs
+import SSA.Experimental.Bits.AutoStructs.ForMathlib
+import SSA.Experimental.Bits.SingleWidth.Defs
 
 open Fin.NatCast
 
