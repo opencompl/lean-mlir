@@ -300,11 +300,11 @@ def Com.rec' {Γ} (com : Com d Γ eff t) : motive com :=
 
 variable {rets} {var} {Γ : Ctxt _}
 
-@[simp] lemma Com.rec'_rets (v : HVector Γ.Var t) :
+@[simp] theorem Com.rec'_rets (v : HVector Γ.Var t) :
     (Com.rets (d:=d) (eff := eff) v).rec' (motive:=motive) rets var = rets v :=
   rfl
 
-@[simp] lemma Com.rec'_var (e : Expr d Γ eff u) (body : Com d _ _ t) :
+@[simp] theorem Com.rec'_var (e : Expr d Γ eff u) (body : Com d _ _ t) :
     (Com.var e body).rec' (motive:=motive) rets var
     = var e body (body.rec' (motive:=motive) rets var) :=
   rfl
@@ -388,16 +388,16 @@ def Com.bvars : Com d Γ eff t → Nat :=
 section Lemmas
 namespace Com
 
-@[simp] lemma size_rets  : (rets v : Com d Γ eff t).size = 0 := rfl
-@[simp] lemma size_var : (var e body : Com d Γ eff t).size = body.size + 1 := rfl
+@[simp] theorem size_rets  : (rets v : Com d Γ eff t).size = 0 := rfl
+@[simp] theorem size_var : (var e body : Com d Γ eff t).size = body.size + 1 := rfl
 
-@[simp] lemma bvars_rets  : (rets v : Com d Γ eff t).bvars = 0 := rfl
-@[simp] lemma bvars_var  :
+@[simp] theorem bvars_rets  : (rets v : Com d Γ eff t).bvars = 0 := rfl
+@[simp] theorem bvars_var  :
   (var e body : Com d Γ eff t).bvars = e.bvars + body.bvars := rfl
 
 end Com
 
-@[simp] lemma Ctxt.get_add_bvars (e : Expr d Γ eff ts) (i : Nat) :
+@[simp] theorem Ctxt.get_add_bvars (e : Expr d Γ eff ts) (i : Nat) :
     e.outContext[i + e.bvars]? = Γ[i]? := by
   rcases e with ⟨op, rfl, _, _⟩
   rcases Γ
@@ -447,13 +447,13 @@ abbrev Expr.contextHom (e : Expr d Γ eff ts) : Γ.Hom e.outContext :=
 
 section Lemmas
 
-@[simp] lemma Com.outContext_rets (vs : HVector Γ.Var t) : (rets vs : Com d Γ eff t).outContext = Γ := rfl
-@[simp] lemma Com.outContext_var {eff} (e : Expr d Γ eff t) (body : Com d e.outContext eff u) :
+@[simp] theorem Com.outContext_rets (vs : HVector Γ.Var t) : (rets vs : Com d Γ eff t).outContext = Γ := rfl
+@[simp] theorem Com.outContext_var {eff} (e : Expr d Γ eff t) (body : Com d e.outContext eff u) :
     (Com.var e body).outContext = body.outContext := rfl
 
-@[simp] lemma Com.outContextHom_rets (v : HVector Γ.Var t) :
+@[simp] theorem Com.outContextHom_rets (v : HVector Γ.Var t) :
     (rets v : Com d Γ eff t).outContextHom = Ctxt.Hom.id := rfl
-@[simp] lemma Com.outContextHom_var :
+@[simp] theorem Com.outContextHom_var :
     (var e body : Com d Γ eff t).outContextHom
     = e.contextHom.comp body.outContextHom := by
   funext t v
@@ -462,8 +462,8 @@ section Lemmas
     e.ty_eq]
   omega
 
-@[simp] lemma Com.returnVars_rets : returnVars (rets vs : Com d Γ eff t) = vs := rfl
-@[simp] lemma Com.returnVars_var :
+@[simp] theorem Com.returnVars_rets : returnVars (rets vs : Com d Γ eff t) = vs := rfl
+@[simp] theorem Com.returnVars_var :
     returnVars (var (d:=d) (eff:=eff) e body) = body.returnVars := rfl
 
 end Lemmas
@@ -527,7 +527,7 @@ omit [LawfulMonad d.m] in
 Unfold `Expr.denote` in terms of the field projections and `Expr.denoteOp`.
 
 NOTE: this allows the unfolding of `Expr.denote` applied to arbitrary expressions,
-whereas the built-in unfold lemma only applies when the argument is an application of
+whereas the built-in unfold theorem only applies when the argument is an application of
 `Expr.mk`.
 
 Unfortunately, if we define `Expr.denote` in terms of the projections directly,
@@ -538,7 +538,7 @@ theorem Expr.denote_unfold (e : Expr d Γ eff ty) :
   rcases e with ⟨op, rfl, _⟩
   simp [denote, denoteOp]
 
-@[simp] lemma Expr.denoteOp_eq_denoteOp_of {e₁ : Expr d Γ eff ty} {e₂ : Expr d Δ eff ty}
+@[simp] theorem Expr.denoteOp_eq_denoteOp_of {e₁ : Expr d Γ eff ty} {e₂ : Expr d Δ eff ty}
     {Γv : Valuation Γ} {Δv : Valuation Δ}
     (op_eq : e₁.op = e₂.op)
     (h_args : HVector.map Γv (op_eq ▸ e₁.args)
@@ -552,15 +552,15 @@ theorem Expr.denote_unfold (e : Expr d Γ eff ty) :
 
 /-
 https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/Equational.20Lemmas
-Recall that `simp` lazily generates equation lemmas.
-Moreover, recall that `simp only` **does not** generate equation lemmas.
-*but* if equation lemmas are present, then `simp only` *uses* the equation lemmas.
+Recall that `simp` lazily generates equation theorems.
+Moreover, recall that `simp only` **does not** generate equation theorems.
+*but* if equation theorems are present, then `simp only` *uses* the equation theorems.
 
-Hence, we build the equation lemmas by invoking the correct Lean meta magic,
+Hence, we build the equation theorems by invoking the correct Lean meta magic,
 so that `simp only` (which we use in `simp_peephole`) can find them!
 
 This allows `simp only [HVector.denote]` to correctly simplify `HVector.denote`
-args, since there now are equation lemmas for it.
+args, since there now are equation theorems for it.
 -/
 /--
 info: some #[`HVector.denote.eq_1, `HVector.denote.eq_2]
@@ -600,45 +600,45 @@ the congruence, you can do: `rw [← Lets.denotePure]; congr`
     Com d Γ .pure ty → Γ.Valuation → (HVector toType ty) :=
   Com.denote
 
-/-! ### simp-lemmas about `denote` functions -/
+/-! ### simp-theorems about `denote` functions -/
 section Lemmas
 
-@[simp] lemma Expr.comap_denote_snocRight (e : Expr d Γ .pure ty) (V : Γ.Valuation) :
+@[simp] theorem Expr.comap_denote_snocRight (e : Expr d Γ .pure ty) (V : Γ.Valuation) :
     (Valuation.comap (e.denote V) e.contextHom) = V := by
   funext t v; simp [Expr.denote_unfold, Id.map_eq']
 
-@[simp] lemma HVector.denote_nil
+@[simp] theorem HVector.denote_nil
     (T : HVector (fun (t : Ctxt d.Ty × List d.Ty) => Com d t.1 .impure t.2) []) :
     HVector.denote T = HVector.nil := by
   cases T; rfl
 
-@[simp] lemma HVector.denote_cons
+@[simp] theorem HVector.denote_cons
     {t : _ × _} {ts : RegionSignature _}
     (a : Com d t.1 .impure t.2) (as : Regions _ ts) :
     HVector.denote (.cons a as) = .cons (a.denote) (as.denote) :=
   rfl
 
-@[simp] lemma Com.denote_rets {eff : EffectKind} (Γ : Ctxt d.Ty) (vs : HVector Γ.Var ts) :
+@[simp] theorem Com.denote_rets {eff : EffectKind} (Γ : Ctxt d.Ty) (vs : HVector Γ.Var ts) :
     (Com.rets (eff := eff) vs).denote = fun V => pure (vs.map V) :=
   rfl
 
-@[simp] lemma Com.denote_var [LawfulMonad d.m] {e : Expr d Γ eff α} :
+@[simp] theorem Com.denote_var [LawfulMonad d.m] {e : Expr d Γ eff α} :
     (Com.var e body).denote =
     fun Γv => (e.denote Γv) >>= body.denote := by
   cases eff <;> rfl
 
-@[simp] lemma Com.denoteLets_var (e : Expr d Γ eff t) (body : Com d _ eff u) [LawfulMonad d.m] :
+@[simp] theorem Com.denoteLets_var (e : Expr d Γ eff t) (body : Com d _ eff u) [LawfulMonad d.m] :
     (Com.var e body).denoteLets =
         fun V => e.denote V >>= body.denoteLets := by
   cases eff
   · rfl
   · simp [denoteLets, bind_pure]
 
-@[simp] lemma Lets.denote_nil {Γ : Ctxt d.Ty} :
+@[simp] theorem Lets.denote_nil {Γ : Ctxt d.Ty} :
     (Lets.nil : Lets d Γ eff Γ).denote = (return ·) := by
   funext; simp [denote]
 
-@[simp] lemma Lets.denote_var {lets : Lets d Γ_in eff Γ_out} {e : Expr d Γ_out eff t} :
+@[simp] theorem Lets.denote_var {lets : Lets d Γ_in eff Γ_out} {e : Expr d Γ_out eff t} :
     (lets.var e).denote = fun V_in => lets.denote V_in >>= e.denote :=
   rfl
 
@@ -661,19 +661,19 @@ def Com.changeVars : Com d Γ eff ty →
   |  .var e body => fun varsMap => .var (e.changeVars varsMap)
       (body.changeVars (fun _ v => varsMap.append v))
 
-/-! simp-lemmas about `changeVars`-/
+/-! simp-theorems about `changeVars`-/
 section Lemmas
 variable {Γ Γ' : Ctxt d.Ty} {t} (f : Γ.Hom Γ') (e : Expr d Γ eff t) (V : Γ'.Valuation)
 
-@[simp] lemma op_changeVars : (e.changeVars f).op = e.op := rfl
-@[simp] lemma regArgs_changeVars : (e.changeVars f).regArgs = e.regArgs := rfl
-@[simp] lemma args_changeVars : (e.changeVars f).args = e.args.map f := rfl
+@[simp] theorem op_changeVars : (e.changeVars f).op = e.op := rfl
+@[simp] theorem regArgs_changeVars : (e.changeVars f).regArgs = e.regArgs := rfl
+@[simp] theorem args_changeVars : (e.changeVars f).args = e.args.map f := rfl
 
-@[simp] lemma Expr.denoteOp_changeVars  :
+@[simp] theorem Expr.denoteOp_changeVars  :
     (e.changeVars f).denoteOp V = e.denoteOp (V.comap f) := by
   simp [denoteOp, HVector.map_map]; rfl
 
-@[simp] lemma Expr.denote_changeVars {Γ Γ' : Ctxt d.Ty}
+@[simp] theorem Expr.denote_changeVars {Γ Γ' : Ctxt d.Ty}
     (varsMap : Γ.Hom Γ')
     (e : Expr d Γ eff Δ)
     (V : Γ'.Valuation)
@@ -685,22 +685,22 @@ variable {Γ Γ' : Ctxt d.Ty} {t} (f : Γ.Hom Γ') (e : Expr d Γ eff t) (V : Γ
 
 end Lemmas
 
-@[simp] lemma Com.changeVars_rets :
+@[simp] theorem Com.changeVars_rets :
     (Com.rets (d:=d) (Γ:=Γ) (eff := eff) vs).changeVars
     = fun (map : Γ.Hom Δ) => Com.rets (vs.map map) := by
   funext map
   simp [changeVars]
 
-@[simp] lemma Com.changeVars_var (e : Expr d Γ eff t) (body : Com d _ eff u) :
+@[simp] theorem Com.changeVars_var (e : Expr d Γ eff t) (body : Com d _ eff u) :
     (Com.var e body).changeVars
     = fun (map : Γ.Hom Δ) => Com.var (e.changeVars map) (body.changeVars map.append) := by
   simp [changeVars]
 
--- TODO: this is implied by simpler simp-lemmas, do we need it?
-@[simp] lemma Com.outContext_changeVars_rets (varsMap : Γ.Hom Γ') (_ : Com d Γ eff ty) :
+-- TODO: this is implied by simpler simp-theorems, do we need it?
+@[simp] theorem Com.outContext_changeVars_rets (varsMap : Γ.Hom Γ') (_ : Com d Γ eff ty) :
   ((Com.rets (d:=d) (eff := eff) v).changeVars varsMap).outContext = Γ' := by simp
 
-@[simp] lemma Com.denote_changeVars
+@[simp] theorem Com.denote_changeVars
     (varsMap : Γ.Hom Γ') (c : Com d Γ eff ty) :
     (c.changeVars varsMap).denote =
     fun V => c.denote (V.comap varsMap) := by
@@ -708,7 +708,7 @@ end Lemmas
   | rets x      => simp [HVector.map_map]; rfl
   | var _ _ ih => simp [denote, ih]
 
-@[simp] lemma Com.denote_changeVars' (varsMap : Γ.Hom Γ') (c : Com d Γ eff ty) :
+@[simp] theorem Com.denote_changeVars' (varsMap : Γ.Hom Γ') (c : Com d Γ eff ty) :
     (c.changeVars varsMap).denote = fun V => c.denote (V.comap varsMap) := by
   simp
 
@@ -718,32 +718,32 @@ end Lemmas
   | .var _ body  => cast (by simp) <|
       Com.outContext_changeVars_hom (map := map.append) map_inv.append (c := body)
 
-@[simp] lemma Com.denoteLets_returnVars (c : Com d Γ .pure tys) (V : Valuation Γ) :
+@[simp] theorem Com.denoteLets_returnVars (c : Com d Γ .pure tys) (V : Valuation Γ) :
     c.returnVars.map (c.denoteLets V) = c.denote V := by
   induction c using Com.rec'
   case rets v  => rfl
   case var ih => simp [denoteLets, Id.pure_eq', Id.bind_eq', ih, denote]
 
-@[simp] lemma Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
+@[simp] theorem Expr.changeVars_changeVars (e : Expr d Γ eff ty) (f : Γ.Hom Δ) (g : Δ.Hom Ξ) :
     (e.changeVars f).changeVars g = e.changeVars (f.comp g) := by
   simp [changeVars, HVector.map_map]; rfl
 
 /-! ### ChangeVars & Specific Morphisms -/
 
-lemma Expr.changeVars_castCodomain (e : Expr d Γ eff t)
+theorem Expr.changeVars_castCodomain (e : Expr d Γ eff t)
     (f : Hom Γ Δ) (h : Δ = Δ') :
     e.changeVars (f.castCodomain h) = cast (by simp [h]) (e.changeVars f) := by
   subst h; rfl
 
-@[simp] lemma HVector.changeVars_id {Γ : Ctxt d.Ty} (vs : HVector Γ.Var ts) :
+@[simp] theorem HVector.changeVars_id {Γ : Ctxt d.Ty} (vs : HVector Γ.Var ts) :
     vs.map Hom.id = vs := by
   induction vs <;> simp [map, *]
 
-@[simp] lemma Expr.changeVars_id (e : Expr d Γ eff t) :
+@[simp] theorem Expr.changeVars_id (e : Expr d Γ eff t) :
     e.changeVars .id = e := by
   cases e; simp [changeVars]
 
-@[simp] lemma Com.changeVars_id (c : Com d Γ eff t) :
+@[simp] theorem Com.changeVars_id (c : Com d Γ eff t) :
     c.changeVars .id = c := by
   induction c
   · simp
@@ -841,43 +841,43 @@ def Com.letSup (e : Expr d Γ eff₁ t) (body : Com d (e.outContext) eff₂ u) :
 
 section Lemmas
 
-@[simp] lemma Expr.op_castPureToEff (e : Expr d Γ .pure t) : (e.castPureToEff eff).op = e.op := by
+@[simp] theorem Expr.op_castPureToEff (e : Expr d Γ .pure t) : (e.castPureToEff eff).op = e.op := by
   cases e; cases eff <;> rfl
-@[simp] lemma Expr.args_castPureToEff (e : Expr d Γ .pure t) :
+@[simp] theorem Expr.args_castPureToEff (e : Expr d Γ .pure t) :
     (e.castPureToEff eff).args = cast (by simp) e.args := by
   cases e; cases eff <;> rfl
 
-@[simp] lemma Com.castPureToEff_rets : (rets v : Com d Γ .pure ty).castPureToEff eff = rets v := rfl
-@[simp] lemma Com.castPureToEff_var {com : Com d _ .pure ty} {e : Expr d Γ _ eTy} :
+@[simp] theorem Com.castPureToEff_rets : (rets v : Com d Γ .pure ty).castPureToEff eff = rets v := rfl
+@[simp] theorem Com.castPureToEff_var {com : Com d _ .pure ty} {e : Expr d Γ _ eTy} :
     (var e com).castPureToEff eff = var (e.castPureToEff eff) (com.castPureToEff eff) := rfl
 
-@[simp] lemma Lets.castPureToEff_nil : (nil : Lets d Γ_in _ _).castPureToEff eff = nil := rfl
-@[simp] lemma Lets.castPureToEff_var {lets : Lets d Γ_in .pure Γ_out}
+@[simp] theorem Lets.castPureToEff_nil : (nil : Lets d Γ_in _ _).castPureToEff eff = nil := rfl
+@[simp] theorem Lets.castPureToEff_var {lets : Lets d Γ_in .pure Γ_out}
     {e : Expr d Γ_out .pure eTy} :
     (var lets e).castPureToEff eff = var (lets.castPureToEff eff) (e.castPureToEff eff) :=
   rfl
 
-@[simp] lemma Com.outContext_castPureToEff {com : Com d Γ .pure ty} :
+@[simp] theorem Com.outContext_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).outContext = com.outContext := by
   induction com <;> simp [*]
 
 /-- `castPureToEff` does not change the size of a `Com` -/
-@[simp] lemma Com.size_castPureToEff {com : Com d Γ .pure ty} :
+@[simp] theorem Com.size_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).size = com.size := by
   induction com <;> simp [*]
 
 /-- `castPureToEff` does not change the number of bvars of a `Com` -/
-@[simp] lemma Com.bvars_castPureToEff {com : Com d Γ .pure ty} :
+@[simp] theorem Com.bvars_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).bvars = com.bvars := by
   induction com <;> simp [*]
 
-@[simp] lemma Com.returnVars_castPureToEff (eff : _) (com : Com d Γ .pure tys) :
+@[simp] theorem Com.returnVars_castPureToEff (eff : _) (com : Com d Γ .pure tys) :
     (com.castPureToEff eff).returnVars = com.returnVars.map (fun _ v => v.castCtxt (by simp)) := by
   induction com <;> simp_all
 
 /-! denotations of `castPureToEff` -/
 
-@[simp] lemma Expr.denote_castPureToEff {e : Expr d Γ .pure t} :
+@[simp] theorem Expr.denote_castPureToEff {e : Expr d Γ .pure t} :
     denote (e.castPureToEff eff) = fun V => pure (e.denote V) := by
   rcases e with ⟨op, rfl, eff_le, _, _⟩
   cases eff
@@ -887,7 +887,7 @@ section Lemmas
     simp only [castPureToEff, changeEffect, denote_unfold, denoteOp, op_mk, args_mk, regArgs_mk,
       EffectKind.pure_map, EffectKind.pure_liftEffect]
 
-@[simp] lemma Com.denote_castPureToEff {com : Com d Γ .pure ty} :
+@[simp] theorem Com.denote_castPureToEff {com : Com d Γ .pure ty} :
     denote (com.castPureToEff eff) = fun V => pure (com.denote V) := by
   funext V
   induction com using Com.rec'
@@ -904,7 +904,7 @@ def Expr.HasPureOp (e : Expr d Γ eff ty) : Prop :=
 /-- `e.HasPureOp` is decidable -/
 instance (e : Expr d Γ eff t) : Decidable (e.HasPureOp) := inferInstanceAs (Decidable <| _ = _)
 
-@[simp] lemma Expr.castPureToEff_pure_eq (e : Expr d Γ .pure t) : e.castPureToEff .pure = e := by
+@[simp] theorem Expr.castPureToEff_pure_eq (e : Expr d Γ .pure t) : e.castPureToEff .pure = e := by
   cases e; simp [castPureToEff, changeEffect]
 
 /-- Convert an arbitrary expression into a statically known
@@ -927,9 +927,9 @@ theorem Expr.HasPureOp_of_pure : (e : Expr d Γ .pure t) → e.HasPureOp
 section toPureLemmas
 variable {Γ eff ty} {e : Expr d Γ eff ty} (h : e.HasPureOp)
 
-@[simp] lemma Expr.op_toPure       : (e.toPure h).op = e.op := rfl
-@[simp] lemma Expr.args_toPure     : (e.toPure h).args = e.args := rfl
-@[simp] lemma Expr.regArgs_toPure  : (e.toPure h).regArgs = e.regArgs := rfl
+@[simp] theorem Expr.op_toPure       : (e.toPure h).op = e.op := rfl
+@[simp] theorem Expr.args_toPure     : (e.toPure h).args = e.args := rfl
+@[simp] theorem Expr.regArgs_toPure  : (e.toPure h).regArgs = e.regArgs := rfl
 
 end toPureLemmas
 
@@ -961,13 +961,13 @@ equivalent to the return value of the inserted program `newCom`, then the denota
 after insertion agrees with the original zipper. -/
 section DenoteInsert
 
-@[simp] lemma Expr.denote_appendInl (e : Expr d Γ .pure t) (V : Γ.Valuation) (v : Γ.Var u) :
+@[simp] theorem Expr.denote_appendInl (e : Expr d Γ .pure t) (V : Γ.Valuation) (v : Γ.Var u) :
     e.denote V v.appendInl = V v := by
   simp [denote_unfold, Id.map_eq']
 
 /-- Denoting any of the free variables of a program through `Com.denoteLets` just returns the
 assignment of that variable in the input valuation -/
-@[simp] lemma Com.denoteLets_outContextHom (com : Com d Γ .pure ty) (V : Valuation Γ)
+@[simp] theorem Com.denoteLets_outContextHom (com : Com d Γ .pure ty) (V : Valuation Γ)
     {vTy} (v : Var Γ vTy) :
     com.denoteLets V (com.outContextHom v) = V v := by
   induction com using Com.rec'
@@ -976,7 +976,7 @@ assignment of that variable in the input valuation -/
     rw [outContextHom_var]
     simp [Id.bind_eq', Hom.comp, ih]
 
-@[simp] lemma Ctxt.Valuation.comap_outContextHom_denoteLets {com : Com d Γ .pure ty} {V} :
+@[simp] theorem Ctxt.Valuation.comap_outContextHom_denoteLets {com : Com d Γ .pure ty} {V} :
     Valuation.comap (com.denoteLets V) com.outContextHom = V := by
   unfold comap; simp
 
@@ -1017,9 +1017,9 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
   (getPureExprAux lets v).map fun ⟨_, v, e⟩ =>
     ⟨_, v, e.changeVars Ctxt.dropUntilHom⟩
 
-@[simp] lemma Lets.getPureExpr_nil : getPureExpr (.nil : Lets d Γ eff Γ) v = none := rfl
+@[simp] theorem Lets.getPureExpr_nil : getPureExpr (.nil : Lets d Γ eff Γ) v = none := rfl
 
-@[simp] lemma Lets.getPureExpr_var_appendInr (lets : Lets d Γ_in eff Γ_out)
+@[simp] theorem Lets.getPureExpr_var_appendInr (lets : Lets d Γ_in eff Γ_out)
     (e : Expr d Γ_out eff ty) (v : Var ⟨ty⟩ u) :
     getPureExpr (lets.var e) v.appendInr
     = e.toPure?.map (fun e => ⟨_, v, e.changeVars <| e.contextHom⟩) := by
@@ -1035,7 +1035,7 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
   simp; grind
 
 
-@[simp] lemma Lets.getPureExprAux_var_appendInl (lets : Lets d Γ_in eff Γ_out)
+@[simp] theorem Lets.getPureExprAux_var_appendInl (lets : Lets d Γ_in eff Γ_out)
     (e : Expr d Γ_out eff ty₁) (v : Var Γ_out ty₂) :
     getPureExprAux (lets.var e) v.appendInl
     = (getPureExprAux lets v).map fun ⟨_, w, e⟩ =>
@@ -1050,7 +1050,7 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
     simp only [Option.map_some, cast_eq_iff_heq]
     congr 3 <;> simp [Expr.changeVars_castCodomain]
 
-@[simp] lemma Lets.getPureExpr_var_appendInl (lets : Lets d Γ_in eff Γ_out) (e : Expr d Γ_out _ ty₁)
+@[simp] theorem Lets.getPureExpr_var_appendInl (lets : Lets d Γ_in eff Γ_out) (e : Expr d Γ_out _ ty₁)
     (v : Var Γ_out ty₂):
     getPureExpr (lets.var e) (v.appendInl)
     = (fun ⟨_, w, e'⟩ => ⟨_, w,  e'.changeVars <| e.contextHom⟩) <$> (getPureExpr lets v) := by
@@ -1152,12 +1152,12 @@ def Lets.changeDialect : Lets d Γ_in eff Γ_out → Lets d' (f.mapTy <$> Γ_in)
 
 section Lemmas
 
-@[simp] lemma Com.changeDialect_rets (f : DialectMorphism d d') (vs) :
+@[simp] theorem Com.changeDialect_rets (f : DialectMorphism d d') (vs) :
     Com.changeDialect f (Com.rets vs : Com d Γ eff t)
     = Com.rets (vs.map' f.mapTy (fun _ v => v.toMap)) := by
   cases eff <;> simp [changeDialect]
 
-@[simp] lemma Com.changeDialect_var (f : DialectMorphism d d')
+@[simp] theorem Com.changeDialect_var (f : DialectMorphism d d')
     (e : Expr d Γ eff t) (body : Com d _ eff u) :
     (Com.var e body).changeDialect f
     = have h := by simp
@@ -1165,7 +1165,7 @@ section Lemmas
       <| (body.changeDialect f).changeVars (Hom.id.castCodomain h) := by
   simp only [changeDialect]
 
-@[simp] lemma HVector.changeDialect_nil {eff : EffectKind} (f : DialectMorphism d d') :
+@[simp] theorem HVector.changeDialect_nil {eff : EffectKind} (f : DialectMorphism d d') :
     HVector.changeDialect (eff := eff) f nil = nil := by simp [HVector.changeDialect]
 
 end Lemmas
@@ -1194,16 +1194,16 @@ section Lemmas
 
 /-! #### Basic Lemmas -/
 
-@[simp] lemma Lets.addComToEnd_rets {lets : Lets d Γ_in eff Γ_out} :
+@[simp] theorem Lets.addComToEnd_rets {lets : Lets d Γ_in eff Γ_out} :
     addComToEnd lets (.rets v : Com d Γ_out eff t) = lets             := by simp [addComToEnd]
-@[simp] lemma Lets.addComToEnd_var {lets : Lets d Γ_in eff Γ_out} {com : Com d _ eff t} :
+@[simp] theorem Lets.addComToEnd_var {lets : Lets d Γ_in eff Γ_out} {com : Com d _ eff t} :
     addComToEnd lets (Com.var e com) = addComToEnd (lets.var e) com := by simp [addComToEnd]
 
-@[simp] lemma Com.toLets_rets : toLets (rets v : Com d Γ eff t) = .nil := by simp [toLets]
+@[simp] theorem Com.toLets_rets : toLets (rets v : Com d Γ eff t) = .nil := by simp [toLets]
 
 /-! ### castPureToEff -/
 
-@[simp] lemma Lets.addComToEnd_castPureToEff {lets : Lets d Γ_in .pure Γ_out}
+@[simp] theorem Lets.addComToEnd_castPureToEff {lets : Lets d Γ_in .pure Γ_out}
     {com : Com d Γ_out .pure ty} :
     (lets.castPureToEff eff).addComToEnd (com.castPureToEff eff)
     = cast (by simp) ((lets.addComToEnd com).castPureToEff eff) := by
@@ -1213,7 +1213,7 @@ section Lemmas
     simp only [Com.castPureToEff_var, Com.outContext_var, addComToEnd_var,
       ← Lets.castPureToEff_var, ih]
 
-@[simp] lemma Com.toLets_castPureToEff {com : Com d Γ .pure ty} :
+@[simp] theorem Com.toLets_castPureToEff {com : Com d Γ .pure ty} :
     (com.castPureToEff eff).toLets = cast (by simp) (com.toLets.castPureToEff eff) := by
   unfold toLets
   rw [show (Lets.nil : Lets d Γ eff Γ) = (Lets.nil.castPureToEff eff) from rfl,
@@ -1221,7 +1221,7 @@ section Lemmas
 
 /-! ### Denotation Lemmas-/
 
-@[simp] lemma Lets.denote_addComToEnd
+@[simp] theorem Lets.denote_addComToEnd
     {lets : Lets d Γ_in eff Γ_out} {com : Com d Γ_out eff t} :
     Lets.denote (lets.addComToEnd com) = fun V => (do
         let Vlets ← lets.denote V
@@ -1232,13 +1232,13 @@ section Lemmas
   case rets => simp [Com.denoteLets]
   case var ih => simp [addComToEnd, ih, denote_var]
 
-@[simp] lemma Com.denoteLets_rets : (.rets v : Com d Γ eff t).denoteLets = fun V => pure V := by
+@[simp] theorem Com.denoteLets_rets : (.rets v : Com d Γ eff t).denoteLets = fun V => pure V := by
   funext V; simp [denoteLets]
 
 theorem Com.denoteLets_eq {com : Com d Γ eff t} : com.denoteLets = com.toLets.denote := by
   simp only [toLets]; induction com using Com.rec' <;> simp [Lets.denote_var]
 
-@[simp] lemma Com.denoteLets_castPureToEff {com : Com d Γ .pure ty} :
+@[simp] theorem Com.denoteLets_castPureToEff {com : Com d Γ .pure ty} :
     denoteLets (com.castPureToEff eff)
     = fun V => pure (com.denoteLets V |>.comap fun _ v => v.castCtxt (by simp)) := by
   funext V
@@ -1286,20 +1286,20 @@ def Com.vars (com : Com d Γ eff ts) : VarSet Γ :=
 
 section Lemmas
 
-@[simp] lemma Com.vars_toLets (com : Com d Γ eff t) :
+@[simp] theorem Com.vars_toLets (com : Com d Γ eff t) :
     com.toLets.varsOfVec com.returnVars = com.vars := rfl
 
-@[simp] lemma Lets.vars_var {lets : Lets d Γ_in eff Γ_out}
+@[simp] theorem Lets.vars_var {lets : Lets d Γ_in eff Γ_out}
     {t} {e : Expr d Γ_out eff t} {w : Γ_out.Var u} :
     Lets.vars (Lets.var lets e) w.appendInl
     = Lets.vars lets w := by
   simp [Lets.vars]
 
-@[simp] lemma HVector.vars_nil :
+@[simp] theorem HVector.vars_nil :
     (HVector.nil : HVector (Var Γ) ([] : List d.Ty)).vars = ∅ := by
   simp [HVector.vars, HVector.foldl]
 
-@[simp] lemma HVector.vars_cons {t  : d.Ty} {l : List d.Ty}
+@[simp] theorem HVector.vars_cons {t  : d.Ty} {l : List d.Ty}
     (v : Var Γ t) (T : HVector (Var Γ) l) :
     (HVector.cons v T).vars = insert ⟨_, v⟩ T.vars := by
   rw [HVector.vars, HVector.vars]

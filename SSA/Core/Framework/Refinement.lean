@@ -77,7 +77,7 @@ variable {α β} [inst : HRefinement α β]
 instance instRefinement : HRefinement (Id α) (Id β) := inst
 
 @[simp_denote (high)] -- high priority so that this is tried before the `reduceIsRefinedBy` simproc
-lemma pure_isRefinedBy_pure (x : α) (y : β) :
+theorem pure_isRefinedBy_pure (x : α) (y : β) :
   (pure x : Id _) ⊑ (pure y : Id _) ↔ x ⊑ y := by rfl
 
 end Id
@@ -121,12 +121,12 @@ instance instEffToMonadRefinement :
   IsRefinedBy x y := coe_toMonad x ⊑ coe_toMonad y
 
 open EffectKind (pure) in
-@[simp, simp_denote] lemma effToMonadRefinement_pure (x : pure.toMonad m α) (y : pure.toMonad n β) :
+@[simp, simp_denote] theorem effToMonadRefinement_pure (x : pure.toMonad m α) (y : pure.toMonad n β) :
     x ⊑ y ↔ pure (f := m) (@id α x) ⊑ pure (f := n) (@id β y) := by
   rfl
 
 open EffectKind (impure) in
-@[simp, simp_denote] lemma effToMonadRefinement_impure (x : impure.toMonad m α) (y : impure.toMonad n β) :
+@[simp, simp_denote] theorem effToMonadRefinement_impure (x : impure.toMonad m α) (y : impure.toMonad n β) :
     x ⊑ y ↔ (@id (m α) x) ⊑ (@id (n β) y) := by
   rfl
 
@@ -206,7 +206,7 @@ open Lean Meta in
 `reduceIsRefinedBy` simplifies certain `HRefinement` instances.
 
 We tend to have a lot of types which are def-eq, but not *reducibly* def-eq,
-to others. Yet, we often want to write simp-lemmas just about the underlying
+to others. Yet, we often want to write simp-theorems just about the underlying
 types and not have to duplicate those.
 
 In particular, this holds for the denotation of dialect types (i.e., `⟦t⟧` for
@@ -217,7 +217,7 @@ terms of `inferInstance(As)` and mark the instance as `@[simp_denote]`.
 Note that the instances are not problematic, per se, as instances are *not* part
 of the discrtree matching that `simp` uses [1], however, the *types* that are
 passed to `HRefinement.IsRefinedBy` *are* part of the discrtree (unless
-explictly marked `no_index` by a particular simp-lemma). While unfolding the
+explictly marked `no_index` by a particular simp-theorem). While unfolding the
 instances, `reduceIsRefinedBy` will also unfold the *types* into the canonical
 spelling for the unfolded type.
 
@@ -322,11 +322,11 @@ instance  : HRefinement (HVector A as) (HVector B bs) where
 
 variable {x : A a} {xs : HVector A as} {y : B b} {ys : HVector B bs}
 
-@[simp, simp_denote] lemma cons_isRefinedBy_cons  : ((x ::ₕ xs) ⊑ (y ::ₕ ys)) ↔ (x ⊑ y ∧ xs ⊑ ys) := by rfl
-@[simp, simp_denote] lemma nil_isRefinedBy_nil    : (nil : HVector A _) ⊑ (nil : HVector B _)     := True.intro
+@[simp, simp_denote] theorem cons_isRefinedBy_cons  : ((x ::ₕ xs) ⊑ (y ::ₕ ys)) ↔ (x ⊑ y ∧ xs ⊑ ys) := by rfl
+@[simp, simp_denote] theorem nil_isRefinedBy_nil    : (nil : HVector A _) ⊑ (nil : HVector B _)     := True.intro
 
-@[simp, simp_denote] lemma not_nil_isRefinedBy_cons : ¬((nil : HVector A _) ⊑ (y ::ₕ ys)) := by rintro ⟨⟩
-@[simp, simp_denote] lemma not_cons_isRefinedBy_nil : ¬((x ::ₕ xs) ⊑ (nil : HVector B _)) := by rintro ⟨⟩
+@[simp, simp_denote] theorem not_nil_isRefinedBy_cons : ¬((nil : HVector A _) ⊑ (y ::ₕ ys)) := by rintro ⟨⟩
+@[simp, simp_denote] theorem not_cons_isRefinedBy_nil : ¬((x ::ₕ xs) ⊑ (nil : HVector B _)) := by rintro ⟨⟩
 
 end HVector
 

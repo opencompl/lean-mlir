@@ -66,7 +66,7 @@ instance [ToString α] : ToString (PoisonOr α) where
   | .poison  => "poison"
   | .value a => "(value " ++ addParenHeuristic (toString a) ++ ")"
 
-/-! ### Monad instance and lemmas -/
+/-! ### Monad instance and theorems -/
 instance : Monad PoisonOr where
   pure := value
   bind := fun a f => match a with

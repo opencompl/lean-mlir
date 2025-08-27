@@ -13,7 +13,7 @@ import Lean.Meta.KAbstract
 import Lean.Elab.Tactic.ElabTerm
 
 variable [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [LawfulMonad d.m] in
-@[simp_denote] lemma Expr.denote_unfold' {ty} (e : Expr d Γ eff ty) :
+@[simp_denote] theorem Expr.denote_unfold' {ty} (e : Expr d Γ eff ty) :
     e.denote V = do
       let x ← e.denoteOp V
       return V ++ x := by
@@ -70,15 +70,15 @@ We've observed `simp [HVector.denote]` not working in such situations.
 According to Zulip (https://leanprover.zulipchat.com/#narrow/stream/270676-lean4/topic/simp.20.5BX.5D.20fails.2C.20rw.20.5BX.5D.20works/near/358861409):
 > simp [(X)] is a standard trick to fix simp [X] not working
 
-By default, it seems that `simp` will synthesize typeclass arguments of a lemma, and then
-use the *default* instance to determine whether a simp-lemma applies to the current goal.
+By default, it seems that `simp` will synthesize typeclass arguments of a theorem, and then
+use the *default* instance to determine whether a simp-theorem applies to the current goal.
 Writing `simp [(X)]`, on the other hand, is equivalent to writing `simp [@X _ _ _]`
   (for as many underscores as `X` takes arguments, implicit or explicit).
 The parentheses seems to enable `simp` to unify typeclass arguments as well, and thus the
-  simp-lemma applies even for non-standard instances.
+  simp-theorem applies even for non-standard instances.
 
 We've replicated this effect by defining `HVector.denote_{nil,cons}'`, as analogues
-to their non-primed lemmas, which instead take all instances as regular implicit
+to their non-primed theorems, which instead take all instances as regular implicit
 arguments, thus guiding `simp` to unify against non-standard instances.
 -/
 section
@@ -86,12 +86,12 @@ variable {d : Dialect} {instSig : DialectSignature d}
   {instTyDenote : TyDenote d.Ty} {instDenote : DialectDenote d}
   {instMonad : Monad d.m}
 
-@[simp_denote] lemma HVector.denote_nil'
+@[simp_denote] theorem HVector.denote_nil'
     (T : HVector (fun (t : Ctxt d.Ty × List d.Ty) => Com d t.1 .impure t.2) []) :
     HVector.denote T = HVector.nil := by
   cases T; simp [HVector.denote]
 
-@[simp_denote] lemma HVector.denote_cons'
+@[simp_denote] theorem HVector.denote_cons'
     (t : Ctxt d.Ty × List d.Ty) (ts : List (Ctxt d.Ty × List d.Ty))
     (a : Com d t.1 .impure t.2) (as : HVector (fun t => Com d t.1 .impure t.2) ts) :
     HVector.denote (.cons a as) = .cons (a.denote) (as.denote) := by
@@ -187,12 +187,12 @@ end SimpValuationApply
 
 WORKAROUND: Simplifying the semantics can yield equalities of the form:
   `@Eq (Id <| HVector _ _) (x ::ₕ xs) (y ::ₕ ys)`
-The `Id _` in the type of the equality somehow blocks the injectivity lemma
+The `Id _` in the type of the equality somehow blocks the injectivity theorem
 for `HVector.cons` from applying, so we first have to clean up the equality.
 -/
-@[simp_denote] lemma eq_id_iff (x y : α) : @Eq (Id α) x y ↔ x = y := by rfl
+@[simp_denote] theorem eq_id_iff (x y : α) : @Eq (Id α) x y ↔ x = y := by rfl
 
-@[simp_denote] lemma HVector.cons_inj {α : Type u_1} {f : α → Type u_2}
+@[simp_denote] theorem HVector.cons_inj {α : Type u_1} {f : α → Type u_2}
     {as : List α} {a : α}  (x y : f a) (xs ys : HVector f as) :
     @Eq (no_index _) (x ::ₕ xs) (y ::ₕ ys) ↔ (x = y ∧ xs = ys) := by
   rw [HVector.cons.injEq]

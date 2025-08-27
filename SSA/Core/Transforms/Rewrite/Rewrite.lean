@@ -98,11 +98,11 @@ def rewriteAt
     return zip.toCom
   else none
 
-@[simp] lemma Com.denote_toFlatCom_lets [LawfulMonad d.m] (com : Com d Γ .pure t) :
+@[simp] theorem Com.denote_toFlatCom_lets [LawfulMonad d.m] (com : Com d Γ .pure t) :
     com.toFlatCom.lets.denote = com.denoteLets := by
   funext Γv; simp [toFlatCom, Com.denoteLets_eq]
 
-@[simp] lemma Com.toFlatCom_ret [LawfulMonad d.m] (com : Com d Γ .pure t) :
+@[simp] theorem Com.toFlatCom_ret [LawfulMonad d.m] (com : Com d Γ .pure t) :
     com.toFlatCom.rets = com.returnVars := by
   simp [toFlatCom]
 
@@ -237,10 +237,10 @@ def multiRewritePeephole (fuel : ℕ)
     (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
   multiRewritePeepholeAt fuel prs 0 target
 
-/-- helper lemma for the proof of `denote_rewritePeephole_go_multi`. It proofs that folding
+/-- helper theorem for the proof of `denote_rewritePeephole_go_multi`. It proofs that folding
 a list of semantics preserving peephole rewrites over the target program does preserve the semantics
 of the target program. -/
-lemma denote_foldl_rewritePeepholeAt
+theorem denote_foldl_rewritePeepholeAt
   (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (ix : ℕ) (target : Com d Γ₂ eff t₂) :
     (prs.foldl (fun acc ⟨_Γ, _ty, pr⟩=> rewritePeepholeAt pr ix acc) target).denote = target.denote := by
   induction prs generalizing target
