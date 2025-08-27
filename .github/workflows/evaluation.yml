@@ -26,6 +26,7 @@ jobs:
             .lake/packages
             .lake/build
             Tacbench/.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Install elan 🕑
         if: steps.cache-lake.outputs.cache-hit != 'true'
