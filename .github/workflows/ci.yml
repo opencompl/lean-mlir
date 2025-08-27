@@ -16,6 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
+        id: setup-buildx
         uses: docker/setup-buildx-action@v3
 
       - name: Login to GitHub Container Registry
@@ -40,7 +41,9 @@ jobs:
       - name: Inject `.lake` cache
         uses: reproducible-containers/buildkit-cache-dance@v3.3.0
         with:
-          cache-dir: .lake
+          builder: ${{ steps.setup-buildx.outputs.name }}
+          cache-map: |
+            { ".lake": "/root/.cache/LeanMLIR" }              
           dockerfile: Dockerfile
           skip-extraction: ${{ steps.cache-lake.outputs.cache-hit }}
 
