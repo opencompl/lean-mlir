@@ -1,21 +1,21 @@
 import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
-/-! ;
 
-This file implements and verifies the alu32.ll test cases. We still need to find figure out the srl case. -/
+/-!
+  This file implements the `alu32.ll` test case in the LLVM test suite.
+-/
 
-/- # 1 -/
-/--
-define i32 @addi(i32 %a) nounwind {
-; RV64I-LABEL: addi:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    addiw a0, a0, 1
-; RV64I-NEXT:    ret
-  %1 = add i32 %a, 1
-  ret i32 %1
-}-/
-
+/-- ### 1
+  define i32 @addi(i32 %a) nounwind {
+  ; RV64I-LABEL: addi:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    addiw a0, a0, 1
+  ; RV64I-NEXT:    ret
+    %1 = add i32 %a, 1
+    ret i32 %1
+  }
+-/
 def addi_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (1) : i32
@@ -38,19 +38,21 @@ def addi_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   correct := by
     unfold addi_llvm_i32 addi_riscv_i32
     simp_lowering
+    bv_decide
 
 
-/- # 2 -/
-/- define i32 @slti(i32 %a) nounwind {
-; RV64I-LABEL: slti:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    sext.w a0, a0
-; RV64I-NEXT:    slti a0, a0, 2
-; RV64I-NEXT:    ret
-  %1 = icmp slt i32 %a, 2
-  %2 = zext i1 %1 to i32
-  ret i32 %2
-}-/
+/-- ### 2
+  define i32 @slti(i32 %a) nounwind {
+  ; RV64I-LABEL: slti:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    sext.w a0, a0
+  ; RV64I-NEXT:    slti a0, a0, 2
+  ; RV64I-NEXT:    ret
+    %1 = icmp slt i32 %a, 2
+    %2 = zext i1 %1 to i32
+    ret i32 %2
+  }
+-/
 def slti_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (2) : i32
@@ -77,17 +79,18 @@ def slti_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_lowering
     bv_decide
 
-/- # 3 -/
-/- define i32 @sltiu(i32 %a) nounwind {
-; RV64I-LABEL: sltiu:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    sext.w a0, a0
-; RV64I-NEXT:    sltiu a0, a0, 3
-; RV64I-NEXT:    ret
-  %1 = icmp ult i32 %a, 3
-  %2 = zext i1 %1 to i32
-  ret i32 %2
-}-/
+/-- ### 3
+  define i32 @sltiu(i32 %a) nounwind {
+  ; RV64I-LABEL: sltiu:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    sext.w a0, a0
+  ; RV64I-NEXT:    sltiu a0, a0, 3
+  ; RV64I-NEXT:    ret
+    %1 = icmp ult i32 %a, 3
+    %2 = zext i1 %1 to i32
+    ret i32 %2
+  }
+-/
 def sltiu_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (3) : i32
@@ -114,15 +117,16 @@ def sltiu_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_lowering
     bv_decide
 
-/- # 4 -/
-/- define i32 @xori(i32 %a) nounwind {
-; RV64I-LABEL: xori:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    xori a0, a0, 4
-; RV64I-NEXT:    ret
-  %1 = xor i32 %a, 4
-  ret i32 %1
-}-/
+/-- ### 4
+  define i32 @xori(i32 %a) nounwind {
+  ; RV64I-LABEL: xori:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    xori a0, a0, 4
+  ; RV64I-NEXT:    ret
+    %1 = xor i32 %a, 4
+    ret i32 %1
+  }
+-/
 def xori_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (4) : i32
@@ -147,15 +151,16 @@ def xori_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_lowering
     bv_decide --fixed
 
-/- # 5 -/
-/- define i32 @ori(i32 %a) nounwind {
-; RV64I-LABEL: ori:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    ori a0, a0, 5
-; RV64I-NEXT:    ret
-  %1 = or i32 %a, 5
-  ret i32 %1
-}-/
+/-- ### 5
+  define i32 @ori(i32 %a) nounwind {
+  ; RV64I-LABEL: ori:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    ori a0, a0, 5
+  ; RV64I-NEXT:    ret
+    %1 = or i32 %a, 5
+    ret i32 %1
+  }
+-/
 def ori_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (5) : i32
@@ -180,15 +185,16 @@ def ori_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_lowering
     bv_decide --fixed
 
-/- # 6 -/
-/- define i32 @andi(i32 %a) nounwind {
-; RV64I-LABEL: andi:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    andi a0, a0, 6
-; RV64I-NEXT:    ret
-  %1 = and i32 %a, 6
-  ret i32 %1
-}-/
+/-- ### 6
+  define i32 @andi(i32 %a) nounwind {
+  ; RV64I-LABEL: andi:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    andi a0, a0, 6
+  ; RV64I-NEXT:    ret
+    %1 = and i32 %a, 6
+    ret i32 %1
+  }
+-/
 def andi_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (6) : i32
@@ -218,15 +224,16 @@ def andi_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 7 -/
-/- define i32 @slli(i32 %a) nounwind {
-; RV64I-LABEL: slli:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    slliw a0, a0, 7
-; RV64I-NEXT:    ret
-  %1 = shl i32 %a, 7
-  ret i32 %1
-}-/
+/-- ### 7
+  define i32 @slli(i32 %a) nounwind {
+  ; RV64I-LABEL: slli:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    slliw a0, a0, 7
+  ; RV64I-NEXT:    ret
+    %1 = shl i32 %a, 7
+    ret i32 %1
+  }
+-/
 def slli_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (7) : i32
@@ -256,15 +263,16 @@ def slli_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 8 -/
-/- define i32 @srli(i32 %a) nounwind {
-; RV64I-LABEL: srli:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    srliw a0, a0, 8
-; RV64I-NEXT:    ret
-  %1 = lshr i32 %a, 8
-  ret i32 %1
-}-/
+/-- ### 8
+  define i32 @srli(i32 %a) nounwind {
+  ; RV64I-LABEL: srli:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    srliw a0, a0, 8
+  ; RV64I-NEXT:    ret
+    %1 = lshr i32 %a, 8
+    ret i32 %1
+  }
+-/
 def srli_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (8) : i32
@@ -294,19 +302,18 @@ def srli_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 9 -/
-/-; This makes sure SimplifyDemandedBits doesn't prevent us from matching SRLIW
-; on RV64.
-define i32 @srli_demandedbits(i32 %0) {
-; RV64I-LABEL: srli_demandedbits:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    srliw a0, a0, 3
-; RV64I-NEXT:    ori a0, a0, 1
-; RV64I-NEXT:    ret
-  %2 = lshr i32 %0, 3
-  %3 = or i32 %2, 1
-  ret i32 %3
-}-/
+/-- ### 9
+  define i32 @srli_demandedbits(i32 %0) {
+  ; RV64I-LABEL: srli_demandedbits:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    srliw a0, a0, 3
+  ; RV64I-NEXT:    ori a0, a0, 1
+  ; RV64I-NEXT:    ret
+    %2 = lshr i32 %0, 3
+    %3 = or i32 %2, 1
+    ret i32 %3
+  }
+-/
 def srli_demandedbits_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (3) : i32
@@ -339,15 +346,16 @@ def srli_demandedbits_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 10 -/
-/- define i32 @srai(i32 %a) nounwind {
-RISCV64I-LABEL: srai:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    sraiw a0, a0, 9
-; RV64I-NEXT:    ret
-  %1 = ashr i32 %a, 9
-  ret i32 %1
-}-/
+/-- ### 10
+  define i32 @srai(i32 %a) nounwind {
+  RISCV64I-LABEL: srai:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    sraiw a0, a0, 9
+  ; RV64I-NEXT:    ret
+    %1 = ashr i32 %a, 9
+    ret i32 %1
+  }
+-/
 def srai_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (9) : i32
@@ -377,15 +385,15 @@ def srai_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 11 -/
-/- define i32 @add(i32 %a, i32 %b) nounwind {
-; RV64I-LABEL: add:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    addw a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = add i32 %a, %b
-  ret i32 %1
-}
+/-- ### 11
+  define i32 @add(i32 %a, i32 %b) nounwind {
+  ; RV64I-LABEL: add:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    addw a0, a0, a1
+  ; RV64I-NEXT:    ret
+    %1 = add i32 %a, %b
+    ret i32 %1
+  }
 -/
 def add_llvm_i32 := [LV| {
     ^entry (%a: i32, %b: i32):
@@ -415,15 +423,16 @@ def add_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 12 -/
-/- define i32 @sub(i32 %a, i32 %b) nounwind {
-; RV64I-LABEL: sub:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    subw a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = sub i32 %a, %b
-  ret i32 %1
-}-/
+/-- ### 12
+  define i32 @sub(i32 %a, i32 %b) nounwind {
+  ; RV64I-LABEL: sub:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    subw a0, a0, a1
+  ; RV64I-NEXT:    ret
+    %1 = sub i32 %a, %b
+    ret i32 %1
+  }
+-/
 def sub_llvm_i32 := [LV| {
     ^entry (%a: i32, %b: i32):
     %0 = llvm.sub %a, %b : i32
@@ -452,16 +461,17 @@ def sub_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 13 -/
-/- define i32 @sub_negative_constant_lhs(i32 %a) nounwind {
-; RV64I-LABEL: sub_negative_constant_lhs:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    li a1, -2
-; RV64I-NEXT:    subw a0, a1, a0
-; RV64I-NEXT:    ret
-  %1 = sub i32 -2, %a
-  ret i32 %1
-} -/
+/-- ### 13
+  define i32 @sub_negative_constant_lhs(i32 %a) nounwind {
+  ; RV64I-LABEL: sub_negative_constant_lhs:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    li a1, -2
+  ; RV64I-NEXT:    subw a0, a1, a0
+  ; RV64I-NEXT:    ret
+    %1 = sub i32 -2, %a
+    ret i32 %1
+  }
+-/
 def sub_negative_constant_lhs_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (-2) : i32
@@ -485,17 +495,18 @@ def sub_negative_constant_lhs_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (
   correct := by
     unfold sub_negative_constant_lhs_llvm_i32 sub_negative_constant_lhs_riscv_i32
     simp_lowering
-    bv_decide -- fixed
+    bv_decide
 
-/- # 14 -/
-/- define i32 @sll(i32 %a, i32 %b) nounwind {
-; RV64I-LABEL: sll:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    sllw a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = shl i32 %a, %b
-  ret i32 %1
-}-/
+/-- ### 14
+  define i32 @sll(i32 %a, i32 %b) nounwind {
+  ; RV64I-LABEL: sll:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    sllw a0, a0, a1
+  ; RV64I-NEXT:    ret
+    %1 = shl i32 %a, %b
+    ret i32 %1
+  }
+-/
 def sll_llvm_i32 := [LV| {
     ^entry (%a: i32, %b: i32):
     %0 = llvm.shl %a, %b : i32
@@ -520,16 +531,17 @@ def sll_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_lowering
     bv_decide
 
-/- # 15 -/
-/- define i32 @sll_negative_constant_lhs(i32 %a) nounwind {
-; RV64I-LABEL: sll_negative_constant_lhs:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    li a1, -1
-; RV64I-NEXT:    sllw a0, a1, a0
-; RV64I-NEXT:    ret
-  %1 = shl i32 -1, %a
-  ret i32 %1
-}-/
+/-- ### 15
+  define i32 @sll_negative_constant_lhs(i32 %a) nounwind {
+  ; RV64I-LABEL: sll_negative_constant_lhs:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    li a1, -1
+  ; RV64I-NEXT:    sllw a0, a1, a0
+  ; RV64I-NEXT:    ret
+    %1 = shl i32 -1, %a
+    ret i32 %1
+  }
+-/
 def sll_negative_constant_lhs_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (-1) : i32
@@ -555,18 +567,19 @@ def sll_negative_constant_lhs_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (
     simp_lowering
     bv_decide
 
-/- # 16 -/
-/- define i32 @slt(i32 %a, i32 %b) nounwind {
-; RV64I-LABEL: slt:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    sext.w a1, a1
-; RV64I-NEXT:    sext.w a0, a0
-; RV64I-NEXT:    slt a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = icmp slt i32 %a, %b
-  %2 = zext i1 %1 to i32
-  ret i32 %2
-}-/
+/-- ### 16
+  define i32 @slt(i32 %a, i32 %b) nounwind {
+  ; RV64I-LABEL: slt:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    sext.w a1, a1
+  ; RV64I-NEXT:    sext.w a0, a0
+  ; RV64I-NEXT:    slt a0, a0, a1
+  ; RV64I-NEXT:    ret
+    %1 = icmp slt i32 %a, %b
+    %2 = zext i1 %1 to i32
+    ret i32 %2
+  }
+-/
 def slt_llvm_i32 := [LV| {
     ^entry (%a: i32, %b: i32):
     %0 = llvm.icmp.slt %a, %b : i32
@@ -594,18 +607,19 @@ def slt_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_lowering
     bv_decide
 
-/- # 17 -/
-/- define i32 @sltu(i32 %a, i32 %b) nounwind {
-; RV64I-LABEL: sltu:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    sext.w a1, a1
-; RV64I-NEXT:    sext.w a0, a0
-; RV64I-NEXT:    sltu a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = icmp ult i32 %a, %b
-  %2 = zext i1 %1 to i32
-  ret i32 %2
-}-/
+/-- ### 17
+  define i32 @sltu(i32 %a, i32 %b) nounwind {
+  ; RV64I-LABEL: sltu:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    sext.w a1, a1
+  ; RV64I-NEXT:    sext.w a0, a0
+  ; RV64I-NEXT:    sltu a0, a0, a1
+  ; RV64I-NEXT:    ret
+    %1 = icmp ult i32 %a, %b
+    %2 = zext i1 %1 to i32
+    ret i32 %2
+  }
+-/
 def sltu_llvm_i32 := [LV| {
     ^entry (%a: i32, %b: i32):
     %0 = llvm.icmp.ult %a, %b : i32
@@ -633,15 +647,16 @@ def sltu_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm 
     simp_lowering
     bv_decide
 
-/- # 18 -/
-/- define i32 @xor(i32 %a, i32 %b) nounwind {
-; RV64I-LABEL: xor:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    xor a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = xor i32 %a, %b
-  ret i32 %1
-}-/
+/-- ### 18
+  define i32 @xor(i32 %a, i32 %b) nounwind {
+  ; RV64I-LABEL: xor:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    xor a0, a0, a1
+  ; RV64I-NEXT:    ret
+    %1 = xor i32 %a, %b
+    ret i32 %1
+  }
+-/
 def xor_llvm_i32 := [LV| {
     ^entry (%a: i32, %b: i32):
     %0 = llvm.xor %a, %b : i32
@@ -670,15 +685,16 @@ def xor_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 19 -/
-/- define i32 @srl(i32 %a, i32 %b) nounwind {
-; RV64I-LABEL: srl:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    srlw a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = lshr i32 %a, %b
-  ret i32 %1
-}-/
+/-- ### 19
+  define i32 @srl(i32 %a, i32 %b) nounwind {
+  ; RV64I-LABEL: srl:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    srlw a0, a0, a1
+  ; RV64I-NEXT:    ret
+    %1 = lshr i32 %a, %b
+    ret i32 %1
+  }
+-/
 def srl_llvm_i32 := [LV| {
     ^entry (%a: i32, %b: i32):
     %0 = llvm.lshr %a, %b : i32
@@ -703,16 +719,17 @@ def srl_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_lowering
     bv_decide
 
-/- # 20 -/
-/- define i32 @srl_negative_constant_lhs(i32 %a) nounwind {
-; RV64I-LABEL: srl_negative_constant_lhs:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    li a1, -1
-; RV64I-NEXT:    srlw a0, a1, a0
-; RV64I-NEXT:    ret
-  %1 = lshr i32 -1, %a
-  ret i32 %1
-}-/
+/-- ### 20
+  define i32 @srl_negative_constant_lhs(i32 %a) nounwind {
+  ; RV64I-LABEL: srl_negative_constant_lhs:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    li a1, -1
+  ; RV64I-NEXT:    srlw a0, a1, a0
+  ; RV64I-NEXT:    ret
+    %1 = lshr i32 -1, %a
+    ret i32 %1
+  }
+-/
 def srl_negative_constant_lhs_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (-1) : i32
@@ -738,15 +755,16 @@ def srl_negative_constant_lhs_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (
     simp_lowering
     bv_decide
 
-/- # 21 -/
-/- define i32 @sra(i32 %a, i32 %b) nounwind {
-; RV64I-LABEL: sra:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    sraw a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = ashr i32 %a, %b
-  ret i32 %1
-}-/
+/-- ### 21
+  define i32 @sra(i32 %a, i32 %b) nounwind {
+  ; RV64I-LABEL: sra:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    sraw a0, a0, a1
+  ; RV64I-NEXT:    ret
+    %1 = ashr i32 %a, %b
+    ret i32 %1
+  }
+-/
 def sra_llvm_i32 := [LV| {
     ^entry (%a: i32, %b: i32):
     %0 = llvm.ashr %a, %b : i32
@@ -771,16 +789,17 @@ def sra_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_lowering
     bv_decide
 
-/- # 22 -/
-/- define i32 @sra_negative_constant_lhs(i32 %a) nounwind {
-; RV64I-LABEL: sra_negative_constant_lhs:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    lui a1, 524288
-; RV64I-NEXT:    sraw a0, a1, a0
-; RV64I-NEXT:    ret
-  %1 = ashr i32 2147483648, %a
-  ret i32 %1
-}-/
+/-- ### 22
+  define i32 @sra_negative_constant_lhs(i32 %a) nounwind {
+  ; RV64I-LABEL: sra_negative_constant_lhs:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    lui a1, 524288
+  ; RV64I-NEXT:    sraw a0, a1, a0
+  ; RV64I-NEXT:    ret
+    %1 = ashr i32 2147483648, %a
+    ret i32 %1
+  }
+-/
 def sra_negative_constant_lhs_llvm_i32 := [LV| {
     ^entry (%a: i32):
     %0 = llvm.mlir.constant (2147483648) : i32
@@ -807,15 +826,16 @@ def sra_negative_constant_lhs_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (
     simp_lowering
     bv_decide
 
-/- # 23 -/
-/- define i32 @or(i32 %a, i32 %b) nounwind {
-; RV64I-LABEL: or:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    or a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = or i32 %a, %b
-  ret i32 %1
-}-/
+/-- ### 23
+  define i32 @or(i32 %a, i32 %b) nounwind {
+  ; RV64I-LABEL: or:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    or a0, a0, a1
+  ; RV64I-NEXT:    ret
+    %1 = or i32 %a, %b
+    ret i32 %1
+  }
+-/
 def or_llvm_i32 := [LV| {
     ^entry (%a: i32, %b: i32):
     %0 = llvm.or %a, %b : i32
@@ -844,15 +864,16 @@ def or_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 24 -/
-/- define i32 @and(i32 %a, i32 %b) nounwind {
-; RV64I-LABEL: and:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    and a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = and i32 %a, %b
-  ret i32 %1
-}-/
+/-- ### 24
+  define i32 @and(i32 %a, i32 %b) nounwind {
+  ; RV64I-LABEL: and:
+  ; RV64I:       # %bb.0:
+  ; RV64I-NEXT:    and a0, a0, a1
+  ; RV64I-NEXT:    ret
+    %1 = and i32 %a, %b
+    ret i32 %1
+  }
+-/
 def and_llvm_i32 := [LV| {
     ^entry (%a: i32, %b: i32):
     %0 = llvm.and %a, %b : i32

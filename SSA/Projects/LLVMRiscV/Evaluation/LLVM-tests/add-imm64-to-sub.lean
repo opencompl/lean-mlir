@@ -2,27 +2,25 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
 
+/-! This file verifies the LLVM RISCV test suite test case `add-imm64-to-sub.ll`. -/
 
-
-/- # 1 -/
-/-
-define i64 @add_b31(i64 %x) {
-; NOZBS-LABEL: add_b31:
-; NOZBS:       # %bb.0:
-; NOZBS-NEXT:    lui a1, 524288
-; NOZBS-NEXT:    sub a0, a0, a1
-; NOZBS-NEXT:    ret
-;
-; ZBS-LABEL: add_b31:
-; ZBS:       # %bb.0:
-; ZBS-NEXT:    bseti a1, zero, 31
-; ZBS-NEXT:    add a0, a0, a1
-; ZBS-NEXT:    ret
-  %add = add i64 %x, 2147483648
-  ret i64 %add
-}
+/-- ### 1
+  define i64 @add_b31(i64 %x) {
+  ; NOZBS-LABEL: add_b31:
+  ; NOZBS:       # %bb.0:
+  ; NOZBS-NEXT:    lui a1, 524288
+  ; NOZBS-NEXT:    sub a0, a0, a1
+  ; NOZBS-NEXT:    ret
+  ;
+  ; ZBS-LABEL: add_b31:
+  ; ZBS:       # %bb.0:
+  ; ZBS-NEXT:    bseti a1, zero, 31
+  ; ZBS-NEXT:    add a0, a0, a1
+  ; ZBS-NEXT:    ret
+    %add = add i64 %x, 2147483648
+    ret i64 %add
+  }
 -/
-
 def add_b31_llvm_i64 := [LV| {
     ^entry (%x: i64):
     %0 = llvm.mlir.constant (2147483648) : i64
@@ -54,26 +52,24 @@ def add_b31_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 2 -/
-/-
-define i64 @add_b32(i64 %x) {
-; NOZBS-LABEL: add_b32:
-; NOZBS:       # %bb.0:
-; NOZBS-NEXT:    li a1, -1
-; NOZBS-NEXT:    slli a1, a1, 32
-; NOZBS-NEXT:    add a0, a0, a1
-; NOZBS-NEXT:    ret
-;
-; ZBS-LABEL: add_b32:
-; ZBS:       # %bb.0:
-; ZBS-NEXT:    bseti a1, zero, 32
-; ZBS-NEXT:    sub a0, a0, a1
-; ZBS-NEXT:    ret
-  %add = add i64 %x, -4294967296
-  ret i64 %add
-}
+/-- ### 2
+  define i64 @add_b32(i64 %x) {
+  ; NOZBS-LABEL: add_b32:
+  ; NOZBS:       # %bb.0:
+  ; NOZBS-NEXT:    li a1, -1
+  ; NOZBS-NEXT:    slli a1, a1, 32
+  ; NOZBS-NEXT:    add a0, a0, a1
+  ; NOZBS-NEXT:    ret
+  ;
+  ; ZBS-LABEL: add_b32:
+  ; ZBS:       # %bb.0:
+  ; ZBS-NEXT:    bseti a1, zero, 32
+  ; ZBS-NEXT:    sub a0, a0, a1
+  ; ZBS-NEXT:    ret
+    %add = add i64 %x, -4294967296
+    ret i64 %add
+  }
 -/
--- add_b32
 def add_b32_llvm_i64 := [LV| {
     ^entry (%x: i64):
     %0 = llvm.mlir.constant (-4294967296) : i64
@@ -129,18 +125,17 @@ def add_b32_test_ZBS : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 3 -/
-/-
-define i64 @sub_0xffffffffff(i64 %x) {
-; CHECK-LABEL: sub_0xffffffffff:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    li a1, -1
-; CHECK-NEXT:    srli a1, a1, 24
-; CHECK-NEXT:    sub a0, a0, a1
-; CHECK-NEXT:    ret
-  %sub = sub i64 %x, 1099511627775
-  ret i64 %sub
-}
+/-- ### 3
+  define i64 @sub_0xffffffffff(i64 %x) {
+  ; CHECK-LABEL: sub_0xffffffffff:
+  ; CHECK:       # %bb.0:
+  ; CHECK-NEXT:    li a1, -1
+  ; CHECK-NEXT:    srli a1, a1, 24
+  ; CHECK-NEXT:    sub a0, a0, a1
+  ; CHECK-NEXT:    ret
+    %sub = sub i64 %x, 1099511627775
+    ret i64 %sub
+  }
 -/
 def sub_0xffffffffff_llvm_i64 := [LV| {
     ^entry (%x: i64):
@@ -173,23 +168,21 @@ def sub_0xffffffffff_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
     simp_alive_split
     all_goals simp;
 
-/- # 4 -/
-/-
-define i64 @add_multiuse(i64 %x) {
-; CHECK-LABEL: add_multiuse:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    li a1, -1
-; CHECK-NEXT:    slli a1, a1, 40
-; CHECK-NEXT:    addi a1, a1, 1
-; CHECK-NEXT:    add a0, a0, a1
-; CHECK-NEXT:    and a0, a0, a1
-; CHECK-NEXT:    ret
-  %add = add i64 %x, -1099511627775
-  %and = and i64 %add, -1099511627775
-  ret i64 %and
-}
+/-- ### 4
+  define i64 @add_multiuse(i64 %x) {
+  ; CHECK-LABEL: add_multiuse:
+  ; CHECK:       # %bb.0:
+  ; CHECK-NEXT:    li a1, -1
+  ; CHECK-NEXT:    slli a1, a1, 40
+  ; CHECK-NEXT:    addi a1, a1, 1
+  ; CHECK-NEXT:    add a0, a0, a1
+  ; CHECK-NEXT:    and a0, a0, a1
+  ; CHECK-NEXT:    ret
+    %add = add i64 %x, -1099511627775
+    %and = and i64 %add, -1099511627775
+    ret i64 %and
+  }
 -/
--- add_multiuse
 def add_multiuse_llvm_i64 := [LV| {
     ^entry (%x: i64):
     %0 = llvm.mlir.constant (-1099511627775) : i64
@@ -224,21 +217,20 @@ def add_multiuse_riscv_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
     simp_alive_split
     all_goals simp; bv_decide
 
-/- # 5 -/
-/-
-define i64 @add_multiuse_const(i64 %x, i64 %y) {
-; CHECK-LABEL: add_multiuse_const:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    li a2, -1
-; CHECK-NEXT:    srli a2, a2, 24
-; CHECK-NEXT:    sub a0, a0, a2
-; CHECK-NEXT:    sub a1, a1, a2
-; CHECK-NEXT:    xor a0, a0, a1
-; CHECK-NEXT:    ret
-  %a = add i64 %x, -1099511627775
-  %b = add i64 %y, -1099511627775
-  %xor = xor i64 %a, %b
-  ret i64 %xor
+/-- ### 5
+  define i64 @add_multiuse_const(i64 %x, i64 %y) {
+  ; CHECK-LABEL: add_multiuse_const:
+  ; CHECK:       # %bb.0:
+  ; CHECK-NEXT:    li a2, -1
+  ; CHECK-NEXT:    srli a2, a2, 24
+  ; CHECK-NEXT:    sub a0, a0, a2
+  ; CHECK-NEXT:    sub a1, a1, a2
+  ; CHECK-NEXT:    xor a0, a0, a1
+  ; CHECK-NEXT:    ret
+    %a = add i64 %x, -1099511627775
+    %b = add i64 %y, -1099511627775
+    %xor = xor i64 %a, %b
+    ret i64 %xor
 }-/
 def add_multiuse_const_llvm_i64 := [LV| {
     ^entry (%x: i64, %y: i64):
