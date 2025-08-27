@@ -280,8 +280,14 @@ def XDSL_compile_riscv(input_file, output_file, log_file, pass_dict):
     pass_dict[output_file] = ret_code
 
 def generate_benchmarks(file_name, num, jobs):
+
     setup_benchmarking_directories()
     input_file = MLIR_multi_DIR_PATH + file_name
+
+    # build Lean-MLIR
+    cmd = f"cd {ROOT_DIR_PATH}; lake exe cache get && lake build && lake build opt"
+    log_file = open((os.path.join(LOGS_DIR_PATH, "build.log")), "w")
+    run_command(cmd, log_file)
 
     # extract mlir blocks and put them all in separate files
     extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, num)
