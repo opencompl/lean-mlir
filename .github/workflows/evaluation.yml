@@ -49,8 +49,8 @@ jobs:
     needs: eval-build
     strategy:
       matrix:
-        extract_offset: [0, 1, 2, 3, 4]
-        extract_stride: [5]
+        extract_offset: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        extract_stride: [10]
     permissions:
       pull-requests: write
     steps:
