@@ -20,9 +20,5 @@ theorem test_ashr_exact__exact_is_unsafe_thm.extracted_1._3 : ∀ (x : BitVec 64
       2#32 ≥ ↑32 ∨
           True ∧ (x_1.sshiftRight' 2#32 &&& BitVec.ofInt 32 (-536870897)).msb = true ∨
             zeroExtend 64 (x_1.sshiftRight' 2#32 &&& BitVec.ofInt 32 (-536870897)) ≥ ↑64 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (x.sshiftRight' (zeroExtend 64 ((x_1 &&& BitVec.ofInt 32 (-2147483585)).sshiftRight' 2#32))))
-          PoisonOr.poison :=
+        False :=
 sorry

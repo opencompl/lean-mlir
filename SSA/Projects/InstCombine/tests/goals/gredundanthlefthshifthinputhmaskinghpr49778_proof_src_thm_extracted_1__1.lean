@@ -25,9 +25,5 @@ theorem src_thm.extracted_1._1 : ∀ (x : BitVec 1),
                 (((-1#32) <<< zeroExtend 32 x ^^^ -1#32) &&& zeroExtend 32 x) <<< zeroExtend 32 x >>> zeroExtend 32 x ≠
                   ((-1#32) <<< zeroExtend 32 x ^^^ -1#32) &&& zeroExtend 32 x ∨
               zeroExtend 32 x ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((((-1#32) <<< zeroExtend 32 x ^^^ -1#32) &&& zeroExtend 32 x) <<< zeroExtend 32 x))
-        PoisonOr.poison :=
+      False :=
 sorry

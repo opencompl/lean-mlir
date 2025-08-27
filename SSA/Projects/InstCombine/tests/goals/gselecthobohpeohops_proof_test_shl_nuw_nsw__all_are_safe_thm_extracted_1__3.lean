@@ -18,9 +18,5 @@ theorem test_shl_nuw_nsw__all_are_safe_thm.extracted_1._3 : ∀ (x : BitVec 64) 
     ¬(True ∧ ((x_1 &&& 15#32) <<< 2#32).sshiftRight' 2#32 ≠ x_1 &&& 15#32 ∨
           True ∧ (x_1 &&& 15#32) <<< 2#32 >>> 2#32 ≠ x_1 &&& 15#32 ∨
             2#32 ≥ ↑32 ∨ zeroExtend 64 ((x_1 &&& 15#32) <<< 2#32) ≥ ↑64) →
-      2#32 ≥ ↑32 ∨ True ∧ (x_1 <<< 2#32 &&& 60#32).msb = true ∨ zeroExtend 64 (x_1 <<< 2#32 &&& 60#32) ≥ ↑64 →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 64)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (x.sshiftRight' (zeroExtend 64 ((x_1 &&& 15#32) <<< 2#32)))) PoisonOr.poison :=
+      2#32 ≥ ↑32 ∨ True ∧ (x_1 <<< 2#32 &&& 60#32).msb = true ∨ zeroExtend 64 (x_1 <<< 2#32 &&& 60#32) ≥ ↑64 → False :=
 sorry

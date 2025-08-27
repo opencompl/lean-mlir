@@ -13,11 +13,5 @@ set_option maxRecDepth 1000000
 set_option Elab.async false
 -/
 
-theorem ashr_overshift_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ¬(15#32 ≥ ↑32 ∨ 17#32 ≥ ↑32) →
-    31#32 ≥ ↑32 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value ((x.sshiftRight' 15#32).sshiftRight' 17#32)) PoisonOr.poison :=
+theorem ashr_overshift_thm.extracted_1._1 : ∀ (x : BitVec 32), ¬(15#32 ≥ ↑32 ∨ 17#32 ≥ ↑32) → 31#32 ≥ ↑32 → False :=
 sorry

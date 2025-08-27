@@ -14,10 +14,5 @@ set_option Elab.async false
 -/
 
 theorem test_add__nuw_is_safe_thm.extracted_1._1 : ∀ (x : BitVec 32),
-  ofBool (x &&& 2147483647#32 == 2147483647#32) = 1#1 →
-    True ∧ (x &&& 2147483647#32).uaddOverflow 1#32 = true →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value (BitVec.ofInt 32 (-2147483648))) PoisonOr.poison :=
+  ofBool (x &&& 2147483647#32 == 2147483647#32) = 1#1 → True ∧ (x &&& 2147483647#32).uaddOverflow 1#32 = true → False :=
 sorry
