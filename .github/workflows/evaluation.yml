@@ -16,7 +16,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Cache `.lake` folder
+      - name: Cache `.lake` and `.elan` folders
         id: cache-lake
         uses: actions/cache@v4
         with:
@@ -35,7 +35,7 @@ jobs:
           ~/.elan/bin/lean --version
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Build
+      - name: Build Lean-MLIR
         if: steps.cache-lake.outputs.cache-hit != 'true'
         run: |
           lake -R build
