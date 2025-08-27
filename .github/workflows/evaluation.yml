@@ -44,7 +44,7 @@ jobs:
           lake -R build
 
   extract-goals:
-    name: Check that extract-goals remains unchanged
+    name: Check Extract-goals
     runs-on: ubuntu-latest
     needs: eval-build
     permissions:
@@ -83,7 +83,7 @@ jobs:
           bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh
 
   evaluation-LLVM:
-    name: Evaluation of Tactics & Decision Procedures
+    name: Evaluate LLVM
     runs-on: ubuntu-latest
     needs: eval-build
     permissions:
@@ -149,7 +149,7 @@ jobs:
           path: bv-evaluation/results
 
   evaluation-alive-hdel:
-    name: Evaluation of Tactics & Decision Procedures
+    name: Evaluation Alive and Hacker's Delight
     runs-on: ubuntu-latest
     needs: eval-build
     permissions:
