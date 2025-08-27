@@ -58,10 +58,13 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
-          context: "{{defaultContext}}:bv-evaluation"
+          context: "./bv-evaluation"
           push: true
           tags: ghcr.io/opencompl/bitwuzla:latest
           outputs: type=docker,dest=${{ runner.temp }}/bitwuzla.tar
