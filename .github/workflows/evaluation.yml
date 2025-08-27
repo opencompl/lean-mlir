@@ -76,11 +76,6 @@ jobs:
         run: |
           lake -R build
 
-      - name: Install Python Modules
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-matplotlib python3-pandas python3-num2words python3-psutil ripgrep
-
       - name: Ensure InstCombine goals are up-to-date
         continue-on-error: true
         run: |

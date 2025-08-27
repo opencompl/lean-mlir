@@ -12,7 +12,6 @@ import shutil
 from typing import List
 from pathlib import Path
 from dataclasses import dataclass, asdict
-import pandas as pd
 import os
 import re
 import logging
