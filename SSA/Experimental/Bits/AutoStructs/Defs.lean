@@ -2,9 +2,8 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import SSA.Experimental.Bits.AutoStructs.ForMathlib
-import SSA.Experimental.Bits.SingleWidth.Defs
-import SSA.Projects.InstCombine.ForStd
+import BvDecideParametric.AutoStructs.ForMathlib
+import BvDecideParametric.SingleWidth.Defs
 
 open Fin.NatCast
 
@@ -137,14 +136,14 @@ deriving Repr
 def evalRelation (rel : Relation) {w} (bv1 bv2 : BitVec w) : Prop :=
   match rel with
   | .eq => bv1 = bv2
-  | .signed .lt => bv1 <ₛ bv2
-  | .signed .le => bv1 ≤ₛ bv2
-  | .signed .gt => bv1 >ₛ bv2
-  | .signed .ge => bv1 ≥ₛ bv2
-  | .unsigned .lt => bv1 <ᵤ bv2
-  | .unsigned .le => bv1 ≤ᵤ bv2
-  | .unsigned .gt => bv1 >ᵤ bv2
-  | .unsigned .ge => bv1 ≥ᵤ bv2
+  | .signed .lt => bv1.slt bv2
+  | .signed .le => bv1.sle  bv2
+  | .signed .gt => bv2.slt bv1
+  | .signed .ge => bv2.sle bv1
+  | .unsigned .lt => bv1.ult bv2
+  | .unsigned .le => bv1.ule bv2
+  | .unsigned .gt => bv2.ult bv1
+  | .unsigned .ge => bv2.ule bv1
 
 @[simp]
 lemma evalRelation_coe (rel : Relation) (bv1 bv2 : BitVec w1) (heq : w1 = w2) :
@@ -465,3 +464,4 @@ abbrev envOfArray {w} (a : Array (BitVec w)) : Nat → BitVec w := fun n => a.ge
 
 @[simp]
 abbrev envOfList {w} (a : List (BitVec w)) : Nat → BitVec w := fun n => a.getD n 0
+
