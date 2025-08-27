@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  build-eval:
-    name: Build Lean MLIR
+  eval-build:
+    name: Build Lean-MLIR
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
@@ -44,7 +44,7 @@ jobs:
   extract-goals:
     name: Check that extract-goals remains unchanged
     runs-on: ubuntu-latest
-    needs: build-eval
+    needs: eval-build
     permissions:
       pull-requests: write
     steps:
@@ -84,7 +84,7 @@ jobs:
   evaluation:
     name: Evaluation of Tactics & Decision Procedures
     runs-on: ubuntu-latest
-    needs: build-eval
+    needs: eval-build
     permissions:
       pull-requests: write
     steps:
