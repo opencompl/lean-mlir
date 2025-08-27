@@ -2,7 +2,6 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
 
-<<<<<<< HEAD
 /-!
   This file implements the `alu64.ll` test case in the LLVM test suite:
   https://github.com/llvm/llvm-project/blob/b424207cdddfa2cbfc9129bbe0a31e47cb04e6dc/llvm/test/CodeGen/RISCV/alu64.ll
@@ -10,17 +9,6 @@ open LLVMRiscV
 
 /-- ### addi -/
 @[simp_denote]
-=======
-/- # 1 -/
-/- define i64 @addi(i64 %a) nounwind {
-; RV64I-LABEL: addi:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    addi a0, a0, 1
-; RV64I-NEXT:    ret
-  %1 = add i64 %a, 1
-  ret i64 %1
-}-/
->>>>>>> faa6cc524 (first eval run)
 def addi_llvm_i64 := [LV| {
     ^entry (%a: i64):
     %0 = llvm.mlir.constant (1) : i64
@@ -87,7 +75,10 @@ def slti_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   rhs := slti_riscv_i64
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> sarah-eval
 /- # 3 -/
 /- define i64 @sltiu(i64 %a) nounwind {
 ; RV64I-LABEL: sltiu:
@@ -125,10 +116,13 @@ def sltiu_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   rhs := sltiu_riscv_i64
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### xori -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 4 -/
 /- define i64 @xori(i64 %a) nounwind {
 ; RV64I-LABEL: xori:
@@ -282,7 +276,10 @@ def slli_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   rhs := slli_riscv_i64
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> sarah-eval
 /- # 8 -/
 /- define i64 @srli(i64 %a) nounwind {
 ; RV64I-LABEL: srli:
@@ -316,7 +313,10 @@ def srli_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   rhs := srli_riscv_i64
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> sarah-eval
 /- # 9 -/
 /- define i64 @srai(i64 %a) nounwind {
 ; RV64I-LABEL: srai:
@@ -349,7 +349,10 @@ def srai_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   rhs := srai_riscv_i64
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> sarah-eval
 /- # 10 -/
 /- define i64 @add(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: add:
@@ -382,10 +385,13 @@ def add_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
   rhs := add_riscv_i64
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### sub -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 11 -/
 /- define i64 @sub(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: sub:
@@ -876,7 +882,10 @@ define i64 @sraiw_i64(i64 %a) nounwind {
   ret i64 %2
 }
 -/
+<<<<<<< HEAD
 >>>>>>> faa6cc524 (first eval run)
+=======
+>>>>>>> sarah-eval
 def sraiw_llvm_i64 := [LV| {
     ^entry (%a: i64):
     %32 = llvm.mlir.constant (32) : i64
@@ -884,6 +893,7 @@ def sraiw_llvm_i64 := [LV| {
     %0 = llvm.shl %a, %32 : i64
     %1 = llvm.ashr %0, %41: i64
     llvm.return %1 : i64
+<<<<<<< HEAD
 <<<<<<< HEAD
   }]
 
@@ -944,6 +954,8 @@ def add_hi_and_lo_negone_llvm_i64 := [LV| {
 
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
   }]
 
 def sraiw_riscv_i64 := [LV| {
@@ -1199,6 +1211,7 @@ def add_hi_one_lo_negone_riscv_i64 :=
     %4 = add %3, %a : !riscv.reg
     %5 = "builtin.unrealized_conversion_cast" (%4) : (!riscv.reg) -> (i64)
     llvm.return %5 : i64
+<<<<<<< HEAD
   }]
 
 def add_hi_one_lo_negone_i64__test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -1329,6 +1342,42 @@ def add_hi_one_lo_negone_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
   lhs := add_hi_one_lo_negone_llvm_i64
   rhs := add_hi_one_lo_negone_riscv_i64
 =======
+=======
+  }]
+
+def add_hi_one_lo_negone_i64__test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := add_hi_one_lo_negone_llvm_i64
+  rhs := add_hi_one_lo_negone_riscv_i64
+
+
+
+/- # 25 -/
+/-
+define i64 @add_hi_and_lo_negone(i64 %0) {
+; RV64I-LABEL: add_hi_and_lo_negone:
+; RV64I:       # %bb.0:
+; RV64I-NEXT:    addi a0, a0, -1
+; RV64I-NEXT:    ret
+
+  %2 = add nsw i64 %0, -1
+  ret i64 %2
+}
+-/
+def add_hi_and_lo_negone_llvm_i64 := [LV| {
+    ^entry (%a: i64):
+    %c = llvm.mlir.constant (-1) : i64
+    %0 = llvm.add %a, %c overflow<nsw> : i64
+    llvm.return %0 : i64
+  }]
+
+def add_hi_and_lo_negone_riscv_i64 :=
+  [LV| {
+    ^entry (%arg0: i64):
+    %a = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!riscv.reg)
+    %0 = li (0) : !riscv.reg
+    %1= li (1) : !riscv.reg
+    %2 = sub %0, %1 : !riscv.reg  -- load -1 into %1 becaue can't encode (-1) for the moment
+>>>>>>> sarah-eval
     %3 = "builtin.unrealized_conversion_cast" (%2) : (!riscv.reg) -> (i64)
     llvm.return %3 : i64
   }]
@@ -1340,4 +1389,7 @@ def add_hi_and_lo_negone_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
     unfold add_hi_one_lo_negone_llvm_i64 add_hi_one_lo_negone_riscv_i64
     simp_lowering
     bv_decide
+<<<<<<< HEAD
 >>>>>>> faa6cc524 (first eval run)
+=======
+>>>>>>> sarah-eval

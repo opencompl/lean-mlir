@@ -2,25 +2,10 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
 
-<<<<<<< HEAD
 /-!
   This file implements the `alu32.ll` test case in the LLVM test suite:
   https://github.com/llvm/llvm-project/blob/b424207cdddfa2cbfc9129bbe0a31e47cb04e6dc/llvm/test/CodeGen/RISCV/alu32.ll
 -/
-=======
-This file implements and verifies the alu32.ll test cases. We still need to find figure out the srl case. -/
-
-/- # 1 -/
-/--
-define i32 @addi(i32 %a) nounwind {
-; RV64I-LABEL: addi:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    addiw a0, a0, 1
-; RV64I-NEXT:    ret
-  %1 = add i32 %a, 1
-  ret i32 %1
-}-/
->>>>>>> faa6cc524 (first eval run)
 
 /-- addi -/
 @[simp_denote]
@@ -258,10 +243,13 @@ def andi_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := andi_llvm_i32
   rhs := andi_riscv_i32
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### slli -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
   correct := by
     unfold andi_llvm_i32 andi_riscv_i32
     simp_peephole
@@ -304,10 +292,13 @@ def slli_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   rhs := slli_riscv_i32
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### srli -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 8 -/
 /- define i32 @srli(i32 %a) nounwind {
 ; RV64I-LABEL: srli:
@@ -340,9 +331,12 @@ def srli_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   rhs := srli_riscv_i32
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /-- ### srli_demandedbits -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 9 -/
 /-; This makes sure SimplifyDemandedBits doesn't prevent us from matching SRLIW
 ; on RV64.
@@ -382,9 +376,12 @@ def srli_demandedbits_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 
   rhs := srli_demandedbits_riscv_i32
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /-- ### srai -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 10 -/
 /- define i32 @srai(i32 %a) nounwind {
 RISCV64I-LABEL: srai:
@@ -417,9 +414,12 @@ def srai_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   rhs := srai_riscv_i32
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /-- ### add -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 11 -/
 /- define i32 @add(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: add:
@@ -453,9 +453,12 @@ def add_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
   rhs := add_riscv_i32
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /-- ### sub -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 12 -/
 /- define i32 @sub(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: sub:
@@ -488,10 +491,13 @@ def sub_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
   rhs := sub_riscv_i32
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### sub -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 13 -/
 /- define i32 @sub_negative_constant_lhs(i32 %a) nounwind {
 ; RV64I-LABEL: sub_negative_constant_lhs:
@@ -741,10 +747,13 @@ def xor_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
   rhs := xor_riscv_i32
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### srl -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 19 -/
 /- define i32 @srl(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: srl:
@@ -945,10 +954,13 @@ def or_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.
   rhs := or_riscv_i32
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### and -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 24 -/
 /- define i32 @and(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: and:

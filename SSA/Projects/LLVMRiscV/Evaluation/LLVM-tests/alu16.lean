@@ -2,7 +2,6 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 
 open LLVMRiscV
-<<<<<<< HEAD
 
 /-!
   This file implements the `alu16.ll` test case in the LLVM test suite:
@@ -12,25 +11,6 @@ open LLVMRiscV
 
 /-- ### addi -/
 @[simp_denote]
-=======
-/-!This file implements the alu16.ll test case in the llv mtest suite. The newest rewrite was added added 02.06.25
-These tests are identical to those in alu32.ll but operate on i16. They check
-that legalisation of these non-native types doesn't introduce unnecessary
-inefficiencies.
-Legalisation of non-native types and
--/
-
-
-/- # 1 -/
-/-
-; RV64I-LABEL: addi:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    addi a0, a0, 1
-; RV64I-NEXT:    ret
-  %1 = add i16 %a, 1
-  ret
--/
->>>>>>> faa6cc524 (first eval run)
 def addi_llvm := [LV| {
     ^entry (%a: i16):
     %0 = llvm.mlir.constant (1) : i16
@@ -101,10 +81,13 @@ def slti_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   rhs := slti_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### sltiu -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 3 -/
 /-
 ; RV64I-LABEL: sltiu:
@@ -593,10 +576,13 @@ def sub_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
     all_goals simp; bv_decide
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### sll -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 12 -/
 /-
 define i16 @sll(i16 %a, i16 %b) nounwind {
@@ -634,10 +620,13 @@ def sll_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
     bv_decide
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### slt -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 13 -/
 /-
 define i16 @slt(i16 %a, i16 %b) nounwind {
@@ -682,10 +671,13 @@ def slt_signext_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llv
   rhs := slt_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### sltu -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 14 -/
 /-
 define i16 @sltu(i16 %a, i16 %b) nounwind {
@@ -921,10 +913,13 @@ def or_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.b
   rhs := or_riscv_i16
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### and -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
 /- # 19 -/
 /-define i16 @and(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: and:

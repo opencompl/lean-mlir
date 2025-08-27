@@ -2,24 +2,9 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
 
-<<<<<<< HEAD
 /-!
   This file implements the `add-imm.ll` test case in the LLVM test suite:
   https://github.com/llvm/llvm-project/blob/b424207cdddfa2cbfc9129bbe0a31e47cb04e6dc/llvm/test/CodeGen/RISCV/add-imm.ll
-=======
-/-! This file verifies the LLVM RISCV test suite test case `add-imm.ll`.
-we could reimplement and verify 11/13 test cases  -/
-
- /-# 1 -/
-/--
-; RV64I-LABEL: add_positive_low_bound_reject:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    addiw a0, a0, 2047
-; RV64I-NEXT:    ret
-  %1 = add i32 %a, 2047
-  ret i32 %1
-}
->>>>>>> faa6cc524 (first eval run)
 -/
 
 
@@ -47,10 +32,13 @@ def add_positive_low_bound_reject_test: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.
   rhs := add_positive_low_bound_reject_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### add_positive_low_bound_accept -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
  /-# 2 -/
 /-
 define i32 @add_positive_low_bound_accept(i32 %a) nounwind {
@@ -87,9 +75,12 @@ def add_positive_low_bound_accept_test: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.
   rhs := add_positive_low_bound_accept_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /-- ###  add_positive_high_bound_accept -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
  /-# 3 -/
 /--
 define i32 @add_positive_high_bound_accept(i32 %a) nounwind {
@@ -126,10 +117,13 @@ def add_positive_high_bound_accept_test: LLVMPeepholeRewriteRefine 32 [Ty.llvm (
   rhs := add_positive_high_bound_accept_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### add_positive_high_bound_reject -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
  /-# 4 -/
 /-
 define i32 @add_positive_high_bound_reject(i32 %a) nounwind {
@@ -169,10 +163,13 @@ def add_positive_high_bound_reject_test: LLVMPeepholeRewriteRefine 32 [Ty.llvm (
   rhs := add_positive_high_bound_reject_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### add_negative_high_bound_reject -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
  /-# 5 -/
 /-
 define i32 @add_negative_high_bound_reject(i32 %a) nounwind {
@@ -212,10 +209,13 @@ def add_negative_high_bound_reject_test: LLVMPeepholeRewriteRefine 32 [Ty.llvm (
   rhs := add_negative_high_bound_reject_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### add_negative_high_bound_accept -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
  /-# 6 -/
 /-
 define i32 @add_negative_high_bound_accept(i32 %a) nounwind {
@@ -257,9 +257,12 @@ def add_negative_high_bound_accept_test: LLVMPeepholeRewriteRefine 32 [Ty.llvm (
   rhs := add_negative_high_bound_accept_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /-- ### add_negative_low_bound_accept -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
  /-# 7 -/
 /-
 define i32 @add_negative_low_bound_accept(i32 %a) nounwind {
@@ -295,9 +298,12 @@ def add_negative_low_bound_accept_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (
   rhs := add_negative_low_bound_accept_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /-- ###  add_negative_low_bound_reject -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
  /-# 8 -/
 /-
 define i32 @add_negative_low_bound_reject(i32 %a) nounwind {
@@ -336,9 +342,12 @@ def add_negative_low_bound_reject_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (
   rhs := add_negative_low_bound_reject_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /-- ###  add32_accept -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
  /-# 9 -/
 /-
 define i32 @add32_accept(i32 %a) nounwind {
@@ -374,9 +383,12 @@ def add32_accept_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] wher
   rhs := add32_accept_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 /-- ###  add32_sext_accept -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
  /-# 10 -/
 /-
 define signext i32 @add32_sext_accept(i32 signext %a) nounwind {
@@ -412,10 +424,13 @@ def add32_sext_accept_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)]
   rhs :=  add32_sext_accept_riscv
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 /-- ### add64_accept -/
 @[simp_denote]
 =======
+=======
+>>>>>>> sarah-eval
  /-# 11 -/
 /-define i64 @add64_accept(i64 %a) nounwind {
 ; RV64I-LABEL: add64_accept:
