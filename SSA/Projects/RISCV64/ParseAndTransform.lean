@@ -5,6 +5,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open MLIR AST InstCombine
 open RISCV64
+open LeanMLIR.SingleReturnCompat
 /-!
 This file defines functions that are accessed via the Opt tool to parse input files into the hybrid
 dialect. In the future, flags for the Opt tool that perform transformations in the hybrid dialect
@@ -16,7 +17,7 @@ seen as an extension of the Opt tool, specific to the LLVMAndRiscV dialect.
 It throws an error if the transformation fails. -/
 def regionTransform_RISCV (region : Region 0) : Except ParseError
   (Σ (Γ' : Ctxt RISCV64.Ty ) (eff : EffectKind)
-  (ty : RISCV64.Ty ), Com RV64 Γ' eff ty) :=
+  (ty : List RISCV64.Ty ), Com RV64 Γ' eff ty) :=
   let res := mkCom (d:= RV64) region
   match res with
   | Except.error e => Except.error s!"Error:\n{reprStr e}"
@@ -27,7 +28,7 @@ def regionTransform_RISCV (region : Region 0) : Except ParseError
 also used for parsing LLVM `Com`s. -/
 def parseComFromFile_LLVMRISCV(fileName : String) :
   IO (Option (Σ (Γ' :  Ctxt RISCV64.Ty ) (eff : EffectKind)
-  (ty :  RISCV64.Ty), Com RV64 Γ' eff ty)) := do
+  (ty : List RISCV64.Ty), Com RV64 Γ' eff ty)) := do
   parseRegionFromFile fileName regionTransform_RISCV
 
 def parseAsRiscv (fileName : String ) : IO UInt32 := do

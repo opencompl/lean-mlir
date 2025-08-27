@@ -2,8 +2,9 @@ import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
+
 open LLVMRiscV
-set_option Elab.async true
+open LeanMLIR.SingleReturnCompat
 
 /-!
   This file contains the instruction lowering for the `llvm.select` instruction for types i8, i16, i32, i64.
@@ -147,8 +148,8 @@ def select_riscv_select_llvm_64 : LLVMPeepholeRewriteRefine 64
 
 def select_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   [⟨[Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64),Ty.llvm (.bitvec 1)],
-   Ty.llvm (.bitvec 64),(LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND select_riscv_select_llvm_64)⟩,
+   [Ty.llvm (.bitvec 64)],(LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND select_riscv_select_llvm_64)⟩,
   ⟨[Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32),Ty.llvm (.bitvec 1)],
-   Ty.llvm (.bitvec 32),(LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND select_riscv_select_llvm_32)⟩,
+   [Ty.llvm (.bitvec 32)],(LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND select_riscv_select_llvm_32)⟩,
    ⟨[Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8),Ty.llvm (.bitvec 1)],
-   Ty.llvm (.bitvec 8),(LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND select_riscv_select_llvm_8)⟩]
+   [Ty.llvm (.bitvec 8)],(LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND select_riscv_select_llvm_8)⟩]

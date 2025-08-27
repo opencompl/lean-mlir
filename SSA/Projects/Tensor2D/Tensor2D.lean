@@ -132,7 +132,7 @@ def Op.sig : Op → List Ty
 
 @[reducible, simp]
 def Op.regSig : Op → RegionSignature Ty
-  | .map2d => [([Ty.int], .int)]
+  | .map2d => [([Ty.int], [.int])]
   | _ => []
 
 set_option linter.dupNamespace false in
@@ -142,7 +142,7 @@ def Tensor2D : Dialect where
 
 @[reducible]
 instance : DialectSignature Tensor2D where
-  signature op := { sig := op.sig, regSig := op.regSig, outTy := op.outTy }
+  signature op := { sig := op.sig, regSig := op.regSig, returnTypes := [op.outTy] }
 
 
 /-

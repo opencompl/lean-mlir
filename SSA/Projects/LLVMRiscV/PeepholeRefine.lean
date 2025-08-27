@@ -25,10 +25,10 @@ instance : Refinement (BitVec w) := .ofEq
   throw an error message.
   The refinement is based on the semantics of `PoisonOr`. -/
 structure LLVMPeepholeRewriteRefine (w : Nat) (Γ : List Ty) where
-  lhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
-  rhs : Com LLVMPlusRiscV Γ .pure (Ty.llvm (.bitvec w))
+  lhs : Com LLVMPlusRiscV Γ .pure [Ty.llvm (.bitvec w)]
+  rhs : Com LLVMPlusRiscV Γ .pure [Ty.llvm (.bitvec w)]
   correct : ∀ V,
-    PoisonOr.IsRefinedBy (lhs.denote V) (rhs.denote V) := by
+    PoisonOr.IsRefinedBy (lhs.denote V |>.getN 0) (rhs.denote V |>.getN 0) := by
       simp_lowering <;> bv_decide
 
 /-- `LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND` is a wrapper to pass the rewrites to the
@@ -36,7 +36,7 @@ structure LLVMPeepholeRewriteRefine (w : Nat) (Γ : List Ty) where
   given that we are working with refinement semantics. -/
 def LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND
   (self : LLVMPeepholeRewriteRefine w Γ) :
-   PeepholeRewrite LLVMPlusRiscV Γ (Ty.llvm (.bitvec w))  :=
+   PeepholeRewrite LLVMPlusRiscV Γ [Ty.llvm (.bitvec w)] :=
   {
     lhs := self.lhs
     rhs := self.rhs

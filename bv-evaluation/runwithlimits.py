@@ -21,7 +21,7 @@ def kill_process_tree(pid: int):
         pass
 
 
-def monitor_memory(pid: int, memout_mb: int, flag: Dict[str, str]):
+def monitor_memory(pid: int, memout_mb: int, flag: Dict[str, bool]):
     """
     Monitor memory of process 'pid', and ensure that it
     does not exceed 'memout_mb' (in megabytes) by polling.
@@ -92,6 +92,4 @@ def run_with_limits(cmd: List[str], timeout: int, memout_mb: int, cwd : Optional
             return "TIMEOUT", stdout, stderr
     except Exception as e:
         return "ERROR", "", str(e)
-
-
 

@@ -6,13 +6,14 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
- 
-  def liRiscv_50 := [LV| {
+open LeanMLIR.SingleReturnCompat
+
+def liRiscv_50 := [LV| {
   ^entry ():
     %0 = "li"() {imm = -50 : !i64} : (!i64) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i64)
     llvm.return %1 : i64
-  }]
+}]
 
 def constLLVM_50 : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 64)) := [LV| {
   ^entry ():
@@ -2331,7 +2332,7 @@ def llvm_const_lower_riscv_li50 : LLVMPeepholeRewriteRefine 64 [] :=
   }
 
 def const_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
- List.map (fun x =>  ⟨[], Ty.llvm (.bitvec 64), (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x)⟩)
+ List.map (fun x =>  ⟨[], [Ty.llvm (.bitvec 64)], (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x)⟩)
  [
 llvm_const_lower_riscv_li_50,
   llvm_const_lower_riscv_li_49,
@@ -2435,4 +2436,3 @@ llvm_const_lower_riscv_li_50,
   llvm_const_lower_riscv_li49,
   llvm_const_lower_riscv_li50
   ]
-

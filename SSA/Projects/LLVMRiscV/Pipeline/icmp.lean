@@ -4,6 +4,7 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
+open LeanMLIR.SingleReturnCompat
 
 /-!
   This file implements the lowering for the `llvm.icmp` instruction for types i32 and i64.
@@ -15,7 +16,7 @@ open LLVMRiscV
 
 @[simp_denote]
 def icmp_ugt_llvm_32 : Com LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
-  .pure (.llvm (.bitvec 1))  := [LV| {
+  .pure (.llvm (.bitvec 1)) := [LV| {
   ^entry (%lhs: i32, %rhs: i32):
     %1 = llvm.icmp.ugt %lhs, %rhs  : i32
     llvm.return %1 : i1
