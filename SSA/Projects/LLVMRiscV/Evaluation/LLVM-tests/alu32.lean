@@ -56,6 +56,7 @@ def slti_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := slti_llvm_i32
   rhs := slti_riscv_i32
 
+
 /-- ### sltiu -/
 @[simp_denote]
 def sltiu_llvm_i32 := [LV| {
@@ -81,6 +82,7 @@ def sltiu_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := sltiu_llvm_i32
   rhs := sltiu_riscv_i32
 
+
 /-- ### xori -/
 @[simp_denote]
 def xori_llvm_i32 := [LV| {
@@ -104,6 +106,7 @@ def xori_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := xori_llvm_i32
   rhs := xori_riscv_i32
 
+
 /-- ### ori -/
 @[simp_denote]
 def ori_llvm_i32 := [LV| {
@@ -126,6 +129,7 @@ def ori_riscv_i32 :=
 def ori_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   lhs := ori_llvm_i32
   rhs := ori_riscv_i32
+
 
 /-- ### andi -/
 @[simp_denote]
