@@ -1,9 +1,8 @@
 import Mathlib.Tactic.NormNum
-
 import Mathlib.Logic.Function.Iterate
-import SSA.Projects.InstCombine.ForLean
--- TODO: upstream the following section
+-- import SSA.Projects.InstCombine.ForLean
 section UpStream
+
 
 namespace Int
 
@@ -342,7 +341,14 @@ section Lemmas
     toBitVec w' (ofBitVecSext x) = x.signExtend w' := by
   induction w'
   case zero      => simp only [BitVec.eq_nil]
-  case succ w ih => rw [toBitVec, ih]; simp [BitVec.signExtend_succ]
+  case succ w ih =>
+    rw [toBitVec, ih]
+    ext i hi
+    simp only [BitVec.getElem_cons, BitVec.getElem_signExtend, dite_eq_ite, ite_eq_right_iff]
+    intros hieq
+    subst hieq
+    simp only [ofBitVecSext]
+    by_cases hi : i < w <;> simp [hi]
 
 theorem toBitVec_eq_of_equal_up_to {w : Nat} {x y : BitStream} (h : x ={≤w} y) :
     x.toBitVec w = y.toBitVec w := by
@@ -857,7 +863,9 @@ theorem neg_neg : a = - - a := by
     a.neg.negAux i = ⟨a i, (a.negAux i).2⟩ := by
     induction' i with i ih
     · simp [neg, negAux]
-    · simp [neg, negAux, ih, Bool.xor_not_xor, Bool.not_xor_and_self, -Bool.not_bne',-Bool.not_bne]
+    · simp only [negAux, neg, Bool.not_bne, Bool.not_not, Bool.bne_assoc, Prod.mk.injEq]
+      rw [ih]
+      bv_decide
   simp [Neg.neg, neg, neg_lemma]
 
 /--
@@ -890,7 +898,9 @@ theorem neg_or_add (i : Nat) :
 theorem subCarries?_correct (i : Nat) :
     a.subCarries? b i = ((b.negAux i).2 == (a.addAux b.neg i).2) := by
   induction' i with i ih
-  · simp [subCarries?, negAux, addAux, BitVec.adcb, neg]
+  · simp only [subCarries?, Bool.and_false, Bool.or_false, negAux, addAux, BitVec.adcb, neg,
+    Bool.atLeastTwo_false_right, Bool.bne_false, Prod.swap_prod_mk]
+    bv_decide
   · by_cases a1 : a (i + 1)
     <;> by_cases b1 : b (i + 1)
     <;> cases' @neg_or_add a b i with h h
@@ -900,7 +910,9 @@ theorem subAux_inductive_lemma (i : Nat) :
     a.subAux b i = ⟨(a.addAux b.neg i).1, subCarries? a b i⟩ := by
   induction' i with i ih
   · simp [subAux, addAux, negAux, BitVec.adcb, subCarries?, neg]
-  · simp [subAux, addAux, negAux, BitVec.adcb, ih, Bool.xor_ne_self, subCarries?, neg, Bool.xor_inv_left, subCarries?_correct i, -Bool.not_bne]
+  · simp only [subAux, ih, subCarries?_correct i, addAux, BitVec.adcb, neg, negAux, Bool.not_bne,
+    Bool.bne_assoc, Bool.bne_not, Prod.swap_prod_mk, subCarries?, Prod.mk.injEq, and_true]
+    bv_decide
 
 theorem sub_eq_add_neg : a - b = a + (-b) := by
   ext i
@@ -910,13 +922,23 @@ theorem sub_eq_add_neg : a - b = a + (-b) := by
 theorem ofBitVec_getLsbD (n : Nat) (h : n < w) : ofBitVecSext x n = x.getLsbD n := by
   simp [ofBitVecSext, h]
 
+private theorem two_le_add_iff_odd_and_odd (n m : Nat) :
+    2 ≤ n % 2 + m % 2 ↔ n % 2 = 1 ∧ m % 2 = 1 := by
+  omega
+
+private theorem add_odd_iff_neq (n m : Nat) :
+    (n + m) % 2 = 1 ↔ (n % 2 = 1) ≠ (m % 2 = 1) := by
+  cases' Nat.mod_two_eq_zero_or_one n with nparity nparity
+  <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
+  <;> simp [mparity, nparity, Nat.add_mod]
+
 theorem ofBitVec_add : ofBitVecSext (x + y) ≈ʷ (ofBitVecSext x) + (ofBitVecSext y) := by
   intros n a
   have add_lemma : ⟨(x + y).getLsbD n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVecSext x).addAux (ofBitVecSext y) n := by
     induction' n with n ih
-    ·
-      simp [addAux, BitVec.adcb, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
-        Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
+    · simp [addAux, BitVec.adcb, BitVec.carry, BitVec.getLsbD, a,
+        two_le_add_iff_odd_and_odd, add_odd_iff_neq]
+      bv_decide
     · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add];
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
 
@@ -933,8 +955,12 @@ theorem ofBitVecZext_add_EqualUpTo :
   have add_lemma : ⟨(x + y).getLsbD n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVecZext x).addAux (ofBitVecZext y) n := by
     induction' n with n ih
     · simp only [zero_add, addAux_zero, ofBitVecZext_eq_getLsbD, Prod.mk.injEq]
-      simp [BitVec.getLsbD, a, BitVec.getLsbD, BitVec.carry, ← Bool.decide_and,
-        Bool.xor_decide, Nat.two_le_add_iff_odd_and_odd, Nat.add_odd_iff_neq]
+      simp only [BitVec.getLsbD, BitVec.toNat_add, Nat.testBit_zero, Nat.mod_two_pos_mod_two_eq_one,
+        a, true_and]
+      simp only [add_odd_iff_neq, ne_eq, eq_iff_iff, decide_not, Bool.decide_iff_dist,
+        Bool.not_eq_eq_eq_not, BitVec.carry, pow_one, Bool.toNat_false, add_zero, ge_iff_le,
+        two_le_add_iff_odd_and_odd, Bool.decide_and, and_true]
+      bv_decide
     · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add];
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
 
