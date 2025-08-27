@@ -6,7 +6,18 @@ open LLVMRiscV
   02.06.25. These tests are identical to those in alu32.ll but operate on i16.
   They check that legalisation of non-native types doesn't introduce unnecessary inefficiencies.
 -/
+import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
+open LLVMRiscV
+/-!This file implements the alu16.ll test case in the llv mtest suite. The newest rewrite was added added 02.06.25
+These tests are identical to those in alu32.ll but operate on i16. They check
+that legalisation of these non-native types doesn't introduce unnecessary
+inefficiencies.
+Legalisation of non-native types and
+-/
+
+
+/- # 1 -/
 /-
 ; RV64I-LABEL: addi:
 ; RV64I:       # %bb.0:
@@ -16,7 +27,7 @@ open LLVMRiscV
   ret
 -/
 def addi_llvm := [LV| {
-  ^entry (%a: i16):
+    ^entry (%a: i16):
     %0 = llvm.mlir.constant (1) : i16
     %1 = llvm.add %a, %0 : i16
     llvm.return %1 :i16
@@ -24,7 +35,7 @@ def addi_llvm := [LV| {
 
 def addi_riscv :=
   [LV| {
-  ^entry (%arg: i16):
+    ^entry (%arg: i16):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i16) -> (!i64)
     %0 = addi %a, 1 : !i64
     %1 =  "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i16)
@@ -36,14 +47,10 @@ def addi_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   rhs := addi_riscv
   correct := by
     unfold addi_riscv addi_llvm
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp
-    sorry
+    simp_lowering
+    bv_decide
 
+/- # 2 -/
 /-
 ; RV64I-LABEL: slti:
 ; RV64I:       # %bb.0:
@@ -57,7 +64,7 @@ def addi_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
 }
 -/
 def slti_llvm := [LV| {
-  ^entry (%a: i16):
+    ^entry (%a: i16):
     %0 = llvm.mlir.constant (2) : i16
     %1 = llvm.icmp.slt %a, %0 : i16
     %2 = llvm.zext %1: i1 to i16
@@ -66,7 +73,7 @@ def slti_llvm := [LV| {
 
 def slti_riscv :=
   [LV| {
-  ^entry (%arg: i16):
+    ^entry (%arg: i16):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i16) -> (!i64)
     %0 = slli %a, 48 : !i64
     %1 = srai %0, 48 : !i64
@@ -88,6 +95,7 @@ def slti_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 3 -/
 /-
 ; RV64I-LABEL: sltiu:
 ; RV64I:       # %bb.0:
@@ -101,7 +109,7 @@ def slti_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
 }
 -/
 def sltiu_llvm := [LV| {
-  ^entry (%a: i16):
+    ^entry (%a: i16):
     %0 = llvm.mlir.constant (3) : i16
     %1 = llvm.icmp.ult %a, %0 : i16
     %2 = llvm.zext %1: i1 to i16
@@ -110,7 +118,7 @@ def sltiu_llvm := [LV| {
 
 def sltiu_riscv :=
   [LV| {
-  ^entry (%arg: i16):
+    ^entry (%arg: i16):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i16) -> (!i64)
     %0 = slli %a, 48 : !i64
     %1 = srli %0, 48 : !i64
@@ -131,6 +139,8 @@ def sltiu_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 4 -/
 /-
 ; Make sure we avoid an AND, if the input of an unsigned compare is known
 ; to be sign extended. This can occur due to InstCombine canonicalizing
@@ -146,7 +156,7 @@ define i16 @sltiu_signext(i16 signext %a) nounwind {
 }
 -/
 def sltiu_signext_llvm := [LV| {
-  ^entry (%a: i16):
+    ^entry (%a: i16):
     %0 = llvm.mlir.constant (10) : i16
     %1 = llvm.icmp.ult %a, %0 : i16
     %2 = llvm.zext %1: i1 to i16
@@ -155,7 +165,7 @@ def sltiu_signext_llvm := [LV| {
 
 def sltiu_signext_riscv :=
   [LV| {
-  ^entry (%arg: i16):
+    ^entry (%arg: i16):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i16) -> (!i64)
     %0 = sltiu %a, 10 : !i64
     %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i16)
@@ -174,6 +184,8 @@ def sltiu_signext_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] wher
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 5 -/
 /-
 define i16 @xori(i16 %a) nounwind {
 ; RV64I-LABEL: xori:
@@ -185,7 +197,7 @@ define i16 @xori(i16 %a) nounwind {
 }
 -/
 def xori_llvm := [LV| {
-  ^entry (%a: i16):
+    ^entry (%a: i16):
     %0 = llvm.mlir.constant (4) : i16
     %1 = llvm.xor %a, %0 : i16
     llvm.return %1 :i16
@@ -193,7 +205,7 @@ def xori_llvm := [LV| {
 
 def xori_riscv :=
   [LV| {
-  ^entry (%arg: i16):
+    ^entry (%arg: i16):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i16) -> (!i64)
     %0 =xori %a, 4 : !i64
     %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i16)
@@ -212,6 +224,8 @@ def xori_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 6 -/
 /-
 define i16 @ori(i16 %a) nounwind {
 ; RV64I-LABEL: ori:
@@ -223,7 +237,7 @@ define i16 @ori(i16 %a) nounwind {
 }
 -/
 def ori_llvm := [LV| {
-  ^entry (%a: i16):
+    ^entry (%a: i16):
     %0 = llvm.mlir.constant (5) : i16
     %1 = llvm.or %a, %0 : i16
     llvm.return %1 :i16
@@ -231,7 +245,7 @@ def ori_llvm := [LV| {
 
 def ori_riscv :=
   [LV| {
-  ^entry (%arg: i16):
+    ^entry (%arg: i16):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i16) -> (!i64)
     %0 =ori %a, 5 : !i64
     %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i16)
@@ -250,6 +264,8 @@ def ori_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 7 -/
 /-
 define i16 @andi(i16 %a) nounwind {
 ; RV64I-LABEL: andi:
@@ -261,7 +277,7 @@ define i16 @andi(i16 %a) nounwind {
 }
 -/
 def andi_llvm := [LV| {
-  ^entry (%a: i16):
+    ^entry (%a: i16):
     %0 = llvm.mlir.constant (6) : i16
     %1 = llvm.and %a, %0 : i16
     llvm.return %1 :i16
@@ -269,7 +285,7 @@ def andi_llvm := [LV| {
 
 def andi_riscv :=
   [LV| {
-  ^entry (%arg: i16):
+    ^entry (%arg: i16):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i16) -> (!i64)
     %0 =andi %a, 6 : !i64
     %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i16)
@@ -288,6 +304,8 @@ def andi_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 8 -/
 /-
 define i16 @slli(i16 %a) nounwind {
 ; RV64I-LABEL: slli:
@@ -299,7 +317,7 @@ define i16 @slli(i16 %a) nounwind {
 }
 -/
 def slli_llvm := [LV| {
-  ^entry (%a: i16):
+    ^entry (%a: i16):
     %0 = llvm.mlir.constant (7) : i16
     %1 = llvm.shl %a, %0 : i16
     llvm.return %1 :i16
@@ -307,7 +325,7 @@ def slli_llvm := [LV| {
 
 def slli_riscv :=
   [LV| {
-  ^entry (%arg: i16):
+    ^entry (%arg: i16):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i16) -> (!i64)
     %0 =slli %a, 7 : !i64
     %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i16)
@@ -326,6 +344,8 @@ def slli_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 9 -/
 /-
 define i16 @srli(i16 %a) nounwind {
 ; RV64I-LABEL: srli:
@@ -338,7 +358,7 @@ define i16 @srli(i16 %a) nounwind {
 }
 -/
 def srli_llvm := [LV| {
-  ^entry (%a: i16):
+    ^entry (%a: i16):
     %0 = llvm.mlir.constant (6) : i16
     %1 = llvm.lshr %a, %0 : i16
     llvm.return %1 :i16
@@ -346,7 +366,7 @@ def srli_llvm := [LV| {
 
 def srli_riscv :=
   [LV| {
-  ^entry (%arg: i16):
+    ^entry (%arg: i16):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i16) -> (!i64)
     %0 =slli %a, 48 : !i64
     %1 =srli %0, 54 : !i64
@@ -366,6 +386,8 @@ def srli_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 10 -/
 /-
 define i16 @srai(i16 %a) nounwind {
 ; RV64I-LABEL: srai:
@@ -378,7 +400,7 @@ define i16 @srai(i16 %a) nounwind {
 }
 -/
 def srai_llvm := [LV| {
-  ^entry (%a: i16):
+    ^entry (%a: i16):
     %0 = llvm.mlir.constant (9) : i16
     %1 = llvm.ashr %a, %0 : i16
     llvm.return %1 :i16
@@ -386,7 +408,7 @@ def srai_llvm := [LV| {
 
 def srai_riscv :=
   [LV| {
-  ^entry (%arg: i16):
+    ^entry (%arg: i16):
     %a =  "builtin.unrealized_conversion_cast" (%arg) : (i16) -> (!i64)
     %0 =slli %a, 48 : !i64
     %1 =srai %0, 57 : !i64
@@ -406,6 +428,8 @@ def srai_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 11 -/
 /-
 define i16 @add(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: add:
@@ -417,14 +441,14 @@ define i16 @add(i16 %a, i16 %b) nounwind {
 }
 -/
 def add_llvm_i16:= [LV| {
-  ^entry (%a: i16,%b: i16 ):
+    ^entry (%a: i16,%b: i16 ):
     %0 = llvm.add %a, %b : i16
     llvm.return %0 :i16
   }]
 
 def add_riscv_i16 :=
   [LV| {
-  ^entry (%arg0: i16, %arg1: i16 ):
+    ^entry (%arg0: i16, %arg1: i16 ):
     %a =  "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %b =  "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 =add %a, %b : !i64
@@ -444,6 +468,8 @@ def add_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 12 -/
 /-
 define i16 @sub(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: sub:
@@ -455,14 +481,14 @@ define i16 @sub(i16 %a, i16 %b) nounwind {
 }
 -/
 def sub_llvm_i16:= [LV| {
-  ^entry (%a: i16,%b: i16 ):
+    ^entry (%a: i16,%b: i16 ):
     %0 = llvm.sub %a, %b : i16
     llvm.return %0 :i16
   }]
 
 def sub_riscv_i16 :=
   [LV| {
-  ^entry (%arg0: i16, %arg1: i16 ):
+    ^entry (%arg0: i16, %arg1: i16 ):
     %a = "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %b = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 =sub %a, %b : !i64
@@ -482,6 +508,8 @@ def sub_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 12 -/
 /-
 define i16 @sll(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: sll:
@@ -492,14 +520,14 @@ define i16 @sll(i16 %a, i16 %b) nounwind {
   ret i16 %1
 }-/
 def sll_llvm_i16:= [LV| {
-  ^entry (%a: i16,%b: i16 ):
+    ^entry (%a: i16,%b: i16 ):
     %0 = llvm.shl %a, %b : i16
     llvm.return %0 :i16
   }]
 
 def sll_riscv_i16 :=
   [LV| {
-  ^entry (%arg0: i16, %arg1: i16 ):
+    ^entry (%arg0: i16, %arg1: i16 ):
     %a = "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %b = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 =sll %a, %b : !i64
@@ -512,19 +540,10 @@ def sll_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
   rhs := sll_riscv_i16
   correct := by
     unfold sll_llvm_i16 sll_riscv_i16
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    intro x x'
-    split
-    · simp
-    case value.value.isFalse hf =>
-      simp [hf]
-      simp at hf
-      sorry
+    simp_lowering
+    bv_decide
 
+/- # 13 -/
 /-
 define i16 @slt(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: slt:
@@ -541,7 +560,7 @@ define i16 @slt(i16 %a, i16 %b) nounwind {
 }
 -/
 def slt_llvm := [LV| {
-  ^entry (%a: i16, %b: i16 ):
+    ^entry (%a: i16, %b: i16 ):
     %0 = llvm.icmp.slt %a, %b : i16
     %1 = llvm.zext %0: i1 to i16
     llvm.return %1 :i16
@@ -549,7 +568,7 @@ def slt_llvm := [LV| {
 
 def slt_riscv :=
   [LV| {
-  ^entry (%arg0: i16, %arg1: i16 ):
+    ^entry (%arg0: i16, %arg1: i16 ):
     %a0 =  "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %a1 =  "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 = slli %a1, 48 : !i64
@@ -574,6 +593,7 @@ def slt_signext_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llv
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 14 -/
 /-
 define i16 @sltu(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: sltu:
@@ -590,7 +610,7 @@ define i16 @sltu(i16 %a, i16 %b) nounwind {
 }
 -/
 def sltu_llvm := [LV| {
-  ^entry (%a: i16, %b: i16 ):
+    ^entry (%a: i16, %b: i16 ):
     %0 = llvm.icmp.ult %a, %b : i16
     %1 = llvm.zext %0: i1 to i16
     llvm.return %1 :i16
@@ -598,7 +618,7 @@ def sltu_llvm := [LV| {
 
 def sltu_riscv :=
   [LV| {
-  ^entry (%arg0: i16, %arg1: i16):
+    ^entry (%arg0: i16, %arg1: i16):
     %a0 = "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %a1 = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 = li (149595403036) : !i64 -- random value bc reg can hold anything
@@ -623,6 +643,8 @@ def sltu_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bit
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 15 -/
 /-
 define i16 @xor(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: xor:
@@ -634,14 +656,14 @@ define i16 @xor(i16 %a, i16 %b) nounwind {
 }
 -/
 def xor_llvm_i16:= [LV| {
-  ^entry (%a: i16,%b: i16 ):
+    ^entry (%a: i16,%b: i16 ):
     %0 = llvm.xor %a, %b : i16
     llvm.return %0 :i16
   }]
 
 def xor_riscv_i16 :=
   [LV| {
-  ^entry (%arg0: i16, %arg1: i16 ):
+    ^entry (%arg0: i16, %arg1: i16 ):
     %a = "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %b = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 = xor %a, %b : !i64
@@ -661,6 +683,8 @@ def xor_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 16 -/
 /-
 define i16 @srl(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: srl:
@@ -674,19 +698,19 @@ define i16 @srl(i16 %a, i16 %b) nounwind {
 }
 -/
 def srl_llvm_i16 := [LV| {
-  ^entry (%a: i16, %b: i16 ):
+    ^entry (%a: i16, %b: i16 ):
     %0 = llvm.lshr %a, %b : i16
     llvm.return %0 :i16
   }]
 
 def srl_riscv_i16 :=
   [LV| {
-  ^entry (%arg0: i16, %arg1: i16):
+    ^entry (%arg0: i16, %arg1: i16):
     %a0 = "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %a1 = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 = slli %a0, 48 : !i64
-    %1 = srai %0, 48 : !i64
-    %2 = srl %0, %a1 : !i64
+    %1 = srli %0, 48 : !i64
+    %2 = srl %1, %a1 : !i64
     %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i16)
     llvm.return %3 :i16
   }]
@@ -696,14 +720,10 @@ def srl_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitv
   rhs := srl_riscv_i16
   correct := by
     unfold srl_llvm_i16 srl_riscv_i16
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp;
-    sorry -- aka askhow to best integrate this with bv_decide
+    simp_lowering
+    bv_decide
+
+/- # 17 -/
 /-
 define i16 @sra(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: sra:
@@ -717,19 +737,19 @@ define i16 @sra(i16 %a, i16 %b) nounwind {
 }
 -/
 def sra_llvm_i16 := [LV| {
-  ^entry (%a: i16, %b: i16 ):
+    ^entry (%a: i16, %b: i16 ):
     %0 = llvm.ashr %a, %b : i16
     llvm.return %0 :i16
   }]
 
 def sra_riscv_i16 :=
   [LV| {
-  ^entry (%arg0: i16, %arg1: i16):
+    ^entry (%arg0: i16, %arg1: i16):
     %a0 = "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %a1 = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 = slli %a0, 48 : !i64
     %1 = srai %0, 48 : !i64
-    %2 = sra %0, %a1 : !i64
+    %2 = sra %1, %a1 : !i64
     %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i16)
     llvm.return %3 :i16
   }]
@@ -739,14 +759,10 @@ def sra_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitv
   rhs := sra_riscv_i16
   correct := by
     unfold sra_llvm_i16 sra_riscv_i16
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp;
-    sorry -- same bv_decide problem
+    simp_lowering
+    bv_decide
+
+/- # 18 -/
 /-
 define i16 @or(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: or:
@@ -758,14 +774,14 @@ define i16 @or(i16 %a, i16 %b) nounwind {
 }
 -/
 def or_llvm_i16:= [LV| {
-  ^entry (%a: i16,%b: i16 ):
+    ^entry (%a: i16,%b: i16 ):
     %0 = llvm.or %a, %b : i16
     llvm.return %0 :i16
   }]
 
 def or_riscv_i16 :=
   [LV| {
-  ^entry (%arg0: i16, %arg1: i16 ):
+    ^entry (%arg0: i16, %arg1: i16 ):
     %a = "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %b = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 = or %a, %b : !i64
@@ -786,6 +802,7 @@ def or_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.b
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 19 -/
 /-define i16 @and(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: and:
 ; RV64I:       # %bb.0:
@@ -795,14 +812,14 @@ def or_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.b
   ret i16 %1
 }-/
 def and_llvm_i16:= [LV| {
-  ^entry (%a: i16,%b: i16 ):
+    ^entry (%a: i16,%b: i16 ):
     %0 = llvm.and %a, %b : i16
     llvm.return %0 :i16
   }]
 
 def and_riscv_i16 :=
   [LV| {
-  ^entry (%arg0: i16, %arg1: i16 ):
+    ^entry (%arg0: i16, %arg1: i16 ):
     %a = "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %b = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 = and %a, %b : !i64

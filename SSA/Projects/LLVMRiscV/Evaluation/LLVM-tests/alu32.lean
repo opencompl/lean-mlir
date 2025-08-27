@@ -5,6 +5,7 @@ open LLVMRiscV
 
 This file implements and verifies the alu32.ll test cases. We still need to find figure out the srl case. -/
 
+/- # 1 -/
 /--
 define i32 @addi(i32 %a) nounwind {
 ; RV64I-LABEL: addi:
@@ -37,8 +38,9 @@ def addi_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
   correct := by
     unfold addi_llvm_i32 addi_riscv_i32
     simp_lowering
-    bv_decide
 
+
+/- # 2 -/
 /- define i32 @slti(i32 %a) nounwind {
 ; RV64I-LABEL: slti:
 ; RV64I:       # %bb.0:
@@ -75,6 +77,7 @@ def slti_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_lowering
     bv_decide
 
+/- # 3 -/
 /- define i32 @sltiu(i32 %a) nounwind {
 ; RV64I-LABEL: sltiu:
 ; RV64I:       # %bb.0:
@@ -111,6 +114,7 @@ def sltiu_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_lowering
     bv_decide
 
+/- # 4 -/
 /- define i32 @xori(i32 %a) nounwind {
 ; RV64I-LABEL: xori:
 ; RV64I:       # %bb.0:
@@ -143,7 +147,7 @@ def xori_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_lowering
     bv_decide --fixed
 
-
+/- # 5 -/
 /- define i32 @ori(i32 %a) nounwind {
 ; RV64I-LABEL: ori:
 ; RV64I:       # %bb.0:
@@ -176,6 +180,7 @@ def ori_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_lowering
     bv_decide --fixed
 
+/- # 6 -/
 /- define i32 @andi(i32 %a) nounwind {
 ; RV64I-LABEL: andi:
 ; RV64I:       # %bb.0:
@@ -200,6 +205,20 @@ def andi_riscv_i32 :=
     llvm.return %1 : i32
   }]
 
+def andi_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
+  lhs := andi_llvm_i32
+  rhs := andi_riscv_i32
+  correct := by
+    unfold andi_llvm_i32 andi_riscv_i32
+    simp_peephole
+    simp_riscv
+    simp_alive_undef
+    simp_alive_ops
+    simp_alive_case_bash
+    simp_alive_split
+    all_goals simp; bv_decide
+
+/- # 7 -/
 /- define i32 @slli(i32 %a) nounwind {
 ; RV64I-LABEL: slli:
 ; RV64I:       # %bb.0:
@@ -237,6 +256,7 @@ def slli_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 8 -/
 /- define i32 @srli(i32 %a) nounwind {
 ; RV64I-LABEL: srli:
 ; RV64I:       # %bb.0:
@@ -274,6 +294,7 @@ def srli_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 9 -/
 /-; This makes sure SimplifyDemandedBits doesn't prevent us from matching SRLIW
 ; on RV64.
 define i32 @srli_demandedbits(i32 %0) {
@@ -318,6 +339,7 @@ def srli_demandedbits_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 10 -/
 /- define i32 @srai(i32 %a) nounwind {
 RISCV64I-LABEL: srai:
 ; RV64I:       # %bb.0:
@@ -355,6 +377,7 @@ def srai_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 11 -/
 /- define i32 @add(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: add:
 ; RV64I:       # %bb.0:
@@ -392,6 +415,7 @@ def add_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 12 -/
 /- define i32 @sub(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: sub:
 ; RV64I:       # %bb.0:
@@ -428,6 +452,7 @@ def sub_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 13 -/
 /- define i32 @sub_negative_constant_lhs(i32 %a) nounwind {
 ; RV64I-LABEL: sub_negative_constant_lhs:
 ; RV64I:       # %bb.0:
@@ -462,6 +487,7 @@ def sub_negative_constant_lhs_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (
     simp_lowering
     bv_decide -- fixed
 
+/- # 14 -/
 /- define i32 @sll(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: sll:
 ; RV64I:       # %bb.0:
@@ -494,6 +520,7 @@ def sll_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_lowering
     bv_decide
 
+/- # 15 -/
 /- define i32 @sll_negative_constant_lhs(i32 %a) nounwind {
 ; RV64I-LABEL: sll_negative_constant_lhs:
 ; RV64I:       # %bb.0:
@@ -528,6 +555,7 @@ def sll_negative_constant_lhs_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (
     simp_lowering
     bv_decide
 
+/- # 16 -/
 /- define i32 @slt(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: slt:
 ; RV64I:       # %bb.0:
@@ -566,6 +594,7 @@ def slt_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_lowering
     bv_decide
 
+/- # 17 -/
 /- define i32 @sltu(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: sltu:
 ; RV64I:       # %bb.0:
@@ -604,6 +633,7 @@ def sltu_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm 
     simp_lowering
     bv_decide
 
+/- # 18 -/
 /- define i32 @xor(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: xor:
 ; RV64I:       # %bb.0:
@@ -640,6 +670,7 @@ def xor_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 19 -/
 /- define i32 @srl(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: srl:
 ; RV64I:       # %bb.0:
@@ -672,6 +703,7 @@ def srl_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_lowering
     bv_decide
 
+/- # 20 -/
 /- define i32 @srl_negative_constant_lhs(i32 %a) nounwind {
 ; RV64I-LABEL: srl_negative_constant_lhs:
 ; RV64I:       # %bb.0:
@@ -706,6 +738,7 @@ def srl_negative_constant_lhs_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (
     simp_lowering
     bv_decide
 
+/- # 21 -/
 /- define i32 @sra(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: sra:
 ; RV64I:       # %bb.0:
@@ -738,6 +771,7 @@ def sra_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (
     simp_lowering
     bv_decide
 
+/- # 22 -/
 /- define i32 @sra_negative_constant_lhs(i32 %a) nounwind {
 ; RV64I-LABEL: sra_negative_constant_lhs:
 ; RV64I:       # %bb.0:
@@ -773,6 +807,7 @@ def sra_negative_constant_lhs_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (
     simp_lowering
     bv_decide
 
+/- # 23 -/
 /- define i32 @or(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: or:
 ; RV64I:       # %bb.0:
@@ -809,6 +844,7 @@ def or_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 24 -/
 /- define i32 @and(i32 %a, i32 %b) nounwind {
 ; RV64I-LABEL: and:
 ; RV64I:       # %bb.0:
