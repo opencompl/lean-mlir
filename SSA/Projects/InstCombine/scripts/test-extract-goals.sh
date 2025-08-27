@@ -6,7 +6,7 @@ pushd "$(git rev-parse --show-toplevel)" || exit 1
 
 ## The first argument to this script is passed on as `stride`, the second as `offset`.
 
-python3 SSA/Projects/InstCombine/scripts/extract-goals.py --nfiles 9000 -j7 --stride $1 --offset $2
+python3 SSA/Projects/InstCombine/scripts/extract-goals.py $@
 OUT=$(git diff SSA/Projects/InstCombine/tests/goals/)
 git checkout -- SSA/Projects/InstCombine/ # undo all changes made by extraction.
 echo "$OUT"
