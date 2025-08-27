@@ -44,7 +44,7 @@ jobs:
           lake -R build
 
   extract-goals:
-    name: Check Extract-goals
+    name: Check extracted goals
     runs-on: ubuntu-latest
     needs: eval-build
     permissions:
