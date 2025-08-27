@@ -44,7 +44,7 @@ jobs:
           lake -R build
 
   extract-goals:
-    name: Check extracted goals
+    name: Extract goals
     runs-on: ubuntu-latest
     needs: eval-build
     strategy:
