@@ -84,11 +84,16 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
     file_path = BENCHMARK_DIR + file
     fileTitle = file.split('.')[0]
     EXTRACT_GOALS = "extract_goals"
-    logging.info(f"{fileTitle}: writing '{EXTRACT_GOALS}' tactic into file #{file_num}.")
+    logging.debug(f"{fileTitle}: writing '{EXTRACT_GOALS}' tactic into file #{file_num}.")
     subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,{EXTRACT_GOALS},g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
+
 
     cmd = 'lake lean ' + file_path
     logging.debug(f"{fileTitle}({file_num}/{nfiles}): running '{cmd}'")
+    K = nfiles // 30
+    if file_num % K  == 0:
+        logging.info(f"{file_num}/{nfiles} ({file_num/nfiles*100:.1f}%)")
+
 
     # TODO: can check that file exists to skip.
     p = subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
@@ -121,11 +126,13 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
 
     for t in theorems:
         path = Path(GOALS_DIR) / t.get_file_name(fileTitle)
-        logging.info(f"{fileTitle}({file_num}/{nfiles}): Writing '{path}'...")
+        logging.debug(f"{fileTitle}({file_num}/{nfiles}): Writing '{path}'...")
         with open(path, 'w') as f:
             f.write(PREAMBLE)
             f.write(t.text)
-            logging.info(f"{fileTitle}({file_num}/{nfiles}): {STATUS_GREEN_CHECK} Written to '{path}'")
+            logging.debug(f"{fileTitle}({file_num}/{nfiles}): {STATUS_GREEN_CHECK} Written to '{path}'")
+
+
     return True
 
 def process(args):
@@ -177,19 +184,14 @@ def process(args):
         if not success:
             logging.error('%r FAILED run' % (file))
 
-        percentage = ((ix + 1) / total) * 100
-        status_symbol = STATUS_SUCCESS if success else STATUS_FAIL
         num_completed += 1
-        if ix % 100 == 1:
-          logging.debug(f'{status_symbol} completed {file} ({percentage:.1f}%)')
-          logging.debug(f"total #files processed: {num_completed}/{total}")
 
     if num_completed != total:
         logging.error(f"Expected {total} files to be processed, but got {num_completed} completed futures.")
 
-def setup_logging(db_name : str):
+def setup_logging(db_name : str, loglevel: str):
     # Set up the logging configuration
-    logging.basicConfig(level=os.environ.get('LOGLEVEL', 'DEBUG').upper(),
+    logging.basicConfig(level=loglevel.upper(),
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
 
@@ -204,8 +206,10 @@ if __name__ == "__main__":
   parser.add_argument('--timeout', type=int, default=600, help="timeout in seconds for each file processing")
   parser.add_argument('--stride', type=int, default=1, help="Files that are processed have index 'ix = ∃ k, stride * k + offset'")
   parser.add_argument('--offset', type=int, default=0, help="Files that are processed have index 'ix = ∃ k, stride * k + offset'")
+  parser.add_argument('--loglevel', type=str, default="DEBUG", help="Log level",
+    choices=["DEBUG", "INFO", "WARNING", "ERROR"])
   args = parser.parse_args()
-  setup_logging(args.db)
+  setup_logging(args.db, args.loglevel)
   logging.info(args)
   process(args)
 
