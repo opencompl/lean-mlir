@@ -8,6 +8,15 @@
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:
+	add	a2, a0, a0
+	slli	a1, a1, 63
+	srai	a1, a1, 63
+	and	a0, a1, a0
+	sltu	a1, a2, a0
+	neg	a1, a1
+	mul	a0, a0, a2
+	sll	a1, a1, a0
+	slt	a0, a1, a0
 	ret
 .Lfunc_end0:
 	.size	main, .Lfunc_end0-main

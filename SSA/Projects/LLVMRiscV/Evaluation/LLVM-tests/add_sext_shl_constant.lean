@@ -3,7 +3,11 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 open LLVMRiscV
 
 /-! total exsit 12 test cases, we implement 6 of these because they are supported in our fragemnt
-, where each has 2 version ,the ZBA and the non-ZBA supported version. -/
+, where each has 2 version ,the ZBA and the non-ZBA supported version.
+https://github.com/llvm/llvm-project/blob/main/llvm/test/CodeGen/RISCV/add_sext_shl_constant.ll
+ -/
+
+ /-# 1 -/
 /-
 define i64 @add_shl_moreOneUse_sh1add(i64 %x) {
 ; NO-ZBA-LABEL: add_shl_moreOneUse_sh1add:
@@ -80,6 +84,9 @@ def add_shl_moreOneUse_sh1add_no_ZBA : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.b
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+ /-# 2 -/
+
 /-
 define i64 @add_shl_moreOneUse_sh2add(i64 %x) {
 ; NO-ZBA-LABEL: add_shl_moreOneUse_sh2add:
@@ -156,6 +163,8 @@ def add_shl_moreOneUse_sh2add_no_ZBA : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.b
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/-# 3 -/
 /-
 define i64 @add_shl_moreOneUse_sh3add(i64 %x) {
 ; NO-ZBA-LABEL: add_shl_moreOneUse_sh3add:
@@ -233,6 +242,8 @@ def add_shl_moreOneUse_sh3add_no_ZBA : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.b
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+ /-# 4 -/
 /-
 ;; Covers a case which previously crashed (pr119527)
 define i64 @add_shl_sext(i32 %1) {
@@ -270,14 +281,10 @@ def add_shl_sext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
   rhs := add_shl_sext_riscv
   correct := by
     unfold add_shl_sext_llvm add_shl_sext_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-    sorry
+    simp_lowering
+    bv_decide
+
+ /-# 5 -/
 /-
 define i64 @add_shl_moreOneUse_sh4add(i64 %x) {
 ; RV64-LABEL: add_shl_moreOneUse_sh4add:
@@ -326,6 +333,8 @@ def add_shl_moreOneUse_sh4add : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+ /-# 6 -/
 /-
 define i64 @add_shl_rhs_constant(i64 %x, i64 %y) {
 ; RV64-LABEL: add_shl_rhs_constant:

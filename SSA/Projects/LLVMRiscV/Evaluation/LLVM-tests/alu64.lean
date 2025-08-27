@@ -1,6 +1,8 @@
 import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
+
+/- # 1 -/
 /- define i64 @addi(i64 %a) nounwind {
 ; RV64I-LABEL: addi:
 ; RV64I:       # %bb.0:
@@ -30,13 +32,10 @@ def addi_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   rhs := addi_riscv_i64
   correct := by
     unfold addi_llvm_i64 addi_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp;
+    simp_lowering
+    bv_decide
 
+/- # 2 -/
 /- define i64 @slti(i64 %a) nounwind {
 ; RV64I-LABEL: slti:
 ; RV64I:       # %bb.0:
@@ -77,6 +76,7 @@ def slti_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     simp_alive_split
     all_goals simp;
 
+/- # 3 -/
 /- define i64 @sltiu(i64 %a) nounwind {
 ; RV64I-LABEL: sltiu:
 ; RV64I:       # %bb.0:
@@ -117,7 +117,7 @@ def sltiu_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     simp_alive_split
     all_goals simp;
 
-
+/- # 4 -/
 /- define i64 @xori(i64 %a) nounwind {
 ; RV64I-LABEL: xori:
 ; RV64I:       # %bb.0:
@@ -148,13 +148,10 @@ def xori_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   rhs := xori_riscv_i64
   correct := by
     unfold xori_llvm_i64 xori_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp;
+    simp_lowering
+    bv_decide
 
+/- # 5 -/
 /- define i64 @ori(i64 %a) nounwind {
 ; RV64I-LABEL: ori:
 ; RV64I:       # %bb.0:
@@ -185,13 +182,10 @@ def ori_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   rhs := ori_riscv_i64
   correct := by
     unfold ori_llvm_i64 ori_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp;
+    simp_lowering
+    bv_decide
 
+/- # 6 -/
 /- define i64 @andi(i64 %a) nounwind {
 ; RV64I-LABEL: andi:
 ; RV64I:       # %bb.0:
@@ -222,13 +216,10 @@ def andi_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   rhs := andi_riscv_i64
   correct := by
     unfold andi_llvm_i64 andi_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp;
+    simp_lowering
+    bv_decide
 
+/- # 7 -/
 /-define i64 @slli(i64 %a) nounwind {
 ; RV64I-LABEL: slli:
 ; RV64I:       # %bb.0:
@@ -267,6 +258,7 @@ def slli_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     simp_alive_split
     all_goals simp;
 
+/- # 8 -/
 /- define i64 @srli(i64 %a) nounwind {
 ; RV64I-LABEL: srli:
 ; RV64I:       # %bb.0:
@@ -306,6 +298,7 @@ def srli_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     simp_alive_split
     all_goals simp;
 
+/- # 9 -/
 /- define i64 @srai(i64 %a) nounwind {
 ; RV64I-LABEL: srai:
 ; RV64I:       # %bb.0:
@@ -344,6 +337,7 @@ def srai_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     simp_alive_split
     all_goals simp;
 
+/- # 10 -/
 /- define i64 @add(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: add:
 ; RV64I:       # %bb.0:
@@ -381,6 +375,7 @@ def add_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
     simp_alive_split
     all_goals simp;
 
+/- # 11 -/
 /- define i64 @sub(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: sub:
 ; RV64I:       # %bb.0:
@@ -417,6 +412,8 @@ def sub_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
     simp_alive_case_bash
     simp_alive_split
     all_goals simp;
+
+/- # 12 -/
 /-
 define i64 @sll(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: sll:
@@ -439,7 +436,7 @@ def sll_riscv_i64 :=
     ^entry (%arg0: i64, %arg1: i64):
     %a = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!i64)
     %b = "builtin.unrealized_conversion_cast" (%arg1) : (i64) -> (!i64)
-    %0 = sllw %a, %b : !i64
+    %0 = sll %a, %b : !i64
     %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
     llvm.return %1 : i64
   }]
@@ -449,15 +446,10 @@ def sll_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
   rhs := sll_riscv_i64
   correct := by
     unfold sll_llvm_i64 sll_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp;
-    sorry -- same problem
+    simp_lowering
+    bv_decide
 
+/- # 13 -/
 /-
 define i64 @slt(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: slt:
@@ -499,6 +491,8 @@ def slt_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
     simp_alive_case_bash
     simp_alive_split
     all_goals simp;
+
+/- # 14 -/
 /-
 define i64 @sltu(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: sltu:
@@ -540,6 +534,8 @@ def sltu_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm 
     simp_alive_case_bash
     simp_alive_split
     all_goals simp;
+
+/- # 15 -/
 /-
 define i64 @xor(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: xor:
@@ -578,6 +574,8 @@ def xor_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 16 -/
 /-
 define i64 @srl(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: srl:
@@ -609,13 +607,10 @@ def srl_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
   rhs := srl_riscv_i64
   correct := by
     unfold srl_llvm_i64 srl_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
+    simp_lowering
+    bv_decide
+
+/- # 17 -/
 /-
 define i64 @sra(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: sra:
@@ -647,13 +642,10 @@ def sra_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
   rhs := sra_riscv_i64
   correct := by
     unfold sra_llvm_i64 sra_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
+    simp_lowering
+    bv_decide
+
+/- # 18 -/
 /-
 define i64 @or(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: or:
@@ -692,6 +684,8 @@ def or_i32_test : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 19 -/
 /-
 define i64 @and(i64 %a, i64 %b) nounwind {
 ; RV64I-LABEL: and:
@@ -731,7 +725,11 @@ def and_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+
 /-
+Can't be implemented because LEAN-MLIR does't support the signext intrinsic as applied for the arg
+`i32 signext %a `)
 define signext i32 @addiw(i32 signext %a) nounwind {
 ; RV64I-LABEL: addiw:
 ; RV64I:       # %bb.0:
@@ -743,7 +741,9 @@ define signext i32 @addiw(i32 signext %a) nounwind {
 }
 -/
 
+
 /-
+Can't be implemented because LEAN-MLIR does't support the signext intrinsic as applied for the arg
 define signext i32 @slliw(i32 signext %a) nounwind {
 ; RV64I-LABEL: slliw:
 ; RV64I:       # %bb.0:
@@ -754,7 +754,21 @@ define signext i32 @slliw(i32 signext %a) nounwind {
 }
 -/
 
+
 /-
+Can't be implemented because LEAN-MLIR does't support the signext intrinsic as applied for the arg
+define signext i32 @srliw(i32 %a) nounwind {
+; RV64I-LABEL: srliw:
+; RV64I:       # %bb.0:
+; RV64I-NEXT:    srliw a0, a0, 8
+; RV64I-NEXT:    ret
+  %1 = lshr i32 %a, 8
+  ret i32 %1
+}-/
+
+
+/-
+Can't be implemented because LEAN-MLIR does't support the signext intrinsic as applied for the arg
 define signext i32 @srliw(i32 %a) nounwind {
 ; RV64I-LABEL: srliw:
 ; RV64I:       # %bb.0:
@@ -776,6 +790,7 @@ define signext i32 @sraiw(i32 %a) nounwind {
 }
 -/
 
+/- # 20 -/
 /-
 define i64 @sraiw_i64(i64 %a) nounwind {
 ; RV64I-LABEL: sraiw_i64:
@@ -788,8 +803,33 @@ define i64 @sraiw_i64(i64 %a) nounwind {
   ret i64 %2
 }
 -/
+def sraiw_llvm_i64 := [LV| {
+    ^entry (%a: i64):
+    %32 = llvm.mlir.constant (32) : i64
+    %41 = llvm.mlir.constant (41) : i64
+    %0 = llvm.shl %a, %32 : i64
+    %1 = llvm.ashr %0, %41: i64
+    llvm.return %1 : i64
+  }]
+
+def sraiw_riscv_i64 := [LV| {
+    ^entry (%arg: i64):
+    %0 = "builtin.unrealized_conversion_cast" (%arg) : (i64) -> (!riscv.reg)
+    %1 = sraiw %0, 9 : !riscv.reg
+    %2 = "builtin.unrealized_conversion_cast" (%1) : (!riscv.reg) -> (i64)
+    llvm.return %2 : i64
+  }]
+
+def sraiw_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := sraiw_llvm_i64
+  rhs := sraiw_riscv_i64
+  correct := by
+    unfold  sraiw_llvm_i64 sraiw_riscv_i64
+    simp_lowering
+    bv_decide
 
 /-
+Can't be implemented because LEAN-MLIR does't support the zeronext intrinsic as applied for the arg
 define signext i32 @sextw(i32 zeroext %a) nounwind {
 ; RV64I-LABEL: sextw:
 ; RV64I:       # %bb.0:
@@ -801,6 +841,7 @@ define signext i32 @sextw(i32 zeroext %a) nounwind {
 -/
 
 /-
+Can't be implemented because LEAN-MLIR does't support the signext intrinsic as applied for the arg
 define signext i32 @addw(i32 signext %a, i32 signext %b) nounwind {
 ; RV64I-LABEL: addw:
 ; RV64I:       # %bb.0:
@@ -813,6 +854,7 @@ define signext i32 @addw(i32 signext %a, i32 signext %b) nounwind {
 -/
 
 /-
+Can't be implemented because LEAN-MLIR does't support the signext intrinsic as applied for the arg
 define signext i32 @subw(i32 signext %a, i32 signext %b) nounwind {
 ; RV64I-LABEL: subw:
 ; RV64I:       # %bb.0:
@@ -825,6 +867,7 @@ define signext i32 @subw(i32 signext %a, i32 signext %b) nounwind {
 -/
 
 /-
+Can't be implemented because LEAN-MLIR does't support the signext intrinsic as applied for the arg
 define signext i32 @sllw(i32 signext %a, i32 zeroext %b) nounwind {
 ; RV64I-LABEL: sllw:
 ; RV64I:       # %bb.0:
@@ -836,6 +879,7 @@ define signext i32 @sllw(i32 signext %a, i32 zeroext %b) nounwind {
 -/
 
 /-
+Can't be implemented because LEAN-MLIR does't support the signext intrinsic as applied for the arg
 define signext i32 @srlw(i32 signext %a, i32 zeroext %b) nounwind {
 ; RV64I-LABEL: srlw:
 ; RV64I:       # %bb.0:
@@ -848,6 +892,7 @@ define signext i32 @srlw(i32 signext %a, i32 zeroext %b) nounwind {
 -/
 
 /-
+Can't be implemented because LEAN-MLIR does't support the signext intrinsic as applied for the arg
 define signext i32 @sraw(i64 %a, i32 zeroext %b) nounwind {
 ; RV64I-LABEL: sraw:
 ; RV64I:       # %bb.0:
@@ -860,18 +905,47 @@ define signext i32 @sraw(i64 %a, i32 zeroext %b) nounwind {
 }
 -/
 
-/-
-define i64 @add_hi_and_lo_negone(i64 %0) {
-; RV64I-LABEL: add_hi_and_lo_negone:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    addi a0, a0, -1
-; RV64I-NEXT:    ret
+/- # 21 -/
+-- define i64 @add_hi_and_lo_negone(i64 %0) {
+-- ; RV64I-LABEL: add_hi_and_lo_negone:
+-- ; RV64I:       # %bb.0:
+-- ; RV64I-NEXT:    addi a0, a0, -1
+-- ; RV64I-NEXT:    ret
+-- ;
+-- ; RV32I-LABEL: add_hi_and_lo_negone:
+-- ; RV32I:       # %bb.0:
+-- ; RV32I-NEXT:    seqz a2, a0
+-- ; RV32I-NEXT:    sub a1, a1, a2
+-- ; RV32I-NEXT:    addi a0, a0, -1
+-- ; RV32I-NEXT:    ret
+--   %2 = add nsw i64 %0, -1
+--   ret i64 %2
+def add_hi_and_lo_negone_llvm_i64 := [LV| {
+    ^entry (%arg: i64):
+    %1 = llvm.mlir.constant (-1) : i64
+    %0 = llvm.add %arg, %1 overflow<nsw> : i64
+    llvm.return %0 : i64
+  }]
 
-  %2 = add nsw i64 %0, -1
-  ret i64 %2
-}
--/
+def add_hi_and_lo_negone_riscv_i64 :=
+  [LV| {
+    ^entry (%arg0: i64):
+    %a = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!riscv.reg)
+    %0 = li (0) : !riscv.reg
+    %1= li (1) : !riscv.reg
+    %2 = sub %0, %1 : !riscv.reg  -- load -1 into %1 becaue can't encode (-1) for the moment
+    %3 = add %a, %2 : !riscv.reg
+    %4 = "builtin.unrealized_conversion_cast" (%3) : (!riscv.reg) -> (i64)
+    llvm.return %4 : i64
+  }]
 
+def add_hi_and_lo_negone_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := add_hi_and_lo_negone_llvm_i64
+  rhs := add_hi_and_lo_negone_riscv_i64
+  correct := by
+    unfold add_hi_and_lo_negone_llvm_i64 add_hi_and_lo_negone_riscv_i64
+    simp_lowering
+    bv_decide
 /-
 define i64 @add_hi_zero_lo_negone(i64 %0) {
 ; RV64I-LABEL: add_hi_zero_lo_negone:
@@ -886,6 +960,36 @@ define i64 @add_hi_zero_lo_negone(i64 %0) {
 }
 -/
 
+/- # 22 -/
+def add_hi_zero_lo_negone_llvm_i64 := [LV| {
+    ^entry (%0: i64):
+    %4294967295 = llvm.mlir.constant (4294967295) : i64
+    %1 = llvm.add %0, %4294967295 : i64
+    llvm.return %1 : i64
+  }]
+
+def add_hi_zero_lo_negone_riscv_i64 :=
+  [LV| {
+    ^entry (%arg0: i64):
+    %a = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!riscv.reg)
+    %0 = li (0) : !riscv.reg
+    %1= li (1) : !riscv.reg
+    %2 = sub %0, %1 : !riscv.reg  -- load -1 into %1 becaue can't encode (-1) for the moment
+    %3 = srli %2, 32 : !riscv.reg
+    %4 = add %a, %3 : !riscv.reg
+    %5 = "builtin.unrealized_conversion_cast" (%4) : (!riscv.reg) -> (i64)
+    llvm.return %5 : i64
+  }]
+
+def add_hi_one_lo_negone_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := add_hi_zero_lo_negone_llvm_i64
+  rhs :=add_hi_zero_lo_negone_riscv_i64
+  correct := by
+    unfold add_hi_zero_lo_negone_llvm_i64 add_hi_zero_lo_negone_riscv_i64
+    simp_lowering
+    bv_decide
+
+/- # 23 -/
 /-
 define i64 @add_lo_negone(i64 %0) {
 ; RV64I-LABEL: add_lo_negone:
@@ -899,7 +1003,38 @@ define i64 @add_lo_negone(i64 %0) {
   ret i64 %2
 }
 -/
+def add_lo_negone_llvm_i64 := [LV| {
+    ^entry (%arg: i64):
+    %4294967297 = llvm.mlir.constant (4294967297) : i64
+    %0 = llvm.mlir.constant (0) : i64
+    %1 =llvm.sub %0, %4294967297 : i64
+    %2 = llvm.add %1, %arg overflow<nsw> : i64
+    llvm.return %2 : i64
+  }]
 
+def add_lo_negone_riscv_i64 :=
+  [LV| {
+    ^entry (%arg0: i64):
+    %a = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!riscv.reg)
+    %0 = li (0) : !riscv.reg
+    %1= li (1) : !riscv.reg
+    %2 = sub %0, %1 : !riscv.reg  -- load -1 into %1 becaue can't encode (-1) for the moment
+    %3 = slli %2, 32 : !riscv.reg
+    %4 = add %3, %2 : !riscv.reg
+    %5 = add %a, %4 : !riscv.reg
+    %6 = "builtin.unrealized_conversion_cast" (%5) : (!riscv.reg) -> (i64)
+    llvm.return %6 : i64
+  }]
+
+def add_lo_negone_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := add_lo_negone_llvm_i64
+  rhs := add_lo_negone_riscv_i64
+  correct := by
+    unfold add_lo_negone_llvm_i64 add_lo_negone_riscv_i64
+    simp_lowering
+    bv_decide
+
+/- # 24 -/
 /-
 define i64 @add_hi_one_lo_negone(i64 %0) {
 ; RV64I-LABEL: add_hi_one_lo_negone:
@@ -913,30 +1048,65 @@ define i64 @add_hi_one_lo_negone(i64 %0) {
 }
 -/
 def add_hi_one_lo_negone_llvm_i64 := [LV| {
-    ^entry (%a: i64):
-    %c = llvm.mlir.constant (8589934591) : i64
-    %0 = llvm.add nsw %a, %c : i64
-    llvm.return %0 : i64
+    ^entry (%arg: i64):
+    %8589934591 = llvm.mlir.constant (8589934591) : i64
+    %1 = llvm.add %arg, %8589934591 overflow<nsw> : i64
+    llvm.return %1 : i64
   }]
 
 def add_hi_one_lo_negone_riscv_i64 :=
   [LV| {
     ^entry (%arg0: i64):
-    %a = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!i64)
-    %b = "builtin.unrealized_conversion_cast" (%arg1) : (i64) -> (!i64)
-    %0 = and %a, %b : !i64
-    %1 = "builtin.unrealized_conversion_cast" (%0) : (!i64) -> (i64)
-    llvm.return %1 : i64
+    %a = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!riscv.reg)
+    %0 = li (0) : !riscv.reg
+    %1= li (1) : !riscv.reg
+    %2 = sub %0, %1 : !riscv.reg  -- load -1 into %1 becaue can't encode (-1) for the moment
+    %3 = srli %2, 31 : !riscv.reg
+    %4 = add %3, %a : !riscv.reg
+    %5 = "builtin.unrealized_conversion_cast" (%4) : (!riscv.reg) -> (i64)
+    llvm.return %5 : i64
   }]
 
-def add_hi_one_lo_negone_i32_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def add_hi_one_lo_negone_i64__test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := add_hi_one_lo_negone_llvm_i64
+  rhs := add_hi_one_lo_negone_riscv_i64
+
+
+
+/- # 25 -/
+/-
+define i64 @add_hi_and_lo_negone(i64 %0) {
+; RV64I-LABEL: add_hi_and_lo_negone:
+; RV64I:       # %bb.0:
+; RV64I-NEXT:    addi a0, a0, -1
+; RV64I-NEXT:    ret
+
+  %2 = add nsw i64 %0, -1
+  ret i64 %2
+}
+-/
+def add_hi_and_lo_negone_llvm_i64 := [LV| {
+    ^entry (%a: i64):
+    %c = llvm.mlir.constant (-1) : i64
+    %0 = llvm.add %a, %c overflow<nsw> : i64
+    llvm.return %0 : i64
+  }]
+
+def add_hi_and_lo_negone_riscv_i64 :=
+  [LV| {
+    ^entry (%arg0: i64):
+    %a = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!riscv.reg)
+    %0 = li (0) : !riscv.reg
+    %1= li (1) : !riscv.reg
+    %2 = sub %0, %1 : !riscv.reg  -- load -1 into %1 becaue can't encode (-1) for the moment
+    %3 = "builtin.unrealized_conversion_cast" (%2) : (!riscv.reg) -> (i64)
+    llvm.return %3 : i64
+  }]
+
+def add_hi_and_lo_negone_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := add_hi_one_lo_negone_llvm_i64
   rhs := add_hi_one_lo_negone_riscv_i64
   correct := by
     unfold add_hi_one_lo_negone_llvm_i64 add_hi_one_lo_negone_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
+    simp_lowering
+    bv_decide

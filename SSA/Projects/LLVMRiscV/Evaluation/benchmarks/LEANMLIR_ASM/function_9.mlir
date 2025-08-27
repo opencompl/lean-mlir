@@ -1,4 +1,20 @@
 builtin.module { 
-^bb0(%0 : i32):
-  "llvm.return"(%0) : (i32) -> ()
+^bb0(%0 : i64, %1 : i1):
+  %2 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+  %3 = "riscv.srl"(%2, %2) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %4 = "riscv.div"(%2, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %5 = "riscv.mul"(%4, %2) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.sltu"(%3, %2) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  %8 = "builtin.unrealized_conversion_cast"(%7) : (i1) -> (!riscv.reg)
+  %9 = "riscv.slli"(%8){immediate = -1 : i6 } : (!riscv.reg) -> (!riscv.reg)
+  %10 = "riscv.srai"(%9){immediate = -1 : i6 } : (!riscv.reg) -> (!riscv.reg)
+  %11 = "riscv.or"(%5, %10) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %12 = "builtin.unrealized_conversion_cast"(%1) : (i1) -> (!riscv.reg)
+  %13 = "riscv.andi"(%12){immediate = 1 : i12 } : (!riscv.reg) -> (!riscv.reg)
+  %14 = "riscv.and"(%4, %13) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %15 = "riscv.sub"(%2, %14) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %16 = "riscv.slt"(%15, %11) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %17 = "builtin.unrealized_conversion_cast"(%16) : (!riscv.reg) -> (i1)
+  "llvm.return"(%17) : (i1) -> ()
  }

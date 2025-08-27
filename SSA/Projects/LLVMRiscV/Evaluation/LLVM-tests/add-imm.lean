@@ -5,6 +5,7 @@ open LLVMRiscV
 /-! This file verifies the LLVM RISCV test suite test case `add-imm.ll`.
 we could reimplement and verify 11/13 test cases  -/
 
+ /-# 1 -/
 /--
 ; RV64I-LABEL: add_positive_low_bound_reject:
 ; RV64I:       # %bb.0:
@@ -43,6 +44,7 @@ def add_positive_low_bound_reject: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitve
     simp_alive_split
     all_goals simp; bv_decide
 
+ /-# 2 -/
 /-
 define i32 @add_positive_low_bound_accept(i32 %a) nounwind {
 ; RV64I-LABEL: add_positive_low_bound_accept:
@@ -84,6 +86,7 @@ def add_positive_low_bound_accept: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitve
     simp_alive_split
     all_goals simp; bv_decide
 
+ /-# 3 -/
 /--
 define i32 @add_positive_high_bound_accept(i32 %a) nounwind {
 ; RV64I-LABEL: add_positive_high_bound_accept:
@@ -125,6 +128,7 @@ def add_positive_high_bound_accept: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitv
     simp_alive_split
     all_goals simp; bv_decide
 
+ /-# 4 -/
 /-
 define i32 @add_positive_high_bound_reject(i32 %a) nounwind {
 ; RV64I-LABEL: add_positive_high_bound_reject:
@@ -169,6 +173,7 @@ def add_positive_high_bound_reject: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitv
     simp_alive_split
     all_goals simp; bv_decide
 
+ /-# 5 -/
 /-
 define i32 @add_negative_high_bound_reject(i32 %a) nounwind {
 ; RV32I-LABEL: add_negative_high_bound_reject:
@@ -213,16 +218,7 @@ def add_negative_high_bound_reject: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitv
     simp_alive_split
     all_goals simp; bv_decide
 
-def add_positive_high_bound_riscv :=
-  [LV| {
-    ^entry (%arg: i64):
-    %a =  "builtin.unrealized_conversion_cast" (%arg) : (i64) -> (!i64)
-    %2 = addi %a, 2047 : !i64
-    %3 = addi %2, 952 : !i64
-    %4 =  "builtin.unrealized_conversion_cast" (%3) : (!i64) -> (i64)
-    llvm.return %4 :i64
-  }]
-
+ /-# 6 -/
 /-
 define i32 @add_negative_high_bound_accept(i32 %a) nounwind {
 ; RV32I-LABEL: add_negative_high_bound_accept:
@@ -269,6 +265,7 @@ def add_negative_high_bound_accept : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bit
     simp_alive_split
     all_goals simp; bv_decide
 
+ /-# 7 -/
 /-
 define i32 @add_negative_low_bound_accept(i32 %a) nounwind {
 ; RV64I-LABEL: add_negative_low_bound_accept:
@@ -309,6 +306,7 @@ def  add_negative_low_bound_accept : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bit
     simp_alive_split
     all_goals simp; bv_decide
 
+ /-# 8 -/
 /-
 define i32 @add_negative_low_bound_reject(i32 %a) nounwind {
 ; RV64I-LABEL: add_negative_low_bound_reject:
@@ -352,6 +350,7 @@ def add_negative_low_bound_reject : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitv
     simp_alive_split
     all_goals simp; bv_decide
 
+ /-# 9 -/
 /-
 define i32 @add32_accept(i32 %a) nounwind {
 ; RV64I-LABEL: add32_accept:
@@ -392,6 +391,7 @@ def add32_accept : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
     simp_alive_split
     all_goals simp; bv_decide
 
+ /-# 10 -/
 /-
 define signext i32 @add32_sext_accept(i32 signext %a) nounwind {
 ; RV64I-LABEL: add32_sext_accept:
@@ -432,6 +432,7 @@ def add32_sext_accept : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] wher
     simp_alive_split
     all_goals simp; bv_decide
 
+ /-# 11 -/
 /-define i64 @add64_accept(i64 %a) nounwind {
 ; RV64I-LABEL: add64_accept:
 ; RV64I:       # %bb.0:

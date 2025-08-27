@@ -472,17 +472,17 @@ def icmp_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ugt_riscv_eq_icmp_ugt_llvm_32),
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ult_riscv_eq_icmp_ult_llvm_32),
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_eq_riscv_eq_icmp_eq_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_neq_riscv_eq_icmp_neq_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_uge_riscv_eq_icmp_uge_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_slt_riscv_eq_icmp_slt_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_sle_riscv_eq_icmp_sle_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ule_riscv_eq_icmp_ule_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_sgt_riscv_eq_icmp_slt_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_sge_riscv_eq_icmp_sge_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ugt_riscv_eq_icmp_ugt_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ult_riscv_eq_icmp_ult_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_eq_riscv_eq_icmp_eq_llvm_32),
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_neq_riscv_eq_icmp_neq_llvm_32)
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_neq_riscv_eq_icmp_neq_llvm_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_uge_riscv_eq_icmp_uge_llvm_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_slt_riscv_eq_icmp_slt_llvm_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_sle_riscv_eq_icmp_sle_llvm_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ule_riscv_eq_icmp_ule_llvm_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_sgt_riscv_eq_icmp_slt_llvm_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_sge_riscv_eq_icmp_sge_llvm_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ugt_riscv_eq_icmp_ugt_llvm_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_ult_riscv_eq_icmp_ult_llvm_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_eq_riscv_eq_icmp_eq_llvm_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND icmp_neq_riscv_eq_icmp_neq_llvm_64)
 
 
 ]

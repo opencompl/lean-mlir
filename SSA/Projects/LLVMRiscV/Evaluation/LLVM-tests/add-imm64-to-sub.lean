@@ -1,6 +1,8 @@
 import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open LLVMRiscV
+
+/- # 1 -/
 /-
 define i64 @add_b31(i64 %x) {
 ; NOZBS-LABEL: add_b31:
@@ -18,7 +20,7 @@ define i64 @add_b31(i64 %x) {
   ret i64 %add
 }
 -/
--- add_b31
+
 def add_b31_llvm_i64 := [LV| {
     ^entry (%x: i64):
     %0 = llvm.mlir.constant (2147483648) : i64
@@ -49,6 +51,8 @@ def add_b31_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 2 -/
 /-
 define i64 @add_b32(i64 %x) {
 ; NOZBS-LABEL: add_b32:
@@ -121,8 +125,9 @@ def add_b32_test_ZBS : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    all_goals simp; bv_decide 
+    all_goals simp; bv_decide
 
+/- # 3 -/
 /-
 define i64 @sub_0xffffffffff(i64 %x) {
 ; CHECK-LABEL: sub_0xffffffffff:
@@ -135,7 +140,6 @@ define i64 @sub_0xffffffffff(i64 %x) {
   ret i64 %sub
 }
 -/
--- sub_0xffffffffff
 def sub_0xffffffffff_llvm_i64 := [LV| {
     ^entry (%x: i64):
     %0 = llvm.mlir.constant (1099511627775) : i64
@@ -166,6 +170,8 @@ def sub_0xffffffffff_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
     simp_alive_case_bash
     simp_alive_split
     all_goals simp;
+
+/- # 4 -/
 /-
 define i64 @add_multiuse(i64 %x) {
 ; CHECK-LABEL: add_multiuse:
@@ -215,6 +221,8 @@ def add_multiuse_riscv_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 5 -/
 /-
 define i64 @add_multiuse_const(i64 %x, i64 %y) {
 ; CHECK-LABEL: add_multiuse_const:
@@ -230,7 +238,6 @@ define i64 @add_multiuse_const(i64 %x, i64 %y) {
   %xor = xor i64 %a, %b
   ret i64 %xor
 }-/
--- add_multiuse_const
 def add_multiuse_const_llvm_i64 := [LV| {
     ^entry (%x: i64, %y: i64):
     %0 = llvm.mlir.constant (-1099511627775) : i64

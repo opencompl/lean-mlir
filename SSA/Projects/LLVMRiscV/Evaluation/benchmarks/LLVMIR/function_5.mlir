@@ -1,9 +1,8 @@
 ; ModuleID = 'LLVMDialectModule'
 source_filename = "LLVMDialectModule"
 
-define i1 @main(i64 %0) {
-  %2 = icmp ugt i64 %0, %0
-  ret i1 %2
+define i32 @main(i32 %0) {
+  ret i32 %0
 }
 
 !llvm.module.flags = !{!0}

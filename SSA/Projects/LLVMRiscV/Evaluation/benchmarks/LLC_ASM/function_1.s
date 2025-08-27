@@ -8,6 +8,11 @@
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:
+	xor	a0, a0, a1
+	srl	a2, a0, a1
+	sll	a0, a0, a1
+	rem	a0, a2, a0
+	seqz	a0, a0
 	ret
 .Lfunc_end0:
 	.size	main, .Lfunc_end0-main

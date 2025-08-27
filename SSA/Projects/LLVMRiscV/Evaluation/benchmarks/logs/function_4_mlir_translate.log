@@ -1,2 +1,2 @@
 DestTy too big for Trunc
-  %3 = trunc i1 %2 to i64
+  %13 = trunc i1 %12 to i64

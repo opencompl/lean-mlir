@@ -8,7 +8,6 @@
 main:                                   # @main
 	.cfi_startproc
 # %bb.0:
-	sltu	a0, a0, a0
 	ret
 .Lfunc_end0:
 	.size	main, .Lfunc_end0-main

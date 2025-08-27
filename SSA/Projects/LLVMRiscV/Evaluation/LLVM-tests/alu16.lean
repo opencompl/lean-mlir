@@ -3,14 +3,13 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 open LLVMRiscV
 /-!This file implements the alu16.ll test case in the llv mtest suite. The newest rewrite was added added 02.06.25
 These tests are identical to those in alu32.ll but operate on i16. They check
-; that legalisation of these non-native types doesn't introduce unnecessary
-; inefficiencies.
+that legalisation of these non-native types doesn't introduce unnecessary
+inefficiencies.
 Legalisation of non-native types and
 -/
 
-/-
-we default assume signextend if no hint is given, if the zeroextnd is given we first zeroextend to the appropriate width.
--/
+
+/- # 1 -/
 /-
 ; RV64I-LABEL: addi:
 ; RV64I:       # %bb.0:
@@ -40,12 +39,10 @@ def addi_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   rhs := addi_riscv
   correct := by
     unfold addi_riscv addi_llvm
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
+    simp_lowering
+    bv_decide
+
+/- # 2 -/
 /-
 ; RV64I-LABEL: slti:
 ; RV64I:       # %bb.0:
@@ -90,6 +87,7 @@ def slti_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 3 -/
 /-
 ; RV64I-LABEL: sltiu:
 ; RV64I:       # %bb.0:
@@ -133,6 +131,8 @@ def sltiu_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 4 -/
 /-
 ; Make sure we avoid an AND, if the input of an unsigned compare is known
 ; to be sign extended. This can occur due to InstCombine canonicalizing
@@ -176,6 +176,8 @@ def sltiu_signext_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] wher
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 5 -/
 /-
 define i16 @xori(i16 %a) nounwind {
 ; RV64I-LABEL: xori:
@@ -214,6 +216,8 @@ def xori_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 6 -/
 /-
 define i16 @ori(i16 %a) nounwind {
 ; RV64I-LABEL: ori:
@@ -252,6 +256,8 @@ def ori_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 7 -/
 /-
 define i16 @andi(i16 %a) nounwind {
 ; RV64I-LABEL: andi:
@@ -290,6 +296,8 @@ def andi_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 8 -/
 /-
 define i16 @slli(i16 %a) nounwind {
 ; RV64I-LABEL: slli:
@@ -328,6 +336,8 @@ def slli_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 9 -/
 /-
 define i16 @srli(i16 %a) nounwind {
 ; RV64I-LABEL: srli:
@@ -368,6 +378,8 @@ def srli_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 10 -/
 /-
 define i16 @srai(i16 %a) nounwind {
 ; RV64I-LABEL: srai:
@@ -408,6 +420,8 @@ def srai_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 11 -/
 /-
 define i16 @add(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: add:
@@ -446,6 +460,8 @@ def add_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 12 -/
 /-
 define i16 @sub(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: sub:
@@ -484,6 +500,8 @@ def sub_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 12 -/
 /-
 define i16 @sll(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: sll:
@@ -514,19 +532,10 @@ def sll_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
   rhs := sll_riscv_i16
   correct := by
     unfold sll_llvm_i16 sll_riscv_i16
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    intro x x'
-    split
-    · simp
-    case value.value.isFalse hf =>
-      simp [hf]
-      simp at hf
-      sorry
+    simp_lowering
+    bv_decide
 
+/- # 13 -/
 /-
 define i16 @slt(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: slt:
@@ -576,6 +585,7 @@ def slt_signext_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llv
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 14 -/
 /-
 define i16 @sltu(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: sltu:
@@ -625,6 +635,8 @@ def sltu_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bit
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 15 -/
 /-
 define i16 @xor(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: xor:
@@ -663,6 +675,8 @@ def xor_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
     simp_alive_case_bash
     simp_alive_split
     all_goals simp; bv_decide
+
+/- # 16 -/
 /-
 define i16 @srl(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: srl:
@@ -687,8 +701,8 @@ def srl_riscv_i16 :=
     %a0 = "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %a1 = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 = slli %a0, 48 : !i64
-    %1 = srai %0, 48 : !i64
-    %2 = srl %0, %a1 : !i64
+    %1 = srli %0, 48 : !i64
+    %2 = srl %1, %a1 : !i64
     %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i16)
     llvm.return %3 :i16
   }]
@@ -698,14 +712,10 @@ def srl_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitv
   rhs := srl_riscv_i16
   correct := by
     unfold srl_llvm_i16 srl_riscv_i16
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp;
-    sorry -- aka askhow to best integrate this with bv_decide
+    simp_lowering
+    bv_decide
+
+/- # 17 -/
 /-
 define i16 @sra(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: sra:
@@ -731,7 +741,7 @@ def sra_riscv_i16 :=
     %a1 = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %0 = slli %a0, 48 : !i64
     %1 = srai %0, 48 : !i64
-    %2 = sra %0, %a1 : !i64
+    %2 = sra %1, %a1 : !i64
     %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i16)
     llvm.return %3 :i16
   }]
@@ -741,14 +751,10 @@ def sra_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitv
   rhs := sra_riscv_i16
   correct := by
     unfold sra_llvm_i16 sra_riscv_i16
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp;
-    sorry -- same bv_decide problem
+    simp_lowering
+    bv_decide
+
+/- # 18 -/
 /-
 define i16 @or(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: or:
@@ -788,6 +794,7 @@ def or_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.b
     simp_alive_split
     all_goals simp; bv_decide
 
+/- # 19 -/
 /-define i16 @and(i16 %a, i16 %b) nounwind {
 ; RV64I-LABEL: and:
 ; RV64I:       # %bb.0:
