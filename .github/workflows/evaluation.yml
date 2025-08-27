@@ -28,7 +28,7 @@ jobs:
             TacBench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
-      - name: Install elan 🕑
+      - name: Install Elan & Lean
         if: steps.cache-lake.outputs.cache-hit != 'true'
         run: |
           set -o pipefail
@@ -36,7 +36,9 @@ jobs:
           ~/.elan/bin/lean --version
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Build Lean-MLIR
+      - name: Build Lean-MLIR & Mathlib
+        # We build Mathlib from scratch as this reduces the build artifacts that are stored in the cache. Previous experiments
+        # led to savings from avoiding a full Mathlib cache in the order of a couple hundred MBs.
         if: steps.cache-lake.outputs.cache-hit != 'true'
         run: |
           lake -R build
