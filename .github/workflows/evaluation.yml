@@ -22,10 +22,10 @@ jobs:
         with:
           lookup-only: true
           path: |
-            .elan
+            ~/.elan
             .lake/packages
             .lake/build
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+            Tacbench/.lake
 
       - name: Install elan 🕑
         if: steps.cache-lake.outputs.cache-hit != 'true'
@@ -55,9 +55,10 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: |
-            .elan
+            ~/.elan
             .lake/packages
             .lake/build
+            Tacbench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Install elan 🕑
@@ -94,9 +95,10 @@ jobs:
         uses: actions/cache/restore@v4
         with:
           path: |
-            .elan
+            ~/.elan
             .lake/packages
             .lake/build
+            Tacbench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: List Directories
