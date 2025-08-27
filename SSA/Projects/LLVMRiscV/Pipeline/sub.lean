@@ -156,8 +156,6 @@ def llvm_sub_lower_riscv_no_flag_self_64: LLVMPeepholeRewriteRefine 64 [Ty.llvm 
   rhs := sub_riscv_self_64
 
 
- /-! # SUB i64 -/
-
 @[simp_denote]
 def llvm_sub_64 := [LV| {
   ^entry (%x: i64, %y: i64):
