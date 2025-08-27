@@ -93,11 +93,23 @@ def run_with_limits(cmd: List[str], timeout: int, memout_mb: int, cwd : Optional
     except Exception as e:
         return "ERROR", "", str(e)
 
+class Errcode:
+    TIMEOUT = 10
+    MEMOUT = 20
+    PYERROR = 30
 
 def parse_args():
-    parser = argparse.ArgumentParser(description="Run a command with timeout and memory limits.")
-    parser.add_argument("--timeout", type=int, required=True, help="Timeout in seconds")
-    parser.add_argument("--memout", type=int, required=True, help="Memory limit in MB")
+    parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+        description=(
+        f"Run a command with timeout and memory limits.\n\n"
+        f"RETURN CODES:\n"
+        f"  success:      0\n"
+        f"  timeout:      {Errcode.TIMEOUT}\n"
+        f"  memout:       {Errcode.MEMOUT}\n"
+        f"  python error: {Errcode.PYERROR}\n"
+        ))
+    parser.add_argument("--timeout-sec", type=int, required=True, help="Timeout in seconds")
+    parser.add_argument("--memout-mb", type=int, required=True, help="Memory limit in MB")
     parser.add_argument("cmd", nargs=argparse.REMAINDER, help="Command to run with arguments")
     return parser.parse_args()
 
@@ -109,18 +121,18 @@ def main():
     else:
         cmd_args = args.cmd
 
-    err, stdout, stderr = run_with_limits(cmd_args, args.timeout, args.memout)
+    err, stdout, stderr = run_with_limits(cmd_args, args.timeout_sec, args.memout_mb)
     print(stdout, file=sys.stdout, end="")
     print(stderr, file=sys.stderr, end="")
 
-    if err == "":
-        sys.exit(0)
+    if isinstance(err, int):
+        sys.exit(err)
     elif err == "TIMEOUT":
-        sys.exit(10)
+        sys.exit(Errcode.TIMEOUT)
     elif err == "MEMOUT":
-        sys.exit(20)
+        sys.exit(Errcode.MEMOUT)
     else:
-        sys.exit(30)
+        sys.exit(Errcode.PYERROR)
 
 if __name__ == "__main__":
     main()

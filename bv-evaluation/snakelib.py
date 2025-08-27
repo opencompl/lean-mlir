@@ -13,9 +13,9 @@ from functools import partial
 from pathlib import Path
 import sys
 
-def git_root() -> Path:
+def get_git_root() -> Path:
   return Path(subprocess.check_output( ["git", "rev-parse", "--show-toplevel"]).decode().strip())
 
 
-def sed() -> str:
+def get_sed() -> str:
   return "gsed" if platform.system() == "Darwin" else "sed"
