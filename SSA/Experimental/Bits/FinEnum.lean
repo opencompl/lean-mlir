@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import Mathlib.Data.FinEnum
 import Mathlib.Tactic.FinCases
 
-instance: FinEnum (BitVec w) where
+instance instFinEnumBV : FinEnum (BitVec w) where
   card := 2^w
   equiv := {
     toFun := fun x => x.toFin

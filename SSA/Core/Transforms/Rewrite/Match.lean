@@ -130,7 +130,7 @@ variable [DecidableEq d.Op] {Γ_in Γ_out Δ_in Δ_out t te}
           {matchLets : Lets d Δ_in .pure Δ_out}
           {matchExpr : Expr d Δ_out .pure te}
 
-@[simp] lemma matchVar_appendInl (w : Δ_out.Var t) :
+@[simp] theorem matchVar_appendInl (w : Δ_out.Var t) :
     matchVar lets v (.var matchLets matchExpr) w.appendInl
     = matchVar lets v matchLets w := by
   simp [matchVar]
@@ -144,7 +144,7 @@ theorem unifyVars_eq_some_iff :
   simp only [unifyVars]
   split <;> simp_all
 
-@[simp] lemma matchVar_nil_eq {lets : Lets d Γ_in eff Γ_out} :
+@[simp] theorem matchVar_nil_eq {lets : Lets d Γ_in eff Γ_out} :
     matchVar lets v (.nil : Lets d Δ .pure Δ) w = unifyVars w v := by
   simp only [matchVar]
 
@@ -229,7 +229,7 @@ def MatchArgResult.mk {mapOut : Mapping _ _}
 ### Subtype-based lemmas
 -/
 
-@[simp] lemma lookup_matchVar_nil (m : MatchVarResult lets v .nil w ma) :
+@[simp] theorem lookup_matchVar_nil (m : MatchVarResult lets v .nil w ma) :
     m.val.lookup ⟨_, w⟩ = some v := by
   rcases m with ⟨m, -, m', -, h_entries_out, hm'⟩
   rw [← Option.mem_def, AList.mem_lookup_iff]
@@ -248,7 +248,7 @@ theorem ofSubsetEntries {varMap₁ : MatchVarResult lets v matchLets w ma} {varM
 /-! ### nil lemmas -/
 
 variable [TyDenote d.Ty] [∀ (t : d.Ty), Inhabited ⟦t⟧] in
-@[simp] lemma mapValuation_nil (mapOut : MatchVarResult lets v .nil w mapIn) (V) :
+@[simp] theorem mapValuation_nil (mapOut : MatchVarResult lets v .nil w mapIn) (V) :
     mapOut.val.mapValuation V w = V v := by
   simp [Mapping.mapValuation]
 
@@ -263,12 +263,12 @@ def eqvVarLeft  :
   invFun := fun ⟨x, h⟩ => ⟨x, by simp_all⟩
 
 @[simp, defeq]
-lemma entries_symm_eqvVar (varMap : MatchVarResult lets v matchLets w ma) :
+theorem entries_symm_eqvVar (varMap : MatchVarResult lets v matchLets w ma) :
   (eqvVarLeft (matchExpr:=matchExpr) |>.symm  varMap).val.entries = varMap.val.entries := rfl
 
 variable {mapIn} (mapOut : MatchVarResult lets v (.var matchLets matchExpr) w.appendInl mapIn)
 
-@[simp, defeq] lemma entries_eqvVar : (eqvVarLeft mapOut).val.entries = mapOut.val.entries := rfl
+@[simp, defeq] theorem entries_eqvVar : (eqvVarLeft mapOut).val.entries = mapOut.val.entries := rfl
 
 end Left
 /-! ### var_appendInr lemmas -/
@@ -307,7 +307,7 @@ noncomputable instance :
          MatchArgResult lets matchLets args matchExpr.args mapIn) where
   coe := mapOut.toArgResult
 
-@[simp] lemma val_toArgResult (mapOut : MatchVarResult lets v (.var matchLets matchExpr) w.appendInr mapIn) :
+@[simp] theorem val_toArgResult (mapOut : MatchVarResult lets v (.var matchLets matchExpr) w.appendInr mapIn) :
     mapOut.toArgResult.val = mapOut.val := rfl
 
 end MatchVarResult
@@ -486,8 +486,8 @@ def consRight : MatchArgResult lets matchLets vs ws mapIn :=
     · exact isMonotone_matchVar _ _ h₁
   ⟩
 
-@[simp, grind=] lemma val_consLeft : mapOut.consLeft.val = mapOut.val := rfl
-@[simp, grind=] lemma val_consRight : mapOut.consRight.val = mapOut.val := rfl
+@[simp, grind=] theorem val_consLeft : mapOut.consLeft.val = mapOut.val := rfl
+@[simp, grind=] theorem val_consRight : mapOut.consRight.val = mapOut.val := rfl
 
 end MatchArgResult
 
@@ -597,7 +597,7 @@ theorem Lets.denote_eq_denoteIntoSubtype (lets : Lets d Γ_in eff Γ_out) (Γv :
 
 end DenoteIntoSubtype
 
-@[simp] lemma Lets.denote_var_appendInr_pure (lets : Lets d Γ_in .pure Γ_out)
+@[simp] theorem Lets.denote_var_appendInr_pure (lets : Lets d Γ_in .pure Γ_out)
     (e : Expr d Γ_out .pure tys) (V_in : Valuation Γ_in) (v : Var _ u) :
     Lets.denote (var lets e) V_in (v.appendInr)
     = let xs : HVector .. := e.denoteOp (lets.denote V_in)

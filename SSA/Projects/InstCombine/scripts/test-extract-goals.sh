@@ -4,7 +4,9 @@ set -o xtrace
 
 pushd "$(git rev-parse --show-toplevel)" || exit 1
 
-python3 SSA/Projects/InstCombine/scripts/extract-goals.py --nfiles 9000 -j7
+## We pass CLI args for extract-goals to allow CI to document what options we are testing with.
+
+python3 SSA/Projects/InstCombine/scripts/extract-goals.py $@
 OUT=$(git diff SSA/Projects/InstCombine/tests/goals/)
 git checkout -- SSA/Projects/InstCombine/ # undo all changes made by extraction.
 echo "$OUT"

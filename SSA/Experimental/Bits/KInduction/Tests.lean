@@ -9,7 +9,6 @@ Authors: Siddharth Bhat
 -/
 import SSA.Experimental.Bits.SingleWidth.Tactic
 import SSA.Experimental.Bits.Fast.MBA
-import SSA.Projects.InstCombine.TacticAuto
 
 open Lean Meta Elab Tactic in
 #eval show TermElabM Unit from do

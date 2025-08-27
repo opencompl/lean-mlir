@@ -9,48 +9,111 @@ permissions:
   contents: write
 
 jobs:
-  build:
-    name: Evaluation of Tactics & Decision Procedures
+  eval-build:
+    name: Build Lean-MLIR
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Install elan 🕑
+      - name: Cache `.lake` and `.elan` folders
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          lookup-only: true
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+            TacBench/.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Install Elan & Lean
+        if: steps.cache-lake.outputs.cache-hit != 'true'
         run: |
           set -o pipefail
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
           ~/.elan/bin/lean --version
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Cache `.lake` folder
+      - name: Build Lean-MLIR & Mathlib
+        # We build Mathlib from scratch as this reduces the build artifacts that are stored in the cache. Previous experiments
+        # led to savings from avoiding a full Mathlib cache in the order of a couple hundred MBs.
+        if: steps.cache-lake.outputs.cache-hit != 'true'
+        run: |
+          lake -R build
+
+  extract-goals:
+    name: Extract goals
+    runs-on: ubuntu-latest
+    needs: eval-build
+    strategy:
+      matrix:
+        extract_offset: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        extract_stride: [10]
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Load Lean and Lean-MLIR from Cache
         id: cache-lake
-        uses: actions/cache@v4
+        uses: actions/cache/restore@v4
         with:
-          path: .lake
-          key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+            TacBench/.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
-      - name: Install Python Modules
+      - name: Add Lean to PATH
         run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-matplotlib python3-pandas python3-num2words python3-psutil ripgrep
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Get Cache
-        continue-on-error: true
-        run: |
-          lake -R exe cache get # download cache of mathlib docs.
-
-      - name: Build
-        continue-on-error: true
+      - name: Build Lean-MLIR (should be all in cache)
         run: |
           lake -R build
 
       - name: Ensure InstCombine goals are up-to-date
         continue-on-error: true
         run: |
-          bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh
+          bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh --nfiles 9000 -j7  --stride ${{matrix.extract_stride}} --offset ${{matrix.extract_offset}}
+
+  evaluation-LLVM:
+    name: Evaluate LLVM
+    runs-on: ubuntu-latest
+    needs: eval-build
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Load Lean and Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+            TacBench/.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Add Lean to PATH
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR (should be all in cache)
+        run: |
+          lake -R build
+
+      - name: Install Python Modules
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-matplotlib python3-pandas python3-num2words python3-psutil ripgrep
 
       - name: Run LLVM
         continue-on-error: true
@@ -84,6 +147,40 @@ jobs:
           name: LLVM evaluation
           path: bv-evaluation/results
 
+  evaluation-alive-hdel:
+    name: Evaluation Alive and Hacker's Delight
+    runs-on: ubuntu-latest
+    needs: eval-build
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Load Lean and Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+            TacBench/.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+
+      - name: Add Lean to PATH
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR (should be all in cache)
+        run: |
+          lake -R build
+
+      - name: Install Python Modules
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-matplotlib python3-pandas python3-num2words python3-psutil ripgrep
+
       - name: Run Alive Symbolic
         run: |
           (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-alive-sym.py -j48)
@@ -110,16 +207,6 @@ jobs:
         continue-on-error: true
         run: |
           (cd bv-evaluation; python3 ./collect.py hackersdelight > /dev/null)
-
-#    - name: Run LLVM Symbolic
-#        continue-on-error: true
-#        run: |
-#          (cd bv-evaluation; python3 ./compare-leansat-vs-bitwuzla-llvm-sym.py -j48)
-
-#      - name: Compare LLVM Symbolic
-#        continue-on-error: true
-#        run: |
-#          (cd bv-evaluation; python3 ./collect-data-llvm-symbolic.py > /dev/null)
 
       - name: Collect Stats
         continue-on-error: true
