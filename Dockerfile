@@ -34,7 +34,7 @@ RUN lake --version
 # about the caching boilerplate
 COPY . ./
 RUN --mount=type=cache,target=/root/.cache/mathlib \
-    --mount=type=cache,target=/root/.cache/LeanMLIR \
+    --mount=type=cache,target=/root/.cache/LeanMLIR,sharing=private \
   # \
   # Setup cache \
   # \
