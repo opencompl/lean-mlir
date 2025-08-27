@@ -53,7 +53,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Cache `.lake` folder
+      - name: Load Lean and Lean-MLIR from Cache
         id: cache-lake
         uses: actions/cache/restore@v4
         with:
@@ -64,12 +64,11 @@ jobs:
             TacBench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
-      - name: Install elan 🕑
+      - name: Add Lean to PATH
         run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Build
-        continue-on-error: true
+      - name: Build Lean-MLIR (should be all in cache)
         run: |
           lake -R build
 
@@ -93,7 +92,7 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Cache `.lake` folder
+      - name: Load Lean and Lean-MLIR from Cache
         id: cache-lake
         uses: actions/cache/restore@v4
         with:
@@ -104,23 +103,11 @@ jobs:
             TacBench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
-      - name: List Directories
-        run: |
-          ls -la
-
-      - name: Enable elan 🕑
+      - name: Add Lean to PATH
         run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Install elan 🕑
-        run: |
-          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
-          ~/.elan/bin/lean --version
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-
-      - name: Build
-        continue-on-error: true
+      - name: Build Lean-MLIR (should be all in cache)
         run: |
           lake -R build
 
