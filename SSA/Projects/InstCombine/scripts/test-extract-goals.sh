@@ -4,7 +4,7 @@ set -o xtrace
 
 pushd "$(git rev-parse --show-toplevel)" || exit 1
 
-## The first argument to this script is passed on as `stride`, the second as `offset`.
+## We pass CLI args for extract-goals to allow CI to document what options we are testing with.
 
 python3 SSA/Projects/InstCombine/scripts/extract-goals.py $@
 OUT=$(git diff SSA/Projects/InstCombine/tests/goals/)
