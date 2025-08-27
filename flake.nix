@@ -33,6 +33,9 @@
           llvmPackages_19.bintools-unwrapped
           ripgrep
 
+          uv # Extremely fast Python package installer and resolver,
+          python312Packages.numpy
+
           #
           # Packages with specific version overrides
           #
