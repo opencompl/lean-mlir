@@ -3,14 +3,13 @@ import SSA.Projects.CIRCT.Stream.WeakBisim
 
 namespace CIRCTStream
 
-#check Nat
--- def syncPrim (ls : List (Stream α)) : Stream (List α) :=
+/-!
+  The code below goes in the direction of having `bv_automata` deciding properties
+  about both synced streams (e.g. the ones in comb) and non-synced ones.
+-/
+
 def syncPrim1 (s : Stream α) : Stream α := s
 
-#check Stream.corec
--- the code below goes in the direction of having bv_automata deciding properties
--- about both synced streams (e.g. the ones in comb) and non-synced ones.
--- this makes it hard to express what's the actual benefit of using DC.
 
 -- σ is the state spaces
 def syncMapAccum₂ (init : σ) (f : α → β → σ → γ × σ) (xs : Stream α) (ys : Stream β) : Stream γ :=
@@ -44,6 +43,7 @@ def syncMap₃ (f : α → β → γ → δ) (xs : Stream α) (ys : Stream β) (
       let ys := if (ys 0).isNone then ys.tail else ys
       let zs := if (zs 0).isNone then zs.tail else zs
       ⟨none, xs, ys, zs⟩
+
 
 section SyncLemmas
 open Stream.Bisim
@@ -104,17 +104,18 @@ example (xs ys zs : Stream (BitVec 8)) : add₂ (add₂ xs zs) ys = add₃ xs ys
   funext a b c
   bv_decide
 
-/-- for things that are not synced, the above will do the above as a preproc anyways,
-creating rather large areas of comb regions connected by other dc things.
-to decide things that can't be synced there are multiple decproc we can write:
-1. blackbox all synced stuff (values), just check the presence of things (just separates
-  data from control)
-2. more complex decproc: there are multiple comb nodes, I create an automaton for each comb part
-  and the circuit will be the result of combining these automata.
+/-!
+  For streams that are not synced, the above will do the above as a preprocessing anyways,
+  creating rather large areas of comb regions connected by DC operations.
+  To decide properties that can't be synced there are multiple decproc we can write:
+  1. blackbox all synced stuff (values), just check the presence of things (just separates
+    data from control)
+  2. more complex decproc: there are multiple comb nodes, I create an automaton for each comb part
+    and the circuit will be the result of combining these automata.
 -/
 
 
-example (xs ys zs : Stream (BitVec 8)) : add₂ (add₂ xs zs) ys ~ add₃ xs ys zs := by sorry
+-- example (xs ys zs : Stream (BitVec 8)) : add₂ (add₂ xs zs) ys ~ add₃ xs ys zs := by sorry
 
 open Stream.Bisim
 
@@ -128,9 +129,6 @@ example (xs ys zs : Stream (BitVec 8)) : add₂ (add₂ xs zs) ys ~ add₃ xs ys
   simp [add₂, add₃]
   rw [syncMap₃_eq_syncMap₃ xs.removeNone_equiv _ _]
   funext i
-
----------------------
-
 
 
 end Examples
