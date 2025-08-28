@@ -99,16 +99,10 @@ jobs:
     defaults:
       run:
         working-directory: /code/lean-mlir
-    env:
-      HOME: /home/user
     steps:
+      - run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
       - name: Compile `mlirnatural` Executable 🧐
         run: |
-          echo "PATH=$PATH"
-          echo "working-dir="
-          pwd
-          echo "USER="
-          whoami
           lake -R build mlirnatural
 
       - name: Compile `opt` Executable 🧐
@@ -132,9 +126,8 @@ jobs:
     defaults:
       run:
         working-directory: /code/lean-mlir
-    env:
-      HOME: /root
     steps:
+      - run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
       - name: Checkout git history
         # This is needed because we do `git diff` below
         uses: actions/checkout@v3
@@ -160,6 +153,7 @@ jobs:
     permissions:
       pull-requests: write
     steps:     
+      - run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
       - name: Run LLVM
         continue-on-error: true
         run: |
@@ -198,13 +192,12 @@ jobs:
     defaults:
       run:
         working-directory: /code/lean-mlir/bv-evaluation
-    env:
-      HOME: /root
     strategy:
       matrix:
         extract_offset: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         extract_stride: [10]
     steps:
+      - run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
       - name: Checkout git history
         uses: actions/checkout@v3
         with:
