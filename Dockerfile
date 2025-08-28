@@ -28,7 +28,7 @@ RUN lake --version
 # See note at the end for more details
 # about the caching boilerplate
 COPY . ./
-RUN --mount=type=cache,target=/root/.cache/mathlib \
+RUN --mount=type=cache,target=/root/.cache/mathlib,sharing=private \
     --mount=type=cache,target=/root/.cache/LeanMLIR,sharing=private \
   # \
   # Symlink cache into place \

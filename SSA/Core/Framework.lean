@@ -61,6 +61,7 @@ theorem _root_.Pure.pure_cast {f} [inst : Pure f] (b : β) (h : β = α) :
   · symm; assumption
   · exact cast_heq ..
 
+-- A random comment to force rebuild
 
 /- # Classes -/
 
