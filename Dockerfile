@@ -11,14 +11,15 @@ RUN update-ca-certificates -f
 
 # Drop privilege to non-root user
 ENV UID=9000
-ENV HOME=/github/home
-# ^^ Github Actions overrides the home directory [1]. Rather than fight it we
-#    choose to directly install our stuff in the directory it expects.
-#    [1] https://github.com/actions/runner/issues/863
+ENV HOME=/home/user
 RUN \
   useradd user --create-home --uid $UID --home-dir="$HOME" && \
   mkdir -p /code/lean-mlir && \
-  chown -R user /code 
+  chown -R user /code && \
+  ln -s /github/home/.elan $HOME/.elan
+  # ^^ Github Actions overrides the home directory [1]. Rather than fight it we
+  #    choose to symlink our stuff in the directory it expects.
+  #    [1] https://github.com/actions/runner/issues/863
 USER user
 WORKDIR $HOME
 
