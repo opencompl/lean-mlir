@@ -9,19 +9,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # Ensure CA certificates are up-to-date
 RUN update-ca-certificates -f
 
-# Drop privilege to non-root user
-ENV UID=9000
-ENV HOME=/home/user
-RUN \
-  useradd user --create-home --uid $UID --home-dir="$HOME" && \
-  mkdir -p /code/lean-mlir /github/home && \
-  chown -R user /code /github
-USER user
-WORKDIR $HOME
-# RUN ln -s $HOME/.elan /github/home/.elan
-  # ^^ Github Actions overrides the home directory [1]. Rather than fight it we
-  #    choose to symlink our stuff in the directory it expects.
-  #    [1] https://github.com/actions/runner/issues/863
+# Set user env vars
+ENV UID=0
+ENV HOME=/root
 
 # Install elan and update environment
 RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
@@ -34,14 +24,14 @@ ENV PATH=$HOME/.elan/bin:$PATH
 # so that Docker does not invalidate the cached 
 # image layer every time the code changes.
 WORKDIR /code/lean-mlir
-COPY --chown=user lean-toolchain ./
+COPY lean-toolchain ./
 RUN lake --version 
 # ^^ Force lake to install the specified version
 
 # Build the framework.
 # See note at the end for more details
 # about the caching boilerplate
-COPY --chown=user . ./
+COPY . ./
 RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private,uid=$UID \
     --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private,uid=$UID \
   # \
