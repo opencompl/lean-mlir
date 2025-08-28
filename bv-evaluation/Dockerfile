@@ -34,13 +34,13 @@ RUN \
   useradd user --create-home --uid $UID --home-dir="$HOME" && \
   mkdir -p /code/lean-mlir && \
   mkdir -p /github/home && \
-  chown -R user /code /github/home && \
-  ln -s $HOME/.elan /github/home/.elan
+  chown -R user /code /github/home
+USER user
+WORKDIR $HOME
+RUN ln -s $HOME/.elan /github/home/.elan
   # ^^ Github Actions overrides the home directory [1]. Rather than fight it we
   #    choose to symlink our stuff in the directory it expects.
   #    [1] https://github.com/actions/runner/issues/863
-USER user
-WORKDIR $HOME
 
 # Install uv
 ADD --link --chown=$UID https://astral.sh/uv/0.8.13/install.sh ./uv-installer.sh
