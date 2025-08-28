@@ -25,7 +25,10 @@ jobs:
             .lake/packages
             .lake/build
             TacBench/.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Install Elan & Lean
         if: steps.cache-lake.outputs.cache-hit != 'true'
@@ -67,7 +70,7 @@ jobs:
             .lake/packages
             .lake/build
             TacBench/.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Add Lean to PATH
         run: |
@@ -100,7 +103,7 @@ jobs:
             .lake/packages
             .lake/build
             TacBench/.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Add Lean to PATH
         run: |
