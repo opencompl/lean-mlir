@@ -130,14 +130,15 @@ jobs:
     steps:
       - name: Symlink .elan (to correct for GHA changing $HOME)
         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
-      - name: Checkout git history
-        # This is needed because we do `git diff` below
+      
+      - name: Checkout git history 📚
         uses: actions/checkout@v3
         with:
           sparse-checkout: .git
-      - env: 
-          GIT_DIR: ${{ github.workspace }}/.git
-        run: |
+      - name: Symlink git history 📚
+        run: 'ln -s "${{ github.workspace }}/.git" /code/lean-mlir/'
+
+      - run: |
           lake build AliveExamples
           (cd SSA/Projects/InstCombine/; uv run ./update_alive_statements.py)
           # /--------------------------- ^^^^^^
@@ -157,6 +158,14 @@ jobs:
     steps:     
       - name: Symlink .elan (to correct for GHA changing $HOME)
         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
+      
+      - name: Checkout git history 📚
+        uses: actions/checkout@v3
+        with:
+          sparse-checkout: .git
+      - name: Symlink git history 📚
+        run: 'ln -s "${{ github.workspace }}/.git" /code/lean-mlir/'
+
       - name: Run LLVM
         continue-on-error: true
         run: |
@@ -194,7 +203,7 @@ jobs:
     container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
     defaults:
       run:
-        working-directory: /code/lean-mlir/bv-evaluation
+        working-directory: /code/lean-mlir
     strategy:
       matrix:
         extract_offset: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -202,10 +211,14 @@ jobs:
     steps:
       - name: Symlink .elan (to correct for GHA changing $HOME)
         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
-      - name: Checkout git history
+
+      - name: Checkout git history 📚
         uses: actions/checkout@v3
         with:
           sparse-checkout: .git
+      - name: Symlink git history 📚
+        run: 'ln -s "${{ github.workspace }}/.git" /code/lean-mlir/'
+
       - name: Ensure InstCombine goals are up-to-date
         env: 
           GIT_DIR: ${{ github.workspace }}/.git
