@@ -20,7 +20,6 @@ jobs:
         id: cache-lake
         uses: actions/cache@v4
         with:
-          lookup-only: true
           path: |
             ~/.elan
             .lake/packages
@@ -34,6 +33,9 @@ jobs:
           set -o pipefail
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
           ~/.elan/bin/lean --version
+
+      - name: Make lake available
+        run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
       - name: Build Lean-MLIR & Mathlib
