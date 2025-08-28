@@ -103,8 +103,10 @@ jobs:
       - name: Compile `mlirnatural` Executable 🧐
         run: |
           echo "PATH=$PATH"
-          echo "PWD=$PWD"
-          echo "USER=$USER"
+          echo "working-dir="
+          pwd
+          echo "USER="
+          whoami
           lake -R build mlirnatural
 
       - name: Compile `opt` Executable 🧐
