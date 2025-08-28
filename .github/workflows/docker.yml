@@ -180,3 +180,26 @@ jobs:
         with:
           name: LLVM evaluation
           path: results
+
+  extract-goals:
+    name: Extract goals
+    runs-on: ubuntu-latest # Run on GH-provided runner
+    needs: instcombine-docker-img
+    container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
+    defaults:
+      run:
+        working-directory: /code/lean-mlir/bv-evaluation
+    strategy:
+      matrix:
+        extract_offset: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        extract_stride: [10]
+    steps:
+      - name: Checkout git history
+        uses: actions/checkout@v3
+        with:
+          sparse-checkout: .git
+      - name: Ensure InstCombine goals are up-to-date
+        env: 
+          GIT_DIR: ${{ github.workspace }}/.git
+        run: |
+          bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh --nfiles 9000 -j7  --stride ${{matrix.extract_stride}} --offset ${{matrix.extract_offset}}
