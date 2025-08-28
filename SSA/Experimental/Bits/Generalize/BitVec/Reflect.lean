@@ -1,7 +1,5 @@
 import Lean.Elab.Term
 import Lean
-
-import SSA.Core.Util
 import SSA.Experimental.Bits.Generalize.Generalize
 import SSA.Experimental.Bits.Generalize.BitVec.Basic
 

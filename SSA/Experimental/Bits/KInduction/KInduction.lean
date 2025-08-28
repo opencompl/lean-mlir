@@ -63,8 +63,8 @@ TODO:
 
 - [x] Check if the constants we support work for (a) hackers delight and (b) gsubhxor_proof
     + Added support for hacker's delight numerals. Checked by running files
-        SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean
-	      SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean
+        - SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean
+	      - SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean
     + gsubhxor: We need support for `signExtend`, which we don't have yet :)
       I can add this.
 - [ ] `signExtend`  support.
