@@ -41,7 +41,7 @@ USER user
 WORKDIR $HOME
 
 # Install uv
-ADD --chown=user https://astral.sh/uv/0.8.13/install.sh ./uv-installer.sh
+ADD --link --chown=user https://astral.sh/uv/0.8.13/install.sh ./uv-installer.sh
 RUN sh ./uv-installer.sh && rm ./uv-installer.sh
 ENV PATH="$HOME/.local/bin/:$PATH"
 
@@ -49,10 +49,10 @@ ENV PATH="$HOME/.local/bin/:$PATH"
 WORKDIR /code/lean-mlir/
 
 # Install LeanMLIR Python dependencies (via uv)
-COPY --from=lean-mlir --chown=user /code/lean-mlir/requirements.txt ./
+COPY --link --from=lean-mlir --chown=user /code/lean-mlir/requirements.txt ./
 RUN uv venv && uv pip install -r requirements.txt
 
 # Copy LeanMLIR toolchain & build artifacts from image
-COPY --from=lean-mlir --chown=user $HOME/.elan/ $HOME/.elan/
-COPY --from=lean-mlir --chown=user /code/lean-mlir/ /code/lean-mlir/
+COPY --link --from=lean-mlir --chown=user $HOME/.elan/ $HOME/.elan/
+COPY --link --from=lean-mlir --chown=user /code/lean-mlir/ /code/lean-mlir/
 ENV PATH="$HOME/.elan/bin/:$PATH"
