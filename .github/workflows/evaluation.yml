@@ -25,7 +25,7 @@ jobs:
             .lake/packages
             .lake/build
             TacBench/.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Install Elan & Lean
         if: steps.cache-lake.outputs.cache-hit != 'true'
