@@ -11,6 +11,9 @@ permissions:
   packages: write
 
 jobs:
+  #
+  # Docker image builders
+  #
   core-docker-img:
     name: Build Docker image for core library
     runs-on: namespace-profile-leanmlir-docker-cached 
@@ -83,6 +86,9 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  #
+  # Evaluation & test jobs
+  # 
   build-tools:
     name: tools, scaling, and auto-generated stmts
     runs-on: ubuntu-latest # Run on GH-provided runner
