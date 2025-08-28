@@ -170,6 +170,10 @@ jobs:
             .lake/build
             TacBench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+
 
       - name: Add Lean to PATH
         run: |
