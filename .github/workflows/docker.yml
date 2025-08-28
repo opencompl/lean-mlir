@@ -80,6 +80,8 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: "./bv-evaluation"
+          build-args: |
+            LEANMLIR_TAG=${{ github.sha }}
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -137,3 +139,45 @@ jobs:
           # /--------------------------- ^^^^^^
           # | TODO: this could be removed if we add a uv shebang to the python file
           bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+
+   evaluation-LLVM:
+    name: Evaluate LLVM
+    runs-on: ubuntu-latest # Run on GH-provided runner
+    needs: instcombine-docker-img
+    container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
+    defaults:
+      run:
+        working-directory: /code/lean-mlir/bv-evaluation
+    permissions:
+      pull-requests: write
+    steps:     
+      - name: Run LLVM
+        continue-on-error: true
+        run: |
+          uv run ./compare.py instcombine -j48 \
+            || echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV
+
+      - name: Collect data LLVM
+        continue-on-error: true
+        run: |
+          (uv run ./collect.py instcombine | tee llvm-stats) \
+            || echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV
+
+      - uses: actions/github-script@v6
+        working-directory: /code/lean-mlir/bv-evaluation
+        if: env.LEANMLIR_STATUS != 'fail' && github.event_name == 'pull_request'
+        with:
+          script: |
+            const fs = require('fs')
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: fs.readFileSync('llvm-stats', 'utf8')
+            })
+
+      - name: Upload LLVM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LLVM evaluation
+          path: results
