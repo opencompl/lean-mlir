@@ -39,7 +39,6 @@ jobs:
       - name: Build Lean-MLIR & Mathlib
         # We build Mathlib from scratch as this reduces the build artifacts that are stored in the cache. Previous experiments
         # led to savings from avoiding a full Mathlib cache in the order of a couple hundred MBs.
-        if: steps.cache-lake.outputs.cache-hit != 'true'
         run: |
           lake -R build
 
