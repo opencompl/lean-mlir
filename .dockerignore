@@ -2,3 +2,12 @@ Dockerfile
 *.pdf
 .venv/
 .lake/
+
+.devcontainer
+.dockerignore
+.envrc
+.git
+.gitattributes
+.github
+.gitignore
+.gitmodules
