@@ -140,7 +140,7 @@ jobs:
           # | TODO: this could be removed if we add a uv shebang to the python file
           bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
 
-   evaluation-LLVM:
+  evaluation-LLVM:
     name: Evaluate LLVM
     runs-on: ubuntu-latest # Run on GH-provided runner
     needs: instcombine-docker-img
