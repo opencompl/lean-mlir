@@ -102,6 +102,9 @@ jobs:
     steps:
       - name: Compile `mlirnatural` Executable 🧐
         run: |
+          echo "PATH=$PATH"
+          echo "PWD=$PWD"
+          echo "USER=$USER"
           lake -R build mlirnatural
 
       - name: Compile `opt` Executable 🧐
