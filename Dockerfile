@@ -10,7 +10,11 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 RUN update-ca-certificates -f
 
 # Drop privilege to non-root user
-RUN useradd user --create-home
+ENV UID=9000
+RUN \
+  useradd user --create-home --uid $UID && \
+  mkdir -p /code/lean-mlir && \
+  chown -R user /code 
 USER user
 ENV HOME=/home/user
 WORKDIR $HOME
@@ -26,16 +30,16 @@ ENV PATH=$HOME/.elan/bin:$PATH
 # so that Docker does not invalidate the cached 
 # image layer every time the code changes.
 WORKDIR /code/lean-mlir
-COPY lean-toolchain ./
+COPY --chown=user lean-toolchain ./
 RUN lake --version 
 # ^^ Force lake to install the specified version
 
 # Build the framework.
 # See note at the end for more details
 # about the caching boilerplate
-COPY . ./
-RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private \
-    --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
+COPY --chown=user . ./
+RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private,uid=$UID \
+    --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private,uid=$UID \
   # \
   # Symlink cache into place \
   # \
