@@ -34,7 +34,7 @@ RUN \
   useradd user --create-home --uid $UID --home-dir="$HOME" && \
   mkdir -p /code/lean-mlir && \
   mkdir -p /github/home && \
-  chown -R user /code /github/home
+  chown -R user /code /github
 USER user
 WORKDIR $HOME
 # RUN ln -s $HOME/.elan /github/home/.elan
