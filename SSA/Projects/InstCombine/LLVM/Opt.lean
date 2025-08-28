@@ -22,7 +22,7 @@ def wellformed (fileName : String ) : IO UInt32 := do
     match icom? with
     | none => return 1
     | some (Sigma.mk _Γ ⟨_eff, ⟨_retTy, c⟩⟩) => do
-      IO.println s!"{toString c}"
+      IO.println s!"{Com.toPrint c}"
       return 0
 
 def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
@@ -32,6 +32,9 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
     return code
   if args.hasFlag "riscv" then -- parsing as riscv
     let code ←  parseAsRiscv fileName
+    return code
+  if args.hasFlag "passriscv64_optimized" then -- optimized ISel pass including GlobalISel combiners and pseudoops
+    let code ← passriscv64 fileName
     return code
   if args.hasFlag "passriscv64" then -- lowering pass to a RISC-V 64 SSA-assembly IR
     let code ← passriscv64 fileName
@@ -47,6 +50,7 @@ def mainCmd := `[Cli|
       verbose; "Prints verbose output for debugging using the Repr typeclass to print."
       passriscv64; "Lowering pass to a RISC-V 64 SSA-assembly IR"
       riscv; "Allows to parse a file as a RISC-V 64 SSA-assembly IR"
+      passriscv64_optimized; "Allows to parse a file as a RISC-V 64 SSA-assembly IR"
     ARGS:
       file: String; "Input filename"
     ]

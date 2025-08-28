@@ -24,8 +24,8 @@ section SplitProgram
 
 variable (d Γ eff t) in
 structure SplitProgramResult extends Zipper d Γ eff t where
-  {midType : d.Ty}
-  midRet : toZipper.Γ_mid.Var midType
+  {midTypes : List d.Ty}
+  midRet : HVector toZipper.Γ_mid.Var midTypes
 
 /-- `splitProgramAtAux pos lets prog`, will return a `Lets` ending
 with the `pos`th variable in `prog`, and an `Com` starting with the next variable.
@@ -37,9 +37,9 @@ def splitProgramAtAux : (pos : ℕ) → (lets : Lets d Γ₁ eff Γ₂) →
   | 0, lets, .var e body => some {
       top := lets.var e
       bot := body
-      midRet := Var.last _ _
+      midRet := e.returnVars
     }
-  | _, _, .ret _ => none
+  | _, _, .rets _ => none
   | n+1, lets, .var e body =>
     splitProgramAtAux n (lets.var e) body
 
@@ -53,7 +53,7 @@ theorem denote_splitProgramAtAux [LawfulMonad d.m] :
     obtain rfl := by
       simpa only [splitProgramAtAux, Option.mem_def, Option.some.injEq] using hres
     simp
-  | _+1, _, .ret _, res, hres, s => by
+  | _+1, _, .rets _, res, hres, s => by
     simp [splitProgramAtAux, Option.mem_def] at hres
   | n+1, lets, .var e body, res, hres, s => by
     rw [splitProgramAtAux] at hres
@@ -83,28 +83,27 @@ end SplitProgram
 `target`. If it can match the variables, it inserts `rhs` into the program
 with the correct assignment of variables, and then replaces occurences
 of the variable at position `pos` in `target` with the output of `rhs`.  -/
-def rewriteAt (lhs rhs : Com d Γ₁ .pure t₁)
+def rewriteAt
+    (lhs rhs : Com d Γ₁ .pure ts₁)
     (hlhs : ∀ t (v : Var Γ₁ t), ⟨t, v⟩ ∈ lhs.vars)
     (pos : ℕ) (target : Com d Γ₂ eff t₂) :
     Option (Com d Γ₂ eff t₂) := do
   let splitRes ← splitProgramAt pos target
-  if h : t₁ = splitRes.midType
-  then
-    let targetLets := splitRes.top
-    let vm := splitRes.midRet
-    let flatLhs := lhs.toFlatCom
-    let m ← matchVarMap targetLets vm flatLhs.lets (flatLhs.ret.cast h)
-      (by subst h; exact hlhs)
-    let zip := splitRes.insertPureCom vm (h ▸ rhs.changeVars m)
+  if h : ts₁ = splitRes.midTypes then
+    let m ← matchArgRes splitRes.top lhs.toLets splitRes.midRet (h ▸ lhs.returnVars)
+    let m := m.toHom <| by
+      subst h; exact hlhs
+    let rhs := rhs.changeVars m
+    let zip := splitRes.insertPureCom splitRes.midRet (cast (by simp[← h]) rhs)
     return zip.toCom
   else none
 
-@[simp] lemma Com.denote_toFlatCom_lets [LawfulMonad d.m] (com : Com d Γ .pure t) :
+@[simp] theorem Com.denote_toFlatCom_lets [LawfulMonad d.m] (com : Com d Γ .pure t) :
     com.toFlatCom.lets.denote = com.denoteLets := by
   funext Γv; simp [toFlatCom, Com.denoteLets_eq]
 
-@[simp] lemma Com.toFlatCom_ret [LawfulMonad d.m] (com : Com d Γ .pure t) :
-    com.toFlatCom.ret = com.returnVar := by
+@[simp] theorem Com.toFlatCom_ret [LawfulMonad d.m] (com : Com d Γ .pure t) :
+    com.toFlatCom.rets = com.returnVars := by
   simp [toFlatCom]
 
 theorem denote_rewriteAt [LawfulMonad d.m]
@@ -116,25 +115,29 @@ theorem denote_rewriteAt [LawfulMonad d.m]
     (hrew : rew ∈ rewriteAt lhs rhs hlhs pos target) :
     rew.denote = target.denote := by
   funext V
-  simp only [rewriteAt, Com.toFlatCom_ret, Option.pure_def, Option.bind_eq_bind, Option.mem_def,
+  simp only [rewriteAt, Option.pure_def, Option.bind_eq_bind, Option.mem_def,
     Option.bind_eq_some_iff, Option.dite_none_right_eq_some, Option.some.injEq] at hrew
-  rcases hrew with ⟨res, h_split, rfl, varMap', hmap, rfl⟩
-  rw [Zipper.denote_toCom, ← denote_splitProgramAt h_split]
+  rcases hrew with ⟨res, h_split, rfl, varMap', -, rfl⟩
+  dsimp only at varMap'
+  simp only [cast_eq, Zipper.denote_toCom, ← denote_splitProgramAt h_split]
   apply Zipper.denote_insertPureCom_eq_of
   intro V
-  simp [← hl, ← denote_matchLets_of_matchVarMap hmap]
+  simp only [Expr.pdenoteOp, Com.denote_changeVars, ← hl]
+  rw [← Com.denoteLets_returnVars, Com.denoteLets_eq]
+  apply denote_matchLets_of varMap' hlhs
+
 
 variable (d : Dialect) [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] in
 /--
   Rewrites are indexed with a concrete list of types, rather than an (erased) context, so that
   the required variable checks become decidable
 -/
-structure PeepholeRewrite (Γ : List d.Ty) (t : d.Ty) where
-  lhs : Com d (.ofList Γ) .pure t
-  rhs : Com d (.ofList Γ) .pure t
+structure PeepholeRewrite (Γ : List d.Ty) (ts : List d.Ty) where
+  lhs : Com d (.ofList Γ) .pure ts
+  rhs : Com d (.ofList Γ) .pure ts
   correct : lhs.denote = rhs.denote
 
-instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
+instance {Γ : List d.Ty} {t'} {lhs : Com d (.ofList Γ) .pure t'} :
     Decidable (∀ (t : d.Ty) (v : Var (.ofList Γ) t), ⟨t, v⟩ ∈ lhs.vars) :=
   decidable_of_iff
     (∀ (i : Fin Γ.length),
@@ -152,12 +155,13 @@ instance {Γ : List d.Ty} {t' : d.Ty} {lhs : Com d (.ofList Γ) .pure t'} :
 
 def rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
     (pos : ℕ) (target : Com d Γ₂ eff t₂) :
-    (Com d Γ₂ eff t₂) := if hlhs : ∀ t (v : Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
-      match rewriteAt pr.lhs pr.rhs hlhs pos target
-      with
-        | some res => res
-        | none => target
-      else target
+    (Com d Γ₂ eff t₂) :=
+  if hlhs : ∀ t (v : Var (.ofList Γ) t), ⟨_, v⟩ ∈ pr.lhs.vars then
+    match rewriteAt pr.lhs pr.rhs hlhs pos target
+    with
+      | some res => res
+      | none => target
+  else target
 
 variable [LawfulMonad d.m]
 theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
@@ -169,6 +173,9 @@ theorem denote_rewritePeepholeAt (pr : PeepholeRewrite d Γ t)
       · apply denote_rewriteAt pr.correct; assumption
       · rfl
     · rfl
+
+/-- info: 'denote_rewriteAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+#guard_msgs in #print axioms denote_rewriteAt
 
 /-- info: 'denote_rewritePeepholeAt' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms denote_rewritePeepholeAt
@@ -230,10 +237,10 @@ def multiRewritePeephole (fuel : ℕ)
     (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (target : Com d Γ₂ eff t₂) : (Com d Γ₂ eff t₂) :=
   multiRewritePeepholeAt fuel prs 0 target
 
-/-- helper lemma for the proof of `denote_rewritePeephole_go_multi`. It proofs that folding
+/-- helper lemma for the proof of `denote_rewritePeephole_go_multi`. It proves that folding
 a list of semantics preserving peephole rewrites over the target program does preserve the semantics
 of the target program. -/
-lemma denote_foldl_rewritePeepholeAt
+theorem denote_foldl_rewritePeepholeAt
   (prs : List (Σ Γ, Σ ty, PeepholeRewrite d Γ ty)) (ix : ℕ) (target : Com d Γ₂ eff t₂) :
     (prs.foldl (fun acc ⟨_Γ, _ty, pr⟩=> rewritePeepholeAt pr ix acc) target).denote = target.denote := by
   induction prs generalizing target
@@ -267,7 +274,7 @@ theorem denote_multiRewritePeephole (fuel : ℕ)
   exact denote_multiRewritePeepholeAt ..
 
 theorem Expr.denote_eq_of_region_denote_eq {ty} (op : d.Op)
-    (ty_eq : ty = DialectSignature.outTy op)
+    (ty_eq : ty = DialectSignature.returnTypes op)
     (eff' : DialectSignature.effectKind op ≤ eff)
     (args : HVector (Var Γ) (DialectSignature.sig op))
     (regArgs regArgs' : HVector (fun t => Com d t.1 EffectKind.impure t.2)
@@ -287,7 +294,7 @@ theorem Expr.denote_eq_of_region_denote_eq {ty} (op : d.Op)
 mutual
 
 def rewritePeepholeRecursivelyRegArgs (fuel : ℕ)
-    (pr : PeepholeRewrite d Γ t) {ts :  List (Ctxt d.Ty × d.Ty)}
+    (pr : PeepholeRewrite d Γ t) {ts :  List (Ctxt d.Ty × List d.Ty)}
     (args : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts)
     : { out : HVector (fun t => Com d t.1 EffectKind.impure t.2) ts // out.denote = args.denote} :=
   match ts with
@@ -303,7 +310,7 @@ def rewritePeepholeRecursivelyRegArgs (fuel : ℕ)
 termination_by (fuel, ts.length + 2)
 
 def rewritePeepholeRecursivelyExpr (fuel : ℕ)
-    (pr : PeepholeRewrite d Γ t) {ty : d.Ty}
+    (pr : PeepholeRewrite d Γ t) {ty}
     (e : Expr d Γ₂ eff ty) : { out : Expr d Γ₂ eff ty // out.denote = e.denote } :=
   match e with
   | Expr.mk op ty eff' args regArgs =>
@@ -324,9 +331,9 @@ def rewritePeepholeRecursively (fuel : ℕ)
     have htarget'_denote_eq_htarget : target'.denote = target.denote := by
       apply denote_rewritePeephole
     match htarget : target' with
-    | .ret v => ⟨target', by
+    | .rets v => ⟨target', by
       simp [htarget, htarget'_denote_eq_htarget]⟩
-    | .var (α := α) e body =>
+    | .var e body =>
       let ⟨e', he'⟩ := rewritePeepholeRecursivelyExpr fuel pr e
       let ⟨body', hbody'⟩ :=
         -- decreases because 'body' is smaller.

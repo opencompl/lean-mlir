@@ -1,11 +1,8 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
---import SSA.Core.WellTypedFramework
-import SSA.Core.Framework
+import SSA.Core
 import SSA.Core.Tactic.SimpSet
-import SSA.Core.Util
-import SSA.Core.Util.ConcreteOrMVar
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.LLVM.Semantics
 
@@ -377,6 +374,22 @@ instance : ToString (MOp φ) where
 -- instance : ToString Op where
 --   toString o := repr o |>.pretty
 
+def printOverflowFlags (flags : NoWrapFlags) : String :=
+  match flags with
+  | ⟨false, false⟩ => "<{overflowFlags = #llvm.overflow<none>}>"
+  | ⟨true, false⟩  => "<{overflowFlags = #llvm.overflow<nsw>}>"
+  | ⟨false, true⟩  => "<{overflowFlags = #llvm.overflow<nuw>}>"
+  | ⟨true, true⟩   => "<{overflowFlags = #llvm.overflow<nsw,nuw>}>"
+
+def attributesToPrint (op : LLVM.Op) : String :=
+  match op with
+  | .const w v => s!"\{value = {v} : {w}}"
+  | .or w ⟨true⟩ => s!"\{disjoint = true : {w}}"
+  | .add _ f |.shl _ f | .sub _ f | .mul _ f => printOverflowFlags f
+  | .udiv _ ⟨true⟩ | .sdiv _ ⟨true⟩ | .lshr _ ⟨true⟩ => "<{isExact}> "
+  | .icmp ty _ => s!"{ty}"
+  |_ => ""
+
 instance : ToString LLVM.Op := by unfold LLVM; infer_instance
 instance : Repr LLVM.Op := by unfold LLVM; infer_instance
 
@@ -396,6 +409,14 @@ instance : ToString (MTy φ) where
   toString t := repr t |>.pretty
 instance : ToString LLVM.Ty := by unfold LLVM; infer_instance
 
+instance : ToPrint (LLVM) where
+  printOpName
+  | op => "llvm." ++ toString op
+  printTy := toString
+  printAttributes := attributesToPrint
+  printDialect:= "llvm"
+  printReturn _:= "llvm.return"
+  printFunc _:= "^bb0"
 /-! ### Signature -/
 
 @[simp, reducible]
@@ -421,9 +442,9 @@ def MOp.outTy : MOp φ → MTy φ
 | .icmp _ _ => .bitvec 1
 
 instance {φ} : DialectSignature (MetaLLVM φ) where
-  signature op := ⟨op.sig, [], op.outTy, .pure⟩
+  signature op := ⟨op.sig, [], [op.outTy], .pure⟩
 instance : DialectSignature LLVM where
-  signature op := ⟨op.sig, [], op.outTy, .pure⟩
+  signature op := ⟨op.sig, [], [op.outTy], .pure⟩
 
 /-! ### Type Semantics -/
 
@@ -469,7 +490,7 @@ end LLVM.Ty
 
 @[simp]
 def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig o)) :
-    (TyDenote.toType <| DialectSignature.outTy o) :=
+    (TyDenote.toType (β := LLVM.Ty) o.outTy) :=
   match o with
   | LLVM.Op.const _ val    => const? _ val
   | LLVM.Op.copy _         =>               (op.getN 0 (by simp [DialectSignature.sig, signature]))
@@ -495,7 +516,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   | LLVM.Op.select _       => LLVM.select   (op.getN 0 (by simp [DialectSignature.sig, signature])) (op.getN 1 (by simp [DialectSignature.sig, signature])) (op.getN 2 (by simp [DialectSignature.sig, signature]))
 
 instance : DialectDenote LLVM := ⟨
-  fun o args _ => Op.denote o args
+  fun o args _ => [Op.denote o args]ₕ
 ⟩
 
 end InstCombine

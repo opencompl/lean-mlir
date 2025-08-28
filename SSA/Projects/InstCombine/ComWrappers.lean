@@ -7,6 +7,7 @@ import SSA.Projects.InstCombine.LLVM.SimpSet
 /- Wrapper around Com, Expr constructors to easily hand-write IR -/
 namespace ComWrappers
 open InstCombine (LLVM)
+open LeanMLIR.SingleReturnCompat (Com Expr)
 
 macro_rules
 | `(tactic| get_elem_tactic_trivial) => `(tactic| simp [Ctxt.snoc])

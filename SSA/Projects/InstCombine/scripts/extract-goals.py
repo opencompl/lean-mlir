@@ -12,7 +12,6 @@ import shutil
 from typing import List
 from pathlib import Path
 from dataclasses import dataclass, asdict
-import pandas as pd
 import os
 import re
 import logging
@@ -31,7 +30,9 @@ STATUS_PROCESSING = "🕒"
 SCRIPT_PATH = os.path.relpath(os.path.abspath(__file__), ROOT_DIR)
 
 
-PREAMBLE = f""" -- auto-generated from '{SCRIPT_PATH}'
+PREAMBLE = f"""
+/-
+-- auto-generated from '{SCRIPT_PATH}'
 import SSA.Projects.InstCombine.TacticAuto
 import SSA.Projects.InstCombine.LLVM.Semantics
 open BitVec
@@ -42,6 +43,7 @@ set_option linter.unreachableTactic false
 set_option maxHeartbeats 5000000
 set_option maxRecDepth 1000000
 set_option Elab.async false
+-/
 
 """
 
@@ -81,15 +83,20 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
     file_path = BENCHMARK_DIR + file
     fileTitle = file.split('.')[0]
     EXTRACT_GOALS = "extract_goals"
-    logging.info(f"{fileTitle}: writing '{EXTRACT_GOALS}' tactic into file #{file_num}.")
+    logging.debug(f"{fileTitle}: writing '{EXTRACT_GOALS}' tactic into file #{file_num}.")
     subprocess.Popen(f'{sed()} -i -E \'s,simp_alive_benchmark,{EXTRACT_GOALS},g\' ' + file_path, cwd=ROOT_DIR, shell=True).wait()
 
+
     cmd = 'lake lean ' + file_path
-    logging.info(f"{fileTitle}({file_num}/{nfiles}): running '{cmd}'")
+    logging.debug(f"{fileTitle}({file_num}/{nfiles}): running '{cmd}'")
+    K = nfiles // 30
+    if file_num % K  == 0:
+        logging.info(f"{file_num}/{nfiles} ({file_num/nfiles*100:.1f}%)")
+
 
     # TODO: can check that file exists to skip.
     p = subprocess.Popen(cmd, cwd=ROOT_DIR, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, universal_newlines=True)
-    logging.info(f"{fileTitle}({file_num}/{nfiles}): running...")
+    logging.debug(f"{fileTitle}({file_num}/{nfiles}): running...")
     try:
         out, err = p.communicate(timeout=timeout)
     except subprocess.TimeoutExpired as e:
@@ -97,13 +104,13 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
         p.kill()
         return False
 
-    logging.info(f"{fileTitle}({file_num}/{nfiles}): done processing.")
+    logging.debug(f"{fileTitle}({file_num}/{nfiles}): done processing.")
     if p.returncode != 0:
         logging.error(f"{fileTitle}({file_num}/{nfiles}) {STATUS_FAIL}: Expected return code of 0, found {p.returncode}")
 
     # split 'out' into parts that are delimited by 'theorem ... := sorry'.
     theorems = extract_theorems(out)
-    logging.info(f"{fileTitle}({file_num}/{nfiles}) Extracted {len(theorems)} theorems.")
+    logging.debug(f"{fileTitle}({file_num}/{nfiles}) Extracted {len(theorems)} theorems.")
     if not theorems:
         logging.error(f"{fileTitle}({file_num}/{nfiles}) {STATUS_FAIL}: No theorems extracted from file {file_path}.")
         return False
@@ -118,14 +125,20 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
 
     for t in theorems:
         path = Path(GOALS_DIR) / t.get_file_name(fileTitle)
-        logging.info(f"{fileTitle}({file_num}/{nfiles}): Writing '{path}'...")
+        logging.debug(f"{fileTitle}({file_num}/{nfiles}): Writing '{path}'...")
         with open(path, 'w') as f:
             f.write(PREAMBLE)
             f.write(t.text)
-            logging.info(f"{fileTitle}({file_num}/{nfiles}): {STATUS_GREEN_CHECK} Written to '{path}'")
+            logging.debug(f"{fileTitle}({file_num}/{nfiles}): {STATUS_GREEN_CHECK} Written to '{path}'")
+
+
     return True
 
-def process(db : str, jobs: int, nfiles: int, timeout : int):
+def process(args):
+    db = args.db
+    jobs = args.jobs
+    nfiles = args.nfiles
+    timeout = args.timeout
     tactic_auto_path = f'{ROOT_DIR}/SSA/Projects/InstCombine/TacticAuto.lean'
 
     if os.path.exists(db):
@@ -146,8 +159,10 @@ def process(db : str, jobs: int, nfiles: int, timeout : int):
             if len(files) > nfiles:
                 break # quit if we are not doing a production run after 5 files.
 
+    logging.info(f"total #files to process: {len(files)}, stride={args.stride}, offset={args.offset}")
+    files = [files[i] for i in range(args.offset, len(files), args.stride)]
     total = len(files)
-    logging.info(f"total #files to process: {total}")
+    logging.info(f"picked #files w/stride and offset: {total}")
     num_completed = 0
     future2file = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
@@ -155,7 +170,6 @@ def process(db : str, jobs: int, nfiles: int, timeout : int):
             future = executor.submit(run_file, db, file, ix + 1, total, timeout)
             future2file[future] = file
 
-    total = len(future2file)
     assert len(future2file) == len(files)
     for future in concurrent.futures.as_completed(future2file):
         file = future2file[future]
@@ -169,18 +183,14 @@ def process(db : str, jobs: int, nfiles: int, timeout : int):
         if not success:
             logging.error('%r FAILED run' % (file))
 
-        percentage = ((ix + 1) / total) * 100
-        status_symbol = STATUS_SUCCESS if success else STATUS_FAIL
-        logging.info(f'{status_symbol} completed {file} ({percentage:.1f}%)')
         num_completed += 1
-        logging.info(f"total #files processed: {num_completed}/{total}")
 
     if num_completed != total:
         logging.error(f"Expected {total} files to be processed, but got {num_completed} completed futures.")
 
-def setup_logging(db_name : str):
+def setup_logging(db_name : str, loglevel: str):
     # Set up the logging configuration
-    logging.basicConfig(level=logging.DEBUG,
+    logging.basicConfig(level=loglevel.upper(),
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[logging.FileHandler(f'{db_name}.log', mode='a'), logging.StreamHandler()])
 
@@ -193,8 +203,12 @@ if __name__ == "__main__":
   parser.add_argument('-j', '--jobs', type=int, default=4)
   parser.add_argument('--nfiles', type=int, default=4, help="number of files to extract")
   parser.add_argument('--timeout', type=int, default=600, help="timeout in seconds for each file processing")
+  parser.add_argument('--stride', type=int, default=1, help="Files that are processed have index 'ix = ∃ k, stride * k + offset'")
+  parser.add_argument('--offset', type=int, default=0, help="Files that are processed have index 'ix = ∃ k, stride * k + offset'")
+  parser.add_argument('--loglevel', type=str, default="INFO", help="Log level",
+    choices=["DEBUG", "INFO", "WARNING", "ERROR"])
   args = parser.parse_args()
-  setup_logging(args.db)
+  setup_logging(args.db, args.loglevel)
   logging.info(args)
-  process(args.db, jobs=args.jobs, nfiles=args.nfiles, timeout=args.timeout)
+  process(args)
 

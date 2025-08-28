@@ -16,5 +16,5 @@ theorem test21_thm (e : IntW 8) : LLVM.and (ashr e (const? 8 7)) (const? 8 1) ‚ä
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

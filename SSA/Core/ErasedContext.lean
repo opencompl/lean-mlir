@@ -1,8 +1,8 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Data.Finset.Basic
-import Mathlib.Data.Finset.Union
+import Mathlib.Data.Fintype.Basic
+
 import SSA.Core.HVector
 
 /--
@@ -46,15 +46,36 @@ def empty : Ctxt Ty := .ofList []
 instance : EmptyCollection (Ctxt Ty) := ⟨Ctxt.empty⟩
 instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 
-lemma empty_eq : (∅ : Ctxt Ty) = .empty := rfl
+theorem empty_eq : (∅ : Ctxt Ty) = .empty := rfl
 
 @[match_pattern]
 def snoc : Ctxt Ty → Ty → Ctxt Ty
   | ⟨tl⟩, hd => ⟨hd :: tl⟩
 
-instance : GetElem? (Ctxt Ty) Nat Ty (fun as i => i < as.toList.length) where
-  getElem xs i h := xs.toList[i]
-  getElem? xs i  := xs.toList[i]?
+
+@[grind=]
+def length (Γ : Ctxt Ty) : Nat := Γ.toList.length
+
+instance : GetElem? (Ctxt Ty) Nat Ty (fun Γ i => i < Γ.length) where
+  getElem Γ i h := Γ.toList[i]
+  getElem? Γ i  := Γ.toList[i]?
+
+section GetElemLemmas
+
+theorem getElem?_eq_toList_getElem? {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
+@[simp, grind=] theorem getElem?_ofList (i : Nat) : (ofList ts)[i]? = ts[i]? := rfl
+@[simp, grind=] theorem getElem_ofList (i : Nat) (h : _) : (ofList ts)[i]'h = ts[i]'h := rfl
+
+instance : LawfulGetElem (Ctxt Ty) Nat Ty (fun as i => i < as.length) where
+  getElem?_def Γ i _ := by rcases Γ; grind
+
+@[ext]
+theorem ext_getElem? {Γ Δ : Ctxt Ty} (h : ∀ (i : Nat), Γ[i]? = Δ[i]?) : Γ = Δ := by
+  rcases Γ; rcases Δ;
+  rw [ofList.injEq]
+  exact List.ext_getElem?_iff.mpr h
+
+end GetElemLemmas
 
 instance instAppend : HAppend (Ctxt Ty) (List Ty) (Ctxt Ty) where
   hAppend Γ tys := ⟨tys ++ Γ.toList⟩
@@ -66,44 +87,41 @@ def get? : Ctxt Ty → Nat → Option Ty := (·[·]?)
 def map (f : Ty₁ → Ty₂) : Ctxt Ty₁ → Ctxt Ty₂ :=
   ofList ∘ (List.map f) ∘ toList
 
-def length (Γ : Ctxt Ty) : Nat := Γ.toList.length
-
 section Lemmas
 variable (Γ : Ctxt Ty) (ts us : List Ty)
 
-@[simp] lemma snoc_inj : Γ.snoc t = Γ.snoc u ↔ t = u := by
+@[simp] theorem snoc_inj : Γ.snoc t = Γ.snoc u ↔ t = u := by
   constructor <;> (rintro ⟨⟩; rfl)
 
 variable {m} [Monad m] [LawfulMonad m] (t u : m _) in
-@[simp] lemma snoc_map_inj : Γ.snoc <$> t = Γ.snoc <$> u ↔ t = u :=
+@[simp] theorem snoc_map_inj : Γ.snoc <$> t = Γ.snoc <$> u ↔ t = u :=
   (map_inj_right (snoc_inj _).mp)
 
-@[simp] lemma ofList_append : (⟨ts⟩ : Ctxt _) ++ us = us ++ ts := rfl
-@[simp] lemma toList_append : (Γ ++ ts).toList = ts ++ Γ.toList := rfl
+@[simp] theorem ofList_append : (⟨ts⟩ : Ctxt _) ++ us = us ++ ts := rfl
+@[simp] theorem toList_append : (Γ ++ ts).toList = ts ++ Γ.toList := rfl
 
-lemma getElem?_eq_toList_getElem? {i : Nat} : Γ[i]? = Γ.toList[i]? := rfl
-@[simp] lemma getElem?_ofList (i : Nat) : (ofList ts)[i]? = ts[i]? := rfl
+@[simp] theorem getElem?_snoc_zero (t : Ty)           : (Γ.snoc t)[0]? = some t := rfl
+@[simp] theorem getElem?_snoc_succ (t : Ty) (i : Nat) : (Γ.snoc t)[i+1]? = Γ[i]? := rfl
 
-@[simp] lemma getElem?_snoc_zero (t : Ty)           : (Γ.snoc t)[0]? = some t := rfl
-@[simp] lemma getElem?_snoc_succ (t : Ty) (i : Nat) : (Γ.snoc t)[i+1]? = Γ[i]? := rfl
+@[simp] theorem map_nil (f : Ty → Ty') : map f ∅ = ∅ := rfl
+@[simp] theorem map_snoc : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := rfl
 
-@[simp] lemma map_nil (f : Ty → Ty') : map f ∅ = ∅ := rfl
-@[simp] lemma map_snoc : (Γ.snoc a).map f = (Γ.map f).snoc (f a) := rfl
-
-@[simp] lemma getElem?_map (Γ : Ctxt Ty) (f : Ty → Ty') (i : Nat) :
+@[simp] theorem getElem?_map (Γ : Ctxt Ty) (f : Ty → Ty') (i : Nat) :
     (Γ.map f)[i]? = Γ[i]?.map f := by
   simp [map]; rfl
 
-@[simp] lemma length_ofList : (ofList ts).length = ts.length := rfl
-@[simp] lemma length_snoc (Γ : Ctxt α) (x : α) : (Γ.snoc x).length = Γ.length + 1 := rfl
-@[simp] lemma length_map : (Γ.map f).length = Γ.length := by simp [map, length]
+@[simp, grind=] theorem length_ofList : (ofList ts).length = ts.length := rfl
+@[simp, grind=] theorem length_snoc (Γ : Ctxt α) (x : α) : (Γ.snoc x).length = Γ.length + 1 := rfl
+@[simp, grind=] theorem length_map : (Γ.map f).length = Γ.length := by simp [map, length]
+@[simp, grind=] theorem length_append : (Γ ++ ts).length = Γ.length + ts.length := by
+  simp [length, Nat.add_comm]
 
 instance : Functor Ctxt where
   map := map
 
-@[simp] lemma map_eq_map : f <$> Γ = map f Γ := rfl
+@[simp] theorem map_eq_map : f <$> Γ = map f Γ := rfl
 
-@[simp] lemma map_append (f : Ty₁ → Ty₂) (Γ : Ctxt Ty₁) (ts : List Ty₁) :
+@[simp] theorem map_append (f : Ty₁ → Ty₂) (Γ : Ctxt Ty₁) (ts : List Ty₁) :
     (Γ ++ ts).map f = Γ.map f ++ (ts.map f) := by
   simp [map]
 
@@ -132,11 +150,11 @@ end Rec
 def Var (Γ : Ctxt Ty) (t : Ty) : Type :=
   { i : Nat // Γ[i]? = some t }
 
-/-- constructor for Var. -/
-def Var.mk {Γ : Ctxt Ty} {t : Ty} (i : Nat) (hi : Γ[i]? = some t) : Γ.Var t :=
-  ⟨i, hi⟩
-
 namespace Var
+
+/-- constructor for Var. -/
+def mk {Γ : Ctxt Ty} {t : Ty} (i : Nat) (hi : Γ[i]? = some t) : Γ.Var t :=
+  ⟨i, hi⟩
 
 instance : DecidableEq (Var Γ t) := by
   delta Var
@@ -148,7 +166,7 @@ def last (Γ : Ctxt Ty) (t : Ty) : Ctxt.Var (Ctxt.snoc Γ t) t :=
 
 def emptyElim {α : Sort _} {t : Ty} : Ctxt.Var ∅ t → α :=
   fun ⟨_, h⟩ => by
-    simp [getElem?_eq_toList_getElem?, EmptyCollection.emptyCollection, empty] at h
+    simp [EmptyCollection.emptyCollection, empty] at h
 
 /-- Take a variable in a context `Γ` and get the corresponding variable
 in context `Γ.snoc t`. This is marked as a coercion. -/
@@ -156,15 +174,21 @@ in context `Γ.snoc t`. This is marked as a coercion. -/
 def toSnoc {Γ : Ctxt Ty} {t t' : Ty} (var : Var Γ t) : Var (snoc Γ t') t  :=
   ⟨var.1+1, var.2⟩
 
-@[simp]
-theorem zero_eq_last {Γ : Ctxt Ty} {t : Ty} (h) :
-    ⟨0, h⟩ = last Γ t :=
-  rfl
+section Lemmas
+variable {Γ : Ctxt Ty} {t : Ty}
 
-@[simp]
-theorem succ_eq_toSnoc {Γ : Ctxt Ty} {t : Ty} {w} (h : (Γ.snoc t)[w+1]? = some t') :
-    ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ :=
-  rfl
+theorem val_lt (v : Γ.Var t) : v.val < Γ.length := by
+  rcases v with ⟨idx, h⟩
+  suffices ¬(Γ.length ≤ idx) by grind
+  rcases Γ
+  simp only [length_ofList, ← List.getElem?_eq_none_iff]
+  simp_all
+
+@[simp] theorem zero_eq_last (h) : ⟨0, h⟩ = last Γ t := rfl
+@[simp] theorem succ_eq_toSnoc {w} (h : (Γ.snoc t)[w+1]? = some t') :
+    ⟨w+1, h⟩ = toSnoc ⟨w, h⟩ := rfl
+
+end Lemmas
 
 /-! ### toMap-/
 
@@ -244,36 +268,39 @@ def castCtxt {Γ : Ctxt Op} (h_eq : Γ = Δ) : Γ.Var ty → Δ.Var ty
 section Lemmas
 variable {t} (v : Var Γ t)
 
-@[simp] lemma cast_rfl (h : t = t) : v.cast h = v := rfl
+@[simp, grind=] theorem cast_rfl (h : t = t) : v.cast h = v := rfl
 
-@[simp] lemma castCtxt_rfl (h : Γ = Γ) : v.castCtxt h = v := rfl
-@[simp] lemma castCtxt_castCtxt (h₁ : Γ = Δ) (h₂ : Δ = Ξ) :
+@[simp, grind=] theorem castCtxt_rfl (h : Γ = Γ) : v.castCtxt h = v := rfl
+@[simp, grind=] theorem castCtxt_castCtxt (h₁ : Γ = Δ) (h₂ : Δ = Ξ) :
     (v.castCtxt h₁).castCtxt h₂ = v.castCtxt (by simp [*]) := by subst h₁ h₂; simp
 
-@[simp] lemma cast_mk : cast h ⟨vi, hv⟩ = ⟨vi, h ▸ hv⟩ := rfl
-@[simp] lemma castCtxt_mk : castCtxt h ⟨vi, hv⟩ = ⟨vi, h ▸ hv⟩ := rfl
+@[simp, grind=] theorem cast_mk : cast h ⟨vi, hv⟩ = ⟨vi, h ▸ hv⟩ := rfl
+@[simp, grind=] theorem castCtxt_mk : castCtxt h ⟨vi, hv⟩ = ⟨vi, h ▸ hv⟩ := rfl
 
-@[simp] lemma val_cast : (cast h v).val = v.val := rfl
-@[simp] lemma val_castCtxt : (castCtxt h v).val = v.val := rfl
+@[simp, grind=] theorem val_cast : (cast h v).val = v.val := rfl
+@[simp, grind=] theorem val_castCtxt : (castCtxt h v).val = v.val := rfl
 
 end Lemmas
 
 /-! ### Var Append -/
 
-def appendInl : Γ.Var t → (Γ ++ ts).Var t
-  | ⟨v, h⟩ => ⟨v + ts.length, by
-      rcases Γ; simp_all [List.getElem?_append_right]
+def appendInl (v : Γ.Var t) : (Γ ++ ts).Var t :=
+  ⟨v.val + ts.length, by
+      have := v.prop
+      rcases Γ
+      simp_all [List.getElem?_append_right]
     ⟩
 instance : Coe (Γ.Var t) ((Γ ++ ts).Var t) where coe := appendInl
 
-def appendInr : Var ⟨ts⟩ t → (Γ ++ ts).Var t
-  | ⟨v, h⟩ => ⟨v, by
+def appendInr (v : Var ⟨ts⟩ t) : (Γ ++ ts).Var t :=
+  ⟨v.val, by
       rcases Γ
+      rcases v with ⟨v, h⟩
       have : v < ts.length := by
         suffices ¬(ts.length ≤ v) by omega
         rw [← List.getElem?_eq_none_iff]
         simp_all
-      simp_all [List.getElem?_append_left]
+      simpa [List.getElem?_append_left this] using h
     ⟩
 
 @[elab_as_elim]
@@ -294,15 +321,18 @@ def appendCases
       ⟩
       have eq : v'.appendInl = ⟨idx, h⟩ := by
         show Subtype.mk _ _ = _
-        congr 1
-        omega
+        simp [v']; omega
       eq ▸ left v'
 
 section Lemmas
 variable {t : Ty} {v : Γ.Var t}
 
-@[simp] lemma val_appendInl {v : Γ.Var t} : (v.appendInl (ts := ts)).val = v.val + ts.length := rfl
-@[simp] lemma val_appendInr {v : Var ts t}  : (v.appendInr (Γ := Γ)).val = v.val := rfl
+@[simp] theorem val_appendInl {v : Γ.Var t} : (v.appendInl (ts := ts)).val = v.val + ts.length := rfl
+@[simp] theorem val_appendInr {v : Var ts t}  : (v.appendInr (Γ := Γ)).val = v.val := rfl
+
+theorem toSnoc_appendInr {v : Var ⟨ts⟩ t} :
+    v.toSnoc (t':=t').appendInr (Γ := Γ) = v.appendInr.toSnoc :=
+  rfl
 
 @[simp] theorem appendCases_appendInl (v : Γ.Var t) :
     appendCases (motive := motive) left right v.appendInl = (left v) := by
@@ -329,22 +359,81 @@ variable {t : Ty} {v : Γ.Var t}
 
 end Lemmas
 
+/-! ### Var equality -/
+
+/--
+Given two variables `v, w` in the same context `Γ`, but with potentially
+different types `t` and `u`, `v.eq w` holds if `v = w` (after
+substituing along a proof that `t = u`).
+-/
+def eq (v : Γ.Var t) (w : Γ.Var u) : Prop :=
+  ∃ (h : t = u), v = h ▸ w
+
+instance [DecidableEq Ty] {v : Γ.Var t} {w : Γ.Var u} : Decidable (v.eq w) := by
+  unfold Var.eq; infer_instance
+
+/-- Given variables `v, w : Γ.Var t` with the same type index `t`, `v.eq w`
+coincides exactly with `v = w`. -/
+@[simp] theorem eq_iff {v w : Γ.Var t} : v.eq w ↔ v = w := by
+  simp [Var.eq]
+
+@[inherit_doc eq_iff] theorem eq.to_eq {v w : Γ.Var t} : v.eq w → v = w := eq_iff.mp
+
+/-- From `v.eq w` it follows that the types of `v` and `w` are the same. -/
+theorem eq.ty_eq {v : Γ.Var t} {w : Γ.Var u} (h : v.eq w) : t = u := h.1
+
+/-! ### Fintype instance -/
+
+instance [DecidableEq Ty] {Γ : Ctxt Ty} {t : Ty} : Fintype (Γ.Var t) where
+  elems := {
+      val := .ofList <|
+                List.range Γ.length
+                |>.filterMap fun i =>
+                    if h : Γ[i]? = some t then
+                      some ⟨i, h⟩
+                    else
+                      none
+      nodup := by
+        apply List.Nodup.filterMap ?_ List.nodup_range
+        simp only [Option.mem_def, Option.dite_none_right_eq_some, Option.some.injEq,
+          forall_exists_index, forall_apply_eq_imp_iff]
+        intro i j hi hj h_eq
+        cases h_eq
+        rfl
+    }
+  complete v := by simpa using ⟨v.val, v.val_lt, v.prop, rfl⟩
+
 /-! ### Var Fin Helpers -/
 
-def toFin : Γ.Var t → Fin Γ.length
-  | ⟨idx, h⟩ => ⟨idx, by
-      suffices ¬(Γ.length ≤ idx) by omega
-      rcases Γ
-      simp only [length_ofList, ← List.getElem?_eq_none_iff]
-      simp_all
-    ⟩
+def toFin (v : Γ.Var t) : Fin Γ.length :=
+  ⟨v.val, v.val_lt⟩
 
-def ofFin : (i : Fin Γ.length) → Γ.Var (Γ[i])
-  | ⟨idx, h⟩ => ⟨idx, by simpa using List.getElem?_eq_getElem _⟩
+def ofFin (i : Fin Γ.length) : Γ.Var (Γ[i]) :=
+  ⟨i.val, by simp⟩
+
+section Lemmas
+
+@[simp, grind=] theorem ofFin_toFin (v : Γ.Var t) :
+    ofFin v.toFin = v.cast (by have := v.prop; grind [toFin]) := rfl
+
+def ofFinCases
+    {motive : ∀ {t}, Γ.Var t → Sort u}
+    (ofFin : (i : Fin Γ.length) → motive (ofFin i))
+    (v : Γ.Var t) :
+    motive v := by
+  refine _root_.cast ?h <| ofFin v.toFin
+  grind
+
+@[simp] theorem toFin_toSnoc (v : Γ.Var t) : (v.toSnoc (t':=t')).toFin = v.toFin.succ := rfl
+
+end Lemmas
+
+/-! ### All vars in a context -/
+
+def allVarsIn (ts : List Ty) : HVector (Var ⟨ts⟩) ts :=
+  .ofFn _ ts Var.ofFin
 
 end Var
-
-end Ctxt
 
 /-!
 ### Indexing an HVector by `Var`
@@ -352,12 +441,35 @@ Note that a `Var` is quite similar to a `Fin`, plus a static proof of the item
 at the particular index. This extra knowledge is useful when indexing into an
 HVector as well.
 -/
-instance : GetElem (HVector A as) (Ctxt.Var ⟨as⟩ a) (A a) (fun _ _ => True) where
-  getElem xs i _ := (cast · <| xs.get i.toFin) <| by
+end Ctxt
+open Ctxt
+
+instance {Γ} : GetElem (HVector A as) (Var Γ a) (A a) (fun _ _ => as = Γ.toList) where
+  getElem xs i h := (cast · <| xs.get <| i.toFin.cast <| by rw [h]; rfl) <| by
+    subst h
     congr 1
     rcases i with ⟨i, h⟩
     simpa [Ctxt.Var.toFin, List.getElem_eq_iff] using h
 
+namespace HVector
+variable {A : α → _} {as : List α} (xs : HVector A as) {Γ : Ctxt α}
+
+@[simp] theorem getElem_ofFin_eq_get (i : Fin as.length) :
+    xs[Ctxt.Var.ofFin i] = xs.get i := rfl
+@[simp] theorem getElem_map (xs : HVector A as) (v : Var ⟨as⟩ a) :
+    (xs.map f)[v] = f _ xs[v] := by
+  cases v using Var.ofFinCases
+  rw [getElem_ofFin_eq_get, getElem_ofFin_eq_get]
+  simp only [length_ofList, get_map, List.get_eq_getElem]
+  rfl
+
+@[simp] theorem cons_getElem_toSnoc (x : A a) (v : Var Γ u)
+    (h : as = Γ.toList := by rfl) (h' : a :: as = (Γ.snoc a).toList := by rfl) :
+    (HVector.cons x xs)[v.toSnoc (t' := a)]'h' = xs[v]'h := by
+  simp only [GetElem.getElem]
+  simp
+
+end HVector
 namespace Ctxt
 /-!
 ## Context Homomorphisms
@@ -365,26 +477,33 @@ namespace Ctxt
 
 abbrev Hom (Γ Γ' : Ctxt Ty) := ⦃t : Ty⦄ → Γ.Var t → Γ'.Var t
 
-@[simp]
-abbrev Hom.id {Γ : Ctxt Ty} : Γ.Hom Γ :=
+@[simp] abbrev Hom.id {Γ : Ctxt Ty} : Γ.Hom Γ :=
   fun _ v => v
 
+/-! ### Morphism Composition -/
+section Comp
+variable {Γ Δ Ξ : Ctxt Ty} (f : Hom Γ Δ) (g : Hom Δ Ξ)
+
 /-- `f.comp g := g(f(x))` -/
-def Hom.comp {Γ Δ Ξ : Ctxt Ty} (f : Hom Γ Δ) (g : Hom Δ Ξ) : Hom Γ Ξ :=
+def Hom.comp : Hom Γ Ξ :=
   fun _t v => g (f v)
 
+@[simp, grind=] theorem Hom.comp_apply : f.comp g v = g (f v) := rfl
+
+end Comp
+
 /--
-  `map.with v₁ v₂` adjusts a single variable of a Context map, so that in the resulting map
-   * `v₁` now maps to `v₂`
+  `map.with v₁ v₂` adjusts a vector of variables of a Context map, so that in
+  the resulting map:
+   * `v₁[i]` now maps to `v₂[i]`
    * all other variables `v` still map to `map v` as in the original map
 -/
-def Hom.with [DecidableEq Ty] {Γ₁ Γ₂ : Ctxt Ty} (f : Γ₁.Hom Γ₂) {t : Ty}
-    (v₁ : Γ₁.Var t) (v₂ : Γ₂.Var t) : Γ₁.Hom Γ₂ :=
-  fun t' w =>
-    if h : ∃ ty_eq : t = t', ty_eq ▸ w = v₁ then
-      v₂.cast h.fst
-    else
-      f w
+def Hom.with [DecidableEq Ty] {Γ₁ Γ₂ : Ctxt Ty} (f : Γ₁.Hom Γ₂) {ts}
+    (v₁ : HVector Γ₁.Var ts) (v₂ : HVector Γ₂.Var ts) : Γ₁.Hom Γ₂ :=
+  fun _ w =>
+    match v₁.idxOf? w with
+    | none => f w
+    | some ⟨i, h⟩ => (v₂.get i).cast h
 
 def Hom.snocMap {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} :
     (Γ.snoc t).Hom (Γ'.snoc t) := by
@@ -393,9 +512,9 @@ def Hom.snocMap {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} :
   | toSnoc v => exact Ctxt.Var.toSnoc (f v)
   | last => exact Ctxt.Var.last _ _
 
-@[simp] lemma Hom.snocMap_last {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} :
+@[simp] theorem Hom.snocMap_last {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} :
     (f.snocMap (Ctxt.Var.last Γ t)) = Ctxt.Var.last Γ' t := rfl
-@[simp] lemma Hom.snocMap_toSnoc {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t t' : Ty} (v : Γ.Var t') :
+@[simp] theorem Hom.snocMap_toSnoc {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t t' : Ty} (v : Γ.Var t') :
     (f.snocMap v.toSnoc (t := t)) = (f v).toSnoc := rfl
 
 @[simp]
@@ -406,7 +525,7 @@ abbrev Hom.snocRight {Γ Γ' : Ctxt Ty} (f : Hom Γ Γ') {t : Ty} : Γ.Hom (Γ'.
 def Hom.unSnoc (f : Hom (Γ.snoc t) Δ) : Hom Γ Δ :=
   fun _ v => f v.toSnoc
 
-@[simp] lemma Hom.unSnoc_apply {Γ : Ctxt Ty} (f : Hom (Γ.snoc t) Δ) (v : Var Γ u) :
+@[simp] theorem Hom.unSnoc_apply {Γ : Ctxt Ty} (f : Hom (Γ.snoc t) Δ) (v : Var Γ u) :
     f.unSnoc v = f v.toSnoc := rfl
 
 instance : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
@@ -415,7 +534,7 @@ instance : Coe (Γ.Var t) ((Γ.snoc t').Var t) := ⟨Ctxt.Var.toSnoc⟩
 
 /--
 Lift a context morphism `f` from context `Γ` to context `Δ` into a morphism
-where an arbitrary list of types is append to both the domain and codomain.
+where a list of types `ts` is appended to *both* the domain and codomain.
 That is, on any variables in the original domain `Γ`, `f.append` acts like `f`,
 but on any *new* variables, in the appended list of types `ts`, `f.append`
 maps to the corresponding new variable in the codomain (`Δ ++ ts`).
@@ -424,6 +543,13 @@ def Hom.append {ts : List Ty} (f : Γ.Hom Δ) : Hom (Γ ++ ts) (Δ ++ ts) :=
   fun _ => Var.appendCases
     (fun v => (f v).appendInl)
     (fun v => v.appendInr)
+
+/--
+Lift a context morphism `f` from context `Γ` to context `Δ` into a morphism
+where a list of types is appended to just to codomain `Δ`.
+-/
+def Hom.appendCodomain {ts : List Ty} (f : Γ.Hom Δ) : Hom Γ (Δ ++ ts) :=
+  fun _ v => (f v).appendInl
 
 section Lemmas
 
@@ -435,6 +561,13 @@ section Lemmas
     (f.append (ts := ts)) v.appendInr = v.appendInr := by
   simp [append]
 
+@[simp] theorem Hom.appendCodomain_apply (f : Γ.Hom Δ) (v : Γ.Var t) :
+    (f.appendCodomain (ts := ts)) v = (f v).appendInl :=
+  rfl
+
+@[simp] theorem Hom.id_append : (Hom.id (Γ:=Γ)).append (ts := ts) = .id := by
+  funext t v; cases v using Var.appendCases <;> simp [id, append]
+
 end Lemmas
 
 /-! ### Cast -/
@@ -443,8 +576,15 @@ variable {Γ Δ Δ' : Ctxt Ty} in
 def Hom.castCodomain (h : Δ = Δ') (f : Γ.Hom Δ) : Γ.Hom Δ' :=
   fun _t v => (f v).castCtxt h
 
-@[simp] lemma Hom.castDomain_apply {h : Δ = Δ'} {f : Γ.Hom Δ} {v : Γ.Var t} :
+@[simp] theorem Hom.castDomain_apply {h : Δ = Δ'} {f : Γ.Hom Δ} {v : Γ.Var t} :
     f.castCodomain h v = (f v).castCtxt h := rfl
+
+@[simp] theorem Hom.castDomain_castCodomain {h₁ : Δ₁ = Δ₂} {h₂ : Δ₂ = Δ₃}
+    {f : Γ.Hom Δ₁} :
+    (f.castCodomain h₁).castCodomain h₂ = f.castCodomain (h₁ ▸ h₂) := rfl
+
+@[simp] theorem Hom.castDomain_rfl {h : Δ = Δ} {f : Γ.Hom Δ} :
+    (f.castCodomain h) = f := rfl
 
 /-!
 ## Context Valuations
@@ -493,7 +633,7 @@ theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType
 
 @[simp]
 theorem Valuation.snoc_last {t : Ty} (s : Γ.Valuation) (x : toType t) :
-    (s.snoc x) (Ctxt.Var.last _ _) = x :=
+    (s.snoc x : no_index _) (Ctxt.Var.last _ _) = x :=
   rfl
 
 @[simp]
@@ -502,12 +642,12 @@ theorem Valuation.snoc_zero {ty : Ty} (s : Γ.Valuation) (x : toType ty)
     (s.snoc x) ⟨0, h⟩ = x :=
   rfl
 
-@[simp] lemma Valuation.snoc_toSnoc {t t' : Ty} (s : Γ.Valuation)
+@[simp] theorem Valuation.snoc_toSnoc {t t' : Ty} (s : Γ.Valuation)
     (x : toType t) (v : Γ.Var t') :
     (s.snoc x) v.toSnoc = s v :=
   rfl
 
-@[simp] lemma Valuation.snoc_inj {t : Ty} {x y : ⟦t⟧} :
+@[simp] theorem Valuation.snoc_inj {t : Ty} {x y : ⟦t⟧} :
     (V ::ᵥ x) = (V ::ᵥ y) ↔ x = y where
   mpr := by rintro rfl; rfl
   mp := by
@@ -515,7 +655,7 @@ theorem Valuation.snoc_zero {ty : Ty} (s : Γ.Valuation) (x : toType ty)
     rw [← snoc_last V x, ← snoc_last V y, h]
 
 variable {m} [Monad m] [LawfulMonad m] in
-@[simp] lemma Valuation.snoc_map_inj {V : Γ.Valuation} {x y : m ⟦t⟧} :
+@[simp] theorem Valuation.snoc_map_inj {V : Γ.Valuation} {x y : m ⟦t⟧} :
     (V.snoc <$> x) = (V.snoc <$> y) ↔ x = y :=
   map_inj_right <| Valuation.snoc_inj.mp
 
@@ -554,6 +694,38 @@ variable {V : Γ.Valuation} {xs : HVector toType ts}
 @[simp] theorem Valuation.append_appendInr {v : Var ⟨ts⟩ t} :
     (V ++ xs) v.appendInr = xs[v] := by
   simp [(· ++ ·)]
+
+@[simp] theorem Valuation.append_inj {V : Γ.Valuation}
+    {ts : List Ty} {xs ys : HVector toType ts} :
+    (V ++ xs) = (V ++ ys) ↔ xs = ys where
+  mpr := by rintro rfl; rfl
+  mp := by
+    intro h
+    replace h {t} (v : Var _ t) : (V ++ xs) v.appendInr = (V ++ ys) v.appendInr := by
+      rw [h]
+    simp only [append_appendInr] at h
+    ext i
+    exact h (Var.ofFin i)
+
+@[simp] theorem Valuation.append_nil {V : Γ.Valuation} :
+    V ++ (HVector.nil (α := Ty) (f := toType)) = V := rfl
+
+@[simp] theorem Valuation.append_cons {t : Ty} {V : Γ.Valuation} {x : ⟦t⟧}  {xs : HVector toType ts} :
+    V ++ (HVector.cons x xs) = (V ++ xs).snoc x := by
+  funext _t v
+  cases v using Var.appendCases with
+  | left v =>
+      simp only [append_appendInl]
+      have : v.appendInl (ts := t :: ts) = (v.appendInl (ts:=ts) |>.toSnoc (t':=t)) := by
+        rfl
+      simp [this]
+  | right v =>
+      simp only [append_appendInr]
+      cases v using Var.casesOn with
+      | toSnoc v =>
+          simp only [Var.toSnoc_appendInr, snoc_toSnoc, append_appendInr]
+          apply HVector.cons_getElem_toSnoc
+      | last => rfl
 
 /-! ## Valuation Construction Helpers -/
 
@@ -598,38 +770,59 @@ def Valuation.comap {Γi Γo : Ctxt Ty} (Γiv: Γi.Valuation) (hom : Ctxt.Hom Γ
   funext t' v
   cases v using Var.casesOn <;> rfl
 
-@[simp] lemma Valuation.comap_id {Γ : Ctxt Ty} (Γv : Valuation Γ) : comap Γv Hom.id = Γv := rfl
-@[simp] lemma Valuation.comap_snoc_snocRight {Γ Δ : Ctxt Ty} (Γv : Valuation Γ) (f : Hom Δ Γ) :
+@[simp] theorem Valuation.comap_id {Γ : Ctxt Ty} (V : Valuation Γ) : comap V Hom.id = V := rfl
+
+@[simp] theorem Valuation.comap_snoc_snocRight {Γ Δ : Ctxt Ty} (Γv : Valuation Γ) (f : Hom Δ Γ) :
     comap (Γv.snoc x) (f.snocRight) = comap Γv f :=
   rfl
 
-@[simp] lemma Valuation.comap_append_append {Γ Δ : Ctxt Ty} {ts : List Ty}
+@[simp] theorem Valuation.comap_append_append {Γ Δ : Ctxt Ty} {ts : List Ty}
     (V : Γ.Valuation) (xs : HVector toType ts)
     (f : Δ.Hom Γ) :
     (V ++ xs).comap (f.append) = (V.comap f) ++ xs := by
   funext t v; cases v using Var.appendCases <;> simp
 
+@[simp] theorem Valuation.comap_appendCodomain {Γ Δ : Ctxt Ty} {ts : List Ty}
+    (V : Γ.Valuation) (xs : HVector toType ts) (f : Δ.Hom Γ) :
+    (V ++ xs).comap f.appendCodomain = V.comap f := by
+  funext t v; simp
+
+/-! ### Reassign Variables-/
+
 /-- Reassign the variable var to value val in context ctxt -/
-def Valuation.reassignVar [DecidableEq Ty] {t : Ty} {Γ : Ctxt Ty}
-    (V : Γ.Valuation) (var : Var Γ t) (val : toType t) : Γ.Valuation :=
-  fun tneedle vneedle =>
-    if h : ∃ h : t = tneedle, h ▸ vneedle = var
-    then h.fst ▸ val
-    else V vneedle
+def Valuation.reassignVars [DecidableEq Ty] {ts : List Ty} {Γ : Ctxt Ty}
+    (V : Γ.Valuation) (var : HVector Γ.Var ts) (val : HVector toType ts) : Γ.Valuation :=
+  fun _ vneedle =>
+    match var.idxOf? vneedle with
+    | none => V vneedle
+    | some ⟨i, h⟩ => h ▸ val.get i
 
-@[simp] lemma Valuation.reassignVar_eq [DecidableEq Ty] (V : Γ.Valuation) :
-    V.reassignVar v (V v) = V := by
-  funext t v
-  simp only [reassignVar, dite_eq_right_iff, forall_exists_index]
-  rintro rfl rfl
-  rfl
+@[simp] theorem Valuation.reassignVars_eq [DecidableEq Ty] (V : Γ.Valuation) :
+    V.reassignVars vs (vs.map V) = V := by
+  funext t w
+  unfold reassignVars
+  induction vs
+  case nil => rfl
+  case cons v vs ih =>
+    by_cases h_eq : w.eq v
+    · have := h_eq.ty_eq
+      subst this
+      have := h_eq.to_eq
+      subst this
+      simp
+    · unfold Var.eq at h_eq
+      simp only [HVector.idxOf?, h_eq, ↓reduceDIte, List.get_eq_getElem, List.length_cons,
+        HVector.map_cons]
+      split at ih <;> simp_all
 
-@[simp] lemma Valuation.comap_with [DecidableEq Ty] {Γ Δ : Ctxt Ty}
-    {Γv : Valuation Γ} {map : Δ.Hom Γ} {v : Var Δ ty} {w : Var Γ ty} :
-    Γv.comap (map.with v w) = (Γv.comap map).reassignVar v (Γv w) := by
+@[simp] theorem Valuation.comap_with [DecidableEq Ty] {Γ Δ : Ctxt Ty}
+    {V : Valuation Γ} {map : Δ.Hom Γ} {vs : HVector Δ.Var ty} {ws : HVector Γ.Var ty} :
+    V.comap (map.with vs ws) = (V.comap map).reassignVars vs (ws.map V) := by
   funext t' v'
-  simp only [comap, Hom.with, reassignVar]
-  split_ifs <;> aesop
+  simp only [comap, Hom.with, reassignVars]
+  split <;> aesop
+
+/-! ### Recursion -/
 
 /-- Recursion principle for valuations in terms of `Valuation.nil` and `Valuation.snoc` -/
 @[elab_as_elim, induction_eliminator]
@@ -642,24 +835,15 @@ def Valuation.recOn {motive : ∀ {Γ : Ctxt Ty}, Γ.Valuation → Sort*}
   · exact (eq_nil V).symm ▸ nil
   · exact snoc_toSnoc_last V ▸ (snoc (fun _ v' => V v'.toSnoc) (V <|.last ..) (ih _))
 
+/-! ### Cast -/
+
 def Valuation.cast {Γ Δ : Ctxt Ty} (h : Γ = Δ) (V : Valuation Γ) : Valuation Δ :=
   fun _ v => V <| v.castCtxt h.symm
 
-@[simp] lemma Valuation.cast_rfl {Γ : Ctxt Ty} (h : Γ = Γ) (V : Valuation Γ) : V.cast h = V := rfl
+@[simp] theorem Valuation.cast_rfl {Γ : Ctxt Ty} (h : Γ = Γ) (V : Valuation Γ) : V.cast h = V := rfl
 
-@[simp] lemma Valuation.cast_apply {Γ : Ctxt Ty} (h : Γ = Δ) (V : Γ.Valuation) (v : Δ.Var t) :
+@[simp] theorem Valuation.cast_apply {Γ : Ctxt Ty} (h : Γ = Δ) (V : Γ.Valuation) (v : Δ.Var t) :
     V.cast h v = V (v.castCtxt h.symm) := rfl
-
-/-- reassigning a variable to the same value that has been looked up is identity. -/
-theorem Valuation.reassignVar_eq_of_lookup [DecidableEq Ty]
-    {Γ : Ctxt Ty} {V : Γ.Valuation} {var : Var Γ t} :
-    (V.reassignVar var (V var)) = V := by
-  funext t' v
-  simp only [reassignVar, dite_eq_right_iff, forall_exists_index]
-  intros h x
-  subst h
-  subst x
-  rfl
 
 /-- Show that a valuation is equivalent to a `HVector` -/
 def Valuation.equivHVector {Γ : List Ty} : Valuation ⟨Γ⟩ ≃ HVector toType Γ where
@@ -798,7 +982,7 @@ def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
 
 instance : HAdd (Diff Γ₁ Γ₂) (Diff Γ₂ Γ₃) (Diff Γ₁ Γ₃) := ⟨add⟩
 
-@[simp, grind] lemma val_add (f : Γ.Diff Δ) (g : Δ.Diff Ξ) : (f + g).val = f.val + g.val := rfl
+@[simp, grind] theorem val_add (f : Γ.Diff Δ) (g : Δ.Diff Ξ) : (f + g).val = f.val + g.val := rfl
 
 /-!
 ### `toHom`
@@ -810,7 +994,7 @@ def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
 
 section Lemmas
 
-@[simp, grind] lemma val_toHom_apply (d : Diff Γ Δ) (v : Γ.Var t) :
+@[simp, grind] theorem val_toHom_apply (d : Diff Γ Δ) (v : Γ.Var t) :
     (d.toHom v).val = v.val + d.val := rfl
 
 theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h_valid : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
@@ -819,15 +1003,15 @@ theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h_valid : Valid Γ₁ (
   simp [←h_valid h_get, snoc, List.getElem?_cons]
   rfl
 
-lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
+theorem toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc t) (d+1)) :
     toHom ⟨d+1, h⟩ = (toHom ⟨d, Valid.of_succ h⟩).snocRight := by
   rfl
 
-@[simp] lemma toHom_zero {Γ : Ctxt Ty} {h : Valid Γ Γ 0} :
+@[simp] theorem toHom_zero {Γ : Ctxt Ty} {h : Valid Γ Γ 0} :
     toHom ⟨0, h⟩ = Hom.id := by
   rfl
 
-@[simp] lemma toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
+@[simp] theorem toHom_unSnoc {Γ₁ Γ₂ : Ctxt Ty} (d : Diff (Γ₁.snoc t) Γ₂) :
     toHom (unSnoc d) = fun _ v => (toHom d) v.toSnoc := by
   unfold unSnoc Var.toSnoc toHom
   simp only [Valid]
@@ -835,12 +1019,10 @@ lemma toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.snoc 
   congr 1
   rw [Nat.add_assoc, Nat.add_comm 1]
 
-@[simp] lemma toHom_comp_toHom (f : Γ.Diff Δ) (g : Δ.Diff Ξ) :
+@[simp] theorem toHom_comp_toHom (f : Γ.Diff Δ) (g : Δ.Diff Ξ) :
     f.toHom.comp g.toHom = (f + g).toHom := by
   funext t v
   apply Subtype.eq
-  simp
-  simp only [Hom.comp, toHom, Valid]
   grind
 
 end Lemmas
@@ -896,33 +1078,55 @@ instance {Γ' : DerivedCtxt Γ} : Coe (Ctxt.Var Γ t) (Ctxt.Var (Γ' : Ctxt Ty) 
 end DerivedCtxt
 
 /-! ## `dropUntil` -/
+section DropUntil
+variable (Γ : Ctxt Ty) {ty} (v : Var Γ ty)
 
-/-- `Γ.dropUntil v` is the largest prefix of context `Γ` that no longer contains variable `v` -/
-def dropUntil (Γ : Ctxt Ty) (v : Var Γ ty) : Ctxt Ty :=
+/-- `Γ.dropUntil v` is the largest prefix of context `Γ` that no longer contains variable `v`. -/
+def dropUntil : Ctxt Ty :=
   ⟨List.drop (v.val + 1) Γ.toList⟩
 
-@[simp] lemma dropUntil_last   : dropUntil (snoc Γ ty) (Var.last Γ ty) = Γ := rfl
-@[simp] lemma dropUntil_toSnoc : dropUntil (snoc Γ ty) (Var.toSnoc v) = dropUntil Γ v := rfl
+variable {Γ} {v}
 
-@[simp] lemma dropUntil_castCtxt {v : Γ'.Var t} {h : Γ' = Γ} :
-    Γ.dropUntil (v.castCtxt h) = Γ'.dropUntil v := by
+@[simp] theorem dropUntil_last   : dropUntil (snoc Γ ty) (Var.last Γ ty) = Γ := rfl
+@[simp] theorem dropUntil_toSnoc : dropUntil (snoc Γ ty) (Var.toSnoc v) = dropUntil Γ v := rfl
+
+@[simp] theorem dropUntil_castCtxt {h : Γ = Γ'} :
+    Γ'.dropUntil (v.castCtxt h) = Γ.dropUntil v := by
   subst h; rfl
 
-@[simp] lemma dropUntil_appendInl {v : Γ.Var t} :
+@[simp] theorem dropUntil_appendInl :
     (Γ ++ ts).dropUntil v.appendInl = Γ.dropUntil v := by
   simp only [dropUntil, Var.val_appendInl]
   rw [Nat.add_right_comm, Nat.add_comm]
   simp
 
+@[simp] theorem dropUntil_appendInr {v : Var ⟨ts⟩ t} :
+    (Γ ++ ts).dropUntil v.appendInr = Γ ++ (ts.drop <| v.1 + 1) := by
+  rcases Γ
+  -- TODO: upstream the following as a `List` lemma
+  suffices ∀ {xs} (i : Nat) (hi : i ≤ xs.length) (ys : List Ty),
+    List.drop i (xs ++ ys) = List.drop i xs ++ ys
+  by
+    have hi : v.val + 1 ≤ ts.length := by
+      simpa using v.val_lt
+    simpa [dropUntil] using this _ hi _
+  intro xs i hi ys
+  induction xs generalizing i
+  case nil => cases i <;> simp_all
+  case cons ih =>
+    rcases i with _|i
+    · rfl
+    · simp [ih i (by simp_all)]
+
 /-- The difference between `Γ.dropUntil v` and `Γ` is exactly `v.val + 1` -/
-def dropUntilDiff {Γ : Ctxt Ty} {v : Var Γ ty} : Diff (Γ.dropUntil v) Γ :=
+def dropUntilDiff : Diff (Γ.dropUntil v) Γ :=
   ⟨v.val+1, by
     intro i _ h
     induction Γ
     case nil => exact v.emptyElim
     case snoc Γ _ ih =>
       cases v using Var.casesOn
-      · simp only [dropUntil_toSnoc, Var.val_toSnoc] at h ⊢
+      · simp only [Var.val_toSnoc] at h ⊢
         apply ih h
       · simpa! using h
   ⟩
@@ -930,13 +1134,16 @@ def dropUntilDiff {Γ : Ctxt Ty} {v : Var Γ ty} : Diff (Γ.dropUntil v) Γ :=
 /-- Context homomorphism from `(Γ.dropUntil v)` to `Γ`, see also `dropUntilDiff` -/
 abbrev dropUntilHom : Hom (Γ.dropUntil v) Γ := dropUntilDiff.toHom
 
-@[simp] lemma dropUntilHom_last : dropUntilHom (v := Var.last Γ ty) = Hom.id.snocRight := rfl
-@[simp] lemma dropUntilHom_toSnoc {v : Var Γ t} :
+@[simp, grind=] theorem val_dropUntilDiff : (@dropUntilDiff _ Γ _ v).val = v.val+1 := rfl
+
+@[simp] theorem dropUntilHom_last : dropUntilHom (v := Var.last Γ ty) = Hom.id.snocRight := rfl
+@[simp] theorem dropUntilHom_toSnoc {v : Var Γ t} :
   dropUntilHom (v := v.toSnoc (t' := t')) = (dropUntilHom (v:=v)).snocRight := rfl
 
 instance : CoeOut (Var (Γ.dropUntil v) ty) (Var Γ ty) where
   coe v := dropUntilDiff.toHom v
 
+end DropUntil
 
 /-!
 # ToExpr

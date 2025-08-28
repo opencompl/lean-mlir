@@ -1,10 +1,7 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Vector.Basic
--- import Mathlib.Tactic
-
 
 /--
   A general type that is either a concrete known value of type `α`, or one of `φ` metavariables
@@ -71,17 +68,17 @@ def instantiate_ofNat_eq (as : List.Vector Nat φ) (x : Nat) :
    ConcreteOrMVar.instantiate as (OfNat.ofNat x) = x := rfl
 
 @[simp]
-lemma instantiate_mvar_zero {hφ : List.length (w :: ws) = φ} {h0 : 0 < φ} :
+theorem instantiate_mvar_zero {hφ : List.length (w :: ws) = φ} {h0 : 0 < φ} :
     ConcreteOrMVar.instantiate (Subtype.mk (w :: ws) hφ)  (ConcreteOrMVar.mvar ⟨0, h0⟩) = w := by
   simp [instantiate]
   simp [List.Vector.get]
 
 @[simp]
-lemma instantiate_mvar_zero' :
+theorem instantiate_mvar_zero' :
     (mvar (φ := 1) ⟨0, by simp⟩).instantiate (Subtype.mk [w] (by simp)) = w := rfl
 
 @[simp]
-lemma instantiate_mvar_zero'' :
+theorem instantiate_mvar_zero'' :
     (mvar (φ := 1) 0).instantiate (Subtype.mk [w] h1) = w := rfl
 
 end ConcreteOrMVar

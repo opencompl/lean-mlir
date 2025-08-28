@@ -17,7 +17,7 @@ def toMonad (e : EffectKind) (m : Type → Type) : Type → Type :=
 
 section Lemmas
 
-@[simp_denote] theorem toMonad_pure   : pure.toMonad m = Id := rfl
+@[simp_denote] theorem toMonad_pure_apply : pure.toMonad m α = α := rfl
 @[simp_denote] theorem toMonad_impure : impure.toMonad m = m := rfl
 
 end Lemmas
@@ -65,7 +65,7 @@ end Instances
 section Lemmas
 variable [Monad m]
 
-@[simp] lemma pure_pure (eff : EffectKind) (x : α) :
+@[simp] theorem pure_pure (eff : EffectKind) (x : α) :
     (Pure.pure (Pure.pure x : pure.toMonad m (no_index α)) : eff.toMonad m α) = Pure.pure x :=
   rfl
 

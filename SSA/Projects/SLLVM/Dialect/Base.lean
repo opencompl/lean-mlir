@@ -78,10 +78,10 @@ instance : DialectSignature SLLVM where
 open InstCombine.LLVM.Op in
 instance : DialectDenote SLLVM where
   denote
-  | udiv _ flag => fun (x ::ₕ (y ::ₕ .nil)) _ => LeanMLIR.SLLVM.udiv x y flag
-  | sdiv _ flag => fun (x ::ₕ (y ::ₕ .nil)) _ => LeanMLIR.SLLVM.sdiv x y flag
-  | urem _      => fun (x ::ₕ (y ::ₕ .nil)) _ => LeanMLIR.SLLVM.urem x y
-  | srem _      => fun (x ::ₕ (y ::ₕ .nil)) _ => LeanMLIR.SLLVM.srem x y
+  | udiv _ flag => fun ([x, y]ₕ) _ => ([·]ₕ) <$> LeanMLIR.SLLVM.udiv x y flag
+  | sdiv _ flag => fun ([x, y]ₕ) _ => ([·]ₕ) <$> LeanMLIR.SLLVM.sdiv x y flag
+  | urem _      => fun ([x, y]ₕ) _ => ([·]ₕ) <$> LeanMLIR.SLLVM.urem x y
+  | srem _      => fun ([x, y]ₕ) _ => ([·]ₕ) <$> LeanMLIR.SLLVM.srem x y
   | op => fun args .nil =>
     EffectKind.liftEffect (EffectKind.pure_le _) <|
       DialectDenote.denote (d := LLVM) op args .nil

@@ -16,7 +16,7 @@ theorem c0_thm (e : IntW 8) : icmp IntPred.ugt (LLVM.and e (const? 8 3)) e ⊑ c
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry
 
 
@@ -26,5 +26,5 @@ theorem cv2_thm (e e_1 : IntW 8) :
     simp_alive_ops
     simp_alive_case_bash
     simp_alive_split
-    simp_alive_benchmark
+    extract_goals
     all_goals sorry

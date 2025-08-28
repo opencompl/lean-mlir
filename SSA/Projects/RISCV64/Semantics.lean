@@ -1,7 +1,6 @@
 import SSA.Core.MLIRSyntax.EDSL
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.RISCV64.Tactic.SimpRiscVAttr
-set_option maxHeartbeats 1000000000000000000
 
 open BitVec
 /-!
@@ -99,7 +98,7 @@ def SHIFTIOP_pure64_RISCV_SRLI (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec
 
 @[simp_riscv]
 def SHIFTIOP_pure64_RISCV_SRLI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
-    rs1_val >>> shamt
+  rs1_val >>> shamt
 
 theorem SHIFTIOP_pure64_RISCV_SRLI_eq_SHIFTIOP_pure64_RISCV_SRLI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :
     SHIFTIOP_pure64_RISCV_SRLI shamt rs1_val = SHIFTIOP_pure64_RISCV_SRLI_bv shamt rs1_val := by
@@ -349,10 +348,9 @@ def SIGNED_pure64_REMW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :
           else (BitVec.extractLsb 31 0 rs1_val).toInt.tmod (BitVec.extractLsb 31 0 rs2_val).toInt)))
 @[simp_riscv]
 def SIGNED_pure64_REMW_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-    BitVec.signExtend 64
-    ((BitVec.extractLsb 31 0 rs1_val).srem (BitVec.extractLsb 31 0 rs2_val))
+  BitVec.signExtend 64 ((BitVec.extractLsb 31 0 rs1_val).srem (BitVec.extractLsb 31 0 rs2_val))
 
-theorem SIGNED_pure64_REMWd_eq_SIGNED_pure64_REMW (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+theorem SIGNED_pure64_REMW_eq_SIGNED_pure64_REMW (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
     SIGNED_pure64_REMW rs2_val rs1_val = SIGNED_pure64_REMW_bv rs2_val rs1_val := by
   unfold SIGNED_pure64_REMW SIGNED_pure64_REMW_bv
   rw [extractLsb'_ofInt_eq_ofInt (h:= by simp)]
@@ -485,7 +483,7 @@ def pure64_MUL_tff (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.extractLsb 127 64 (BitVec.extractLsb' 0 128 (BitVec.ofInt 129 (rs1_val.toNat * rs2_val.toNat)))
 
 @[simp_riscv]
-def pure64_MUL_bv_tff  (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+def pure64_MUL_bv_tff (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
    BitVec.extractLsb 127 64 (BitVec.extractLsb' 0 128 ((BitVec.zeroExtend 128 rs1_val)  * (BitVec.zeroExtend 128 rs2_val)))
 
 theorem pure64_MUL_tff_eq_pure64_MUL_tff_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
@@ -773,13 +771,13 @@ theorem ZBS_RTYPE_pure64_RISCV_BEXT_eq_ZBS_RTYPE_pure64_RISCV_BEXT_bv (rs2_val :
   simp
 
 @[simp_riscv]
- def ZBS_RTYPE_pure64_BINV (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+def ZBS_RTYPE_pure64_BINV (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
   BitVec.xor rs1_val
     (BitVec.shiftLeft
       (BitVec.zeroExtend 64 1#1) (BitVec.extractLsb 5 0 rs2_val).toNat)
 
 @[simp_riscv]
- def ZBS_RTYPE_pure64_BINV_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+def ZBS_RTYPE_pure64_BINV_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
   BitVec.xor rs1_val ((BitVec.zeroExtend 64 1#1) <<< (BitVec.extractLsb 5 0 rs2_val))
 
 theorem ZBS_RTYPE_pure64_BINV_eq_ZBS_RTYPE_pure64_BINV_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
@@ -803,7 +801,7 @@ theorem ZBS_RTYPE_pure64_RISCV_BSET_eq_ZBS_RTYPE_pure64_RISCV_BSET_bv (rs2_val :
 
 @[simp_riscv]
 def ZBS_IOP_pure64_RISCV_BCLRI (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
-    BitVec.and rs1_val (BitVec.not ((BitVec.setWidth 64 1#1) <<< shamt))
+  BitVec.and rs1_val (BitVec.not ((BitVec.setWidth 64 1#1) <<< shamt))
 
 @[simp_riscv]
 def ZBS_IOP_pure64_RISCV_BCLRI_bv (shamt : BitVec 6) (rs1_val : BitVec 64) :=
@@ -882,12 +880,12 @@ def ZBB_RTYPEW_pure64_RISCV_ROLW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : B
           (BitVec.extractLsb 4 0 rs2_val)))).toNat))
 
 @[simp_riscv]
-  def ZBB_RTYPE_pure64_RISCV_ROL (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+def ZBB_RTYPE_pure64_RISCV_ROL (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
   BitVec.or (BitVec.shiftLeft rs1_val (BitVec.extractLsb 5 0 rs2_val).toNat)
     (BitVec.ushiftRight rs1_val (BitVec.extractLsb' 0 6 (BitVec.ofInt 7 64) - BitVec.extractLsb 5 0 rs2_val).toNat)
 
 @[simp_riscv]
- def ZBB_RTYPE_pure64_RISCV_ROL_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+def ZBB_RTYPE_pure64_RISCV_ROL_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
   BitVec.or (BitVec.shiftLeft rs1_val (BitVec.extractLsb 5 0 rs2_val).toNat)
     (rs1_val >>> (BitVec.extractLsb' 0 6 (64#7) - BitVec.extractLsb 5 0 rs2_val))
 
@@ -902,7 +900,7 @@ def ZBB_RTYPE_pure64_RISCV_ROR (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
     (BitVec.shiftLeft rs1_val ((BitVec.extractLsb' 0 6 (BitVec.ofInt 7 64) - BitVec.extractLsb 5 0 rs2_val)).toNat)
 
 @[simp_riscv]
- def ZBB_RTYPE_pure64_RISCV_ROR_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
+def ZBB_RTYPE_pure64_RISCV_ROR_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :=
   BitVec.or ( rs1_val >>> (BitVec.extractLsb 5 0 rs2_val))
     (rs1_val <<< ((BitVec.extractLsb' 0 6 (BitVec.ofInt 7 64) - BitVec.extractLsb 5 0 rs2_val)))
 
@@ -912,7 +910,44 @@ theorem ZBB_RTYPE_pure64_RISCV_ROR_eq_ZBB_RTYPE_pure64_RISCV_ROR_bv (rs2_val : B
   simp
 
 @[simp_riscv]
- def ZBA_RTYPEUW_pure64_RISCV_ADDUW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+def ZBB_pure64_RISCV_RORIW (shamt : (BitVec 5)) (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.signExtend 64
+    (BitVec.extractLsb 31 0 rs1_val >>> shamt.toNat ||| BitVec.extractLsb 31 0 rs1_val <<< ((32 - shamt.toNat) % 32))
+
+@[simp_riscv]
+def ZBB_pure64_RISCV_RORI (shamt : (BitVec 5)) (rs1_val : BitVec 64) : BitVec 64 :=
+  rs1_val >>> shamt.toNat ||| rs1_val <<< ((64 - shamt.toNat) % 64)
+
+@[simp_riscv]
+def ZBB_RTYPE_pure_RISCV_XNOR (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  ~~~(rs1_val ^^^ rs2_val)
+
+@[simp_riscv]
+def ZBB_RTYPE_pure_RISCV_ORN (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  rs1_val ||| ~~~rs2_val
+
+@[simp_riscv]
+def ZBB_RTYPE_pure_RISCV_ANDN (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  rs1_val &&& ~~~rs2_val
+
+@[simp_riscv]
+def ZBB_RTYPE_pure_RISCV_MIN (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.extractLsb' 0 64 (BitVec.ofInt 65 (min rs1_val.toInt rs2_val.toInt))
+
+@[simp_riscv]
+def ZBB_RTYPE_pure_RISCV_MINU (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.extractLsb' 0 64 (BitVec.ofInt 65 (min ↑rs1_val.toNat ↑rs2_val.toNat))
+
+@[simp_riscv]
+def ZBB_RTYPE_pure_RISCV_MAXU (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.extractLsb' 0 64 (BitVec.ofInt (65) (max ↑rs1_val.toNat ↑rs2_val.toNat))
+
+@[simp_riscv]
+def ZBB_RTYPE_pure_RISCV_MAX (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.extractLsb' 0 64 (BitVec.ofInt 65 (max rs1_val.toInt rs2_val.toInt))
+
+@[simp_riscv]
+def ZBA_RTYPEUW_pure64_RISCV_ADDUW (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.zeroExtend 64 (BitVec.extractLsb 31 0 rs1_val) <<< 0#2 + rs2_val
 
 @[simp_riscv]
@@ -936,7 +971,46 @@ def ZBA_RTYPE_pure64_RISCV_SH2ADD (rs2_val : BitVec 64) (rs1_val : BitVec 64) : 
   BitVec.add (rs1_val <<< 2#2) rs2_val
 
 @[simp_riscv]
-def ZBA_RTYPE_pure64_RISCV_SH3ADD(rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+def ZBA_RTYPE_pure64_RISCV_SH3ADD (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.add (rs1_val <<< 3#2) rs2_val
+
+@[simp_riscv]
+def ZBA_pure64_RISCV_SLLIUW (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
+  (BitVec.setWidth 64 (BitVec.extractLsb 31 0 rs1_val)) <<< shamt
+
+def ZBB_RTYPE_pure_RISCV_MIN_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.extractLsb' 0 64 (if BitVec.sle rs1_val rs2_val then rs1_val else rs2_val)
+
+theorem ZBB_RTYPE_pure_RISCV_MIN_eq_ZBB_RTYPE_pure_RISCV_MIN_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    ZBB_RTYPE_pure_RISCV_MIN rs2_val rs1_val = ZBB_RTYPE_pure_RISCV_MIN_bv rs2_val rs1_val := by
+  unfold ZBB_RTYPE_pure_RISCV_MIN ZBB_RTYPE_pure_RISCV_MIN_bv
+  sorry
+
+def ZBB_RTYPE_pure_RISCV_MINU_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.extractLsb' 0 64 (if BitVec.ule rs1_val rs2_val then rs1_val else rs2_val)
+
+theorem ZBB_RTYPE_pure_RISCV_MINU_eq_ZBB_RTYPE_pure_RISCV_MINU_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    ZBB_RTYPE_pure_RISCV_MINU rs2_val rs1_val = ZBB_RTYPE_pure_RISCV_MINU_bv rs2_val rs1_val := by
+  unfold ZBB_RTYPE_pure_RISCV_MINU ZBB_RTYPE_pure_RISCV_MINU_bv
+  simp
+  sorry
+
+def ZBB_RTYPE_pure_RISCV_MAXU_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.extractLsb' 0 64 (if BitVec.ult rs1_val rs2_val then rs2_val else rs1_val)
+
+theorem ZBB_RTYPE_pure_RISCV_MAXU_eq_ZBB_RTYPE_pure_RISCV_MAXU_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    ZBB_RTYPE_pure_RISCV_MAXU rs2_val rs1_val =ZBB_RTYPE_pure_RISCV_MAXU_bv rs2_val rs1_val := by
+  unfold ZBB_RTYPE_pure_RISCV_MAXU ZBB_RTYPE_pure_RISCV_MAXU_bv
+  simp
+  sorry
+
+def ZBB_RTYPE_pure_RISCV_MAX_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.extractLsb' 0 64 (if BitVec.slt rs1_val rs2_val then rs2_val else rs1_val)
+
+theorem ZBB_RTYPE_pure_RISCV_MAX_eq_ZBB_RTYPE_pure_RISCV_MAX_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
+    ZBB_RTYPE_pure_RISCV_MAX rs2_val rs1_val =ZBB_RTYPE_pure_RISCV_MAX_bv rs2_val rs1_val := by
+  unfold ZBB_RTYPE_pure_RISCV_MAX ZBB_RTYPE_pure_RISCV_MAX_bv
+  simp
+  sorry
 
 end RV64Semantics

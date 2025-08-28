@@ -17,6 +17,8 @@ instance : ToString (Stream (BitVec w)) where
     let l := Stream.toList 100 s
     toString l
 
+namespace HandshakeExample
+
 unseal String.splitOnAux in
 def BranchEg1 := [handshake_com| {
   ^entry(%0: !Stream_BitVec_1, %1: !Stream_BitVec_1):
@@ -41,7 +43,7 @@ def x : Stream (BitVec 1) := ofList [some 1, none, some 1, some 0, none]
 
 -- is this in the opposite order or am I misunderstanding? if yes: why?
 def test : Stream (BitVec 1) :=
-  BranchEg1.denote (Ctxt.Valuation.ofPair c x)
+  BranchEg1.denote (Ctxt.Valuation.ofPair c x) |>.getN 0
 
 
 unseal String.splitOnAux in
@@ -63,22 +65,25 @@ def i : Stream (BitVec 8) := ofList [1#8, none, 1#8, 4#8, 0#8]
 def j : Stream (BitVec 8) := ofList [none, 3#8, none]
 
 def testSync : Stream (BitVec 8) :=
-  SyncEg1.denote (Ctxt.Valuation.ofPair j i)
+  SyncEg1.denote (Ctxt.Valuation.ofPair j i) |>.getN 0
 
 #eval testSync
 
-namespace Stream
+open Stream
 
 
 open Ctxt in
-theorem equiv_arg1 (x1Stream x2Stream : Stream (BitVec 1)) : x1Stream ≈ BranchEg1.denote (Valuation.ofPair x1Stream x2Stream) := by
+theorem equiv_arg1 (x1Stream x2Stream : Stream (BitVec 1)) :
+    x1Stream ≈ (BranchEg1.denote (Valuation.ofPair x1Stream x2Stream) |>.getN 0) := by
   simp [BranchEg1, Valuation.ofPair, Valuation.ofHVector]
   let v := (@Valuation.ofPair MLIR2Handshake.Ty _ (MLIR2Handshake.Ty.stream (MLIR2Handshake.Ty2.bitvec 1)) (MLIR2Handshake.Ty.stream (MLIR2Handshake.Ty2.bitvec 1)) x1Stream x2Stream)
   simp_peephole at v
   sorry
 
 theorem determinate :
-  Set.Subsingleton (nondeterminify2 (fun s1 s2 => BranchEg1.denote (Ctxt.Valuation.ofPair s1 s2)) (s1', s2')) := by
+    Set.Subsingleton (nondeterminify2 (fun s1 s2 =>
+      BranchEg1.denote (Ctxt.Valuation.ofPair s1 s2) |>.getN 0) (s1', s2')
+    ) := by
   intro x Hx y  Hy
   simp [Stream.nondeterminify2, Stream.StreamWithoutNones.hasStream] at *
   rcases Hx with ⟨ x1Stream, x1, x2Stream, x2, rfl ⟩

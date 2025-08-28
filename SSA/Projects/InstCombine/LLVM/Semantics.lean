@@ -31,7 +31,12 @@ namespace IntW
 instance : Inhabited (IntW w) := by unfold IntW; infer_instance
 instance : DecidableEq (IntW w) := by unfold IntW; infer_instance
 
-instance : Refinement (LLVM.IntW w) := inferInstanceAs (Refinement <| PoisonOr _)
+instance instRefinement : HRefinement (LLVM.IntW w) (LLVM.IntW w') where
+  IsRefinedBy x y :=
+    if h : w = w' then
+      (@id (PoisonOr _) x) ⊑ h ▸ @id (PoisonOr _) y
+    else
+      false
 
 /--
 `isRefinedBy_iff` rewrites refinement of `LLVM.IntW` values into refinement
@@ -44,7 +49,13 @@ having to duplicate that API for `LLVM.IntW`.
 @[simp, simp_llvm]
 theorem isRefinedBy_iff (x y : LLVM.IntW w) :
     x ⊑ y ↔ @HRefinement.IsRefinedBy (PoisonOr _) (PoisonOr _) _ x y := by
-  rfl
+  simp [instRefinement]
+
+@[simp, simp_llvm]
+theorem isRefinedBy_iff_of_width_neq {x : LLVM.IntW w} {y : LLVM.IntW v} (h : w ≠ v) :
+    x ⊑ y ↔ False := by
+  simp [instRefinement, h]
+
 
 end IntW
 

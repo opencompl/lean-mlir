@@ -1,10 +1,7 @@
+import SSA.Core
+
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.Framework
-import SSA.Core.Framework.Macro
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.EDSL2
-import SSA.Core.Tactic.SimpSet
 import Init.Data.String.Basic
 
 open MLIR AST Ctxt
@@ -243,17 +240,17 @@ toType := fun
 | Ty.stream2token ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType (Ty2.bitvec 1))
 
 def_denote for Handshake where
-| .fst _ => fun s => s.fst
-| .snd _ => fun s => s.snd
-| .branch _ => fun s c => HandshakeOp.branch s c
-| .merge _ => fun s₁ s₂ => HandshakeOp.merge s₁ s₂
-| .altMerge _ => fun s₁ s₂ =>HandshakeOp.altMerge s₁ s₂
-| .fork _ => fun s => HandshakeOp.fork s
-| .controlMerge _ => fun s₁ s₂ => HandshakeOp.controlMerge s₁ s₂
-| .join _ => fun s₁ s₂ => HandshakeOp.join s₁ s₂
-| .mux _ => fun s₁ s₂ c => HandshakeOp.mux s₁ s₂ c
-| .sink _ => fun s => HandshakeOp.sink s
-| .sync _ => fun s₁ s₂ => HandshakeOp.sync s₁ s₂
+| .fst _ => fun s => [s.fst]ₕ
+| .snd _ => fun s => [s.snd]ₕ
+| .branch _ => fun s c => [HandshakeOp.branch s c]ₕ
+| .merge _ => fun s₁ s₂ => [HandshakeOp.merge s₁ s₂]ₕ
+| .altMerge _ => fun s₁ s₂ => [HandshakeOp.altMerge s₁ s₂]ₕ
+| .fork _ => fun s => [HandshakeOp.fork s]ₕ
+| .controlMerge _ => fun s₁ s₂ => [HandshakeOp.controlMerge s₁ s₂]ₕ
+| .join _ => fun s₁ s₂ => [HandshakeOp.join s₁ s₂]ₕ
+| .mux _ => fun s₁ s₂ c => [HandshakeOp.mux s₁ s₂ c]ₕ
+| .sink _ => fun s => [HandshakeOp.sink s]ₕ
+| .sync _ => fun s₁ s₂ => [HandshakeOp.sync s₁ s₂]ₕ
 
 
 
@@ -286,6 +283,9 @@ def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Handshake Handshake.Ty
 
 instance instTransformTy : MLIR.AST.TransformTy Handshake 0 where
   mkTy := mkTy
+
+section Compat
+open LeanMLIR.SingleReturnCompat
 
 def branch {r} {Γ : Ctxt _} (a : Var Γ (.stream r)) (c : Var Γ (.stream (.bitvec 1))) : Expr (Handshake) Γ .pure (.stream2 r) :=
   Expr.mk
@@ -327,6 +327,8 @@ def sync {Γ : Ctxt _} (a b : Var Γ (.stream r)) : Expr (Handshake) Γ .pure (.
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
+end Compat
+
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (Handshake) (Σ eff ty, Expr (Handshake) Γ eff ty) := do
   match opStx.name with
@@ -336,9 +338,9 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
       match ty₁, ty₂, op with
-      | .stream r₁, .stream (.bitvec 1), "handshake.branch" => return ⟨_, .stream2 r₁, @branch r₁ _ v₁ v₂⟩
+      | .stream r₁, .stream (.bitvec 1), "handshake.branch" => return ⟨_, [.stream2 r₁], @branch r₁ _ v₁ v₂⟩
       -- unsure this is correct
-      | .stream r₁, _, "handshake.merge" => return ⟨_, .stream r₁, merge v₁ v₁⟩
+      | .stream r₁, _, "handshake.merge" => return ⟨_, [.stream r₁], merge v₁ v₁⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"handshake.fst" | op@"handshake.snd" =>
@@ -346,8 +348,8 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
-      | .stream2 r, "handshake.fst" => return ⟨_, .stream r, fst v₁⟩
-      | .stream2 r, "handshake.snd"  => return ⟨_, .stream r, snd v₁⟩
+      | .stream2 r, "handshake.fst" => return ⟨_, [.stream r], fst v₁⟩
+      | .stream2 r, "handshake.snd"  => return ⟨_, [.stream r], snd v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"handshake.sync" =>
@@ -359,7 +361,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .stream r₁, .stream r₂, "handshake.sync" =>
         if h : r₁ = r₂ then
           have h': Γ.Var (Ty.stream r₁) = Γ.Var (Ty.stream r₂) := by simp_all
-          return ⟨_, .stream2 r₁, sync v₁ (h'▸v₂)⟩
+          return ⟨_, [.stream2 r₁], sync v₁ (h'▸v₂)⟩
         else
           throw <| .generic s!"type mismatch"
       | _, _, _ => throw <| .generic s!"type mismatch"
@@ -375,7 +377,7 @@ def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) : MLIR.AST.ReaderM (Handshake
   then match opStx.args with
   | vStx::[] => do
     let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
-    return ⟨.pure, ty, Com.ret v⟩
+    return ⟨.pure, [ty], Com.ret v⟩
   | _ => throw <| .generic s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})"
   else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
 

@@ -1,19 +1,17 @@
+import SSA.Core
+
 import SSA.Projects.CIRCT.DC.DC
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.Tactic
-import SSA.Core.ErasedContext
-import SSA.Core.HVector
-import SSA.Core.EffectKind
-import SSA.Core.Util
 
 namespace CIRCTStream
 
 instance : ToString DCOp.TokenStream where
   toString s := toString (Stream.toList 100 s)
 
-open MLIR AST in
+namespace DCExample
 
+open MLIR AST in
 unseal String.splitOnAux in
 def SourceEg := [DC_com| {
   ^entry():
@@ -28,7 +26,7 @@ def SourceEg := [DC_com| {
 #print axioms SourceEg
 
 def test1 : DCOp.TokenStream :=
-  SourceEg.denote (Ctxt.Valuation.nil)
+  SourceEg.denote (Ctxt.Valuation.nil) |>.getN 0
 
 #eval test1
 
@@ -51,13 +49,15 @@ def BranchEg := [DC_com| {
 #print axioms BranchEg
 
 def ofList (vals : List (Option α)) : Stream α :=
-  fun i => (vals.get? i).join
+  fun i => (vals[i]?).join
 
 def c : DCOp.ValueStream (BitVec 1) := ofList [some 1, none, some 0, some 1, some 0]
 def x : DCOp.ValueStream (BitVec 8) := ofList [some 1, none, some 2, some 3, none]
 def u : DCOp.TokenStream := ofList [some (), none, some (), some (), none]
 
 def test2 : DCOp.TokenStream :=
-  BranchEg.denote (Ctxt.Valuation.ofHVector (.cons c <| .cons x <| .cons u <| .nil))
+  BranchEg.denote (Ctxt.Valuation.ofHVector (.cons c <| .cons x <| .cons u <| .nil)) |>.getN 0
 
 #eval test2
+
+end DCExample
