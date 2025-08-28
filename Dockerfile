@@ -15,8 +15,9 @@ ENV HOME=/home/user
 RUN \
   useradd user --create-home --uid $UID --home-dir="$HOME" && \
   mkdir -p /code/lean-mlir && \
-  chown -R user /code && \
-  ln -s /github/home/.elan $HOME/.elan
+  mkdir -p /github/home && \
+  chown -R user /code /github/home && \
+  ln -s $HOME/.elan /github/home/.elan
   # ^^ Github Actions overrides the home directory [1]. Rather than fight it we
   #    choose to symlink our stuff in the directory it expects.
   #    [1] https://github.com/actions/runner/issues/863
