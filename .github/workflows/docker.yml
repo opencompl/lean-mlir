@@ -164,16 +164,15 @@ jobs:
             || echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV
 
       - uses: actions/github-script@v6
-        working-directory: /code/lean-mlir/bv-evaluation
         if: env.LEANMLIR_STATUS != 'fail' && github.event_name == 'pull_request'
-        with:
+        with: 
           script: |
             const fs = require('fs')
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: fs.readFileSync('llvm-stats', 'utf8')
+              body: fs.readFileSync('/code/lean-mlir/bv-evaluation/llvm-stats', 'utf8')
             })
 
       - name: Upload LLVM artifact
