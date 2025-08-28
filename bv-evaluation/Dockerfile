@@ -25,10 +25,23 @@ RUN \
     ./configure.py && \
     cd build && ninja && ninja install
 
+# Drop privilege to non-root user
+ENV UID=9000
+ENV HOME=/github/home
+# ^^ Github Actions overrides the home directory [1]. Rather than fight it we
+#    choose to directly install our stuff in the directory it expects.
+#    [1] https://github.com/actions/runner/issues/863
+RUN \
+  useradd user --create-home --uid $UID --home-dir="$HOME" && \
+  mkdir -p /code/lean-mlir && \
+  chown -R user /code 
+USER user
+WORKDIR $HOME
+
 # Install uv
 ADD https://astral.sh/uv/0.8.13/install.sh ./uv-installer.sh
 RUN sh ./uv-installer.sh && rm ./uv-installer.sh
-ENV PATH="/root/.local/bin/:$PATH"
+ENV PATH="$HOME/.local/bin/:$PATH"
 
 # Switch to Lean MLIR workdir
 WORKDIR /code/lean-mlir/
@@ -38,6 +51,6 @@ COPY --from=lean-mlir /code/lean-mlir/requirements.txt ./
 RUN uv venv && uv pip install -r requirements.txt
 
 # Copy LeanMLIR toolchain & build artifacts from image
-COPY --from=lean-mlir /root/.elan/ /root/.elan/
+COPY --from=lean-mlir $HOME/.elan/ $HOME/.elan/
 COPY --from=lean-mlir /code/lean-mlir/ /code/lean-mlir/
-ENV PATH="/root/.elan/bin/:$PATH"
+ENV PATH="$HOME/.elan/bin/:$PATH"
