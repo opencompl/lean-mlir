@@ -47,10 +47,10 @@ ENV PATH="$HOME/.local/bin/:$PATH"
 WORKDIR /code/lean-mlir/
 
 # Install LeanMLIR Python dependencies (via uv)
-COPY --from=lean-mlir /code/lean-mlir/requirements.txt ./
+COPY --from=lean-mlir --chown=user /code/lean-mlir/requirements.txt ./
 RUN uv venv && uv pip install -r requirements.txt
 
 # Copy LeanMLIR toolchain & build artifacts from image
-COPY --from=lean-mlir $HOME/.elan/ $HOME/.elan/
-COPY --from=lean-mlir /code/lean-mlir/ /code/lean-mlir/
+COPY --from=lean-mlir --chown=user $HOME/.elan/ $HOME/.elan/
+COPY --from=lean-mlir --chown=user /code/lean-mlir/ /code/lean-mlir/
 ENV PATH="$HOME/.elan/bin/:$PATH"
