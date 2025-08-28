@@ -44,9 +44,10 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  bitwuzla-docker-img:
-    name: Build Docker image for Bitwuzla
-    runs-on: ubuntu-latest
+  instcombine-docker-img:
+    name: Build Docker image for InstCombine Evaluation
+    runs-on: ubuntu-latest # Run on GH-provided runner
+    needs: core-docker-img
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -66,8 +67,7 @@ jobs:
         with:
           context: "./bv-evaluation"
           push: true
-          tags: ghcr.io/opencompl/bitwuzla:latest
-          outputs: type=docker,dest=${{ runner.temp }}/bitwuzla.tar
+          tags: ghcr.io/opencompl/lean-mlir-instcombine:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -97,8 +97,25 @@ jobs:
         run: |
           lake -R build SSA.Projects.InstCombine.ScalingTest
 
-      - name: Check for changes in AliveStatements
+  alive-check-changes:
+    name: Check for changes in AliveStatements
+    runs-on: ubuntu-latest # Run on GH-provided runner
+    needs: instcombine-docker-img
+    container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
+    defaults:
+      run:
+        working-directory: /code/lean-mlir
+    steps:
+      - name: Checkout git history
+        # This is needed because we do `git diff` below
+        uses: actions/checkout@v3
+        with:
+          sparse-checkout: .git
+      - env: 
+          GIT_DIR: ${{ github.workspace }}/.git
         run: |
           lake build AliveExamples
-          (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
+          (cd SSA/Projects/InstCombine/; uv run ./update_alive_statements.py)
+          # /--------------------------- ^^^^^^
+          # | TODO: this could be removed if we add a uv shebang to the python file
           bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
