@@ -248,8 +248,8 @@ def get_git_root():
 def test_file_preamble():
     return """
 import Std.Tactic.BVDecide
-import SSA.Experimental.Bits.SingleWidth.Tactic
-import SSA.Experimental.Bits.Fast.MBA
+import Blase.SingleWidth.Tactic
+import Blase.Fast.MBA
 import TacBench
 
 set_option maxHeartbeats 0

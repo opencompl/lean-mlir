@@ -798,7 +798,7 @@ private lemma simple_test (x y : BitVec w) : x + y = y + x ∨ x = 0 := by
   bv_automata_classic
 
 /--
-info: '_private.SSA.Experimental.Bits.SingleWidth.Tactic.0.simple_test' depends on axioms: [hashMap_missing,
+info: '_private.Blase.SingleWidth.Tactic.0.simple_test' depends on axioms: [hashMap_missing,
  propext,
  Classical.choice,
  Lean.ofReduceBool,
