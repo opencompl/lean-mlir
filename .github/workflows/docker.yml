@@ -99,6 +99,8 @@ jobs:
     defaults:
       run:
         working-directory: /code/lean-mlir
+    env:
+      HOME: /home/user
     steps:
       - name: Compile `mlirnatural` Executable 🧐
         run: |
@@ -130,6 +132,8 @@ jobs:
     defaults:
       run:
         working-directory: /code/lean-mlir
+    env:
+      HOME: /home/user
     steps:
       - name: Checkout git history
         # This is needed because we do `git diff` below
@@ -194,6 +198,8 @@ jobs:
     defaults:
       run:
         working-directory: /code/lean-mlir/bv-evaluation
+    env:
+      HOME: /home/user
     strategy:
       matrix:
         extract_offset: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
