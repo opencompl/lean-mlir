@@ -76,6 +76,9 @@ jobs:
     runs-on: ubuntu-latest # Run on GH-provided runner
     needs: core-docker-img
     container: "ghcr.io/opencompl/lean-mlir:${{ github.sha }}"
+    defaults:
+      run:
+        working-directory: /code/lean-mlir
     steps:
       - name: Compile `mlirnatural` Executable 🧐
         run: |
