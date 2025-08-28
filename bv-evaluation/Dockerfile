@@ -8,6 +8,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 	apt-get install -yqq --no-install-recommends \
         python3 \
         curl wget unzip ca-certificates \
+        # evaluation tools
+        ripgrep \
         # bitwuzla dependencies
         git ninja-build build-essential \
         meson libgmp-dev libcadical-dev libsymfpu-dev pkg-config
@@ -39,7 +41,7 @@ USER user
 WORKDIR $HOME
 
 # Install uv
-ADD https://astral.sh/uv/0.8.13/install.sh ./uv-installer.sh
+ADD --chown=user https://astral.sh/uv/0.8.13/install.sh ./uv-installer.sh
 RUN sh ./uv-installer.sh && rm ./uv-installer.sh
 ENV PATH="$HOME/.local/bin/:$PATH"
 
