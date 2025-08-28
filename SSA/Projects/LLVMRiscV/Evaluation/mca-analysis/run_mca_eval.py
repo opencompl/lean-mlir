@@ -396,10 +396,6 @@ def createPlotsFromTables():
 def scatter_plotting_selectors (pivoted_df, selector1, selector2): # defined selector1 as x-axes.
     plt.figure(figsize=(8, 8),frameon=False) # A square figure is often good for comparison plots
 
-    # Define which selector to compare 'our' against
-    # You can change 'SelectionDAG' to 'GlobalISel' here if you want to compare against that.
-
-
     #cech existence
     if selector1 not in pivoted_df.columns or selector2 not in pivoted_df.columns:
         print(f"Error: the column we wanred doesnt exist'{selector1}' or '{selector2}' not found in data.")
@@ -410,16 +406,15 @@ def scatter_plotting_selectors (pivoted_df, selector1, selector2): # defined sel
         print(f"No common data points for '{selector1}' and '{selector2}' after dropping NaNs. No plot generated.")
         return
     
-    # Group by the instruction counts occurrences
+
     num_data_pairs = df_plot_comparison.shape[0]
     print(num_data_pairs)   
     frequencies = df_plot_comparison.groupby([selector1, selector2]).size().reset_index(name='Frequency')
     print("here")
     print(frequencies)
-    # Merge frequencies back into the data for plotting
     df_plot_scaled = pd.merge(df_plot_comparison, frequencies, on=[selector1, selector2], how='left')
-    # Scale the frequencies
 
+    # difference scaling 
     # print(1/(df_plot_scaled['Frequency']/num_data_pairs))# improve scaling 
 
     df_plot_scaled['Scaled_Size'] = np.sqrt ((df_plot_scaled['Frequency']))*50   + 20

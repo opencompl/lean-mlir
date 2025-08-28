@@ -33,6 +33,9 @@ MCA_LLVM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM/"
 )
 LOGS_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/logs/"
+MCA_LLVM_GLOBALISEL_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM_GLOBALISEL/"
+)
 
 def create_missing_folders(): 
     if not os.path.exists(MCA_LEANMLIR_DIR):
@@ -41,6 +44,8 @@ def create_missing_folders():
         os.makedirs(MCA_LLVM_DIR)
     if not os.path.exists(LOGS_DIR):
         os.makedirs(LOGS_DIR)
+    if not os.path.exists(MCA_LLVM_GLOBALISEL_DIR):
+        os.makedirs(MCA_LLVM_GLOBALISEL_DIR)
 
 
 def clear_folder(folder):
