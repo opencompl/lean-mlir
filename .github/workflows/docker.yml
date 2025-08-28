@@ -11,7 +11,7 @@ permissions:
   packages: write
 
 jobs:
-  docker:
+  core-docker-img:
     name: Build Docker image for core library
     runs-on: namespace-profile-leanmlir-docker-cached 
     steps:
@@ -44,7 +44,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  docker-bitwuzla:
+  bitwuzla-docker-img:
     name: Build Docker image for Bitwuzla
     runs-on: ubuntu-latest
     steps:
@@ -70,3 +70,32 @@ jobs:
           outputs: type=docker,dest=${{ runner.temp }}/bitwuzla.tar
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  build-tools:
+    name: tools, scaling, and auto-generated stmts
+    runs-on: ubuntu-latest # Run on GH-provided runner
+    needs: core-docker-img
+    container: "ghcr.io/opencompl/lean-mlir:${{ github.sha }}"
+    steps:
+      - name: Compile `mlirnatural` Executable 🧐
+        run: |
+          lake -R build mlirnatural
+
+      - name: Compile `opt` Executable 🧐
+        run: |
+          lake -R build opt
+
+#      This broke the build during a recent update
+#      - name: LLVM opt round trip test
+#        run: |
+#          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
+
+      - name: Compile Alive Scaling
+        run: |
+          lake -R build SSA.Projects.InstCombine.ScalingTest
+
+      - name: Check for changes in AliveStatements
+        run: |
+          lake build AliveExamples
+          (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
+          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
