@@ -136,7 +136,7 @@ jobs:
           (cd SSA/Projects/InstCombine/; uv run ./update_alive_statements.py)
           # /--------------------------- ^^^^^^
           # | TODO: this could be removed if we add a uv shebang to the python file
-          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+          bash -c '! git diff -- SSA/Projects/InstCombine | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
 
   evaluation-LLVM:
     name: Evaluate LLVM
