@@ -492,14 +492,14 @@ def icmp' {w : Nat} (c : IntPred) (x y : BitVec w) : Bool :=
   match c with
     | .eq => (x == y)
     | .ne => (x != y)
-    | .sgt => (x >ₛ y)
-    | .sge => (x ≥ₛ y)
-    | .slt => (x <ₛ y)
-    | .sle => (x ≤ₛ y)
-    | .ugt => (x >ᵤ y)
-    | .uge => (x ≥ᵤ y)
-    | .ult => (x <ᵤ y)
-    | .ule => (x ≤ᵤ y)
+    | .sgt => (y.slt x)
+    | .sge => (y.sle x)
+    | .slt => (x.slt y)
+    | .sle => (x.slt y)
+    | .ugt => (y.ult x)
+    | .uge => (y.ule x)
+    | .ult => (x.ult y)
+    | .ule => (x.ult y)
 
 
 /--
@@ -528,15 +528,15 @@ def icmp? {w : Nat} (c : IntPred) (x y : BitVec w) : IntW 1 :=
 
 @[simp]
 theorem icmp?_ult_eq {w : Nat} {a b : BitVec w} :
-  icmp? .ult a b = .value (BitVec.ofBool (a <ᵤ b)) := rfl
+  icmp? .ult a b = .value (BitVec.ofBool (a.ult b)) := rfl
 
 @[simp]
 theorem icmp?_slt_eq {w : Nat} {a b : BitVec w} :
-  icmp? .slt a b = .value (BitVec.ofBool (a <ₛ b)) := rfl
+  icmp? .slt a b = .value (BitVec.ofBool (a.slt b)) := rfl
 
 @[simp]
 theorem icmp?_sgt_eq {w : Nat} {a b : BitVec w} :
-  icmp? .sgt a b = .value (BitVec.ofBool (a >ₛ b)) := rfl
+  icmp? .sgt a b = .value (BitVec.ofBool (b.slt a)) := rfl
 
 @[simp_llvm_option]
 def icmp {w : Nat} (c : IntPred) (x y : IntW w) : IntW 1 := do
