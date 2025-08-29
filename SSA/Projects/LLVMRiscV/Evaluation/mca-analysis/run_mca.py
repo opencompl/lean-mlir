@@ -17,6 +17,9 @@ TIMEOUT = 1800  # seconds
 
 LLVM_BUILD_DIR = "~/llvm-project/build/bin/"
 
+LLC_GLOBALISEL_ASM_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_GLOBALISEL_ASM/"
+)
 LLC_ASM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/"
 )
@@ -30,6 +33,9 @@ MCA_LLVM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM/"
 )
 LOGS_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/logs/"
+MCA_LLVM_GLOBALISEL_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM_GLOBALISEL/"
+)
 
 def create_missing_folders(): 
     if not os.path.exists(MCA_LEANMLIR_DIR):
@@ -38,6 +44,8 @@ def create_missing_folders():
         os.makedirs(MCA_LLVM_DIR)
     if not os.path.exists(LOGS_DIR):
         os.makedirs(LOGS_DIR)
+    if not os.path.exists(MCA_LLVM_GLOBALISEL_DIR):
+        os.makedirs(MCA_LLVM_GLOBALISEL_DIR)
 
 
 def clear_folder(folder):
@@ -83,6 +91,7 @@ def clear_folders():
     clear_folder(LOGS_DIR)
     clear_folder(MCA_LEANMLIR_DIR)
     clear_folder(MCA_LLVM_DIR)
+    clear_folder(MCA_LLVM_GLOBALISEL_DIR)
 
 
 def clear_empty_logs():
@@ -134,6 +143,13 @@ def run_tests():
         basename, _ = os.path.splitext(filename)
         output_file = os.path.join(MCA_LLVM_DIR, basename + '.out')
         log_file = open(os.path.join(LOGS_DIR, 'llvm_' + filename),'w')
+        mca_analysis(input_file, output_file, log_file)
+    
+    for filename in os.listdir(LLC_GLOBALISEL_ASM_DIR):
+        input_file = os.path.join(LLC_GLOBALISEL_ASM_DIR, filename)
+        basename, _ = os.path.splitext(filename)
+        output_file = os.path.join(MCA_LLVM_GLOBALISEL_DIR, basename + '.out')
+        log_file = open(os.path.join(LOGS_DIR, 'globalisel_llvm_' + filename),'w')
         mca_analysis(input_file, output_file, log_file)
 
     clear_empty_logs()

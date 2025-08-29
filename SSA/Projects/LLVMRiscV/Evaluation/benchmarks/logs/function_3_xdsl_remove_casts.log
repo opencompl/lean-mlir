@@ -1,0 +1,52 @@
+Traceback (most recent call last):
+  File "/Users/sarahkuhn/Desktop/lean-mlir/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/remove_casts.py", line 76, in <module>
+    main()
+  File "/Users/sarahkuhn/Desktop/lean-mlir/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/remove_casts.py", line 72, in main
+    MyOptMain().run()
+  File "/Users/sarahkuhn/Desktop/lean-mlir/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/remove_casts.py", line 56, in run
+    module = self.parse_chunk(chunk, file_extension, offset)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/tools/command_line_tool.py", line 112, in parse_chunk
+    return self.available_frontends[file_extension](chunk)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/tools/command_line_tool.py", line 98, in parse_mlir
+    ).parse_module(not self.args.no_implicit_module)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/core.py", line 130, in parse_module
+    if (parsed_op := self.parse_optional_operation()) is not None:
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/core.py", line 678, in parse_optional_operation
+    return self.parse_operation()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/core.py", line 707, in parse_operation
+    op = op_type.parse(self)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/dialects/builtin.py", line 1918, in parse
+    region = parser.parse_region()
+             ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/core.py", line 596, in parse_region
+    region = self.parse_optional_region(arguments)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/core.py", line 560, in parse_optional_region
+    block = self._parse_block()
+            ^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/core.py", line 249, in _parse_block
+    self._parse_block_body(block)
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/core.py", line 217, in _parse_block_body
+    while (op := self.parse_optional_operation()) is not None:
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/core.py", line 678, in parse_optional_operation
+    return self.parse_operation()
+           ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/core.py", line 714, in parse_operation
+    op_type = self._get_op_by_name(op_name)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/core.py", line 749, in _get_op_by_name
+    self.raise_error(f"Operation {name} is not registered")
+  File "/Users/sarahkuhn/Desktop/xdsl-experiments/xdsl-env/lib/python3.11/site-packages/xdsl/parser/generic_parser.py", line 94, in raise_error
+    raise ParseError(at_position, msg)
+xdsl.utils.exceptions.ParseError: /Users/sarahkuhn/Desktop/lean-mlir/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM/function_3.mlir:24:15
+  %24 = "llvm."InstCombine.MOp.UnaryOp.trunc (ConcreteOrMVar.concrete 64) { nsw := false, nuw := false }""(%23) : (i1) -> (i64)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+               Operation llvm. is not registered
+

@@ -1,0 +1,45 @@
+Iterations:        100
+Instructions:      300
+Total Cycles:      6703
+Total uOps:        300
+
+Dispatch Width:    2
+uOps Per Cycle:    0.04
+IPC:               0.04
+Block RThroughput: 65.0
+
+
+Instruction Info:
+[1]: #uOps
+[2]: Latency
+[3]: RThroughput
+[4]: MayLoad
+[5]: MayStore
+[6]: HasSideEffects (U)
+
+[1]    [2]    [3]    [4]    [5]    [6]    Instructions:
+ 1      3     0.50                        and	t0, t0, t0
+ 1      66    65.00                       remu	t0, t0, t0
+ 1      3     1.00                        ret
+
+
+Resources:
+[0]   - VLEN512SiFive7FDiv
+[1]   - VLEN512SiFive7IDiv
+[2]   - VLEN512SiFive7PipeA
+[3]   - VLEN512SiFive7PipeB
+[4]   - VLEN512SiFive7VA
+[5]   - VLEN512SiFive7VCQ
+[6]   - VLEN512SiFive7VL
+[7]   - VLEN512SiFive7VS
+
+
+Resource pressure per iteration:
+[0]    [1]    [2]    [3]    [4]    [5]    [6]    [7]    
+ -     65.00  0.99   2.01    -      -      -      -     
+
+Resource pressure by instruction:
+[0]    [1]    [2]    [3]    [4]    [5]    [6]    [7]    Instructions:
+ -      -     0.99   0.01    -      -      -      -     and	t0, t0, t0
+ -     65.00   -     1.00    -      -      -      -     remu	t0, t0, t0
+ -      -      -     1.00    -      -      -      -     ret
