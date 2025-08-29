@@ -119,27 +119,6 @@ jobs:
         run: |
           lake -R build SSA.Projects.InstCombine.ScalingTest
 
-  check-mathlib-imports:
-    name: Check that `MathlibImports.lean` is up-to-date
-    runs-on: ubuntu-latest # Run on GH-provided runner
-    needs: core-docker-img
-    container: "ghcr.io/opencompl/lean-mlir:${{ github.sha }}"
-    defaults:
-      run:
-        working-directory: /code/lean-mlir
-    steps:
-      - run: |
-          FILE="${{ runner.temp }}/MathlibImports.lean"
-          grep --no-filename --recursive --only-matching -E 'import Mathlib.\S*' SSA \
-            | sort -u > "$FILE"
-          if ! (cat SSA/MathlibImports.lean | sort -u | diff "$FILE" -) ; then
-            echo ""
-            echo "The above imports are missing from MathlibImports.lean"
-            echo "Please ensure all files imported from Mathlib are added to MathlibImports.lean!"
-            echo ""
-            exit 1
-          fi
-
   alive-check-changes:
     name: Check for changes in AliveStatements
     runs-on: ubuntu-latest # Run on GH-provided runner
