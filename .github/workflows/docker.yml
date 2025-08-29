@@ -146,8 +146,10 @@ jobs:
     defaults:
       run:
         working-directory: /code/lean-mlir/bv-evaluation
-    permissions:
-      pull-requests: write
+    strategy:
+      matrix:
+        offset: [0, 1, 2]
+        stride: [3]
     steps:     
       - name: Symlink .elan (to correct for GHA changing $HOME)
         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
@@ -155,8 +157,35 @@ jobs:
       - name: Run LLVM
         continue-on-error: true
         run: |
-          uv run ./compare.py instcombine -j48 \
+          uv run ./compare.py instcombine -j48 --stride=${{matrix.stride}} --offset=${{matrix.offset}} \
             || echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV
+      
+      - name: Upload logs
+        id: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.run_id }}-instcombine-logs-${{matrix.offset}}
+          retention-days: 1
+          path: |
+            /code/lean-mlir/bv-evaluation/results/InstCombine/
+
+  report-LLVM:
+    name: Collect & report LLVM evaluation data   
+    runs-on: ubuntu-latest # Run on GH-provided runner
+    needs: evaluation-LLVM
+    container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
+    defaults:
+      run:
+        working-directory: /code/lean-mlir/bv-evaluation
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Download data
+        uses: actions/download-artifact@v5
+        with:
+          path: /code/lean-mlir/bv-evaluation/results/InstCombine/
+          pattern: ${{ github.run_id }}-instcombine-logs-*
+          merge-multiple: true
 
       - name: Collect data LLVM
         continue-on-error: true

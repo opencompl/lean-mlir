@@ -175,6 +175,8 @@ def compare(
     memout: int,
     num_samples,
     seed,
+    stride: int,
+    offset: int
 ):
     """Processes benchmarks using a thread pool."""
     with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
@@ -237,20 +239,22 @@ def compare(
             clear_folder(RESULTS_DIR_INSTCOMBINE)
             os.makedirs(RESULTS_DIR_INSTCOMBINE, exist_ok=True)
 
-            for file in os.listdir(BENCHMARK_DIR_INSTCOMBINE):
-                if "_proof" in file and file.endswith(
-                    ".lean"
-                ):  # Ensure it's a Lean file
-                    for r in range(reps):
-                        file_path = os.path.join(BENCHMARK_DIR_INSTCOMBINE, file)
-                        file_title = os.path.splitext(file)[0]
-                        log_file_path = os.path.join(
-                            RESULTS_DIR_INSTCOMBINE, f"{file_title}_r{str(r)}.txt"
-                        )
-                        future = executor.submit(
-                            run_file, file_path, log_file_path
-                        )
-                        futures[future] = file_path
+            files = [ file for file in os.listdir(BENCHMARK_DIR_INSTCOMBINE)
+                        if "_proof" in file and file.endswith(".lean") ] # Ensure it's a Lean file
+            # Filter to just the files meant for this runner (if distributed)
+            files = files[offset::stride]
+
+            for file in files:
+                for r in range(reps):
+                    file_path = os.path.join(BENCHMARK_DIR_INSTCOMBINE, file)
+                    file_title = os.path.splitext(file)[0]
+                    log_file_path = os.path.join(
+                        RESULTS_DIR_INSTCOMBINE, f"{file_title}_r{str(r)}.txt"
+                    )
+                    future = executor.submit(
+                        run_file, file_path, log_file_path
+                    )
+                    futures[future] = file_path
 
         elif benchmark == "smtlib":
             clear_folder(RESULTS_DIR_SMTLIB)
@@ -331,6 +335,20 @@ def main():
         help="Solver for SMT-LIB benchmarks",
     )
 
+    parser.add_argument(
+        "--stride",
+        type=int,
+        default=1,
+        help="For distributed runs, the total number of jobs (instcombine benchmark only!)"
+    )
+
+    parser.add_argument(
+        "--offset",
+        type=int,
+        default=0,
+        help="For distributed runs, the index of the current runner (instcombine benchmark only!)"
+    )
+
     args = parser.parse_args()
     benchmarks_to_run = (
         ["hackersdelight", "instcombine", "smtlib"]
@@ -348,6 +366,8 @@ def main():
             args.memout,
             args.num_samples,
             args.seed,
+            args.stride,
+            args.offset
         )
 
 
