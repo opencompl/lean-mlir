@@ -9,9 +9,13 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 # Ensure CA certificates are up-to-date
 RUN update-ca-certificates -f
 
+# Set user env vars
+ENV UID=0
+ENV HOME=/root
+
 # Install elan and update environment
 RUN curl https://elan.lean-lang.org/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
-ENV PATH=/root/.elan/bin:$PATH
+ENV PATH=$HOME/.elan/bin:$PATH
 
 #
 # Install Lean.
@@ -28,12 +32,12 @@ RUN lake --version
 # See note at the end for more details
 # about the caching boilerplate
 COPY . ./
-RUN --mount=type=cache,target=/root/.cache/mathlib \
-    --mount=type=cache,target=/root/.cache/LeanMLIR,sharing=private \
+RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private,uid=$UID \
+    --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private,uid=$UID \
   # \
   # Symlink cache into place \
   # \
-  ln -s /root/.cache/LeanMLIR/ .lake && \
+  ln -s $HOME/.cache/LeanMLIR/ .lake && \
   # \
   # Actual Build \
   # \
@@ -42,7 +46,7 @@ RUN --mount=type=cache,target=/root/.cache/mathlib \
   # Persist .lake into Docker image \
   # \
   rm .lake && \
-  cp -Ra /root/.cache/LeanMLIR .lake
+  cp -Ra $HOME/.cache/LeanMLIR .lake
 
 # The previous RUN uses cache-mounts to speed up 
 # builds. Note, however, that the paths which were

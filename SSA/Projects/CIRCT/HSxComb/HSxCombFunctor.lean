@@ -208,8 +208,8 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, opStx.name with
-      | .stream t, "HSxComb.fst" =>  mkExprOf <| Op.hs (MLIR2Handshake.Op.fst t)
-      | .stream t, "HSxComb.snd" =>  mkExprOf <| Op.hs (MLIR2Handshake.Op.snd t)
+      | .stream2 t, "HSxComb.fst" =>  mkExprOf <| Op.hs (MLIR2Handshake.Op.fst t)
+      | .stream2 t, "HSxComb.snd" =>  mkExprOf <| Op.hs (MLIR2Handshake.Op.snd t)
       | .stream t, "HSxComb.fork" =>  mkExprOf <| Op.hs (MLIR2Handshake.Op.fork t)
       | .stream t, "HSxComb.sink" =>  mkExprOf <| Op.hs (MLIR2Handshake.Op.sink t)
       | _, _ => throw <| .generic s!"type mismatch at {repr opStx.args}"

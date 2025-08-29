@@ -151,25 +151,6 @@ macro "bv_compare'": tactic =>
       )
    )
 
-macro "simp_alive_split": tactic =>
-  `(tactic|
-      (
-        all_goals try intros
-        repeat(
-          all_goals try simp -implicitDefEqProofs only [simp_llvm_split]
-          all_goals try simp -implicitDefEqProofs only [simp_llvm_split] at *
-          any_goals split_ifs
-        )
-        repeat(
-          all_goals try simp -implicitDefEqProofs only [simp_llvm_split]
-          all_goals try simp -implicitDefEqProofs only [simp_llvm_split] at *
-          any_goals split
-        )
-        all_goals try simp -implicitDefEqProofs only [simp_llvm_split]
-        all_goals try simp -implicitDefEqProofs only [simp_llvm_split] at *
-      )
-   )
-
 macro "simp_alive_benchmark": tactic =>
   `(tactic|
       (

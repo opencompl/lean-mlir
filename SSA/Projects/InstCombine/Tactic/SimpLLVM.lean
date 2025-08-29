@@ -105,6 +105,26 @@ macro_rules
     )
   )
 
+/-! ### simp_alive_split -/
+macro "simp_alive_split": tactic =>
+  `(tactic|
+      (
+        all_goals try intros
+        repeat(
+          all_goals try simp -implicitDefEqProofs only [simp_llvm_split]
+          all_goals try simp -implicitDefEqProofs only [simp_llvm_split] at *
+          any_goals split_ifs
+        )
+        repeat(
+          all_goals try simp -implicitDefEqProofs only [simp_llvm_split]
+          all_goals try simp -implicitDefEqProofs only [simp_llvm_split] at *
+          any_goals split
+        )
+        all_goals try simp -implicitDefEqProofs only [simp_llvm_split]
+        all_goals try simp -implicitDefEqProofs only [simp_llvm_split] at *
+      )
+   )
+
 /-! ### Constant Hiding Workaround
 The following section defines two tactics, `hide_constants` and `unhide_constants`.
 * `hide_constants` will rewrite occurences of `LLVM.const?` or `BitVec.ofInt`

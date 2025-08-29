@@ -20,13 +20,15 @@ jobs:
         id: cache-lake
         uses: actions/cache@v4
         with:
-          lookup-only: true
           path: |
             ~/.elan
             .lake/packages
             .lake/build
             TacBench/.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Install Elan & Lean
         if: steps.cache-lake.outputs.cache-hit != 'true'
@@ -34,12 +36,14 @@ jobs:
           set -o pipefail
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
           ~/.elan/bin/lean --version
+
+      - name: Make lake available
+        run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
       - name: Build Lean-MLIR & Mathlib
         # We build Mathlib from scratch as this reduces the build artifacts that are stored in the cache. Previous experiments
         # led to savings from avoiding a full Mathlib cache in the order of a couple hundred MBs.
-        if: steps.cache-lake.outputs.cache-hit != 'true'
         run: |
           lake -R build
 
@@ -66,7 +70,7 @@ jobs:
             .lake/packages
             .lake/build
             TacBench/.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Add Lean to PATH
         run: |
@@ -99,7 +103,7 @@ jobs:
             .lake/packages
             .lake/build
             TacBench/.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Add Lean to PATH
         run: |
@@ -119,14 +123,14 @@ jobs:
         run: |
           cd bv-evaluation
           python3 ./compare.py instcombine -j48 \
-            || echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV
+            || (echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV; exit 1)
 
       - name: Collect data LLVM
         continue-on-error: true
         run: |
           cd bv-evaluation
           (python3 ./collect.py instcombine | tee llvm-stats) \
-            || echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV
+            || (echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV; exit 1)
 
       - uses: actions/github-script@v6
         if: env.LEANMLIR_STATUS != 'fail' && github.event_name == 'pull_request'
@@ -166,6 +170,10 @@ jobs:
             .lake/build
             TacBench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+
 
       - name: Add Lean to PATH
         run: |
