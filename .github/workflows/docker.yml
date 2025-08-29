@@ -130,13 +130,6 @@ jobs:
     steps:
       - name: Symlink .elan (to correct for GHA changing $HOME)
         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
-      
-      - name: Checkout git history 📚
-        uses: actions/checkout@v3
-        with:
-          sparse-checkout: .git
-      - name: Symlink git history 📚
-        run: 'ln -s "${{ github.workspace }}/.git" /code/lean-mlir/'
 
       - run: |
           lake build AliveExamples
@@ -158,13 +151,6 @@ jobs:
     steps:     
       - name: Symlink .elan (to correct for GHA changing $HOME)
         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
-      
-      - name: Checkout git history 📚
-        uses: actions/checkout@v3
-        with:
-          sparse-checkout: .git
-      - name: Symlink git history 📚
-        run: 'ln -s "${{ github.workspace }}/.git" /code/lean-mlir/'
 
       - name: Run LLVM
         continue-on-error: true
@@ -211,13 +197,6 @@ jobs:
     steps:
       - name: Symlink .elan (to correct for GHA changing $HOME)
         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
-
-      - name: Checkout git history 📚
-        uses: actions/checkout@v3
-        with:
-          sparse-checkout: .git
-      - name: Symlink git history 📚
-        run: 'ln -s "${{ github.workspace }}/.git" /code/lean-mlir/'
 
       - name: Ensure InstCombine goals are up-to-date
         env: 

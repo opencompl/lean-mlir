@@ -6,7 +6,6 @@ Dockerfile
 .devcontainer
 .dockerignore
 .envrc
-.git
 .gitattributes
 .github
 .gitignore
