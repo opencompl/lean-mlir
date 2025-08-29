@@ -8,7 +8,6 @@ import Leanwuzla
 import SSA.Projects.InstCombine.Tactic.SimpLLVM
 import Blase.SingleWidth.Tactic
 import Blase.Fast.MBA
--- import Blase.AutoStructs.ForLean
 import TacBench
 import SSA.Core.Tactic.ExtractGoals
 
