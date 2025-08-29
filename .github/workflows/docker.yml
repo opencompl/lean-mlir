@@ -158,7 +158,7 @@ jobs:
         continue-on-error: true
         run: |
           uv run ./compare.py instcombine -j48 --stride=${{matrix.stride}} --offset=${{matrix.offset}} \
-            || echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV
+            || (echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV; exit 1)
       
       - name: Upload logs
         id: upload
@@ -191,7 +191,7 @@ jobs:
         continue-on-error: true
         run: |
           (uv run ./collect.py instcombine | tee llvm-stats) \
-            || echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV
+            || (echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV; exit 1)
 
       - uses: actions/github-script@v6
         if: env.LEANMLIR_STATUS != 'fail' && github.event_name == 'pull_request'
