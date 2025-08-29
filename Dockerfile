@@ -10,7 +10,7 @@ SHELL ["/bin/bash", "-c"]
 # ^ We need bash for `{foo,bar}` expansion
 RUN --mount=type=bind,source=./,target=/mnt/lean-mlir \
   grep --no-filename --recursive --only-matching -E 'import (Mathlib|Qq|Lean)\S*' \ 
-        /mnt/lean-mlir/SSA/{Core,Projects/{CIRCT,InstCombine,DCE,CSE}} \
+        /mnt/lean-mlir/SSA/ \
     | sort -u > Imports.lean
 
 FROM ubuntu:25.04
@@ -18,7 +18,9 @@ FROM ubuntu:25.04
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   apt-get update && \
   apt-get install -yqq --no-install-recommends \
-    ca-certificates curl \
+    ca-certificates \
+    curl \
+    rsync \
     git
 
 # Ensure CA certificates are up-to-date
@@ -64,29 +66,31 @@ RUN lake env echo
 #          locked in manifest file (instead updating to the latest version allowed)
 
 #
-# Build Mathlib
+# Fetch Cache & build dependencies
 #
-COPY --from=dependencies /code/lean-mlir/SSA/Imports.lean ./SSA/
-RUN lake build SSA/Imports.lean
-# ^^ We deliberately build Mathlib ourselves, rather than use `lake exe cache get`
-#    The latter would be faster, but it downloads *all* off Mathlib, which weighs in
-#    at more than 5GB. We only use a tiny fraction of that, so by building only 
-#    those bits of Mathlib we actually use, we keep our image much smaller, and
-#    thus faster to transfer over the network. Since we build Mathlib in a dedicated
-#    layer, this step should be cached for most builds.
-
-#
-# Build the framework.
-#
-# See note at the end for more details
-# about the caching boilerplate
-COPY . ./
+COPY ./.dockerscripts ./dockerscripts
 # RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private,uid=$UID \
 #     --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private,uid=$UID \
+#   # Setup (Docker) cache
+#   ./dockerscripts/cache_setup.sh $HOME/.cache/LeanMLIR .lake && \
+#   # Fetch (Lean) cache
+#   lake exe cache get && \
+#   # 
+#   ./dockerscripts/cache_teardown.sh $HOME/.cache/LeanMLIR .lake
+# COPY --from=dependencies /code/lean-mlir/SSA/Imports.lean ./SSA/
+# RUN lake build SSA/Imports.lean
+
+# #
+# # Build the framework.
+# #
+# # See note at the end for more details
+# # about the caching boilerplate
+# COPY . ./
+# RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private,uid=$UID \
 #   # \
-#   # Symlink cache into place \
+#   # Setup cache  \
 #   # \
-#   ln -s $HOME/.cache/LeanMLIR/build .lake/build && \
+#   ./dockerscripts/cache_setup.sh $HOME/.cache/LeanMLIR .lake && \
 #   # \
 #   # Actual Build \
 #   # \
@@ -94,8 +98,7 @@ COPY . ./
 #   # \
 #   # Persist .lake into Docker image \
 #   # \
-#   rm .lake/build && \
-#   cp -Ra $HOME/.cache/LeanMLIR/build .lake/build
+#   ./dockerscripts/cache_teardown.sh $HOME/.cache/LeanMLIR .lake
 
 # The previous RUN uses cache-mounts to speed up 
 # builds. Note, however, that the paths which were
