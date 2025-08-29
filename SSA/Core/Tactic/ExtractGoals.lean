@@ -129,14 +129,13 @@ elab_rules : tactic
         let seenLevels := collectLevelParams {} ty
         let levels := (← Term.getLevelNames).filter
                         fun u => seenLevels.visitedLevel.contains (.param u)
-        let val ← mkSorry ty (synthetic := false)
         let msg ← PrintPrivate.mkDefLikeMessage
           (sigOnly := false)
-          "theorem"
+          "def"
           name
           levels
+          (Expr.sort 0)
           ty
-          val
         msgs := msgs.push <| msg
       pure msgs
     for msg in msgs do
@@ -144,14 +143,14 @@ elab_rules : tactic
 
 
 /--
-info: theorem _example.extracted_1._1 : ∀ (P Q R : Prop), P :=
-sorry
+info: def _example.extracted_1._1 : Prop :=
+∀ (P Q R : Prop), P
 ---
-info: theorem _example.extracted_1._2 : ∀ (P Q R : Prop), Q :=
-sorry
+info: def _example.extracted_1._2 : Prop :=
+∀ (P Q R : Prop), Q
 ---
-info: theorem _example.extracted_1._3 : ∀ (P Q R : Prop), R :=
-sorry
+info: def _example.extracted_1._3 : Prop :=
+∀ (P Q R : Prop), R
 ---
 warning: declaration uses 'sorry'
 ---
@@ -166,8 +165,8 @@ Note: This linter can be disabled with `set_option linter.unusedTactic false`
 
 
 /--
-info: theorem _example.extracted_1._1 : ∀ (P Q : Nat), P + Q = Q + P :=
-sorry
+info: def _example.extracted_1._1 : Prop :=
+∀ (P Q : Nat), P + Q = Q + P
 ---
 warning: declaration uses 'sorry'
 ---
