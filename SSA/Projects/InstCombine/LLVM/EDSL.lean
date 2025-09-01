@@ -59,7 +59,7 @@ def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags := do
               | 1 => return (⟨true, false⟩)
               | 2 => return (⟨false, true⟩)
               | 3 => return (⟨true, true⟩)
-              | s => throw <| .generic s!"The overflow flag with prediacte {s} not allowed. \
+              | s => throw <| .generic s!"The overflow flag with predicate {s} is not allowed. \
                 We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
 /--
 Maps integer predicate codes (as defined in the MLIR LLVM dialect) to their corresponding
