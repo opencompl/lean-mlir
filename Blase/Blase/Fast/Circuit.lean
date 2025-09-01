@@ -551,6 +551,43 @@ def bAnd : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
   | a::l, f, g => by
     rw [bAnd, eval_foldl_and]; simp
 
+/-- In a sum type, assign variables to the right of the circuit signature. -/
+def assignVarsRight [DecidableEq α] (c : Circuit (α ⊕ β))
+  (f : β → Bool) : Circuit α
+  := match c with
+  | tru => tru
+  | fals => fals
+  | var positive x =>
+    match x with
+    | .inl a => Circuit.var (positive := positive) a
+    | .inr b => Circuit.ofBool  (positive == f b)
+  | and p q => assignVarsRight p f &&& assignVarsRight q f
+  | or p q => assignVarsRight p f ||| assignVarsRight q f
+  | xor p q => assignVarsRight p f ^^^ assignVarsRight q f
+
+/-- Says how to evaluate asssignVars' in terms of an updated environment. -/
+@[simp]
+lemma eval_assignVarsRight [DecidableEq α] {c : Circuit (α ⊕ β)}
+    {f : β → Bool} :
+    eval (assignVarsRight c f) env = c.eval (Sum.elim env f) := by
+  induction c
+  case tru => simp [eval, assignVarsRight]
+  case fals => simp [eval, assignVarsRight]
+  case var positive x =>
+    simp [assignVarsRight]
+    rcases x with a | b
+    · simp
+    · simp only [Sum.elim_inr]
+      rcases fx : f b <;> rcases positive <;> simp
+  case and p q hp hq =>
+    simp [eval, hp, hq, assignVarsRight]
+  case or p q hp hq =>
+    simp [eval, hp, hq, assignVarsRight]
+  case xor p q hp hq =>
+    simp [eval, hp, hq, assignVarsRight]
+
+
+
 /-- perform the same task as assignVars, but don't change the signature of the circuit. -/
 def assignAllVars [DecidableEq α] (c : Circuit α)
   (f : α → Bool) : Circuit Empty

@@ -706,6 +706,25 @@ def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
     | i + 1 => (addAux x y i).2
   Prod.swap (BitVec.adcb (x i) (y i) carryIn)
 
+def addAux' (carryIn : Bool) (x y : BitStream) (i : Nat) :  Bool × Bool :=
+  let carryIn : Bool := match i with
+    | 0 => carryIn
+    | i + 1 => (addAux' carryIn x y i).2
+  Prod.swap (BitVec.adcb (x i) (y i) carryIn)
+
+@[simp] theorem addAux'_zero (carryIn : Bool)
+  (x y : BitStream) : (addAux' carryIn x y 0) =
+  ((x 0) ^^ (y 0) ^^ carryIn, Bool.atLeastTwo (x 0)  (y 0) carryIn) := by
+  simp [addAux', BitVec.adcb, Prod.swap]
+
+@[simp] theorem addAux'_succ (x y : BitStream) : (addAux' carryIn x y (i+1)) =
+    let out := (addAux' carryIn x y i)
+    let a := x (i + 1)
+    let b := y (i + 1)
+    let carryOut := out.2
+    (a ^^ b ^^ carryOut, Bool.atLeastTwo a  b carryOut) := by
+  simp [addAux', BitVec.adcb, Prod.swap]
+
 @[simp] theorem addAux_zero (x y : BitStream) : (x.addAux y 0) =
   ((x 0) ^^ (y 0), (x 0) && (y 0)) := by
   simp [addAux, addAux,BitVec.adcb]
@@ -720,6 +739,10 @@ def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
 
 def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
+
+/-- The stream of carry bits from the addition -/
+def carry (initCarry : Bool) (x y : BitStream) : BitStream :=
+  fun n => (addAux' initCarry x y n).2
 
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (xor (x 0) (y 0), !(x 0) && y 0)

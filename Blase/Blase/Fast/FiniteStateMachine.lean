@@ -158,6 +158,8 @@ def eval' (x : arity → BitStream) : BitStream :=
     ((x_tail, next.fst), next.snd)
   ) (x, p.initCarry)
 
+
+
 /-- `p.changeInitCarry c` yields an FSM with `c` as the initial state -/
 def changeInitCarry (p : FSM arity) (c : p.α → Bool) : FSM arity :=
   { p with initCarry := c }
