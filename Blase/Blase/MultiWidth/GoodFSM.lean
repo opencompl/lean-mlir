@@ -851,7 +851,6 @@ def fsmTermEq {wcard tcard : Nat}
     (composeBinaryAux' FSM.nxor afsm.toFsm  bfsm.toFsm)
 
 
-
 -- | TODO: refactor the whole thing, to not need a separation between 'output' and 'state.
 /-- fsm for carry, where initial carry bit is given statically. -/
 def fsmCarry (initialCarryVal : Bool): FSM Bool :=
@@ -918,16 +917,18 @@ TODO: rewrite with 'induction' to be a clean proof script.
     simp only [carry_fsmCarry]
     simp
 
+/-- an FSM for carry, that takes in the init carry after one step. -/
+def fsmCarryDelayed (initialCarryVal : Bool) : FSM Bool :=
+  composeUnaryAux (FSM.ls false) (fsmCarry initialCarryVal)
 
 /--
 The 'carry' FSM evaluates to the value of the carry bit.
 -/
-theorem eval_fsmCary_eq {wcard tcard : Nat}
+theorem eval_fsmCarryDelayed_eq {wcard tcard : Nat}
     (tctx : Term.Ctx wcard tcard)
     {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv)
     (w : WidthExpr wcard)
-    (initCarryVal : Bool)
     (a : Term tctx w)
     (b : Term tctx w)
     (afsm : TermFSM wcard tcard (.ofDep a))
@@ -936,20 +937,26 @@ theorem eval_fsmCary_eq {wcard tcard : Nat}
     (hbfsm : HTermFSMToBitStream bfsm)
     (fsmEnv : StateSpace wcard tcard → BitStream)
     (henv : HTermEnv fsmEnv tenv)
-    {i : Nat}
-    {initCarryVal : Bool}
     :
-    (composeBinaryAux' (fsmCarry initCarryVal)
+    ((composeBinaryAux' (fsmCarryDelayed initCarry)
       afsm.toFsm
-      bfsm.toFsm).eval fsmEnv i =
-    BitVec.carry (i + 1) (a.toBV tenv) (b.toBV tenv) initCarryVal := by
-  simp
-  rw [BitStream.carry_eq_carry (x' := Term.toBV tenv a) (y' := Term.toBV tenv b)]
-  · simp [hafsm.heq (henv := henv)]
+      bfsm.toFsm)).eval fsmEnv i =
+      match i with
+      | 0 => false
+      | i + 1 =>
+        BitStream.carry initCarry (afsm.toFsm.eval fsmEnv) (bfsm.toFsm.eval fsmEnv) i := by
+  simp only [fsmCarryDelayed, composeBinaryAux'_eval, composeUnaryAux_eval, eval_fsmCarry,
+    cond_true, cond_false, FSM.eval_ls]
+  rw [hafsm.heq (henv := henv)]
+  rw [hbfsm.heq (henv := henv)]
+  rcases i with rfl | i
+  · simp
+  · induction i
+    simp
     sorry
-  · simp [hbfsm.heq (henv := henv)]
-    sorry
-
+  · case succ i ih =>
+      simp only [] at ih ⊢
+      sorry
 #check BitVec.ult_eq_not_carry
 #check BitVec.carry
 #check FSM.add
@@ -959,21 +966,23 @@ def fsmTermUlt {wcard tcard : Nat}
   (bfsm : TermFSM wcard tcard b)
   : FSM (StateSpace wcard tcard) :=
   -- composeUnaryAux (FSM.ls false) <|
-      (composeBinaryAux' FSM.borrow afsm.toFsm bfsm.toFsm)
+      (composeBinaryAux' (fsmCarryDelayed true)  afsm.toFsm bfsm.toFsm)
 
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   (PredicateFSM wcard tcard p) :=
   match p with
-  | .binRel .eq a b =>
+  | .binRel .eq _w a b =>
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
     { toFsm := fsmTermEq fsmA fsmB }
 
-  | .binRel .ult a b =>
+  | .binRel .ult w a b =>
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
-    { toFsm := fsmTermUlt fsmA fsmB }
+    let fsmW := mkWidthFSM wcard tcard w
+    { toFsm :=
+      ~~~ fsmW.toFsm ||| (composeBinaryAux' FSM.borrow fsmA.toFsm fsmB.toFsm) }
   | .or p q  =>
     let fsmP :=  mkPredicateFSMAux wcard tcard p
     let fsmQ :=  mkPredicateFSMAux wcard tcard q
@@ -988,6 +997,8 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
 
 theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
   exact Function.ne_iff.mp h
+
+
 
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -1026,10 +1037,10 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
       constructor
       intros wenv tenv fsmEnv henv
       simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-      -- fsmTermEqProof starts here.
-      simp [fsmTermUlt]
+      have hw := IsGoodNatFSM_mkWidthFSM tcard w
       have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
       have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
+      rw [hw.heq (henv := henv.toHWidthEnv)]
       rw [ha.heq (henv := henv)]
       rw [hb.heq (henv := henv)]
       simp [Predicate.toProp]
@@ -1038,13 +1049,15 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
         simp at h
         ext N
         simp
-        induction N
-        case zero =>
-          simp
-          sorry
-        case succ N ihN =>
+        by_cases hw : w.toNat wenv < N
+        · simp [hw]
+        · simp [hw]; simp at hw
           sorry
       · intros h
+        simp at h
+        rw [← BitVec.ult_iff_lt]
+        rw [BitVec.ult_eq_not_carry]
+        simp at h
         sorry
   case or p q hp hq =>
     constructor
