@@ -495,11 +495,11 @@ def icmp' {w : Nat} (c : IntPred) (x y : BitVec w) : Bool :=
     | .sgt => (y.slt x)
     | .sge => (y.sle x)
     | .slt => (x.slt y)
-    | .sle => (x.slt y)
+    | .sle => (x.sle y)
     | .ugt => (y.ult x)
     | .uge => (y.ule x)
     | .ult => (x.ult y)
-    | .ule => (x.ult y)
+    | .ule => (x.ule y)
 
 
 /--
