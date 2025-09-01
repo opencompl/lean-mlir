@@ -744,6 +744,18 @@ def add (x y : BitStream) : BitStream :=
 def carry (initCarry : Bool) (x y : BitStream) : BitStream :=
   fun n => (addAux' initCarry x y n).2
 
+@[simp] theorem carry_zero
+    (initCarry : Bool) (x y : BitStream) :
+  (carry initCarry x y 0) = (Bool.atLeastTwo (x 0) (y 0) initCarry) := rfl
+
+@[simp] theorem carry_succ (initCarry : Bool) (x y : BitStream) :
+    (carry initCarry x y (i + 1)) =
+  let out := carry initCarry x y i
+  let a := x (i + 1)
+  let b := y (i + 1)
+  Bool.atLeastTwo a b out := rfl
+
+
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (xor (x 0) (y 0), !(x 0) && y 0)
   | n+1 =>

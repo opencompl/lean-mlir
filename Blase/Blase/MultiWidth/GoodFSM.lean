@@ -877,11 +877,7 @@ theorem initCarry_fsmCarry : (fsmCarry initCarry).initCarry = fun _ => initCarry
 @[simp]
 theorem snd_nextBit_fsmCarry {state : Unit → Bool} {env : Bool → Bool} :
     ((fsmCarry initCarry).nextBit state env).2 =
-    (env true && env false ||
-      env true && state () ||
-      env false && state ())
-    := by
-  simp [fsmCarry, FSM.nextBit]
+      Bool.atLeastTwo (env true) (env false) (state ()) := rfl
 
 @[simp]
 theorem fst_nextBit_fsmCarry_eq_atLeastTwo {state : Unit → Bool} {env : Bool → Bool} :
@@ -906,9 +902,8 @@ TODO: rewrite with 'induction' to be a clean proof script.
     simp [fsmCarry, FSM.carry, FSM.nextBit, BitStream.carry, BitStream.addAux'
       , BitVec.adcb]
   case succ n ih =>
-    rw [carry, ih]
-    simp [nextBit, borrow]
-
+    rw [FSM.carry, ih]
+    simp [FSM.nextBit, fsmCarry]
 
 @[simp] lemma eval_fsmCarry (x : Bool → BitStream) :
     (fsmCarry initCarry).eval x =
@@ -919,11 +914,9 @@ TODO: rewrite with 'induction' to be a clean proof script.
     simp [fsmCarry, BitStream.carry,
       BitStream.addAux', FSM.eval, FSM.nextBit, BitVec.adcb]
   case succ i ih =>
-    rw [eval]
-    simp only [carry_borrow, BitStream.borrow_succ]
-    rw [← ih]
-    simp [nextBit, eval, borrow]
-
+    rw [FSM.eval]
+    simp only [carry_fsmCarry]
+    simp
 
 /-- Shows how to write 'BitVec.carry' as an add carry circuit. -/
 private theorem carry_eq_adc (x y : BitVec w) (c : Bool) :
