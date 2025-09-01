@@ -950,7 +950,6 @@ theorem eval_fsmCary_eq {wcard tcard : Nat}
     BitVec.carry i (a.toBV tenv) (b.toBV tenv) initCarryVal := by
   sorry
 
-    sorry
 
 
 #check BitVec.ult_eq_not_carry
