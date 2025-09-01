@@ -918,11 +918,6 @@ TODO: rewrite with 'induction' to be a clean proof script.
     simp only [carry_fsmCarry]
     simp
 
-/-- Shows how to write 'BitVec.carry' as an add carry circuit. -/
-private theorem carry_eq_adc (x y : BitVec w) (c : Bool) :
-    BitVec.carry w x y c = (BitVec.adc x y c).1 := by
-  rw [BitVec.adc_spec]
-
 
 /--
 The 'carry' FSM evaluates to the value of the carry bit.
@@ -947,10 +942,13 @@ theorem eval_fsmCary_eq {wcard tcard : Nat}
     (composeBinaryAux' (fsmCarry initCarryVal)
       afsm.toFsm
       bfsm.toFsm).eval fsmEnv i =
-    BitVec.carry i (a.toBV tenv) (b.toBV tenv) initCarryVal := by
-  sorry
-
-
+    BitVec.carry (i + 1) (a.toBV tenv) (b.toBV tenv) initCarryVal := by
+  simp
+  rw [BitStream.carry_eq_carry (x' := Term.toBV tenv a) (y' := Term.toBV tenv b)]
+  · simp [hafsm.heq (henv := henv)]
+    sorry
+  · simp [hbfsm.heq (henv := henv)]
+    sorry
 
 #check BitVec.ult_eq_not_carry
 #check BitVec.carry

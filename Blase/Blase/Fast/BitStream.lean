@@ -756,20 +756,24 @@ def carry (initCarry : Bool) (x y : BitStream) : BitStream :=
   Bool.atLeastTwo a b out := rfl
 
 /-- Shows how to write a `BitStream.carry` as a `BitVec.carry`  -/
-private theorem carry_eq_carry (x y : BitStream) (c : Bool) (hw : n < w):
-    carry c x y n = (BitVec.carry (n + 1) (x.toBitVec w) (y.toBitVec w) c)  := by
+protected theorem carry_eq_carry (x y : BitStream) (c : Bool)
+    (x' y' : BitVec w)
+    (hx : ∀ i, (hi : i < w) → x'[i] = x i)
+    (hy : ∀ i, (hi : i < w) → y'[i] = y i)
+    (hw : n < w):
+    carry c x y n = (BitVec.carry (n + 1) x' y' c) := by
   induction n
   case zero =>
     rw [carry]
     rw [BitVec.carry_succ]
     simp [show 0 < w by omega]
+    simp [hx, hy]
   case succ n ihn =>
     rw [carry_succ]
     rw [BitVec.carry_succ]
-    simp only [show n + 1 < w by omega, BitVec.getLsbD_eq_getElem, getElem_toBitVec, decide_true,
-      Bool.true_and]
-    rw [ihn]
-    · omega
+    simp only [show n + 1 < w by omega, BitVec.getLsbD_eq_getElem]
+    simp [hx, hy]
+    rw [ihn (by omega)]
 
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (xor (x 0) (y 0), !(x 0) && y 0)
