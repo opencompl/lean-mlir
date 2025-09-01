@@ -978,9 +978,7 @@ TODO: rewrite with 'induction' to be a clean proof script.
     rcases width0Val with rfl | rfl <;> simp
   · induction i
     case zero =>
-      simp [fsmCarry, BitStream.carry,
-        BitStream.addAux', FSM.eval, FSM.nextBit, BitVec.adcb]
-      sorry
+      simp [FSM.eval]
     case succ i ih =>
       rw [FSM.eval]
       simp only [carry_fsmCarry]
@@ -1041,8 +1039,7 @@ def fsmTermUlt {wcard tcard : Nat}
   (afsm : TermFSM wcard tcard a)
   (bfsm : TermFSM wcard tcard b)
   : FSM (StateSpace wcard tcard) :=
-  --  (FSM.ls false) <|
-      (composeBinaryAux' (fsmCarryDelayed true)  afsm.toFsm bfsm.toFsm)
+    ~~~ (composeBinaryAux' (fsmCarry false true)  afsm.toFsm bfsm.toFsm)
 
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
@@ -1052,13 +1049,11 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
     { toFsm := fsmTermEq fsmA fsmB }
-
   | .binRel .ult w a b =>
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
     let fsmW := mkWidthFSM wcard tcard w
-    { toFsm :=
-      ~~~ fsmW.toFsm ||| (composeBinaryAux' FSM.borrow fsmA.toFsm fsmB.toFsm) }
+    { toFsm := ~~~ fsmW.toFsm ||| fsmTermUlt fsmA fsmB }
   | .or p q  =>
     let fsmP :=  mkPredicateFSMAux wcard tcard p
     let fsmQ :=  mkPredicateFSMAux wcard tcard q
@@ -1116,24 +1111,41 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
       have hw := IsGoodNatFSM_mkWidthFSM tcard w
       have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
       have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
+      simp [fsmTermUlt]
       rw [hw.heq (henv := henv.toHWidthEnv)]
-      rw [ha.heq (henv := henv)]
-      rw [hb.heq (henv := henv)]
+      -- rw [ha.heq (henv := henv)]
+      -- rw [hb.heq (henv := henv)]
       simp [Predicate.toProp]
       constructor
       · intros h
         simp at h
         ext N
-        simp
+        simp only [BitStream.or_eq, BitStream.not_eq, BitStream.eval_ofNatUnary,
+          BitStream.negOne_eq, Bool.or_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
+          decide_eq_false_iff_not, not_le]
         by_cases hw : w.toNat wenv < N
         · simp [hw]
-        · simp [hw]; simp at hw
-          sorry
+        · simp [hw]
+          rcases N with rfl | N
+          · simp
+          · simp
+            sorry
       · intros h
         simp at h
         rw [← BitVec.ult_iff_lt]
         rw [BitVec.ult_eq_not_carry]
-        simp at h
+        simp
+        -- have := BitVec.ult_eq_not_carry
+        --   (w := w.toNat wenv)
+        --   (x := Term.toBV tenv a)
+        --   (y := Term.toBV tenv b)
+        -- have := congrArg Bool.not this
+        -- rw [Bool.not_not] at this
+        -- rw [← this]
+        -- simp
+        have := congrFun h ((w.toNat wenv) + 1)
+        simp at this
+        -- rw [BitStream.carry_eq_carry]
         sorry
   case or p q hp hq =>
     constructor
