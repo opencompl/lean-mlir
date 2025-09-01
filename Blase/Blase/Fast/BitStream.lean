@@ -67,12 +67,16 @@ section Basic
 def head (x : BitStream) : Bool      := x 0
 def tail (x : BitStream) : BitStream := (x <| · + 1)
 
+@[simp]
+theorem tail_eq (x : BitStream) (i : Nat) : x.tail i = x (i + 1) := rfl
+
 /-- Append a single bit to the least significant end of a bitvector.
 That is, the new bit is the least significant bit.
 -/
 def concat (b : Bool) (x : BitStream) : BitStream
   | 0   => b
   | i+1 => x i
+
 
 @[simp]
 theorem concat_zero (b : Bool) (x : BitStream) : concat b x 0 = b := rfl

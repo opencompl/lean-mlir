@@ -852,39 +852,82 @@ def fsmTermEq {wcard tcard : Nat}
 
 
 -- | TODO: refactor the whole thing, to not need a separation between 'output' and 'state.
-/-- fsm for carry, where initial carry bit is given statically. -/
-def fsmCarry (initialCarryVal : Bool): FSM Bool :=
-  { α := Unit,
-    -- Internal state is the current borrow.
-    initCarry := fun _ => initialCarryVal,
-    outputCirc :=
-      let carry := Circuit.var true (Sum.inl ())
-      let a := Circuit.var true (Sum.inr true)
-      let b := Circuit.var true (Sum.inr false)
-      (a &&& b) ||| (a &&& carry) ||| (b &&& carry)
-      -- carry
-    nextStateCirc := fun () =>
-      let carry := Circuit.var true (Sum.inl ())
-      let a := Circuit.var true (Sum.inr true)
-      let b := Circuit.var true (Sum.inr false)
-      (a &&& b) ||| (a &&& carry) ||| (b &&& carry)
+/-- fsm for carry, where initial carry bit is given statically.
+
+TODO: create different
+-/
+def fsmCarry (width0Val : Bool) (initialCarryVal : Bool): FSM Bool :=
+  let outputCirc :=
+    let atState0 := Circuit.var true (Sum.inl false)
+    let carry := Circuit.var true (Sum.inl true)
+    let a := Circuit.var true (Sum.inr true)
+    let b := Circuit.var true (Sum.inr false)
+    -- if we are zero, then the output is 'false'.
+    Circuit.ite atState0
+      (Circuit.ofBool width0Val)
+      ((a &&& b) ||| (a &&& carry) ||| (b &&& carry))
+  let nextStateCirc :=
+    let atState0 := Circuit.var true (Sum.inl false)
+    let carry := Circuit.var true (Sum.inl true)
+    let a := Circuit.var true (Sum.inr true)
+    let b := Circuit.var true (Sum.inr false)
+    -- if we are zero, then the output is 'false'.
+    Circuit.ite atState0
+      (carry)
+      ((a &&& b) ||| (a &&& carry) ||| (b &&& carry))
+
+  { α := Bool,
+    -- bit at 'false' tells us if we are at the zero state.
+    -- bit at 'true' tells us the carry value.
+    initCarry := fun stateIx =>
+      match stateIx with
+      | false => true -- we are at the state zero.
+      | true => initialCarryVal, -- our carry is the init carry.
+    outputCirc := outputCirc
+    nextStateCirc := fun stateIx =>
+      match stateIx with
+      | false => Circuit.fals -- from state 1 onwards, this is just "false"
+      | true => nextStateCirc
   }
 
 @[simp]
-theorem initCarry_fsmCarry : (fsmCarry initCarry).initCarry = fun _ => initCarry := rfl
+theorem initCarry_fsmCarry : (fsmCarry width0Val initCarry).initCarry =
+  fun isZeroOrCarry =>
+      match isZeroOrCarry with
+      | false => true -- we are at the state zero.
+      | true => initCarry := by
+  simp [fsmCarry]; grind
 
 @[simp]
-theorem snd_nextBit_fsmCarry {state : Unit → Bool} {env : Bool → Bool} :
-    ((fsmCarry initCarry).nextBit state env).2 =
-      Bool.atLeastTwo (env true) (env false) (state ()) := rfl
+theorem snd_nextBit_fsmCarry {state : Bool → Bool} {env : Bool → Bool} :
+    ((fsmCarry width0Val initCarry).nextBit state env).2 =
+      if (state false)
+      then width0Val
+      else Bool.atLeastTwo (env true) (env false) (state true) := by
+  simp [fsmCarry, FSM.nextBit, Lean.Elab.WF.paramLet, FSM.nextBit]
+  by_cases hs : state false
+  · simp [hs]
+    by_cases hw : width0Val <;> simp [hw]
+  · simp [hs]
 
 @[simp]
-theorem fst_nextBit_fsmCarry_eq_atLeastTwo {state : Unit → Bool} {env : Bool → Bool} :
-    ((fsmCarry initCarry).nextBit state env).1 = fun _ =>
-    Bool.atLeastTwo (state ()) (env true) (env false) := by
-  simp only [fsmCarry, Lean.Elab.WF.paramLet, FSM.nextBit, Circuit.eval_or, Circuit.eval_and,
-    Circuit.eval, ↓reduceIte, Sum.elim_inr, Sum.elim_inl, Circuit.eval.eq_3]
-  grind
+theorem fst_nextBit_fsmCarry_eq_atLeastTwo {state : Bool → Bool} {env : Bool → Bool} :
+    ((fsmCarry width0Val initCarry).nextBit state env).1 = fun stateIx =>
+    match stateIx with
+    | false => false
+    | true =>
+      if (state false)
+      then (state true)
+      else Bool.atLeastTwo (env true) (env false) (state true) := by
+  simp [fsmCarry, Lean.Elab.WF.paramLet, FSM.nextBit]
+  ext bit
+  rcases bit with rfl | rfl
+  · simp
+  · simp
+    -- by_cases hs : state false
+    -- · simp [hs]
+    --   by_cases hw : width0Val <;> simp [hw]
+    -- · simp [hs]
 
 /--
 The carry state of the borrow bit.
@@ -892,39 +935,65 @@ TODO: rewrite with 'induction' to be a clean proof script.
 -/
 @[simp] theorem carry_fsmCarry (initCarry : Bool)
     (x : Bool → BitStream) : ∀ (n : ℕ),
-    FSM.carry (fsmCarry initCarry) x (n + 1) =
-    fun _ => BitStream.carry initCarry (x true) (x false) n := by
+    FSM.carry (fsmCarry width0Val initCarry) x (n + 1) =
+    fun stateIx =>
+      match stateIx with
+      | false => false
+      | true =>
+        match n with
+        | 0 => initCarry
+        | n + 1 => BitStream.carry initCarry ((x true).tail) ((x false).tail) n := by
   intros n
   induction n
   case zero =>
-    ext i
-    simp [fsmCarry, FSM.carry, FSM.nextBit, BitStream.carry, BitStream.addAux'
-      , BitVec.adcb]
+    ext stateIx
+    rcases stateIx with rfl | rfl
+    · simp [fsmCarry, FSM.carry, FSM.nextBit]
+    · simp [fsmCarry, FSM.carry, FSM.nextBit]
+      -- by_cases hw : width0Val <;> simp [hw]
   case succ n ih =>
-    rw [FSM.carry, ih]
+    ext stateIx
+    rw [FSM.carry]
+    simp only [ih]
+    clear ih
     simp [FSM.nextBit, fsmCarry]
+    rcases stateIx with rfl | rfl
+    · simp
+    · simp
+      induction n
+      case zero =>
+        simp [BitStream.carry_zero, Bool.atLeastTwo]
+        -- sorry
+      case succ n ih =>
+        simp [BitStream.carry_succ, Bool.atLeastTwo]
+        -- sorry
 
 @[simp] lemma eval_fsmCarry (x : Bool → BitStream) :
-    (fsmCarry initCarry).eval x =
-    BitStream.carry initCarry (x true) (x false) := by
+    (fsmCarry width0Val initCarry).eval x =
+    (BitStream.concat width0Val <|
+      BitStream.carry initCarry (x true).tail (x false).tail) := by
   ext i
-  induction i
-  case zero =>
-    simp [fsmCarry, BitStream.carry,
-      BitStream.addAux', FSM.eval, FSM.nextBit, BitVec.adcb]
-  case succ i ih =>
-    rw [FSM.eval]
-    simp only [carry_fsmCarry]
-    simp
+  rcases i with rfl | i
+  · simp [fsmCarry, FSM.eval, FSM.nextBit]
+    rcases width0Val with rfl | rfl <;> simp
+  · induction i
+    case zero =>
+      simp [fsmCarry, BitStream.carry,
+        BitStream.addAux', FSM.eval, FSM.nextBit, BitVec.adcb]
+      sorry
+    case succ i ih =>
+      rw [FSM.eval]
+      simp only [carry_fsmCarry]
+      simp
 
-/-- an FSM for carry, that takes in the init carry after one step. -/
-def fsmCarryDelayed (initialCarryVal : Bool) : FSM Bool :=
-  composeUnaryAux (FSM.ls false) (fsmCarry initialCarryVal)
+-- /-- an FSM for carry, that takes in the init carry after one step. -/
+-- def fsmCarryDelayed (initialCarryVal : Bool) : FSM Bool :=
+--   composeUnaryAux (FSM.ls false) (fsmCarry initialCarryVal)
 
 /--
 The 'carry' FSM evaluates to the value of the carry bit.
 -/
-theorem eval_fsmCarryDelayed_eq {wcard tcard : Nat}
+theorem eval_fsmCarry_eq {wcard tcard : Nat}
     (tctx : Term.Ctx wcard tcard)
     {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv)
@@ -938,34 +1007,41 @@ theorem eval_fsmCarryDelayed_eq {wcard tcard : Nat}
     (fsmEnv : StateSpace wcard tcard → BitStream)
     (henv : HTermEnv fsmEnv tenv)
     :
-    ((composeBinaryAux' (fsmCarryDelayed initCarry)
+    ((composeBinaryAux' (fsmCarry width0Val initCarry)
       afsm.toFsm
       bfsm.toFsm)).eval fsmEnv i =
       match i with
-      | 0 => false
-      | i + 1 =>
-        BitStream.carry initCarry (afsm.toFsm.eval fsmEnv) (bfsm.toFsm.eval fsmEnv) i := by
-  simp only [fsmCarryDelayed, composeBinaryAux'_eval, composeUnaryAux_eval, eval_fsmCarry,
-    cond_true, cond_false, FSM.eval_ls]
-  rw [hafsm.heq (henv := henv)]
-  rw [hbfsm.heq (henv := henv)]
+      | 0 => width0Val
+      | i + 1 => BitVec.carry (i + 1) (a.toBV tenv) (b.toBV tenv) initCarry
+           := by
   rcases i with rfl | i
   · simp
   · induction i
-    simp
-    sorry
-  · case succ i ih =>
+    · case zero =>
+      simp
+      rw [BitVec.carry_succ]
+      simp
+      rw [hafsm.heq (henv := henv)]
+      simp
+      rw [hbfsm.heq (henv := henv)]
+      simp
+    · case succ i ih =>
       simp only [] at ih ⊢
-      sorry
-#check BitVec.ult_eq_not_carry
-#check BitVec.carry
-#check FSM.add
+      simp
+      rw [BitVec.carry_succ]
+      rw [← ih]
+      simp
+      rw [hafsm.heq (henv := henv)]
+      simp
+      rw [hbfsm.heq (henv := henv)]
+      simp
+
 def fsmTermUlt {wcard tcard : Nat}
   {a b : Nondep.Term}
   (afsm : TermFSM wcard tcard a)
   (bfsm : TermFSM wcard tcard b)
   : FSM (StateSpace wcard tcard) :=
-  -- composeUnaryAux (FSM.ls false) <|
+  --  (FSM.ls false) <|
       (composeBinaryAux' (fsmCarryDelayed true)  afsm.toFsm bfsm.toFsm)
 
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
