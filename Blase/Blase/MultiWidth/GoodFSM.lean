@@ -204,6 +204,13 @@ theorem eval_fsmMsb_eq_BitStream_ofBitVecSext {wenv : WidthExpr.Env wcard}
     congr
     omega
 
+
+-- TODO: give the TermFSM also the FSM of the width.
+-- def TermFSM.toFsmSext {wcard tcard : Nat} {t : Nondep.Term}
+--   (fsm : TermFSM wcard tcard t) : FSM (StateSpace wcard tcard) :=
+--   composeUnaryAux fsmMsb
+
+
 -- | Found a cuter expression for 'getLsbD_signExtend'.
 theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
   (x.signExtend wnew).getLsbD i =
@@ -1103,18 +1110,16 @@ def fsmMsbEq (a : FSM α) (b : FSM α) : FSM α :=
 
 def fsmTermSlt
   {wcard tcard : Nat}
+  {w : Nondep.WidthExpr}
   {a b : Nondep.Term}
-  (wfsm : NatFSM wcard tcard (.ofDep w))
+  (wfsm : NatFSM wcard tcard w)
   (afsm : TermFSM wcard tcard a)
   (bfsm : TermFSM wcard tcard b)
   : FSM (StateSpace wcard tcard) :=
     let afsm := afsm.toFsmZext
     let bfsm := bfsm.toFsmZext
-    -- let afsm :=
-    --   composeBinaryAux'
-    --     (FSM.latchImmediate false)
-    --     (afsm.toFsm)
-    --     (wfsm.fsmUnaryIndexUle)
+    let afsm := fsmMsb afsm wfsm.toFsm
+    let bfsm := fsmMsb bfsm wfsm.toFsm
     -- let bfsm :=
     --   composeBinaryAux'
     --     (FSM.latchImmediate false)
@@ -1124,72 +1129,102 @@ def fsmTermSlt
       (~~~ (composeBinaryAux' (fsmCarry'' true)  afsm (~~~ bfsm)))
     let xorFsm := fsmMsbEq afsm bfsm
     let val := xorFsm ^^^ carryFsm
-    let valLatched := composeBinaryAux'
-      (FSM.latchImmediate false)
-      val
-      (wfsm.fsmUnaryIndexUle)
-    valLatched
+    val
 /--
 info: BitVec.slt_eq_not_carry {w : ℕ} {x y : BitVec w} :
   x.slt y = (x.msb == y.msb ^^ BitVec.carry w x (~~~y) true)
 -/
 #guard_msgs (whitespace := lax) in #check BitVec.slt_eq_not_carry
 
--- theorem eval_fsmTermSlt_eq_decide_slt {wcard tcard : Nat}
---     (tctx : Term.Ctx wcard tcard)
---     {wenv : WidthExpr.Env wcard}
---     (tenv : tctx.Env wenv)
---     (w : WidthExpr wcard)
---     (a : Term tctx w)
---     (b : Term tctx w)
---     (wfsm : NatFSM wcard tcard (.ofDep w))
---     (hwfsm : HNatFSMToBitstream wfsm)
---     (afsm : TermFSM wcard tcard (.ofDep a))
---     (hafsm : HTermFSMToBitStream afsm)
---     (bfsm : TermFSM wcard tcard (.ofDep b))
---     (hbfsm : HTermFSMToBitStream bfsm)
---     (fsmEnv : StateSpace wcard tcard → BitStream)
---     (henv : HTermEnv fsmEnv tenv)
---     :
---     ((fsmTermSlt
---       wfsm
---       afsm
---       bfsm)).eval fsmEnv i =
---        decide (((a.toBV tenv).setWidth (min i (w.toNat wenv)).sle
---           ((b.toBV tenv).setWidth i)) := by
---   have := BitVec.sle_eq_carry
---     (x := (a.toBV tenv).setWidth i)
---     (y := (b.toBV tenv).setWidth i)
---   rw [this]
---   clear this
---   simp [fsmTermSle]
---   rw [BitStream.carry'_eq_carry
---       (x' := BitVec.setWidth i (Term.toBV tenv b))
---       (y' := ~~~ BitVec.setWidth i (Term.toBV tenv a))]
---   simp [fsmMsbEq]
---   · rcases i with rfl | i
---     · simp [BitVec.of_length_zero]
---     · simp
---       simp [BitVec.msb_eq_getLsbD_last]
---       rw [hafsm.heq (henv := henv)]
---       rw [hbfsm.heq (henv := henv)]
---       simp only [BitStream.ofBitVecZext_eq_getLsbD]
---       generalize (Term.toBV tenv a).getLsbD i = va
---       generalize (Term.toBV tenv b).getLsbD i = vb
---       rcases va with rfl | rfl <;>
---         rcases vb with rfl | rfl <;>
---           simp
---   · intros j
---     simp
---     intros hj
---     simp [hj]
---     rw [hbfsm.heq (henv := henv)]
---   · intros j
---     simp
---     intros hj
---     simp [hj]
---     rw [hafsm.heq (henv := henv)]
+private theorem BitVec.signExtend_sle_signExtend_of_sle {x y : BitVec w}
+    {N : Nat} (hN : w ≤ N)
+    (h : x.sle y) : (x.signExtend N).sle (y.signExtend N) := by
+  rw [BitVec.sle_eq_decide] at ⊢ h
+  simp at h ⊢
+  simp [BitVec.toInt_signExtend]
+  simp [show min N w = w by omega]
+  assumption
 
+
+private theorem BitVec.signExtend_slt_signExtend_of_slt {x y : BitVec w}
+    {N : Nat} (hN : w ≤ N)
+    (h : x.slt y) : (x.signExtend N).slt (y.signExtend N) := by
+  rw [BitVec.slt_eq_decide] at ⊢ h
+  simp at h ⊢
+  simp [BitVec.toInt_signExtend]
+  simp [show min N w = w by omega]
+  assumption
+
+theorem eval_fsmTermSlt_eq_decide_slt {wcard tcard : Nat}
+    (tctx : Term.Ctx wcard tcard)
+    {wenv : WidthExpr.Env wcard}
+    (tenv : tctx.Env wenv)
+    (w : WidthExpr wcard)
+    (a : Term tctx w)
+    (b : Term tctx w)
+    (wfsm : NatFSM wcard tcard (.ofDep w))
+    (hwfsm : HNatFSMToBitstream wfsm)
+    (afsm : TermFSM wcard tcard (.ofDep a))
+    (hafsm : HTermFSMToBitStream afsm)
+    (bfsm : TermFSM wcard tcard (.ofDep b))
+    (hbfsm : HTermFSMToBitStream bfsm)
+    (fsmEnv : StateSpace wcard tcard → BitStream)
+    (henv : HTermEnv fsmEnv tenv)
+    :
+    ((fsmTermSlt
+      wfsm
+      afsm
+      bfsm)).eval fsmEnv i =
+       decide (((a.toBV tenv).signExtend i).slt
+          ((b.toBV tenv).signExtend i)) := by
+  simp [fsmTermSlt]
+  have := BitVec.slt_eq_not_carry
+    (x := (a.toBV tenv).signExtend i)
+    (y := (b.toBV tenv).signExtend i)
+  rw [this]
+  clear this
+  simp [eval_fsmMsb_eq_BitStream_ofBitVecSext (hxfsm := hafsm) (hwfsm := hwfsm)
+        (tenv := tenv) (htenv := henv)]
+  simp [eval_fsmMsb_eq_BitStream_ofBitVecSext (hxfsm := hbfsm) (hwfsm := hwfsm)
+    (tenv := tenv) (htenv := henv)]
+  rw [BitStream.carry'_eq_carry
+      (x' := BitVec.signExtend i (Term.toBV tenv a))
+      (y' := ~~~ BitVec.signExtend i (Term.toBV tenv b))]
+  -- simp [fsmMsbEq]
+  · rcases i with rfl | i
+    · simp
+      simp [BitVec.of_length_zero]
+      simp [fsmMsbEq]
+    · simp [fsmMsbEq]
+      simp [eval_fsmMsb_eq_BitStream_ofBitVecSext (hxfsm := hafsm) (hwfsm := hwfsm)
+            (tenv := tenv) (htenv := henv)]
+      simp [eval_fsmMsb_eq_BitStream_ofBitVecSext (hxfsm := hbfsm) (hwfsm := hwfsm)
+        (tenv := tenv) (htenv := henv)]
+      simp [BitStream.ofBitVecSext]
+      by_cases hi : i < w.toNat wenv
+      · simp [BitVec.msb_eq_getLsbD_last, BitVec.getElem_signExtend]
+        simp [hi]
+        grind [Bool]
+      · simp [BitVec.msb_eq_getLsbD_last, BitVec.getElem_signExtend]
+        simp [hi]
+        grind [Bool]
+  · intros j
+    intros hj
+    simp [hj]
+    simp [BitVec.getElem_signExtend]
+    simp [BitStream.ofBitVecSext]
+    by_cases hw : j < w.toNat wenv
+    · simp [hw]
+    · simp [hw]
+  · intros j
+    simp
+    intros hj
+    simp [hj]
+    simp [BitVec.getElem_signExtend]
+    simp [BitStream.ofBitVecSext]
+    by_cases hw : j < w.toNat wenv
+    · simp [hw]
+    · simp [hw]
 
 /--
 info: BitVec.sle_eq_carry {w : ℕ} {x y : BitVec w} :
