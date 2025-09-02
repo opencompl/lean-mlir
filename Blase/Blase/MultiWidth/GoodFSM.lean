@@ -1203,10 +1203,8 @@ def fsmTermUlt {wcard tcard : Nat}
   (afsm : TermFSM wcard tcard a)
   (bfsm : TermFSM wcard tcard b)
   : FSM (StateSpace wcard tcard) :=
-    let streamFsm :=
-      composeUnaryAux (FSM.ls true) (fsmCarry' true)
+    let streamFsm := composeUnaryAux (FSM.ls true) (fsmCarry'' true)
     (~~~ (composeBinaryAux' streamFsm  afsm.toFsm (~~~ bfsm.toFsm)))
-
 
 /--
 info: BitVec.ult_eq_not_carry {w : ℕ} (x y : BitVec w) :
@@ -1241,13 +1239,23 @@ theorem eval_fsmTermUlt_eq_carry {wcard tcard : Nat}
     rcases i with rfl | i
     · simp
     · simp
-      rw [BitStream.carry_eq_carry]
-      · have := hafsm.heq (henv := henv)
-        rw [this]
+      rw [BitStream.carry'_eq_carry
+        (x' := BitVec.shiftLeftZeroExtend (Term.toBV tenv a) 1)
+        (y' := ~~~ (BitVec.shiftLeftZeroExtend ((Term.toBV tenv b)) 1))]
+      sorry
+      · intros i
+        rw [hafsm.heq (henv := henv)]
         simp
-        sorry
-      · sorry
-
+        rcases i with rfl | i
+        · simp
+        · simp
+      · intros i
+        rw [hbfsm.heq (henv := henv)]
+        simp
+        rcases i with rfl | i
+        · simp
+        · simp
+          sorry
 
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
