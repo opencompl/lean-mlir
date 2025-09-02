@@ -429,7 +429,7 @@ structure HTermEnv {wcard tcard : Nat}
   (fsmEnv : StateSpace wcard tcard → BitStream) (tenv : tctx.Env wenv) : Prop
   extends HWidthEnv fsmEnv wenv where
     heq_term : ∀ (v : Fin tcard),
-      fsmEnv (StateSpace.termVar v) = BitStream.ofBitVecZextMsb (tenv v)
+      fsmEnv (StateSpace.termVar v) = BitStream.ofBitVecZext (tenv v)
 
 /-- make a 'HTermEnv' of 'ofTenv'. -/
 def HTermEnv.mkFsmEnvOfTenv {wcard tcard : Nat}
@@ -439,7 +439,7 @@ def HTermEnv.mkFsmEnvOfTenv {wcard tcard : Nat}
     | .widthVar v =>
         BitStream.ofNatUnary (wenv v)
     | .termVar v =>
-      BitStream.ofBitVecZextMsb (tenv v)
+      BitStream.ofBitVecZext (tenv v)
 
 @[simp]
 theorem HTermEnv.of_mkFsmEnvOfTenv {wcard tcard : Nat}
@@ -474,7 +474,7 @@ structure HTermFSMToBitStream {w : WidthExpr wcard}
       (fsmEnv : StateSpace wcard tcard → BitStream),
       (henv : HTermEnv fsmEnv tenv) →
         fsm.toFsm.eval fsmEnv =
-        BitStream.ofBitVecZextMsb (t.toBV tenv)
+        BitStream.ofBitVecZext (t.toBV tenv)
 
 structure HPredFSMToBitStream
   {tctx : Term.Ctx wcard tcard}

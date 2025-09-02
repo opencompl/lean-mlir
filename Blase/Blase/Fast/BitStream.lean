@@ -253,11 +253,11 @@ theorem ofBitVecZextMsb_eq_ofBitVecZext_mul_two_zeroExtend (x : BitVec w)
 
 /-- Make a bitstream of a unary natural number. -/
 abbrev ofNatUnary (n : Nat) : BitStream :=
-  fun i => decide (i ≤ n)
+  fun i => decide (i < n)
 
 @[simp]
 theorem eval_ofNatUnary (n : Nat) (i : Nat) :
-    ofNatUnary n i = decide (i ≤ n) := rfl
+    ofNatUnary n i = decide (i < n) := rfl
 
 /-- `x.toBitVec w` returns the first `w` bits of bitstream `x` -/
 def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
@@ -802,8 +802,8 @@ def carry' (initCarry : Bool) (x y : BitStream) : BitStream :=
 /-- Shows how to write a `BitStream.carry` as a `BitVec.carry`  -/
 protected theorem carry'_eq_carry (x y : BitStream) (c : Bool)
     (x' y' : BitVec w)
-    (hx : ∀ i, x'.getLsbD i = x i)
-    (hy : ∀ i,  y'.getLsbD i = y i) :
+    (hx : ∀ i, i < n → x'.getLsbD i = x i)
+    (hy : ∀ i,  i < n → y'.getLsbD i = y i) :
     carry' c x y n = (BitVec.carry n x' y' c) := by
   induction n
   case zero =>
@@ -812,8 +812,36 @@ protected theorem carry'_eq_carry (x y : BitStream) (c : Bool)
   case succ n ihn =>
     rw [carry'_succ]
     rw [BitVec.carry_succ]
-    rw [hx, hy]
+    simp only
     rw [ihn]
+    · rw [hx]
+      · rw [hy]
+        · omega
+      · omega
+    · intros i hi
+      apply hx
+      omega
+    · intros i hi
+      apply hy
+      omega
+
+-- /-- Shows how to write a `BitStream.carry` as a `BitVec.carry`  -/
+-- protected theorem carry'_eq_carry (x y : BitStream) (c : Bool)
+--     (x' y' : BitVec w)
+--     (hx : ∀ i, x'.getLsbD i = x (i + 1))
+--     (hy : ∀ i,  y'.getLsbD i = y (i + 1)) :
+--     carry' c x y n = (BitVec.carry n  x' y' c) := by
+--   induction n
+--   case zero =>
+--     rw [carry]
+--     simp
+--     rw [BitVec.carry_succ]
+--     simp [hx, hy]
+--   case succ n ihn =>
+--     rw [carry_succ]
+--     rw [BitVec.carry_succ]
+--     rw [hx, hy]
+--     rw [ihn]
 
 
 def subAux (x y : BitStream) : Nat → Bool × Bool

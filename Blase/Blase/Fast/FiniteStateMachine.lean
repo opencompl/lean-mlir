@@ -1184,7 +1184,7 @@ def latchImmediate (initVal : Bool) : FSM Bool where
     let state := Circuit.var true (inl ())
     Circuit.ite control xval state
 
-@[simp]
+@[simp low]
 theorem eval_latchImmediate_zero_eq (initVal : Bool)
     (x : Bool → BitStream) :
     (latchImmediate initVal).eval x 0 = if (x true 0) then (x false 0) else initVal := by
