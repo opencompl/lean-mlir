@@ -232,7 +232,7 @@ theorem eval_fsmUnaryMin_eq_decide
   ((fsmUnaryMin a.toFsm b.toFsm).eval fsmEnv) i =
     (i < (min (v.toNat wenv) (w.toNat wenv))) := by
   simp only [fsmUnaryMin, composeBinaryAux'_eval, _root_.FSM.eval_and, cond_true, cond_false,
-    BitStream.and_eq, Bool.and_eq_true, le_inf_iff, eq_iff_iff]
+    BitStream.and_eq, Bool.and_eq_true, eq_iff_iff]
   rw [ha.heq (henv := henv)]
   rw [hb.heq (henv := henv)]
   simp
