@@ -26,7 +26,6 @@ instance : Fintype (StateSpace wcard tcard) where
     intros x
     rcases x with x | x  <;> simp
 
-
 /-
 op
 op.toBV : Nat → BV
@@ -200,6 +199,10 @@ theorem Term.toBV_add {wenv : WidthExpr.Env wcard}
 
 inductive BinaryRelationKind
 | eq
+| ne
+| ule
+| slt
+| sle
 | ult -- unsigned less than.
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
@@ -224,7 +227,11 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
     (p : Predicate tctx) : Prop :=
   match p with
   | .binRel .eq _w a b => a.toBV tenv = b.toBV tenv
-  | .binRel .ult _w a b => (a.toBV tenv) < (b.toBV) tenv
+  | .binRel .ne _w a b => a.toBV tenv ≠ b.toBV tenv
+  | .binRel .ult _w a b => (a.toBV tenv) < (b.toBV tenv)
+  | .binRel .ule _w a b => (a.toBV tenv) ≤ (b.toBV tenv)
+  | .binRel .slt _w a b => (a.toBV tenv).slt (b.toBV tenv)
+  | .binRel .sle _w a b => (a.toBV tenv).sle (b.toBV tenv)
   | .and p1 p2 => p1.toProp tenv ∧ p2.toProp tenv
   | .or p1 p2 => p1.toProp tenv ∨ p2.toProp tenv
 
@@ -378,14 +385,22 @@ deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 def Predicate.wcard (p : Predicate) : Nat :=
   match p with
   | .binRel .eq w _a _b => w.wcard
+  | .binRel .ne w _a _b => w.wcard
   | .binRel .ult _w a _b => a.wcard
+  | .binRel .ule w _a _b => w.wcard
+  | .binRel .sle w _a _b => w.wcard
+  | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
   | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
 
 def Predicate.tcard (p : Predicate) : Nat :=
   match p with
   | .binRel .eq _w a b => max a.tcard b.tcard
+  | .binRel .ne _w a b => max a.tcard b.tcard
   | .binRel .ult _w a b => max a.tcard b.tcard
+  | .binRel .ule w _a _b => w.wcard
+  | .binRel .sle w _a _b => w.wcard
+  | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
   | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
 
@@ -393,7 +408,11 @@ def Predicate.ofDep {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate tctx) : Predicate :=
   match p with
   | .binRel .eq w a b => .binRel .eq (.ofDep w) (.ofDep a) (.ofDep b)
+  | .binRel .ne w a b => .binRel .ne (.ofDep w) (.ofDep a) (.ofDep b)
   | .binRel .ult w a b => .binRel .ult (.ofDep w) (.ofDep a) (.ofDep b)
+  | .binRel .ule w a b => .binRel .ule (.ofDep w) (.ofDep a) (.ofDep b)
+  | .binRel .slt w a b => .binRel .slt (.ofDep w) (.ofDep a) (.ofDep b)
+  | .binRel .sle w a b => .binRel .sle (.ofDep w) (.ofDep a) (.ofDep b)
   | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
   | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
 
@@ -407,7 +426,7 @@ structure NatFSM (wcard tcard : Nat) (v : Nondep.WidthExpr) where
   toFsm : FSM (StateSpace wcard tcard)
 
 structure TermFSM (wcard tcard : Nat) (t : Nondep.Term) where
-  toFsm : FSM (StateSpace wcard tcard)
+  toFsmZext : FSM (StateSpace wcard tcard)
 
 structure PredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) where
   toFsm : FSM (StateSpace wcard tcard)
@@ -473,7 +492,7 @@ structure HTermFSMToBitStream {w : WidthExpr wcard}
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
       (henv : HTermEnv fsmEnv tenv) →
-        fsm.toFsm.eval fsmEnv =
+        fsm.toFsmZext.eval fsmEnv =
         BitStream.ofBitVecZext (t.toBV tenv)
 
 structure HPredFSMToBitStream
