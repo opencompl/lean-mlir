@@ -847,6 +847,19 @@ def fsmTermEq {wcard tcard : Nat}
     composeUnaryAux FSM.scanAnd
     (composeBinaryAux' FSM.nxor afsm.toFsmZext  bfsm.toFsmZext)
 
+/--
+FSM for not equals. Two terms are not equal if they fail to match
+at any index.
+-/
+def fsmTermNe {wcard tcard : Nat}
+  {a b : Nondep.Term}
+  (afsm : TermFSM wcard tcard a)
+  (bfsm : TermFSM wcard tcard b)
+  : FSM (StateSpace wcard tcard) :=
+    composeUnaryAux FSM.scanOr
+    (composeBinaryAux' FSM.xor afsm.toFsmZext  bfsm.toFsmZext)
+
+
 
 
 def fsmCarry' (initialCarryVal : Bool): FSM Bool :=
@@ -1327,6 +1340,11 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
     { toFsm := fsmTermEq fsmA fsmB }
+  | .binRel .ne w a b =>
+    let fsmW := mkWidthFSM wcard tcard w
+    let fsmA := mkTermFSM wcard tcard a
+    let fsmB := mkTermFSM wcard tcard b
+    { toFsm := fsmW.toFsm ||| fsmTermNe fsmA fsmB }
   | .binRel .ult w a b =>
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
@@ -1418,7 +1436,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     HPredFSMToBitStream (mkPredicateFSMAux wcard tcard (.ofDep p)) := by
   induction p
   case binRel rel w a b =>
-    rcases rel with rfl | rfl
+    rcases rel
     case eq =>
       -- | TODO: extract proof.
       constructor
@@ -1447,6 +1465,47 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
         simp at this
         rw [this]
         omega
+    case ne =>
+      -- | TODO: extract proof.
+      constructor
+      intros wenv tenv fsmEnv henv
+      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      -- fsmTermEqProof starts here.
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
+      have hw := IsGoodNatFSM_mkWidthFSM tcard w
+      simp [fsmTermNe]
+      rw [ha.heq (henv := henv)]
+      rw [hb.heq (henv := henv)]
+      rw [hw.heq (henv := henv.toHWidthEnv)]
+      simp [Predicate.toProp]
+      constructor
+      · intros h
+        simp at h
+        ext N
+        simp
+        by_cases hw : N < w.toNat wenv
+        · simp [hw]
+        · simp [hw]
+          rw [BitStream.scanOr_eq_decide]
+          simp
+          by_contra hcontra
+          apply h
+          simp at hcontra
+          apply BitVec.eq_of_getLsbD_eq
+          intros i hi
+          apply hcontra
+          omega
+      · intros h
+        have := congrFun h
+        simp at this
+        simp [BitStream.scanOr_eq_decide] at this
+        specialize this (w.toNat wenv)
+        simp at this
+        by_contra hcontra
+        rw [hcontra] at this
+        obtain ⟨i, h, heq⟩ := this
+        contradiction
     case ult =>
       constructor
       intros wenv tenv fsmEnv henv
