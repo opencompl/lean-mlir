@@ -12,6 +12,27 @@ import Lean
 namespace MultiWidth
 
 
+private theorem decide_eq_eq_decide_iff_decide {P Q : Prop}
+  [Decidable P] [Decidable Q] :
+  (decide P = decide Q) = decide (P ↔ Q) := by
+  simp
+
+private theorem not_decide_eq_decide_lnot {P : Prop}
+  [Decidable P] :
+    (!(decide P)) = (decide (¬ P)) := by simp
+
+private theorem decide_and_decide_eq_decide {P Q : Prop}
+  [Decidable P] [Decidable Q] :
+  (decide P && decide Q) = decide (P ∧ Q) := by
+  simp
+
+private theorem decide_or_decide_eq_decide {P Q : Prop}
+  [Decidable P] [Decidable Q] :
+  (decide P || decide Q) = decide (P ∨ Q) := by
+  simp
+
+
+
 -- build an FSM whose output is unary, and is 1 in the beginning, and becomes 0
 -- forever after.
 -- TODO: I am pretty sure we can just do this with binary encodings as well?
@@ -63,6 +84,7 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
       rw [hv]
       ext i
       simp
+      simp only [decide_or_decide_eq_decide, decide_eq_decide]
       omega
 
 /--
@@ -96,7 +118,10 @@ the MSB finite state machine
 returns the 'msb' upto the current width.
 -/
 def fsmMsb (x w : FSM α) : FSM α :=
-  composeBinaryAux' (FSM.latchImmediate false) (qfalse := x) (qtrue := w)
+  composeBinaryAux'
+    (FSM.latchImmediate false)
+    (qfalse := x)
+    (qtrue := w)
 
 @[simp]
 theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
@@ -111,54 +136,48 @@ theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
     (hwfsm : HNatFSMToBitstream wfsm)
     (htenv : HTermEnv fsmEnv tenv) :
     (fsmMsb xfsm.toFsm wfsm.toFsm).eval fsmEnv = (fun i =>
-      BitStream.ofBitVecZextMsb (x.toBV tenv) (min i (w.toNat wenv))) := by
+      BitStream.ofBitVecZext (x.toBV tenv) (min i (w.toNat wenv - 1))) := by
   simp [fsmMsb]
   have wfsmEval := hwfsm.heq (henv := htenv.toHWidthEnv)
   have tfsmEval := hxfsm.heq (henv := htenv)
   ext i
   rcases i with rfl | i
-  · simp
-    intros hxFsmEq
-    simp [tfsmEval]
-  · simp
-    rw [tfsmEval, wfsmEval]
+  case zero =>
+    simp [wfsmEval]
+    by_cases hw : 0 < w.toNat wenv
+    · simp [hw]
+      simp [tfsmEval]
+      rfl
+    · simp at hw
+      simp [hw]
+  case succ =>
     simp
-    induction i
-    case zero =>
-      simp
-      by_cases hw : 1 ≤ w.toNat wenv
-      · simp [hw]
-      · simp at hw
-        simp [hw]
-    case succ i hi =>
-      simp
-      by_cases hxiSucc : (Term.toBV tenv x).getLsbD (i + 1) = true
-      · simp [hxiSucc]
-        by_cases hiwLe : i + 1 + 1  ≤ w.toNat wenv
-        · simp [hiwLe]
-          simp [hxiSucc]
-        · simp [hiwLe]
-          simp at hiwLe
-          have hiwLt := BitVec.lt_of_getLsbD hxiSucc
+    simp [wfsmEval]
+    simp [tfsmEval]
+    by_cases hi : i + 1 < w.toNat wenv
+    · simp [hi]
+      congr; omega
+    · simp [hi]
+      simp at hi
+      simp [show min (i + 1) (w.toNat wenv - 1) = w.toNat wenv - 1 by omega]
+      induction i
+      case neg.zero =>
+        simp
+        by_cases hw : 0 < w.toNat wenv
+        · simp [hw]
+          simp [show w.toNat wenv = 1 by omega]
+        · simp [hw]
+          simp at hw
+          simp [hw]
+      case neg.succ i ih =>
+        simp
+        by_cases hw : i + 1 < w.toNat wenv
+        · simp [hw]
+          congr
           omega
-      · simp at hxiSucc
-        simp [hxiSucc]
-        rw [hi]
-        clear hi
-        generalize hbv : (Term.toBV tenv x) = bv
-        rw [hbv] at hxiSucc
-        by_cases hiSucc : i + 1 ≤ w.toNat wenv
-        · simp [hiSucc]
-          by_cases hiSuccSucc : i + 1 + 1 ≤ w.toNat wenv
-          · simp [hiSuccSucc]
-            rw [hxiSucc]
-          · simp at hiSuccSucc
-            have hwEq : w.toNat wenv = i + 1 := by omega
-            simp [hwEq]
-        · simp at hiSucc
-          simp [show ¬ i + 1 + 1 ≤ w.toNat wenv by omega]
-          simp [show min (i + 1) (w.toNat wenv) = w.toNat wenv by omega]
-          simp [show min (i + 1 + 1) (w.toNat wenv) = w.toNat wenv by omega]
+        · simp [hw]
+          rw [ih]
+          omega
 
 
 -- | Found a cuter expression for 'getLsbD_signExtend'.
@@ -192,7 +211,7 @@ theorem eval_fsmUnaryMax_eq_decide
   (henv : HWidthEnv fsmEnv wenv)
   (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
   ((fsmUnaryMax a.toFsm b.toFsm).eval fsmEnv) i =
-    (i ≤ (max (v.toNat wenv) (w.toNat wenv))) := by
+    (i < (max (v.toNat wenv) (w.toNat wenv))) := by
   simp only [fsmUnaryMax, composeBinaryAux'_eval, eq_iff_iff]
   rw [ha.heq (henv := henv)]
   rw [hb.heq (henv := henv)]
@@ -211,9 +230,9 @@ theorem eval_fsmUnaryMin_eq_decide
   (henv : HWidthEnv fsmEnv wenv)
   (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
   ((fsmUnaryMin a.toFsm b.toFsm).eval fsmEnv) i =
-    (i ≤ (min (v.toNat wenv) (w.toNat wenv))) := by
+    (i < (min (v.toNat wenv) (w.toNat wenv))) := by
   simp only [fsmUnaryMin, composeBinaryAux'_eval, _root_.FSM.eval_and, cond_true, cond_false,
-    BitStream.and_eq, Bool.and_eq_true, le_inf_iff, eq_iff_iff]
+    BitStream.and_eq, Bool.and_eq_true, eq_iff_iff]
   rw [ha.heq (henv := henv)]
   rw [hb.heq (henv := henv)]
   simp
@@ -231,7 +250,7 @@ theorem eval_fsmUnaryIncrK_eq_decide
   (henv : HWidthEnv fsmEnv wenv)
   (ha : HNatFSMToBitstream a) :
   ((fsmUnaryIncrK k a.toFsm).eval fsmEnv) = fun i =>
-  decide (i ≤ (v.toNat wenv) + k) := by
+  decide (i < (v.toNat wenv) + k) := by
   induction k
   case zero =>
     simp [fsmUnaryIncrK]
@@ -241,9 +260,40 @@ theorem eval_fsmUnaryIncrK_eq_decide
     rw [ih]
     ext i
     rcases i with rfl | i
-    · simp only [BitStream.concat_zero, zero_le, decide_true]
+    · simp
     · simp only [BitStream.concat_succ, decide_eq_decide]
       omega
+
+
+@[simp]
+private theorem min_eq_of_not_le {a b : Nat} (hab : ¬ a ≤ b) : min a b = b := by
+  omega
+
+@[simp]
+private theorem min_eq_of_not_le' {a b : Nat} (hab : ¬ a ≤ b) : min b a = b := by
+  omega
+
+/-- this creates an FSM that returns whether 'a ≤ i' -/
+def NatFSM.fsmUnaryIndexUle (a : NatFSM wcard tcard v) :
+    FSM (StateSpace wcard tcard) :=
+  composeUnaryAux (FSM.ls true) a.toFsm
+
+@[simp]
+theorem HNatFSMToBitstream.fsmIndexUle_eval_eq
+    (a : NatFSM wcard tcard (.ofDep v))
+    {wenv : WidthExpr.Env wcard}
+    {fsmEnv : StateSpace wcard tcard → BitStream}
+    (henv : HWidthEnv fsmEnv wenv)
+    (ha : HNatFSMToBitstream a) :
+    (NatFSM.fsmUnaryIndexUle a).eval fsmEnv = fun i =>
+    decide (i ≤ v.toNat wenv) := by
+  ext i
+  rw [NatFSM.fsmUnaryIndexUle]
+  rcases i with rfl | i
+  · simp
+  · simp [ha.heq (henv := henv)]
+    omega
+
 
 -- when we compute 'a - b', if the borrow bit is zero,
 -- then we know that 'a' is greater than or equal to 'b'.
@@ -254,8 +304,9 @@ theorem eval_fsmUnaryIncrK_eq_decide
 
 -- alternatively, a[i] = 1 → b[i] = 1.
 -- if a is high, then b must be high for it to be ≤.
-def fsmUnaryUle (a : FSM arity) (b : FSM arity) : FSM arity :=
- composeUnaryAux FSM.scanAnd (b ||| ~~~ a)
+def fsmUnaryUle (a : NatFSM wcard tcard (.ofDep v))
+    (b : NatFSM wcard tcard (.ofDep w)) : FSM (StateSpace wcard tcard) :=
+ composeUnaryAux FSM.scanAnd (b.fsmUnaryIndexUle ||| ~~~ a.fsmUnaryIndexUle)
 
 theorem eval_fsmUnaryUle_eq_decide
     (a : NatFSM wcard tcard (.ofDep v))
@@ -264,11 +315,11 @@ theorem eval_fsmUnaryUle_eq_decide
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
     (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
-    ((fsmUnaryUle a.toFsm b.toFsm).eval fsmEnv) i =
+    ((fsmUnaryUle a b).eval fsmEnv) i =
     decide (min i (v.toNat wenv) ≤ min i (w.toNat wenv)) := by
   simp [fsmUnaryUle]
-  rw [ha.heq (henv := henv)]
-  rw [hb.heq (henv := henv)]
+  rw [ha.fsmIndexUle_eval_eq (henv := henv)]
+  rw [hb.fsmIndexUle_eval_eq (henv := henv)]
   simp [BitStream.scanAnd_eq_decide]
   by_cases hiv : i ≤ v.toNat wenv
   case pos =>
@@ -312,7 +363,7 @@ theorem eval_fsmUnaryUle_eq_lt_or_decide
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
     (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
-    ((fsmUnaryUle a.toFsm b.toFsm).eval fsmEnv) i =
+    ((fsmUnaryUle a b).eval fsmEnv) i =
     decide (i ≤ min (v.toNat wenv) (w.toNat wenv) ∨ (v.toNat wenv) ≤ (w.toNat wenv)) := by
   rw [eval_fsmUnaryUle_eq_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
   simp
@@ -325,17 +376,14 @@ info: 'MultiWidth.eval_fsmUnaryUle_eq_decide' depends on axioms: [propext, Class
 -/
 #guard_msgs in #print axioms eval_fsmUnaryUle_eq_decide
 
+
 -- returns 1 if a is equal to b.
-def fsmEqUnaryUpto (a : FSM arity) (b : FSM arity) : FSM arity :=
-  composeUnaryAux FSM.scanAnd (composeBinaryAux' FSM.nxor a b)
+def fsmEqUnaryUpto (a : NatFSM wcard tcard (.ofDep v))
+  (b : NatFSM wcard tcard (.ofDep w)) : FSM (StateSpace wcard tcard) :=
+  composeUnaryAux FSM.scanAnd (composeBinaryAux' FSM.nxor
+    a.fsmUnaryIndexUle
+    b.fsmUnaryIndexUle)
 
-@[simp]
-private theorem min_eq_of_not_le {a b : Nat} (hab : ¬ a ≤ b) : min a b = b := by
-  omega
-
-@[simp]
-private theorem min_eq_of_not_le' {a b : Nat} (hab : ¬ a ≤ b) : min b a = b := by
-  omega
 
 @[simp]
 theorem eval_FsmEqUpto_eq_decide
@@ -345,12 +393,13 @@ theorem eval_FsmEqUpto_eq_decide
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
     (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
-    ((fsmEqUnaryUpto a.toFsm b.toFsm).eval fsmEnv) i =
+    ((fsmEqUnaryUpto a b).eval fsmEnv) i =
     decide (min i (v.toNat wenv) = min i (w.toNat wenv)) := by
   simp [fsmEqUnaryUpto]
-  rw [ha.heq (henv := henv)]
-  rw [hb.heq (henv := henv)]
   simp [BitStream.scanAnd_eq_decide]
+  rw [ha.fsmIndexUle_eval_eq (henv := henv)]
+  rw [hb.fsmIndexUle_eval_eq (henv := henv)]
+  simp
   constructor
   · intros hi
     -- | think about what the heck this is saying.
@@ -379,33 +428,15 @@ theorem eval_FsmEqUpto_eq_decide'
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
     (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
-    ((fsmEqUnaryUpto a.toFsm b.toFsm).eval fsmEnv) = fun i =>
+    ((fsmEqUnaryUpto a b).eval fsmEnv) = fun i =>
     decide (min i (v.toNat wenv) = min i (w.toNat wenv)) := by
   ext i
   rw [eval_FsmEqUpto_eq_decide (henv := henv) (ha := ha) (hb := hb)]
 
-private theorem decide_eq_eq_decide_iff_decide {P Q : Prop}
-  [Decidable P] [Decidable Q] :
-  (decide P = decide Q) = decide (P ↔ Q) := by
-  simp
-
-private theorem not_decide_eq_decide_lnot {P : Prop}
-  [Decidable P] :
-    (!(decide P)) = (decide (¬ P)) := by simp
-
-private theorem decide_and_decide_eq_decide {P Q : Prop}
-  [Decidable P] [Decidable Q] :
-  (decide P && decide Q) = decide (P ∧ Q) := by
-  simp
-
-private theorem decide_or_decide_eq_decide {P Q : Prop}
-  [Decidable P] [Decidable Q] :
-  (decide P || decide Q) = decide (P ∨ Q) := by
-  simp
-
 /-- returns 1 if a is not equal to b. -/
-def fsmUnaryNeqUpto (a b : FSM arity) : FSM arity :=
-  composeUnaryAux FSM.scanOr (a ^^^ b)
+def fsmUnaryNeqUpto (a : NatFSM wcard tcard (.ofDep v))
+    (b : NatFSM wcard tcard (.ofDep w)) : FSM (StateSpace wcard tcard) :=
+  composeUnaryAux FSM.scanOr (a.fsmUnaryIndexUle ^^^ b.fsmUnaryIndexUle)
 
 theorem neq_of_min_neq_min {i v w : Nat} (hivw : ¬ min i v = min i w ) :
   (v ≠ w) := by
@@ -427,11 +458,11 @@ theorem eval_fsmUnaryNeqUpto_eq_decide
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
     (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
-    ((fsmUnaryNeqUpto a.toFsm b.toFsm).eval fsmEnv) i =
+    ((fsmUnaryNeqUpto a b).eval fsmEnv) i =
     (decide (min i (v.toNat wenv) ≠ min i (w.toNat wenv))) := by
   simp [fsmUnaryNeqUpto]
-  rw [ha.heq (henv := henv)]
-  rw [hb.heq (henv := henv)]
+  rw [ha.fsmIndexUle_eval_eq (henv := henv)]
+  rw [hb.fsmIndexUle_eval_eq (henv := henv)]
   simp [BitStream.scanOr_eq_decide]
   rw [not_decide_eq_decide_lnot]
   rw [decide_eq_eq_decide_iff_decide]
@@ -466,7 +497,9 @@ theorem eval_fsmUnaryNeqUpto_eq_decide
           exists (v.toNat wenv)
           omega
 
-def fsmUltUnary (a b : FSM arity) : FSM arity :=
+def fsmUltUnary
+    (a : NatFSM wcard tcard (.ofDep v))
+    (b : NatFSM wcard tcard (.ofDep w)) : FSM (StateSpace wcard tcard) :=
   composeBinaryAux' FSM.and (fsmUnaryUle a b) (fsmUnaryNeqUpto a b)
 
 theorem eval_fsmUltUnary_eq_decide
@@ -476,7 +509,7 @@ theorem eval_fsmUltUnary_eq_decide
     {fsmEnv : StateSpace wcard tcard → BitStream}
     (henv : HWidthEnv fsmEnv wenv)
     (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
-    ((fsmUltUnary a.toFsm b.toFsm).eval fsmEnv) i =
+    ((fsmUltUnary a b).eval fsmEnv) i =
    (decide (min i (v.toNat wenv) < min i (w.toNat wenv))) := by
   simp [fsmUltUnary]
   rw [eval_fsmUnaryUle_eq_lt_or_decide (wenv := wenv) (henv := henv) (ha := ha) (hb := hb)]
@@ -493,26 +526,10 @@ private theorem BitVec.getLsbD_zeroExtend_eq_getLsbD (x : BitVec wold) (wnew : N
     (x.zeroExtend wnew).getLsbD i = ((x.getLsbD i) ∧ (i ≤ wnew - 1) ∧ (wnew ≠ 0)) := by
   simp [and_comm]; try omega
 
-/-- this creates an FSM that returns whether 'a ≤ i' -/
-def fsmUnaryIndexUle (a : NatFSM wcard tcard (.ofDep v)) :
-    FSM (StateSpace wcard tcard) :=
-  a.toFsm
-
-@[simp]
-theorem fsmIndexUle_eval_eq
-    (a : NatFSM wcard tcard (.ofDep v))
-    {wenv : WidthExpr.Env wcard}
-    {fsmEnv : StateSpace wcard tcard → BitStream}
-    (henv : HWidthEnv fsmEnv wenv)
-    (ha : HNatFSMToBitstream a) :
-    (fsmUnaryIndexUle a).eval fsmEnv i =
-    decide (i ≤ v.toNat wenv) := by
-  rw [fsmUnaryIndexUle]
-  rw [ha.heq (henv := henv)]
 
 def fsmZext (nFsm wnewfsm : FSM (StateSpace wcard tcard))
     : FSM (StateSpace wcard tcard) :=
-  nFsm &&& (wnewfsm)
+  (nFsm) &&& (wnewfsm)
 
 
 /-- the fsmZext builds the correct zero-extended FSM. -/
@@ -528,22 +545,16 @@ theorem fsmZext_eval_eq
     (ht : HTermFSMToBitStream tFsm)
     (htenv : HTermEnv fsmEnv tenv) :
     (fsmZext tFsm.toFsm wnewFsm.toFsm).eval fsmEnv = fun i =>
-      ((BitStream.ofBitVecZextMsb ((Term.zext t wnew).toBV tenv))) i := by
+      ((BitStream.ofBitVecZext ((Term.zext t wnew).toBV tenv))) i := by
   ext i
   rw [fsmZext]
-  simp only [FSM.eval_and', BitStream.and_eq, BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext]
+  simp only [FSM.eval_and', BitStream.and_eq]
+  simp
   rw [ht.heq (henv := htenv)]
   rw [hwnew.heq (henv := htenv.toHWidthEnv)]
+  -- rw [hwnew.fsmIndexUle_eval_eq (henv := htenv.toHWidthEnv)]
   simp
-  rcases i with rfl | i
-  · simp
-  · simp
-    by_cases hi : i < wnew.toNat wenv
-    · simp [hi]
-      intros hval
-      omega
-    · simp [hi]
-      omega
+  by_cases hi : i < wnew.toNat wenv <;> simp [hi]
 
 /-- the fsmZext builds the correct zero-extended FSM. -/
 theorem fsmSext_eval_eq
@@ -560,53 +571,35 @@ theorem fsmSext_eval_eq
     (htfsm : HTermFSMToBitStream tFsm)
     (htenv : HTermEnv fsmEnv tenv) :
     (fsmSext tFsm.toFsm woldFsm.toFsm  wnewFsm.toFsm).eval fsmEnv = fun i =>
-      ((BitStream.ofBitVecZextMsb ((Term.sext t wnew).toBV tenv))) i := by
+      ((BitStream.ofBitVecZext ((Term.sext t wnew).toBV tenv))) i := by
   ext i
   rw [fsmSext]
-  simp only [FSM.eval_and', BitStream.and_eq,
-    BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext]
+  simp [FSM.eval_and', BitStream.and_eq]
   rw [hwnew.heq (henv := htenv.toHWidthEnv)]
   rw [eval_fsmMsb_eq
         (xfsm := tFsm) (wfsm := woldFsm) (htenv := htenv)
         (hxfsm := htfsm) (hwfsm := hwold)]
   simp
-  by_cases hwold : i ≤ wold.toNat wenv
+  by_cases hwold : i < wold.toNat wenv
   · simp [hwold]
-    by_cases hwnew : i ≤ wnew.toNat wenv
+    by_cases hwnew : i < wnew.toNat wenv
     · simp [hwnew]
-      rcases i with rfl | i
-      · simp
-      · simp [BitVec.getLsbD_signExtend]
-        simp [show i < wnew.toNat wenv by omega]
-        omega
+      simp [BitVec.getElem_signExtend]
+      simp [hwold]
+      congr; omega
     · simp [hwnew]
-      rcases i with rfl | i
-      · simp
-      · simp [BitVec.getLsbD_signExtend]
-        omega
-  · simp [hwold]
-    by_cases hwnew : i ≤ wnew.toNat wenv
+      simp [BitVec.getLsbD_signExtend]
+      omega
+  · by_cases hwnew : i < wnew.toNat wenv
     · simp [hwnew]
-      -- TODO: needs fsmMsbAux.
-      rcases i with rfl | i
-      · simp
-        omega
-      · simp
-        simp at hwold
-        rw [getLsbD_signExtend_eq]
-        simp [show min i (wold.toNat wenv - 1) = wold.toNat wenv - 1 by omega]
-        simp [show i < wnew.toNat wenv by omega]
-        have hwold : wold.toNat wenv = 0 ∨ 0 < wold.toNat wenv := by
-          omega
-        rcases hwold with hwold | hwold
-        · simp [hwold]
-        · simp [hwold]
+      simp at hwold
+      rw [BitVec.getElem_signExtend]
+      simp [show min i (wold.toNat wenv - 1) = wold.toNat wenv - 1 by omega]
+      simp [show ¬ i < wold.toNat wenv by omega]
+      rw [BitVec.msb_eq_getLsbD_last]
     · simp [hwnew]
-      rcases i with rfl | w
-      · simp
-      · simp
-        rw [BitVec.getLsbD_signExtend]
-        simp; omega
+      rw [BitVec.getLsbD_signExtend]
+      simp; omega
 
 /-- info: 'MultiWidth.fsmSext_eval_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms fsmSext_eval_eq
@@ -674,9 +667,8 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let aFsm := mkTermFSM wcard tcard a
     let wFsm := mkWidthFSM wcard tcard w
     { toFsm :=
-      composeBinaryAux' FSM.and wFsm.toFsm
-        (composeBinaryAux' FSM.and (mkMaskZeroFSM.map Fin.elim0)
-          (composeUnaryAux FSM.not aFsm.toFsm)) }
+          composeBinaryAux' FSM.and wFsm.toFsm
+            (composeUnaryAux FSM.not aFsm.toFsm) }
 
 /-- if we concatenate, then the bitstreams remain equal. -/
 @[simp]
@@ -700,29 +692,27 @@ theorem BitStream.EqualUpTo_of_concat_EqualUpTo_concat
 /-- masking with a unary bitstream produces equal results
 if the bitstreams are equal upto a given width. -/
 theorem BitStream.ofNatUnary_and_eq_ofNatUnary_and_of_EqualUpTo_succ (n : Nat)
-  {x y : BitStream} (hxy : BitStream.EqualUpTo (n + 1) x y) :
+  {x y : BitStream} (hxy : BitStream.EqualUpTo n x y) :
   (BitStream.ofNatUnary n) &&& x =
   (BitStream.ofNatUnary n) &&& y := by
   ext i
   simp
   specialize hxy i
-  by_cases hi : i ≤ n
+  by_cases hi : i < n
   · simp [hi]
     apply hxy (by omega)
   · simp [hi]
 
 /-- Zero extend a finite bitvector 'x' to the infinite stream of 'x.msb' -/
 theorem ofBitVecZextMsb_eq_ofNatUnary_and_ofBitVecZextMsb {w} (x : BitVec w) :
-  (BitStream.ofBitVecZextMsb x) =
-  (BitStream.ofNatUnary w) &&& (BitStream.ofBitVecZextMsb x) := by
+  (BitStream.ofBitVecZext x) =
+  (BitStream.ofNatUnary w) &&& (BitStream.ofBitVecZext x) := by
   ext i
   simp
-  rcases i with rfl | i
-  · simp
-  · simp
-    intros hi
-    have := BitVec.lt_of_getLsbD hi
-    omega
+  intros hi
+  have := BitVec.lt_of_getLsbD hi
+  omega
+
 
 def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     {wold : WidthExpr wcard}
@@ -734,9 +724,9 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     intros wenv tenv fsmEnv htenv
     obtain htenv_term := htenv.heq_term
     obtain htenv_width := htenv.heq_width
-    simp only [Nondep.Term.ofDep_var, mkTermFSM,
+    simp [Nondep.Term.ofDep_var, mkTermFSM,
       Fin.is_lt, ↓reduceDIte, Fin.eta, FSM.eval_var', htenv_term,
-      BitStream.ofBitVecZextMsb_eq_concat_ofBitVecZext, Term.toBV_var]
+      Term.toBV_var]
   case add v p q hp hq =>
     constructor
     intros wenv tenv fsmEnv htenv
@@ -750,25 +740,22 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     rw [hwgood.heq (henv := htenv.toHWidthEnv)]
     ext i
     simp
-    rcases i with rfl | i
-    · simp
-    · simp
-      by_cases hi : i < v.toNat wenv
-      · simp [show i + 1 ≤ v.toNat wenv by omega]
-        rw [BitStream.concat_false_add_concat_false_eq_add]
-        simp only [BitStream.concat_succ]
-        -- | TODO: find clean lemmas here.
-        rw [BitStream.EqualUpTo_ofBitVecZext_add]
-        omega
-      · simp [show ¬ i + 1 ≤ v.toNat wenv by omega]
-        apply BitVec.getLsbD_of_ge
-        omega
+    by_cases hi : i < v.toNat wenv
+    · simp [hi]
+      rw [BitStream.EqualUpTo_ofBitVecZext_add]
+      · rfl
+      · exact hi
+    · simp [hi]
+      apply BitVec.getLsbD_of_ge
+      omega
   case zext w' a wnew ha  =>
     constructor
     intros wenv tenv fsmEnv htenv
     simp [Nondep.Term.ofDep, mkTermFSM]
     let hwnew := IsGoodNatFSM_mkWidthFSM tcard wnew
     rw [fsmZext_eval_eq (htenv := htenv) (wnew := wnew) (ht := ha) (hwnew := hwnew)]
+    simp
+    ext i
     simp
   case sext wold a wnew ha =>
     constructor
@@ -815,17 +802,9 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     intros wenv tenv fsmEnv htenv
     simp [Nondep.Term.ofDep, mkTermFSM]
     rw [ha.heq (henv := htenv)]
-    rw [hw.heq (henv := htenv.toHWidthEnv)]
-    simp [Term.toBV]
     ext i
-    rcases i with rfl | i
-    · simp
-    · simp
-      by_cases hi : i < w.toNat wenv
-      · simp [hi]
-        omega
-      · simp [hi]
-        omega
+    simp [Term.toBV]
+    rw [hw.heq (henv := htenv.toHWidthEnv)]
 
 def fsmTermEq {wcard tcard : Nat}
   {a b : Nondep.Term}
@@ -838,14 +817,266 @@ def fsmTermEq {wcard tcard : Nat}
     (composeBinaryAux' FSM.nxor afsm.toFsm  bfsm.toFsm)
 
 
+
+def fsmCarry' (initialCarryVal : Bool): FSM Bool :=
+  let outputCirc :=
+    let carry := Circuit.var true (Sum.inl ())
+    let a := Circuit.var true (Sum.inr true)
+    let b := Circuit.var true (Sum.inr false)
+    -- if we are zero, then the output is 'false'.
+    ((a &&& b) ||| (a &&& carry) ||| (b &&& carry))
+  { α := Unit,
+    -- bit at 'false' tells us if we are at the zero state.
+    -- bit at 'true' tells us the carry value.
+    initCarry := fun () => initialCarryVal, -- our carry is the init carry.
+    outputCirc := outputCirc,
+    nextStateCirc := fun () => outputCirc
+  }
+
+
+@[simp]
+theorem initCarry_fsmCarry' : (fsmCarry' initCarry).initCarry =
+    fun _ => initCarry := by
+  simp [fsmCarry']
+
+@[simp]
+theorem snd_nextBit_fsmCarry' {state : Unit → Bool} {env : Bool → Bool} :
+    ((fsmCarry' initCarry).nextBit state env).2 =
+      Bool.atLeastTwo (env true) (env false) (state ()) := by
+  simp [fsmCarry', FSM.nextBit, Lean.Elab.WF.paramLet, FSM.nextBit]
+
+@[simp]
+theorem fst_nextBit_fsmCarry'_eq_atLeastTwo {state : Unit → Bool} {env : Bool → Bool} :
+    ((fsmCarry' initCarry).nextBit state env).1 =
+      fun () => Bool.atLeastTwo (env true) (env false) (state ()) := by
+  simp [fsmCarry', Lean.Elab.WF.paramLet, FSM.nextBit]
+
+/--
+The carry state of the borrow bit.
+TODO: rewrite with 'induction' to be a clean proof script.
+-/
+@[simp] theorem carry_fsmCarry' (initCarry : Bool)
+    (x : Bool → BitStream) : ∀ (n : ℕ),
+    FSM.carry (fsmCarry' initCarry) x (n + 1) =
+      fun () =>
+        BitStream.carry initCarry ((x true)) ((x false)) n := by
+  intros n
+  induction n
+  case zero =>
+    ext stateIx
+    simp [fsmCarry', FSM.carry, FSM.nextBit]
+      -- by_cases hw : width0Val <;> simp [hw]
+  case succ n ih =>
+    ext stateIx
+    rw [FSM.carry]
+    simp only [ih]
+    clear ih
+    simp [FSM.nextBit, fsmCarry']
+
+@[simp] lemma eval_fsmCarry' (x : Bool → BitStream) :
+    (fsmCarry' initCarry).eval x =
+      (BitStream.carry initCarry (x true) (x false)) := by
+  ext i
+  rcases i with rfl | i
+  · simp [fsmCarry', FSM.eval, FSM.nextBit]
+  · induction i
+    case zero =>
+      simp [FSM.eval]
+    case succ i ih =>
+      rw [FSM.eval]
+      simp only [carry_fsmCarry']
+      simp
+
+def fsmCarry'' (initialCarryVal : Bool): FSM Bool :=
+  let outputCirc :=
+    let carry := Circuit.var true (Sum.inl ())
+    let a := Circuit.var true (Sum.inr true)
+    let b := Circuit.var true (Sum.inr false)
+    -- if we are zero, then the output is 'false'.
+    ((a &&& b) ||| (a &&& carry) ||| (b &&& carry))
+  { α := Unit,
+    -- bit at 'false' tells us if we are at the zero state.
+    -- bit at 'true' tells us the carry value.
+    initCarry := fun () => initialCarryVal, -- our carry is the init carry.
+    outputCirc := Circuit.var true (Sum.inl ()) ,
+    nextStateCirc := fun () => outputCirc
+  }
+
+
+@[simp]
+theorem initCarry_fsmCarry'' : (fsmCarry'' initCarry).initCarry =
+    fun _ => initCarry := by
+  simp [fsmCarry'']
+
+@[simp]
+theorem snd_nextBit_fsmCarry'' {state : Unit → Bool} {env : Bool → Bool} :
+    ((fsmCarry'' initCarry).nextBit state env).2 =
+      (state ()) := by
+  simp [fsmCarry'', FSM.nextBit, Lean.Elab.WF.paramLet, FSM.nextBit]
+
+@[simp]
+theorem fst_nextBit_fsmCarry''_eq_atLeastTwo {state : Unit → Bool} {env : Bool → Bool} :
+    ((fsmCarry' initCarry).nextBit state env).1 =
+      fun () => Bool.atLeastTwo (env true) (env false) (state ()) := by
+  simp [fsmCarry', Lean.Elab.WF.paramLet, FSM.nextBit]
+
+/--
+The carry state of the borrow bit.
+TODO: rewrite with 'induction' to be a clean proof script.
+-/
+@[simp] theorem carry_fsmCarry'' (initCarry : Bool)
+    (x : Bool → BitStream) : ∀ (n : ℕ),
+    FSM.carry (fsmCarry'' initCarry) x n =
+      fun () =>
+        BitStream.carry' initCarry ((x true)) ((x false)) n := by
+  intros n
+  induction n
+  case zero =>
+    ext stateIx
+    simp [fsmCarry'', FSM.carry]
+      -- by_cases hw : width0Val <;> simp [hw]
+  case succ n ih =>
+    ext stateIx
+    rw [FSM.carry]
+    simp only [ih]
+    clear ih
+    simp [FSM.nextBit, fsmCarry'']
+
+@[simp] lemma eval_fsmCarry'' (x : Bool → BitStream) :
+    (fsmCarry'' initCarry).eval x =
+      (BitStream.carry' initCarry (x true) (x false)) := by
+  ext i
+  induction i
+  case zero =>
+    simp [FSM.eval]
+  case succ i ih =>
+    simp [FSM.eval]
+
+def fsmTermUlt {wcard tcard : Nat}
+  {a b : Nondep.Term}
+  (afsm : TermFSM wcard tcard a)
+  (bfsm : TermFSM wcard tcard b)
+  : FSM (StateSpace wcard tcard) :=
+    -- let streamFsm := composeUnaryAux (FSM.ls true) (fsmCarry'' true)
+    let streamFsm := (fsmCarry'' true)
+    (~~~ (composeBinaryAux' streamFsm  afsm.toFsm (~~~ bfsm.toFsm)))
+
+/--
+info: BitVec.ult_eq_not_carry {w : ℕ} (x y : BitVec w) :
+  x.ult y = !BitVec.carry w x (~~~y) true
+-/
+#guard_msgs (whitespace := lax) in #check BitVec.ult_eq_not_carry
+
+
+-- /--
+-- The 'carry' FSM evaluates to the value of the carry bit.
+-- -/
+-- theorem eval_fsmTermUlt_eq_carry {wcard tcard : Nat}
+--     (tctx : Term.Ctx wcard tcard)
+--     {wenv : WidthExpr.Env wcard}
+--     (tenv : tctx.Env wenv)
+--     (w : WidthExpr wcard)
+--     (a : Term tctx w)
+--     (b : Term tctx w)
+--     (afsm : TermFSM wcard tcard (.ofDep a))
+--     (hafsm : HTermFSMToBitStream afsm)
+--     (bfsm : TermFSM wcard tcard (.ofDep b))
+--     (hbfsm : HTermFSMToBitStream bfsm)
+--     (fsmEnv : StateSpace wcard tcard → BitStream)
+--     (henv : HTermEnv fsmEnv tenv)
+--     :
+--     ((fsmTermUlt
+--       afsm
+--       bfsm)).eval fsmEnv i =
+--       !(BitVec.carry i (a.toBV tenv) (~~~ b.toBV tenv) true)
+--            := by
+--     simp [fsmTermUlt]
+--     rcases i with rfl | i
+--     · simp
+--     · simp
+--       rw [BitStream.carry'_eq_carry
+--         (x' := BitVec.shiftLeftZeroExtend (Term.toBV tenv a) 1)
+--         (y' := BitVec.shiftLeftZeroExtend ((Term.toBV tenv b)) 1)]
+--       sorry
+--       · intros i
+--         rw [hafsm.heq (henv := henv)]
+--         simp
+--         rcases i with rfl | i
+--         · simp
+--         · simp
+--       · intros i
+--         rw [hbfsm.heq (henv := henv)]
+--         simp
+--         sorry
+
+theorem eval_fsmTermUlt_eq_decide_lt {wcard tcard : Nat}
+    (tctx : Term.Ctx wcard tcard)
+    {wenv : WidthExpr.Env wcard}
+    (tenv : tctx.Env wenv)
+    (w : WidthExpr wcard)
+    (a : Term tctx w)
+    (b : Term tctx w)
+    (afsm : TermFSM wcard tcard (.ofDep a))
+    (hafsm : HTermFSMToBitStream afsm)
+    (bfsm : TermFSM wcard tcard (.ofDep b))
+    (hbfsm : HTermFSMToBitStream bfsm)
+    (fsmEnv : StateSpace wcard tcard → BitStream)
+    (henv : HTermEnv fsmEnv tenv)
+    :
+    ((fsmTermUlt
+      afsm
+      bfsm)).eval fsmEnv i =
+       decide (((a.toBV tenv).setWidth i) < ((b.toBV tenv).setWidth i)) := by
+  have := BitVec.ult_eq_not_carry
+    ((a.toBV tenv).setWidth i)
+    ((b.toBV tenv).setWidth i)
+  simp [← BitVec.ult_iff_lt]
+  rw [this]
+  clear this
+  simp [fsmTermUlt]
+  rw [BitStream.carry'_eq_carry
+      (x' := BitVec.setWidth i (Term.toBV tenv a))
+      (y' := ~~~ BitVec.setWidth i (Term.toBV tenv b))]
+  · intros j
+    simp
+    intros hj
+    simp [hj]
+    rw [hafsm.heq (henv := henv)]
+  · intros j
+    simp
+    intros hj
+    simp [hj]
+    rw [hbfsm.heq (henv := henv)]
+
+/--
+info: 'MultiWidth.eval_fsmTermUlt_eq_decide_lt' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms eval_fsmTermUlt_eq_decide_lt
+
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   (PredicateFSM wcard tcard p) :=
   match p with
-  | .binRel .eq a b =>
+  | .binRel .eq _w a b =>
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
     { toFsm := fsmTermEq fsmA fsmB }
+  | .binRel .ult w a b =>
+    let fsmA := mkTermFSM wcard tcard a
+    let fsmB := mkTermFSM wcard tcard b
+    let fsmW := mkWidthFSM wcard tcard w
+    { toFsm :=
+      -- upto 'w', don't make a decision, then
+      -- spit out what fsmTermUlt believes.
+      -- TODO: try to replace with a 'latchImmediate',
+      -- since that should be a much more long-term solution.
+      fsmW.toFsm |||
+        -- (composeBinaryAux'
+          -- (FSM.latchImmediate true)
+          (fsmTermUlt fsmA fsmB)
+          -- (fsmW.toFsm)
+        -- )
+    }
   | .or p q  =>
     let fsmP :=  mkPredicateFSMAux wcard tcard p
     let fsmQ :=  mkPredicateFSMAux wcard tcard q
@@ -857,8 +1088,22 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
     let fsmQ := mkPredicateFSMAux wcard tcard q
     { toFsm := (fsmP.toFsm &&& fsmQ.toFsm) }
 
+
 theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
   exact Function.ne_iff.mp h
+
+/-- if 'x < y', then also 'x.setWidth N < y.setWidthN'. -/
+private theorem BitVec.setWidth_lt_setWidth_of_lt {x y : BitVec w}
+  {N : Nat} (hN : w ≤ N)
+    (h : x < y) : x.setWidth N < y.setWidth N := by
+  have hlt := BitVec.lt_def |>.mp h
+  rw [BitVec.lt_def]
+  simp
+  have : 2^w ≤ 2^N := by
+    apply Nat.pow_le_pow_right (by omega) (by omega)
+  rw [Nat.mod_eq_of_lt (by omega)]
+  rw [Nat.mod_eq_of_lt (by omega)]
+  assumption
 
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -866,8 +1111,9 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     HPredFSMToBitStream (mkPredicateFSMAux wcard tcard (.ofDep p)) := by
   induction p
   case binRel rel w a b =>
-    rcases rel
+    rcases rel with rfl | rfl
     case eq =>
+      -- | TODO: extract proof.
       constructor
       intros wenv tenv fsmEnv henv
       simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
@@ -889,9 +1135,64 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
       · intros h
         apply BitVec.eq_of_getLsbD_eq
         intros i hi
-        have := congrFun h (i + 1)
+        have := congrFun h i
+        rw [BitStream.scanAnd_eq_decide] at this
         simp at this
-        simp [this]
+        rw [this]
+        omega
+    case ult =>
+      constructor
+      intros wenv tenv fsmEnv henv
+      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      have hw := IsGoodNatFSM_mkWidthFSM tcard w
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
+      rw [hw.heq (henv := henv.toHWidthEnv)]
+      -- rw [ha.heq (henv := henv)]
+      -- rw [hb.heq (henv := henv)]
+      simp [Predicate.toProp]
+      constructor
+      -- I understand the problem:
+      -- I need to build an automata that checks that you are ult
+      -- at *that particular width*.
+      -- so the way to do this is to create a latch,
+      -- that allows the 'ult' circuit to propagate until
+      -- we hit that index, and from that index onwards,
+      -- we 'hold' our value.
+      -- This way, if 'a < b', then we print 111...(until w)<isLt><isLt><isLt>...
+      -- jesus this stuff is crazy crazy annoying.
+      · intros h
+        simp at h
+        ext N
+        simp
+        by_cases hw : N < w.toNat wenv
+        · simp [hw]
+        · simp [hw]
+          rw [eval_fsmTermUlt_eq_decide_lt
+              (hafsm := ha)
+              (hbfsm := hb)
+              (a := a)
+              (b := b)
+              (tenv := tenv)
+              (henv := henv)
+          ]
+          simp only [decide_eq_true_eq]
+          apply BitVec.setWidth_lt_setWidth_of_lt
+          · omega
+          · exact h
+      · intros h
+        obtain h := congrFun h (w.toNat wenv)
+        simp at h
+        rw [eval_fsmTermUlt_eq_decide_lt
+            (hafsm := ha)
+            (hbfsm := hb)
+            (a := a)
+            (b := b)
+            (tenv := tenv)
+            (henv := henv)
+        ] at h
+        simp at h
+        exact h
   case or p q hp hq =>
     constructor
     intros wenv tenv fsmEnv henv

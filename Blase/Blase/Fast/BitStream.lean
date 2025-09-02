@@ -67,12 +67,16 @@ section Basic
 def head (x : BitStream) : Bool      := x 0
 def tail (x : BitStream) : BitStream := (x <| · + 1)
 
+@[simp]
+theorem tail_eq (x : BitStream) (i : Nat) : x.tail i = x (i + 1) := rfl
+
 /-- Append a single bit to the least significant end of a bitvector.
 That is, the new bit is the least significant bit.
 -/
 def concat (b : Bool) (x : BitStream) : BitStream
   | 0   => b
   | i+1 => x i
+
 
 @[simp]
 theorem concat_zero (b : Bool) (x : BitStream) : concat b x 0 = b := rfl
@@ -249,11 +253,11 @@ theorem ofBitVecZextMsb_eq_ofBitVecZext_mul_two_zeroExtend (x : BitVec w)
 
 /-- Make a bitstream of a unary natural number. -/
 abbrev ofNatUnary (n : Nat) : BitStream :=
-  fun i => decide (i ≤ n)
+  fun i => decide (i < n)
 
 @[simp]
 theorem eval_ofNatUnary (n : Nat) (i : Nat) :
-    ofNatUnary n i = decide (i ≤ n) := rfl
+    ofNatUnary n i = decide (i < n) := rfl
 
 /-- `x.toBitVec w` returns the first `w` bits of bitstream `x` -/
 def toBitVec (w : Nat) (x : BitStream) : BitVec w :=
@@ -706,6 +710,25 @@ def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
     | i + 1 => (addAux x y i).2
   Prod.swap (BitVec.adcb (x i) (y i) carryIn)
 
+def addAux' (carryIn : Bool) (x y : BitStream) (i : Nat) :  Bool × Bool :=
+  let carryIn : Bool := match i with
+    | 0 => carryIn
+    | i + 1 => (addAux' carryIn x y i).2
+  Prod.swap (BitVec.adcb (x i) (y i) carryIn)
+
+@[simp] theorem addAux'_zero (carryIn : Bool)
+  (x y : BitStream) : (addAux' carryIn x y 0) =
+  ((x 0) ^^ (y 0) ^^ carryIn, Bool.atLeastTwo (x 0)  (y 0) carryIn) := by
+  simp [addAux', BitVec.adcb, Prod.swap]
+
+@[simp] theorem addAux'_succ (x y : BitStream) : (addAux' carryIn x y (i+1)) =
+    let out := (addAux' carryIn x y i)
+    let a := x (i + 1)
+    let b := y (i + 1)
+    let carryOut := out.2
+    (a ^^ b ^^ carryOut, Bool.atLeastTwo a  b carryOut) := by
+  simp [addAux', BitVec.adcb, Prod.swap]
+
 @[simp] theorem addAux_zero (x y : BitStream) : (x.addAux y 0) =
   ((x 0) ^^ (y 0), (x 0) && (y 0)) := by
   simp [addAux, addAux,BitVec.adcb]
@@ -720,6 +743,106 @@ def addAux (x y : BitStream) (i : Nat) :  Bool × Bool :=
 
 def add (x y : BitStream) : BitStream :=
   fun n => (addAux x y n).1
+
+/-- The stream of carry bits from the addition -/
+def carry (initCarry : Bool) (x y : BitStream) : BitStream :=
+  fun n => (addAux' initCarry x y n).2
+
+@[simp] theorem carry_zero
+    (initCarry : Bool) (x y : BitStream) :
+  (carry initCarry x y 0) = (Bool.atLeastTwo (x 0) (y 0) initCarry) := rfl
+
+@[simp] theorem carry_succ (initCarry : Bool) (x y : BitStream) :
+    (carry initCarry x y (i + 1)) =
+  let out := carry initCarry x y i
+  let a := x (i + 1)
+  let b := y (i + 1)
+  Bool.atLeastTwo a b out := rfl
+
+/-- Shows how to write a `BitStream.carry` as a `BitVec.carry`  -/
+protected theorem carry_eq_carry (x y : BitStream) (c : Bool)
+    (x' y' : BitVec w)
+    (hx : ∀ i, x'.getLsbD i = x i)
+    (hy : ∀ i,  y'.getLsbD i = y i) :
+    carry c x y n = (BitVec.carry (n + 1) x' y' c) := by
+  induction n
+  case zero =>
+    rw [carry]
+    rw [BitVec.carry_succ]
+    simp [hx, hy]
+  case succ n ihn =>
+    rw [carry_succ]
+    rw [BitVec.carry_succ]
+    rw [hx, hy]
+    rw [ihn]
+
+
+/-- The stream of carry bits from the addition -/
+def carry' (initCarry : Bool) (x y : BitStream) : BitStream :=
+  fun n =>
+  match n with
+  | 0 => initCarry
+  | n + 1 => (addAux' initCarry x y n).2
+
+@[simp] theorem carry'_zero
+    (initCarry : Bool) (x y : BitStream) :
+  (carry' initCarry x y 0) = initCarry := rfl
+
+@[simp] theorem carry'_succ (initCarry : Bool) (x y : BitStream) :
+    (carry' initCarry x y (i + 1)) =
+    let out := carry' initCarry x y i
+  let a := x i
+  let b := y i
+  Bool.atLeastTwo a b out := by
+  simp [carry']
+  rcases i with rfl | i
+  · simp
+  · simp
+
+/-- Shows how to write a `BitStream.carry` as a `BitVec.carry`  -/
+protected theorem carry'_eq_carry (x y : BitStream) (c : Bool)
+    (x' y' : BitVec w)
+    (hx : ∀ i, i < n → x'.getLsbD i = x i)
+    (hy : ∀ i,  i < n → y'.getLsbD i = y i) :
+    carry' c x y n = (BitVec.carry n x' y' c) := by
+  induction n
+  case zero =>
+    rw [carry']
+    rw [BitVec.carry_zero]
+  case succ n ihn =>
+    rw [carry'_succ]
+    rw [BitVec.carry_succ]
+    simp only
+    rw [ihn]
+    · rw [hx]
+      · rw [hy]
+        · omega
+      · omega
+    · intros i hi
+      apply hx
+      omega
+    · intros i hi
+      apply hy
+      omega
+
+-- /-- Shows how to write a `BitStream.carry` as a `BitVec.carry`  -/
+-- protected theorem carry'_eq_carry (x y : BitStream) (c : Bool)
+--     (x' y' : BitVec w)
+--     (hx : ∀ i, x'.getLsbD i = x (i + 1))
+--     (hy : ∀ i,  y'.getLsbD i = y (i + 1)) :
+--     carry' c x y n = (BitVec.carry n  x' y' c) := by
+--   induction n
+--   case zero =>
+--     rw [carry]
+--     simp
+--     rw [BitVec.carry_succ]
+--     simp [hx, hy]
+--   case succ n ihn =>
+--     rw [carry_succ]
+--     rw [BitVec.carry_succ]
+--     rw [hx, hy]
+--     rw [ihn]
+
 
 def subAux (x y : BitStream) : Nat → Bool × Bool
   | 0 => (xor (x 0) (y 0), !(x 0) && y 0)
