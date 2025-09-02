@@ -1358,6 +1358,15 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
       -- rw [hb.heq (henv := henv)]
       simp [Predicate.toProp]
       constructor
+      -- I understand the problem:
+      -- I need to build an automata that checks that you are ult
+      -- at *that particular width*.
+      -- so the way to do this is to create a latch,
+      -- that allows the 'ult' circuit to propagate until
+      -- we hit that index, and from that index onwards,
+      -- we 'hold' our value.
+      -- This way, if 'a < b', then we print 111...(until w)<isLt><isLt><isLt>...
+      -- jesus this stuff is crazy crazy annoying.
       · intros h
         simp at h
         ext N
