@@ -274,7 +274,7 @@ private theorem min_eq_of_not_le' {a b : Nat} (hab : ¬ a ≤ b) : min b a = b :
   omega
 
 /-- this creates an FSM that returns whether 'a ≤ i' -/
-def NatFSM.fsmUnaryIndexUle (a : NatFSM wcard tcard (.ofDep v)) :
+def NatFSM.fsmUnaryIndexUle (a : NatFSM wcard tcard v) :
     FSM (StateSpace wcard tcard) :=
   composeUnaryAux (FSM.ls true) a.toFsm
 
@@ -667,9 +667,8 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let aFsm := mkTermFSM wcard tcard a
     let wFsm := mkWidthFSM wcard tcard w
     { toFsm :=
-      composeBinaryAux' FSM.and wFsm.toFsm
-        (composeBinaryAux' FSM.and (mkMaskZeroFSM.map Fin.elim0)
-          (composeUnaryAux FSM.not aFsm.toFsm)) }
+          composeBinaryAux' FSM.and wFsm.toFsm
+            (composeUnaryAux FSM.not aFsm.toFsm) }
 
 /-- if we concatenate, then the bitstreams remain equal. -/
 @[simp]
@@ -803,14 +802,9 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     intros wenv tenv fsmEnv htenv
     simp [Nondep.Term.ofDep, mkTermFSM]
     rw [ha.heq (henv := htenv)]
-    rw [hw.heq (henv := htenv.toHWidthEnv)]
-    simp [Term.toBV]
     ext i
-    simp
-    by_cases hi : i < w.toNat wenv
-    · simp [hi]
-      sorry
-    · simp [hi]
+    simp [Term.toBV]
+    rw [hw.heq (henv := htenv.toHWidthEnv)]
 
 def fsmTermEq {wcard tcard : Nat}
   {a b : Nondep.Term}
@@ -1186,7 +1180,19 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
           apply BitVec.setWidth_lt_setWidth_of_lt
           · omega
           · exact h
-      · sorry
+      · intros h
+        obtain h := congrFun h (w.toNat wenv)
+        simp at h
+        rw [eval_fsmTermUlt_eq_decide_lt
+            (hafsm := ha)
+            (hbfsm := hb)
+            (a := a)
+            (b := b)
+            (tenv := tenv)
+            (henv := henv)
+        ] at h
+        simp at h
+        exact h
   case or p q hp hq =>
     constructor
     intros wenv tenv fsmEnv henv
