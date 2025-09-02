@@ -1241,7 +1241,7 @@ theorem eval_fsmTermUlt_eq_carry {wcard tcard : Nat}
     · simp
       rw [BitStream.carry'_eq_carry
         (x' := BitVec.shiftLeftZeroExtend (Term.toBV tenv a) 1)
-        (y' := ~~~ (BitVec.shiftLeftZeroExtend ((Term.toBV tenv b)) 1))]
+        (y' := BitVec.shiftLeftZeroExtend ((Term.toBV tenv b)) 1)]
       sorry
       · intros i
         rw [hafsm.heq (henv := henv)]
@@ -1252,10 +1252,38 @@ theorem eval_fsmTermUlt_eq_carry {wcard tcard : Nat}
       · intros i
         rw [hbfsm.heq (henv := henv)]
         simp
-        rcases i with rfl | i
-        · simp
-        · simp
-          sorry
+        sorry
+
+theorem eval_fsmTermUlt_eq_decide_lt {wcard tcard : Nat}
+    (tctx : Term.Ctx wcard tcard)
+    {wenv : WidthExpr.Env wcard}
+    (tenv : tctx.Env wenv)
+    (w : WidthExpr wcard)
+    (a : Term tctx w)
+    (b : Term tctx w)
+    (afsm : TermFSM wcard tcard (.ofDep a))
+    (hafsm : HTermFSMToBitStream afsm)
+    (bfsm : TermFSM wcard tcard (.ofDep b))
+    (hbfsm : HTermFSMToBitStream bfsm)
+    (fsmEnv : StateSpace wcard tcard → BitStream)
+    (henv : HTermEnv fsmEnv tenv)
+    :
+    ((fsmTermUlt
+      afsm
+      bfsm)).eval fsmEnv i =
+       decide (((a.toBV tenv).setWidth i) < ((b.toBV tenv).setWidth i)) := by
+  rw [eval_fsmTermUlt_eq_carry
+    (tenv := tenv)
+    (hafsm := hafsm)
+    (hbfsm := hbfsm)
+    (henv := henv)]
+  have := BitVec.ult_eq_not_carry
+    ((a.toBV tenv).setWidth i)
+    ((b.toBV tenv).setWidth i)
+  simp [← BitVec.ult_iff_lt]
+  rw [this]
+  simp
+  sorry
 
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
@@ -1325,7 +1353,6 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
       have hw := IsGoodNatFSM_mkWidthFSM tcard w
       have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
       have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
-      simp [fsmTermUlt]
       rw [hw.heq (henv := henv.toHWidthEnv)]
       -- rw [ha.heq (henv := henv)]
       -- rw [hb.heq (henv := henv)]
@@ -1334,33 +1361,14 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
       · intros h
         simp at h
         ext N
-        simp only [BitStream.or_eq, BitStream.not_eq, BitStream.eval_ofNatUnary,
-          BitStream.negOne_eq, Bool.or_eq_true, Bool.not_eq_eq_eq_not, Bool.not_true,
-          decide_eq_false_iff_not, not_le]
-        by_cases hw : w.toNat wenv < N
-        · simp [hw]
-        · simp [hw]
-          rcases N with rfl | N
-          · simp
-          · simp
-            sorry
-      · intros h
-        simp at h
-        rw [← BitVec.ult_iff_lt]
-        rw [BitVec.ult_eq_not_carry]
         simp
-        -- have := BitVec.ult_eq_not_carry
-        --   (w := w.toNat wenv)
-        --   (x := Term.toBV tenv a)
-        --   (y := Term.toBV tenv b)
-        -- have := congrArg Bool.not this
-        -- rw [Bool.not_not] at this
-        -- rw [← this]
-        -- simp
-        have := congrFun h ((w.toNat wenv) + 1)
-        simp at this
-        -- rw [BitStream.carry_eq_carry]
-        sorry
+        rw [eval_fsmTermUlt_eq_decide_lt
+          (hafsm := ha)
+          (hbfsm := hb)
+          (a := a)
+          (b := b)
+          (tenv := tenv)
+        ]
   case or p q hp hq =>
     constructor
     intros wenv tenv fsmEnv henv
