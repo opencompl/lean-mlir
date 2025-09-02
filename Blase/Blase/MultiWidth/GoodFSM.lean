@@ -1071,7 +1071,18 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
     let fsmW := mkWidthFSM wcard tcard w
-    { toFsm := ~~~ fsmW.toFsm ||| fsmTermUlt fsmA fsmB }
+    { toFsm :=
+      -- upto 'w', don't make a decision, then
+      -- spit out what fsmTermUlt believes.
+      -- TODO: try to replace with a 'latchImmediate',
+      -- since that should be a much more long-term solution.
+      fsmW.toFsm |||
+        -- (composeBinaryAux'
+          -- (FSM.latchImmediate true)
+          (fsmTermUlt fsmA fsmB)
+          -- (fsmW.toFsm)
+        -- )
+    }
   | .or p q  =>
     let fsmP :=  mkPredicateFSMAux wcard tcard p
     let fsmQ :=  mkPredicateFSMAux wcard tcard q
@@ -1086,6 +1097,19 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
 
 theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
   exact Function.ne_iff.mp h
+
+/-- if 'x < y', then also 'x.setWidth N < y.setWidthN'. -/
+private theorem BitVec.setWidth_lt_setWidth_of_lt {x y : BitVec w}
+  {N : Nat} (hN : w ≤ N)
+    (h : x < y) : x.setWidth N < y.setWidth N := by
+  have hlt := BitVec.lt_def |>.mp h
+  rw [BitVec.lt_def]
+  simp
+  have : 2^w ≤ 2^N := by
+    apply Nat.pow_le_pow_right (by omega) (by omega)
+  rw [Nat.mod_eq_of_lt (by omega)]
+  rw [Nat.mod_eq_of_lt (by omega)]
+  assumption
 
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -1147,17 +1171,21 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
         simp at h
         ext N
         simp
-        rw [eval_fsmTermUlt_eq_decide_lt
-          (hafsm := ha)
-          (hbfsm := hb)
-          (a := a)
-          (b := b)
-          (tenv := tenv)
-          (henv := henv)
-        ]
-        by_cases hw : w.toNat wenv ≤ N
+        by_cases hw : N < w.toNat wenv
         · simp [hw]
         · simp [hw]
+          rw [eval_fsmTermUlt_eq_decide_lt
+              (hafsm := ha)
+              (hbfsm := hb)
+              (a := a)
+              (b := b)
+              (tenv := tenv)
+              (henv := henv)
+          ]
+          simp only [decide_eq_true_eq]
+          apply BitVec.setWidth_lt_setWidth_of_lt
+          · omega
+          · exact h
       · sorry
   case or p q hp hq =>
     constructor
