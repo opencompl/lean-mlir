@@ -41,23 +41,23 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
   match w with
   | .var wnat =>
     if h : wnat < wcard then
-      { toFsmZext :=
+      { toFsm :=
         -- composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
         (FSM.var' (StateSpace.widthVar ⟨wnat, h⟩))
       }
     else
-      { toFsmZext := FSM.zero' } -- default, should not be used.
+      { toFsm := FSM.zero' } -- default, should not be used.
   | .min v w =>
-      { toFsmZext :=
-        (mkWidthFSM wcard tcard v).toFsmZext &&& (mkWidthFSM wcard tcard w).toFsmZext
+      { toFsm :=
+        (mkWidthFSM wcard tcard v).toFsm &&& (mkWidthFSM wcard tcard w).toFsm
       }
   | .max v w =>
-        { toFsmZext :=
-        (mkWidthFSM wcard tcard v).toFsmZext ||| (mkWidthFSM wcard tcard w).toFsmZext
+        { toFsm :=
+        (mkWidthFSM wcard tcard v).toFsm ||| (mkWidthFSM wcard tcard w).toFsm
       }
   | .addK v k =>
-    { toFsmZext :=
-        composeUnaryAux (FSM.repeatN true k)  (mkWidthFSM wcard tcard v).toFsmZext
+    { toFsm :=
+        composeUnaryAux (FSM.repeatN true k)  (mkWidthFSM wcard tcard v).toFsm
     }
 
 def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
@@ -135,7 +135,7 @@ theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
     (wfsm : NatFSM wcard tcard (.ofDep w))
     (hwfsm : HNatFSMToBitstream wfsm)
     (htenv : HTermEnv fsmEnv tenv) :
-    (fsmMsb xfsm.toFsm wfsm.toFsmZext).eval fsmEnv = (fun i =>
+    (fsmMsb xfsm.toFsm wfsm.toFsm).eval fsmEnv = (fun i =>
       BitStream.ofBitVecZext (x.toBV tenv) (min i (w.toNat wenv - 1))) := by
   simp [fsmMsb]
   have wfsmEval := hwfsm.heq (henv := htenv.toHWidthEnv)
@@ -190,7 +190,7 @@ theorem eval_fsmMsb_eq_BitStream_ofBitVecSext {wenv : WidthExpr.Env wcard}
     (wfsm : NatFSM wcard tcard (.ofDep w))
     (hwfsm : HNatFSMToBitstream wfsm)
     (htenv : HTermEnv fsmEnv tenv) :
-    (fsmMsb xfsm.toFsm wfsm.toFsmZext).eval fsmEnv =
+    (fsmMsb xfsm.toFsm wfsm.toFsm).eval fsmEnv =
       BitStream.ofBitVecSext (x.toBV tenv) := by
   rw [eval_fsmMsb_eq (wfsm := wfsm) (hwfsm := hwfsm) (hxfsm := hxfsm)
     (tenv := tenv) (htenv := htenv)]
@@ -234,7 +234,7 @@ theorem eval_fsmUnaryMax_eq_decide
   {fsmEnv : StateSpace wcard tcard → BitStream}
   (henv : HWidthEnv fsmEnv wenv)
   (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
-  ((fsmUnaryMax a.toFsmZext b.toFsmZext).eval fsmEnv) i =
+  ((fsmUnaryMax a.toFsm b.toFsm).eval fsmEnv) i =
     (i < (max (v.toNat wenv) (w.toNat wenv))) := by
   simp only [fsmUnaryMax, composeBinaryAux'_eval, eq_iff_iff]
   rw [ha.heq (henv := henv)]
@@ -253,7 +253,7 @@ theorem eval_fsmUnaryMin_eq_decide
   {fsmEnv : StateSpace wcard tcard → BitStream}
   (henv : HWidthEnv fsmEnv wenv)
   (ha : HNatFSMToBitstream a) (hb : HNatFSMToBitstream b) :
-  ((fsmUnaryMin a.toFsmZext b.toFsmZext).eval fsmEnv) i =
+  ((fsmUnaryMin a.toFsm b.toFsm).eval fsmEnv) i =
     (i < (min (v.toNat wenv) (w.toNat wenv))) := by
   simp only [fsmUnaryMin, composeBinaryAux'_eval, _root_.FSM.eval_and, cond_true, cond_false,
     BitStream.and_eq, Bool.and_eq_true, eq_iff_iff]
@@ -273,7 +273,7 @@ theorem eval_fsmUnaryIncrK_eq_decide
   {fsmEnv : StateSpace wcard tcard → BitStream}
   (henv : HWidthEnv fsmEnv wenv)
   (ha : HNatFSMToBitstream a) :
-  ((fsmUnaryIncrK k a.toFsmZext).eval fsmEnv) = fun i =>
+  ((fsmUnaryIncrK k a.toFsm).eval fsmEnv) = fun i =>
   decide (i < (v.toNat wenv) + k) := by
   induction k
   case zero =>
@@ -300,7 +300,7 @@ private theorem min_eq_of_not_le' {a b : Nat} (hab : ¬ a ≤ b) : min b a = b :
 /-- this creates an FSM that returns whether 'a ≤ i' -/
 def NatFSM.fsmUnaryIndexUle (a : NatFSM wcard tcard v) :
     FSM (StateSpace wcard tcard) :=
-  composeUnaryAux (FSM.ls true) a.toFsmZext
+  composeUnaryAux (FSM.ls true) a.toFsm
 
 @[simp]
 theorem HNatFSMToBitstream.fsmIndexUle_eval_eq
@@ -568,7 +568,7 @@ theorem fsmZext_eval_eq
     (tFsm : TermFSM wcard tcard (.ofDep t))
     (ht : HTermFSMToBitStream tFsm)
     (htenv : HTermEnv fsmEnv tenv) :
-    (fsmZext tFsm.toFsm wnewFsm.toFsmZext).eval fsmEnv = fun i =>
+    (fsmZext tFsm.toFsm wnewFsm.toFsm).eval fsmEnv = fun i =>
       ((BitStream.ofBitVecZext ((Term.zext t wnew).toBV tenv))) i := by
   ext i
   rw [fsmZext]
@@ -594,7 +594,7 @@ theorem fsmSext_eval_eq
     (tFsm : TermFSM wcard tcard (.ofDep t))
     (htfsm : HTermFSMToBitStream tFsm)
     (htenv : HTermEnv fsmEnv tenv) :
-    (fsmSext tFsm.toFsm woldFsm.toFsmZext  wnewFsm.toFsmZext).eval fsmEnv = fun i =>
+    (fsmSext tFsm.toFsm woldFsm.toFsm  wnewFsm.toFsm).eval fsmEnv = fun i =>
       ((BitStream.ofBitVecZext ((Term.sext t wnew).toBV tenv))) i := by
   ext i
   rw [fsmSext]
@@ -657,7 +657,7 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let fsmB := mkTermFSM wcard tcard b
     { toFsm :=
       composeBinaryAux' FSM.and
-        fsmW.toFsmZext
+        fsmW.toFsm
         (composeBinaryAux' FSM.add fsmA.toFsm fsmB.toFsm)
     }
   | .zext a wnew =>
@@ -665,13 +665,13 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
       let afsm := mkTermFSM wcard tcard a
       -- let woldFsm := mkWidthFSM wcard tcard wold
       let wnewFsm := mkWidthFSM wcard tcard wnew
-      { toFsm := fsmZext afsm.toFsm wnewFsm.toFsmZext }
+      { toFsm := fsmZext afsm.toFsm wnewFsm.toFsm }
   | .sext a v =>
     let wold := a.width
     let afsm := mkTermFSM wcard tcard a
     let woldFsm := mkWidthFSM wcard tcard wold
     let vFsm := mkWidthFSM wcard tcard v
-    { toFsm := fsmSext afsm.toFsm woldFsm.toFsmZext vFsm.toFsmZext }
+    { toFsm := fsmSext afsm.toFsm woldFsm.toFsm vFsm.toFsm }
   | .band _w a b =>
       let aFsm := mkTermFSM wcard tcard a
       let bFsm := mkTermFSM wcard tcard b
@@ -691,7 +691,7 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     let aFsm := mkTermFSM wcard tcard a
     let wFsm := mkWidthFSM wcard tcard w
     { toFsm :=
-          composeBinaryAux' FSM.and wFsm.toFsmZext
+          composeBinaryAux' FSM.and wFsm.toFsm
             (composeUnaryAux FSM.not aFsm.toFsm) }
 
 /-- if we concatenate, then the bitstreams remain equal. -/
@@ -1276,7 +1276,7 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
       -- spit out what fsmTermUlt believes.
       -- TODO: try to replace with a 'latchImmediate',
       -- since that should be a much more long-term solution.
-      fsmW.toFsmZext ||| (fsmTermUlt fsmA fsmB)
+      fsmW.toFsm ||| (fsmTermUlt fsmA fsmB)
     }
   | .binRel .ule w a b =>
     let fsmA := mkTermFSM wcard tcard a
@@ -1287,7 +1287,7 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
       -- spit out what fsmTermUlt believes.
       -- TODO: try to replace with a 'latchImmediate',
       -- since that should be a much more long-term solution.
-      fsmW.toFsmZext ||| (fsmTermUle fsmA fsmB)
+      fsmW.toFsm ||| (fsmTermUle fsmA fsmB)
     }
   -- | .binRel .slt w a b =>
   --   let fsmA := mkTermFSM wcard tcard a
