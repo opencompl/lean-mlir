@@ -179,6 +179,31 @@ theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
           rw [ih]
           omega
 
+theorem eval_fsmMsb_eq_BitStream_ofBitVecSext {wenv : WidthExpr.Env wcard}
+    {fsmEnv : StateSpace wcard tcard → BitStream}
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : Term.Ctx.Env tctx wenv)
+    (w : WidthExpr wcard)
+    (x : Term tctx w)
+    (xfsm : TermFSM wcard tcard (.ofDep x))
+    (hxfsm : HTermFSMToBitStream xfsm)
+    (wfsm : NatFSM wcard tcard (.ofDep w))
+    (hwfsm : HNatFSMToBitstream wfsm)
+    (htenv : HTermEnv fsmEnv tenv) :
+    (fsmMsb xfsm.toFsm wfsm.toFsmZext).eval fsmEnv =
+      BitStream.ofBitVecSext (x.toBV tenv) := by
+  rw [eval_fsmMsb_eq (wfsm := wfsm) (hwfsm := hwfsm) (hxfsm := hxfsm)
+    (tenv := tenv) (htenv := htenv)]
+  ext i
+  simp [BitStream.ofBitVecSext]
+  by_cases hi : i < w.toNat wenv
+  · simp [hi]
+    congr
+    omega
+  · simp [hi, BitVec.msb_eq_getLsbD_last]
+    congr
+    omega
+
 -- | Found a cuter expression for 'getLsbD_signExtend'.
 theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
   (x.signExtend wnew).getLsbD i =
@@ -1073,6 +1098,8 @@ theorem eval_fsmTermUle_eq_decide_le {wcard tcard : Nat}
 def fsmMsbEq (a : FSM α) (b : FSM α) : FSM α :=
   composeUnaryAux (FSM.ls false) <|
     composeBinaryAux' FSM.xor a b
+
+
 
 def fsmTermSlt
   {wcard tcard : Nat}
