@@ -1117,9 +1117,11 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
       · intros h
         apply BitVec.eq_of_getLsbD_eq
         intros i hi
-        have := congrFun h (i + 1)
+        have := congrFun h i
+        rw [BitStream.scanAnd_eq_decide] at this
         simp at this
-        simp [this]
+        rw [this]
+        omega
     case ult =>
       constructor
       intros wenv tenv fsmEnv henv
@@ -1151,7 +1153,12 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
           (a := a)
           (b := b)
           (tenv := tenv)
+          (henv := henv)
         ]
+        by_cases hw : w.toNat wenv ≤ N
+        · simp [hw]
+        · simp [hw]
+      · sorry
   case or p q hp hq =>
     constructor
     intros wenv tenv fsmEnv henv
