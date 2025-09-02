@@ -427,7 +427,7 @@ structure NatFSM (wcard tcard : Nat) (v : Nondep.WidthExpr) where
   toFsm : FSM (StateSpace wcard tcard)
 
 structure TermFSM (wcard tcard : Nat) (t : Nondep.Term) where
-  toFsm : FSM (StateSpace wcard tcard)
+  toFsmZext : FSM (StateSpace wcard tcard)
 
 structure PredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) where
   toFsm : FSM (StateSpace wcard tcard)
@@ -493,7 +493,7 @@ structure HTermFSMToBitStream {w : WidthExpr wcard}
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard → BitStream),
       (henv : HTermEnv fsmEnv tenv) →
-        fsm.toFsm.eval fsmEnv =
+        fsm.toFsmZext.eval fsmEnv =
         BitStream.ofBitVecZext (t.toBV tenv)
 
 structure HPredFSMToBitStream
