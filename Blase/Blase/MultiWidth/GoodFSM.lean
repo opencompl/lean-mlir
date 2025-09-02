@@ -179,7 +179,6 @@ theorem eval_fsmMsb_eq {wenv : WidthExpr.Env wcard}
           rw [ih]
           omega
 
-
 -- | Found a cuter expression for 'getLsbD_signExtend'.
 theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
   (x.signExtend wnew).getLsbD i =
@@ -968,47 +967,6 @@ info: BitVec.ult_eq_not_carry {w : ℕ} (x y : BitVec w) :
 #guard_msgs (whitespace := lax) in #check BitVec.ult_eq_not_carry
 
 
--- /--
--- The 'carry' FSM evaluates to the value of the carry bit.
--- -/
--- theorem eval_fsmTermUlt_eq_carry {wcard tcard : Nat}
---     (tctx : Term.Ctx wcard tcard)
---     {wenv : WidthExpr.Env wcard}
---     (tenv : tctx.Env wenv)
---     (w : WidthExpr wcard)
---     (a : Term tctx w)
---     (b : Term tctx w)
---     (afsm : TermFSM wcard tcard (.ofDep a))
---     (hafsm : HTermFSMToBitStream afsm)
---     (bfsm : TermFSM wcard tcard (.ofDep b))
---     (hbfsm : HTermFSMToBitStream bfsm)
---     (fsmEnv : StateSpace wcard tcard → BitStream)
---     (henv : HTermEnv fsmEnv tenv)
---     :
---     ((fsmTermUlt
---       afsm
---       bfsm)).eval fsmEnv i =
---       !(BitVec.carry i (a.toBV tenv) (~~~ b.toBV tenv) true)
---            := by
---     simp [fsmTermUlt]
---     rcases i with rfl | i
---     · simp
---     · simp
---       rw [BitStream.carry'_eq_carry
---         (x' := BitVec.shiftLeftZeroExtend (Term.toBV tenv a) 1)
---         (y' := BitVec.shiftLeftZeroExtend ((Term.toBV tenv b)) 1)]
---       sorry
---       · intros i
---         rw [hafsm.heq (henv := henv)]
---         simp
---         rcases i with rfl | i
---         · simp
---         · simp
---       · intros i
---         rw [hbfsm.heq (henv := henv)]
---         simp
---         sorry
-
 theorem eval_fsmTermUlt_eq_decide_lt {wcard tcard : Nat}
     (tctx : Term.Ctx wcard tcard)
     {wenv : WidthExpr.Env wcard}
@@ -1052,6 +1010,206 @@ theorem eval_fsmTermUlt_eq_decide_lt {wcard tcard : Nat}
 info: 'MultiWidth.eval_fsmTermUlt_eq_decide_lt' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms eval_fsmTermUlt_eq_decide_lt
+
+def fsmTermUle {wcard tcard : Nat}
+  {a b : Nondep.Term}
+  (afsm : TermFSM wcard tcard a)
+  (bfsm : TermFSM wcard tcard b)
+  : FSM (StateSpace wcard tcard) :=
+    -- let streamFsm := composeUnaryAux (FSM.ls true) (fsmCarry'' true)
+    let streamFsm := (fsmCarry'' true)
+    ((composeBinaryAux' streamFsm  bfsm.toFsm (~~~ afsm.toFsm)))
+
+/--
+info: BitVec.ult_eq_not_carry {w : ℕ} (x y : BitVec w) :
+  x.ult y = !BitVec.carry w x (~~~y) true
+-/
+#guard_msgs (whitespace := lax) in #check BitVec.ult_eq_not_carry
+
+
+theorem eval_fsmTermUle_eq_decide_le {wcard tcard : Nat}
+    (tctx : Term.Ctx wcard tcard)
+    {wenv : WidthExpr.Env wcard}
+    (tenv : tctx.Env wenv)
+    (w : WidthExpr wcard)
+    (a : Term tctx w)
+    (b : Term tctx w)
+    (afsm : TermFSM wcard tcard (.ofDep a))
+    (hafsm : HTermFSMToBitStream afsm)
+    (bfsm : TermFSM wcard tcard (.ofDep b))
+    (hbfsm : HTermFSMToBitStream bfsm)
+    (fsmEnv : StateSpace wcard tcard → BitStream)
+    (henv : HTermEnv fsmEnv tenv)
+    :
+    ((fsmTermUle
+      afsm
+      bfsm)).eval fsmEnv i =
+       decide (((a.toBV tenv).setWidth i) ≤ ((b.toBV tenv).setWidth i)) := by
+  have := BitVec.ule_eq_carry
+    ((a.toBV tenv).setWidth i)
+    ((b.toBV tenv).setWidth i)
+  simp [← BitVec.ule_iff_le]
+  rw [this]
+  clear this
+  simp [fsmTermUle]
+  rw [BitStream.carry'_eq_carry
+      (x' := BitVec.setWidth i (Term.toBV tenv b))
+      (y' := ~~~ BitVec.setWidth i (Term.toBV tenv a))]
+  · intros j
+    simp
+    intros hj
+    simp [hj]
+    rw [hbfsm.heq (henv := henv)]
+  · intros j
+    simp
+    intros hj
+    simp [hj]
+    rw [hafsm.heq (henv := henv)]
+
+/-- info: BitVec.ule_eq_carry {w : ℕ} (x y : BitVec w) :
+    x.ule y = BitVec.carry w y (~~~x) true -/
+#guard_msgs (whitespace := lax) in #check BitVec.ule_eq_carry
+
+def fsmMsbEq (a : FSM α) (b : FSM α) : FSM α :=
+  composeUnaryAux (FSM.ls false) <|
+    composeBinaryAux' FSM.xor a b
+
+def fsmTermSlt
+  {wcard tcard : Nat}
+  {a b : Nondep.Term}
+  (afsm : TermFSM wcard tcard a)
+  (bfsm : TermFSM wcard tcard b)
+  : FSM (StateSpace wcard tcard) :=
+    let carryFsm :=
+      (~~~ (composeBinaryAux' (fsmCarry'' true)  afsm.toFsm (~~~ bfsm.toFsm)))
+    let xorFsm := fsmMsbEq afsm.toFsm bfsm.toFsm
+    xorFsm ^^^ carryFsm
+
+/--
+info: BitVec.slt_eq_not_carry {w : ℕ} {x y : BitVec w} :
+  x.slt y = (x.msb == y.msb ^^ BitVec.carry w x (~~~y) true)
+-/
+#guard_msgs (whitespace := lax) in #check BitVec.slt_eq_not_carry
+
+
+theorem eval_fsmTermSlt_eq_decide_slt {wcard tcard : Nat}
+    (tctx : Term.Ctx wcard tcard)
+    {wenv : WidthExpr.Env wcard}
+    (tenv : tctx.Env wenv)
+    (w : WidthExpr wcard)
+    (a : Term tctx w)
+    (b : Term tctx w)
+    (afsm : TermFSM wcard tcard (.ofDep a))
+    (hafsm : HTermFSMToBitStream afsm)
+    (bfsm : TermFSM wcard tcard (.ofDep b))
+    (hbfsm : HTermFSMToBitStream bfsm)
+    (fsmEnv : StateSpace wcard tcard → BitStream)
+    (henv : HTermEnv fsmEnv tenv)
+    :
+    ((fsmTermSlt
+      afsm
+      bfsm)).eval fsmEnv i =
+       decide (((a.toBV tenv).setWidth i).slt ((b.toBV tenv).setWidth i)) := by
+  have := BitVec.slt_eq_not_carry
+    (x := (a.toBV tenv).setWidth i)
+    (y := (b.toBV tenv).setWidth i)
+  rw [this]
+  clear this
+  simp [fsmTermSlt]
+  rw [BitStream.carry'_eq_carry
+      (x' := BitVec.setWidth i (Term.toBV tenv a))
+      (y' := ~~~ BitVec.setWidth i (Term.toBV tenv b))]
+  simp [fsmMsbEq]
+  · rcases i with rfl | i
+    · simp [BitVec.of_length_zero]
+    · simp
+      simp [BitVec.msb_eq_getLsbD_last]
+      rw [hafsm.heq (henv := henv)]
+      rw [hbfsm.heq (henv := henv)]
+      simp only [BitStream.ofBitVecZext_eq_getLsbD]
+      generalize (Term.toBV tenv a).getLsbD i = va
+      generalize (Term.toBV tenv b).getLsbD i = vb
+      rcases va with rfl | rfl <;>
+        rcases vb with rfl | rfl <;>
+          simp
+  · intros j
+    simp
+    intros hj
+    simp [hj]
+    rw [hafsm.heq (henv := henv)]
+  · intros j
+    simp
+    intros hj
+    simp [hj]
+    rw [hbfsm.heq (henv := henv)]
+
+/--
+info: BitVec.sle_eq_carry {w : ℕ} {x y : BitVec w} :
+    x.sle y = !(x.msb == y.msb ^^ BitVec.carry w y (~~~x) true)
+-/
+#guard_msgs (whitespace := lax) in #check BitVec.sle_eq_carry
+
+def fsmTermSle
+  {wcard tcard : Nat}
+  {a b : Nondep.Term}
+  (afsm : TermFSM wcard tcard a)
+  (bfsm : TermFSM wcard tcard b)
+  : FSM (StateSpace wcard tcard) :=
+    let carryFsm :=
+      ((composeBinaryAux' (fsmCarry'' true)  bfsm.toFsm (~~~ afsm.toFsm)))
+    let xorFsm := fsmMsbEq afsm.toFsm bfsm.toFsm
+    ~~~ ((~~~ xorFsm) ^^^ carryFsm)
+
+theorem eval_fsmTermSle_eq_decide_sle {wcard tcard : Nat}
+    (tctx : Term.Ctx wcard tcard)
+    {wenv : WidthExpr.Env wcard}
+    (tenv : tctx.Env wenv)
+    (w : WidthExpr wcard)
+    (a : Term tctx w)
+    (b : Term tctx w)
+    (afsm : TermFSM wcard tcard (.ofDep a))
+    (hafsm : HTermFSMToBitStream afsm)
+    (bfsm : TermFSM wcard tcard (.ofDep b))
+    (hbfsm : HTermFSMToBitStream bfsm)
+    (fsmEnv : StateSpace wcard tcard → BitStream)
+    (henv : HTermEnv fsmEnv tenv)
+    :
+    ((fsmTermSle
+      afsm
+      bfsm)).eval fsmEnv i =
+       decide (((a.toBV tenv).setWidth i).sle ((b.toBV tenv).setWidth i)) := by
+  have := BitVec.sle_eq_carry
+    (x := (a.toBV tenv).setWidth i)
+    (y := (b.toBV tenv).setWidth i)
+  rw [this]
+  clear this
+  simp [fsmTermSle]
+  rw [BitStream.carry'_eq_carry
+      (x' := BitVec.setWidth i (Term.toBV tenv b))
+      (y' := ~~~ BitVec.setWidth i (Term.toBV tenv a))]
+  simp [fsmMsbEq]
+  · rcases i with rfl | i
+    · simp [BitVec.of_length_zero]
+    · simp
+      simp [BitVec.msb_eq_getLsbD_last]
+      rw [hafsm.heq (henv := henv)]
+      rw [hbfsm.heq (henv := henv)]
+      simp only [BitStream.ofBitVecZext_eq_getLsbD]
+      generalize (Term.toBV tenv a).getLsbD i = va
+      generalize (Term.toBV tenv b).getLsbD i = vb
+      rcases va with rfl | rfl <;>
+        rcases vb with rfl | rfl <;>
+          simp
+  · intros j
+    simp
+    intros hj
+    simp [hj]
+    rw [hbfsm.heq (henv := henv)]
+  · intros j
+    simp
+    intros hj
+    simp [hj]
+    rw [hafsm.heq (henv := henv)]
 
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
