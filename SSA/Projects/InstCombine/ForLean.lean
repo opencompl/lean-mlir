@@ -296,67 +296,8 @@ theorem intMin_slt_zero (h : 0 < w) :
   norm_cast
   simp [h]
 
-theorem neg_sgt_eq_slt_neg {A B : BitVec w} (h : A ≠ intMin w) (h2 : B ≠ intMin w) :
-    (-A >ₛ B) = (A <ₛ -B) := by
-  unfold BitVec.slt
-  simp only [decide_eq_decide, toInt_neg_of_ne_intMin h, toInt_neg_of_ne_intMin h2]
-  omega
-
-theorem sgt_zero_eq_not_neg_sgt_zero (A : BitVec w) (h_ne_intMin : A ≠ intMin w)
-    (h_ne_zero : A ≠ 0) : (A >ₛ 0#w) ↔ ¬ ((-A) >ₛ 0#w) := by
-  by_cases w0 : w = 0
-  · subst w0
-    simp [BitVec.eq_nil A] at h_ne_zero
-  simp only [Bool.not_eq_true, Bool.coe_true_iff_false]
-  rw [neg_sgt_eq_slt_neg h_ne_intMin _]
-  unfold BitVec.slt
-  by_cases h : A.toInt < 0
-  · simp [h]
-    omega
-  · simp only [toInt_zero, neg_zero, h, decide_false, Bool.not_false, decide_eq_true_eq]
-    simp only [ofNat_eq_ofNat, ne_eq, ← toInt_ne, toInt_zero] at h_ne_zero
-    omega
-  simp only [ne_eq]
-  have h : 0 < w := by omega
-  simp only [ne_eq]
-  have two_pow_pos := Nat.two_pow_pos (w-1)
-  simp only [intMin, toNat_eq, toNat_ofNat, Nat.zero_mod, toNat_twoPow, ne_eq]
-  let w' := w - 1
-  have hw₀: w - 1 = w' := by omega
-  have hw₁: w = w' + 1 := by omega
-  rw [hw₀, hw₁]
-  rw [Nat.mod_eq_of_lt (by simp [Nat.pow_lt_pow_succ])]
-  have := Nat.two_pow_pos (w := w')
-  omega
-
-theorem sgt_same (A : BitVec w) : ¬ (A >ₛ A) := by
+theorem sgt_same (A : BitVec w) : ¬ (A.slt A) := by
   simp [BitVec.slt]
-
-private theorem intMin_lt_zero (h : 0 < w): intMin w <ₛ 0 := by
-  unfold BitVec.slt
-  simp only [toInt_intMin, ofNat_eq_ofNat, toInt_zero, Left.neg_neg_iff, decide_eq_true_eq]
-  norm_cast
-  rw [Nat.two_pow_pred_mod_two_pow (by omega)]
-  exact Nat.two_pow_pos (w-1)
-
-private theorem not_gt_eq_le (A B : BitVec w) : (¬ (A >ₛ B)) = (A ≤ₛ B) := by
-  simp [BitVec.slt, BitVec.sle]
-
-private theorem sge_eq_sle (A B : BitVec w) : (A ≥ₛ B) = (B ≤ₛ A) := by
-  simp [BitVec.sle]
-
-private theorem sge_of_sgt (A B : BitVec w) : (A >ₛ B) → (A ≥ₛ B) := by
-  simp only [BitVec.slt, decide_eq_true_eq, BitVec.sle]
-  omega
-
-theorem intMin_not_gt_zero : ¬ (intMin w >ₛ (0#w)):= by
-  by_cases h : w = 0
-  · subst h
-    simp [of_length_zero]
-  · simp only [not_gt_eq_le]
-    rw [sge_of_sgt]
-    apply intMin_lt_zero
-    omega
 
 @[simp]
 lemma carry_and_xor_false : carry i (a &&& b) (a ^^^ b) false = false := by
