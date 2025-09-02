@@ -27,6 +27,11 @@ instance : Fintype (StateSpace wcard tcard) where
     rcases x with x | x  <;> simp
 
 
+
+
+
+
+
 /-
 op
 op.toBV : Nat → BV
@@ -419,7 +424,7 @@ section ToFSM
 
 /-- the FSM that corresponds to a given nat-predicate. -/
 structure NatFSM (wcard tcard : Nat) (v : Nondep.WidthExpr) where
-  toFsm : FSM (StateSpace wcard tcard)
+  toFsmZext : FSM (StateSpace wcard tcard)
 
 structure TermFSM (wcard tcard : Nat) (t : Nondep.Term) where
   toFsm : FSM (StateSpace wcard tcard)
@@ -472,7 +477,7 @@ structure HNatFSMToBitstream {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat}
    (fsm : NatFSM wcard tcard (.ofDep v)) : Prop where
   heq :
     ∀ (wenv : Fin wcard → Nat) (fsmEnv : StateSpace wcard tcard → BitStream),
-    (henv : HWidthEnv fsmEnv wenv) → fsm.toFsm.eval fsmEnv =
+    (henv : HWidthEnv fsmEnv wenv) → fsm.toFsmZext.eval fsmEnv =
       BitStream.ofNatUnary (v.toNat wenv)
 
 /--
