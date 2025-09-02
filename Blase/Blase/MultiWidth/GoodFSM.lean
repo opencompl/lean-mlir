@@ -1034,6 +1034,77 @@ theorem eval_fsmCarry_eq {wcard tcard : Nat}
       rw [hbfsm.heq (henv := henv)]
       simp
 
+
+
+def fsmCarry' (initialCarryVal : Bool): FSM Bool :=
+  let outputCirc :=
+    let carry := Circuit.var true (Sum.inl ())
+    let a := Circuit.var true (Sum.inr true)
+    let b := Circuit.var true (Sum.inr false)
+    -- if we are zero, then the output is 'false'.
+    ((a &&& b) ||| (a &&& carry) ||| (b &&& carry))
+  { α := Unit,
+    -- bit at 'false' tells us if we are at the zero state.
+    -- bit at 'true' tells us the carry value.
+    initCarry := fun () => initialCarryVal, -- our carry is the init carry.
+    outputCirc := outputCirc,
+    nextStateCirc := fun () => outputCirc
+  }
+
+
+@[simp]
+theorem initCarry_fsmCarry' : (fsmCarry' initCarry).initCarry =
+    fun _ => initCarry := by
+  simp [fsmCarry']
+
+@[simp]
+theorem snd_nextBit_fsmCarry' {state : Unit → Bool} {env : Bool → Bool} :
+    ((fsmCarry' initCarry).nextBit state env).2 =
+      Bool.atLeastTwo (env true) (env false) (state ()) := by
+  simp [fsmCarry', FSM.nextBit, Lean.Elab.WF.paramLet, FSM.nextBit]
+
+@[simp]
+theorem fst_nextBit_fsmCarry'_eq_atLeastTwo {state : Unit → Bool} {env : Bool → Bool} :
+    ((fsmCarry' initCarry).nextBit state env).1 =
+      fun () => Bool.atLeastTwo (env true) (env false) (state ()) := by
+  simp [fsmCarry', Lean.Elab.WF.paramLet, FSM.nextBit]
+
+/--
+The carry state of the borrow bit.
+TODO: rewrite with 'induction' to be a clean proof script.
+-/
+@[simp] theorem carry_fsmCarry' (initCarry : Bool)
+    (x : Bool → BitStream) : ∀ (n : ℕ),
+    FSM.carry (fsmCarry' initCarry) x (n + 1) =
+      fun () =>
+        BitStream.carry initCarry ((x true)) ((x false)) n := by
+  intros n
+  induction n
+  case zero =>
+    ext stateIx
+    simp [fsmCarry', FSM.carry, FSM.nextBit]
+      -- by_cases hw : width0Val <;> simp [hw]
+  case succ n ih =>
+    ext stateIx
+    rw [FSM.carry]
+    simp only [ih]
+    clear ih
+    simp [FSM.nextBit, fsmCarry']
+
+@[simp] lemma eval_fsmCarry' (x : Bool → BitStream) :
+    (fsmCarry' initCarry).eval x =
+      (BitStream.carry initCarry (x true) (x false)) := by
+  ext i
+  rcases i with rfl | i
+  · simp [fsmCarry', FSM.eval, FSM.nextBit]
+  · induction i
+    case zero =>
+      simp [FSM.eval]
+    case succ i ih =>
+      rw [FSM.eval]
+      simp only [carry_fsmCarry']
+      simp
+
 def fsmTermUlt {wcard tcard : Nat}
   {a b : Nondep.Term}
   (afsm : TermFSM wcard tcard a)
@@ -1068,8 +1139,6 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
 
 theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
   exact Function.ne_iff.mp h
-
-
 
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard}
