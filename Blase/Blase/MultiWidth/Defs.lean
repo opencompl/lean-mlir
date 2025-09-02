@@ -26,12 +26,6 @@ instance : Fintype (StateSpace wcard tcard) where
     intros x
     rcases x with x | x  <;> simp
 
-
-
-
-
-
-
 /-
 op
 op.toBV : Nat → BV
@@ -207,7 +201,7 @@ inductive BinaryRelationKind
 | eq
 | ule
 | slt
--- | sle
+| sle
 | ult -- unsigned less than.
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
@@ -235,7 +229,7 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
   | .binRel .ult _w a b => (a.toBV tenv) < (b.toBV tenv)
   | .binRel .ule _w a b => (a.toBV tenv) ≤ (b.toBV tenv)
   | .binRel .slt _w a b => (a.toBV tenv).slt (b.toBV tenv)
-  -- | .binRel .sle _w a b => (a.toBV tenv).sle (b.toBV tenv)
+  | .binRel .sle _w a b => (a.toBV tenv).sle (b.toBV tenv)
   | .and p1 p2 => p1.toProp tenv ∧ p2.toProp tenv
   | .or p1 p2 => p1.toProp tenv ∨ p2.toProp tenv
 
@@ -391,7 +385,7 @@ def Predicate.wcard (p : Predicate) : Nat :=
   | .binRel .eq w _a _b => w.wcard
   | .binRel .ult _w a _b => a.wcard
   | .binRel .ule w _a _b => w.wcard
-  -- | .binRel .sle w _a _b => w.wcard
+  | .binRel .sle w _a _b => w.wcard
   | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
   | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
@@ -401,7 +395,7 @@ def Predicate.tcard (p : Predicate) : Nat :=
   | .binRel .eq _w a b => max a.tcard b.tcard
   | .binRel .ult _w a b => max a.tcard b.tcard
   | .binRel .ule w _a _b => w.wcard
-  -- | .binRel .sle w _a _b => w.wcard
+  | .binRel .sle w _a _b => w.wcard
   | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
   | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
@@ -413,7 +407,7 @@ def Predicate.ofDep {wcard tcard : Nat}
   | .binRel .ult w a b => .binRel .ult (.ofDep w) (.ofDep a) (.ofDep b)
   | .binRel .ule w a b => .binRel .ule (.ofDep w) (.ofDep a) (.ofDep b)
   | .binRel .slt w a b => .binRel .slt (.ofDep w) (.ofDep a) (.ofDep b)
-  -- | .binRel .sle w a b => .binRel .sle (.ofDep w) (.ofDep a) (.ofDep b)
+  | .binRel .sle w a b => .binRel .sle (.ofDep w) (.ofDep a) (.ofDep b)
   | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
   | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
 

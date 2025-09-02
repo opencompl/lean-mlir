@@ -1360,17 +1360,17 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
       -- since that should be a much more long-term solution.
       fsmW.toFsm ||| (fsmTermSlt fsmW fsmA fsmB)
     }
-  -- | .binRel .sle w a b =>
-  --   let fsmA := mkTermFSM wcard tcard a
-  --   let fsmB := mkTermFSM wcard tcard b
-  --   let fsmW := mkWidthFSM wcard tcard w
-  --   { toFsm :=
-  --     -- upto 'w', don't make a decision, then
-  --     -- spit out what fsmTermUlt believes.
-  --     -- TODO: try to replace with a 'latchImmediate',
-  --     -- since that should be a much more long-term solution.
-  --     fsmW.toFsm ||| (fsmTermSle fsmA fsmB)
-  --   }
+  | .binRel .sle w a b =>
+    let fsmA := mkTermFSM wcard tcard a
+    let fsmB := mkTermFSM wcard tcard b
+    let fsmW := mkWidthFSM wcard tcard w
+    { toFsm :=
+      -- upto 'w', don't make a decision, then
+      -- spit out what fsmTermUlt believes.
+      -- TODO: try to replace with a 'latchImmediate',
+      -- since that should be a much more long-term solution.
+      fsmW.toFsm ||| (fsmTermSle fsmW fsmA fsmB)
+    }
   | .or p q  =>
     let fsmP :=  mkPredicateFSMAux wcard tcard p
     let fsmQ :=  mkPredicateFSMAux wcard tcard q
@@ -1577,6 +1577,51 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
         obtain h := congrFun h (w.toNat wenv)
         simp at h
         rw [eval_fsmTermSlt_eq_decide_slt
+            (hafsm := ha)
+            (hbfsm := hb)
+            (hwfsm := hwfsm)
+            (a := a)
+            (b := b)
+            (tenv := tenv)
+            (henv := henv)
+        ] at h
+        simp at h
+        exact h
+    case sle =>
+      constructor
+      intros wenv tenv fsmEnv henv
+      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      have hwfsm := IsGoodNatFSM_mkWidthFSM tcard w
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
+      rw [hwfsm.heq (henv := henv.toHWidthEnv)]
+      simp [Predicate.toProp]
+      constructor
+      · intros h
+        simp at h
+        ext N
+        simp
+        by_cases hw : N < w.toNat wenv
+        · simp [hw]
+        · simp [hw]
+          rw [eval_fsmTermSle_eq_decide_sle
+              (hafsm := ha)
+              (hbfsm := hb)
+              (a := a)
+              (b := b)
+              (w := w)
+              (hwfsm := hwfsm)
+              (tenv := tenv)
+              (henv := henv)
+          ]
+          simp only [decide_eq_true_eq]
+          apply BitVec.signExtend_sle_signExtend_of_sle
+          · omega
+          · exact h
+      · intros h
+        obtain h := congrFun h (w.toNat wenv)
+        simp at h
+        rw [eval_fsmTermSle_eq_decide_sle
             (hafsm := ha)
             (hbfsm := hb)
             (hwfsm := hwfsm)
