@@ -209,7 +209,6 @@ inductive Predicate
     (a : Term ctx w) (b : Term ctx w) : Predicate ctx
 | and (p1 p2 : Predicate ctx) : Predicate ctx
 | or (p1 p2 : Predicate ctx) : Predicate ctx
-| not (p : Predicate ctx) : Predicate ctx
 -- add predicate NOT, <= for bitvectors, < for bitvectors, <=
 -- for widths, =, not equals for widths.
 
@@ -228,7 +227,6 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
   | .binRel .ult _w a b => (a.toBV tenv) < (b.toBV) tenv
   | .and p1 p2 => p1.toProp tenv ∧ p2.toProp tenv
   | .or p1 p2 => p1.toProp tenv ∨ p2.toProp tenv
-  | .not p => ¬ (p.toProp tenv)
 
 -- TODO: is this even needed?
 -- Can't I directly show that the FSM corresponds to the BV?
@@ -375,7 +373,6 @@ inductive Predicate
     (a : Term) (b : Term) : Predicate
 | or (p1 p2 : Predicate) : Predicate
 | and (p1 p2 : Predicate) : Predicate
-| not (p : Predicate) : Predicate
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Predicate.wcard (p : Predicate) : Nat :=
@@ -384,7 +381,6 @@ def Predicate.wcard (p : Predicate) : Nat :=
   | .binRel .ult _w a _b => a.wcard
   | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
   | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
-  | .not p => Predicate.wcard p
 
 def Predicate.tcard (p : Predicate) : Nat :=
   match p with
@@ -392,7 +388,6 @@ def Predicate.tcard (p : Predicate) : Nat :=
   | .binRel .ult _w a b => max a.tcard b.tcard
   | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
   | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
-  | .not p => Predicate.tcard p
 
 def Predicate.ofDep {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate tctx) : Predicate :=
@@ -401,7 +396,6 @@ def Predicate.ofDep {wcard tcard : Nat}
   | .binRel .ult w a b => .binRel .ult (.ofDep w) (.ofDep a) (.ofDep b)
   | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
   | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
-  | .not p => .not (.ofDep p)
 
 end Nondep
 
@@ -486,12 +480,10 @@ structure HPredFSMToBitStream
   {tctx : Term.Ctx wcard tcard}
   {p : Predicate tctx} (fsm : PredicateFSM wcard tcard (.ofDep p)) : Prop where
   heq :
-    (∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv), p.toProp tenv) ↔
-    (∀  {wenv : WidthExpr.Env wcard}
-        (tenv : tctx.Env wenv)
-        (fsmEnv : StateSpace wcard tcard → BitStream),
-          (henv : HTermEnv fsmEnv tenv) →
-          fsm.toFsm.eval fsmEnv = .negOne)
+    ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
+      (fsmEnv : StateSpace wcard tcard → BitStream),
+      (henv : HTermEnv fsmEnv tenv) →
+        p.toProp tenv ↔ (fsm.toFsm.eval fsmEnv = .negOne)
 
 end ToFSM
 end MultiWidth
