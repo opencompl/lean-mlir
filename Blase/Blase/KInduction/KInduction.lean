@@ -16,7 +16,6 @@ import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Defs
 import Mathlib.Data.Multiset.FinsetOps
-import Blase.SingleWidth.Defs
 import Blase.Fast.BitStream
 import Blase.Fast.Defs
 import Blase.Fast.FiniteStateMachine

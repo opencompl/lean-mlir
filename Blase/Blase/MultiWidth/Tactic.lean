@@ -1,6 +1,7 @@
 import Mathlib.Data.Fintype.Defs
 import Blase.MultiWidth.Defs
 import Blase.MultiWidth.GoodFSM
+import Blase.MultiWidth.Preprocessing
 import Blase.KInduction.KInduction
 import Blase.AutoStructs.FormulaToAuto
 import Blase.ReflectMap
@@ -624,12 +625,11 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
 
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
-
-  let .some g ← Simplifications.runPreprocessing g
+  let .some g ← Normalize.runPreprocessing g
     | do
-        trace[Bits.Frontend] m!"Preprocessing automatically closed goal."
+        debugLog m!"Preprocessing automatically closed goal."
         return []
-  trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
+  debugLog m!"goal after preprocessing: {indentD g}"
 
   g.withContext do
     let collect : CollectState := {}
