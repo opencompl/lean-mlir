@@ -624,6 +624,13 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
 
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
+
+  let .some g ← Simplifications.runPreprocessing g
+    | do
+        trace[Bits.Frontend] m!"Preprocessing automatically closed goal."
+        return []
+  trace[Bits.Frontend] m!"goal after preprocessing: {indentD g}"
+
   g.withContext do
     let collect : CollectState := {}
     let (p, collect) ← collectBVPredicateAux collect (← g.getType)

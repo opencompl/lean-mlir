@@ -1,2 +1,2 @@
-import Blase.KInduction.Tests
+import Blase.SingleWidth.Tests
 

@@ -3,9 +3,18 @@ import Blase.MultiWidth.Tactic
 open MultiWidth
 
 
-theorem add_eq_xor_add_mul_and_nt (x y : BitVec w) :
+theorem add_eq_xor_add_mul_and_1 (x y : BitVec w) :
     x + y = (x ^^^ y) + 2 * (x &&& y) := by
   bv_multi_width (config := { niter := 2 })
+
+theorem add_eq_xor_add_mul_and_2 (x y : BitVec w) :
+    x + y = (x ^^^ y) + (x &&& y) <<< 1 := by
+  bv_multi_width (config := { niter := 2 })
+
+theorem add_eq_xor_add_mul_and_3 (x y : BitVec w) :
+    x + y = (x ^^^ y) + (x &&& y) * 2#w := by
+  bv_multi_width (config := { niter := 2 })
+
 
 theorem add_eq_xor_add_mul_and_nt_zext (x y : BitVec w) :
     x.zeroExtend (w + 1) + y.zeroExtend (w + 1) =

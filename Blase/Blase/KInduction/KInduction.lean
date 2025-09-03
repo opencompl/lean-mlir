@@ -22,7 +22,6 @@ import Blase.Fast.Defs
 import Blase.Fast.FiniteStateMachine
 import Blase.Fast.Decide
 import Blase.SingleWidth.Syntax
-import Blase.SingleWidth.Preprocessing
 import Lean.Meta.ForEachExpr
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 import Blase.Fast.ForLean
