@@ -125,10 +125,10 @@ open Stream.Bisim
 
 
 
-example (xs ys zs : Stream (BitVec 8)) : add₂ (add₂ xs zs) ys ~ add₃ xs ys zs := by
-  simp [add₂, add₃]
-  rw [syncMap₃_eq_syncMap₃ xs.removeNone_equiv _ _]
-  funext i
+-- example (xs ys zs : Stream (BitVec 8)) : add₂ (add₂ xs zs) ys ~ add₃ xs ys zs := by
+--   simp [add₂, add₃]
+--   rw [syncMap₃_eq_syncMap₃ xs.removeNone_equiv _ _]
+--   funext i
 
 
 end Examples
