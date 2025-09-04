@@ -9,7 +9,7 @@ theorem add_eq_xor_add_mul_and_zext (x y : BitVec w) :
   bv_multi_width
 
 /--
-info: 'add_eq_xor_add_mul_and_zext' depends on axioms: [propext,
+info: 'MultiWidthTests.add_eq_xor_add_mul_and_zext' depends on axioms: [propext,
  Classical.choice,
  Lean.ofReduceBool,
  Lean.trustCompiler,
