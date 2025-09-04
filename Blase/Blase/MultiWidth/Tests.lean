@@ -61,7 +61,17 @@ theorem add_eq_xor_add_mul_and_nt_zext (x y : BitVec w) :
   bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
   -- bv_multi_width (config := { niter := 10, verbose? := True })
 
- theorem eg2 (w : Nat) (x : BitVec w) : x + 2 = x + 1 + 1 := by
+/-- For fixed-width problems, we encode constraints correctly, and understand
+e.g. characteristic. -/
+theorem egFixedWidthTwo (x : BitVec 2) : x + x + x + x = 0 := by
+  bv_multi_width
+
+/-- We understand constant numerals. -/
+theorem egConstNumeral (w : Nat) (x : BitVec w) : x + 2 = x + 1 + 1 := by
+  bv_multi_width
+
+/-- We understand constant BVs. -/
+theorem egConstBV (w : Nat) (x : BitVec w) : x + (2#w) = x + (1#w) + (1#w) := by
   bv_multi_width
 
 /-

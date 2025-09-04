@@ -162,6 +162,8 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
     if ← check? then
       if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
         throwError m!"expected width to be a Nat, found: {indentD e}"
+    if let .some n ← getNatValue? e then
+      return (MultiWidth.Nondep.WidthExpr.const n, state)
     let (wix, wToIx) := state.wToIx.findOrInsertVal e
     return (.var wix, { state with wToIx := wToIx })
 
@@ -336,6 +338,12 @@ def collectBVAtom (state : CollectState)
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
   match_expr e with
+  | BitVec.ofNat wExpr nExpr =>
+    let (w, state) ← collectWidthAtom state wExpr
+    if let some n ← getNatValue? nExpr then
+      return (.ofNat w n, state)
+    else
+      mkAtom
   | HAdd.hAdd _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
