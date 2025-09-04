@@ -123,14 +123,14 @@ jobs:
         run: |
           cd bv-evaluation
           python3 ./compare.py instcombine -j48 \
-            || echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV
+            || (echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV; exit 1)
 
       - name: Collect data LLVM
         continue-on-error: true
         run: |
           cd bv-evaluation
           (python3 ./collect.py instcombine | tee llvm-stats) \
-            || echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV
+            || (echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV; exit 1)
 
       - uses: actions/github-script@v6
         if: env.LEANMLIR_STATUS != 'fail' && github.event_name == 'pull_request'
@@ -170,6 +170,10 @@ jobs:
             .lake/build
             TacBench/.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+
 
       - name: Add Lean to PATH
         run: |

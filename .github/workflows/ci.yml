@@ -11,66 +11,6 @@ permissions:
   packages: write
 
 jobs:
-  docker:
-    name: Build Docker image for core library
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/opencompl/lean-mlir:latest,ghcr.io/opencompl/lean-mlir:${{ github.sha }}
-          outputs: type=docker,dest=${{ runner.temp }}/lean-mlir.tar
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Upload Docker image as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: lean-mlir-docker
-          path: ${{ runner.temp }}/lean-mlir.tar
-
-  docker-bitwuzla:
-    name: Build Docker image for Bitwuzla
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: "./bv-evaluation"
-          push: true
-          tags: ghcr.io/opencompl/bitwuzla:latest
-          outputs: type=docker,dest=${{ runner.temp }}/bitwuzla.tar
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
   build:
     name: core library
     permissions:
@@ -112,7 +52,7 @@ jobs:
 
       - name: Compile Decide Experiment 🧐
         run: |
-          lake -R build SSA.Experimental.Bits.Fast.Decide
+          lake -R build Blase.Fast.Decide
 
       - name: Compile Hacker's Delight Theorems 🧮
         run: |
