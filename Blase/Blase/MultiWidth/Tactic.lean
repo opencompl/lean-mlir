@@ -344,6 +344,37 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       let (v, state) ← collectWidthAtom state v
       let (x, state) ← collectTerm state x
       return (.sext x v, state)
+  | HXor.hXor _bv _bv _bv _inst a b =>
+    match_expr _bv with
+    | BitVec w =>
+      let (w, state) ← collectWidthAtom state w
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.bxor w ta tb, state)
+    | _ => mkAtom
+  | HAnd.hAnd _bv _bv _bv _inst a b =>
+    match_expr _bv with
+    | BitVec w =>
+      let (w, state) ← collectWidthAtom state w
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.band w ta tb, state)
+    | _ => mkAtom
+  | HOr.hOr _bv _bv _bv _inst a b =>
+    match_expr _bv with
+    | BitVec w =>
+      let (w, state) ← collectWidthAtom state w
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.bor w ta tb, state)
+    | _ => mkAtom
+  | HNot.hnot _bv _inst a =>
+    match_expr _bv with
+    | BitVec w =>
+      let (w, state) ← collectWidthAtom state w
+      let (ta, state) ← collectTerm state a
+      return (.bnot w ta, state)
+    | _ => mkAtom
   | _ => mkAtom
   where
     mkAtom := do
@@ -508,13 +539,15 @@ private def getBoolLit? : Expr → Option Bool
   | Expr.const ``Bool.false _ => some false
   | _                         => none
 
+
+
 open Lean Meta Elab Tactic in
 /--
 Assumes that the mvar has type 'a = <true>' or 'a = <false>',
 and closes this goal with 'native_decide' of a 'rfl' proof.
 Assigns to the MVarId a proof.
 -/
-def mkEqRflNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) (debugSorry? : Bool := false) : SolverM Expr := do
+def mkEqReflBoolNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) (debugSorry? : Bool := false) : SolverM Expr := do
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
   let name := name ++ `lhs
   let auxDeclName ← Term.mkAuxName name
@@ -527,7 +560,8 @@ def mkEqRflNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) (debugS
     safety := .safe
   }
   addAndCompile decl
-  debugLog m!"declared {lhsExpr} as {auxDeclName}"
+  -- debugLog m!"declared {lhsExpr} as {auxDeclName}"
+  debugLog m!"declared {auxDeclName} equality native decide proof."
   let lhsDef : Expr := mkConst auxDeclName
   let rflProof ← mkEqRefl (toExpr rhs)
   -- let rflProof := mkApp2 (mkConst ``Eq.refl [Level.ofNat 1]) (mkConst ``Bool []) (toExpr rhs)
@@ -535,6 +569,26 @@ def mkEqRflNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) (debugS
   let sorryProof ← mkSorry (type := rflTy) (synthetic := true)
   let proof := mkApp3 (mkConst ``Lean.ofReduceBool []) lhsDef (toExpr rhs) rflProof
   return if debugSorry? then sorryProof else proof
+
+def mkEqReflNativeDecideProof (name : Name) (lhsSmallExpr : Expr) (rhsLargeExpr : Expr)
+    (debugSorry? : Bool := false) : SolverM Expr := do
+    -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
+  let name := name ++ `eqProof
+  let auxDeclName ← Term.mkAuxName name
+  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) (mkConst ``Bool []) lhsSmallExpr rhsLargeExpr
+  let rflProof ← mkEqRefl rhsLargeExpr
+  let sorryProof ← mkSorry (type := rflTy) (synthetic := true)
+  let proof := if debugSorry? then sorryProof else rflProof
+  let decl := Declaration.defnDecl {
+    name := auxDeclName
+    levelParams := []
+    type := rflTy
+    value := proof
+    hints := .abbrev
+    safety := .safe
+  }
+  addAndCompile decl
+  return (mkConst auxDeclName)
 
 def mkDecideTy : SolverM Expr := do
   let ty ← mkEq (mkNatLit 1) (mkNatLit 1)
@@ -625,7 +679,7 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
 
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
-  let .some g ← Normalize.runPreprocessing g
+  let .some g ← g.withContext (Simplifications.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."
         return []
@@ -672,15 +726,17 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
         let verifyCircuitMkSafetyCircuitExpr ← Expr.mkVerifyCircuit
           (← Expr.KInductionCircuits.mkMkSafetyCircuit circsExpr)
           (toExpr safetyCert)
-        debugLog m!"made safety cert expr: {verifyCircuitMkSafetyCircuitExpr}"
+        -- debugLog m!"made safety cert expr: {verifyCircuitMkSafetyCircuitExpr}"
         debugLog "making safety cert = true proof..."
-        let safetyCertProof ← mkEqRflNativeDecideProof `safetyCert verifyCircuitMkSafetyCircuitExpr true
-        debugLog m!"made safety cert proof: {safetyCertProof}"
+        let safetyCertProof ←
+          mkEqReflBoolNativeDecideProof `safetyCert verifyCircuitMkSafetyCircuitExpr true
+        -- debugLog m!"made safety cert proof: {safetyCertProof}"
         let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
             (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
             (toExpr indCert)
-        debugLog m!"made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
-        let indCertProof ← mkEqRflNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
+        -- debugLog m!"made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
+        let indCertProof ←
+          mkEqReflBoolNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
         debugLog m!"made induction cert = true proof..."
         let prf ← mkAppM ``MultiWidth.Predicate.toProp_of_KInductionCircuits
           #[tctx,
@@ -689,7 +745,6 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
             ← mkEqRefl pNondepExpr,
             predNondepFsmExpr,
             ← mkEqRefl predNondepFsmExpr,
-            -- fsmExpr,
             toExpr niters,
             circsExpr,
             circsLawfulExpr,
@@ -700,8 +755,16 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
             wenv,
             tenv]
         let prf ← instantiateMVars prf
+        -- let prf (← mkSorry (synthetic := true) (← g.getType))
         pure prf
-      g.assign prf
+      let gs ← g.apply prf
+      if gs.isEmpty then
+        debugLog m!"unified goal with proof."
+      else
+        let mut msg := m!"Expected proof cerificate to close goal, but failed. Leftover goals:"
+        for g in gs do
+          msg := msg ++ m!"{indentD g}"
+        throwError msg
       return []
 
 def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do

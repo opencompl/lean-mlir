@@ -2,10 +2,50 @@ import Blase.MultiWidth.Tactic
 
 open MultiWidth
 
+theorem test28 {w : Nat} (x : BitVec w) :
+    x &&& x &&& x &&& x &&& x &&& x = x := by
+  bv_multi_width (config := { niter := 2 })
+
+def thmStmt : MultiWidth.Predicate (wcard := 1) (tcard := 2)
+  (MultiWidth.Term.Ctx.cons
+    (MultiWidth.Term.Ctx.cons
+      (MultiWidth.Term.Ctx.empty (wcard := 1))
+    (.var ⟨0, by omega⟩))
+  (.var ⟨0, by omega⟩)) :=
+     (Predicate.binRel BinaryRelationKind.eq (WidthExpr.var ⟨0, by omega⟩)
+       (MultiWidth.Term.add
+          (MultiWidth.Term.var (⟨0, by omega⟩ : Fin 2))
+          (MultiWidth.Term.var (⟨1, by omega⟩ : Fin 2)))
+       (MultiWidth.Term.add
+         (MultiWidth.Term.var (⟨1, by omega⟩ : Fin 2))
+         (MultiWidth.Term.var (⟨0, by omega⟩ : Fin 2))
+       )
+     )
+
+abbrev ty :=
+  BitVec (WidthExpr.toNat (WidthExpr.var (Fin.mk 0 (by simp))) (WidthExpr.Env.empty.cons 10))
+
+theorem hty : ty = BitVec 10 := by
+  unfold ty
+  rfl
+
+set_option pp.analyze true in
+def test5 (x y z : BitVec w) : (x + y) = (y + x) := by
+  bv_multi_width (config := { niter := 10, verbose? := True, check? := True })
+
+#eval test5.safetyCert.lhs_1
+#eval test5.indCert.lhs_3
+
+def test6 (x y z : BitVec w) : (x + (y + z)) = ((x + y) + z) := by
+  bv_multi_width (config := { niter := 10 })
+
+theorem add_eq_or_add_and (x y : BitVec w) :
+    x + y = (x ||| y) + (x &&& y) := by
+  bv_multi_width (config := { niter := 10, verbose? := True })
 
 theorem add_eq_xor_add_mul_and_1 (x y : BitVec w) :
     x + y = (x ^^^ y) + 2 * (x &&& y) := by
-  bv_multi_width (config := { niter := 2, verbose? := True })
+  bv_multi_width (config := { niter := 10, verbose? := True })
 
 theorem add_eq_xor_add_mul_and_2 (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) <<< 1 := by
@@ -13,13 +53,15 @@ theorem add_eq_xor_add_mul_and_2 (x y : BitVec w) :
 
 theorem add_eq_xor_add_mul_and_3 (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) * 2#w := by
-  bv_multi_width (config := { niter := 2 })
+  bv_multi_width (config := { niter := 2, verbose? := True })
 
 
 theorem add_eq_xor_add_mul_and_nt_zext (x y : BitVec w) :
     x.zeroExtend (w + 1) + y.zeroExtend (w + 1) =
       (x ^^^ y).zeroExtend (w + 1) + 2 * (x &&& y).zeroExtend (w + 1) := by
-  bv_multi_width (config := { niter := 2 })
+  bv_multi_width (config := { niter := 10, verbose? := True })
+
+/-
 
  theorem eg2 (w : Nat) (x : BitVec w) : x + 2 = x + 1 + 1 := by
   bv_multi_width
@@ -291,8 +333,6 @@ def test5 (x y z : BitVec w) : (x + y + z) = (z + y + x) := by
   bv_multi_width (config := { niter := 2 })
 
 
-def test6 (x y z : BitVec w) : (x + (y + z)) = (x + y + z) := by
-  bv_multi_width (config := { niter := 2 })
 
 def test11 (x y : BitVec w) : (x + y) = ((x |||  y) + (x &&&  y)) := by
   bv_multi_width (config := { niter := 2 })
@@ -332,8 +372,6 @@ def test26 {w : Nat} (x y : BitVec w) : 1#w + x + 0#w = 1#w + x := by
 def test27 (x y : BitVec w) : 2#w + x  = 1#w  + x + 1#w := by
   bv_multi_width (config := { niter := 2 })
 
-def test28 {w : Nat} (x y : BitVec w) : x &&& x &&& x &&& x &&& x &&& x = x := by
-  bv_multi_width (config := { niter := 2 })
 
 example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofNat w 1 := by
   intros
@@ -418,3 +456,5 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
   bv_multi_width (config := { niter := 2 })
+
+-/
