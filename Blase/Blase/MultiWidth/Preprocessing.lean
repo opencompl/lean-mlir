@@ -30,21 +30,30 @@ with BitVec.ofNat -/
 
 /-! Normal form for shifts
 
-See that `x <<< (n : Nat)` is strictly more expression than `x <<< BitVec.ofNat w n`,
-because in the former case, we can shift by arbitrary amounts, while in the latter case,
-we can only shift by numbers upto `2^w`. Therefore, we choose `x <<< (n : Nat)` as our simp
-and preprocessing normal form for the tactic.
+We normalize all shifts into multiplication by constant bitvector on the left.
 -/
 
-@[simp] theorem BitVec.shiftLeft_ofNat_eq (x : BitVec w) (n : Nat) :
-  x <<< BitVec.ofNat w n = x <<< (n % 2^w) := by simp
+@[bv_multi_width_normalize] theorem BitVec.shiftLeft_ofNat_eq (x : BitVec w) (n : Nat) :
+  x <<< BitVec.ofNat w n = (BitVec.ofNat w (2 ^ (n % 2^w))) * x := by
+  apply BitVec.eq_of_toNat_eq
+  simp
+  rw [Nat.shiftLeft_eq]
+  rw [Nat.mul_comm]
+
+@[bv_multi_width_normalize] theorem BitVec.shiftLeft_nat_eq (x : BitVec w) (n : Nat) :
+  x <<< n = (BitVec.ofNat w (2 ^ n)) * x := by
+  apply BitVec.eq_of_toNat_eq
+  simp
+  rw [Nat.shiftLeft_eq]
+  rw [Nat.mul_comm]
 
 /--
 Multiplying by an even number `e` is the same as shifting by `1`,
 followed by multiplying by half of `e` (the number `n`).
 This is used to simplify multiplications into shifts.
 -/
-theorem BitVec.even_mul_eq_shiftLeft_mul_of_eq_mul_two (w : Nat) (x : BitVec w) (n e : Nat) (he : e = n * 2) :
+theorem BitVec.even_mul_eq_shiftLeft_mul_of_eq_mul_two
+    (w : Nat) (x : BitVec w) (n e : Nat) (he : e = n * 2) :
     (BitVec.ofNat w e) * x = (BitVec.ofNat w n) * (x <<< (1 : Nat)) := by
   apply BitVec.eq_of_toNat_eq
   simp [Nat.shiftLeft_eq, he]
@@ -87,7 +96,10 @@ theorem BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one (w : Nat) (x : Bit
 
 -- @[bv_multi_width_normalize] theorem BitVec.neg_one_mul (x : BitVec w) : -1#w * x = -x := by simp
 
-@[bv_multi_width_normalize] theorem BitVec.neg_mul (x y : BitVec w) : (- x) * y = -(x * y) := by simp
+
+/-# Rewrite subtraction to addition with bitvec not. -/
+attribute [bv_multi_width_normalize] BitVec.sub_eq_add_neg
+attribute [bv_multi_width_normalize] BitVec.neg_eq_not_add
 
 
 open Lean Meta Elab in
@@ -130,38 +142,6 @@ simproc↓ [bv_multi_width_normalize] shiftLeft_break_down ((BitVec.ofNat _ _) *
     return .visit { proof? := eqProof, expr := ← getEqRhs eqProof }
   | _ => return .continue
 
-open Lean Elab Meta
-def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
-  let some ext ← (getSimpExtension? `bv_multi_width_normalize)
-    | throwError m!"'bv_multi_width_preprocess' simp attribute not found!"
-  let theorems ← ext.getTheorems
-  let some ext ← (Simp.getSimprocExtension? `bv_multi_width_normalize)
-    | throwError m!" 'bv_multi_width_preprocess' simp attribute not found!"
-  let simprocs ← ext.getSimprocs
-  let config : Simp.Config := { }
-  let config := { config with failIfUnchanged := false }
-  let ctx ← Simp.mkContext (config := config)
-    (simpTheorems := #[theorems])
-    (congrTheorems := ← Meta.getSimpCongrTheorems)
-  match ← simpGoal g ctx (simprocs := #[simprocs]) with
-  | (none, _) => return none
-  | (some (_newHyps, g'), _) => pure g'
-
-
-open Lean Elab Meta
-open Lean Elab Meta Tactic in
-/-- Convert the goal into negation normal form. -/
-elab "bv_multi_width_normalize" : tactic => do
-  liftMetaTactic fun g => do
-    match ← runPreprocessing g with
-    | none => return []
-    | some g => do
-      -- revert after running the simp-set, so that we don't transform
-      -- with `forall_and : (∀ x, p x ∧ q x) ↔ (∀ x, p x) ∧ (∀ x, q x)`.
-      -- TODO(@bollu): This opens up an interesting possibility, where we can handle smaller problems
-      -- by just working on disjunctions.
-      -- let g ← g.revertAll
-      return [g]
 
 attribute [bv_multi_width_normalize] BitVec.not_lt
 attribute [bv_multi_width_normalize] BitVec.not_le
@@ -359,6 +339,50 @@ simproc [bv_multi_width_normalize] boolEqIff (@Eq Bool _ _) := fun e => do
         let pf := mkApp2 (.const ``bool_eq_iff []) e₁ e₂
         pure $ .done { expr := e', proof? := some pf }
   | _ => pure .continue
+
+open Lean Elab Meta
+def getSimpData (simpsetName : Name) : MetaM (SimpTheorems × Simprocs) := do
+  let some ext ← (getSimpExtension? simpsetName)
+    | throwError m!"'{simpsetName}' simp attribute not found!"
+  let theorems ← ext.getTheorems
+  let some ext ← (Simp.getSimprocExtension? simpsetName)
+    | throwError m!"'{simpsetName}' simp attribute not found!"
+  let simprocs ← ext.getSimprocs
+  return (theorems, simprocs)
+
+open Lean Elab Meta
+def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
+  let mut theorems : Array SimpTheorems := #[]
+  let mut simprocs : Array Simprocs := #[]
+
+  for name in [`seval, `bv_multi_width_normalize] do
+    let res ← getSimpData name
+    theorems := theorems.push res.1
+    simprocs := simprocs.push res.2
+
+  let config : Simp.Config := { }
+  let config := { config with failIfUnchanged := false }
+  let ctx ← Simp.mkContext (config := config)
+    (simpTheorems := theorems)
+    (congrTheorems := ← Meta.getSimpCongrTheorems)
+  match ← simpGoal g ctx (simprocs := simprocs) with
+  | (none, _) => return none
+  | (some (_newHyps, g'), _) => pure g'
+
+open Lean Elab Meta
+open Lean Elab Meta Tactic in
+/-- Convert the goal into negation normal form. -/
+elab "bv_multi_width_normalize" : tactic => do
+  liftMetaTactic fun g => do
+    match ← runPreprocessing g with
+    | none => return []
+    | some g => do
+      -- revert after running the simp-set, so that we don't transform
+      -- with `forall_and : (∀ x, p x ∧ q x) ↔ (∀ x, p x) ∧ (∀ x, q x)`.
+      -- TODO(@bollu): This opens up an interesting possibility, where we can handle smaller problems
+      -- by just working on disjunctions.
+      -- let g ← g.revertAll
+      return [g]
 
 
 /--

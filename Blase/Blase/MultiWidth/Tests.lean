@@ -31,41 +31,56 @@ theorem hty : ty = BitVec 10 := by
 
 set_option pp.analyze true in
 def test5 (x y z : BitVec w) : (x + y) = (y + x) := by
-  bv_multi_width (config := { niter := 10, verbose? := True, check? := True })
-
-#eval test5.safetyCert.lhs_1
-#eval test5.indCert.lhs_3
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 def test6 (x y z : BitVec w) : (x + (y + z)) = ((x + y) + z) := by
-  bv_multi_width (config := { niter := 10 })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 theorem add_eq_or_add_and (x y : BitVec w) :
     x + y = (x ||| y) + (x &&& y) := by
-  bv_multi_width (config := { niter := 10, verbose? := True })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 theorem add_eq_xor_add_mul_and_1 (x y : BitVec w) :
     x + y = (x ^^^ y) + 2 * (x &&& y) := by
-  bv_multi_width (config := { niter := 10, verbose? := True })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 theorem add_eq_xor_add_mul_and_2 (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) <<< 1 := by
-  bv_multi_width (config := { niter := 2, verbose? := True })
+  -- bv_multi_width_normalize
+  -- simp only [seval, bv_multi_width_normalize]
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 theorem add_eq_xor_add_mul_and_3 (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) * 2#w := by
-  bv_multi_width (config := { niter := 2, verbose? := True })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 
 theorem add_eq_xor_add_mul_and_nt_zext (x y : BitVec w) :
     x.zeroExtend (w + 1) + y.zeroExtend (w + 1) =
       (x ^^^ y).zeroExtend (w + 1) + 2 * (x &&& y).zeroExtend (w + 1) := by
-  bv_multi_width (config := { niter := 10, verbose? := True })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
+  -- bv_multi_width (config := { niter := 10, verbose? := True })
 
-/-
-
- theorem eg2 (w : Nat) (x : BitVec w) : x + 2 = x + 1 + 1 := by
+/-- For fixed-width problems, we encode constraints correctly, and understand
+e.g. characteristic. -/
+theorem egFixedWidthTwo (x : BitVec 2) : x + x + x + x = 0 := by
   bv_multi_width
 
+/-- We understand constant numerals. -/
+theorem egConstNumeral (w : Nat) (x : BitVec w) : x + 2 = x + 1 + 1 := by
+  bv_multi_width
+
+/-- We understand constant BVs. -/
+theorem egConstBV (w : Nat) (x : BitVec w) : x + (2#w) = x + (1#w) + (1#w) := by
+  bv_multi_width
+
+/-
+theorem egZextMin (u v : Nat) (x : BitVec w) :
+    u ≤ v → (x.zeroExtend u).zeroExtend v = x.zeroExtend v := by
+  bv_multi_width (config := { niter := 2 })
+-/
+
+/-
 theorem eg3 (u w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend u = x.zeroExtend u := by
   bv_multi_width (config := { niter := 2 })

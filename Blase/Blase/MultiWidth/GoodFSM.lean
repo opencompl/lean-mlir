@@ -39,11 +39,14 @@ private theorem decide_or_decide_eq_decide {P Q : Prop}
 def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
     (NatFSM wcard tcard w) :=
   match w with
+  | .const nat => {
+      toFsm := (FSM.trueUptoExcluding nat).map Fin.elim0
+    }
   | .var wnat =>
     if h : wnat < wcard then
       { toFsm :=
-        -- composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
-        (FSM.var' (StateSpace.widthVar ⟨wnat, h⟩))
+        composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨wnat, h⟩))
+        -- (FSM.var' (StateSpace.widthVar ⟨wnat, h⟩))
       }
     else
       { toFsm := FSM.zero' } -- default, should not be used.
@@ -65,10 +68,22 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
   heq := by
     intros wenv fsmEnv henv
     induction w
+    case const n =>
+      simp [mkWidthFSM, FSM.eval_trueUptoExcluding]
     case var v =>
       simp [mkWidthFSM]
       have ⟨henv⟩ := henv
       rw [henv]
+      ext i
+      rw [BitStream.scanAnd_eq_decide]
+      simp
+      constructor
+      · intros hi
+        apply hi
+        omega
+      · intros hi
+        intros j hj
+        omega
     case min v w hv hw =>
       simp [mkWidthFSM]
       rw [hv, hw]
@@ -650,6 +665,10 @@ theorem eval_mkMaskZeroFsm_eq_decide (env : α → BitStream):
 def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard t) :=
   match t with
+  | .ofNat w n =>
+    let fsmW : FSM (StateSpace wcard tcard) := (mkWidthFSM wcard tcard w).toFsm
+    let fsmN : FSM (StateSpace wcard tcard) := (FSM.ofNat n).map Fin.elim0
+    { toFsmZext := fsmW &&& fsmN }
   | .var v _w =>
     if h : v < tcard then
       {
@@ -750,6 +769,24 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     (t : Term tctx wold) :
     (HTermFSMToBitStream (mkTermFSM wcard tcard (.ofDep t))) := by
   induction t
+  case ofNat w n =>
+    constructor
+    intros wenv tenv fsmEnv htenv
+    obtain htenv_term := htenv.heq_term
+    obtain htenv_width := htenv.heq_width
+    have hwgood := IsGoodNatFSM_mkWidthFSM (wcard := wcard) (tcard := tcard) w
+    simp [mkTermFSM, Nondep.Term.ofDep]
+    rw [hwgood.heq (henv := htenv.toHWidthEnv)]
+    ext i
+    simp
+    by_cases hi : i < w.toNat wenv
+    · simp [hi]
+      rw [BitVec.getElem_eq_testBit_toNat]
+      simp
+      omega
+    · simp [hi]
+      apply BitVec.getLsbD_of_ge
+      omega
   case var v =>
     constructor
     intros wenv tenv fsmEnv htenv

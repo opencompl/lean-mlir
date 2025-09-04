@@ -19,6 +19,8 @@ structure Config where
   -- number of k-induction iterations.
   niter : Nat := 10
   verbose?: Bool := false
+  /-- Make the final reflection proof as a 'sorry' for debugging. -/
+  debugFillFinalReflectionProofWithSorry : Bool := false
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -160,6 +162,8 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
     if ← check? then
       if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
         throwError m!"expected width to be a Nat, found: {indentD e}"
+    if let .some n ← getNatValue? e then
+      return (MultiWidth.Nondep.WidthExpr.const n, state)
     let (wix, wToIx) := state.wToIx.findOrInsertVal e
     return (.var wix, { state with wToIx := wToIx })
 
@@ -186,9 +190,15 @@ private def mkFinLit (n : Nat) (i : Nat) : SolverM Expr := do
 /-- info: MultiWidth.WidthExpr.addK {wcard : ℕ} (v : WidthExpr wcard) (k : ℕ) : WidthExpr wcard -/
 #guard_msgs in #check MultiWidth.WidthExpr.addK
 
+/- This needs to be checked carefully for equivalence. -/
 def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
     SolverM Expr := do
   match ve with
+  | .const w =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.const)
+      #[mkNatLit wcard, mkNatLit w]
+    debugCheck out
+    return out
   | .var v =>
     let out := mkAppN (mkConst ``MultiWidth.WidthExpr.var)
       #[mkNatLit wcard, ← mkFinLit wcard v]
@@ -328,6 +338,12 @@ def collectBVAtom (state : CollectState)
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
   match_expr e with
+  | BitVec.ofNat wExpr nExpr =>
+    let (w, state) ← collectWidthAtom state wExpr
+    if let some n ← getNatValue? nExpr then
+      return (.ofNat w n, state)
+    else
+      mkAtom
   | HAdd.hAdd _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
@@ -386,10 +402,17 @@ info: MultiWidth.Term.var {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (v :
 -/
 #guard_msgs in #check MultiWidth.Term.var
 
-/-- Convert a raw expression into a `Term`. -/
+/-- Convert a raw expression into a `Term`.
+This needs to be checked carefully for equivalence. -/
 def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
     (t : MultiWidth.Nondep.Term) : SolverM Expr := do
   match t with
+  | .ofNat w n =>
+    let wExpr ← mkWidthExpr wcard w
+    let out := mkAppN (mkConst ``MultiWidth.Term.ofNat [])
+      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, mkNatLit n]
+    debugCheck out
+    return out
   | .var v _wexpr =>
     let out := mkAppN (mkConst ``MultiWidth.Term.var [])
       #[mkNatLit wcard, mkNatLit tcard, tctx, ← mkFinLit tcard v]
@@ -679,7 +702,7 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
 
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
-  let .some g ← g.withContext (Simplifications.runPreprocessing g)
+  let .some g ← g.withContext (Normalize.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."
         return []
@@ -713,6 +736,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
       collect.logSuspiciousFvars
       throwError m!"exhausted iterations for predicate {repr p}"
     | .provenByKIndCycleBreaking niters safetyCert indCert =>
+      collect.logSuspiciousFvars
       debugLog m!"proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
         -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
@@ -754,8 +778,11 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
             indCertProof,
             wenv,
             tenv]
-        let prf ← instantiateMVars prf
-        -- let prf (← mkSorry (synthetic := true) (← g.getType))
+        let prf ←
+          if (← read).debugFillFinalReflectionProofWithSorry then
+            mkSorry (synthetic := true) (← g.getType)
+          else
+            instantiateMVars prf
         pure prf
       let gs ← g.apply prf
       if gs.isEmpty then
@@ -772,11 +799,11 @@ def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
 
 declare_config_elab elabBvMultiWidthConfig Config
 
-syntax (name := bvMultiWidth) "bv_multi_width" (Lean.Parser.Tactic.config)? : tactic
+syntax (name := bvMultiWidth) "bv_multi_width" Lean.Parser.Tactic.optConfig : tactic
 @[tactic bvMultiWidth]
 def evalBvMultiWidth : Tactic := fun
-| `(tactic| bv_multi_width $[$cfg]?) => do
-  let cfg ← elabBvMultiWidthConfig (mkOptionalNode cfg)
+| `(tactic| bv_multi_width $cfg) => do
+  let cfg ← elabBvMultiWidthConfig cfg
   let g ← getMainGoal
   g.withContext do
     let gs ← solveEntrypoint g cfg
