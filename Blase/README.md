@@ -5,5 +5,7 @@ with linear arithmetic, bitwise operationrs, zeroExtend, signExtend, and bitwidt
 
 #### Algorithms Improvements TODO
 
+- Add a `w` and `2^w` constraint, where for a unary width, we can build the bitvector that is `2^w`
+  or `2^w - 1`. 
 - Check if a variable is used both as a width variable and a nat variable,
   and then complain about it.
