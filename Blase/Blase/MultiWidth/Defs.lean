@@ -167,13 +167,45 @@ def Term.Ctx.Env.cons
   fun v => v.cases (bv.cast hw) (fun w => tenv w)
 
 
+
+/-- get the value of a variable from the environment. -/
+def Term.Ctx.Env.get {tcard : Nat}
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv) (i : Nat) (hi : i < tcard) :
+  BitVec ((tctx ⟨i, hi⟩).toNat wenv) :=
+  tenv ⟨i, hi⟩
+
+@[simp]
+def Term.Ctx.Env.cons_get_zero
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv)
+  (wexpr : WidthExpr wcard)
+  {w : Nat} (bv : BitVec w)
+  (hw : w = wexpr.toNat wenv)
+  (h0 : 0 < tcard + 1) :
+  (Term.Ctx.Env.cons tenv wexpr bv hw).get 0 h0 = bv.cast hw := rfl
+
+@[simp]
+def Term.Ctx.Env.cons_get_succ
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv)
+  (wexpr : WidthExpr wcard)
+  {w : Nat} (bv : BitVec w)
+  (hw : w = wexpr.toNat wenv)
+  (h0 : i + 1 < tcard + 1) :
+  (Term.Ctx.Env.cons tenv wexpr bv hw).get (i + 1) h0 = tenv.get i (by omega) := rfl
+
+
 /-- Evaluate a term to get a concrete bitvector expression. -/
 def Term.toBV {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (tenv : tctx.Env wenv) :
   Term tctx w → BitVec (w.toNat wenv)
 | .ofNat w n => BitVec.ofNat (w.toNat wenv) n
-| .var v => tenv v
+| .var v => tenv.get v.1 v.2
 | .add a b => (a.toBV tenv) + (b.toBV tenv)
 | .zext a v => (a.toBV tenv).zeroExtend (v.toNat wenv)
 | .sext a v => (a.toBV tenv).signExtend (v.toNat wenv)

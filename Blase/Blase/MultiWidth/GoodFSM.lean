@@ -1855,4 +1855,28 @@ info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [pr
 -/
 #guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits
 
+open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
+theorem Predicate.toProp_of_KInductionCircuits' 
+    {wcard tcard : Nat}
+    (P : Prop)
+    (tctx : Term.Ctx wcard tcard)
+    (p : MultiWidth.Predicate tctx)
+    (pNondep : Nondep.Predicate)
+    (_hpNondep : pNondep = (.ofDep p))
+    (fsm : PredicateFSM wcard tcard pNondep)
+    (_hfsm : fsm = mkPredicateFSMNondep wcard tcard pNondep)
+    (n : Nat)
+    (circs : KInductionCircuits fsm.toFsm n)
+    (hCircs : circs.IsLawful)
+    (sCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
+    (hs : Circuit.verifyCircuit (circs.mkSafetyCircuit) sCert = true)
+    (indCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
+    (hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
+    (wenv : WidthExpr.Env wcard)
+    (tenv : tctx.Env wenv)
+    (hp : p.toProp tenv = P) :
+    P := by
+  rw [← hp]
+  apply Predicate.toProp_of_KInductionCircuits <;> assumption
+
 end MultiWidth
