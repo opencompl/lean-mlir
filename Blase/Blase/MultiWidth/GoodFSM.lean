@@ -42,8 +42,8 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (w : Nondep.WidthExpr) :
   | .var wnat =>
     if h : wnat < wcard then
       { toFsm :=
-        -- composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨w.toNat, h⟩))
-        (FSM.var' (StateSpace.widthVar ⟨wnat, h⟩))
+        composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.widthVar ⟨wnat, h⟩))
+        -- (FSM.var' (StateSpace.widthVar ⟨wnat, h⟩))
       }
     else
       { toFsm := FSM.zero' } -- default, should not be used.
@@ -69,6 +69,16 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (w : WidthExpr wcard) :
       simp [mkWidthFSM]
       have ⟨henv⟩ := henv
       rw [henv]
+      ext i
+      rw [BitStream.scanAnd_eq_decide]
+      simp
+      constructor
+      · intros hi
+        apply hi
+        omega
+      · intros hi
+        intros j hj
+        omega
     case min v w hv hw =>
       simp [mkWidthFSM]
       rw [hv, hw]
