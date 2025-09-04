@@ -179,8 +179,6 @@ def dcAdd2 := [DCxComb_com| {
 -- delay-insensitive, hence easier to prove.
 
 
-
-
 def dcAdd4 := [DCxComb_com| {
   ^entry(%a: !ValueStream_32, %b: !ValueStream_32):
     %unpacka = "DCxComb.unpack" (%a) : (!ValueStream_32) -> (!ValueTokenStream_32)
