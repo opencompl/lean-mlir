@@ -33,6 +33,7 @@ op.toBitStream : BitStream
 -/
 
 inductive WidthExpr (wcard : Nat) : Type
+| const (n : Nat) :  WidthExpr wcard
 | var : (v : Fin wcard) → WidthExpr wcard
 | min : (v w : WidthExpr wcard) → WidthExpr wcard
 | max : (v w : WidthExpr wcard) → WidthExpr wcard
@@ -42,6 +43,7 @@ inductive WidthExpr (wcard : Nat) : Type
 /-- Cast the width expression along the fact that width is ≤. -/
 def WidthExpr.castLe {wcard : Nat} (e : WidthExpr wcard) (hw : wcard ≤ wcard') : WidthExpr wcard' :=
   match e with
+  | .const n => .const n
   | .var v => .var ⟨v, by omega⟩
   | .min v w => .min (v.castLe hw) (w.castLe hw)
   | .max v w => .max (v.castLe hw) (w.castLe hw)
@@ -59,10 +61,15 @@ def WidthExpr.Env.cons (env : WidthExpr.Env wcard) (w : Nat) :
 
 def WidthExpr.toNat (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
   match e with
+  | .const n => n
   | .var v => env v
   | .min v w => Nat.min (v.toNat env) (w.toNat env)
   | .max v w => Nat.max (v.toNat env) (w.toNat env)
   | .addK v k => v.toNat env + k
+
+@[simp]
+def WidthExpr.toNat_const {n : Nat} (env : WidthExpr.Env wcard) :
+    WidthExpr.toNat (.const n) env = n := rfl
 
 @[simp]
 def WidthExpr.toNat_var (v : Fin wcard) (env : WidthExpr.Env wcard) :
@@ -84,11 +91,11 @@ def WidthExpr.toNat_addK (v : WidthExpr wcard) (k : Nat)
 def WidthExpr.toBitStream (e : WidthExpr wcard)
   (bsEnv : StateSpace wcard tcard → BitStream) : BitStream :=
   match e with
+  | .const n => BitStream.ofNatUnary n
   | .var v => bsEnv (StateSpace.widthVar v)
   | .min v w => BitStream.minUnary (v.toBitStream bsEnv) (w.toBitStream bsEnv)
   | .max v w => BitStream.maxUnary (v.toBitStream bsEnv) (w.toBitStream bsEnv)
   | .addK v k => BitStream.addKUnary (v.toBitStream bsEnv) k
-
 
 inductive NatPredicate (wcard : Nat) : Type
 | eq : WidthExpr wcard → WidthExpr wcard → NatPredicate wcard
@@ -110,6 +117,8 @@ def Term.Ctx.cons {wcard : Nat} {tcard : Nat} (ctx : Term.Ctx wcard tcard)
 
 inductive Term {wcard tcard : Nat}
   (tctx : Term.Ctx wcard tcard) : (WidthExpr wcard) → Type
+/-- A bitvector built from a natural number. -/
+| ofNat (w : WidthExpr wcard) (n : Nat) : Term tctx w
 /-- a variable of a given width -/
 | var (v : Fin tcard) : Term tctx (tctx v)
 /-- addition of two terms of the same width -/
@@ -163,6 +172,7 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (tenv : tctx.Env wenv) :
   Term tctx w → BitVec (w.toNat wenv)
+| .ofNat w n => BitVec.ofNat (w.toNat wenv) n
 | .var v => tenv v
 | .add a b => (a.toBV tenv) + (b.toBV tenv)
 | .zext a v => (a.toBV tenv).zeroExtend (v.toNat wenv)
@@ -171,6 +181,13 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
 | .band a b => (a.toBV tenv) &&& (b.toBV tenv)
 | .bxor a b => (a.toBV tenv) ^^^ (b.toBV tenv)
 | .bnot a => ~~~ (a.toBV tenv)
+
+@[simp]
+theorem Term.toBV_ofNat
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv)
+    (w : WidthExpr wcard) (n : Nat) :
+  Term.toBV tenv (.ofNat w n) = BitVec.ofNat (w.toNat wenv) n := rfl
 
 @[simp]
 theorem Term.toBV_var {wenv : WidthExpr.Env wcard}
@@ -263,6 +280,7 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
 namespace Nondep
 
 inductive WidthExpr where
+| const : Nat → WidthExpr
 | var : Nat → WidthExpr
 | max : WidthExpr → WidthExpr → WidthExpr
 | min : WidthExpr → WidthExpr → WidthExpr
@@ -271,6 +289,7 @@ deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 def WidthExpr.wcard (w : WidthExpr) : Nat :=
   match w with
+  | .const _ => 0
   | .var i => i + 1
   | .max v w => Nat.max (v.wcard) (w.wcard)
   | .min v w => Nat.min (v.wcard) (w.wcard)
@@ -280,10 +299,16 @@ def WidthExpr.wcard (w : WidthExpr) : Nat :=
 def WidthExpr.ofDep {wcard : Nat}
     (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
   match w with
+  | .const n => .const n
   | .var v => .var v
   | .max a b => .max (.ofDep a) (.ofDep b)
   | .min a b => .min (.ofDep a) (.ofDep b)
   | .addK a k => .addK (.ofDep a) k
+
+@[simp]
+def WidthExpr.ofDep_const {wcard : Nat} {n : Nat} :
+    (WidthExpr.ofDep (MultiWidth.WidthExpr.const n (wcard := wcard))) =
+    (.const n) := rfl
 
 @[simp]
 def WidthExpr.ofDep_var {wcard : Nat} {v : Fin wcard} :
@@ -305,6 +330,7 @@ def WidthExpr.ofDep_addK {wcard : Nat} {v : MultiWidth.WidthExpr wcard} {k : Nat
     (.addK (.ofDep v) k) := rfl
 
 inductive Term
+| ofNat (w : WidthExpr) (n : Nat) : Term
 | var (v : Nat) (w : WidthExpr) : Term
 | add (w : WidthExpr) (a b : Term) : Term
 | zext (a : Term) (wnew : WidthExpr) : Term
@@ -320,6 +346,7 @@ def Term.ofDep {wcard tcard : Nat}
     {w : MultiWidth.WidthExpr wcard}
     (t : MultiWidth.Term tctx w) : Term :=
   match t with
+  | .ofNat w n => .ofNat (.ofDep w) n
   | .var v => .var v (.ofDep w)
   | .add (w := w) a b => .add (.ofDep w) (.ofDep a) (.ofDep b)
   | .zext a wnew => .zext (.ofDep a) (.ofDep wnew)
@@ -336,6 +363,7 @@ def Term.ofDep_var {wcard tcard : Nat}
 
 def Term.width (t : Term) : WidthExpr :=
   match t with
+  | .ofNat w _n => w
   | .var _v w => w
   | .add w _a _b => w
   | .zext _a wnew => wnew
@@ -354,7 +382,10 @@ theorem Term.width_ofDep_eq_ofDep {wcard tcard : Nat}
     (t : MultiWidth.Term tctx w)
     : (Term.ofDep t).width = (.ofDep w) := by
   induction t
-  case var v => simp [Term.width]
+  case ofNat w n =>
+    simp [Term.ofDep, Term.width]
+  case var v =>
+    simp [Term.width]
   case add w a b ha hb =>
     simp [Term.ofDep, Term.width]
   case zext a wnew =>
@@ -374,6 +405,7 @@ def Term.wcard (t : Term) : Nat := t.width.wcard
 
 def Term.tcard (t : Term) : Nat :=
   match t with
+  | .ofNat _w _n => 0
   | .var v _w => v + 1
   | .add _w a b => max (Term.tcard a) (Term.tcard b)
   | .zext a _wnew => (Term.tcard a)

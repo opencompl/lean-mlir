@@ -188,9 +188,15 @@ private def mkFinLit (n : Nat) (i : Nat) : SolverM Expr := do
 /-- info: MultiWidth.WidthExpr.addK {wcard : ℕ} (v : WidthExpr wcard) (k : ℕ) : WidthExpr wcard -/
 #guard_msgs in #check MultiWidth.WidthExpr.addK
 
+/- This needs to be checked carefully for equivalence. -/
 def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
     SolverM Expr := do
   match ve with
+  | .const w =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.const)
+      #[mkNatLit wcard, mkNatLit w]
+    debugCheck out
+    return out
   | .var v =>
     let out := mkAppN (mkConst ``MultiWidth.WidthExpr.var)
       #[mkNatLit wcard, ← mkFinLit wcard v]
@@ -388,10 +394,17 @@ info: MultiWidth.Term.var {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (v :
 -/
 #guard_msgs in #check MultiWidth.Term.var
 
-/-- Convert a raw expression into a `Term`. -/
+/-- Convert a raw expression into a `Term`.
+This needs to be checked carefully for equivalence. -/
 def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
     (t : MultiWidth.Nondep.Term) : SolverM Expr := do
   match t with
+  | .ofNat w n =>
+    let wExpr ← mkWidthExpr wcard w
+    let out := mkAppN (mkConst ``MultiWidth.Term.ofNat [])
+      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, mkNatLit n]
+    debugCheck out
+    return out
   | .var v _wexpr =>
     let out := mkAppN (mkConst ``MultiWidth.Term.var [])
       #[mkNatLit wcard, mkNatLit tcard, tctx, ← mkFinLit tcard v]

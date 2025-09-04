@@ -1170,7 +1170,7 @@ def repeatBit : FSM Unit where
 /--
 (xval:false, control:true)
 update the latch value when 'control = true'.
-output happens *after* update
+output happens *
 -/
 def latchImmediate (initVal : Bool) : FSM Bool where
   α := Unit
@@ -1607,8 +1607,9 @@ and 'false' after.
 -/
 def trueUptoExcluding (n : Nat) : FSM (Fin 0) :=
   ofNat (BitVec.allOnes n).toNat
-@[simp] theorem eval_trueUptoExcluding (n : Nat) (i : Nat) {env : Fin 0 → BitStream} :
-    (trueUptoExcluding n).eval env i = decide (i < n) := by simp [trueUptoExcluding]
+
+@[simp] theorem eval_trueUptoExcluding (n : Nat) {env : Fin 0 → BitStream} :
+    (trueUptoExcluding n).eval env = fun i => decide (i < n) := by ext i; simp [trueUptoExcluding]
 
 def falseAfterIncluding (n : Nat) : FSM (Fin 0) := trueUptoExcluding n
 private theorem falseAfterIncluding_false_iff (n i : Nat) {env : Fin 0 → BitStream} :
