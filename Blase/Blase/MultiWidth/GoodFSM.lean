@@ -219,13 +219,6 @@ theorem eval_fsmMsb_eq_BitStream_ofBitVecSext {wenv : WidthExpr.Env wcard}
     congr
     omega
 
-
--- TODO: give the TermFSM also the FSM of the width.
--- def TermFSM.toFsmSext {wcard tcard : Nat} {t : Nondep.Term}
---   (fsm : TermFSM wcard tcard t) : FSM (StateSpace wcard tcard) :=
---   composeUnaryAux fsmMsb
-
-
 -- | Found a cuter expression for 'getLsbD_signExtend'.
 theorem getLsbD_signExtend_eq {wold : Nat} (x : BitVec wold) {wnew : Nat} :
   (x.signExtend wnew).getLsbD i =
@@ -673,12 +666,13 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
       width := fsmW
     }
   | .var v w =>
+    let wfsm := mkWidthFSM wcard tcard w
     if h : v < tcard then
+      let varFsm : FSM (StateSpace wcard tcard) :=
+       (FSM.var' (StateSpace.termVar ⟨v, h⟩))
       {
-      -- toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v, h⟩))
-      toFsmZext := (FSM.var' (StateSpace.termVar ⟨v, h⟩)),
-      width := mkWidthFSM wcard tcard w
-
+        toFsmZext := varFsm &&& wfsm.toFsm,
+        width := wfsm
       }
     else
       -- default, should not be ued.
@@ -807,9 +801,14 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     intros wenv tenv fsmEnv htenv
     obtain htenv_term := htenv.heq_term
     obtain htenv_width := htenv.heq_width
-    simp [Nondep.Term.ofDep_var, mkTermFSM,
-      Fin.is_lt, ↓reduceDIte, Fin.eta, FSM.eval_var', htenv_term,
-      Term.toBV_var]
+    have hwgood := IsGoodNatFSM_mkWidthFSM (wcard := wcard) (tcard := tcard) (tctx v)
+    simp [Nondep.Term.ofDep_var, mkTermFSM, htenv_term]
+    rw [hwgood.heq (henv := htenv.toHWidthEnv)]
+    ext i 
+    simp
+    intros hi
+    have := BitVec.lt_of_getLsbD hi
+    omega
   case add v p q hp hq =>
     constructor
     intros wenv tenv fsmEnv htenv

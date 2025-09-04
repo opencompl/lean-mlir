@@ -10,6 +10,8 @@ Authors: Siddharth Bhat
 import Blase.SingleWidth.Tactic
 import Blase.Fast.MBA
 
+namespace TestsSingleWidth
+
 open Lean Meta Elab Tactic in
 #eval show TermElabM Unit from do
   let fsm : FSM (Fin 1) := FSM.mk (α := Unit)
@@ -477,3 +479,5 @@ theorem e_331 (x y : BitVec w):
 -- bv_automata_gen (config := {backend := .circuit_cadical_verified 20 } )
 
 end BvAutomataTests
+
+end TestSingleWidth

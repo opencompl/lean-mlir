@@ -1,5 +1,6 @@
 import Blase
 
+namespace MultiWidthTests
 set_option warn.sorry false
 
 theorem add_eq_xor_add_mul_and_zext (x y : BitVec w) :
@@ -91,18 +92,14 @@ theorem check_add_comm (w : Nat) (a b : BitVec w) : a + b = b + a := by
 
 -- For some reason, this fails. I don't understand why.
 example (w : Nat) (a : BitVec w) : (a = a + 0#w) := by
-  fail_if_success bv_multi_width
-  sorry
-
+  bv_multi_width
 
 example (w : Nat) (a : BitVec w) :  (a * 3 = a + a + a)  := by
   bv_multi_width 
 
-
-/-
-example (w : Nat) (a b : BitVec 0) : a = b  := by
-  bv_multi_width +verbose?
--/
+/-- We know that all bitvectors are equal at width 0 -/
+example (a b : BitVec 0) : a = b  := by
+  bv_multi_width 
 
 set_option warn.sorry false in
 example (w : Nat) (a : BitVec w) : (a = 0#w) := by
@@ -239,24 +236,20 @@ def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x =
 def test_OfNat_ofNat (x : BitVec 1) : 1#1 + x = x + 1#1 := by
   bv_multi_width (config := { niter := 2 })
 
-def test0 {w : Nat} (x y : BitVec w) : x + 0#w = x := by
-  fail_if_success bv_multi_width
-  sorry
-
+def test0 {w : Nat} (x : BitVec w) : x + 0#w = x := by
+  bv_multi_width
 
 def test_simple2 {w : Nat} (x _y : BitVec w) : x = x := by
   bv_multi_width (config := { niter := 2 })
 
 def test1 {w : Nat} (x y : BitVec w) : (x ||| y) - (x ^^^ y) = x &&& y := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 example (x y : BitVec w) : (x + -y) = (x - y) := by
   bv_multi_width (config := { niter := 2 })
 
 example (x y z : BitVec w) : (x + y + z) = (z + y + x) := by
   bv_multi_width
-
 
 def test11 (x y : BitVec w) : (x + y) = ((x |||  y) + (x &&&  y)) := by
   bv_multi_width 
@@ -265,16 +258,13 @@ def test15 (x y : BitVec w) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) :=
   bv_multi_width
 
 def test17 (x y : BitVec w) : (x ^^^ y) = ((x ||| y) - (x &&& y)) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 def test18 (x y : BitVec w) : (x &&&  (~~~ y)) = ((x ||| y) - y) := by
   bv_multi_width
 
-
 def test19 (x y : BitVec w) : (x &&&  (~~~ y)) = (x -  (x &&& y)) := by
   bv_multi_width
-
 
 def test21 (x y : BitVec w) : (~~~(x - y)) = (~~~x + y) := by
   bv_multi_width
@@ -283,12 +273,10 @@ def test2_gen (x y : BitVec w) : (~~~(x ^^^ y)) = ((x &&& y) + ~~~(x ||| y)) := 
   bv_multi_width
 
 def test24 (x y : BitVec w) : (x ||| y) = (( x &&& (~~~y)) + y) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 def test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofNat w 1 := by
   intros
@@ -308,8 +296,7 @@ example : ∀ (w : Nat) (x : BitVec w), x <<< (1 : Nat) = x + x := by
   bv_multi_width (config := { niter := 2 })
 
 example : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
-  fail_if_success bv_multi_width
-  sorry
+  intros; bv_multi_width
 
 /-- Can solve width-constraints problems -/
 def test30  : (w = 2) → 8#w = 0#w := by
@@ -337,8 +324,7 @@ theorem mul_four (x : BitVec w) : 4 * x = x + x + x + x := by
   bv_multi_width
 
 theorem add_eq (x : BitVec w) : x = x + 0 := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 theorem add_five (x : BitVec w) : (x + x) + (x + x) + x = x + x + x + x + x := by
   bv_multi_width
@@ -349,16 +335,10 @@ theorem mul_five (x : BitVec w) : 5 * x = x + x + x + x + x := by
 
 /-- Check that we support zero extension. -/
 theorem zext (b : BitVec 8) : (b.zeroExtend 10 |>.zeroExtend 8) = b := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 /-- Can solve width-constraints problems, when written with a width constraint. -/
 def width_specific_1 (x : BitVec w) : w = 1 →  x + x = x ^^^ x := by
-  fail_if_success bv_multi_width
-  sorry
-
-
-example (x : BitVec 0) : x = x + 0#0 := by
   fail_if_success bv_multi_width
   sorry
 
@@ -387,7 +367,7 @@ theorem egZextMin (u v : Nat) (x : BitVec w) :
   fail_if_success bv_multi_width
   sorry
 
-
 example (w : Nat) (a : BitVec w) : a = a + 0#w := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
+
+end MultiWidthTests
