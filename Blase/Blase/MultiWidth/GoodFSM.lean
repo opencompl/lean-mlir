@@ -666,17 +666,23 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard t) :=
   match t with
   | .ofNat w n =>
-    let fsmW : FSM (StateSpace wcard tcard) := (mkWidthFSM wcard tcard w).toFsm
+    let fsmW  := (mkWidthFSM wcard tcard w)
     let fsmN : FSM (StateSpace wcard tcard) := (FSM.ofNat n).map Fin.elim0
-    { toFsmZext := fsmW &&& fsmN }
-  | .var v _w =>
+    {
+      toFsmZext := fsmW.toFsm &&& fsmN,
+      width := fsmW
+    }
+  | .var v w =>
     if h : v < tcard then
       {
       -- toFsm := composeUnaryAux FSM.scanAnd (FSM.var' (StateSpace.termVar ⟨v, h⟩))
-      toFsmZext := (FSM.var' (StateSpace.termVar ⟨v, h⟩))
+      toFsmZext := (FSM.var' (StateSpace.termVar ⟨v, h⟩)),
+      width := mkWidthFSM wcard tcard w
+
       }
     else
-      { toFsmZext := FSM.zero.map Fin.elim0 } -- default, should not be ued.
+      -- default, should not be ued.
+      { toFsmZext := FSM.zero.map Fin.elim0, width := mkWidthFSM wcard tcard w }
   | .add w a b =>
     let fsmW := mkWidthFSM wcard tcard w
     let fsmA := mkTermFSM wcard tcard a
@@ -684,41 +690,50 @@ def mkTermFSM (wcard tcard : Nat) (t : Nondep.Term) :
     { toFsmZext :=
       composeBinaryAux' FSM.and
         fsmW.toFsm
-        (composeBinaryAux' FSM.add fsmA.toFsmZext fsmB.toFsmZext)
+        (composeBinaryAux' FSM.add fsmA.toFsmZext fsmB.toFsmZext),
+      width := fsmW
     }
   | .zext a wnew =>
       -- let wold := a.width
       let afsm := mkTermFSM wcard tcard a
       -- let woldFsm := mkWidthFSM wcard tcard wold
       let wnewFsm := mkWidthFSM wcard tcard wnew
-      { toFsmZext := fsmZext afsm.toFsmZext wnewFsm.toFsm }
+      { toFsmZext := fsmZext afsm.toFsmZext wnewFsm.toFsm, width := wnewFsm }
   | .sext a v =>
     let wold := a.width
     let afsm := mkTermFSM wcard tcard a
     let woldFsm := mkWidthFSM wcard tcard wold
     let vFsm := mkWidthFSM wcard tcard v
-    { toFsmZext := fsmSext afsm.toFsmZext woldFsm.toFsm vFsm.toFsm }
-  | .band _w a b =>
+    { toFsmZext := fsmSext afsm.toFsmZext woldFsm.toFsm vFsm.toFsm, width := vFsm }
+  | .band w a b =>
       let aFsm := mkTermFSM wcard tcard a
       let bFsm := mkTermFSM wcard tcard b
-      { toFsmZext :=
-            (composeBinaryAux' FSM.and aFsm.toFsmZext bFsm.toFsmZext) }
-  | .bor _w a b =>
+      {
+        toFsmZext :=
+            (composeBinaryAux' FSM.and aFsm.toFsmZext bFsm.toFsmZext),
+        width := mkWidthFSM wcard tcard w
+
+      }
+  | .bor w a b =>
     let aFsm := mkTermFSM wcard tcard a
     let bFsm := mkTermFSM wcard tcard b
-    { toFsmZext :=
-          (composeBinaryAux' FSM.or aFsm.toFsmZext bFsm.toFsmZext) }
-  | .bxor _w a b =>
+    {   toFsmZext := (composeBinaryAux' FSM.or aFsm.toFsmZext bFsm.toFsmZext) ,
+        width := mkWidthFSM wcard tcard w
+    }
+  | .bxor w a b =>
     let aFsm := mkTermFSM wcard tcard a
     let bFsm := mkTermFSM wcard tcard b
-    { toFsmZext :=
-          (composeBinaryAux' FSM.xor aFsm.toFsmZext bFsm.toFsmZext) }
+    { toFsmZext := (composeBinaryAux' FSM.xor aFsm.toFsmZext bFsm.toFsmZext),
+      width := mkWidthFSM wcard tcard w
+    }
   | .bnot w a =>
     let aFsm := mkTermFSM wcard tcard a
     let wFsm := mkWidthFSM wcard tcard w
     { toFsmZext :=
           composeBinaryAux' FSM.and wFsm.toFsm
-            (composeUnaryAux FSM.not aFsm.toFsmZext) }
+            (composeUnaryAux FSM.not aFsm.toFsmZext),
+      width := wFsm
+    }
 
 /-- if we concatenate, then the bitstreams remain equal. -/
 @[simp]

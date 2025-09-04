@@ -499,6 +499,7 @@ structure NatFSM (wcard tcard : Nat) (v : Nondep.WidthExpr) where
 
 structure TermFSM (wcard tcard : Nat) (t : Nondep.Term) where
   toFsmZext : FSM (StateSpace wcard tcard)
+  width : NatFSM wcard tcard t.width
 
 structure PredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) where
   toFsm : FSM (StateSpace wcard tcard)
