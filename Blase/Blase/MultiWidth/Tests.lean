@@ -75,6 +75,12 @@ theorem egConstBV (w : Nat) (x : BitVec w) : x + (2#w) = x + (1#w) + (1#w) := by
   bv_multi_width
 
 /-
+theorem egZextMin (u v : Nat) (x : BitVec w) :
+    u ≤ v → (x.zeroExtend u).zeroExtend v = x.zeroExtend v := by
+  bv_multi_width (config := { niter := 2 })
+-/
+
+/-
 theorem eg3 (u w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend u = x.zeroExtend u := by
   bv_multi_width (config := { niter := 2 })

@@ -736,6 +736,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
       collect.logSuspiciousFvars
       throwError m!"exhausted iterations for predicate {repr p}"
     | .provenByKIndCycleBreaking niters safetyCert indCert =>
+      collect.logSuspiciousFvars
       debugLog m!"proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
         -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
