@@ -40,7 +40,85 @@ def test4 (x y : BitVec w) : (x ||| y) = y ||| x := by
 
 -- This is an example that is genuinely reducible.
 set_option pp.analyze true in
-#print test4
+/--
+info: def test4 : ∀ {w : ℕ} (x y : BitVec w), x ||| y = y ||| x :=
+fun {w} x y =>
+  id
+    (Predicate.toProp_of_KInductionCircuits
+      (((Term.Ctx.empty 1).cons (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩)).cons
+        (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩))
+      (Predicate.binRel BinaryRelationKind.eq (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩)
+        (Term.bor (MultiWidth.Term.var (⟨0, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 2))
+          (MultiWidth.Term.var (⟨1, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 2)))
+        (Term.bor (MultiWidth.Term.var ⟨1, of_decide_eq_true (id (Eq.refl true))⟩)
+          (MultiWidth.Term.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩)))
+      (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
+        (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
+          (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
+        (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
+          (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))
+      (Eq.refl
+        (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
+          (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
+            (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
+          (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
+            (Nondep.Term.var 0 (Nondep.WidthExpr.var 0)))))
+      (mkPredicateFSMNondep 1 2
+        (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
+          (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
+            (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
+          (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
+            (Nondep.Term.var 0 (Nondep.WidthExpr.var 0)))))
+      (Eq.refl
+        (mkPredicateFSMNondep 1 2
+          (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
+            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
+              (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
+            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
+              (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))))
+      0
+      (ReflectVerif.BvDecide.KInductionCircuits.mkN
+        (PredicateFSM.toFsm (p :=
+          Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
+            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
+              (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
+            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
+              (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))
+          (mkPredicateFSMNondep 1 2
+            (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
+              (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
+                (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
+              (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
+                (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))))
+        0)
+      (ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN
+        (PredicateFSM.toFsm (p :=
+          Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
+            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
+              (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
+            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
+              (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))
+          (mkPredicateFSMNondep 1 2
+            (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
+              (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
+                (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
+              (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
+                (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))))
+        0)
+      "60 7 0 1 2 0\n61 27 0 1 3 0\n62 18 0 61 5 0\n63 9 0 62 31 0\n64 0 63 60 47 0\n"
+      (Lean.ofReduceBool test4.safetyCert.lhs_1 true (Eq.refl true))
+      "63 27 0 1 2 0\n64 28 0 1 3 0\n65 -6 0 64 5 0\n66 14 0 64 6 0\n67 18 0 63 8 0\n68 26 0 63 9 0\n69 21 0 68 11 0\n70 -20 0 69 26 0\n71 -2 10 0 70 30 0\n72 9 0 67 34 0\n73 17 0 67 35 0\n74 -15 0 73 37 0\n75 -10 0 74 66 45 0\n76 -2 0 75 71 0\n77 -8 0 72 51 0\n78 0 77 76 65 55 0\n"
+      (Lean.ofReduceBool test4.indCert.lhs_3 true (Eq.refl true)) (WidthExpr.Env.empty.cons w)
+      (Term.Ctx.Env.cons
+        (Term.Ctx.Env.cons (Term.Ctx.Env.empty (WidthExpr.Env.empty.cons w) (Term.Ctx.empty 1))
+          (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩) x
+          (Eq.refl
+            ((WidthExpr.var (⟨0, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 1)).toNat (WidthExpr.Env.empty.cons w))))
+        (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩) y
+        (Eq.refl
+          ((WidthExpr.var (⟨0, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 1)).toNat (WidthExpr.Env.empty.cons w)))))
+-/
+#guard_msgs in #print test4
 
 set_option pp.analyze true in
 def test5 (x y z : BitVec w) : (x + y) = (y + x) := by
