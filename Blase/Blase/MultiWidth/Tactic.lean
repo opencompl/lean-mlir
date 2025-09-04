@@ -487,7 +487,15 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .eq w ta tb, state)
-    | _ => throwError m!"expected bitvector equality, found: {indentD e}"
+    | _ => throwError m!"expected bitvector equality, found equality of type '{α}': {indentD e}"
+  | Ne α a b =>
+    match_expr α with
+    | BitVec w =>
+      let (w, state) ← collectWidthAtom state w
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.binRel .ne w ta tb, state)
+    | _ => throwError m!"expected bitvector disequality, found disequality of type '{α}': {indentD e}"
   | Or p q =>
     let (ta, state) ← collectBVPredicateAux state p
     let (tb, state) ← collectBVPredicateAux state q
@@ -524,10 +532,28 @@ def Expr.mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
         aExpr, bExpr]
     debugCheck out
     return out
+  | .binRel .ne w a b =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard tctx a
+    let bExpr ← mkTermExpr wcard tcard tctx b
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
+      #[mkNatLit wcard, mkNatLit tcard, tctx,
+        mkConst ``MultiWidth.BinaryRelationKind.ne,
+        wExpr,
+        aExpr, bExpr]
+    debugCheck out
+    return out
   | .or p q =>
     let pExpr ← mkPredicateExpr wcard tcard tctx p
     let qExpr ← mkPredicateExpr wcard tcard tctx q
     let out := mkAppN (mkConst ``MultiWidth.Predicate.or)
+      #[mkNatLit wcard, mkNatLit tcard, tctx, pExpr, qExpr]
+    debugCheck out
+    return out
+  | .and p q =>
+    let pExpr ← mkPredicateExpr wcard tcard tctx p
+    let qExpr ← mkPredicateExpr wcard tcard tctx q
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.and)
       #[mkNatLit wcard, mkNatLit tcard, tctx, pExpr, qExpr]
     debugCheck out
     return out
