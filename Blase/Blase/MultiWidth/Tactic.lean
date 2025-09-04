@@ -681,7 +681,7 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
 
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
-  let .some g ← g.withContext (Simplifications.runPreprocessing g)
+  let .some g ← g.withContext (Normalize.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."
         return []

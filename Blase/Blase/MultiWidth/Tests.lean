@@ -33,27 +33,26 @@ set_option pp.analyze true in
 def test5 (x y z : BitVec w) : (x + y) = (y + x) := by
   bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
-#eval test5.safetyCert.lhs_1
-#eval test5.indCert.lhs_3
-
 def test6 (x y z : BitVec w) : (x + (y + z)) = ((x + y) + z) := by
-  bv_multi_width (config := { niter := 10 })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 theorem add_eq_or_add_and (x y : BitVec w) :
     x + y = (x ||| y) + (x &&& y) := by
-  bv_multi_width (config := { niter := 10, verbose? := True })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 theorem add_eq_xor_add_mul_and_1 (x y : BitVec w) :
     x + y = (x ^^^ y) + 2 * (x &&& y) := by
-  bv_multi_width (config := { niter := 10, verbose? := True })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 theorem add_eq_xor_add_mul_and_2 (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) <<< 1 := by
-  bv_multi_width (config := { niter := 2, verbose? := True })
+  -- bv_multi_width_normalize
+  -- simp only [seval, bv_multi_width_normalize]
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 theorem add_eq_xor_add_mul_and_3 (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) * 2#w := by
-  bv_multi_width (config := { niter := 2, verbose? := True })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 
 theorem add_eq_xor_add_mul_and_nt_zext (x y : BitVec w) :
