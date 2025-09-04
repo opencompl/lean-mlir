@@ -19,6 +19,8 @@ structure Config where
   -- number of k-induction iterations.
   niter : Nat := 10
   verbose?: Bool := false
+  /-- Make the final reflection proof as a 'sorry' for debugging. -/
+  debugFillFinalReflectionProofWithSorry : Bool := false
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -754,8 +756,11 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
             indCertProof,
             wenv,
             tenv]
-        let prf ← instantiateMVars prf
-        -- let prf (← mkSorry (synthetic := true) (← g.getType))
+        let prf ←
+          if (← read).debugFillFinalReflectionProofWithSorry then
+            mkSorry (synthetic := true) (← g.getType)
+          else
+            instantiateMVars prf
         pure prf
       let gs ← g.apply prf
       if gs.isEmpty then
@@ -772,11 +777,11 @@ def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
 
 declare_config_elab elabBvMultiWidthConfig Config
 
-syntax (name := bvMultiWidth) "bv_multi_width" (Lean.Parser.Tactic.config)? : tactic
+syntax (name := bvMultiWidth) "bv_multi_width" Lean.Parser.Tactic.optConfig : tactic
 @[tactic bvMultiWidth]
 def evalBvMultiWidth : Tactic := fun
-| `(tactic| bv_multi_width $[$cfg]?) => do
-  let cfg ← elabBvMultiWidthConfig (mkOptionalNode cfg)
+| `(tactic| bv_multi_width $cfg) => do
+  let cfg ← elabBvMultiWidthConfig cfg
   let g ← getMainGoal
   g.withContext do
     let gs ← solveEntrypoint g cfg

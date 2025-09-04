@@ -31,7 +31,7 @@ theorem hty : ty = BitVec 10 := by
 
 set_option pp.analyze true in
 def test5 (x y z : BitVec w) : (x + y) = (y + x) := by
-  bv_multi_width (config := { niter := 10, verbose? := True, check? := True })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
 
 #eval test5.safetyCert.lhs_1
 #eval test5.indCert.lhs_3
