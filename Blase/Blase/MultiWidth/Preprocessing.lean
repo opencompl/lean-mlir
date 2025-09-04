@@ -96,7 +96,10 @@ theorem BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one (w : Nat) (x : Bit
 
 -- @[bv_multi_width_normalize] theorem BitVec.neg_one_mul (x : BitVec w) : -1#w * x = -x := by simp
 
-@[bv_multi_width_normalize] theorem BitVec.neg_mul (x y : BitVec w) : (- x) * y = -(x * y) := by simp
+
+/-# Rewrite subtraction to addition with bitvec not. -/
+attribute [bv_multi_width_normalize] BitVec.sub_eq_add_neg
+attribute [bv_multi_width_normalize] BitVec.neg_eq_not_add
 
 
 open Lean Meta Elab in

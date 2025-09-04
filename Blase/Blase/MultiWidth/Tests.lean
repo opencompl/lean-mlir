@@ -61,11 +61,10 @@ theorem add_eq_xor_add_mul_and_nt_zext (x y : BitVec w) :
   bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
   -- bv_multi_width (config := { niter := 10, verbose? := True })
 
-/-
-
  theorem eg2 (w : Nat) (x : BitVec w) : x + 2 = x + 1 + 1 := by
   bv_multi_width
 
+/-
 theorem eg3 (u w : Nat) (x : BitVec w) :
     (x.zeroExtend u).zeroExtend u = x.zeroExtend u := by
   bv_multi_width (config := { niter := 2 })
