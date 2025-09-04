@@ -33,6 +33,33 @@ theorem hty : ty = BitVec 10 := by
   unfold ty
   rfl
 
+
+@[simp]
+def Term.Ctx.Env.cons_get_zero
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv)
+  (wexpr : WidthExpr wcard)
+  {w : Nat} (bv : BitVec w)
+  (hw : w = wexpr.toNat wenv) :
+  (Term.Ctx.Env.cons tenv wexpr bv hw) 0 = bv.cast hw := rfl
+
+
+theorem nonRefl {w : Nat} {x y : BitVec w} :
+  (Predicate.toProp
+      (((Term.Ctx.Env.empty (WidthExpr.Env.empty.cons w) (Term.Ctx.empty 1)).cons
+         (WidthExpr.var 1) x rfl).cons
+        (WidthExpr.var 0) y rfl)
+      (Predicate.binRel BinaryRelationKind.eq (WidthExpr.var 0)
+        -- sorry
+        (MultiWidth.Term.bor (MultiWidth.Term.var 0) (MultiWidth.Term.var 1))
+        (MultiWidth.Term.bor (MultiWidth.Term.var 1)  (MultiWidth.Term.var 0))
+      )) =
+    (x ||| y = y ||| x) := by
+  simp [Predicate.toProp]
+  simp [Term.toBV]
+  rfl
+
 -- | need two variables to manifest
 def test4 (x y : BitVec w) : (x ||| y) = y ||| x := by
   bv_multi_width +verbose?
@@ -42,8 +69,8 @@ fun {w} x y =>
     (Predicate.toProp_of_KInductionCircuits
       (((Term.Ctx.empty 1).cons (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩)).cons
         (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩))
-        -- | dep 
-      (Predicate.binRel BinaryRelationKind.eq 
+        -- | dep
+      (Predicate.binRel BinaryRelationKind.eq
         (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩)
         (Term.bor (MultiWidth.Term.var (⟨0, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 2))
           (MultiWidth.Term.var (⟨1, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 2)))
