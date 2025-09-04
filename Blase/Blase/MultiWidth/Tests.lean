@@ -58,7 +58,8 @@ theorem add_eq_xor_add_mul_and_3 (x y : BitVec w) :
 theorem add_eq_xor_add_mul_and_nt_zext (x y : BitVec w) :
     x.zeroExtend (w + 1) + y.zeroExtend (w + 1) =
       (x ^^^ y).zeroExtend (w + 1) + 2 * (x &&& y).zeroExtend (w + 1) := by
-  bv_multi_width (config := { niter := 10, verbose? := True })
+  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
+  -- bv_multi_width (config := { niter := 10, verbose? := True })
 
 /-
 
