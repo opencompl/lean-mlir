@@ -16,13 +16,11 @@ import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Defs
 import Mathlib.Data.Multiset.FinsetOps
-import Blase.SingleWidth.Defs
 import Blase.Fast.BitStream
 import Blase.Fast.Defs
 import Blase.Fast.FiniteStateMachine
 import Blase.Fast.Decide
 import Blase.SingleWidth.Syntax
-import Blase.SingleWidth.Preprocessing
 import Lean.Meta.ForEachExpr
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 import Blase.Fast.ForLean

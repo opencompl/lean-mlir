@@ -164,7 +164,7 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv) :
   Term tctx w → BitVec (w.toNat wenv)
 | .var v => tenv v
-| .add a b => a.toBV tenv + b.toBV tenv
+| .add a b => (a.toBV tenv) + (b.toBV tenv)
 | .zext a v => (a.toBV tenv).zeroExtend (v.toNat wenv)
 | .sext a v => (a.toBV tenv).signExtend (v.toNat wenv)
 | .bor a b => (a.toBV tenv) ||| (b.toBV tenv)
@@ -226,12 +226,20 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv)
     (p : Predicate tctx) : Prop :=
   match p with
-  | .binRel .eq _w a b => a.toBV tenv = b.toBV tenv
-  | .binRel .ne _w a b => a.toBV tenv ≠ b.toBV tenv
-  | .binRel .ult _w a b => (a.toBV tenv) < (b.toBV tenv)
-  | .binRel .ule _w a b => (a.toBV tenv) ≤ (b.toBV tenv)
-  | .binRel .slt _w a b => (a.toBV tenv).slt (b.toBV tenv)
-  | .binRel .sle _w a b => (a.toBV tenv).sle (b.toBV tenv)
+  | .binRel rel _w a b =>
+    match rel with
+    | .eq => a.toBV tenv = b.toBV tenv
+    | .ne => a.toBV tenv != b.toBV tenv
+    | .ult => (a.toBV tenv) < (b.toBV tenv)
+    | .ule => (a.toBV tenv) ≤ (b.toBV tenv)
+    | .slt => (a.toBV tenv).slt (b.toBV tenv)
+    | .sle => (a.toBV tenv).sle (b.toBV tenv)
+  -- | .binRel .eq _w a b => a.toBV tenv = b.toBV tenv
+  -- | .binRel .ne _w a b => a.toBV tenv ≠ b.toBV tenv
+  -- | .binRel .ult _w a b => (a.toBV tenv) < (b.toBV tenv)
+  -- | .binRel .ule _w a b => (a.toBV tenv) ≤ (b.toBV tenv)
+  -- | .binRel .slt _w a b => (a.toBV tenv).slt (b.toBV tenv)
+  -- | .binRel .sle _w a b => (a.toBV tenv).sle (b.toBV tenv)
   | .and p1 p2 => p1.toProp tenv ∧ p2.toProp tenv
   | .or p1 p2 => p1.toProp tenv ∨ p2.toProp tenv
 
@@ -241,7 +249,7 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
 --     (p : Predicate tctx)
 --     (bsEnv : StateSpace wcard tcard → BitStream) :
 --     BitStream :=
---   match p with
+--   match p wit
 --   | .binRel k a b =>
 --     match k with
 --     | .eq =>
