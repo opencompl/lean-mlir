@@ -290,7 +290,7 @@ def mkTermEnvCons (reader : CollectState)
 /-- Build an expression `tenv` for the `Term.Ctx.Env`. -/
 def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (_tctx : Expr) : SolverM Expr := do
   let mut out ← mkTermEnvEmpty reader (wenv := wenv)
-  for (bv, ix) in reader.bvToIx.toArrayAsc.zipIdx do
+  for (bv, ix) in reader.bvToIx.toArrayAsc.zipIdx.reverse do
     let some wexpr := reader.bvIxToWidthExpr.get? ix
       | throwError "unable to find width for '{bv}' at index {ix}"
     out ← mkTermEnvCons (reader := reader) (wenv := wenv) (tenv := out) (w := wexpr) (bv := bv)
@@ -384,8 +384,8 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       let (tb, state) ← collectTerm state b
       return (.bor w ta tb, state)
     | _ => mkAtom
-  | HNot.hnot _bv _inst a =>
-    match_expr _bv with
+  | Complement.complement bv _inst a =>
+    match_expr bv with
     | BitVec w =>
       let (w, state) ← collectWidthAtom state w
       let (ta, state) ← collectTerm state a
@@ -722,12 +722,12 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
     let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard tctx p
     let pNondepExpr := Lean.ToExpr.toExpr p
-    let pToProp ← Expr.mkPredicateToPropExpr (pExpr := pExpr)
-      (_wcard := collect.wcard)
-      (_tcard := collect.tcard)
-      (_tctx := tctx)
-      (_wenv := wenv)
-      (tenv := tenv)
+    -- let pToProp ← Expr.mkPredicateToPropExpr (pExpr := pExpr)
+    --   (_wcard := collect.wcard)
+    --   (_tcard := collect.tcard)
+    --   (_tctx := tctx)
+    --   (_wenv := wenv)
+    --   (tenv := tenv)
     -- let g ← g.replaceTargetDefEq pToProp
     let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard p
     debugLog m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
@@ -741,7 +741,8 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
       collect.logSuspiciousFvars
       throwError m!"exhausted iterations for predicate {repr p}"
     | .provenByKIndCycleBreaking niters safetyCert indCert =>
-      collect.logSuspiciousFvars
+      if (← read).verbose? then
+        collect.logSuspiciousFvars
       debugLog m!"proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
         -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr

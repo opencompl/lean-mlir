@@ -2,258 +2,40 @@ import Blase.MultiWidth.Tactic
 
 open MultiWidth
 
+theorem add_eq_xor_add_mul_and_zext (x y : BitVec w) :
+    x.zeroExtend (w + 1) + y.zeroExtend (w + 1) =
+      (x ^^^ y).zeroExtend (w + 1) + 2 * (x &&& y).zeroExtend (w + 1) := by
+  bv_multi_width
+
 theorem test28 {w : Nat} (x : BitVec w) :
     x &&& x &&& x &&& x &&& x &&& x = x := by
   bv_multi_width (config := { niter := 2 })
 
-namespace ConstructionByHand
-def thmStmt : MultiWidth.Predicate (wcard := 1) (tcard := 2)
-  (MultiWidth.Term.Ctx.cons
-    (MultiWidth.Term.Ctx.cons
-      (MultiWidth.Term.Ctx.empty (wcard := 1))
-    (.var ⟨0, by omega⟩))
-  (.var ⟨0, by omega⟩)) :=
-     (Predicate.binRel BinaryRelationKind.eq (WidthExpr.var ⟨0, by omega⟩)
-       (MultiWidth.Term.add
-          (MultiWidth.Term.var (⟨0, by omega⟩ : Fin 2))
-          (MultiWidth.Term.var (⟨1, by omega⟩ : Fin 2)))
-       (MultiWidth.Term.add
-         (MultiWidth.Term.var (⟨1, by omega⟩ : Fin 2))
-         (MultiWidth.Term.var (⟨0, by omega⟩ : Fin 2))
-       )
-     )
-
-
-end ConstructionByHand
-
-abbrev ty :=
-  BitVec (WidthExpr.toNat (WidthExpr.var (Fin.mk 0 (by simp))) (WidthExpr.Env.empty.cons 10))
-
-theorem hty : ty = BitVec 10 := by
-  unfold ty
-  rfl
-
-
-@[simp]
-def Term.Ctx.Env.cons_get_zero
-  {wcard : Nat} {wenv : Fin wcard → Nat}
-  {tctx : Term.Ctx wcard tcard}
-  (tenv : tctx.Env wenv)
-  (wexpr : WidthExpr wcard)
-  {w : Nat} (bv : BitVec w)
-  (hw : w = wexpr.toNat wenv) :
-  (Term.Ctx.Env.cons tenv wexpr bv hw) 0 = bv.cast hw := rfl
-
-
-theorem nonRefl {w : Nat} {x y : BitVec w} :
-  (Predicate.toProp
-      (((Term.Ctx.Env.empty (WidthExpr.Env.empty.cons w) (Term.Ctx.empty 1)).cons
-         (WidthExpr.var 1) x rfl).cons
-        (WidthExpr.var 0) y rfl)
-      (Predicate.binRel BinaryRelationKind.eq (WidthExpr.var 0)
-        -- sorry
-        (MultiWidth.Term.bor (MultiWidth.Term.var 0) (MultiWidth.Term.var 1))
-        (MultiWidth.Term.bor (MultiWidth.Term.var 1)  (MultiWidth.Term.var 0))
-      )) =
-    (x ||| y = y ||| x) := by
-  simp [Predicate.toProp]
-  simp [Term.toBV]
-  rfl
-
--- | need two variables to manifest
 def test4 (x y : BitVec w) : (x ||| y) = y ||| x := by
-  bv_multi_width +verbose?
+  bv_multi_width
 
-def test4' : ∀ {w : ℕ} (x y : BitVec w), x ||| y = y ||| x :=
-fun {w} x y =>
-    (Predicate.toProp_of_KInductionCircuits
-      (((Term.Ctx.empty 1).cons (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩)).cons
-        (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩))
-        -- | dep
-      (Predicate.binRel BinaryRelationKind.eq
-        (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩)
-        (Term.bor (MultiWidth.Term.var (⟨0, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 2))
-          (MultiWidth.Term.var (⟨1, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 2)))
-        (Term.bor (MultiWidth.Term.var 1)
-          (MultiWidth.Term.var 0)))
-      -- | nondep
-      (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-        (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-          (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-        (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-          (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))
-      sorry
-      (mkPredicateFSMNondep 1 2
-        (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-          (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-            (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-          (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-            (Nondep.Term.var 0 (Nondep.WidthExpr.var 0)))))
-      sorry
-      0
-      sorry
-      -- (ReflectVerif.BvDecide.KInductionCircuits.mkN
-      --   (PredicateFSM.toFsm (p :=
-      --     Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-      --       (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-      --         (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-      --       (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-      --         (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))
-      --     (mkPredicateFSMNondep 1 2
-      --       (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-      --         (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-      --           (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-      --         (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-      --           (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))))
-      --   0)
-      sorry
-      -- (ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN
-      --   (PredicateFSM.toFsm (p :=
-      --     Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-      --       (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-      --         (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-      --       (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-      --         (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))
-      --     (mkPredicateFSMNondep 1 2
-      --       (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-      --         (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-      --           (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-      --         (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-      --           (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))))
-      --   0)
-      sorry
-      -- "60 7 0 1 2 0\n61 27 0 1 3 0\n62 18 0 61 5 0\n63 9 0 62 31 0\n64 0 63 60 47 0\n"
-      sorry
-      -- (Lean.ofReduceBool test4.safetyCert.lhs_1 true (Eq.refl true))
-      sorry
-      -- "63 27 0 1 2 0\n64 28 0 1 3 0\n65 -6 0 64 5 0\n66 14 0 64 6 0\n67 18 0 63 8 0\n68 26 0 63 9 0\n69 21 0 68 11 0\n70 -20 0 69 26 0\n71 -2 10 0 70 30 0\n72 9 0 67 34 0\n73 17 0 67 35 0\n74 -15 0 73 37 0\n75 -10 0 74 66 45 0\n76 -2 0 75 71 0\n77 -8 0 72 51 0\n78 0 77 76 65 55 0\n"
-      -- (Lean.ofReduceBool test4.indCert.lhs_3 true (Eq.refl true)) 
-      sorry
-      -- (WidthExpr.Env.empty.cons w)
-      sorry
-      -- (Term.Ctx.Env.cons
-      --   (Term.Ctx.Env.cons (Term.Ctx.Env.empty (WidthExpr.Env.empty.cons w) (Term.Ctx.empty 1))
-      --     (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩) x
-      --     (Eq.refl
-      --       ((WidthExpr.var (⟨0, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 1)).toNat (WidthExpr.Env.empty.cons w))))
-      sorry)
---         (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩) y
---         (Eq.refl
---           ((WidthExpr.var (⟨0, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 1)).toNat (WidthExpr.Env.empty.cons w)))))
--- 
--- This is an example that is genuinely reducible.
-set_option pp.analyze true in
-/--
-info: def test4 : ∀ {w : ℕ} (x y : BitVec w), x ||| y = y ||| x :=
-fun {w} x y =>
-  id
-    (Predicate.toProp_of_KInductionCircuits
-      (((Term.Ctx.empty 1).cons (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩)).cons
-        (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩))
-      (Predicate.binRel BinaryRelationKind.eq (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩)
-        (Term.bor (MultiWidth.Term.var (⟨0, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 2))
-          (MultiWidth.Term.var (⟨1, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 2)))
-        (Term.bor (MultiWidth.Term.var ⟨1, of_decide_eq_true (id (Eq.refl true))⟩)
-          (MultiWidth.Term.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩)))
-      (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-        (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-          (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-        (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-          (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))
-      (Eq.refl
-        (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-          (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-            (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-          (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-            (Nondep.Term.var 0 (Nondep.WidthExpr.var 0)))))
-      (mkPredicateFSMNondep 1 2
-        (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-          (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-            (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-          (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-            (Nondep.Term.var 0 (Nondep.WidthExpr.var 0)))))
-      (Eq.refl
-        (mkPredicateFSMNondep 1 2
-          (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-              (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-              (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))))
-      0
-      (ReflectVerif.BvDecide.KInductionCircuits.mkN
-        (PredicateFSM.toFsm (p :=
-          Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-              (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-              (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))
-          (mkPredicateFSMNondep 1 2
-            (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-              (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-                (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-              (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-                (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))))
-        0)
-      (ReflectVerif.BvDecide.KInductionCircuits.IsLawful_mkN
-        (PredicateFSM.toFsm (p :=
-          Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-              (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-            (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-              (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))
-          (mkPredicateFSMNondep 1 2
-            (Nondep.Predicate.binRel BinaryRelationKind.eq (Nondep.WidthExpr.var 0)
-              (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))
-                (Nondep.Term.var 1 (Nondep.WidthExpr.var 0)))
-              (Nondep.Term.bor (Nondep.WidthExpr.var 0) (Nondep.Term.var 1 (Nondep.WidthExpr.var 0))
-                (Nondep.Term.var 0 (Nondep.WidthExpr.var 0))))))
-        0)
-      "60 7 0 1 2 0\n61 27 0 1 3 0\n62 18 0 61 5 0\n63 9 0 62 31 0\n64 0 63 60 47 0\n"
-      (Lean.ofReduceBool test4.safetyCert.lhs_1 true (Eq.refl true))
-      "63 27 0 1 2 0\n64 28 0 1 3 0\n65 -6 0 64 5 0\n66 14 0 64 6 0\n67 18 0 63 8 0\n68 26 0 63 9 0\n69 21 0 68 11 0\n70 -20 0 69 26 0\n71 -2 10 0 70 30 0\n72 9 0 67 34 0\n73 17 0 67 35 0\n74 -15 0 73 37 0\n75 -10 0 74 66 45 0\n76 -2 0 75 71 0\n77 -8 0 72 51 0\n78 0 77 76 65 55 0\n"
-      (Lean.ofReduceBool test4.indCert.lhs_3 true (Eq.refl true)) (WidthExpr.Env.empty.cons w)
-      (Term.Ctx.Env.cons
-        (Term.Ctx.Env.cons (Term.Ctx.Env.empty (WidthExpr.Env.empty.cons w) (Term.Ctx.empty 1))
-          (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩) x
-          (Eq.refl
-            ((WidthExpr.var (⟨0, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 1)).toNat (WidthExpr.Env.empty.cons w))))
-        (WidthExpr.var ⟨0, of_decide_eq_true (id (Eq.refl true))⟩) y
-        (Eq.refl
-          ((WidthExpr.var (⟨0, of_decide_eq_true (id (Eq.refl true))⟩ : Fin 1)).toNat (WidthExpr.Env.empty.cons w)))))
--/
-#guard_msgs in #print test4
-
-set_option pp.analyze true in
-def test5 (x y z : BitVec w) : (x + y) = (y + x) := by
-  bv_multi_width +verbose?
+def test5 (x y : BitVec w) : (x + y) = (y + x) := by
+  bv_multi_width 
 
 def test6 (x y z : BitVec w) : (x + (y + z)) = ((x + y) + z) := by
-  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
+  bv_multi_width
 
 theorem add_eq_or_add_and (x y : BitVec w) :
     x + y = (x ||| y) + (x &&& y) := by
-  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
+  bv_multi_width 
 
 theorem add_eq_xor_add_mul_and_1 (x y : BitVec w) :
     x + y = (x ^^^ y) + 2 * (x &&& y) := by
-  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
+  bv_multi_width
 
 theorem add_eq_xor_add_mul_and_2 (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) <<< 1 := by
-  -- bv_multi_width_normalize
-  -- simp only [seval, bv_multi_width_normalize]
-  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
+  bv_multi_width
 
 theorem add_eq_xor_add_mul_and_3 (x y : BitVec w) :
     x + y = (x ^^^ y) + (x &&& y) * 2#w := by
-  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
+  bv_multi_width
 
-
-theorem add_eq_xor_add_mul_and_nt_zext (x y : BitVec w) :
-    x.zeroExtend (w + 1) + y.zeroExtend (w + 1) =
-      (x ^^^ y).zeroExtend (w + 1) + 2 * (x &&& y).zeroExtend (w + 1) := by
-  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
-  -- bv_multi_width (config := { niter := 10, verbose? := True })
 
 /-- For fixed-width problems, we encode constraints correctly, and understand
 e.g. characteristic. -/
@@ -268,61 +50,7 @@ theorem egConstNumeral (w : Nat) (x : BitVec w) : x + 2 = x + 1 + 1 := by
 theorem egConstBV (w : Nat) (x : BitVec w) : x + (2#w) = x + (1#w) + (1#w) := by
   bv_multi_width
 
-/-
-theorem egZextMin (u v : Nat) (x : BitVec w) :
-    u ≤ v → (x.zeroExtend u).zeroExtend v = x.zeroExtend v := by
-  bv_multi_width (config := { niter := 2 })
--/
-
-/-
-theorem eg3 (u w : Nat) (x : BitVec w) :
-    (x.zeroExtend u).zeroExtend u = x.zeroExtend u := by
-  bv_multi_width (config := { niter := 2 })
-
-theorem eg4 (u w : Nat) (x : BitVec w) :
-    (x.signExtend u).signExtend u = x.signExtend u := by
-  bv_multi_width (config := { niter := 0 })
-
-theorem eg5 (u w : Nat) (x : BitVec w) :
-    (x.signExtend u).zeroExtend u = x.signExtend u := by
-  bv_multi_width (config := { niter := 0 })
-
-theorem eg6 (u w : Nat) (x : BitVec w) :
-    (x.zeroExtend u).signExtend u = x.zeroExtend u := by
-  bv_multi_width (config := { niter := 0 })
-
-/--
-error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.binRel
-  (MultiWidth.BinaryRelationKind.eq)
-  (MultiWidth.Nondep.Term.zext
-    (MultiWidth.Nondep.Term.zext
-      (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 2))
-      (MultiWidth.Nondep.WidthExpr.var 1))
-    (MultiWidth.Nondep.WidthExpr.var 0))
-  (MultiWidth.Nondep.Term.zext
-    (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 2))
-    (MultiWidth.Nondep.WidthExpr.var 0))
--/
-#guard_msgs in theorem eg100 (u v w : Nat) (x : BitVec w) (h : u ≥ v) :
-    (x.zeroExtend u).zeroExtend v = x.zeroExtend v := by
-  bv_multi_width (config := { niter := 2 })
-
-
-open Lean Meta Elab Tactic in
-#eval show TermElabM Unit from do
-  let fsm : FSM (Fin 1) := FSM.mk (α := Unit)
-    (initCarry :=
-      fun
-      | _ => false)
-    (outputCirc := .var true (.inl ()))
-    (nextStateCirc := fun () => .var true (.inr 0))
-  let _ ← fsm.decideIfZerosVerified 0
-  --logInfo "done test."
-  return ()
-
-set_option linter.unusedVariables false
-
-/-- Can solve explicitly quantified expressions with intros. bv_automata3. -/
+/-- Can solve explicitly quantified expressions -/
 theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
   intros
   bv_multi_width (config := { niter := 2 })
@@ -330,46 +58,18 @@ theorem eq1 : ∀ (w : Nat) (a : BitVec w), a = a := by
 
 /-- Can solve implicitly quantified expressions by directly invoking bv_automata3. -/
 theorem eq2 (w : Nat) (a : BitVec w) : a = a := by
-  bv_multi_width (config := { niter := 2 })
+  bv_multi_width
 
+theorem eq3 (w : Nat) (a : BitVec w) : a = a ||| 0 := by
+  bv_multi_width
 
-theorem eq3 (w : Nat) (a b : BitVec w) : a = a ||| 0 := by
-  bv_multi_width (config := { niter := 2 })
+theorem check_add_comm (w : Nat) (a b : BitVec w) : a + b = b + a := by
+  bv_multi_width 
 
-example (w : Nat) (a b : BitVec w) : a = a + 0 := by
-  bv_multi_width (config := { niter := 2 })
+-- For some reason, this fails. I don't understand why.
+example (w : Nat) (a : BitVec w) : (a = a + 0#w) := by
+  bv_multi_width 
 
---set_option trace.Bits.FastVerif true in
-theorem check_axioms_cadical (w : Nat) (a b : BitVec w) : a + b = b + a := by
-  bv_multi_width (config := { niter := 2 })
-
-/--
-info: 'check_axioms_cadical' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Lean.trustCompiler, Quot.sound]
--/
-#guard_msgs in #print axioms check_axioms_cadical
-
-theorem check_axioms_presburger (w : Nat) (a b : BitVec w) : a + b = b + a := by
-  bv_multi_width (config := { niter := 2 })
-
-/--
-info: 'check_axioms_presburger' depends on axioms: [hashMap_missing,
- propext,
- Classical.choice,
- Lean.ofReduceBool,
- Lean.trustCompiler,
- Quot.sound]
--/
-#guard_msgs in #print axioms check_axioms_presburger
-
-example (w : Nat) (a b : BitVec w) : (a + b = b + a)  := by
-  bv_multi_width (config := { niter := 2 })
-
---set_option trace.Bits.FastVerif true in
-example (w : Nat) (a : BitVec w) : (a = a + 0#w) ∨ (a = a - a)  := by
-  bv_multi_width (config := { niter := 2 })
-
-example (w : Nat) (a : BitVec w) :  (a = a + 0#w)  := by
-  bv_multi_width (config := { niter := 2 })
 
 
 -- Check that this example produces 'normCircuitVerified: ok, normCircuitUnverified: ok'
@@ -665,5 +365,27 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
   bv_multi_width (config := { niter := 2 })
+
+/-
+theorem egZextMin (u v : Nat) (x : BitVec w) :
+    u ≤ v → (x.zeroExtend u).zeroExtend v = x.zeroExtend v := by
+  bv_multi_width (config := { niter := 2 })
+-/
+
+/-
+theorem eg5 (u w : Nat) (x : BitVec w) :
+    (x.signExtend u).zeroExtend u = x.signExtend u := by
+  bv_multi_width (config := { niter := 0 })
+
+theorem eg6 (u w : Nat) (x : BitVec w) :
+    (x.zeroExtend u).signExtend u = x.zeroExtend u := by
+  bv_multi_width (config := { niter := 0 })
+
+
+example (w : Nat) (a : BitVec w) : a = a + 0#w := by
+  bv_multi_width
+
+
+
 
 -/
