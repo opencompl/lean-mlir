@@ -593,12 +593,13 @@ def mkEqReflBoolNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) (d
   let proof := mkApp3 (mkConst ``Lean.ofReduceBool []) lhsDef (toExpr rhs) rflProof
   return if debugSorry? then sorryProof else proof
 
-def mkEqReflNativeDecideProof (name : Name) (lhsSmallExpr : Expr) (rhsLargeExpr : Expr)
+def mkEqReflNativeDecideProof (name : Name) (tyExpr : Expr)
+    (lhsSmallExpr : Expr) (rhsLargeExpr : Expr)
     (debugSorry? : Bool := false) : SolverM Expr := do
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
   let name := name ++ `eqProof
   let auxDeclName ← Term.mkAuxName name
-  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) (mkConst ``Bool []) lhsSmallExpr rhsLargeExpr
+  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) tyExpr lhsSmallExpr rhsLargeExpr
   let rflProof ← mkEqRefl rhsLargeExpr
   let sorryProof ← mkSorry (type := rflTy) (synthetic := true)
   let proof := if debugSorry? then sorryProof else rflProof
@@ -700,6 +701,9 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
   debugCheck out
   return out
 
+/-- info: `MultiWidth.Predicate.toProp_of_KInductionCircuits' : Name -/
+#guard_msgs in #check ``MultiWidth.Predicate.toProp_of_KInductionCircuits'
+
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
   let .some g ← g.withContext (Normalize.runPreprocessing g)
@@ -710,7 +714,8 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
 
   g.withContext do
     let collect : CollectState := {}
-    let (p, collect) ← collectBVPredicateAux collect (← g.getType)
+    let pRawExpr ← g.getType
+    let (p, collect) ← collectBVPredicateAux collect pRawExpr
     debugLog m!"collected predicate: {repr p}"
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
@@ -723,7 +728,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
       (_tctx := tctx)
       (_wenv := wenv)
       (tenv := tenv)
-    let g ← g.replaceTargetDefEq pToProp
+    -- let g ← g.replaceTargetDefEq pToProp
     let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard p
     debugLog m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
     debugLog m!"fsm circuit size: {fsm.toFsm.circuitSize}"
@@ -762,8 +767,11 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
         let indCertProof ←
           mkEqReflBoolNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
         debugLog m!"made induction cert = true proof..."
-        let prf ← mkAppM ``MultiWidth.Predicate.toProp_of_KInductionCircuits
-          #[tctx,
+        let pEqVal ← mkEqRefl pRawExpr  -- mkEqReflNativeDecideProof `pReflectEq (mkConst `Prop) pToProp pRawExpr
+        debugCheck pEqVal
+        let prf ← mkAppM ``MultiWidth.Predicate.toProp_of_KInductionCircuits'
+          #[pRawExpr,
+            tctx,
             pExpr,
             pNondepExpr,
             ← mkEqRefl pNondepExpr,
@@ -777,7 +785,9 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
             toExpr indCert,
             indCertProof,
             wenv,
-            tenv]
+            tenv,
+            pEqVal]
+        debugCheck prf
         let prf ←
           if (← read).debugFillFinalReflectionProofWithSorry then
             mkSorry (synthetic := true) (← g.getType)
