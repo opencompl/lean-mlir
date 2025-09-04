@@ -6,6 +6,7 @@ theorem test28 {w : Nat} (x : BitVec w) :
     x &&& x &&& x &&& x &&& x &&& x = x := by
   bv_multi_width (config := { niter := 2 })
 
+namespace ConstructionByHand
 def thmStmt : MultiWidth.Predicate (wcard := 1) (tcard := 2)
   (MultiWidth.Term.Ctx.cons
     (MultiWidth.Term.Ctx.cons
@@ -22,6 +23,9 @@ def thmStmt : MultiWidth.Predicate (wcard := 1) (tcard := 2)
        )
      )
 
+
+end ConstructionByHand
+
 abbrev ty :=
   BitVec (WidthExpr.toNat (WidthExpr.var (Fin.mk 0 (by simp))) (WidthExpr.Env.empty.cons 10))
 
@@ -29,9 +33,18 @@ theorem hty : ty = BitVec 10 := by
   unfold ty
   rfl
 
+-- | need two variables to manifest
+set_option pp.analyze true in
+def test4 (x y : BitVec w) : (x ||| y) = y ||| x := by
+  bv_multi_width +verbose?
+
+-- This is an example that is genuinely reducible.
+set_option pp.analyze true in
+#print test4
+
 set_option pp.analyze true in
 def test5 (x y z : BitVec w) : (x + y) = (y + x) := by
-  bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
+  bv_multi_width +verbose?
 
 def test6 (x y z : BitVec w) : (x + (y + z)) = ((x + y) + z) := by
   bv_multi_width +verbose? +debugFillFinalReflectionProofWithSorry
