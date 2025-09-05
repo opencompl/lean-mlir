@@ -126,8 +126,7 @@ example (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) := by
   bv_multi_width
 
 -- This should succeed.
-set_option warn.sorry false in
-example (w : Nat) (a b : BitVec w) : (w > 1 ∧ (a - b).slt 0 → a.slt b) := by
+example (w : Nat) (a b : BitVec w) : ((a - b).slt 0 → a.slt b) := by
   -- | TODO: handle width constraints.
   fail_if_success bv_multi_width
   sorry
@@ -341,7 +340,10 @@ def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w :=
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
-  fail_if_success bv_multi_width
+  -- So we should have subtraction as a primitive, so that we don't get stuck
+  -- in simplification.
+  -- → '(~~~1#w + 1#w) * ~~~(x ||| ~~~y)'
+  fail_if_success bv_multi_width +verbose?
   sorry
 
 theorem egZextMin (u v : Nat) (x : BitVec w) :

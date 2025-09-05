@@ -521,6 +521,10 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .ne w ta tb, state)
+    | Nat  =>
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.binRel .ne w ta tb, state)
     | _ => throwError m!"expected bitvector disequality, found disequality of type '{α}': {indentD e}"
   | Or p q =>
     let (ta, state) ← collectBVPredicateAux state p
