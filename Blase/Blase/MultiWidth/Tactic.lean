@@ -547,24 +547,13 @@ info: MultiWidth.Predicate.or {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (
 def Expr.mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
     (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
   match p with
-  | .binRel .eq w a b =>
+  | .binRel relKind w a b =>
     let wExpr ← mkWidthExpr wcard w
     let aExpr ← mkTermExpr wcard tcard tctx a
     let bExpr ← mkTermExpr wcard tcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
       #[mkNatLit wcard, mkNatLit tcard, tctx,
-        mkConst ``MultiWidth.BinaryRelationKind.eq,
-        wExpr,
-        aExpr, bExpr]
-    debugCheck out
-    return out
-  | .binRel .ne w a b =>
-    let wExpr ← mkWidthExpr wcard w
-    let aExpr ← mkTermExpr wcard tcard tctx a
-    let bExpr ← mkTermExpr wcard tcard tctx b
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
-      #[mkNatLit wcard, mkNatLit tcard, tctx,
-        mkConst ``MultiWidth.BinaryRelationKind.ne,
+        toExpr relKind,
         wExpr,
         aExpr, bExpr]
     debugCheck out
@@ -583,7 +572,6 @@ def Expr.mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
       #[mkNatLit wcard, mkNatLit tcard, tctx, pExpr, qExpr]
     debugCheck out
     return out
-  | _ => throwError m!"unhandled mkPredicateExpr {repr p}"
 
 
 /--
@@ -756,8 +744,38 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
 /-- info: `MultiWidth.Predicate.toProp_of_KInductionCircuits' : Name -/
 #guard_msgs in #check ``MultiWidth.Predicate.toProp_of_KInductionCircuits'
 
+/--
+Revert all hypotheses that have to do with bitvectors, so that we can use them.
+
+Ideally, we would have a pass that quickly walks an expression to cheaply
+ee if it's in the BV fragment, and revert it if it is.
+For now, we use a sound overapproximation and revert anything that we can collect.
+-/
+def revertBvHyps (g : MVarId) : SolverM MVarId := do
+  let mut hypsToRevert : Array FVarId := #[]
+  for hyp in (← g.getNondepPropHyps) do
+    -- | Save and restore state, since we just want to test if we can collect.
+    let state ← get 
+    try
+      let _ ← collectBVPredicateAux {} (← hyp.getType)
+      hypsToRevert := hypsToRevert.push hyp
+      set state
+    catch _ =>
+      set state
+      continue
+  let (_, g) ← g.revert hypsToRevert
+  return g
+
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
+  let .some g ← g.withContext (Normalize.runPreprocessing g)
+    | do
+        debugLog m!"Preprocessing automatically closed goal."
+        return []
+  let g ← revertBvHyps g
+  -- | We run preprocessing again after reverting,
+  -- | since we might have created new opportunities for simplification.
+  -- For one, we definitely can simplify `P → Q` into `¬ P ∨ Q`.
   let .some g ← g.withContext (Normalize.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."
