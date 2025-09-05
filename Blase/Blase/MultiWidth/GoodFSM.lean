@@ -1387,10 +1387,11 @@ info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   (PredicateFSM wcard tcard p) :=
   match p with
-  | .binRel .eq _w a b =>
+  | .binRel .eq w a b =>
+    let fsmW := mkWidthFSM wcard tcard w
     let fsmA := mkTermFSM wcard tcard a
     let fsmB := mkTermFSM wcard tcard b
-    { toFsm := fsmTermEq fsmA fsmB }
+    { toFsm := ~~~ fsmW.toFsm ||| fsmTermEq fsmA fsmB }
   | .binRel .ne w a b =>
     let fsmW := mkWidthFSM wcard tcard w
     let fsmA := mkTermFSM wcard tcard a
@@ -1497,8 +1498,10 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
       simp [fsmTermEq]
       have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
       have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
+      have hw := IsGoodNatFSM_mkWidthFSM tcard w
       rw [ha.heq (henv := henv)]
       rw [hb.heq (henv := henv)]
+      rw [hw.heq (henv := henv.toHWidthEnv)]
       simp [Predicate.toProp]
       constructor
       · intros h
@@ -1512,8 +1515,9 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
         apply BitVec.eq_of_getLsbD_eq
         intros i hi
         have := congrFun h i
-        rw [BitStream.scanAnd_eq_decide] at this
         simp at this
+        rw [BitStream.scanAnd_eq_decide] at this
+        simp [show ¬ w.toNat wenv ≤ i by omega] at this
         rw [this]
         omega
     case ne =>
@@ -1596,7 +1600,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
           simp only [decide_eq_true_eq]
           apply BitVec.setWidth_lt_setWidth_of_lt
           · omega
-          · exact h
+          · rw [← BitVec.ult_iff_lt]; exact h
       · intros h
         obtain h := congrFun h (w.toNat wenv)
         simp at h
@@ -1609,6 +1613,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
             (henv := henv)
         ] at h
         simp at h
+        rw [← BitVec.ult_iff_lt] at h
         exact h
     case ule =>
       constructor
@@ -1638,7 +1643,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
           simp only [decide_eq_true_eq]
           apply BitVec.setWidth_le_setWidth_of_le
           · omega
-          · exact h
+          · rw [← BitVec.ule_iff_le]; exact h
       · intros h
         obtain h := congrFun h (w.toNat wenv)
         simp at h
@@ -1651,6 +1656,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
             (henv := henv)
         ] at h
         simp at h
+        rw [← BitVec.ule_iff_le] at h
         exact h
     case slt =>
       constructor

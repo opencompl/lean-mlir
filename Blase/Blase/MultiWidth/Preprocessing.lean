@@ -27,6 +27,17 @@ with BitVec.ofNat -/
 @[bv_multi_width_normalize] theorem BitVec.mul_ofNat_eq_ofNat_mul (x : BitVec w) (n : Nat) :
   x * (BitVec.ofNat w n) = BitVec.ofNat w n * x := by rw [BitVec.mul_comm]
 
+/-! Normal form for < and ≤: we normalize them into ult and ule -/
+@[bv_multi_width_normalize] theorem BitVec.lt_eq_ult {x y : BitVec w} : 
+    (x < y) = ((x.ult y) = true) := by
+  simp [instLTBitVec, BitVec.ult]
+
+
+/-! Normal form for < and ≤: we normalize them into 'ult = true' and 'ule = true'.
+Recall that booleans are coerced into props by writing it as '<bool> = true'. -/
+@[bv_multi_width_normalize] theorem BitVec.le_eq_ule {x y : BitVec w} : 
+    (x ≤ y) = ((x.ule y) = true) := by
+  simp [instLEBitVec, BitVec.ule]
 
 /-! Normal form for shifts
 

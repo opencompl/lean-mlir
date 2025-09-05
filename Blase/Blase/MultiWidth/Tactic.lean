@@ -487,6 +487,32 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .eq w ta tb, state)
+    | Bool =>
+      let_expr true := b
+        | throwError m!"Boolean conditional not of the form '<bool> = <true>'. {indentD e}."
+      match_expr a with
+      | BitVec.slt w a b =>
+        let (w, state) ← collectWidthAtom state w
+        let (ta, state) ← collectTerm state a
+        let (tb, state) ← collectTerm state b
+        return (.binRel .slt w ta tb, state)
+      | BitVec.sle w a b =>
+        let (w, state) ← collectWidthAtom state w
+        let (ta, state) ← collectTerm state a
+        let (tb, state) ← collectTerm state b
+        return (.binRel .sle w ta tb, state)
+      | BitVec.ult w a b =>
+        let (w, state) ← collectWidthAtom state w
+        let (ta, state) ← collectTerm state a
+        let (tb, state) ← collectTerm state b
+        return (.binRel .ult w ta tb, state)
+      | BitVec.ule w a b =>
+        let (w, state) ← collectWidthAtom state w
+        let (ta, state) ← collectTerm state a
+        let (tb, state) ← collectTerm state b
+        return (.binRel .ule w ta tb, state)
+      | _ =>
+        throwError m!"unknown boolean equality predicate: {indentD e}"
     | _ => throwError m!"expected bitvector equality, found equality of type '{α}': {indentD e}"
   | Ne α a b =>
     match_expr α with

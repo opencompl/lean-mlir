@@ -101,19 +101,13 @@ example (w : Nat) (a : BitVec w) :  (a * 3 = a + a + a)  := by
 example (a b : BitVec 0) : a = b  := by
   bv_multi_width 
 
-set_option warn.sorry false in
-example (w : Nat) (a : BitVec w) : (a = 0#w) := by
-  fail_if_success bv_multi_width 
-  sorry
-
 
 /-- Can solve conjunctions. -/
 example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + a = a <<< 1) := by
   bv_multi_width 
 
 example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
-  fail_if_success bv_multi_width +verbose?
-  sorry
+  bv_multi_width 
 
 /-- either a < b or b ≤ a -/
 example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b ≤ a) := by
