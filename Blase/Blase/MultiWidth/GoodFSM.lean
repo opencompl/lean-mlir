@@ -1377,6 +1377,13 @@ theorem eval_fsmTermSle_eq_decide_sle {wcard tcard : Nat}
     · simp [hw]
     · simp [hw]
 
+
+def fsmWidthEq (a b : FSM α) : FSM α :=
+  composeUnaryAux FSM.scanAnd (composeUnaryAux (FSM.ls true) <| composeBinaryAux' FSM.nxor a b)
+
+
+def fsmWidthNe (a b : FSM α) : FSM α :=
+  composeUnaryAux FSM.scanAnd (composeUnaryAux (FSM.ls true) <| composeBinaryAux' FSM.nxor a b)
 /--
 info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 [propext, Classical.choice, Quot.sound]
@@ -1387,6 +1394,22 @@ info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
   (PredicateFSM wcard tcard p) :=
   match p with
+  | .binWidthRel .eq a b =>
+    let fsmA := mkWidthFSM wcard tcard a
+    let fsmB := mkWidthFSM wcard tcard b
+    { toFsm := fsmWidthEq fsmA.toFsm fsmB.toFsm }
+  | .binWidthRel .ne a b =>
+    let fsmA := mkWidthFSM wcard tcard a
+    let fsmB := mkWidthFSM wcard tcard b
+    { toFsm := fsmWidthNe fsmA.toFsm fsmB.toFsm }
+  | .binWidthRel .lt a b =>
+    let fsmA := mkWidthFSM wcard tcard a
+    let fsmB := mkWidthFSM wcard tcard b
+    { toFsm := fsmWidthUlt fsmA.toFsm fsmB.toFsm }
+  | .binWidthRel .le a b =>
+    let fsmA := mkWidthFSM wcard tcard a
+    let fsmB := mkWidthFSM wcard tcard b
+    { toFsm := fsmWidthUle fsmA.toFsm fsmB.toFsm }
   | .binRel .eq w a b =>
     let fsmW := mkWidthFSM wcard tcard w
     let fsmA := mkTermFSM wcard tcard a
