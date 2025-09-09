@@ -195,6 +195,14 @@ theorem map_map {A B C : α → Type*} {l : List α} (t : HVector A l)
     · rfl
     · simp_all [map]
 
+/-! ## map' -/
+section Map'
+
+@[simp] theorem map'_cons : map' f g (cons x xs) = cons (g _ x) (map' f g xs) := rfl
+@[simp] theorem map'_nil : map' f g nil = nil := rfl
+
+end Map'
+
 /-! ## fold -/
 
 @[simp] theorem foldl_cons :
@@ -359,6 +367,23 @@ def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
                         (fun i => by simpa using h_elem i.succ)
       (h₀ ▸ x) ::ₕ xs
 
+section CastLemmas
+variable {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
+
+@[simp] theorem get_cast (i : Fin bs.length) :
+    (cast h_len h_elem xs).get i
+    = _root_.cast (h_elem _ _) (xs.get (i.cast h_len.symm)) := by
+  induction xs generalizing bs i
+  case nil => apply Fin.elim0 <| i.cast h_len.symm
+  case cons ih =>
+    rcases bs with _|⟨b, bs⟩
+    · contradiction
+    cases i using Fin.succRec
+    case zero => rfl
+    case succ i => simp [cast, ih]
+
+end CastLemmas
+
 /-!
 ## Find
 -/
@@ -398,8 +423,8 @@ structure HVectorLiteral where
 
 /-- Given a Lean expression of type `HVector _ _`, try to decompose it into an
 array of element expressions.
-Returns `none` if the passed expression is not a literal. -/
-def litExpr? : Expr → Option HVectorLiteral
+Returns `none` if the passed expression is not a recognized literal. -/
+def litExpr? : Expr → (Option HVectorLiteral)
   | mkApp6 (.const ``HVector.cons _) _α _A _as a x xs => do
       let ret ← litExpr? xs
       some { ret with elems := ret.elems.push ⟨ a, x ⟩ }

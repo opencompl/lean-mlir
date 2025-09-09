@@ -166,8 +166,19 @@ instance : HRefinement (PoisonOr α) (PoisonOr β) where
 @[simp] theorem poison_isRefinedBy : (@poison α) ⊑ b? :=
   IsRefinedBy.poisonLeft
 
-@[simp] theorem value_isRefinedBy_value :
-    value a ⊑ value b ↔ a ⊑ b := by
+@[inherit_doc HRefinement.IsRefinedBy]
+local infix:50 " ⊑ₙᵢ " => @HRefinement.IsRefinedBy (no_index _) (no_index _) _
+/-!
+` ⊑ₙᵢ ` is a local alias of the ` ⊑ ` refinement notation which adds `no_index`
+annotations to both type arguments to the refinement relation.
+
+It should only be used in theorems where the type of the refinement relation is
+obvious from the other arguments!
+-/
+
+@[simp, simp_denote] theorem value_isRefinedBy_value :
+    value a ⊑ₙᵢ value b
+    ↔ a ⊑ b := by
   constructor
   · rintro ⟨⟩; assumption
   · exact IsRefinedBy.bothValues

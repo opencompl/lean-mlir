@@ -4,16 +4,9 @@ Released under Apache 2.0 license as described in the file LICENSE.
 
 import SSA.Core.Util.Poison
 import SSA.Projects.SLLVM.Tactic.SimpSet
+import SSA.Projects.SLLVM.Dialect.Semantics.Memory
 
 namespace LeanMLIR
-
-structure MemoryState where
-  -- TODO: actually implement memory state
-  deriving Inhabited
-
-instance : Refinement MemoryState := .ofEq
-@[simp, simp_sllvm]
-theorem MemoryState.isRefinedBy_iff (s t : MemoryState) : s ⊑ t ↔ s = t := by rfl
 
 def EffectM := StateT MemoryState PoisonOr
 
@@ -23,6 +16,9 @@ namespace EffectM
 
 instance : Monad EffectM        := by unfold EffectM; infer_instance
 instance : LawfulMonad EffectM  := by unfold EffectM; infer_instance
+
+instance : MonadState MemoryState EffectM   := by unfold EffectM; infer_instance
+instance : MonadStateOf MemoryState EffectM := by unfold EffectM; infer_instance
 
 /-! ## Constructors -/
 
@@ -67,3 +63,6 @@ lemma isRefinedBy_iff (x : EffectM α) (y : EffectM β) :
   x ⊑ y ↔ ∀ s, StateT.run x s ⊑ StateT.run y s := by rfl
 
 end Refinement
+
+/-! ## Memory Semantics -/
+section LoadStore

@@ -1,0 +1,3 @@
+
+theorem falsum : False :=
+  falsum

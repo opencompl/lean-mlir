@@ -165,7 +165,9 @@ private partial def varToIndex (e : Expr) : Option Nat :=
 dsimproc [simp_denote] simpValuationApply (Valuation.snoc _ _ _) := fun e => do
   let mkApp2 V _t v := e
     | return .continue
-  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying access of variable: {e}") <| do
+  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying access of variable: …") <| do
+    trace[LeanMLIR.Elab] "Valuation: {V}"
+    trace[LeanMLIR.ELab] "Variable: {v}"
     let Velems := valuationElements V
     let some i := varToIndex v
       | trace[LeanMLIR.Elab] "{Lean.crossEmoji} Expected a fully concrete variable, but found: {v}"
@@ -182,8 +184,54 @@ dsimproc [simp_denote] simpValuationApply (Valuation.snoc _ _ _) := fun e => do
 
 end SimpValuationApply
 
+/-! ### HVector rewrites -/
+
+/-! #### HVector.get -/
+section SimpHVectorGet
+
+/--
+Return `some i` if `e` is one of the following
+
+- `Fin.mk e _`, where `isNumeral e`
+- `Fin.succ j`, where `j` is a `finNumeral`
+- `OfNat.ofNat e`, where `isNumeral e`
+-/
+partial def finNumeral? (e : Lean.Expr) : Option Nat :=
+  match_expr e with
+  | Fin.mk _ i _h => Expr.numeral? i
+  | Fin.succ _ i => (· + 1) <$> finNumeral? i
+  | OfNat.ofNat α i _ => do
+      let_expr Fin n := α | none
+      let n ← Expr.numeral? n
+      let i ← Expr.numeral? i
+      some (i % n)
+  | _ => none
+
+dsimproc simpHVectorGet (HVector.get _ _) := fun e => do
+  let_expr HVector.get _α _A _as xs i := e
+    | return .continue
+  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying: {e}") <| do
+    let some i := finNumeral? i
+      | trace[LeanMLIR.Elab] "Unable to statically determine the value of `Fin` expression: {i}"
+        return .continue
+
+    let rec getElem (xs : Expr) (i : Nat) : MetaM (Option Expr) := do
+      let_expr HVector.cons _α _f _as _a x xs := xs
+        | trace[LeanMLIR.Elab] "Expected an application of `HVector.cons`, but found: {xs}"
+          return none
+      match i with
+      | 0 => return some x
+      | i+1 => getElem xs i
+
+    let some x ← getElem xs i
+      | return .continue
+
+    return .visit x
+
+end SimpHVectorGet
+
 /-!
-### HVector.cons injectivity
+#### HVector.cons injectivity
 
 WORKAROUND: Simplifying the semantics can yield equalities of the form:
   `@Eq (Id <| HVector _ _) (x ::ₕ xs) (y ::ₕ ys)`
@@ -197,10 +245,42 @@ for `HVector.cons` from applying, so we first have to clean up the equality.
     @Eq (no_index _) (x ::ₕ xs) (y ::ₕ ys) ↔ (x = y ∧ xs = ys) := by
   rw [HVector.cons.injEq]
 
+/-!
+#### Miscellaneous HVector Rewrites
+-/
+attribute [simp_denote]
+  HVector.map'_cons HVector.map'_nil
+
+
+
 /-! ### Compatibility Wrappers -/
 attribute [simp_denote]
   SingleReturnCompat.Com SingleReturnCompat.Expr SingleReturnCompat.Com.var
 
+/-!
+## Signature Unfolding
+-/
+
+#check Signature.sig
+#check DialectSignature.signature
+#check Lean.Expr.w
+
+
+/--
+Given an expression `f (DialectSignature.)`
+-/
+def reduceDialectSignature (e : Expr) : MetaM (Option Expr) := do
+  let unfoldable := [
+    ``DialectSignature.sig,
+    ``DialectSignature.regSig,
+    ``DialectSignature.returnTypes,
+    ``DialectSignature.returnTypes
+  ]
+  let e ← withCanUnfoldPred (fun _ info => info.name ∈ []) <|
+    whnf e
+
+
+  _
 
 /-!
 ## Simp_peephole

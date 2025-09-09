@@ -14,6 +14,11 @@ def LLVM.IntW.canBe (x : LLVM.IntW w) (y : BitVec w) : Bool :=
 
 namespace LeanMLIR.SLLVM
 
+/-- An LLVM pointer, or `poison` -/
+def Ptr : Type := PoisonOr Pointer
+
+/-! ### div / rem -/
+
 @[simp_sllvm]
 def udiv (x y : LLVM.IntW w) (flag : LLVM.ExactFlag) : EffectM (LLVM.IntW w) := do
   if y.canBe 0#w then
@@ -41,3 +46,15 @@ def srem (x y : LLVM.IntW w) : EffectM (LLVM.IntW w) := do
     .ub
   else
     pure <| LLVM.srem x y
+
+/-! ### pointer arithmetic -/
+
+def ptradd (p : SLLVM.Ptr) (x : LLVM.IntW 64) : SLLVM.Ptr := do
+  let p ← p
+  let x ← x
+  return { p with offset := p.offset + x}
+
+/-!
+**SIMPLIFICATION**
+We deliberately don't support int-to-ptr nor ptr-to-int casts
+-/
