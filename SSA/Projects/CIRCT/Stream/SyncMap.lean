@@ -85,7 +85,8 @@ end SyncLemmas
 
 namespace Examples
 
-def add₂ : Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) :=
+-- def circuit_add_with_pack : Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) :=
+def add₂: Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) :=
   syncMap₂ (· + ·)
 
 def add₃ : Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) :=

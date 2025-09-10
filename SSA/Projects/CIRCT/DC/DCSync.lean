@@ -53,6 +53,7 @@ def sendReadyValue (_ : Unit) (_ : Unit) : BitVec 1 := 1
 def merge (x y : TokenStream) : ValueStream (BitVec 1) :=
   syncMap₂ (xs := x) (ys := y) (f := sendReadyValue)
 
+
 /--
 An input token is selected based on the value of the incoming select signal, and propagated to the single output. Only the condition value, the selected input, and the output will be transacted.
 
