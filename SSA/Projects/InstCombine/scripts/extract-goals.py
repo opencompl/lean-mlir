@@ -12,6 +12,7 @@ import shutil
 from typing import List
 from pathlib import Path
 from dataclasses import dataclass, asdict
+import shutil
 import os
 import re
 import logging
@@ -19,8 +20,12 @@ import random
 import json
 
 ROOT_DIR = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode('utf-8').strip()
+GIT_COMMIT = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
 BENCHMARK_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/proofs/'
-GOALS_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/goals/'
+GOALS_PROCESSING_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/goals/'
+GOALS_SUCCESS_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/goals/success'
+GOALS_FAILURE_DIR = ROOT_DIR + '/SSA/Projects/InstCombine/tests/goals/failure'
+
 
 STATUS_FAIL = "❌"
 STATUS_GREEN_CHECK = "✅"
@@ -31,20 +36,21 @@ SCRIPT_PATH = os.path.relpath(os.path.abspath(__file__), ROOT_DIR)
 
 
 PREAMBLE = f"""
-/-
--- auto-generated from '{SCRIPT_PATH}'
-import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.LLVM.Semantics
+-- auto-generated from '{SCRIPT_PATH}' @ commit '{GIT_COMMIT}'
 open BitVec
-open LLVM
+notation:50 x " ≥ᵤ " y => BitVec.ule y x
+notation:50 x " >ᵤ " y => BitVec.ult y x
+notation:50 x " ≤ᵤ " y => BitVec.ule x y
+notation:50 x " <ᵤ " y => BitVec.ult x y
 
-set_option linter.unusedTactic false
-set_option linter.unreachableTactic false
-set_option maxHeartbeats 5000000
-set_option maxRecDepth 1000000
-set_option Elab.async false
--/
+notation:50 x " ≥ₛ " y => BitVec.sle y x
+notation:50 x " >ₛ " y => BitVec.slt y x
+notation:50 x " ≤ₛ " y => BitVec.sle x y
+notation:50 x " <ₛ " y => BitVec.slt x y
 
+instance {{n}} : ShiftLeft (BitVec n) := ⟨fun x y => x <<< y.toNat⟩
+instance {{n}} : ShiftRight (BitVec n) := ⟨fun x y => x >>> y.toNat⟩
+infixl:75 ">>>ₛ" => fun x y => BitVec.sshiftRight x (BitVec.toNat y)
 """
 
 def sed():
@@ -124,17 +130,38 @@ def run_file(db : str, file: str, file_num : int, nfiles : int, timeout : int):
                 }) + "\n")
 
     for t in theorems:
-        path = Path(GOALS_DIR) / t.get_file_name(fileTitle)
+        path = Path(GOALS_PROCESSING_DIR) / t.get_file_name(fileTitle)
+        # write file, then run 'lake lean' on it.
+        # if it succeeds, then move to 'GOALS_SUCCESS_DIR'.
+        # otherwise, move to 'GOALS_FAILURE_DIR'
         logging.debug(f"{fileTitle}({file_num}/{nfiles}): Writing '{path}'...")
         with open(path, 'w') as f:
             f.write(PREAMBLE)
             f.write(t.text)
             logging.debug(f"{fileTitle}({file_num}/{nfiles}): {STATUS_GREEN_CHECK} Written to '{path}'")
 
-
+        logging.debug(f"{fileTitle}({file_num}/{nfiles}): Running lake to check file is well-formed")
+        result = subprocess.run(["lake", "env", "lean", path],
+          stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if result.returncode == 0:
+            logging.debug(f"{fileTitle}({file_num}/{nfiles}): {STATUS_SUCCESS} Successfully built.")
+            shutil.move(path, GOALS_SUCCESS_DIR)
+        else:
+            logging.debug(f"{fileTitle}({file_num}/{nfiles}): {STATUS_FAIL} Failed to build. stderr:\n{result.stderr}")
+            shutil.move(path, GOALS_FAILURE_DIR)
     return True
 
+def make_clean_dir(dir_path : str):
+    """ensure that empty 'dir_path' directory exists."""
+    if os.path.exists(dir_path):
+        shutil.rmtree(dir_path)  # deletes dir and all contents
+    os.makedirs(dir_path)
+
 def process(args):
+    make_clean_dir(GOALS_PROCESSING_DIR)
+    make_clean_dir(GOALS_SUCCESS_DIR)
+    make_clean_dir(GOALS_FAILURE_DIR)
+
     db = args.db
     jobs = args.jobs
     nfiles = args.nfiles
@@ -201,7 +228,7 @@ if __name__ == "__main__":
   default_db = f'extract-goals-{current_time}.jsonl'
   parser.add_argument('--db', default=default_db, help='path to jsonl database')
   parser.add_argument('-j', '--jobs', type=int, default=4)
-  parser.add_argument('--nfiles', type=int, default=4, help="number of files to extract")
+  parser.add_argument('--nfiles', type=int, default=9000, help="number of files to extract")
   parser.add_argument('--timeout', type=int, default=600, help="timeout in seconds for each file processing")
   parser.add_argument('--stride', type=int, default=1, help="Files that are processed have index 'ix = ∃ k, stride * k + offset'")
   parser.add_argument('--offset', type=int, default=0, help="Files that are processed have index 'ix = ∃ k, stride * k + offset'")
