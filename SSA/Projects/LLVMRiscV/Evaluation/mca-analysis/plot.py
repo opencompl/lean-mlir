@@ -4,6 +4,7 @@ import subprocess
 import os
 import re
 import csv
+import argparse
 import shutil
 from pathlib import Path
 import pandas as pd
@@ -88,27 +89,46 @@ def setup_benchmarking_directories():
         shutil.rmtree(plots_dir)
         os.makedirs(plots_dir)
 
+parameters_match = {
+    "tot_instructions" : "Instructions:      ",
+    "tot_cycles" : "Total Cycles:      ",
+    "tot_uops" : "Total uOps:        "
+}
+
+parameters_labels = {
+    "tot_instructions" : "#instructions",
+    "tot_cycles" : "#cycles",
+    "tot_uops" : "#uOps"
+}
+
+selector_labels = {
+    "LEANMLIR" : "Cert.",
+    "LEANMLIR_opt" : "Cert. + Opt",
+    "LLVM_globalisel" : "GlobalISel",
+    "LLVM_selectiondag" : "SelectionDAG"
+}
+
 
 def extract_data(results_directory, benchmark_name, parameter) :
     """
     Parses the results of mca and saves the result in a DataFrame, then printed to `.csv`
     """
     function_names = []
-    instructions_numbers = []
+    parameter_numbers = []
     for filename in os.listdir(results_directory):
         file_path = os.path.join(results_directory, filename)
         try:
             with open(file_path, "r") as f:
                 file_lines = f.readlines()
                 for line in file_lines:
-                    if "Instructions:      " in line : 
-                        instructions_num = int(line.split(" ")[-1])
+                    if parameters_match[parameter] in line : 
+                        num = int(line.split(" ")[-1])
                         function_names.append(filename.split(".")[0])
-                        instructions_numbers.append(int(instructions_num/100))
+                        parameter_numbers.append(int(num/100))
         except FileNotFoundError:
             print(f"Warning: file not found at {file_path}. Skipping.")
         
-    df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+parameter : instructions_numbers})
+    df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+parameter : parameter_numbers})
     df.to_csv(data_dir + benchmark_name+'_'+ parameter + '.csv')
 
 def join_dataframes(dataframe_names, parameter) :
@@ -130,11 +150,11 @@ def sorted_line_plot_all(parameter):
 
     sorted_df = df.sort_values(by = 'LEANMLIR_' + parameter)
 
-    plt.plot(sorted_df.index, sorted_df['LEANMLIR_' + parameter], label = 'Cert', 
+    plt.plot(sorted_df.index, sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
         color = light_green)
-    plt.plot(sorted_df.index, sorted_df['LEANMLIR_opt_' + parameter], label = 'Cert + Opt', color = dark_green)
-    plt.plot(sorted_df.index, sorted_df['LLVM_globalisel_' + parameter], label='GlobalISel', color = light_blue)
-    plt.plot(sorted_df.index, sorted_df['LLVM_selectiondag_' + parameter], label='SelectionDAG', color = light_red)
+    plt.plot(sorted_df.index, sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
+    plt.plot(sorted_df.index, sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
+    plt.plot(sorted_df.index, sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
 
     plt.xlabel('Program Index')
     plt.ylabel(parameter)
@@ -193,8 +213,8 @@ def scatter_plot(parameter, selector1, selector2) :
 
     plt.plot([plot_min, plot_max], [plot_min, plot_max], color='gray', linestyle='--', label='$x=y$ line')
     
-    plt.xlabel(selector1 + ' - ' + parameter)
-    plt.ylabel(selector2 + ' - ' + parameter)
+    plt.xlabel(selector1 + ' - ' + parameters_labels[parameter])
+    plt.ylabel(selector2 + ' - ' + parameters_labels[parameter])
 
     plt.xlim(plot_min, plot_max)
     plt.ylim(plot_min, plot_max)
@@ -217,12 +237,12 @@ def sorted_line_plot(parameter, selector1, selector2):
 
     sorted_df = df.sort_values(by = 'LEANMLIR_' + parameter)
 
-    plt.plot(sorted_df.index, sorted_df[selector1 +'_'+ parameter], label = selector1, color = light_green)
-    plt.plot(sorted_df.index, sorted_df[selector2 +'_'+ parameter], label = selector2, color = dark_green)
+    plt.plot(sorted_df.index, sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
+    plt.plot(sorted_df.index, sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
 
     plt.xlabel('Program Index')
-    plt.ylabel(parameter)
-    plt.title(f'{parameter} Per Program, {selector1} vs. {selector2}')
+    plt.ylabel(parameters_labels[parameter])
+    plt.title(f'{parameters_labels[parameter]} Per Program, {selector1} vs. {selector2}')
     plt.xticks(range(0, len(sorted_df), int(np.ceil(np.log(len(sorted_df))))))
     plot_min = min(0, np.min([sorted_df[selector1 +'_'+ parameter].min(), 
                                 sorted_df[selector2 +'_'+ parameter].min()]) - 1)
@@ -247,12 +267,12 @@ def overhead_plot(parameter, selector1, selector2):
 
     sorted_df = df.sort_values(by=[selector1 + '_' + parameter, selector2 + '_' + parameter], ascending=[True, True])
 
-    plt.stackplot(range(0, len(sorted_df)), sorted_df[selector1 + '_' + parameter],labels=selector1, color = light_green)
-    plt.stackplot(range(0, len(sorted_df)), sorted_df[selector2 + '_' + parameter],labels=selector2, color =white, edgecolor=light_red)
+    plt.stackplot(range(0, len(sorted_df)), sorted_df[selector1 + '_' + parameter],labels=selector_labels[selector1], color = light_green)
+    plt.stackplot(range(0, len(sorted_df)), sorted_df[selector2 + '_' + parameter],labels=selector_labels[selector2], color =white, edgecolor=light_red)
 
     plt.xlabel('Program Index')
-    plt.ylabel(parameter)
-    plt.xticks(range(0, len(sorted_df), 100))
+    plt.ylabel(parameters_labels[parameter])
+    plt.xticks(range(0, len(sorted_df), int(np.ceil(len(sorted_df)/10))))
     plt.legend()
     plt.tight_layout()
 
@@ -261,29 +281,51 @@ def overhead_plot(parameter, selector1, selector2):
     print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
-if __name__ == "__main__":
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="plot",
+        description="Produce the plots to evaluate the performance of the Lean-MLIR certified Instruction Selection.",
+    )
+
+    parser.add_argument(
+        "-p",
+        "--parameters",
+        nargs="+",
+        choices=["tot_instructions", "tot_cycles", "tot_uops"], 
+    )
+
+    args = parser.parse_args()
+
     setup_benchmarking_directories()
-    extract_data(LLVM_selectiondag_results_DIR_PATH, 'LLVM_selectiondag', 'instructions_count')
-    extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', 'instructions_count')
-    extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', 'instructions_count')
-    extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', 'instructions_count')
-    join_dataframes(['LEANMLIR', 'LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag'], 'instructions_count')
-    # bubble plots
-    scatter_plot('instructions_count', 'LEANMLIR_opt', 'LLVM_globalisel')
-    scatter_plot('instructions_count', 'LEANMLIR_opt', 'LLVM_selectiondag')
-    scatter_plot('instructions_count', 'LEANMLIR', 'LLVM_globalisel')
-    scatter_plot('instructions_count', 'LEANMLIR', 'LLVM_selectiondag')
-    # line plots
-    sorted_line_plot_all('instructions_count')
-    sorted_line_plot('instructions_count', 'LEANMLIR_opt', 'LLVM_globalisel')
-    sorted_line_plot('instructions_count', 'LEANMLIR_opt', 'LLVM_selectiondag')
-    sorted_line_plot('instructions_count', 'LEANMLIR', 'LLVM_globalisel')
-    sorted_line_plot('instructions_count', 'LEANMLIR', 'LLVM_selectiondag')
-    # overhead plots 
-    overhead_plot('instructions_count', 'LEANMLIR_opt', 'LLVM_globalisel')
-    overhead_plot('instructions_count', 'LEANMLIR_opt', 'LLVM_selectiondag')
-    overhead_plot('instructions_count', 'LEANMLIR', 'LLVM_globalisel')
-    overhead_plot('instructions_count', 'LEANMLIR', 'LLVM_selectiondag')
+
+    print(args)
+
+    for parameter in args.parameters : 
+        extract_data(LLVM_selectiondag_results_DIR_PATH, 'LLVM_selectiondag', parameter)
+        extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', parameter)
+        extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', parameter)
+        extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter)
+        join_dataframes(['LEANMLIR', 'LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag'], parameter)
+        # bubble plots
+        scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+        scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+        scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+        scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+        # line plots
+        sorted_line_plot_all(parameter)
+        sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+        sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+        sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+        sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+        # overhead plots 
+        overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+        overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+        overhead_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+        overhead_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+
+if __name__ == "__main__":
+    main()
 
 
 
