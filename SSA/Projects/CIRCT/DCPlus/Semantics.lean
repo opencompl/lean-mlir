@@ -20,6 +20,11 @@ def fork (x : TokenStream) : TokenStream × TokenStream  :=
     fun x => Id.run <| do
       (x 0, x 0, x.tail)
 
+def forkVal (x : ValueStream (BitVec 1)) : ValueStream (BitVec 1) × ValueStream (BitVec 1)  :=
+  Stream.corec₂ (β := ValueStream (BitVec 1)) x
+    fun x => Id.run <| do
+      (x 0, x 0, x.tail)
+
 def join (x y : TokenStream) : TokenStream  :=
   Stream.corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
@@ -76,6 +81,13 @@ def sink (x : TokenStream) : TokenStream :=
   Stream.corec (β := TokenStream) x fun x => (none, x.tail)
 
 def supp (c : ValueStream (BitVec 1)) (x : TokenStream) : TokenStream := (branch c x).snd
+
+def not (c : ValueStream (BitVec 1)) : (ValueStream (BitVec 1)) :=
+  Stream.corec (β := ValueStream (BitVec 1)) c fun c =>
+  match c 0 with
+  | some 1 => (some 0, c.tail)
+  | some 0 => (some 1, c.tail)
+  | _ => (none, c.tail)
 
 end DCPlusOp
 
