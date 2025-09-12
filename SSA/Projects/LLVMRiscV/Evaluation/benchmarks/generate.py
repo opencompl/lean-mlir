@@ -49,27 +49,41 @@ MLIR_multi_DIR_PATH = (
 LLC_ASM_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/"
 )
+LLC_GLOBALISEL_ASM_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_GLOBALISEL_ASM/"
+)
 LEANMLIR_ASM_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM/"
+)
+LEANMLIR_ASM_opt_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM_opt/"
 )
 XDSL_no_casts_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_no_casts/"
 )
+XDSL_no_casts_opt_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_no_casts_opt/"
+)
 XDSL_reg_alloc_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_reg_alloc/"
+)
+XDSL_reg_alloc_opt_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_reg_alloc_opt/"
 )
 XDSL_ASM_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_ASM/"
 )
+XDSL_opt_ASM_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_opt_ASM/"
+)
 LOGS_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/logs/"
 
-LLC_GLOBALISEL_ASM_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_GLOBALISEL_ASM/"
-)
 
 
 AUTOGEN_DIR_PATHS = [LLVM_DIR_PATH, LLVMIR_DIR_PATH, MLIR_bb0_DIR_PATH, MLIR_single_DIR_PATH, 
-            LLC_ASM_DIR_PATH, LEANMLIR_ASM_DIR_PATH, XDSL_no_casts_DIR_PATH,XDSL_reg_alloc_DIR_PATH, XDSL_ASM_DIR_PATH, LOGS_DIR_PATH]
+            LLC_ASM_DIR_PATH, LEANMLIR_ASM_DIR_PATH, XDSL_no_casts_DIR_PATH,XDSL_reg_alloc_DIR_PATH, 
+            XDSL_ASM_DIR_PATH, LOGS_DIR_PATH, LEANMLIR_ASM_opt_DIR_PATH, XDSL_no_casts_opt_DIR_PATH, 
+            XDSL_reg_alloc_opt_DIR_PATH, XDSL_opt_ASM_DIR_PATH]
 
 def setup_benchmarking_directories(): 
     """
@@ -245,6 +259,32 @@ def LAKE_compile_riscv64(jobs, pass_dict):
             percentage = ((float(idx) + float(1)) / float(total)) * 100
             print(f"{file_path} completed, {percentage:.2f}%")
     
+def LAKE_compile_riscv64_opt(jobs, pass_dict):
+    """
+    Lower the input file to RISCV with Lean-MLIR, using multiple threads.
+    """
+    with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
+        futures = {}
+
+        for filename in os.listdir(MLIR_bb0_DIR_PATH):
+            input_file = os.path.join(MLIR_bb0_DIR_PATH, filename)
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(LEANMLIR_ASM_opt_DIR_PATH, basename + '.mlir')
+            log_file = open(LOGS_DIR_PATH + basename + "_lake.mlir", "w")
+            print(f"Compiling '{input_file}' to RISC-V assembly in Lean-MLIR..")
+            cmd_base = f"cd {ROOT_DIR_PATH}; lake exe opt --passriscv64_optimized "
+            cmd = cmd_base + input_file + " > " + output_file
+            future = executor.submit(run_command, cmd, log_file)
+            futures[future] = output_file
+
+        total = len(futures)
+        for idx, future in enumerate(concurrent.futures.as_completed(futures)):
+            file_path = futures[future]
+            ret_code = future.result()
+            pass_dict[file_path] = ret_code
+            percentage = ((float(idx) + float(1)) / float(total)) * 100
+            print(f"{file_path} completed, {percentage:.2f}%")
+    
 
 # this is just a temporary solution because I don't understand python classes.
 def XDSL_remove_casts(input_file, output_file, log_file, pass_dict):
@@ -351,6 +391,10 @@ def generate_benchmarks(file_name, num, jobs):
     # Run the lean pass in parallel
     LAKE_compile_riscv64(jobs, LAKE_file2ret)
 
+    LAKE_file2ret_opt = dict()
+    # Run the optimized lean pass in parallel
+    LAKE_compile_riscv64_opt(jobs, LAKE_file2ret_opt)
+
     XDSL_remove_casts_file2ret = dict()
     # Remove unrealized casts 
     for filename in os.listdir(LEANMLIR_ASM_DIR_PATH):
@@ -361,6 +405,16 @@ def generate_benchmarks(file_name, num, jobs):
             log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_xdsl_remove_casts.log'), 'w')
             XDSL_remove_casts(input_file, output_file, log_file, XDSL_remove_casts_file2ret)
 
+    XDSL_remove_casts_file2ret_opt = dict()
+    # Remove unrealized casts 
+    for filename in os.listdir(LEANMLIR_ASM_opt_DIR_PATH):
+        input_file = os.path.join(LEANMLIR_ASM_opt_DIR_PATH, filename)
+        if LAKE_file2ret_opt[input_file] == 0: 
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(XDSL_no_casts_opt_DIR_PATH, basename + '.mlir')
+            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_xdsl_remove_casts.log'), 'w')
+            XDSL_remove_casts(input_file, output_file, log_file, XDSL_remove_casts_file2ret_opt)
+
     XDSL_reg_alloc_file2ret = dict()
     for filename in os.listdir(XDSL_no_casts_DIR_PATH):
         input_file = os.path.join(XDSL_no_casts_DIR_PATH, filename)
@@ -369,6 +423,15 @@ def generate_benchmarks(file_name, num, jobs):
             output_file = os.path.join(XDSL_reg_alloc_DIR_PATH, basename + '.mlir')
             log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_xdsl_reg_alloc.log'), 'w')
             XDSL_reg_alloc(input_file, output_file, log_file, XDSL_reg_alloc_file2ret)
+    
+    XDSL_reg_alloc_file2ret_opt = dict()
+    for filename in os.listdir(XDSL_no_casts_opt_DIR_PATH):
+        input_file = os.path.join(XDSL_no_casts_opt_DIR_PATH, filename)
+        if XDSL_remove_casts_file2ret_opt[input_file] == 0: 
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(XDSL_reg_alloc_opt_DIR_PATH, basename + '.mlir')
+            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_xdsl_reg_alloc.log'), 'w')
+            XDSL_reg_alloc(input_file, output_file, log_file, XDSL_reg_alloc_file2ret_opt)
 
     XDSL_riscv_file2ret = dict()
     # Compile to RISCV asm with XDSL 
@@ -379,6 +442,16 @@ def generate_benchmarks(file_name, num, jobs):
             output_file = os.path.join(XDSL_ASM_DIR_PATH, basename + '.s')
             log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_xdsl_riscv.log'), 'w')
             XDSL_compile_riscv(input_file, output_file, log_file, XDSL_riscv_file2ret)
+    
+    XDSL_riscv_file2ret_opt = dict()
+    # Compile to RISCV asm with XDSL 
+    for filename in os.listdir(XDSL_reg_alloc_opt_DIR_PATH):
+        input_file = os.path.join(XDSL_reg_alloc_opt_DIR_PATH, filename)
+        if XDSL_reg_alloc_file2ret_opt[input_file] == 0: 
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(XDSL_opt_ASM_DIR_PATH, basename + '.s')
+            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_xdsl_riscv.log'), 'w')
+            XDSL_compile_riscv(input_file, output_file, log_file, XDSL_riscv_file2ret_opt)
 
 
 def main():

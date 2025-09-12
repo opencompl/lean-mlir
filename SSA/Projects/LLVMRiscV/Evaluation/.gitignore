@@ -1,6 +1,7 @@
 benchmarks/MLIR_single
 benchmarks/MLIR_bb0
 benchmarks/LEANMLIR_ASM
+benchmarks/LEANMLIR_ASM_opt
 benchmarks/LLC_ASM
 benchmarks/LLVM
 benchmarks/LLVMIR
@@ -8,3 +9,6 @@ benchmarks/logs
 benchmarks/XDSL_ASM
 benchmarks/XDSL_no_casts
 benchmarks/XDSL_reg_alloc
+benchmarks/XDSL_opt_ASM
+benchmarks/XDSL_no_casts_opt
+benchmarks/XDSL_reg_alloc_opt
