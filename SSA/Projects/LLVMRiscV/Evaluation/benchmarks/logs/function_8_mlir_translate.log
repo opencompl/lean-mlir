@@ -1,2 +1,0 @@
-DestTy too big for Trunc
-  %5 = trunc i1 %1 to i64
