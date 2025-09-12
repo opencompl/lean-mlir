@@ -157,12 +157,11 @@ section ToPrint
 open Std (Format)
 variable {d} [ToPrint d] [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
 
-/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/ --here
+/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
 partial def formatFormalArgListTuplePrint [ToString d.Ty] (ts : List d.Ty) : String :=
   let args := (List.range ts.length).zip ts.reverse |>.map
     (fun (i, t) => s!"%{i} : {ToPrint.printTy t}")
   "(" ++ String.intercalate ", " args ++ ")"
-
 
 -- Format a sequence of types as `(t₁, ..., tₙ)` using toString instances -/
 private def formatTypeTuplePrint [ToString d.Ty] (xs : List d.Ty) : String :=
