@@ -129,6 +129,8 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
     blocks = re.split(delimiter_pattern, content, flags=re.DOTALL)
 
     function_count = 0
+    not_clean = 0
+    short = 0
     for i, block_content in enumerate(blocks):
         if function_count >= max_functions:
             print(f"Reached maximum of {max_functions} functions. Stopping extraction.")
@@ -137,8 +139,6 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
         clean_block = block_content.strip()
 
         block_lines = len(clean_block.splitlines())
-        print(clean_block)
-        print("length is: "+str(block_lines))
 
         if clean_block and "module {" in clean_block and 5 < block_lines:
             original_mlir_filename = os.path.join(
@@ -156,7 +156,10 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
                 print(f"Error writing to file or during transformation: {e}")
                 # Continue trying to extract other functions even if one fails
                 continue
-
+        elif not clean_block: 
+            not_clean += 1
+        else: 
+            short += 1
 
 def MLIR_opt_arith_llvm(input_file, output_file, log_file, pass_dict):
     """
@@ -334,7 +337,7 @@ def generate_benchmarks(file_name, num, jobs):
     run_command(cmd, log_file)
 
     # extract mlir blocks and put them all in separate files
-    extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, num)
+    extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, 100)
 
     MLIR_opt_file2ret = dict()
     # Run mlir-opt and convert into LLVM dialect

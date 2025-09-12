@@ -150,26 +150,24 @@ def sorted_line_plot_all(parameter):
 
     sorted_df = df.sort_values(by = 'LEANMLIR_' + parameter)
 
-    plt.plot(sorted_df.index, sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
+    plt.plot(sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
         color = light_green)
-    plt.plot(sorted_df.index, sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
-    plt.plot(sorted_df.index, sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
-    plt.plot(sorted_df.index, sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
+    plt.plot(sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
+    plt.plot(sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
+    plt.plot(sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
 
     plt.xlabel('Program Index')
     plt.ylabel(parameter)
     plt.title(f'{parameter} Per Program')
-    plt.xticks(range(0, len(sorted_df), int(np.ceil(np.log(len(sorted_df))))))
-    plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
-                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
-                                sorted_df['LLVM_globalisel_' + parameter].min(), 
-                                sorted_df['LLVM_selectiondag_' + parameter].min()]) - 1)
-    plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
-                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
-                                sorted_df['LLVM_globalisel_' + parameter].min(), 
-                                sorted_df['LLVM_selectiondag_' + parameter].min()]) + 1
+    # plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
+    #                             sorted_df['LEANMLIR_opt_' + parameter].min(), 
+    #                             sorted_df['LLVM_globalisel_' + parameter].min(), 
+    #                             sorted_df['LLVM_selectiondag_' + parameter].min()]) - 1)
+    # plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
+    #                             sorted_df['LEANMLIR_opt_' + parameter].min(), 
+    #                             sorted_df['LLVM_globalisel_' + parameter].min(), 
+    #                             sorted_df['LLVM_selectiondag_' + parameter].min()]) + 1
 
-    plt.yticks(range(int(plot_min), int(plot_max + 1), 1))
     
     plt.legend()
     plt.tight_layout()
@@ -213,8 +211,8 @@ def scatter_plot(parameter, selector1, selector2) :
 
     plt.plot([plot_min, plot_max], [plot_min, plot_max], color='gray', linestyle='--', label='$x=y$ line')
     
-    plt.xlabel(selector1 + ' - ' + parameters_labels[parameter])
-    plt.ylabel(selector2 + ' - ' + parameters_labels[parameter])
+    plt.xlabel(selector_labels[selector1] + ' - ' + parameters_labels[parameter])
+    plt.ylabel(selector_labels[selector2] + ' - ' + parameters_labels[parameter])
 
     plt.xlim(plot_min, plot_max)
     plt.ylim(plot_min, plot_max)
@@ -235,22 +233,15 @@ def sorted_line_plot(parameter, selector1, selector2):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
 
-    sorted_df = df.sort_values(by = 'LEANMLIR_' + parameter)
+    sorted_df = df.sort_values(by = selector1 + '_' + parameter)
 
-    plt.plot(sorted_df.index, sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
-    plt.plot(sorted_df.index, sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
+    plt.plot(sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
+    plt.plot(sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
 
     plt.xlabel('Program Index')
     plt.ylabel(parameters_labels[parameter])
     plt.title(f'{parameters_labels[parameter]} Per Program, {selector1} vs. {selector2}')
-    plt.xticks(range(0, len(sorted_df), int(np.ceil(np.log(len(sorted_df))))))
-    plot_min = min(0, np.min([sorted_df[selector1 +'_'+ parameter].min(), 
-                                sorted_df[selector2 +'_'+ parameter].min()]) - 1)
-    plot_max = np.max([sorted_df[selector1 +'_'+ parameter].min(), 
-                                sorted_df[selector2 +'_'+ parameter].min()]) + 1
-
-    plt.yticks(range(int(plot_min), int(plot_max + 1), 1))
-    
+    # plt.yticks(range(int(plot_min), int(plot_max + 1), 1))
     plt.legend()
     plt.tight_layout()
 
@@ -266,9 +257,8 @@ def overhead_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + '.csv')
 
     sorted_df = df.sort_values(by=[selector1 + '_' + parameter, selector2 + '_' + parameter], ascending=[True, True])
-
-    plt.stackplot(range(0, len(sorted_df)), sorted_df[selector1 + '_' + parameter],labels=selector_labels[selector1], color = light_green)
-    plt.stackplot(range(0, len(sorted_df)), sorted_df[selector2 + '_' + parameter],labels=selector_labels[selector2], color =white, edgecolor=light_red)
+    plt.stackplot(range(0, len(sorted_df)), sorted_df[selector1 + '_' + parameter],labels=[selector_labels[selector1]], color = light_green)
+    plt.stackplot(range(0, len(sorted_df)), sorted_df[selector2 + '_' + parameter],labels=[selector_labels[selector2]], color =white, edgecolor=light_red)
 
     plt.xlabel('Program Index')
     plt.ylabel(parameters_labels[parameter])
@@ -276,7 +266,7 @@ def overhead_plot(parameter, selector1, selector2):
     plt.legend()
     plt.tight_layout()
 
-    pdf_filename = plots_dir + f"overhead_{selector1}_vs_{selector2}.pdf"
+    pdf_filename = plots_dir + f"{parameter}_overhead_{selector1}_vs_{selector2}.pdf"
     plt.savefig(pdf_filename)
     print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
@@ -292,16 +282,20 @@ def main():
         "-p",
         "--parameters",
         nargs="+",
-        choices=["tot_instructions", "tot_cycles", "tot_uops"], 
+        choices=["tot_instructions", "tot_cycles", "tot_uops", "all"], 
     )
 
     args = parser.parse_args()
+
+    params_to_evaluate = (
+        ["tot_instructions", "tot_cycles", "tot_uops"] if "all" in args.parameters else args.parameters
+    )
 
     setup_benchmarking_directories()
 
     print(args)
 
-    for parameter in args.parameters : 
+    for parameter in params_to_evaluate : 
         extract_data(LLVM_selectiondag_results_DIR_PATH, 'LLVM_selectiondag', parameter)
         extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', parameter)
         extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', parameter)
