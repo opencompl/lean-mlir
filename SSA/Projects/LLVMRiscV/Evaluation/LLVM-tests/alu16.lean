@@ -31,31 +31,10 @@ def addi_riscv :=
 def addi_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   lhs := addi_llvm
   rhs := addi_riscv
-<<<<<<< HEAD
 
 
 /-- ### slti -/
 @[simp_denote]
-=======
-  correct := by
-    unfold addi_riscv addi_llvm
-    simp_lowering
-    bv_decide
-
-/- # 2 -/
-/-
-; RV64I-LABEL: slti:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    slli a0, a0, 48
-; RV64I-NEXT:    srai a0, a0, 48
-; RV64I-NEXT:    slti a0, a0, 2
-; RV64I-NEXT:    ret
-  %1 = icmp slt i16 %a, 2
-  %2 = zext i1 %1 to i16
-  ret i16 %2
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def slti_llvm := [LV| {
     ^entry (%a: i16):
     %0 = llvm.mlir.constant (2) : i16
@@ -80,28 +59,9 @@ def slti_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   lhs := slti_llvm
   rhs := slti_riscv
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 /-- ### sltiu -/
 @[simp_denote]
-=======
-=======
->>>>>>> sarah-eval
-/- # 3 -/
-/-
-; RV64I-LABEL: sltiu:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    slli a0, a0, 48
-; RV64I-NEXT:    srli a0, a0, 48
-; RV64I-NEXT:    sltiu a0, a0, 3
-; RV64I-NEXT:    ret
-  %1 = icmp ult i16 %a, 3
-  %2 = zext i1 %1 to i16
-  ret i16 %2
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def sltiu_llvm := [LV| {
     ^entry (%a: i16):
     %0 = llvm.mlir.constant (3) : i16
@@ -125,38 +85,10 @@ def sltiu_riscv :=
 def sltiu_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   lhs := sltiu_llvm
   rhs := sltiu_riscv
-<<<<<<< HEAD
 
 
 /-- ### sltiu_signext -/
 @[simp_denote]
-=======
-  correct := by
-    unfold sltiu_llvm sltiu_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 4 -/
-/-
-; Make sure we avoid an AND, if the input of an unsigned compare is known
-; to be sign extended. This can occur due to InstCombine canonicalizing
-; x s>= 0 && x s< 10 to x u< 10.
-define i16 @sltiu_signext(i16 signext %a) nounwind {
-; RV64I-LABEL: sltiu_signext:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    sltiu a0, a0, 10
-; RV64I-NEXT:    ret
-  %1 = icmp ult i16 %a, 10
-  %2 = zext i1 %1 to i16
-  ret i16 %2
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def sltiu_signext_llvm := [LV| {
     ^entry (%a: i16):
     %0 = llvm.mlir.constant (10) : i16
@@ -178,34 +110,10 @@ def sltiu_signext_riscv :=
 def sltiu_signext_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   lhs := sltiu_signext_llvm
   rhs := sltiu_signext_riscv
-<<<<<<< HEAD
 
 
 /-- ### xori -/
 @[simp_denote]
-=======
-  correct := by
-    unfold sltiu_signext_llvm sltiu_signext_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 5 -/
-/-
-define i16 @xori(i16 %a) nounwind {
-; RV64I-LABEL: xori:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    xori a0, a0, 4
-; RV64I-NEXT:    ret
-  %1 = xor i16 %a, 4
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def xori_llvm := [LV| {
     ^entry (%a: i16):
     %0 = llvm.mlir.constant (4) : i16
@@ -226,34 +134,10 @@ def xori_riscv :=
 def xori_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   lhs := xori_llvm
   rhs := xori_riscv
-<<<<<<< HEAD
 
 
 /-- ### ori -/
 @[simp_denote]
-=======
-  correct := by
-    unfold xori_llvm xori_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 6 -/
-/-
-define i16 @ori(i16 %a) nounwind {
-; RV64I-LABEL: ori:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    ori a0, a0, 5
-; RV64I-NEXT:    ret
-  %1 = or i16 %a, 5
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def ori_llvm := [LV| {
     ^entry (%a: i16):
     %0 = llvm.mlir.constant (5) : i16
@@ -274,34 +158,10 @@ def ori_riscv :=
 def ori_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   lhs := ori_llvm
   rhs := ori_riscv
-<<<<<<< HEAD
 
 
 /-- ### andi -/
 @[simp_denote]
-=======
-  correct := by
-    unfold ori_llvm ori_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 7 -/
-/-
-define i16 @andi(i16 %a) nounwind {
-; RV64I-LABEL: andi:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    andi a0, a0, 6
-; RV64I-NEXT:    ret
-  %1 = and i16 %a, 6
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def andi_llvm := [LV| {
     ^entry (%a: i16):
     %0 = llvm.mlir.constant (6) : i16
@@ -322,34 +182,10 @@ def andi_riscv :=
 def andi_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   lhs := andi_llvm
   rhs := andi_riscv
-<<<<<<< HEAD
 
 
 /-- ### slli -/
 @[simp_denote]
-=======
-  correct := by
-    unfold andi_llvm andi_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 8 -/
-/-
-define i16 @slli(i16 %a) nounwind {
-; RV64I-LABEL: slli:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    slli a0, a0, 7
-; RV64I-NEXT:    ret
-  %1 = shl i16 %a, 7
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def slli_llvm := [LV| {
     ^entry (%a: i16):
     %0 = llvm.mlir.constant (7) : i16
@@ -370,35 +206,10 @@ def slli_riscv :=
 def slli_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   lhs := slli_llvm
   rhs := slli_riscv
-<<<<<<< HEAD
 
 
 /-- ### srli -/
 @[simp_denote]
-=======
-  correct := by
-    unfold slli_llvm slli_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 9 -/
-/-
-define i16 @srli(i16 %a) nounwind {
-; RV64I-LABEL: srli:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    slli a0, a0, 48
-; RV64I-NEXT:    srli a0, a0, 54
-; RV64I-NEXT:    ret
-  %1 = lshr i16 %a, 6
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def srli_llvm := [LV| {
     ^entry (%a: i16):
     %0 = llvm.mlir.constant (6) : i16
@@ -420,35 +231,10 @@ def srli_riscv :=
 def srli_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   lhs := srli_llvm
   rhs := srli_riscv
-<<<<<<< HEAD
 
 
 /-- ### srai -/
 @[simp_denote]
-=======
-  correct := by
-    unfold srli_llvm srli_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 10 -/
-/-
-define i16 @srai(i16 %a) nounwind {
-; RV64I-LABEL: srai:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    slli a0, a0, 48
-; RV64I-NEXT:    srai a0, a0, 57
-; RV64I-NEXT:    ret
-  %1 = ashr i16 %a, 9
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def srai_llvm := [LV| {
     ^entry (%a: i16):
     %0 = llvm.mlir.constant (9) : i16
@@ -470,34 +256,10 @@ def srai_riscv :=
 def srai_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16)] where
   lhs := srai_llvm
   rhs := srai_riscv
-<<<<<<< HEAD
 
 
 /-- ### add -/
 @[simp_denote]
-=======
-  correct := by
-    unfold srai_llvm srai_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 11 -/
-/-
-define i16 @add(i16 %a, i16 %b) nounwind {
-; RV64I-LABEL: add:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    add a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = add i16 %a, %b
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def add_llvm_i16:= [LV| {
     ^entry (%a: i16,%b: i16 ):
     %0 = llvm.add %a, %b : i16
@@ -518,34 +280,10 @@ def add_riscv_i16 :=
 def add_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16) ] where
   lhs := add_llvm_i16
   rhs := add_riscv_i16
-<<<<<<< HEAD
 
 
 /-- ### sub -/
 @[simp_denote]
-=======
-  correct := by
-    unfold add_llvm_i16 add_riscv_i16
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 12 -/
-/-
-define i16 @sub(i16 %a, i16 %b) nounwind {
-; RV64I-LABEL: sub:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    sub a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = sub i16 %a, %b
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def sub_llvm_i16:= [LV| {
     ^entry (%a: i16,%b: i16 ):
     %0 = llvm.sub %a, %b : i16
@@ -575,25 +313,9 @@ def sub_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
     simp_alive_split
     all_goals simp; bv_decide
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 /-- ### sll -/
 @[simp_denote]
-=======
-=======
->>>>>>> sarah-eval
-/- # 12 -/
-/-
-define i16 @sll(i16 %a, i16 %b) nounwind {
-; RV64I-LABEL: sll:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    sll a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = shl i16 %a, %b
-  ret i16 %1
-}-/
->>>>>>> faa6cc524 (first eval run)
 def sll_llvm_i16:= [LV| {
     ^entry (%a: i16,%b: i16 ):
     %0 = llvm.shl %a, %b : i16
@@ -619,31 +341,9 @@ def sll_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.
     simp_lowering
     bv_decide
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 /-- ### slt -/
 @[simp_denote]
-=======
-=======
->>>>>>> sarah-eval
-/- # 13 -/
-/-
-define i16 @slt(i16 %a, i16 %b) nounwind {
-; RV64I-LABEL: slt:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    slli a1, a1, 48
-; RV64I-NEXT:    slli a0, a0, 48
-; RV64I-NEXT:    srai a1, a1, 48
-; RV64I-NEXT:    srai a0, a0, 48
-; RV64I-NEXT:    slt a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = icmp slt i16 %a, %b
-  %2 = zext i1 %1 to i16
-  ret i16 %2
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def slt_llvm := [LV| {
     ^entry (%a: i16, %b: i16 ):
     %0 = llvm.icmp.slt %a, %b : i16
@@ -670,31 +370,9 @@ def slt_signext_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llv
   lhs := slt_llvm
   rhs := slt_riscv
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 /-- ### sltu -/
 @[simp_denote]
-=======
-=======
->>>>>>> sarah-eval
-/- # 14 -/
-/-
-define i16 @sltu(i16 %a, i16 %b) nounwind {
-; RV64I-LABEL: sltu:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    lui a2, 16
-; RV64I-NEXT:    addi a2, a2, -1
-; RV64I-NEXT:    and a1, a1, a2
-; RV64I-NEXT:    and a0, a0, a2
-; RV64I-NEXT:    sltu a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = icmp ult i16 %a, %b
-  %2 = zext i1 %1 to i16
-  ret i16 %2
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def sltu_llvm := [LV| {
     ^entry (%a: i16, %b: i16 ):
     %0 = llvm.icmp.ult %a, %b : i16
@@ -721,34 +399,10 @@ def sltu_riscv :=
 def sltu_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16) ] where
   lhs := sltu_llvm
   rhs := sltu_riscv
-<<<<<<< HEAD
 
 
 /-- ### xor -/
 @[simp_denote]
-=======
-  correct := by
-    unfold sltu_llvm sltu_riscv
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 15 -/
-/-
-define i16 @xor(i16 %a, i16 %b) nounwind {
-; RV64I-LABEL: xor:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    xor a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = xor i16 %a, %b
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def xor_llvm_i16:= [LV| {
     ^entry (%a: i16,%b: i16 ):
     %0 = llvm.xor %a, %b : i16
@@ -769,36 +423,10 @@ def xor_riscv_i16 :=
 def xor_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16) ] where
   lhs := xor_llvm_i16
   rhs := xor_riscv_i16
-<<<<<<< HEAD
 
 
 /-- ### srl -/
 @[simp_denote]
-=======
-  correct := by
-    unfold xor_llvm_i16 xor_riscv_i16
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 16 -/
-/-
-define i16 @srl(i16 %a, i16 %b) nounwind {
-; RV64I-LABEL: srl:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    slli a0, a0, 48
-; RV64I-NEXT:    srli a0, a0, 48
-; RV64I-NEXT:    srl a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = lshr i16 %a, %b
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def srl_llvm_i16 := [LV| {
     ^entry (%a: i16, %b: i16 ):
     %0 = llvm.lshr %a, %b : i16
@@ -821,31 +449,10 @@ def srl_riscv_i16 :=
 def srl_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16) ] where
   lhs := srl_llvm_i16
   rhs := srl_riscv_i16
-<<<<<<< HEAD
 
 
 /-- ### sra -/
 @[simp_denote]
-=======
-  correct := by
-    unfold srl_llvm_i16 srl_riscv_i16
-    simp_lowering
-    bv_decide
-
-/- # 17 -/
-/-
-define i16 @sra(i16 %a, i16 %b) nounwind {
-; RV64I-LABEL: sra:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    slli a0, a0, 48
-; RV64I-NEXT:    srai a0, a0, 48
-; RV64I-NEXT:    sra a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = ashr i16 %a, %b
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def sra_llvm_i16 := [LV| {
     ^entry (%a: i16, %b: i16 ):
     %0 = llvm.ashr %a, %b : i16
@@ -868,29 +475,10 @@ def sra_riscv_i16 :=
 def sra_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16) ] where
   lhs := sra_llvm_i16
   rhs := sra_riscv_i16
-<<<<<<< HEAD
 
 
 /-- ### or -/
 @[simp_denote]
-=======
-  correct := by
-    unfold sra_llvm_i16 sra_riscv_i16
-    simp_lowering
-    bv_decide
-
-/- # 18 -/
-/-
-define i16 @or(i16 %a, i16 %b) nounwind {
-; RV64I-LABEL: or:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    or a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = or i16 %a, %b
-  ret i16 %1
-}
--/
->>>>>>> faa6cc524 (first eval run)
 def or_llvm_i16:= [LV| {
     ^entry (%a: i16,%b: i16 ):
     %0 = llvm.or %a, %b : i16
@@ -912,24 +500,9 @@ def or_i16_test: LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.b
   lhs := or_llvm_i16
   rhs := or_riscv_i16
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 
 /-- ### and -/
 @[simp_denote]
-=======
-=======
->>>>>>> sarah-eval
-/- # 19 -/
-/-define i16 @and(i16 %a, i16 %b) nounwind {
-; RV64I-LABEL: and:
-; RV64I:       # %bb.0:
-; RV64I-NEXT:    and a0, a0, a1
-; RV64I-NEXT:    ret
-  %1 = and i16 %a, %b
-  ret i16 %1
-}-/
->>>>>>> faa6cc524 (first eval run)
 def and_llvm_i16:= [LV| {
     ^entry (%a: i16,%b: i16 ):
     %0 = llvm.and %a, %b : i16

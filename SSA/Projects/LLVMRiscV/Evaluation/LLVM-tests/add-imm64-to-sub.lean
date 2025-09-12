@@ -75,39 +75,10 @@ def add_b32_test_no_ZBS_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64
 def add_b32_test_ZBS_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := add_b32_llvm_i64
   rhs := add_b32_riscv_i64_ZBS
-<<<<<<< HEAD
 
 
 /-- ### sub_0xffffffffff -/
 @[simp_denote]
-=======
-  correct := by
-    unfold add_b32_llvm_i64 add_b32_riscv_i64_ZBS
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 3 -/
-/-
-define i64 @sub_0xffffffffff(i64 %x) {
-; CHECK-LABEL: sub_0xffffffffff:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    li a1, -1
-; CHECK-NEXT:    srli a1, a1, 24
-; CHECK-NEXT:    sub a0, a0, a1
-; CHECK-NEXT:    ret
-  %sub = sub i64 %x, 1099511627775
-  ret i64 %sub
-}
--/
-<<<<<<< HEAD
->>>>>>> faa6cc524 (first eval run)
-=======
->>>>>>> sarah-eval
 def sub_0xffffffffff_llvm_i64 := [LV| {
     ^entry (%x: i64):
     %0 = llvm.mlir.constant (1099511627775) : i64
@@ -130,40 +101,10 @@ def sub_0xffffffffff_riscv_i64 :=
 def sub_0xffffffffff_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := sub_0xffffffffff_llvm_i64
   rhs :=  sub_0xffffffffff_riscv_i64
-<<<<<<< HEAD
 
 
 /-- ### add_multiuse -/
 @[simp_denote]
-=======
-  correct := by
-    unfold sub_0xffffffffff_llvm_i64  sub_0xffffffffff_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp;
-
-/- # 4 -/
-/-
-define i64 @add_multiuse(i64 %x) {
-; CHECK-LABEL: add_multiuse:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    li a1, -1
-; CHECK-NEXT:    slli a1, a1, 40
-; CHECK-NEXT:    addi a1, a1, 1
-; CHECK-NEXT:    add a0, a0, a1
-; CHECK-NEXT:    and a0, a0, a1
-; CHECK-NEXT:    ret
-  %add = add i64 %x, -1099511627775
-  %and = and i64 %add, -1099511627775
-  ret i64 %and
-}
--/
--- add_multiuse
->>>>>>> faa6cc524 (first eval run)
 def add_multiuse_llvm_i64 := [LV| {
     ^entry (%x: i64):
     %0 = llvm.mlir.constant (-1099511627775) : i64
@@ -189,42 +130,10 @@ def add_multiuse_riscv_i64 :=
 def add_multiuse_riscv_i64_test : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := add_multiuse_llvm_i64
   rhs :=  add_multiuse_riscv_i64
-<<<<<<< HEAD
 
 
 /-- ### add_multiuse_const -/
 @[simp_denote]
-=======
-  correct := by
-    unfold add_multiuse_llvm_i64  add_multiuse_riscv_i64
-    simp_peephole
-    simp_riscv
-    simp_alive_undef
-    simp_alive_ops
-    simp_alive_case_bash
-    simp_alive_split
-    all_goals simp; bv_decide
-
-/- # 5 -/
-/-
-define i64 @add_multiuse_const(i64 %x, i64 %y) {
-; CHECK-LABEL: add_multiuse_const:
-; CHECK:       # %bb.0:
-; CHECK-NEXT:    li a2, -1
-; CHECK-NEXT:    srli a2, a2, 24
-; CHECK-NEXT:    sub a0, a0, a2
-; CHECK-NEXT:    sub a1, a1, a2
-; CHECK-NEXT:    xor a0, a0, a1
-; CHECK-NEXT:    ret
-  %a = add i64 %x, -1099511627775
-  %b = add i64 %y, -1099511627775
-  %xor = xor i64 %a, %b
-  ret i64 %xor
-}-/
-<<<<<<< HEAD
->>>>>>> faa6cc524 (first eval run)
-=======
->>>>>>> sarah-eval
 def add_multiuse_const_llvm_i64 := [LV| {
     ^entry (%x: i64, %y: i64):
     %0 = llvm.mlir.constant (-1099511627775) : i64
