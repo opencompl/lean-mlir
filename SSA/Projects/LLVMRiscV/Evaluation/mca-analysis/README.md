@@ -5,7 +5,7 @@ To repreoduce the mca analysis results, run:
 python3 run_mca.py 
 ```
 
-This file will run LLVM's `llvm-mca` tool on the RISCV assembly files produced by both LLVM and Lean-MLIR + XDSL, using the following command: 
+This file will run LLVM's `llvm-mca` tool on the RISCV assembly files produced by LLVM with `globalISel`, LLVM with `selectionDAG`, Lean-MLIR + XDSL and Lean-MLIR with optimizations + XDSL using the following command: 
 ```
 llvm-mca -mtriple=riscv64 -mcpu=sifive-u74 -mattr=+m,+zba,+zbb,+zbs $input_file
 ```

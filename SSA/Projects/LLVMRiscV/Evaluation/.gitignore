@@ -13,3 +13,4 @@ benchmarks/XDSL_reg_alloc
 benchmarks/XDSL_opt_ASM
 benchmarks/XDSL_no_casts_opt
 benchmarks/XDSL_reg_alloc_opt
+mca-analysis/results
