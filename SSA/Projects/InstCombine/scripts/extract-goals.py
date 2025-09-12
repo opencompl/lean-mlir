@@ -12,7 +12,6 @@ import shutil
 from typing import List
 from pathlib import Path
 from dataclasses import dataclass, asdict
-import pandas as pd
 import os
 import re
 import logging
@@ -206,7 +205,7 @@ if __name__ == "__main__":
   parser.add_argument('--timeout', type=int, default=600, help="timeout in seconds for each file processing")
   parser.add_argument('--stride', type=int, default=1, help="Files that are processed have index 'ix = ∃ k, stride * k + offset'")
   parser.add_argument('--offset', type=int, default=0, help="Files that are processed have index 'ix = ∃ k, stride * k + offset'")
-  parser.add_argument('--loglevel', type=str, default="DEBUG", help="Log level",
+  parser.add_argument('--loglevel', type=str, default="INFO", help="Log level",
     choices=["DEBUG", "INFO", "WARNING", "ERROR"])
   args = parser.parse_args()
   setup_logging(args.db, args.loglevel)

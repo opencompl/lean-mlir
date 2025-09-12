@@ -17,9 +17,5 @@ theorem test_sub_nuw_nsw__nsw_is_safe_thm.extracted_1._3 : ∀ (x : BitVec 32),
   ¬ofBool (x ||| BitVec.ofInt 32 (-2147483648) == BitVec.ofInt 32 (-2147483647)) = 1#1 →
     ¬(True ∧ (BitVec.ofInt 32 (-2147483648)).ssubOverflow (x ||| BitVec.ofInt 32 (-2147483648)) = true ∨
           True ∧ (BitVec.ofInt 32 (-2147483648)).usubOverflow (x ||| BitVec.ofInt 32 (-2147483648)) = true) →
-      True ∧ (BitVec.ofInt 32 (-2147483648)).ssubOverflow (x ||| BitVec.ofInt 32 (-2147483648)) = true →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value (BitVec.ofInt 32 (-2147483648) - (x ||| BitVec.ofInt 32 (-2147483648)))) PoisonOr.poison :=
+      True ∧ (BitVec.ofInt 32 (-2147483648)).ssubOverflow (x ||| BitVec.ofInt 32 (-2147483648)) = true → False :=
 sorry

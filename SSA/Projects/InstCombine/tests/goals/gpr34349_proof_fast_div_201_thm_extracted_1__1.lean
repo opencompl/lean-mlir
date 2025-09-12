@@ -37,12 +37,5 @@ theorem fast_div_201_thm.extracted_1._1 : ∀ (x : BitVec 8),
                                     (truncate 8 ((zeroExtend 16 x * 71#16) >>> 8#16)) =
                                   true ∨
                               7#8 ≥ ↑8 →
-      HRefinement.IsRefinedBy (β := PoisonOr (BitVec 8)) (self :=
-        @instHRefinementOfRefinement _
-          (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-        (PoisonOr.value
-          ((truncate 8 ((zeroExtend 16 x * 71#16) >>> 8#16) +
-              (x - truncate 8 ((zeroExtend 16 x * 71#16) >>> 8#16)) >>> 1#8) >>>
-            7#8))
-        PoisonOr.poison :=
+      False :=
 sorry

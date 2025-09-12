@@ -42,7 +42,7 @@ def denote (zip : Zipper d Γ_in eff tys) (V_in : Valuation Γ_in) :
     eff.toMonad d.m (HVector toType tys) :=
   (zip.top.denote V_in) >>= zip.bot.denote
 
-@[simp] lemma denote_mk {lets : Lets d Γ_in eff Γ_out} {com : Com d Γ_out eff ty} :
+@[simp] theorem denote_mk {lets : Lets d Γ_in eff Γ_out} {com : Com d Γ_out eff ty} :
     denote ⟨lets, com⟩ = fun V => (lets.denote V) >>= com.denote := rfl
 
 end Denote
@@ -63,8 +63,8 @@ def toCom (zip : Zipper d Γ_in eff ty) : Com d Γ_in eff ty :=
       | _, .nil, com          => com
       | _, .var body e, com  => go body (.var e com)
 
-@[simp] lemma toCom_nil {com : Com d Γ eff ty} : toCom ⟨.nil, com⟩ = com := rfl
-@[simp] lemma toCom_var {lets : Lets d Γ_in eff Γ_mid} :
+@[simp] theorem toCom_nil {com : Com d Γ eff ty} : toCom ⟨.nil, com⟩ = com := rfl
+@[simp] theorem toCom_var {lets : Lets d Γ_in eff Γ_mid} :
     toCom ⟨Lets.var lets e, com⟩ = toCom ⟨lets, Com.var e com⟩ := rfl
 
 variable [TyDenote d.Ty] [DialectDenote d] [Monad d.m]

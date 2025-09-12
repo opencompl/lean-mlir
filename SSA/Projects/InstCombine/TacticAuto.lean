@@ -6,9 +6,8 @@ import Std.Tactic.BVDecide
 import Leanwuzla
 
 import SSA.Projects.InstCombine.Tactic.SimpLLVM
-import SSA.Experimental.Bits.SingleWidth.Tactic
-import SSA.Experimental.Bits.Fast.MBA
-import SSA.Experimental.Bits.AutoStructs.ForLean
+import Blase.SingleWidth.Tactic
+import Blase.Fast.MBA
 import TacBench
 import SSA.Core.Tactic.ExtractGoals
 
@@ -148,25 +147,6 @@ macro "bv_compare'": tactic =>
         simp (config := {failIfUnchanged := false}) only [BitVec.twoPow, BitVec.intMin, BitVec.intMax] at *
         bv_compare +acNf +shortCircuit
         try bv_decide +acNf +shortCircuit -- close the goal if possible but do not report errors again
-      )
-   )
-
-macro "simp_alive_split": tactic =>
-  `(tactic|
-      (
-        all_goals try intros
-        repeat(
-          all_goals try simp -implicitDefEqProofs only [simp_llvm_split]
-          all_goals try simp -implicitDefEqProofs only [simp_llvm_split] at *
-          any_goals split_ifs
-        )
-        repeat(
-          all_goals try simp -implicitDefEqProofs only [simp_llvm_split]
-          all_goals try simp -implicitDefEqProofs only [simp_llvm_split] at *
-          any_goals split
-        )
-        all_goals try simp -implicitDefEqProofs only [simp_llvm_split]
-        all_goals try simp -implicitDefEqProofs only [simp_llvm_split] at *
       )
    )
 

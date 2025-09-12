@@ -77,7 +77,7 @@ variable {α β} [inst : HRefinement α β]
 instance instRefinement : HRefinement (Id α) (Id β) := inst
 
 @[simp_denote (high)] -- high priority so that this is tried before the `reduceIsRefinedBy` simproc
-lemma pure_isRefinedBy_pure (x : α) (y : β) :
+theorem pure_isRefinedBy_pure (x : α) (y : β) :
   (pure x : Id _) ⊑ (pure y : Id _) ↔ x ⊑ y := by rfl
 
 end Id
@@ -121,12 +121,12 @@ instance instEffToMonadRefinement :
   IsRefinedBy x y := coe_toMonad x ⊑ coe_toMonad y
 
 open EffectKind (pure) in
-@[simp, simp_denote] lemma effToMonadRefinement_pure (x : pure.toMonad m α) (y : pure.toMonad n β) :
+@[simp, simp_denote] theorem effToMonadRefinement_pure (x : pure.toMonad m α) (y : pure.toMonad n β) :
     x ⊑ y ↔ pure (f := m) (@id α x) ⊑ pure (f := n) (@id β y) := by
   rfl
 
 open EffectKind (impure) in
-@[simp, simp_denote] lemma effToMonadRefinement_impure (x : impure.toMonad m α) (y : impure.toMonad n β) :
+@[simp, simp_denote] theorem effToMonadRefinement_impure (x : impure.toMonad m α) (y : impure.toMonad n β) :
     x ⊑ y ↔ (@id (m α) x) ⊑ (@id (n β) y) := by
   rfl
 
@@ -322,11 +322,11 @@ instance  : HRefinement (HVector A as) (HVector B bs) where
 
 variable {x : A a} {xs : HVector A as} {y : B b} {ys : HVector B bs}
 
-@[simp, simp_denote] lemma cons_isRefinedBy_cons  : ((x ::ₕ xs) ⊑ (y ::ₕ ys)) ↔ (x ⊑ y ∧ xs ⊑ ys) := by rfl
-@[simp, simp_denote] lemma nil_isRefinedBy_nil    : (nil : HVector A _) ⊑ (nil : HVector B _)     := True.intro
+@[simp, simp_denote] theorem cons_isRefinedBy_cons  : ((x ::ₕ xs) ⊑ (y ::ₕ ys)) ↔ (x ⊑ y ∧ xs ⊑ ys) := by rfl
+@[simp, simp_denote] theorem nil_isRefinedBy_nil    : (nil : HVector A _) ⊑ (nil : HVector B _)     := True.intro
 
-@[simp, simp_denote] lemma not_nil_isRefinedBy_cons : ¬((nil : HVector A _) ⊑ (y ::ₕ ys)) := by rintro ⟨⟩
-@[simp, simp_denote] lemma not_cons_isRefinedBy_nil : ¬((x ::ₕ xs) ⊑ (nil : HVector B _)) := by rintro ⟨⟩
+@[simp, simp_denote] theorem not_nil_isRefinedBy_cons : ¬((nil : HVector A _) ⊑ (y ::ₕ ys)) := by rintro ⟨⟩
+@[simp, simp_denote] theorem not_cons_isRefinedBy_nil : ¬((x ::ₕ xs) ⊑ (nil : HVector B _)) := by rintro ⟨⟩
 
 end HVector
 

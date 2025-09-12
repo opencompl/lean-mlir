@@ -65,7 +65,7 @@ end Instances
 section Lemmas
 variable [Monad m]
 
-@[simp] lemma pure_pure (eff : EffectKind) (x : α) :
+@[simp] theorem pure_pure (eff : EffectKind) (x : α) :
     (Pure.pure (Pure.pure x : pure.toMonad m (no_index α)) : eff.toMonad m α) = Pure.pure x :=
   rfl
 

@@ -16,9 +16,5 @@ set_option Elab.async false
 theorem test_mul_nuw_nsw__nuw_is_safe_thm.extracted_1._3 : ∀ (x : BitVec 32),
   ¬ofBool (x &&& 268435457#32 == 268435456#32) = 1#1 →
     ¬(True ∧ (x &&& 268435457#32).smulOverflow 9#32 = true ∨ True ∧ (x &&& 268435457#32).umulOverflow 9#32 = true) →
-      True ∧ (x &&& 268435457#32).umulOverflow 9#32 = true →
-        HRefinement.IsRefinedBy (β := PoisonOr (BitVec 32)) (self :=
-          @instHRefinementOfRefinement _
-            (@PoisonOr.instRefinement _ (@instHRefinementOfRefinement _ InstCombine.instRefinementBitVec)))
-          (PoisonOr.value ((x &&& 268435457#32) * 9#32)) PoisonOr.poison :=
+      True ∧ (x &&& 268435457#32).umulOverflow 9#32 = true → False :=
 sorry
