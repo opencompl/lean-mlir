@@ -11,3 +11,8 @@ llvm-mca -mtriple=riscv64 -mcpu=sifive-u74 -mattr=+m,+zba,+zbb,+zbs $input_file
 ```
 
 The results of the analysis and the log of the tool are available in `results/`.
+
+To reproduce the plots, run 
+```
+python3 plot.py
+```

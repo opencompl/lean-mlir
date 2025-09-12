@@ -51,6 +51,9 @@ def setup_benchmarking_directories():
     """
     Create clean directories to store the benchmarks.
     """
+    results_dir = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/"
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
     for directory in AUTOGEN_DIR_PATHS:
         if not os.path.exists(directory):
             os.makedirs(directory)
