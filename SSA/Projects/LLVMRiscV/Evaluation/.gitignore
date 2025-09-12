@@ -2,7 +2,8 @@ benchmarks/MLIR_single
 benchmarks/MLIR_bb0
 benchmarks/LEANMLIR_ASM
 benchmarks/LEANMLIR_ASM_opt
-benchmarks/LLC_ASM
+benchmarks/LLC_ASM_globalisel
+benchmarks/LLC_ASM_selectiondag
 benchmarks/LLVM
 benchmarks/LLVMIR
 benchmarks/logs

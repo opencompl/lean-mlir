@@ -46,11 +46,11 @@ MLIR_single_DIR_PATH = (
 MLIR_multi_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_multi/"
 )
-LLC_ASM_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/"
+LLC_ASM_selectiondag_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM_selectiondag/"
 )
-LLC_GLOBALISEL_ASM_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_GLOBALISEL_ASM/"
+LLC_ASM_globalisel_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM_globalisel/"
 )
 LEANMLIR_ASM_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM/"
@@ -81,7 +81,7 @@ LOGS_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/l
 
 
 AUTOGEN_DIR_PATHS = [LLVM_DIR_PATH, LLVMIR_DIR_PATH, MLIR_bb0_DIR_PATH, MLIR_single_DIR_PATH, 
-            LLC_ASM_DIR_PATH, LEANMLIR_ASM_DIR_PATH, XDSL_no_casts_DIR_PATH,XDSL_reg_alloc_DIR_PATH, 
+            LLC_ASM_selectiondag_DIR_PATH, LLC_ASM_globalisel_DIR_PATH, LEANMLIR_ASM_DIR_PATH, XDSL_no_casts_DIR_PATH,XDSL_reg_alloc_DIR_PATH, 
             XDSL_ASM_DIR_PATH, LOGS_DIR_PATH, LEANMLIR_ASM_opt_DIR_PATH, XDSL_no_casts_opt_DIR_PATH, 
             XDSL_reg_alloc_opt_DIR_PATH, XDSL_opt_ASM_DIR_PATH]
 
@@ -180,7 +180,7 @@ def MLIR_translate_llvmir(input_file, output_file, log_file, pass_dict):
     ret_code = run_command(cmd, log_file)
     pass_dict[output_file] = ret_code
 
-def LLC_compile_riscv(input_file, output_file, log_file, pass_dict):
+def LLC_compile_riscv_selectiondag(input_file, output_file, log_file, pass_dict):
     """
     Compile LLVMIR to RISCV assembly with llc.
     """
@@ -193,7 +193,7 @@ def LLC_compile_riscv(input_file, output_file, log_file, pass_dict):
     ret_code = run_command(cmd, log_file)
     pass_dict[output_file] = ret_code
 
-def LLC_compile_GLOBALISEL_riscv(input_file, output_file, log_file, pass_dict):
+def LLC_compile_riscv_globalisel(input_file, output_file, log_file, pass_dict):
     """
     Compile LLVMIR to RISCV assembly with llc using the GlobalISel framework.
     """
@@ -357,15 +357,15 @@ def generate_benchmarks(file_name, num, jobs):
             MLIR_translate_llvmir(input_file, output_file, log_file, MLIR_translate_file2ret)
 
     LLC_file2ret = dict()
-    # Use llc with selection dag to compile LLVMIR into RISCV
+    # Use llc with `selectionDAG` to compile LLVMIR into RISCV
     for filename in os.listdir(LLVMIR_DIR_PATH):
         input_file = os.path.join(LLVMIR_DIR_PATH, filename)
         # only run the lowering if the previous pass was successful: 
         if MLIR_translate_file2ret[input_file] == 0: 
             basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(LLC_ASM_DIR_PATH, basename + '.s')
-            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_llc.log'), 'w')
-            LLC_compile_riscv(input_file, output_file, log_file, LLC_file2ret)
+            output_file = os.path.join(LLC_ASM_selectiondag_DIR_PATH, basename + '.s')
+            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_selectiondag_llc.log'), 'w')
+            LLC_compile_riscv_selectiondag(input_file, output_file, log_file, LLC_file2ret)
 
 
     LLC_GLOBALISEL_file2ret = dict()
@@ -375,9 +375,9 @@ def generate_benchmarks(file_name, num, jobs):
         # only run the lowering if the previous pass was successful: 
         if MLIR_translate_file2ret[input_file] == 0: #previous pass succeded
             basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(LLC_GLOBALISEL_ASM_DIR_PATH, basename + '.s')
-            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_GLOBALISEL_llc.log'), 'w')
-            LLC_compile_GLOBALISEL_riscv(input_file, output_file, log_file, LLC_file2ret)
+            output_file = os.path.join(LLC_ASM_globalisel_DIR_PATH, basename + '.s')
+            log_file = open(os.path.join(LOGS_DIR_PATH, basename + '_globalisel_llc.log'), 'w')
+            LLC_compile_riscv_globalisel(input_file, output_file, log_file, LLC_file2ret)
 
     # Extract bb0
     for filename in os.listdir(LLVM_DIR_PATH):

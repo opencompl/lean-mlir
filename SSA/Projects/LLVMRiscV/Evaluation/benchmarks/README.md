@@ -8,25 +8,26 @@ python3 generate.py --input --num --jobs
 The script `generate.py` populates the folders in `benchmarks` by running the following: 
 - Starting from the `input` file with multiple functions, extract `num` single MLIR modules and save them in `benchmarks/MLIR_single/`. Each file containing a single module will have a number, that remains consistent throughout the lowering. `input` is by default `benchmarks/MLIR_multi/out_1000.mlir`, which contains 1000 modules. `num` specifies how may modules will be extracted. 
 - using `mlir-opt`, convert each of these files containing a single module to the LLVM dialect, save the result in `benchmarks/LLVM/*.ll`
-- then, the scripts lowers all the files using both LLVM and Lean-MLIR, to enable the comparison of the lowered RISCV assembly output. 
 
-
-For each file in `benchmarks/LLVM/` we perform the following: 
+Then, the scripts lowers all the files using both LLVM and Lean-MLIR, to enable the comparison of the lowered RISCV assembly output. 
 
 *LLVM toolchain*
 - using `mlir-translate`, convert the `*.ll` files in LLVMIR, and save the result in `benchmarks/LLVMIR/*.mlir`
-- using `llc`, compile the LLVMIR files to the `riscv` backend and save the result in `benchmarks/LLC_ASM/*.s`
-- using `llc`, compile the LLVMIR files to the `riscv` backend and save the result in `benchmarks/LLC_ASM/*.s`
+- using `llc` with `selectionDAG`, compile the LLVMIR files to the `riscv` backend and save the result in `benchmarks/LLC_ASM_selectiondag/*.s`
+- using `llc`, compile the LLVMIR files to the `riscv` backend and save the result in `benchmarks/LLC_ASM_globalisel/*.s`
 
 *Lean-MLIR toolchain*
 - extract the first block `bb0` from the `*.ll` files and save the result in `benchmarks/MLIR_bb0/*.mlir`
 - run the Lean-MLIR lowering to RiscV and save the result in `benchmarks/LEANMLIR_ASM/*.mlir`, potentially in parallel by setting the `jobs` input argument (the default number is 1).
+- run the Lean-MLIR optimized lowering to RiscV and save the result in `benchmarks/LEANMLIR_ASM_opt/*.mlir`, potentially in parallel by setting the `jobs` input argument (the default number is 1).
 - remove `unrealized_cast` operations from the assembly file using XDSL, save the result in `benchmarks/XDSL_no_casts/*.mlir`
+- remove `unrealized_cast` operations from the optimized assembly file using XDSL, save the result in `benchmarks/XDSL_no_casts_opt/*.mlir`
 - perform register allocation using XDSL, save the result in `benchmarks/XDSL_reg_alloc/*.mlir`
+- perform register allocation using XDSL on optimized assembly, save the result in `benchmarks/XDSL_reg_alloc_opt/*.mlir`
 - lower to RISCV assembly using XDSL, save the result in `benchmarks/XDSL_ASM/*.mlir`
+- lower optimized assembly to RISCV using XDSL, save the result in `benchmarks/XDSL_ASM_opt/*.mlir`
 
-Each step in `generate.py` produces a log file, typically empty: after the generation is complete we go through these logs and only leave the files with meaningful content.
-Analogously, to avoid empty files, if the output file produced by a lowering is empty or contains error, we immediately delete it. 
+Each step in `generate.py` produces a log file, which one can retrieve in `logs/`. The names in the log file contain the function and the pass that outputted that file.
 
 ### How to reuse and customize
 - to add new MLIR tests, add a file to `benchmarks/MLIR_multi`. Files in this folder at the moment are named according to the followign convention: `out_` + number of MLIR modules in the file + `.mlir`.
