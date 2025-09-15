@@ -164,6 +164,12 @@ instance [∀ a, Repr (f a)] : Repr (HVector f as) where
   # Theorems
 -/
 
+/-! ## Zero-length vectors -/
+
+theorem eq_nil (xs : HVector A []) :
+    xs = nil := by
+  cases xs; rfl
+
 /-! ## get -/
 
 @[simp] theorem cons_get_zero {A : α → Type*} {a: α} {as : List α} {e : A a} {vec : HVector A as} :

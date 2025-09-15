@@ -454,6 +454,8 @@ instance {Γ} : GetElem (HVector A as) (Var Γ a) (A a) (fun _ _ => as = Γ.toLi
 namespace HVector
 variable {A : α → _} {as : List α} (xs : HVector A as) {Γ : Ctxt α}
 
+/-! #### HVector GetElem lemmas -/
+
 @[simp] theorem getElem_ofFin_eq_get (i : Fin as.length) :
     xs[Ctxt.Var.ofFin i] = xs.get i := rfl
 @[simp] theorem getElem_map (xs : HVector A as) (v : Var ⟨as⟩ a) :
@@ -468,6 +470,10 @@ variable {A : α → _} {as : List α} (xs : HVector A as) {Γ : Ctxt α}
     (HVector.cons x xs)[v.toSnoc (t' := a)]'h' = xs[v]'h := by
   simp only [GetElem.getElem]
   simp
+
+@[simp] theorem getElem_appendInl (xs : HVector A (as ++ bs)) (v : Var Γ a) :
+    xs[v] = _ := by
+  sorry
 
 end HVector
 namespace Ctxt
@@ -594,42 +600,46 @@ variable [TyDenote Ty]
 -- ^^ for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
 
 /-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
-def Valuation (Γ : Ctxt Ty) : Type :=
-  ⦃t : Ty⦄ → Γ.Var t → (toType t)
+abbrev Valuation (Γ : Ctxt Ty) : Type :=
+  HVector toType Γ.toList
+
+/-!
+### Function Coercion
+
+This is a backwards compatibility wrapper for code that expects `Valuation` to
+be a functions.
+-/
+
+instance : CoeFun (Γ.Valuation) (fun _ => {ty : Ty} → Γ.Var ty → ⟦ty⟧) where
+  coe (V : HVector _ _) := (V[·])
+
+/--
+The `·[·]` notation is preferred over the function coercion for `Valuation`s
+-/
+@[simp] theorem coeFun_eq (V : Γ.Valuation) {t} (v : Γ.Var t) : V v = V[v] := rfl
+
+/-!
+### Basic Valuation API
+-/
 
 /-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
 def Valuation.eval {Γ : Ctxt Ty} (VAL : Valuation Γ) ⦃t : Ty⦄ (v : Γ.Var t) : toType t :=
     VAL v
 
 /-- Make a valuation for the empty context. -/
-def Valuation.nil : Ctxt.Valuation (∅ : Ctxt Ty) := fun _ v => v.emptyElim
+@[deprecated HVector.nil]
+def Valuation.nil : Ctxt.Valuation (∅ : Ctxt Ty) :=
+  HVector.nil
 
-instance : Inhabited (Ctxt.Valuation (∅ : Ctxt Ty)) := ⟨Valuation.nil⟩
+instance : Inhabited (Ctxt.Valuation (∅ : Ctxt Ty)) := ⟨[]ₕ⟩
 
 /-- Make a valuation for `Γ.snoc t` from a valuation for `Γ` and an element of `t.toType`. -/
 def Valuation.snoc {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
-    (Γ.snoc t).Valuation := by
-  intro t' v
-  revert s x
-  refine Ctxt.Var.casesOn v ?_ ?_
-  · intro _ _ _ v s _; exact s v
-  · intro _ _ _ x; exact x
+    (Γ.snoc t).Valuation :=
+  HVector.cons x s
+-- TODO: `Valuation.snoc` really should be called `cons`
 
 infixl:50 "::ᵥ" => Valuation.snoc
-
-/-- Show the equivalence between the definition in terms of `snoc` and `snoc'`. -/
-theorem Valuation.snoc_eq {Γ : Ctxt Ty} {t : Ty} (s : Γ.Valuation) (x : toType t) :
-    (s.snoc x) = fun t var => match var with
-      | ⟨0, hvar⟩ => by
-          obtain rfl : _ = t := by simpa using hvar
-          exact x
-      | ⟨.succ i, hvar⟩ => s ⟨i, hvar⟩ := by
-  funext t' v
-  rcases v with ⟨⟨⟩|i, hi⟩
-  · injection hi with hi
-    subst hi
-    rfl
-  · rfl
 
 @[simp]
 theorem Valuation.snoc_last {t : Ty} (s : Γ.Valuation) (x : toType t) :
@@ -670,29 +680,26 @@ theorem Valuation.snoc_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦
   rfl
 
 /-- There is only one distinct valuation for the empty context -/
-theorem Valuation.eq_nil (V : Valuation (empty : Ctxt Ty)) : V = Valuation.nil := by
-  funext _ ⟨_, h⟩; contradiction
+theorem Valuation.eq_nil : ∀ (V : Valuation (empty : Ctxt Ty)), V = HVector.nil :=
+  HVector.eq_nil
 
-@[simp]
-theorem Valuation.snoc_toSnoc_last {Γ : Ctxt Ty} {t : Ty} (V : Valuation (Γ.snoc t)) :
-    snoc (fun _ v' => V v'.toSnoc) (V <|.last ..) = V := by
-  funext _ v
-  cases v using Var.casesOn <;> rfl
+-- @[simp] -- TODO: do we need this?
+-- theorem Valuation.snoc_toSnoc_last {Γ : Ctxt Ty} {t : Ty} (V : Valuation (Γ.snoc t)) :
+--     snoc (V.map Var.toSnoc) (V <|.last ..) = _ := by
+--   funext _ v
+--   cases v using Var.casesOn <;> rfl
 
 /-! ## Valuation Append -/
-
-instance (Γ : Ctxt Ty) (ts : List Ty) : HAppend (Valuation Γ) (HVector toType ts) (Valuation <| Γ ++ ts) where
-  hAppend V vals := fun t v =>
-    v.appendCases (@V t) (vals[·])
 
 variable {V : Γ.Valuation} {xs : HVector toType ts}
 
 @[simp] theorem Valuation.append_appendInl {v : Γ.Var t} :
-    (V ++ xs) v.appendInl = V v := by
-  simp [(· ++ ·)]
+    (xs ++ V)[v.appendInl] = V v := by
+  simp only [(· ++ ·)]
+  simp only [HVector.append_eq, coeFun_eq]
 
 @[simp] theorem Valuation.append_appendInr {v : Var ⟨ts⟩ t} :
-    (V ++ xs) v.appendInr = xs[v] := by
+    (xs ++ V)[v.appendInr] = xs[v] := by
   simp [(· ++ ·)]
 
 @[simp] theorem Valuation.append_inj {V : Γ.Valuation}
