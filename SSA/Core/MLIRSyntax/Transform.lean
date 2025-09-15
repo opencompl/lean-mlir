@@ -90,7 +90,7 @@ def addValToMapping (Γ : Ctxt d.Ty) (name : String) (ty : d.Ty) :
   let some nm := (←get).add name
     | throw <| .nameAlreadyDeclared name
   set nm
-  return ⟨DerivedCtxt.ofCtxt Γ |>.snoc ty, Ctxt.Var.last ..⟩
+  return ⟨DerivedCtxt.ofCtxt Γ |>.cons ty, Ctxt.Var.last ..⟩
 
 variable [ToString d.Ty]
 

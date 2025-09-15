@@ -30,20 +30,20 @@ set_option Elab.async false
 
 @[simp_denote]
 private theorem valuation_var_last_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t : Ty}
-  {s : Γ.Valuation} {x : TyDenote.toType t} : (s.snoc x) (Ctxt.Var.last Γ t) = x := by
+  {s : Γ.Valuation} {x : TyDenote.toType t} : (s.cons x) (Ctxt.Var.last Γ t) = x := by
   rfl
 
 open Lean Meta Elab in
-simproc [simp_denote] valuation_var_last_eq ((Ctxt.Valuation.snoc _ _) (Ctxt.Var.last _ _)) := fun e => do
+simproc [simp_denote] valuation_var_last_eq ((Ctxt.Valuation.cons _ _) (Ctxt.Var.last _ _)) := fun e => do
   let (_f, xs) := e.getAppFnArgs
   let Ty := xs[0]!
   let instTyDenote := xs[1]!
   let Γ := xs[2]!
   let t := xs[3]!
-  let s := xs[4]!
-  let x := xs[xs.size - 1 - 2]!
+  let x := xs[4]!
+  let V := xs[5]!
   let proof := mkAppN (mkConst ``valuation_var_last_eq.lemma) #[
-      Ty, instTyDenote, Γ, t, s, x
+      Ty, instTyDenote, Γ, t, V, x
     ]
   return .visit {
     expr := x,
@@ -132,4 +132,4 @@ simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun
 @[simp_denote]
 theorem valuation_var_snoc_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t t' : Ty}
   {s : Γ.Valuation} {x : TyDenote.toType t} {v : Γ.Var t'} :
-  (s.snoc x) (Ctxt.Var.toSnoc v) = s v := rfl
+  (s.cons x) (Ctxt.Var.toCons v) = s v := rfl

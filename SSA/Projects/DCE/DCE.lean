@@ -119,7 +119,7 @@ lemma Ctxt.getElem?_delete {i : Nat} {vs : DeleteRange Γ} :
 
 /-- Subtract one from the starting position of a `DeleteRange` (without changing
 the number of variables deleted). -/
-def DCE.DeleteRange.pred (vs : DeleteRange (Γ.snoc t)) (h : vs.start ≠ 0) :
+def DCE.DeleteRange.pred (vs : DeleteRange (Γ.cons t)) (h : vs.start ≠ 0) :
     DeleteRange Γ where
   start := vs.start.pred (fun h' => by simp [h'] at h)
   num := ⟨vs.num, by
@@ -132,8 +132,8 @@ lemma Ctxt.delete_eq_of_num_eq_zero {vs : DeleteRange Γ} (h : vs.num.val = 0) :
     Γ.delete vs = Γ := by
   ext i; grind [delete]
 
-lemma Ctxt.delete_snoc {vs : DeleteRange (Γ.snoc t)} {h : vs.start ≠ 0} :
-    (Γ.snoc t |>.delete vs) = (Γ.delete (vs.pred h) |>.snoc t) := by
+lemma Ctxt.delete_cons {vs : DeleteRange (Γ.cons t)} {h : vs.start ≠ 0} :
+    (Γ.cons t |>.delete vs) = (Γ.delete (vs.pred h) |>.cons t) := by
   ext i
   rw [Ctxt.getElem?_delete]
   induction i generalizing vs
@@ -145,7 +145,7 @@ lemma Ctxt.delete_snoc {vs : DeleteRange (Γ.snoc t)} {h : vs.start ≠ 0} :
     simp [this]
     rfl
   case succ i ih =>
-    simp only [length_snoc, getElem?_snoc_succ,
+    simp only [length_cons, getElem?_cons_succ,
       show i + 1 + vs.num = i + vs.num + 1 by omega]
     rw [Ctxt.getElem?_delete]
     simp [DeleteRange.pred]
@@ -451,7 +451,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure [.nat] :
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 
 def ex1_pre_dce : Com Ex ∅ .pure [.nat] :=
   Com.var (cst 1) <|

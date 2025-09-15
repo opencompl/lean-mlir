@@ -277,6 +277,6 @@ def test (w : ℕ) :
   .var (urem   w 0 0) <|
   .var (icmp   w .eq 0 0) <|
   .var (select w 0 1 1) <|
-  .ret ⟨0, by simp [Ctxt.snoc]⟩
+  .ret ⟨0, rfl⟩
 
 end ComWrappers

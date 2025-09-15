@@ -269,7 +269,7 @@ instance : DialectDenote SimpleReg where
     | .add, [(a : BitVec 32), (b : BitVec 32)]ₕ , _ => a + b ::ₕ .nil
     | .iterate k, [(x : BitVec 32)]ₕ, [(f : _ → _)]ₕ =>
       let f := fun y => (f y).getN 0
-      let f' (v :  BitVec 32) : BitVec 32 := f (Ctxt.Valuation.nil.snoc v)
+      let f' (v :  BitVec 32) : BitVec 32 := f (Ctxt.Valuation.nil.cons v)
       let y := k.iterate f' x
       [y]ₕ
 

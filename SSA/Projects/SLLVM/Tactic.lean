@@ -42,7 +42,7 @@ attribute [simp_sllvm]
   reduceIsRefinedBy
   -- Valuation append & accesses
   Valuation.append_nil Valuation.append_cons
-  Valuation.snoc_last Valuation.snoc_toSnoc
+  Valuation.cons_last Valuation.cons_toCons
   SSA.simpValuationApply
   -- Other general simp lemmas
   reduceIte bind_assoc

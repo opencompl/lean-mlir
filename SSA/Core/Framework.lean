@@ -1372,7 +1372,7 @@ nonrec abbrev Expr : Ctxt d.Ty → EffectKind → d.Ty → Type := (Expr d · ·
 
 variable {d} {Γ : Ctxt d.Ty} {eff : EffectKind} {t : d.Ty}
 
-nonrec abbrev Com.var : Expr d Γ eff t → Com d (Γ.snoc t) eff β → Com d Γ eff β :=
+nonrec abbrev Com.var : Expr d Γ eff t → Com d (Γ.cons t) eff β → Com d Γ eff β :=
   (Com.var · ·)
 
 end LeanMLIR.SingleReturnCompat

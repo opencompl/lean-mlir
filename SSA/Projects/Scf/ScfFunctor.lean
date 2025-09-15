@@ -236,9 +236,9 @@ instance [Monad d.m] : DialectDenote (Scf d) where
     | .if t t', (.cons (cond ) (.cons v .nil)),
          (.cons (f : Ctxt.Valuation ⟨[t]⟩ → d.m (HVector toType [t'])) (.cons (g : _ → _) .nil)) =>
          let body := if B.denote_eq ▸ cond then f else g
-      body (Ctxt.Valuation.nil.snoc v)
+      body (Ctxt.Valuation.nil.cons v)
     | .run _t, (.cons v .nil), (.cons (f : _ → _) .nil) =>
-        f (Ctxt.Valuation.nil.snoc v)
+        f (Ctxt.Valuation.nil.cons v)
     | .for ty, (.cons istart (.cons istep (.cons niter (.cons vstart .nil)))),
         (.cons (f : _  → _) .nil) => do
         let istart : ℤ := Z.denote_eq ▸ istart
@@ -259,7 +259,7 @@ instance [Monad d.m] : DialectDenote (Scf d) where
       let coe : ℤ = toType Z.ty := Z.denote_eq.symm
       let f' (v : d.m ℤ) : d.m ℤ := do
         let v ← v
-        let xs ← f (Ctxt.Valuation.nil.snoc (cast coe v))
+        let xs ← f (Ctxt.Valuation.nil.cons (cast coe v))
         let x := xs.getN 0
         return coe ▸ x
       let y ← (k.iterate f' (pure x))
@@ -553,8 +553,8 @@ theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.V
     {hvproof : Γ[v]? = some ty}
     {var : Γ.Var ty}
     (hvar : var = ⟨v, hvproof⟩) :
-    V var = (V ::ᵥ snocval) ⟨v+1, by simp [hvproof]⟩ := by
-  simp [Ctxt.Valuation.snoc, hvar]
+    V var = (snocval ::ᵥ V) ⟨v+1, by simp [hvproof]⟩ := by
+  simp [Ctxt.Valuation.cons, hvar]
 
 theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
   unfold lhs rhs

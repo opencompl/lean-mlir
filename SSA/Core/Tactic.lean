@@ -27,15 +27,15 @@ open Ctxt (Var Valuation DerivedCtxt Hom)
 open Lean Elab Tactic Meta
 
 attribute [simp_denote]
-  Int.ofNat_eq_coe DerivedCtxt.snoc DerivedCtxt.ofCtxt
-  DerivedCtxt.ofCtxt_empty Valuation.snoc_last
-  Var.zero_eq_last Var.succ_eq_toSnoc
-  Ctxt.empty Ctxt.empty_eq Ctxt.snoc Ctxt.Valuation.nil
-  Ctxt.Valuation.snoc_last Ctxt.map
-  Ctxt.Valuation.snoc_eval Ctxt.Valuation.snoc_toSnoc
+  Int.ofNat_eq_coe DerivedCtxt.cons DerivedCtxt.ofCtxt
+  DerivedCtxt.ofCtxt_empty Valuation.cons_last
+  Var.zero_eq_last Var.succ_eq_toCons
+  Ctxt.empty Ctxt.empty_eq Ctxt.cons Ctxt.Valuation.nil
+  Ctxt.Valuation.cons_last Ctxt.map
+  Ctxt.Valuation.cons_eval Ctxt.Valuation.cons_toCons
   HVector.map HVector.getN HVector.get HVector.toSingle HVector.toPair HVector.toTuple
   DialectDenote.denote Expr.op_mk Expr.args_mk
-  DialectMorphism.mapOp DialectMorphism.mapTy List.map Ctxt.snoc List.map
+  DialectMorphism.mapOp DialectMorphism.mapTy List.map Ctxt.cons List.map
   Function.comp Valuation.ofPair Valuation.ofHVector Function.uncurry
   List.length_singleton Fin.zero_eta List.map_eq_map List.map_cons List.map_nil
   bind_assoc pairBind
@@ -54,7 +54,7 @@ attribute [simp_denote]
   cast_eq
   -- Valuation append & accesses
   Valuation.append_nil Valuation.append_cons
-  Valuation.snoc_last Valuation.snoc_toSnoc
+  Valuation.cons_last Valuation.cons_toCons
   /- Misc-/
   and_true true_and implies_true
 
@@ -147,7 +147,7 @@ section SimpValuationApply
 That is, in `V ::ₕ x ::ₕ y` with `V` a free variable, return `#[y, x]`. -/
 private partial def valuationElements (e : Expr) (elems : Array Expr := #[]) : Array Expr :=
   match_expr e with
-  | Valuation.snoc _Ty _instTyDenote _Γ _t V x => valuationElements V (elems.push x)
+  | Valuation.cons _Ty _instTyDenote _Γ _t x V => valuationElements V (elems.push x)
   | _ => elems
 
 private partial def varToIndex (e : Expr) : Option Nat :=
@@ -155,14 +155,14 @@ private partial def varToIndex (e : Expr) : Option Nat :=
   | Var.mk _Ty _Γ _t i _hi      => Expr.numeral? i
   | Subtype.mk _α _p i _hi      => Expr.numeral? i
   | Var.last _Ty _Γ _t          => some 0
-  | Var.toSnoc _Ty _Γ _t _t' v  => (· + 1) <$> varToIndex v
+  | Var.toCons _Ty _Γ _t _t' v  => (· + 1) <$> varToIndex v
   | _                           => none
 
 /--
 `simpValuationApply` rewrites applications of *fully-concrete* valuations to
 *fully-concrete* variables.
 -/
-dsimproc [simp_denote] simpValuationApply (Valuation.snoc _ _ _) := fun e => do
+dsimproc [simp_denote] simpValuationApply ((Valuation.cons _ _) _) := fun e => do
   let mkApp2 V _t v := e
     | return .continue
   withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying access of variable: {e}") <| do
