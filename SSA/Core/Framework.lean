@@ -182,13 +182,13 @@ the body are impure!
 -/
 inductive Com : Ctxt d.Ty → EffectKind → List d.Ty → Type where
   | rets {Γ} {tys} {eff : EffectKind} (vs : HVector Γ.Var tys) : Com Γ eff tys
-  | var (e : Expr Γ eff ty) (body : Com (Γ ++ ty) eff β) : Com Γ eff β
+  | var (e : Expr Γ eff ty) (body : Com (ty ++ Γ) eff β) : Com Γ eff β
 end
 
 /-! ### `Expr` output context -/
 /-- The context immediately *after* this expression. -/
 abbrev Expr.outContext (_ : Expr d Γ eff ts) : Ctxt d.Ty :=
-  Γ ++ ts
+  ts ++ Γ
 
 /-! ### Regions -/
 abbrev Regions (regSig : RegionSignature d.Ty) : Type :=
@@ -337,7 +337,7 @@ def Expr.regArgs {Γ ts} (e : Expr d Γ eff ts) :
 
 /-- `e.returnVars` is the vector of variables in `e.outContext` which are bound by `e`. -/
 def Expr.returnVars (e : Expr d Γ eff tys) : HVector e.outContext.Var tys :=
-  .ofFn _ _ <| fun i => (Var.ofFin i).appendInr
+  .ofFn _ _ <| fun i => (Var.ofFin i).appendInl
 
 /-! Projection equations for `Expr` -/
 @[simp]
@@ -487,7 +487,7 @@ def Expr.denote {ty} (e : Expr d Γ eff ty) (V : Valuation Γ) :
   | ⟨op, ty_eq, heff, args, regArgs⟩ => do
       let argsDenote := args.map V
       let val ← EffectKind.liftEffect heff <| DialectDenote.denote op argsDenote regArgs.denote
-      return (V ++ val).cast (by rw [← ty_eq])
+      return (val ++ V).cast (by rw [← ty_eq])
 
 def Com.denote : Com d Γ eff ty → (Γv : Valuation Γ) →
     eff.toMonad d.m (HVector toType ty)
@@ -533,7 +533,7 @@ Unfortunately, if we define `Expr.denote` in terms of the projections directly,
 the termination checker fails to prove termination. Hence, this workaround.
 -/
 theorem Expr.denote_unfold (e : Expr d Γ eff ty) :
-    e.denote = fun V => (V ++ ·) <$> (e.denoteOp V) := by
+    e.denote = fun V => (· ++ V) <$> (e.denoteOp V) := by
   rcases e with ⟨op, rfl, _⟩
   simp [denote, denoteOp]
 
@@ -681,6 +681,7 @@ variable {Γ Γ' : Ctxt d.Ty} {t} (f : Γ.Hom Γ') (e : Expr d Γ eff t) (V : Γ
       >>= (f <| Valuation.comap · varsMap.append)
     = e.denote (V.comap varsMap) >>= f := by
   simp [denote_unfold]
+
 
 end Lemmas
 
@@ -934,7 +935,7 @@ end toPureLemmas
 
 theorem Expr.denote_pure {e : Expr d Γ .pure ty} :
     e.denote = fun (V : Valuation Γ) =>
-      return ((V ++ · : HVector _ _ → _) <| e.denoteOp V) := by
+      return ((· ++ V : HVector _ _ → _) <| e.denoteOp V) := by
   funext V t v
   simp [denote_unfold]; rfl
 
@@ -949,7 +950,10 @@ theorem Expr.denote_toPure? {e : Expr d Γ eff ty} {e': Expr d Γ .pure ty}
   funext V
   obtain ⟨h_pure, rfl⟩ : ∃ (h : e.HasPureOp), e.toPure h = e' := by
     simpa [toPure?] using he
-  rw [denote_pure, EffectKind.pure_pure, ← map_pure, Expr.pure_denoteOp_toPure, denote_unfold]
+  rw [denote_pure, denote_unfold]
+  simp only [← Expr.pure_denoteOp_toPure _ h_pure]
+  rw [map_pure]
+  simp
 
 /-!
 ### Semantic preservation of `Zipper.insertPureCom`
@@ -960,8 +964,8 @@ equivalent to the return value of the inserted program `newCom`, then the denota
 after insertion agrees with the original zipper. -/
 section DenoteInsert
 
-@[simp] theorem Expr.denote_appendInl (e : Expr d Γ .pure t) (V : Γ.Valuation) (v : Γ.Var u) :
-    e.denote V v.appendInl = V v := by
+@[simp] theorem Expr.denote_appendInr (e : Expr d Γ .pure t) (V : Γ.Valuation) (v : Γ.Var u) :
+    e.denote V v.appendInr = V v := by
   simp [denote_unfold, Id.map_eq']
 
 /-- Denoting any of the free variables of a program through `Com.denoteLets` just returns the
@@ -1000,11 +1004,11 @@ def Lets.getPureExprAux {Γ₁ Γ₂ : Ctxt d.Ty} {t} : Lets d Γ₁ eff Γ₂ �
   | .nil, _ => none
   | .var (Γ_out := Γ_out) (t := t) lets e, v => by
     cases v using Var.appendCases with
-    | left v =>
+    | right v =>
         apply cast ?_ <| Lets.getPureExprAux lets v
         simp
-    | right v =>
-        have h : Γ_out ++ (t.drop <| v.1 + 1) = e.outContext.dropUntil v.appendInr := by simp
+    | left v =>
+        have h : (Ctxt.dropUntil t v) ++ Γ_out = e.outContext.dropUntil v.appendInl := by simp
         let f := Hom.castCodomain h <| .appendCodomain .id
         exact e.toPure?.map (fun e => ⟨_, v, e.changeVars f⟩)
 
@@ -1018,11 +1022,11 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
 
 @[simp] theorem Lets.getPureExpr_nil : getPureExpr (.nil : Lets d Γ eff Γ) v = none := rfl
 
-@[simp] theorem Lets.getPureExpr_var_appendInr (lets : Lets d Γ_in eff Γ_out)
+@[simp] theorem Lets.getPureExpr_var_appendInl (lets : Lets d Γ_in eff Γ_out)
     (e : Expr d Γ_out eff ty) (v : Var ⟨ty⟩ u) :
-    getPureExpr (lets.var e) v.appendInr
+    getPureExpr (lets.var e) v.appendInl
     = e.toPure?.map (fun e => ⟨_, v, e.changeVars <| e.contextHom⟩) := by
-  simp only [getPureExpr, getPureExprAux, Ctxt.getElem?_ofList, Var.appendCases_appendInr,
+  simp only [getPureExpr, getPureExprAux, Ctxt.getElem?_ofList, Var.appendCases_appendInl,
     Option.map_map]
   congr 1
   funext e
@@ -1034,9 +1038,9 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
   simp; grind
 
 
-@[simp] theorem Lets.getPureExprAux_var_appendInl (lets : Lets d Γ_in eff Γ_out)
+@[simp] theorem Lets.getPureExprAux_var_appendInr (lets : Lets d Γ_in eff Γ_out)
     (e : Expr d Γ_out eff ty₁) (v : Var Γ_out ty₂) :
-    getPureExprAux (lets.var e) v.appendInl
+    getPureExprAux (lets.var e) v.appendInr
     = (getPureExprAux lets v).map fun ⟨_, w, e⟩ =>
         ⟨_, w, e.changeVars <| Hom.id.castCodomain (by simp)⟩ := by
   simp [getPureExprAux]
@@ -1049,19 +1053,19 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
     simp only [Option.map_some, cast_eq_iff_heq]
     congr 3 <;> simp [Expr.changeVars_castCodomain]
 
-@[simp] theorem Lets.getPureExpr_var_appendInl (lets : Lets d Γ_in eff Γ_out) (e : Expr d Γ_out _ ty₁)
+@[simp] theorem Lets.getPureExpr_var_appendInr (lets : Lets d Γ_in eff Γ_out) (e : Expr d Γ_out _ ty₁)
     (v : Var Γ_out ty₂):
-    getPureExpr (lets.var e) (v.appendInl)
+    getPureExpr (lets.var e) v.appendInr
     = (fun ⟨_, w, e'⟩ => ⟨_, w,  e'.changeVars <| e.contextHom⟩) <$> (getPureExpr lets v) := by
-  simp only [getPureExpr, getPureExprAux_var_appendInl, Option.map_eq_map, Option.map_map]
+  simp only [getPureExpr, getPureExprAux_var_appendInr, Option.map_eq_map, Option.map_map]
   congr 1
   funext ⟨_, e⟩
   simp only [Function.comp_apply, Expr.changeVars_changeVars, Sigma.mk.injEq, heq_eq_eq, true_and]
   congr 2
   funext t v
   apply Subtype.eq
-  simp [Hom.castCodomain, Hom.comp, Ctxt.dropUntilHom, Ctxt.dropUntilDiff, Ctxt.Diff.toHom, Var.appendInl]
-  omega
+  simp [Hom.castCodomain]
+  grind
 
 /-!
 ## Mapping
@@ -1119,7 +1123,7 @@ def Com.changeDialect : Com d Γ eff ty → Com d' (f.mapTy <$> Γ) eff (f.mapTy
   | .var body rest =>
       let rest :=
         rest.changeDialect.changeVars <|
-          Hom.id.castCodomain (by simp)
+          Hom.id.castCodomain (by simp; rfl)
       .var body.changeDialect rest
 termination_by com => sizeOf com
 
@@ -1147,7 +1151,7 @@ end
 def Lets.changeDialect : Lets d Γ_in eff Γ_out → Lets d' (f.mapTy <$> Γ_in) eff (f.mapTy <$> Γ_out)
   | nil => nil
   | var body e =>
-      cast (by simp) <| var (changeDialect body) (e.changeDialect f)
+      cast (by simp; rfl) <| var (changeDialect body) (e.changeDialect f)
 
 section Lemmas
 
@@ -1159,7 +1163,7 @@ section Lemmas
 @[simp] theorem Com.changeDialect_var (f : DialectMorphism d d')
     (e : Expr d Γ eff t) (body : Com d _ eff u) :
     (Com.var e body).changeDialect f
-    = have h := by simp
+    = have h := by simp; rfl
       Com.var (e.changeDialect f)
       <| (body.changeDialect f).changeVars (Hom.id.castCodomain h) := by
   simp only [changeDialect]
@@ -1269,8 +1273,8 @@ def Lets.vars : Lets d Γ_in eff Γ_out → Var Γ_out t → VarSet Γ_in
   | .nil, v => VarSet.ofVar v
   | .var lets e, v => by
       cases v using Var.appendCases with
-      | left v => exact lets.vars v
-      | right _ => exact lets.varsOfVec e.args
+      | right v => exact lets.vars v
+      | left _ => exact lets.varsOfVec e.args
 
 def Lets.varsOfVec (lets : Lets d Γ_in eff Γ_out) (vs : HVector Γ_out.Var ts) :
     VarSet Γ_in :=
@@ -1290,7 +1294,7 @@ section Lemmas
 
 @[simp] theorem Lets.vars_var {lets : Lets d Γ_in eff Γ_out}
     {t} {e : Expr d Γ_out eff t} {w : Γ_out.Var u} :
-    Lets.vars (Lets.var lets e) w.appendInl
+    Lets.vars (Lets.var lets e) w.appendInr
     = Lets.vars lets w := by
   simp [Lets.vars]
 

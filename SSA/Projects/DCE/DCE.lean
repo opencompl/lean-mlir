@@ -27,12 +27,12 @@ def full (Γ : Ctxt Ty) : DeleteRange Γ where
   num := ⟨Γ.length, by simp⟩
 
 def appendInl {Γ : Ctxt Ty} {ts : List Ty}
-    (r : DeleteRange Γ) : DeleteRange (Γ ++ ts) where
+    (r : DeleteRange Γ) : DeleteRange (⟨ts⟩ ++ Γ) where
   start := ⟨r.start + ts.length, by grind⟩
   num := ⟨r.num, by grind⟩
 
 def appendInr {Γ : Ctxt Ty} {ts : List Ty}
-    (r : DeleteRange ⟨ts⟩) : DeleteRange (Γ ++ ts) where
+    (r : DeleteRange ⟨ts⟩) : DeleteRange (⟨ts⟩ ++ Γ) where
   start := ⟨r.start, by grind⟩
   num := ⟨r.num, by grind⟩
 
@@ -72,7 +72,7 @@ def Ctxt.delete (Γ : Ctxt Ty) (vs : DeleteRange Γ) : Ctxt Ty :=
 
 @[simp] theorem Ctxt.delete_append_appendInl {Γ : Ctxt Ty} {us : List Ty}
     {r : DeleteRange Γ} :
-    (Γ ++ us).delete r.appendInl = (Γ.delete r) ++ us := by
+    (⟨us⟩ ++ Γ).delete r.appendInl = ⟨us⟩ ++ (Γ.delete r) := by
   rcases Γ with ⟨Γ⟩
   ext i t
   simp only [delete, ofList_append, length_ofList, List.length_append,
@@ -173,17 +173,17 @@ def Deleted (Γ: Ctxt Ty) (vs : DeleteRange Γ) (Γ' : Ctxt Ty) : Prop :=
 
 /-- build a `Deleted` for a `(Γ ++ αs) → Γ`-/
 def Deleted.deleteAppend (Γ : Ctxt Ty) (αs : List Ty) :
-    Deleted (Γ ++ αs) (DeleteRange.full ⟨αs⟩).appendInr Γ := by
+    Deleted (⟨αs⟩ ++ Γ) (DeleteRange.full ⟨αs⟩).appendInr Γ := by
   ext i
   rw [Ctxt.getElem?_delete]
   rcases Γ
   simp
   grind [List.getElem?_append_right]
 
-/-- append an `ωs` to both the input and output contexts of `Deleted Γ v Γ'` -/
+/-- prepend an `ωs` to both the input and output contexts of `Deleted Γ v Γ'` -/
 def Deleted.append {Γ : Ctxt Ty} {vs : DeleteRange Γ}
     (DEL : Deleted Γ vs Γ') (ωs : List Ty) :
-    Deleted (Γ ++ ωs) vs.appendInl (Γ' ++ ωs) := by
+    Deleted (⟨ωs⟩ ++ Γ) vs.appendInl (⟨ωs⟩ ++ Γ') := by
   ext i
   subst DEL
   simp
@@ -192,7 +192,7 @@ def Deleted.toHom (h : Deleted Γ r Γ') : Γ'.Hom Γ :=
   fun _ v => Hom.delete r (v.castCtxt h)
 
 @[simp] lemma Deleted.toHom_append {Γ Γ' : Ctxt Ty} {vs : DeleteRange Γ}
-    (DEL : Deleted (Γ ++ us) vs.appendInl (Γ' ++ us)) :
+    (DEL : Deleted (⟨us⟩ ++ Γ) vs.appendInl (⟨us⟩ ++ Γ')) :
     DEL.toHom
     = have DEL' : Deleted Γ vs Γ' := by
         rcases Γ'
@@ -211,13 +211,13 @@ def Deleted.toHom (h : Deleted Γ r Γ') : Γ'.Hom Γ :=
   simp only [toHom, Hom.delete, Var.val_castCtxt, DeleteRange.val_start_appendInl,
     DeleteRange.val_num_appendInl, Hom.append, Var.castCtxt_rfl]
   cases v using Var.appendCases with
-  | left _  => simp; grind
-  | right v =>
+  | right _  => simp; grind
+  | left v =>
     have := v.val_lt
     simp; grind
 
 @[simp] lemma Deleted.toHom_last
-    (DEL : Deleted (Γ ++ us) (DeleteRange.full ⟨us⟩).appendInr Γ) :
+    (DEL : Deleted (⟨us⟩ ++ Γ) (DeleteRange.full ⟨us⟩).appendInr Γ) :
     DEL.toHom = Hom.id.appendCodomain := by
   simp [Deleted] at DEL
   funext t v
@@ -345,8 +345,8 @@ partial def dce_ {Γ : Ctxt d.Ty} {t}
     match Com.deleteVar? DEL body with
     | .none => -- we don't succeed, so DCE the child, and rebuild the same `let` binding.
       let ⟨Γ', hom', ⟨body', hbody'⟩⟩
-        : Σ (Γ' : Ctxt d.Ty) (hom: Hom Γ' (Γ ++ tys)),
-        { body' : Com d Γ' .pure t //  ∀ (V : (Γ ++ tys).Valuation),
+        : Σ (Γ' : Ctxt d.Ty) (hom: Hom Γ' (⟨tys⟩ ++ Γ)),
+        { body' : Com d Γ' .pure t //  ∀ (V : (tys ++ Γ).Valuation),
         body.denote V = body'.denote (V.comap hom)} :=
         (dce_ body)
       let com' := Com.var e (body'.changeVars hom')

@@ -494,7 +494,6 @@ open Arith in
 theorem correct : Com.denote (lhs v0) = Com.denote (rhs v0) := by
   unfold lhs rhs
   simp_peephole
-
   intros A B
   rw [Scf.LoopBody.counterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
   simp only [add_left_iterate, nsmul_eq_mul, Int.mul_comm]

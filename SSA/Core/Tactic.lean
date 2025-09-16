@@ -16,7 +16,7 @@ variable [DialectSignature d] [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [Law
 @[simp_denote] theorem Expr.denote_unfold' {ty} (e : Expr d Γ eff ty) :
     e.denote V = do
       let x ← e.denoteOp V
-      return V ++ x := by
+      return x ++ V := by
   rw [Expr.denote_unfold, ← map_eq_pure_bind]
 
 namespace SSA
@@ -53,8 +53,10 @@ attribute [simp_denote]
   pure_bind
   cast_eq
   -- Valuation append & accesses
-  Valuation.append_nil Valuation.append_cons
+  Valuation.nil_append Valuation.cons_append
   Valuation.cons_last Valuation.cons_toCons
+  Valuation.instAppendHVector
+  Valuation.ofHVector_nil Valuation.ofHVector_cons
   /- Misc-/
   and_true true_and implies_true
 
