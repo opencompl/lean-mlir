@@ -20,14 +20,5 @@ builtin.module {
   "llvm.return"(%0) : (i64) -> ()
  }
 -/
-
-def test_multi_args := [llvm|
-{
-^0(%arg0 : i64):
-  %0 = llvm.trunc %arg0 : i64 to i32
-  %1 = llvm.zext %0 : i32 to i64
-  "llvm.return"(%1) : (i64) -> ()
-}
-]
-
-#eval Com.toPrint test_multi_args
+#guard_msgs in
+#eval! passriscv64 "SSA/Projects/LLVMRiscV/Tests/example.mlir"
