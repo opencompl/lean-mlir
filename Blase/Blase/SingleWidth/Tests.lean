@@ -49,7 +49,11 @@ theorem check_axioms_cadical (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .circuit_cadical_verified} )
 
 /--
-info: 'check_axioms_cadical' depends on axioms: [propext, Classical.choice, Lean.ofReduceBool, Lean.trustCompiler, Quot.sound]
+info: 'TestsSingleWidth.check_axioms_cadical' depends on axioms: [propext,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Lean.trustCompiler,
+ Quot.sound]
 -/
 #guard_msgs in #print axioms check_axioms_cadical
 
@@ -57,7 +61,7 @@ theorem check_axioms_presburger (w : Nat) (a b : BitVec w) : a + b = b + a := by
   bv_automata_gen (config := {backend := .automata} )
 
 /--
-info: 'check_axioms_presburger' depends on axioms: [hashMap_missing,
+info: 'TestsSingleWidth.check_axioms_presburger' depends on axioms: [hashMap_missing,
  propext,
  Classical.choice,
  Lean.ofReduceBool,
@@ -480,4 +484,3 @@ theorem e_331 (x y : BitVec w):
 
 end BvAutomataTests
 
-end TestSingleWidth
