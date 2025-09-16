@@ -34,7 +34,7 @@ variable [DialectSignature d]
 def argVector.decEq : DecidableEq (HVector (Ctxt.Var Γ) ts) := inferInstance
 
 
-/-- denoting a `var` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
+/-- denoting a `var` is the same as prepending the denotation of `e` onto the old valuation `V`. -/
 @[simp]
 theorem Lets.denote_var_pure [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [LawfulMonad d.m]
   {Γstart Γ : Ctxt d.Ty}
@@ -83,7 +83,7 @@ def State.vars2vars (self : State d lets) (vs : HVector Γ.Var ts) :
 
 variable [LawfulMonad d.m]
 
-def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
+def State.consNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
     {Γ : Ctxt d.Ty} {α}
     {lets : Lets d Γstart .pure Γ}
     (s : State d lets) (e : Expr d Γ .pure α) : State d (Lets.var lets e) where
@@ -163,19 +163,8 @@ def ExprRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
     -- TODO: extend to Com.
 end RemapVar
 
-
-/-
-e: Expr d Γ .pure α
-body: Com d (Ctxt.snoc Γ α) α✝
-e': Expr d Γ .pure α
-he': Expr.denote e' = Expr.denote e
-v'?: Option { v' // ∀ (V : Ctxt.Valuation Γstart), Lets.denote lets V v' =
-  Expr.denote e (Lets.denote lets V) }
-s': State d.Op (Lets.var lets e') := snocNewExpr2Cache s e'
--/
-
 open Ctxt (Valuation) in
-def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
+def State.consOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
     {Γ : Ctxt d.Ty} {α}
     {lets : Lets d Γstart .pure Γ}
     (s : State d lets) (enew : Expr d Γ .pure α) (eold : Expr d Γ .pure α) (henew :
@@ -347,7 +336,7 @@ def State.cseCom {α}
       let ⟨⟨e', he'⟩, v'?⟩ := s.cseExpr e
       match v'? with
       | .none => /- no variable to replace. -/
-        let s' := s.snocNewExpr2Cache (e := e')
+        let s' := s.consNewExpr2Cache (e := e')
         /- add this expression into the cache for the latest variable. -/
         let ⟨body', hbody'⟩ := s'.cseCom body
         ⟨.var e' body',  by
@@ -357,7 +346,7 @@ def State.cseCom {α}
             rw [← hbody']
             rw [he']⟩
       | .some ⟨v', hv'⟩ =>
-        let s' := s.snocOldExpr2Cache (enew := e') (eold := e) (henew := by { intros V; rw [he'] })
+        let s' := s.consOldExpr2Cache (enew := e') (eold := e) (henew := by { intros V; rw [he'] })
           (vold := v') (hv := by {intros V; rw [hv'] })
           -- add this expression into the cache for the latest variable.
         let ⟨body', hbody'⟩ := s'.cseCom body
@@ -440,7 +429,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure [.nat] :
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 
 def ex1_pre_cse : Com Ex ∅ .pure [.nat] :=
   Com.var (cst 1) <|
