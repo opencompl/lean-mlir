@@ -159,7 +159,7 @@ def sorted_line_plot_all(parameter):
 
     plt.xlabel('Program Index')
     plt.ylabel(parameter)
-    plt.title(f'{parameter} Per Program')
+    # plt.title(f'{parameter} Per Program')
     # plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
     #                             sorted_df['LEANMLIR_opt_' + parameter].min(), 
     #                             sorted_df['LLVM_globalisel_' + parameter].min(), 
@@ -218,13 +218,13 @@ def scatter_plot(parameter, selector1, selector2) :
     plt.xlim(plot_min, plot_max)
     plt.ylim(plot_min, plot_max)
 
-    plt.xticks(range(int(plot_min), int(plot_max), 1))
-    plt.yticks(range(int(plot_min), int(plot_max), 1))
+    plt.xticks(range(0, int(plot_max), int((plot_max)/5)))
+    plt.yticks(range(0, int(plot_max), int((plot_max)/5)))
     plt.gca().set_aspect('equal', adjustable='box') 
 
     plt.tight_layout()
 
-    pdf_filename = plots_dir + f"scatter_plot_{selector1}_vs_{selector2}.pdf"
+    pdf_filename = plots_dir + f"{parameter}_scatter_plot_{selector1}_vs_{selector2}.pdf"
     plt.savefig(pdf_filename)
     print(f"\nScatter plot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
@@ -241,7 +241,7 @@ def sorted_line_plot(parameter, selector1, selector2):
 
     plt.xlabel('Program Index')
     plt.ylabel(parameters_labels[parameter])
-    plt.title(f'{parameters_labels[parameter]} Per Program, {selector1} vs. {selector2}')
+    # plt.title(f'{parameters_labels[parameter]} Per Program, {selector1} vs. {selector2}')
     # plt.yticks(range(int(plot_min), int(plot_max + 1), 1))
     plt.legend()
     plt.tight_layout()
