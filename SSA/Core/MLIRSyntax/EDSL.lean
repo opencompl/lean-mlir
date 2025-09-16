@@ -26,7 +26,7 @@ partial def ctxtNf (as : Expr) : MetaM Expr := do
   match_expr as with
     | List.cons _ a as =>
         let as ← ctxtNf as
-        mkAppM ``Ctxt.snoc #[as, a]
+        mkAppM ``Ctxt.snoc #[a, as]
     | _ => return as
 
 /-- `comNf` reduces an expression of type `Com` to something in between whnf and normal form.

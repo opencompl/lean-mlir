@@ -602,7 +602,7 @@ the congruence, you can do: `rw [← Lets.denotePure]; congr`
 /-! ### simp-lemmas about `denote` functions -/
 section Lemmas
 
-@[simp] theorem Expr.comap_denote_snocRight (e : Expr d Γ .pure ty) (V : Γ.Valuation) :
+@[simp] theorem Expr.comap_denote_contextHom (e : Expr d Γ .pure ty) (V : Γ.Valuation) :
     (Valuation.comap (e.denote V) e.contextHom) = V := by
   funext t v; simp [Expr.denote_unfold, Id.map_eq']
 
