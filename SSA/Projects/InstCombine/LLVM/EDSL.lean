@@ -55,10 +55,10 @@ def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags := do
                 MLIR encodes them using integer attributes. -/
               let ⟨n, _ ⟩ ← op.getIntAttr "overflowFlags"
               match n with
-              | 0 => return (⟨false, false⟩)
-              | 1 => return (⟨true, false⟩)
-              | 2 => return (⟨false, true⟩)
-              | 3 => return (⟨true, true⟩)
+              | 0 => return { nsw := false, nuw := false}
+              | 1 => return { nsw := true, nuw := false}
+              | 2 => return { nsw := false, nuw := true}
+              | 3 => return { nsw := true, nuw := true}
               | s => throw <| .generic s!"The overflow flag with predicate {s} is not allowed. \
                 We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
 /--
