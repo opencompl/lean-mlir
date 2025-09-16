@@ -188,9 +188,14 @@ def parseSignature (ref : TSyntax ``LeanMLIR.Parser.signature) : m Term :=
       | `(argumentList| ${$args})  => pure args
       | `(argumentList| ($args,*)) => `([$args,*])
       | ref => throwUnexpectedSyntax ref
+
+    isListLiteral (e : Term) : Bool :=
+      e.raw.isOfKind `«term[_]»
     mkReturnType (ret : Term) : m Term := do
-      -- TODO: for now we assume there is just a single return type
-      `([$ret])
+      if isListLiteral ret then
+        return ret
+      else
+        `([$ret])
 
     mkSignature (argumentTypes : TSyntax ``argumentList) (regions : Array Term)
         (returnType : Term) (effectKind : Term) :
