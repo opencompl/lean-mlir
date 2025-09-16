@@ -68,7 +68,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Simple Γ .pure [.int] :=
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 
 namespace MLIR2Simple
 
@@ -301,7 +301,7 @@ def iterate {Γ : Ctxt _} (k : Nat) (input : Var Γ int) (body : Com SimpleReg �
     (args := .cons input .nil)
     (regArgs := HVector.cons body HVector.nil)
 
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 
 namespace P1
 /-- running `f(x) = x + x` 0 times is the identity. -/
@@ -315,7 +315,7 @@ def lhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
 def rhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
   Com.rets [⟨0, by rfl⟩]ₕ
 
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 --
 -- set_option trace.Meta.Tactic.simp true in
 open Ctxt (Var Valuation DerivedCtxt) in

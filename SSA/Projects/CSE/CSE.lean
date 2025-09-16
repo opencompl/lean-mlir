@@ -350,7 +350,7 @@ def State.cseCom {α}
           (vold := v') (hv := by {intros V; rw [hv'] })
           -- add this expression into the cache for the latest variable.
         let ⟨body', hbody'⟩ := s'.cseCom body
-        -- TODO: delete the ``e` to get a `body'` in context `Γ`, not `Γ.snoc α`.
+        -- TODO: delete the ``e` to get a `body'` in context `Γ`, not `Γ.cons α`.
         ⟨.var e body' -- we still keep the `e` for now. In the next version, we will delete the `e`
         , by
             intros V

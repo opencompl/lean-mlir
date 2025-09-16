@@ -542,19 +542,6 @@ def rhs : Com ScfArith ⟨[/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /
                         ⟨/- v0 -/ 5, rfl⟩  rgn) <|
   Com.rets [⟨0, rfl⟩]ₕ
 
-
-/-- rewrite a variable whose index is '> 0' to a new variable which is the
-'snoc' of a smaller variable.  this enables rewriting with
-`Ctxt.Valuation.snoc_toSnoc`. -/
-theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.Valuation Γ)
-    {snocval : ⟦snocty⟧}
-    {v: ℕ}
-    {hvproof : Γ[v]? = some ty}
-    {var : Γ.Var ty}
-    (hvar : var = ⟨v, hvproof⟩) :
-    V var = (snocval ::ᵥ V) ⟨v+1, by simp [hvproof]⟩ := by
-  simp [Ctxt.Valuation.cons, hvar]
-
 theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
   unfold lhs rhs
   simp_peephole
@@ -622,7 +609,7 @@ theorem correct :
 end ForFusion
 
 namespace IterateIdentity
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def lhs : Com ScfArith ⟨[.int]⟩ .impure .int :=
@@ -635,7 +622,7 @@ def lhs : Com ScfArith ⟨[.int]⟩ .impure .int :=
 def rhs : Com ScfArith ⟨[.int]⟩ .impure .int :=
   Com.ret ⟨0, by rfl⟩
 
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 
 -- TODO: Sadly we've lost the ability to phrase this as a `PeepHoleRewrite`, since we mandate
 --       that peephole must be pure, but we also have engineered the framework such that (for now)

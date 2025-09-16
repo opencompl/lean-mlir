@@ -130,6 +130,6 @@ simproc [simp_denote] riscvArgsFromHybrid_cons_eq (riscvArgsFromHybrid _) := fun
 
 /-- Simplify the proof goals for the hybrid dialect.-/
 @[simp_denote]
-theorem valuation_var_snoc_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t t' : Ty}
+theorem valuation_var_cons_eq.lemma {Ty : Type} [TyDenote Ty] {Γ : Ctxt Ty} {t t' : Ty}
   {s : Γ.Valuation} {x : TyDenote.toType t} {v : Γ.Var t'} :
   (s.cons x) (Ctxt.Var.toCons v) = s v := rfl
