@@ -337,7 +337,7 @@ def generate_benchmarks(file_name, num, jobs):
     run_command(cmd, log_file)
 
     # extract mlir blocks and put them all in separate files
-    extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, 100)
+    extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, num)
 
     MLIR_opt_file2ret = dict()
     # Run mlir-opt and convert into LLVM dialect

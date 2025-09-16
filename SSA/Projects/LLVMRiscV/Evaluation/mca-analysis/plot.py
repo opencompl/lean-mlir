@@ -148,13 +148,14 @@ def sorted_line_plot_all(parameter):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
 
-    sorted_df = df.sort_values(by = 'LEANMLIR_' + parameter)
+    sorted_df = df.sort_values(by = ['LEANMLIR_' + parameter, 'LEANMLIR_opt_' + parameter, 
+                                        'LLVM_globalisel_' + parameter, 'LLVM_selectiondag_' + parameter])
 
-    plt.plot(sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
-        color = light_green)
-    plt.plot(sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
-    plt.plot(sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
-    plt.plot(sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
+    plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
+        color= light_green)
+    plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
+    plt.plot(range(len(sorted_df)), sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
+    plt.plot(range(len(sorted_df)), sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
 
     plt.xlabel('Program Index')
     plt.ylabel(parameter)
@@ -233,10 +234,10 @@ def sorted_line_plot(parameter, selector1, selector2):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
 
-    sorted_df = df.sort_values(by = selector1 + '_' + parameter)
+    sorted_df = df.sort_values(by = [selector1 + '_' + parameter, selector2 +'_'+ parameter])
 
-    plt.plot(sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
-    plt.plot(sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
+    plt.plot(range(len(sorted_df)), sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
+    plt.plot(range(len(sorted_df)), sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
 
     plt.xlabel('Program Index')
     plt.ylabel(parameters_labels[parameter])
