@@ -7,7 +7,7 @@ open LLVM
 open BitVec
 
 /-!
-CHeck that
+Ceck that
 ^bb0(%arg0: i64, %arg1: i64, %arg2: i1):
 "llvm.return"(%arg0) : (i64) -> ()
 
@@ -15,10 +15,12 @@ is parsed correctly.
 -/
 
 /--
-builtin.module {
+info: builtin.module {
 ^bb0(%0 : i64, %1 : i64, %2 : i1):
   "llvm.return"(%0) : (i64) -> ()
  }
+---
+info: 0
 -/
 #guard_msgs in
 #eval! passriscv64 "SSA/Projects/LLVMRiscV/Tests/example.mlir"
