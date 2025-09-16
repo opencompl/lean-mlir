@@ -681,6 +681,19 @@ def trimTensor (tensor : List Int) : List Int
 
 end Tensor
 
+/-! ## R toExpr -/
+section ToExpr
+
+#check
+#check R.fromPoly (?z : Int)
+
+def R.toExpr (a : R q n) : Lean.Expr :=
+  let a : ZMod _ := a
+  let a : Int := a
+  _
+
+end ToExpr
+
 section Signature
 
 variable [Fact (q > 1)]
@@ -696,7 +709,7 @@ inductive Ty (q : Nat) (n : Nat)
   | integer : Ty q n
   | tensor : Ty q n
   | polynomialLike : Ty q n
-  deriving DecidableEq, Repr
+  deriving DecidableEq, Repr, Lean.ToExpr
 
 instance : Inhabited (Ty q n) := ⟨Ty.index⟩
 instance : TyDenote (Ty q n) where
@@ -729,6 +742,7 @@ inductive Op (q : Nat) (n : Nat)
   | const (c : R q n) : Op q n
   | const_int (c : Int) : Op q n
   | const_idx (i : Nat) : Op q n
+  deriving Lean.ToExpr
 
 /-- `FHE` is the dialect for fully homomorphic encryption -/
 abbrev FHE (q n : Nat) [Fact (q > 1)] : Dialect where

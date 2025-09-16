@@ -1,5 +1,7 @@
 import SSA.Core.MLIRSyntax.AST
-import SSA.Core.MLIRSyntax.EDSL
+import SSA.Core.MLIRSyntax.GenericParser
+import SSA.Core.MLIRSyntax.Transform
+
 import Lean
 /- Parse  a raw file into `MLIR.AST.*` constructs. -/
 open Lean

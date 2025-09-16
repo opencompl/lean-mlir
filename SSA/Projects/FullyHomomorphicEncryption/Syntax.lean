@@ -6,7 +6,7 @@ Syntax definitions for FHE, providing a custom [poly|...] with syntax sugar.
 
 Authors: Andrés Goens<andres@goens.org>, Siddharth Bhat<siddu.druid@gmail.com>
 -/
-import SSA.Core.MLIRSyntax.EDSL
+import SSA.Core
 import SSA.Projects.FullyHomomorphicEncryption.Basic
 
 open MLIR AST Ctxt
@@ -198,4 +198,4 @@ elab "[poly" qi:term "," ni:term "," hq:term " | " reg:mlir_region "]" : term =>
   let n : Q(Nat) ← elabTermEnsuringTypeQ ni q(Nat)
   let _factval ← elabTermEnsuringTypeQ hq q(Fact ($q > 1))
 
-  SSA.elabIntoCom reg q(FHE $q $n)
+  SSA.elabIntoCom' reg q(FHE $q $n)

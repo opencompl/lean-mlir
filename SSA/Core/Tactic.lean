@@ -3,7 +3,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import SSA.Core.Framework
 import SSA.Core.Util
-import SSA.Core.MLIRSyntax.EDSL
 import TacBench
 import SSA.Core.Tactic.SimpSet
 
