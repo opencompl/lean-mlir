@@ -61,3 +61,7 @@ jobs:
           lake build AliveExamples
           (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
           bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+
+      - name: Compile ISL
+        run: |
+          lake -R build ISL
