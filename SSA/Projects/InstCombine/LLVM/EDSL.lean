@@ -44,14 +44,13 @@ def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags := do
   match op.getAttr? "overflowFlags" with
   | .none => return {}
   | .some y => match y with
-    | .opaque_ "llvm.overflow" "nsw" => return (⟨true, false⟩)
-    | .opaque_ "llvm.overflow" "nuw" => return (⟨false, true⟩)
-    | .opaque_ "llvm.overflow" "none" => return (⟨false, false⟩)
+    | .opaque_ "llvm.overflow" "nsw" => return ⟨true, false⟩
+    | .opaque_ "llvm.overflow" "nuw" => return ⟨false, true⟩
+    | .opaque_ "llvm.overflow" "none" => return ⟨false, false⟩
     | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"]
-    | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] =>
-          return (⟨true, true⟩)
+    | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] => return ⟨true, true⟩
     | _ =>  /- This case covers generic MLIR syntax for operations with attributes as
-            MLIR encodes them using integer attributes. -/
+            MLIR encodes them usin integer attributes. -/
           let ⟨n, _ ⟩ ← op.getIntAttr "overflowFlags"
           match n with
           | 0 => return { nsw := false, nuw := false}
