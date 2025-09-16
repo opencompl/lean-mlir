@@ -47,6 +47,10 @@ jobs:
         run: |
           lake -R build opt
 
+      - name: Compile `LLVMRiscV` Tests 
+        run: |
+          lake -R build SSA.Projects.LLVMRiscV.Tests.Tests
+
 #      This broke the build during a recent update
 #      - name: LLVM opt round trip test
 #        run: |
