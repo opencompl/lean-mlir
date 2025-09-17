@@ -14,13 +14,13 @@ variable {Ty} [TyDenote Ty]
 
 /-- Remap the last variables in a context, to get a new context without those variables -/
 def Hom.remapAppend {αs : List Ty} (Γ : Ctxt Ty) (var : HVector Γ.Var αs) :
-  Ctxt.Hom (Γ ++ αs) Γ := fun ty' var' => by
+  Ctxt.Hom (⟨αs⟩ ++ Γ) Γ := fun ty' var' => by
     cases var' using Ctxt.Var.appendCases
-    case left var' => exact var'
-    case right v => exact var[v]
+    case right var' => exact var'
+    case left v => exact var[v]
 
 @[simp] lemma Valuation.comap_remapAppend {Γ : Ctxt Ty} (V : Valuation Γ) (vs : HVector _ ts) :
-    V.comap (.remapAppend _ vs) = V ++ (vs.map V) := by
+    V.comap (.remapAppend _ vs) = (vs.map V) ++ V := by
   funext t v; cases v using Var.appendCases <;> simp [Hom.remapAppend]
 
 end Ctxt
@@ -34,7 +34,7 @@ variable [DialectSignature d]
 def argVector.decEq : DecidableEq (HVector (Ctxt.Var Γ) ts) := inferInstance
 
 
-/-- denoting a `var` is the same as `snoc`ing the denotation of `e` onto the old valuation `V`. -/
+/-- denoting a `var` is the same as prepending the denotation of `e` onto the old valuation `V`. -/
 @[simp]
 theorem Lets.denote_var_pure [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [LawfulMonad d.m]
   {Γstart Γ : Ctxt d.Ty}
@@ -42,7 +42,7 @@ theorem Lets.denote_var_pure [TyDenote d.Ty] [DialectDenote d] [Monad d.m] [Lawf
   (e : Expr d Γ .pure α)
   (V : Ctxt.Valuation Γstart) :
   (lets.var e).denote V
-  = (lets.denotePure V ++ e.pdenoteOp (lets.denote V)) := by
+  = (e.pdenoteOp (lets.denote V) ++ lets.denotePure V) := by
   simp [Expr.denote_unfold]; rfl
 
 /-! # CSE  -/
@@ -83,7 +83,7 @@ def State.vars2vars (self : State d lets) (vs : HVector Γ.Var ts) :
 
 variable [LawfulMonad d.m]
 
-def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
+def State.consNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
     {Γ : Ctxt d.Ty} {α}
     {lets : Lets d Γstart .pure Γ}
     (s : State d lets) (e : Expr d Γ .pure α) : State d (Lets.var lets e) where
@@ -96,13 +96,13 @@ def State.snocNewExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
     -- ^^ If `eneedleΓ` is none, this expression actually uses β in some
     --    nontrivial way, and there's nothing we can really do
     match s.expr2cache _ eneedleΓ with /- find in cache -/
-    | .some ⟨v', hv'⟩ => .some ⟨v'.map fun _ v => v.appendInl, by
+    | .some ⟨v', hv'⟩ => .some ⟨v'.map fun _ v => v.appendInr, by
         simp [heneedleΓ, hv', HVector.map_map]
       ⟩
     | .none => /- not in cache, check if new expr. -/
       if hβ : α = β then
         if exprEq : (hβ ▸ eneedleΓ) = e then
-          some ⟨hβ ▸ (Var.allVarsIn α).map (fun _ v => v.appendInr), by
+          some ⟨hβ ▸ (Var.allVarsIn α).map (fun _ v => v.appendInl), by
             subst hβ
             intro V
             ext i
@@ -163,18 +163,8 @@ def ExprRemapVar [DecidableEq d.Ty] [DecidableEq d.Op]
     -- TODO: extend to Com.
 end RemapVar
 
-
-/-
-e: Expr d Γ .pure α
-body: Com d (Ctxt.snoc Γ α) α✝
-e': Expr d Γ .pure α
-he': Expr.denote e' = Expr.denote e
-v'?: Option { v' // ∀ (V : Ctxt.Valuation Γstart), Lets.denote lets V v' =
-  Expr.denote e (Lets.denote lets V) }
-s': State d.Op (Lets.var lets e') := snocNewExpr2Cache s e'
--/
-
-def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
+open Ctxt (Valuation) in
+def State.consOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
     {Γ : Ctxt d.Ty} {α}
     {lets : Lets d Γstart .pure Γ}
     (s : State d lets) (enew : Expr d Γ .pure α) (eold : Expr d Γ .pure α) (henew :
@@ -185,35 +175,35 @@ def State.snocOldExpr2Cache [DecidableEq d.Ty] [DecidableEq d.Op]
     State d (Lets.var lets enew) where
   var2var := fun v => by
     cases v using Ctxt.Var.appendCases
-    case left v => -- old variable, look up 'var2var'
+    case right v => -- old variable, look up 'var2var'
       let ⟨v', hv'⟩ := s.var2var v
-      apply Subtype.mk v'.appendInl
+      apply Subtype.mk v'.appendInr
       simp [Lets.denote_var_pure, hv']
 
-    case right v => -- new variable, return the CSE'd variable.
-      apply Subtype.mk <| vold[v].appendInl
-      simp_all [Expr.denote_unfold]
+    case left v => -- new variable, return the CSE'd variable.
+      apply Subtype.mk <| vold[v].appendInr
+      intro V
+      specialize henew V
+      simp only [Expr.denote_unfold, Valuation.instAppendHVector, Id.map_eq'] at henew
+      rw [Valuation.append_inj_left, Valuation.ofHVector_inj] at henew
+      simp [henew, hv]
+
   expr2cache := fun β eneedle =>
     let homRemap := Ctxt.Hom.remapAppend Γ vold
-    let lastVar := (Var.allVarsIn α).map (fun _ v => v.appendInr)
+    let lastVar := (Var.allVarsIn α).map (fun _ v => v.appendInl)
     let ⟨eneedle', heneedle'⟩ := ExprRemapVar lets homRemap vold lastVar (by
         intros Vstart
         ext i
-        simp +zetaDelta only [List.get_eq_getElem, HVector.get_map,
-          Ctxt.Valuation.comap_remapAppend, Var.allVarsIn, HVector.map_map,
-          Ctxt.Valuation.append_appendInr, HVector.getElem_map, HVector.get_ofFn]
+        simp +zetaDelta only [List.get_eq_getElem, HVector.get_map, Valuation.comap_remapAppend,
+          Valuation.instAppendHVector, Var.allVarsIn, HVector.map_map, Valuation.append_appendInl,
+          Valuation.ofHVector_apply, HVector.getElem_map, HVector.get_ofFn]
         rw [← HVector.getElem_ofFin_eq_get]
         rfl
       )  eneedle
     match s.expr2cache β eneedle' with
     | .none => .none
-    | .some ⟨e', he'⟩ => .some ⟨e'.map fun _ v => v.appendInl, by
-        intro V
-        simp_all only [Expr.denote_unfold, Ctxt.Valuation.comap_remapAppend, Lets.denote_var_pure,
-          Lets.denotePure, Expr.pdenoteOp, HVector.map_map, Ctxt.Valuation.append_appendInl,
-          homRemap]
-        congr 1
-        exact (henew V).symm
+    | .some ⟨e', he'⟩ => .some ⟨e'.map fun _ v => v.appendInr, by
+        simp_all [Expr.denote_unfold, Lets.denotePure, Expr.pdenoteOp, HVector.map_map, homRemap]
       ⟩
 
 /-- Replace the variables in `as` with new variables that have the same valuation -/
@@ -346,7 +336,7 @@ def State.cseCom {α}
       let ⟨⟨e', he'⟩, v'?⟩ := s.cseExpr e
       match v'? with
       | .none => /- no variable to replace. -/
-        let s' := s.snocNewExpr2Cache (e := e')
+        let s' := s.consNewExpr2Cache (e := e')
         /- add this expression into the cache for the latest variable. -/
         let ⟨body', hbody'⟩ := s'.cseCom body
         ⟨.var e' body',  by
@@ -356,11 +346,11 @@ def State.cseCom {α}
             rw [← hbody']
             rw [he']⟩
       | .some ⟨v', hv'⟩ =>
-        let s' := s.snocOldExpr2Cache (enew := e') (eold := e) (henew := by { intros V; rw [he'] })
+        let s' := s.consOldExpr2Cache (enew := e') (eold := e) (henew := by { intros V; rw [he'] })
           (vold := v') (hv := by {intros V; rw [hv'] })
           -- add this expression into the cache for the latest variable.
         let ⟨body', hbody'⟩ := s'.cseCom body
-        -- TODO: delete the ``e` to get a `body'` in context `Γ`, not `Γ.snoc α`.
+        -- TODO: delete the ``e` to get a `body'` in context `Γ`, not `Γ.cons α`.
         ⟨.var e body' -- we still keep the `e` for now. In the next version, we will delete the `e`
         , by
             intros V
@@ -439,7 +429,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure [.nat] :
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 
 def ex1_pre_cse : Com Ex ∅ .pure [.nat] :=
   Com.var (cst 1) <|

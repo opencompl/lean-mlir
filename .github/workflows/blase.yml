@@ -1,17 +1,25 @@
-name: tools, scaling, and auto-generated statements
+name: Blase Build & Test
 on:
   push:
     branches:
       - "main"
+    paths:
+      - 'Blase/**'
   pull_request:
+    paths:
+      - 'Blase/**'
+
   merge_group:
 
 permissions:
   contents: write
+  packages: write
 
 jobs:
   build:
-    name: tools, scaling, and auto-generated stmts
+    name: blase
+    permissions:
+      pull-requests: write
     # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
     # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
     runs-on: ubuntu-latest
@@ -30,8 +38,8 @@ jobs:
         id: cache-lake
         uses: actions/cache@v4
         with:
-          path: .lake
-          key: ${{ runner.os }}-lake-tools-${{ hashFiles('lake-manifest.json') }}
+          path: Blase/.lake
+          key: ${{ runner.os }}-lake-${{ hashFiles('Blase/lake-manifest.json') }}-4
 
       - name: Get mathlib cache (only if no cache available)
         if: steps.cache-lake.outputs.cache-hit != 'true'
@@ -39,29 +47,10 @@ jobs:
         run: |
           (lake -R exe cache get ; true) # download cache of mathlib docs.
 
-      - name: Compile `mlirnatural` Executable 🧐
+      - name: Compile Blase
         run: |
-          lake -R build mlirnatural
+          lake -R build Blase --iofail
 
-      - name: Compile `opt` Executable 🧐
+      - name: Test Blase
         run: |
-          lake -R build opt
-
-      - name: Compile `LLVMRiscV` Tests 
-        run: |
-          lake -R build SSA.Projects.LLVMRiscV.Tests.Tests
-
-#      This broke the build during a recent update
-#      - name: LLVM opt round trip test
-#        run: |
-#          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
-
-      - name: Compile Alive Scaling
-        run: |
-          lake -R build SSA.Projects.InstCombine.ScalingTest
-
-      - name: Check for changes in AliveStatements
-        run: |
-          lake build AliveExamples
-          (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
-          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+          pushd Blase && lake test; popd
