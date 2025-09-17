@@ -26,6 +26,8 @@ deriving Repr, DecidableEq
 structure Config where
   outputType : Config.OutputType := .text
   outputPath : Option System.FilePath := .none
+  /-- Whether trace should be logged. -/
+  storeTrace : Bool := false
   /-- Number of samples to run each tactic. -/
   nSamples : Nat := 1
 
@@ -215,7 +217,7 @@ def evalTacBench : Tactic := fun
             timeElapsed := result.timeElapsed
             nSamples := result.nSamples
             iSample := result.iSample
-            trace := result.trace
+            trace := if cfg.storeTrace then result.trace else "<elided>"
           }
           let outStr := record |> toJson |>.compress
           logInfo <| outStr
