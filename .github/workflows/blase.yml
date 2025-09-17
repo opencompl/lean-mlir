@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   build:
-    name: core library
+    name: blase
     permissions:
       pull-requests: write
     # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
