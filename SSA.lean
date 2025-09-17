@@ -29,4 +29,3 @@ import SSA.Projects.SLLVM.SLLVM
 -- EXPERIMENTAL
 -- ============
 
-import SSA.Experimental.Bits.Generalize
