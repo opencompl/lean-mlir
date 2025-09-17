@@ -185,7 +185,7 @@ match ctxt, values with
       | bitvec w =>
         let newTy : ⟦bitvec w⟧ :=
           PoisonOr.ofOption <| Option.map (BitVec.ofInt w) val
-        Ctxt.Valuation.snoc valuation' newTy
+        Ctxt.Valuation.cons newTy valuation'
 
 def ConcreteCliTest.eval (test : ConcreteCliTest)
     (values : List.Vector (Option Int) test.context.length) :
