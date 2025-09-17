@@ -486,14 +486,14 @@ section ToFSM
 
 
 /-- the FSM that corresponds to a given nat-predicate. -/
-structure NatFSM (wcard tcard : Nat) (v : Nondep.WidthExpr) where
+structure NatFSM (wcard tcard pcard : Nat) (v : Nondep.WidthExpr) where
   toFsm : FSM (StateSpace wcard tcard pcard)
 
-structure TermFSM (wcard tcard : Nat) (t : Nondep.Term) where
+structure TermFSM (wcard tcard pcard : Nat) (t : Nondep.Term) where
   toFsmZext : FSM (StateSpace wcard tcard pcard)
-  width : NatFSM wcard tcard t.width
+  width : NatFSM wcard tcard pcard t.width
 
-structure PredicateFSM (wcard tcard : Nat) (p : Nondep.Predicate) where
+structure PredicateFSM (wcard tcard pcard : Nat) (p : Nondep.Predicate) where
   toFsm : FSM (StateSpace wcard tcard pcard)
 
 /--
@@ -565,8 +565,8 @@ structure HPredicateEnv {wcard tcard : Nat}
     heq_width : ∀ (v : Fin pcard),
       fsmEnv (StateSpace.predVar v) = BitStream.ofProp (penv v)
 
-structure HNatFSMToBitstream {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat}
-   (fsm : NatFSM wcard tcard (.ofDep v)) : Prop where
+structure HNatFSMToBitstream {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat} {pcard : Nat}
+   (fsm : NatFSM wcard tcard pcard (.ofDep v)) : Prop where
   heq :
     ∀ (wenv : Fin wcard → Nat) (fsmEnv : StateSpace wcard tcard pcard → BitStream),
     (henv : HWidthEnv fsmEnv wenv) → fsm.toFsm.eval fsmEnv =
@@ -580,7 +580,7 @@ followed by the output at a width 'i'.
 -/
 structure HTermFSMToBitStream {w : WidthExpr wcard}
   {tctx : Term.Ctx wcard tcard}
-  {t : Term tctx w} (fsm : TermFSM wcard tcard (.ofDep t)) : Prop where
+  {t : Term tctx w} (fsm : TermFSM wcard tcard pcard (.ofDep t)) : Prop where
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard pcard → BitStream),
@@ -590,7 +590,7 @@ structure HTermFSMToBitStream {w : WidthExpr wcard}
 
 structure HPredFSMToBitStream {pcard : Nat}
   {tctx : Term.Ctx wcard tcard}
-  {p : Predicate tctx pcard} (fsm : PredicateFSM wcard tcard (.ofDep p)) : Prop where
+  {p : Predicate tctx pcard} (fsm : PredicateFSM wcard tcard pcard (.ofDep p)) : Prop where
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (tenv : tctx.Env wenv)
       (penv : Predicate.Env pcard)
