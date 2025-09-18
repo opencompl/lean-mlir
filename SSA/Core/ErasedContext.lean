@@ -492,9 +492,13 @@ variable {A : α → _} {as : List α} (xs : HVector A as) {Γ : Ctxt α}
   simp only [GetElem.getElem]
   simp
 
--- @[simp] theorem getElem_appendInl (xs : HVector A (as ++ bs)) (v : Var Γ a) :
---     xs[v] = _ := by
---   sorry
+@[simp] theorem getElem_appendInl (xs : HVector A as) (ys : HVector A bs) (v : Var ⟨as⟩ a) :
+    (xs ++ ys)[v.appendInl] = xs[v] := by
+  sorry
+
+@[simp] theorem getElem_appendInr (xs : HVector A as) (ys : HVector A bs) (v : Var ⟨bs⟩ a) :
+    (xs ++ ys)[v.appendInr] = ys[v] := by
+  sorry
 
 end HVector
 namespace Ctxt
@@ -634,10 +638,10 @@ be a functions.
 instance : CoeFun (Γ.Valuation) (fun _ => {ty : Ty} → Γ.Var ty → ⟦ty⟧) where
   coe (V : HVector _ _) := (V[·])
 
-/--
-The `·[·]` notation is preferred over the function coercion for `Valuation`s
--/
-@[simp] theorem coeFun_eq (V : Γ.Valuation) {t} (v : Γ.Var t) : V v = V[v] := rfl
+/-- Extensionality in terms of getElem of variables -/
+@[ext] theorem ext (V W : Γ.Valuation) (h : ∀ {t} (v : Γ.Var t), V v = W v) :
+    V = W := by
+  ext i; exact h (Var.ofFin i)
 
 /-!
 ### Basic Valuation API
@@ -703,34 +707,33 @@ theorem Valuation.cons_eval {ty : Ty} (Γ : Ctxt Ty) (V : Γ.Valuation) (v : ⟦
 theorem Valuation.eq_nil : ∀ (V : Valuation (empty : Ctxt Ty)), V = HVector.nil :=
   HVector.eq_nil
 
-@[simp]
-theorem Valuation.cons_toCons_last {Γ : Ctxt Ty} {t : Ty} (V : Valuation (Γ.cons t)) :
-    cons (V <|.last ..) (fun _ v' => V v'.toCons) = V := by
-  funext _ v
-  cases v using Var.casesOn <;> rfl
+-- @[simp]
+-- theorem Valuation.cons_toCons_last {Γ : Ctxt Ty} {t : Ty} (V : Valuation (Γ.cons t)) :
+--     cons (V <|.last ..) (fun _ v' => V v'.toCons) = V := by
+--   funext _ v
+--   cases v using Var.casesOn <;> rfl
 
 /-! ## Valuation Append -/
 
-instance (Γ Δ : Ctxt Ty) : HAppend (Valuation Γ) (Valuation Δ) (Valuation <| Γ ++ Δ) where
-  hAppend V W := fun t v =>
-    v.appendCases (@V t) (@W t)
+instance Valuation.instAppend (Γ Δ : Ctxt Ty) : HAppend (Valuation Γ) (Valuation Δ) (Valuation <| Γ ++ Δ) where
+  hAppend (V W : HVector _ _) := V ++ W
 
 variable {V : Γ.Valuation} {W : Δ.Valuation}
 
 @[simp] theorem Valuation.append_appendInl {v : Γ.Var t} :
-    (V ++ W) v.appendInl = V v := by
-  simp [(· ++ ·)]
+    (V ++ W) v.appendInl = V v :=
+  HVector.getElem_appendInl V W v
 
 @[simp] theorem Valuation.append_appendInr {v : Var Δ t} :
-    (V ++ W) v.appendInr = W v := by
-  simp [(· ++ ·)]
+    (V ++ W) v.appendInr = W v :=
+  HVector.getElem_appendInr V W v
 
 @[simp] theorem Valuation.append_inj_right {V : Γ.Valuation} {W W' : Δ.Valuation} :
     (V ++ W) = (V ++ W') ↔ W = W' where
   mpr := by rintro rfl; rfl
   mp := by
     intro h
-    funext t v
+    ext t v
     suffices (V ++ W) v.appendInr = (V ++ W') v.appendInr by simpa
     rw [h]
 
