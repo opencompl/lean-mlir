@@ -7,7 +7,7 @@ namespace Tests
 
 /--
 info: builtin.module { ⏎
-^bb0(%0 : i1, %1 : i64):
+^bb0(%0 : i64, %1 : i1):
   "llvm.return"(%0) : (i64) -> ()
  }
 -/
@@ -18,7 +18,7 @@ info: builtin.module { ⏎
 
 /--
 info: { ⏎
-^entry(%0 : i1, %1 : i64):
+^entry(%0 : i64, %1 : i1):
   "return"(%0) : (i64) -> ()
  }
 -/
@@ -29,7 +29,7 @@ info: { ⏎
 
 /--
 info: {
-  ^entry(%0 : i1, %1 : i64):
+  ^entry(%0 : i64, %1 : i1):
     return %0 : (i64) → ()
 }
 -/
