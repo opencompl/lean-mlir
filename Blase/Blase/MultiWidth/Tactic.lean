@@ -521,10 +521,6 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .ne w ta tb, state)
-    | Nat  =>
-      let (ta, state) ← collectTerm state a
-      let (tb, state) ← collectTerm state b
-      return (.binRel .ne w ta tb, state)
     | _ => throwError m!"expected bitvector disequality, found disequality of type '{α}': {indentD e}"
   | Or p q =>
     let (ta, state) ← collectBVPredicateAux state p
@@ -548,9 +544,25 @@ info: MultiWidth.Predicate.or {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (
 -/
 #guard_msgs in #check MultiWidth.Predicate.or
 
+/--
+info: MultiWidth.Predicate.binWidthRel {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (k : WidthBinaryRelationKind)
+  (wa wb : WidthExpr wcard) : Predicate ctx
+-/
+#guard_msgs in #check MultiWidth.Predicate.binWidthRel
+
 def Expr.mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
     (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
   match p with
+  | .binWidthRel relKind v w =>
+    let vExpr ← mkWidthExpr wcard v
+    let wExpr ← mkWidthExpr wcard w
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.binWidthRel)
+      #[mkNatLit wcard, mkNatLit tcard, tctx,
+        toExpr relKind,
+        vExpr,
+        wExpr]
+    debugCheck out
+    return out
   | .binRel relKind w a b =>
     let wExpr ← mkWidthExpr wcard w
     let aExpr ← mkTermExpr wcard tcard tctx a
@@ -759,7 +771,7 @@ def revertBvHyps (g : MVarId) : SolverM MVarId := do
   let mut hypsToRevert : Array FVarId := #[]
   for hyp in (← g.getNondepPropHyps) do
     -- | Save and restore state, since we just want to test if we can collect.
-    let state ← get 
+    let state ← get
     try
       let _ ← collectBVPredicateAux {} (← hyp.getType)
       hypsToRevert := hypsToRevert.push hyp
