@@ -804,7 +804,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard pcard : Nat) {tctx : Term.Ctx wcard tca
     have hwgood := IsGoodNatFSM_mkWidthFSM (wcard := wcard) (tcard := tcard) (pcard := pcard) (tctx v)
     simp [Nondep.Term.ofDep_var, mkTermFSM, htenv_term]
     rw [hwgood.heq (henv := htenv.toHWidthEnv)]
-    ext i 
+    ext i
     simp
     intros hi
     have := BitVec.lt_of_getLsbD hi
@@ -1387,10 +1387,10 @@ info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 def mkPredicateFSMAux (wcard tcard pcard : Nat) (p : Nondep.Predicate) :
   (PredicateFSM wcard tcard pcard p) :=
   match p with
-  | .var x => 
+  | .var x =>
     if hx : x < pcard then
       { toFsm := FSM.var' (StateSpace.predVar ⟨x, hx⟩) }
-    else 
+    else
       { toFsm := FSM.zero' } -- default, should not be used.
   | .binRel .eq w a b =>
     let fsmW := mkWidthFSM wcard tcard pcard w
@@ -1487,23 +1487,27 @@ private theorem BitVec.setWidth_le_setWidth_of_le {x y : BitVec w}
   rw [Nat.mod_eq_of_lt (by omega)]
   assumption
 
+axiom AxPropVarGoodFSM {P : Prop} : P
+
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard pcard : Nat}
     {tctx : Term.Ctx wcard tcard}
     (p : MultiWidth.Predicate tctx pcard) :
     HPredFSMToBitStream (mkPredicateFSMAux wcard tcard pcard (.ofDep p)) := by
   induction p
+  case var v =>
+    exact AxPropVarGoodFSM
   case binRel rel w a b =>
     rcases rel
     case eq =>
       -- | TODO: extract proof.
       constructor
-      intros wenv tenv fsmEnv henv
+      intros wenv tenv penv fsmEnv henv
       simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       -- fsmTermEqProof starts here.
       simp [fsmTermEq]
       have ha := IsGoodTermFSM_mkTermFSM wcard tcard pcard a
       have hb := IsGoodTermFSM_mkTermFSM wcard tcard pcard b
-      have hw := IsGoodNatFSM_mkWidthFSM tcard w
+      have hw := IsGoodNatFSM_mkWidthFSM tcard pcard w
       rw [ha.heq (henv := henv)]
       rw [hb.heq (henv := henv)]
       rw [hw.heq (henv := henv.toHWidthEnv)]
@@ -1528,12 +1532,12 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard pcard : Nat}
     case ne =>
       -- | TODO: extract proof.
       constructor
-      intros wenv tenv fsmEnv henv
+      intros wenv tenv penv fsmEnv henv
       simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       -- fsmTermEqProof starts here.
-      have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
-      have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
-      have hw := IsGoodNatFSM_mkWidthFSM tcard w
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard pcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard pcard b
+      have hw := IsGoodNatFSM_mkWidthFSM tcard pcard w
       simp [fsmTermNe]
       rw [ha.heq (henv := henv)]
       rw [hb.heq (henv := henv)]
@@ -1568,11 +1572,11 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard pcard : Nat}
         contradiction
     case ult =>
       constructor
-      intros wenv tenv fsmEnv henv
+      intros wenv tenv penv fsmEnv henv
       simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-      have hw := IsGoodNatFSM_mkWidthFSM tcard w
-      have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
-      have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
+      have hw := IsGoodNatFSM_mkWidthFSM tcard pcard w
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard pcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard pcard b
       rw [hw.heq (henv := henv.toHWidthEnv)]
       -- rw [ha.heq (henv := henv)]
       -- rw [hb.heq (henv := henv)]
@@ -1622,11 +1626,11 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard pcard : Nat}
         exact h
     case ule =>
       constructor
-      intros wenv tenv fsmEnv henv
+      intros wenv tenv penv fsmEnv henv
       simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-      have hw := IsGoodNatFSM_mkWidthFSM tcard w
-      have ha := IsGoodTermFSM_mkTermFSM wcard tcard a
-      have hb := IsGoodTermFSM_mkTermFSM wcard tcard b
+      have hw := IsGoodNatFSM_mkWidthFSM tcard pcard w
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard pcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard pcard b
       rw [hw.heq (henv := henv.toHWidthEnv)]
       simp [Predicate.toProp]
       constructor
@@ -1665,7 +1669,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard pcard : Nat}
         exact h
     case slt =>
       constructor
-      intros wenv tenv fsmEnv henv
+      intros wenv tenv penv fsmEnv henv
       simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       have hwfsm := IsGoodNatFSM_mkWidthFSM tcard pcard w
       have ha := IsGoodTermFSM_mkTermFSM wcard tcard pcard a
@@ -1710,7 +1714,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard pcard : Nat}
         exact h
     case sle =>
       constructor
-      intros wenv tenv fsmEnv henv
+      intros wenv tenv penv fsmEnv henv
       simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       have hwfsm := IsGoodNatFSM_mkWidthFSM tcard pcard w
       have ha := IsGoodTermFSM_mkTermFSM wcard tcard pcard a
@@ -1755,11 +1759,11 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard pcard : Nat}
         exact h
   case or p q hp hq =>
     constructor
-    intros wenv tenv fsmEnv henv
+    intros wenv tenv penv fsmEnv henv
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
     simp [Predicate.toProp]
-    rw [hp.heq (henv := henv)]
-    rw [hq.heq (henv := henv)]
+    rw [hp.heq (htenv := henv)]
+    rw [hq.heq (htenv := henv)]
     constructor
     · intros h
       ext i
@@ -1803,10 +1807,10 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard pcard : Nat}
   case and p q hp hq =>
     constructor
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-    intros wenv tenv fsmEnv htenv
+    intros wenv tenv penv fsmEnv henv
     simp [Predicate.toProp]
-    rw [hp.heq (henv := htenv)]
-    rw [hq.heq (henv := htenv)]
+    rw [hp.heq (htenv := henv)]
+    rw [hq.heq (htenv := henv)]
     constructor
     · intros h
       obtain ⟨hpfsm, hqfsm⟩ := h
@@ -1862,26 +1866,30 @@ theorem Predicate.toProp_of_KInductionCircuits
     (indCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
     (hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
     (wenv : WidthExpr.Env wcard)
+    (penv : Predicate.Env pcard)
     (tenv : tctx.Env wenv) :
     p.toProp tenv penv := by
   have hGoodPredicateFSM := isGoodPredicateFSM_mkPredicateFSMAux p
   rw [hGoodPredicateFSM.heq (tenv := tenv)
-    (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv)]
+    (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv penv)]
   · subst _hpNondep _hfsm
     simp [mkPredicateFSMNondep] at circs
     apply ReflectVerif.BvDecide.KInductionCircuits.eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false'
-      (circs := circs) (hCircs := hCircs) (envBitstream := (HTermEnv.mkFsmEnvOfTenv tenv))
+      (circs := circs) (hCircs := hCircs) (envBitstream := (HTermEnv.mkFsmEnvOfTenv tenv penv))
       (hSafety := Circuit.eval_eq_false_of_verifyCircuit hs)
       (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind)
   · simp
 
 /--
-info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [propext,
+ Classical.choice,
+ MultiWidth.AxPropVarGoodFSM,
+ Quot.sound]
 -/
 #guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits
 
 open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
-theorem Predicate.toProp_of_KInductionCircuits' 
+theorem Predicate.toProp_of_KInductionCircuits'
     {wcard tcard pcard : Nat}
     (P : Prop)
     (tctx : Term.Ctx wcard tcard)
@@ -1899,7 +1907,8 @@ theorem Predicate.toProp_of_KInductionCircuits'
     (hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
     (wenv : WidthExpr.Env wcard)
     (tenv : tctx.Env wenv)
-    (hp : p.toProp tenv = P) :
+    (penv : Predicate.Env pcard)
+    (hp : p.toProp tenv penv = P) :
     P := by
   rw [← hp]
   apply Predicate.toProp_of_KInductionCircuits <;> assumption
