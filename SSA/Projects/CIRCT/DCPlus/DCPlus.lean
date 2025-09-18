@@ -8,7 +8,6 @@ import SSA.Core.MLIRSyntax.EDSL2
 import SSA.Core.Tactic.SimpSet
 
 
-
 namespace MLIR2DCPlus
 section Dialect
 
@@ -29,7 +28,9 @@ inductive Op
 | snd
 | pair (w : Nat)
 | fstVal (w : Nat)
+| fstValPure (w : Nat)
 | sndVal (w : Nat)
+| sndValPure (w : Nat)
 | fstVal' (w : Nat)
 | sndVal' (w : Nat)
 | tokVal' (w : Nat)
@@ -54,7 +55,9 @@ def_signature for DCPlus where
   | .fst => (Ty.tokenstream2) → (Ty.tokenstream)
   | .fstVal t => (Ty.valuetokenstream t) → Ty.valuestream t
   | .fstVal' t => (Ty.variadicvaluetokenstream t) → Ty.valuestream t
+  | .fstValPure t => (Ty.valuestream2 t) → Ty.valuestream t
   | .snd => (Ty.tokenstream2) → (Ty.tokenstream)
+  | .sndValPure t => (Ty.valuestream2 t) → Ty.valuestream t
   | .pair w => (Ty.valuestream w, Ty.valuestream w) → Ty.valuestream2 w
   | .sndVal t => (Ty.valuetokenstream t) → Ty.tokenstream
   | .sndVal' t => (Ty.variadicvaluetokenstream t) → Ty.valuestream t
@@ -84,8 +87,10 @@ toType := fun
 def_denote for DCPlus where
   | .fst => fun s => [s.fst]ₕ
   | .fstVal _ => fun s => [s.fst]ₕ
+  | .fstValPure _ => fun s => [s.fst]ₕ
   | .fstVal' _ => fun s => [s.fst.mapOpt (·[0]?)]ₕ
   | .snd => fun s => [s.snd]ₕ
+  | .sndValPure _ => fun s => [s.snd]ₕ
   | .pair _ => fun s₁ s₂ => [(s₁, s₂)]ₕ
   | .sndVal _ => fun s => [s.snd]ₕ
   | .sndVal' _ => fun s => [s.fst.mapOpt (·[0]?)]ₕ
@@ -233,6 +238,22 @@ def snd {Γ} (a : Γ.Var (MLIR2DCPlus.Ty.tokenstream2)) : Expr (DCPlus) Γ .pure
     (args := .cons a <| .nil)
     (regArgs := .nil)
 
+def fstValPure (a : Γ.Var (MLIR2DCPlus.Ty.valuestream2 r)) : Expr (DCPlus) Γ .pure (.valuestream r) :=
+    Expr.mk
+    (op := .fstValPure r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
+def sndValPure (a : Γ.Var (MLIR2DCPlus.Ty.valuestream2 r)) : Expr (DCPlus) Γ .pure (.valuestream r) :=
+    Expr.mk
+    (op := .sndValPure r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
 def not (a : Γ.Var (MLIR2DCPlus.Ty.valuestream 1)) : Expr (DCPlus) Γ .pure (.valuestream 1) :=
     Expr.mk
     (op := .not)
@@ -251,12 +272,14 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
     else
       return ⟨_, [.tokenstream], source⟩
-  | op@"DCPlus.fork" | op@"DCPlus.forkVal" | op@"DCPlus.sink" | op@"DCPlus.fst" | op@"DCPlus.snd" | op@"DCPlus.not" =>
+  | op@"DCPlus.fork" | op@"DCPlus.forkVal" | op@"DCPlus.sink" | op@"DCPlus.fst" | op@"DCPlus.snd" | op@"DCPlus.fstValPure" | op@"DCPlus.sndValPure" |  op@"DCPlus.not" =>
     match opStx.args with
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
       | .tokenstream2, "DCPlus.fst" => return ⟨_, [.tokenstream], fst v₁⟩
+      | .valuestream2 r, "DCPlus.fstValPure" => return ⟨_, [.valuestream r], fstValPure v₁⟩
+      | .valuestream2 r, "DCPlus.sndValPure" => return ⟨_, [.valuestream r], sndValPure v₁⟩
       | .tokenstream2, "DCPlus.snd"  => return ⟨_, [.tokenstream], snd v₁⟩
       | .tokenstream, "DCPlus.sink" => return ⟨_, [.tokenstream], sink v₁⟩
       | .tokenstream, "DCPlus.fork"  => return ⟨_, [.tokenstream2], fork v₁⟩
