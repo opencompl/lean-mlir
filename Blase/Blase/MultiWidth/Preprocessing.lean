@@ -28,14 +28,14 @@ with BitVec.ofNat -/
   x * (BitVec.ofNat w n) = BitVec.ofNat w n * x := by rw [BitVec.mul_comm]
 
 /-! Normal form for < and ≤: we normalize them into ult and ule -/
-@[bv_multi_width_normalize] theorem BitVec.lt_eq_ult {x y : BitVec w} : 
+@[bv_multi_width_normalize] theorem BitVec.lt_eq_ult {x y : BitVec w} :
     (x < y) = ((x.ult y) = true) := by
   simp [instLTBitVec, BitVec.ult]
 
 
 /-! Normal form for < and ≤: we normalize them into 'ult = true' and 'ule = true'.
 Recall that booleans are coerced into props by writing it as '<bool> = true'. -/
-@[bv_multi_width_normalize] theorem BitVec.le_eq_ule {x y : BitVec w} : 
+@[bv_multi_width_normalize] theorem BitVec.le_eq_ule {x y : BitVec w} :
     (x ≤ y) = ((x.ule y) = true) := by
   simp [instLEBitVec, BitVec.ule]
 
@@ -330,6 +330,22 @@ theorem BitVec.le_ule {x y : BitVec w} : (x ≤ y) = (x.ule y) := by
 attribute [bv_multi_width_normalize] decide_eq_true_iff decide_eq_decide Bool.and_eq_decide Bool.or_eq_decide Bool.decide_beq_decide
 
 theorem bool_eq_iff (b₁ b₂ : Bool) : (b₁ = b₂) = (b₁ ↔ b₂) := by grind
+
+/-- Check that v < w is canonicalized it v + 1 ≤ w -/
+@[bv_multi_width_normalize]
+theorem Nat.ule_of_le (v w : Nat) : v < w ↔ v + 1 ≤ w := by omega
+
+/-- Check that v ≠ w is canonicalized it v < w ∨ w < v -/
+@[bv_multi_width_normalize]
+theorem Nat.ne_of_lt_or_lt (v w : Nat) : v ≠ w ↔ (v < w ∨ w < v) := by omega
+
+/-- Check that not lt is simplified to 'lt' on natural numbers. -/
+@[bv_multi_width_normalize]
+theorem Nat.lt_of_not_le (v w : Nat) : ¬ (v ≤ w) ↔ w < v := by omega
+
+/-- Check that not lt is simplified to 'lt' on natural numbers. -/
+@[bv_multi_width_normalize]
+theorem Nat.le_of_not_lt (v w : Nat) : ¬ (v < w) ↔ w ≤ v := by omega
 
 open Lean in
 simproc [bv_multi_width_normalize] boolEqIff (@Eq Bool _ _) := fun e => do

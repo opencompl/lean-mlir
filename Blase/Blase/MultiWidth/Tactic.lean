@@ -178,6 +178,7 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
       if let .some n ← getNatValue? e then
         return (MultiWidth.Nondep.WidthExpr.const n, state)
     let (wix, wToIx) := state.wToIx.findOrInsertVal e
+    -- TODO: implement 'w + K'.
     return (.var wix, { state with wToIx := wToIx })
 
 /-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
@@ -489,12 +490,25 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 #guard_msgs in
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
 
+
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
     SolverM (MultiWidth.Nondep.Predicate × CollectState) := do
   match_expr e with
+  | LE.le α _inst v w =>
+    match_expr α with
+    | Nat =>
+      let (v, state) ← collectWidthAtom state v
+      let (w, state) ← collectWidthAtom state w
+      return (.binWidthRel .le v w, state)
+    | _ =>
+      throwError m!"expected (· ≤ ·) for natural numbers, found:  {indentD e}"
   | Eq α a b =>
     match_expr α with
+    | Nat =>
+      let (a, state) ← collectWidthAtom state a
+      let (b, state) ← collectWidthAtom state b
+      return (.binWidthRel .eq a b, state)
     | BitVec w =>
       let (w, state) ← collectWidthAtom state w
       let (ta, state) ← collectTerm state a

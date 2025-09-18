@@ -160,31 +160,27 @@ example (w : Nat) (a : BitVec w) : (a &&& a = 0#w) → a = 0#w := by
    bv_multi_width
 
 /--
-Is this true at bitwidth 1? Not it is not!
-So we need an extra hypothesis that rules out bitwifth 1.
-We do this by saying that either the given condition, or 1+1 = 0.
-I'm actually not sure why I need to rule out bitwidth 0? Mysterious!
+Is this true at bitwidth 1? Not it is not, because 'a = -a' really says '2a = 0',
+but at width 1, it's not true.
 -/
-example (w : Nat) (a : BitVec w) : (w = 2) → ((a = - a) → a = 0#w) := by
-  fail_if_success bv_multi_width
-  sorry
+example (w : Nat) (a : BitVec w) : (w = 2) → ((a = - a) → (a = 0#w ∨ a = 2#w)) := by
+  bv_multi_width (config := { widthAbstraction := .never })
+
+example (w : Nat) (a : BitVec w) : (w ≤ 1) → (a + a = 0#w) := by
+  bv_multi_width (config := { widthAbstraction := .never })
 
 
 example (w : Nat) (a : BitVec w) : (w = 1) → (a = 0#w ∨ a = 1#w) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
 example (w : Nat) : (w = 1) → (1#w + 1#w = 0#w) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
 example (w : Nat) : (1#w + 1#w = 0#w) → ((w = 0) ∨ (w = 1)):= by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
 example (w : Nat) : (1#w + 1#w = 0#w) → (w < 2) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
 example (w : Nat) (a b : BitVec w) : (a + b = a - a) → a = - b := by
   bv_multi_width
@@ -281,8 +277,7 @@ example : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
 
 /-- Can solve width-constraints problems -/
 def test30  : (w = 2) → 8#w = 0#w := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
 /-- Can solve width-constraints problems -/
 def test31 (w : Nat) (x : BitVec w) : x &&& x = x := by
@@ -320,23 +315,19 @@ theorem zext (b : BitVec 8) : (b.zeroExtend 10 |>.zeroExtend 8) = b := by
 
 /-- Can solve width-constraints problems, when written with a width constraint. -/
 def width_specific_1 (x : BitVec w) : w = 1 →  x + x = x ^^^ x := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
 /-- All bitvectors are equal at width 0 -/
 example (x y : BitVec w) (hw : w = 0) : x = y := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic equals 2 -/
 def width_1_char_2 (x : BitVec w) (hw : w = 1) : x + x = 0#w := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
 /-- At width 1, adding bitvector to itself four times gives 0. Characteristic 2 divides 4 -/
 def width_1_char_2_add_four (x : BitVec w) (hw : w = 1) : x + x + x + x = 0#w := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
 theorem e_1 (x y : BitVec w) :
      - 1 *  ~~~(x ^^^ y) - 2 * y + 1 *  ~~~x =  - 1 *  ~~~(x |||  ~~~y) - 3 * (x &&& y) := by
@@ -347,8 +338,8 @@ theorem e_1 (x y : BitVec w) :
   sorry
 
 theorem egZextMin (u v : Nat) (x : BitVec w) :
-    u ≤ v → (x.zeroExtend u).zeroExtend v = x.zeroExtend v := by
-  fail_if_success bv_multi_width
+    u ≤ v → (x.zeroExtend v).zeroExtend u = x.zeroExtend u := by
+  fail_if_success bv_multi_width (config := { widthAbstraction := .never })
   sorry
 
 example (w : Nat) (a : BitVec w) : a = a + 0#w := by
