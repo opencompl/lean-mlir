@@ -115,7 +115,7 @@ jobs:
 
       - name: Run Blase Test Suite
         run: |
-          pushd Blase; lake test; popd;
+          lake build BlaseTest
 
   evaluation-LLVM:
     name: Evaluate LLVM
