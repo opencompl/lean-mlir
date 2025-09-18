@@ -1833,7 +1833,7 @@ def mkPredicateFSMNondep (wcard tcard pcard : Nat) (p : Nondep.Predicate) :
     let fsm := mkPredicateFSMAux wcard tcard pcard p
     { toFsm := ~~~ fsm.toFsm }
 
-def mkPredicateFSMDep {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard}
+def mkPredicateFSMDep {wcard tcard pcard : Nat} {tctx : Term.Ctx wcard tcard}
     (p : MultiWidth.Predicate tctx pcard) : PredicateFSM wcard tcard pcard (.ofDep p) :=
   mkPredicateFSMNondep wcard tcard pcard (.ofDep p)
 
