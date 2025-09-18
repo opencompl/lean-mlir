@@ -255,8 +255,16 @@ inductive BinaryRelationKind
 | ult -- unsigned less than.
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
+inductive WidthBinaryRelationKind
+| eq
+| le
+-- lt: a < b ↔ a + 1 ≤ b
+-- a ≠ b: (a < b ∨ b < a)
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
 inductive Predicate
   (ctx : Term.Ctx wcard tcard) : Type
+| binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) : Predicate ctx
 | binRel (k : BinaryRelationKind) (w : WidthExpr wcard)
     (a : Term ctx w) (b : Term ctx w) : Predicate ctx
 | and (p1 p2 : Predicate ctx) : Predicate ctx
@@ -275,6 +283,10 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv)
     (p : Predicate tctx) : Prop :=
   match p with
+  | .binWidthRel rel wa wb =>
+    match rel with
+    | .eq => wa.toNat wenv = wb.toNat wenv
+    | .le => wa.toNat wenv ≤ wb.toNat wenv
   | .binRel rel _w a b =>
     match rel with
     | .eq => a.toBV tenv = b.toBV tenv
@@ -303,7 +315,6 @@ def WidthExpr.wcard (w : WidthExpr) : Nat :=
   | .max v w => Nat.max (v.wcard) (w.wcard)
   | .min v w => Nat.min (v.wcard) (w.wcard)
   | .addK v k => v.wcard + k
-
 
 def WidthExpr.ofDep {wcard : Nat}
     (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
@@ -425,6 +436,7 @@ def Term.tcard (t : Term) : Nat :=
   | .bnot _w a => (Term.tcard a)
 
 inductive Predicate
+| binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr) : Predicate
 | binRel (k : BinaryRelationKind) (w : WidthExpr)
     (a : Term) (b : Term) : Predicate
 | or (p1 p2 : Predicate) : Predicate
@@ -433,6 +445,7 @@ deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Predicate.wcard (p : Predicate) : Nat :=
   match p with
+  | .binWidthRel _k wa wb => Nat.max wa.wcard wb.wcard
   | .binRel .eq w _a _b => w.wcard
   | .binRel .ne w _a _b => w.wcard
   | .binRel .ult _w a _b => a.wcard
@@ -444,6 +457,7 @@ def Predicate.wcard (p : Predicate) : Nat :=
 
 def Predicate.tcard (p : Predicate) : Nat :=
   match p with
+  | .binWidthRel _k _wa _wb => 0
   | .binRel .eq _w a b => max a.tcard b.tcard
   | .binRel .ne _w a b => max a.tcard b.tcard
   | .binRel .ult _w a b => max a.tcard b.tcard
@@ -456,6 +470,8 @@ def Predicate.tcard (p : Predicate) : Nat :=
 def Predicate.ofDep {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate tctx) : Predicate :=
   match p with
+  | .binWidthRel .eq wa wb => .binWidthRel .eq (.ofDep wa) (.ofDep wb)
+  | .binWidthRel .le wa wb => .binWidthRel .le (.ofDep wa) (.ofDep wb)
   | .binRel .eq w a b => .binRel .eq (.ofDep w) (.ofDep a) (.ofDep b)
   | .binRel .ne w a b => .binRel .ne (.ofDep w) (.ofDep a) (.ofDep b)
   | .binRel .ult w a b => .binRel .ult (.ofDep w) (.ofDep a) (.ofDep b)
