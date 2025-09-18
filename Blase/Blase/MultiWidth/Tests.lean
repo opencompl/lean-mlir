@@ -17,6 +17,20 @@ info: 'MultiWidthTests.add_eq_xor_add_mul_and_zext' depends on axioms: [propext,
 -/
 #guard_msgs in #print axioms add_eq_xor_add_mul_and_zext
 
+
+theorem abstract_prop {w : Nat} (p : Prop) (x : BitVec w) : p ∨ (x = x) := by
+  bv_multi_width
+
+/--
+warning: abstracted prop: ⏎
+  → '∀ (x : ℕ), x = x + 1'
+---
+error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.var 0
+-/
+#guard_msgs in theorem abstract_prop_check_warn : ∀ (x : Nat), x = x + 1  := by
+  -- | check that prop is abstracted.
+  bv_multi_width 
+
 theorem eg5 (u w : Nat) (x : BitVec w) :
     (x.signExtend u).zeroExtend u = x.signExtend u := by
   bv_multi_width
@@ -111,23 +125,19 @@ example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
 
 /-- either a < b or b ≤ a -/
 example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b ≤ a) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 /-- Tricohotomy of < -/
 example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b < a) ∨ (a = b) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 /-- < implies not equals -/
 example (w : Nat) (a b : BitVec w) : (a < b) → (a ≠ b) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 /-- <= and >= implies equals -/
 example (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 -- This should succeed.
 set_option warn.sorry false in
