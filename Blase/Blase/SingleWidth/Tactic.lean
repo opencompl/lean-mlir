@@ -155,7 +155,7 @@ partial def reflectTermUnchecked (map : ReflectMap) (w : Expr) (e : Expr) : Meta
     | .some n =>
       return { exprToIx := map, e := Term.ofNat n }
     | none =>
-      logWarning "expected concrete BitVec.ofNat, found symbol '{n}', creating free variable"
+      logWarning "expected a concrete BitVec.ofNat, found symbol '{n}', creating free variable"
       reflectAtomUnchecked map w e
 
   | HAnd.hAnd _bv _bv _bv _inst a b =>
