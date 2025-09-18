@@ -517,7 +517,7 @@ structure HTermEnv {wcard tcard : Nat}
 
 
 open Classical in
-noncomputable def BitStream.ofProp (p : Prop) : BitStream := fun _i => decide p 
+noncomputable def BitStream.ofProp (p : Prop) : BitStream := fun _i => decide p
 
 @[simp]
 theorem BitStream.ofProp_eq_negOne_iff (p : Prop) :
@@ -564,6 +564,17 @@ structure HPredicateEnv {wcard tcard : Nat}
     (penv : Fin pcard → Prop) : Prop where
     heq_width : ∀ (v : Fin pcard),
       fsmEnv (StateSpace.predVar v) = BitStream.ofProp (penv v)
+
+@[simp]
+theorem HPredicateEnv.of_mkFsmEnvOfTenv {wcard tcard : Nat}
+    {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv) (penv : Predicate.Env pcard) :
+    HPredicateEnv (HTermEnv.mkFsmEnvOfTenv tenv penv) penv := by
+  constructor
+  intros p
+  simp [HTermEnv.mkFsmEnvOfTenv]
+
+
 
 structure HNatFSMToBitstream {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat} {pcard : Nat}
    (fsm : NatFSM wcard tcard pcard (.ofDep v)) : Prop where
