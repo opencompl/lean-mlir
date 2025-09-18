@@ -257,9 +257,9 @@ deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 inductive WidthBinaryRelationKind
 | eq
-| ne
-| lt 
 | le
+-- lt: a < b ↔ a + 1 ≤ b
+-- a ≠ b: (a < b ∨ b < a)
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 inductive Predicate
@@ -286,8 +286,6 @@ def Predicate.toProp {wcard tcard : Nat} {wenv : WidthExpr.Env wcard}
   | .binWidthRel rel wa wb =>
     match rel with
     | .eq => wa.toNat wenv = wb.toNat wenv
-    | .ne => wa.toNat wenv ≠ wb.toNat wenv
-    | .lt => wa.toNat wenv < wb.toNat wenv
     | .le => wa.toNat wenv ≤ wb.toNat wenv
   | .binRel rel _w a b =>
     match rel with
@@ -473,8 +471,6 @@ def Predicate.ofDep {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate tctx) : Predicate :=
   match p with
   | .binWidthRel .eq wa wb => .binWidthRel .eq (.ofDep wa) (.ofDep wb)
-  | .binWidthRel .ne wa wb => .binWidthRel .ne (.ofDep wa) (.ofDep wb)
-  | .binWidthRel .lt wa wb => .binWidthRel .lt (.ofDep wa) (.ofDep wb)
   | .binWidthRel .le wa wb => .binWidthRel .le (.ofDep wa) (.ofDep wb)
   | .binRel .eq w a b => .binRel .eq (.ofDep w) (.ofDep a) (.ofDep b)
   | .binRel .ne w a b => .binRel .ne (.ofDep w) (.ofDep a) (.ofDep b)

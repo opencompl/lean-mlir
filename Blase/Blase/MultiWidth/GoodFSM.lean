@@ -804,7 +804,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard : Nat) {tctx : Term.Ctx wcard tcard}
     have hwgood := IsGoodNatFSM_mkWidthFSM (wcard := wcard) (tcard := tcard) (tctx v)
     simp [Nondep.Term.ofDep_var, mkTermFSM, htenv_term]
     rw [hwgood.heq (henv := htenv.toHWidthEnv)]
-    ext i 
+    ext i
     simp
     intros hi
     have := BitVec.lt_of_getLsbD hi
@@ -1379,11 +1379,15 @@ theorem eval_fsmTermSle_eq_decide_sle {wcard tcard : Nat}
 
 
 def fsmWidthEq (a b : FSM α) : FSM α :=
-  composeUnaryAux FSM.scanAnd (composeUnaryAux (FSM.ls true) <| composeBinaryAux' FSM.nxor a b)
+  composeUnaryAux FSM.scanAnd (composeBinaryAux' FSM.nxor a b)
 
+-- a ≤ b ↔ b[0] => a[0]
+-- a ≤ b ↔ ! b[0] || a[0]
+def fsmWidthUle (a b : FSM α) : FSM α :=
+  composeUnaryAux FSM.scanAnd (b ||| ~~~ a)
 
 def fsmWidthNe (a b : FSM α) : FSM α :=
-  composeUnaryAux FSM.scanAnd (composeUnaryAux (FSM.ls true) <| composeBinaryAux' FSM.nxor a b)
+  composeUnaryAux FSM.scanOr (composeBinaryAux' FSM.xor a b)
 /--
 info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 [propext, Classical.choice, Quot.sound]
@@ -1398,14 +1402,6 @@ def mkPredicateFSMAux (wcard tcard : Nat) (p : Nondep.Predicate) :
     let fsmA := mkWidthFSM wcard tcard a
     let fsmB := mkWidthFSM wcard tcard b
     { toFsm := fsmWidthEq fsmA.toFsm fsmB.toFsm }
-  | .binWidthRel .ne a b =>
-    let fsmA := mkWidthFSM wcard tcard a
-    let fsmB := mkWidthFSM wcard tcard b
-    { toFsm := fsmWidthNe fsmA.toFsm fsmB.toFsm }
-  | .binWidthRel .lt a b =>
-    let fsmA := mkWidthFSM wcard tcard a
-    let fsmB := mkWidthFSM wcard tcard b
-    { toFsm := fsmWidthUlt fsmA.toFsm fsmB.toFsm }
   | .binWidthRel .le a b =>
     let fsmA := mkWidthFSM wcard tcard a
     let fsmB := mkWidthFSM wcard tcard b
@@ -1505,11 +1501,70 @@ private theorem BitVec.setWidth_le_setWidth_of_le {x y : BitVec w}
   rw [Nat.mod_eq_of_lt (by omega)]
   assumption
 
+private theorem eq_of_lt_iff_lt_of_le  (h : ∀ (a i : ℕ), i ≤ a → (i < v' ↔ i < w')) :
+    v' = w' := by
+  specialize h (max v' w') (min v' w')
+  simp at h
+  omega
+
+
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard : Nat}
     {tctx : Term.Ctx wcard tcard}
     (p : MultiWidth.Predicate tctx) :
     HPredFSMToBitStream (mkPredicateFSMAux wcard tcard (.ofDep p)) := by
   induction p
+  case binWidthRel rel v w =>
+    cases rel
+    case eq =>
+      constructor
+      intros wenv tenv fsmEnv henv
+      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      simp [fsmWidthEq]
+      have hv := IsGoodNatFSM_mkWidthFSM tcard v
+      have hw := IsGoodNatFSM_mkWidthFSM tcard w
+      rw [hw.heq (henv := henv.toHWidthEnv)]
+      rw [hv.heq (henv := henv.toHWidthEnv)]
+      simp [Predicate.toProp]
+      constructor
+      · intros heq
+        ext i
+        rw [BitStream.scanAnd_eq_decide]
+        simp
+        intros j hj
+        rw [heq]
+      · intros heq
+        have hv := IsGoodNatFSM_mkWidthFSM tcard v
+        have hw := IsGoodNatFSM_mkWidthFSM tcard w
+        have := congrFun heq
+        simp [BitStream.scanAnd_eq_decide] at this
+        specialize this (max (v.toNat wenv) (w.toNat wenv)) (min (v.toNat wenv) (w.toNat wenv))
+        simp at this
+        omega
+    case le =>
+      constructor
+      intros wenv tenv fsmEnv henv
+      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      simp [fsmWidthUle]
+      have hv := IsGoodNatFSM_mkWidthFSM tcard v
+      have hw := IsGoodNatFSM_mkWidthFSM tcard w
+      rw [hw.heq (henv := henv.toHWidthEnv)]
+      rw [hv.heq (henv := henv.toHWidthEnv)]
+      simp [Predicate.toProp]
+      constructor
+      · intros heq
+        ext i
+        rw [BitStream.scanAnd_eq_decide]
+        simp
+        intros j hj
+        omega
+      · intros heq
+        have hv := IsGoodNatFSM_mkWidthFSM tcard v
+        have hw := IsGoodNatFSM_mkWidthFSM tcard w
+        have := congrFun heq
+        simp [BitStream.scanAnd_eq_decide] at this
+        specialize this (max (v.toNat wenv) (w.toNat wenv)) (min (v.toNat wenv) (w.toNat wenv))
+        simp at this
+        omega
   case binRel rel w a b =>
     rcases rel
     case eq =>
@@ -1899,7 +1954,7 @@ info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [pr
 #guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits
 
 open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
-theorem Predicate.toProp_of_KInductionCircuits' 
+theorem Predicate.toProp_of_KInductionCircuits'
     {wcard tcard : Nat}
     (P : Prop)
     (tctx : Term.Ctx wcard tcard)
