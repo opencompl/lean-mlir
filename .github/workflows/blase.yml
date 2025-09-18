@@ -1,0 +1,56 @@
+name: Blase Build & Test
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - 'Blase/**'
+  pull_request:
+    paths:
+      - 'Blase/**'
+
+  merge_group:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    name: blase
+    permissions:
+      pull-requests: write
+    # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache `.lake` folder
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          path: Blase/.lake
+          key: ${{ runner.os }}-lake-${{ hashFiles('Blase/lake-manifest.json') }}-4
+
+      - name: Get mathlib cache (only if no cache available)
+        if: steps.cache-lake.outputs.cache-hit != 'true'
+        continue-on-error: true
+        run: |
+          (pushd Blase; lake -R exe cache get ; popd) # download cache of mathlib docs.
+
+      - name: Compile Blase
+        run: |
+          pushd Blase; lake -R build Blase --iofail; popd
+
+      - name: Test Blase
+        run: |
+          pushd Blase && lake test; popd
