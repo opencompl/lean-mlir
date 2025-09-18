@@ -27,12 +27,12 @@ def full (Γ : Ctxt Ty) : DeleteRange Γ where
   num := ⟨Γ.length, by simp⟩
 
 def appendInl {Γ : Ctxt Ty} {ts : List Ty}
-    (r : DeleteRange Γ) : DeleteRange (Γ ++ ts) where
+    (r : DeleteRange Γ) : DeleteRange (⟨ts⟩ ++ Γ) where
   start := ⟨r.start + ts.length, by grind⟩
   num := ⟨r.num, by grind⟩
 
 def appendInr {Γ : Ctxt Ty} {ts : List Ty}
-    (r : DeleteRange ⟨ts⟩) : DeleteRange (Γ ++ ts) where
+    (r : DeleteRange ⟨ts⟩) : DeleteRange (⟨ts⟩ ++ Γ) where
   start := ⟨r.start, by grind⟩
   num := ⟨r.num, by grind⟩
 
@@ -72,7 +72,7 @@ def Ctxt.delete (Γ : Ctxt Ty) (vs : DeleteRange Γ) : Ctxt Ty :=
 
 @[simp] theorem Ctxt.delete_append_appendInl {Γ : Ctxt Ty} {us : List Ty}
     {r : DeleteRange Γ} :
-    (Γ ++ us).delete r.appendInl = (Γ.delete r) ++ us := by
+    (⟨us⟩ ++ Γ).delete r.appendInl = ⟨us⟩ ++ (Γ.delete r) := by
   rcases Γ with ⟨Γ⟩
   ext i t
   simp only [delete, ofList_append, length_ofList, List.length_append,
@@ -119,7 +119,7 @@ lemma Ctxt.getElem?_delete {i : Nat} {vs : DeleteRange Γ} :
 
 /-- Subtract one from the starting position of a `DeleteRange` (without changing
 the number of variables deleted). -/
-def DCE.DeleteRange.pred (vs : DeleteRange (Γ.snoc t)) (h : vs.start ≠ 0) :
+def DCE.DeleteRange.pred (vs : DeleteRange (Γ.cons t)) (h : vs.start ≠ 0) :
     DeleteRange Γ where
   start := vs.start.pred (fun h' => by simp [h'] at h)
   num := ⟨vs.num, by
@@ -132,8 +132,8 @@ lemma Ctxt.delete_eq_of_num_eq_zero {vs : DeleteRange Γ} (h : vs.num.val = 0) :
     Γ.delete vs = Γ := by
   ext i; grind [delete]
 
-lemma Ctxt.delete_snoc {vs : DeleteRange (Γ.snoc t)} {h : vs.start ≠ 0} :
-    (Γ.snoc t |>.delete vs) = (Γ.delete (vs.pred h) |>.snoc t) := by
+lemma Ctxt.delete_cons {vs : DeleteRange (Γ.cons t)} {h : vs.start ≠ 0} :
+    (Γ.cons t |>.delete vs) = (Γ.delete (vs.pred h) |>.cons t) := by
   ext i
   rw [Ctxt.getElem?_delete]
   induction i generalizing vs
@@ -145,7 +145,7 @@ lemma Ctxt.delete_snoc {vs : DeleteRange (Γ.snoc t)} {h : vs.start ≠ 0} :
     simp [this]
     rfl
   case succ i ih =>
-    simp only [length_snoc, getElem?_snoc_succ,
+    simp only [length_cons, getElem?_cons_succ,
       show i + 1 + vs.num = i + vs.num + 1 by omega]
     rw [Ctxt.getElem?_delete]
     simp [DeleteRange.pred]
@@ -173,17 +173,17 @@ def Deleted (Γ: Ctxt Ty) (vs : DeleteRange Γ) (Γ' : Ctxt Ty) : Prop :=
 
 /-- build a `Deleted` for a `(Γ ++ αs) → Γ`-/
 def Deleted.deleteAppend (Γ : Ctxt Ty) (αs : List Ty) :
-    Deleted (Γ ++ αs) (DeleteRange.full ⟨αs⟩).appendInr Γ := by
+    Deleted (⟨αs⟩ ++ Γ) (DeleteRange.full ⟨αs⟩).appendInr Γ := by
   ext i
   rw [Ctxt.getElem?_delete]
   rcases Γ
   simp
   grind [List.getElem?_append_right]
 
-/-- append an `ωs` to both the input and output contexts of `Deleted Γ v Γ'` -/
+/-- prepend an `ωs` to both the input and output contexts of `Deleted Γ v Γ'` -/
 def Deleted.append {Γ : Ctxt Ty} {vs : DeleteRange Γ}
     (DEL : Deleted Γ vs Γ') (ωs : List Ty) :
-    Deleted (Γ ++ ωs) vs.appendInl (Γ' ++ ωs) := by
+    Deleted (⟨ωs⟩ ++ Γ) vs.appendInl (⟨ωs⟩ ++ Γ') := by
   ext i
   subst DEL
   simp
@@ -192,7 +192,7 @@ def Deleted.toHom (h : Deleted Γ r Γ') : Γ'.Hom Γ :=
   fun _ v => Hom.delete r (v.castCtxt h)
 
 @[simp] lemma Deleted.toHom_append {Γ Γ' : Ctxt Ty} {vs : DeleteRange Γ}
-    (DEL : Deleted (Γ ++ us) vs.appendInl (Γ' ++ us)) :
+    (DEL : Deleted (⟨us⟩ ++ Γ) vs.appendInl (⟨us⟩ ++ Γ')) :
     DEL.toHom
     = have DEL' : Deleted Γ vs Γ' := by
         rcases Γ'
@@ -211,13 +211,13 @@ def Deleted.toHom (h : Deleted Γ r Γ') : Γ'.Hom Γ :=
   simp only [toHom, Hom.delete, Var.val_castCtxt, DeleteRange.val_start_appendInl,
     DeleteRange.val_num_appendInl, Hom.append, Var.castCtxt_rfl]
   cases v using Var.appendCases with
-  | left _  => simp; grind
-  | right v =>
+  | right _  => simp; grind
+  | left v =>
     have := v.val_lt
     simp; grind
 
 @[simp] lemma Deleted.toHom_last
-    (DEL : Deleted (Γ ++ us) (DeleteRange.full ⟨us⟩).appendInr Γ) :
+    (DEL : Deleted (⟨us⟩ ++ Γ) (DeleteRange.full ⟨us⟩).appendInr Γ) :
     DEL.toHom = Hom.id.appendCodomain := by
   simp [Deleted] at DEL
   funext t v
@@ -345,8 +345,8 @@ partial def dce_ {Γ : Ctxt d.Ty} {t}
     match Com.deleteVar? DEL body with
     | .none => -- we don't succeed, so DCE the child, and rebuild the same `let` binding.
       let ⟨Γ', hom', ⟨body', hbody'⟩⟩
-        : Σ (Γ' : Ctxt d.Ty) (hom: Hom Γ' (Γ ++ tys)),
-        { body' : Com d Γ' .pure t //  ∀ (V : (Γ ++ tys).Valuation),
+        : Σ (Γ' : Ctxt d.Ty) (hom: Hom Γ' (⟨tys⟩ ++ Γ)),
+        { body' : Com d Γ' .pure t //  ∀ (V : (tys ++ Γ).Valuation),
         body.denote V = body'.denote (V.comap hom)} :=
         (dce_ body)
       let com' := Com.var e (body'.changeVars hom')
@@ -451,7 +451,7 @@ def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure [.nat] :
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 
 def ex1_pre_dce : Com Ex ∅ .pure [.nat] :=
   Com.var (cst 1) <|

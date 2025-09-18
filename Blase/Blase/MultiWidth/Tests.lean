@@ -64,7 +64,7 @@ def test27 (x : BitVec w) : 2#w + x  = 1#w  + x + 1#w := by
 /-- For fixed-width problems, we encode constraints correctly, and understand
 e.g. characteristic. -/
 theorem egFixedWidthTwo (x : BitVec 2) : x + x + x + x = 0 := by
-  bv_multi_width
+  bv_multi_width (config := { widthAbstraction := .never })
 
 /-- We understand constant numerals. -/
 theorem egConstNumeral (w : Nat) (x : BitVec w) : x + 2 = x + 1 + 1 := by
@@ -88,26 +88,26 @@ theorem eq3 (w : Nat) (a : BitVec w) : a = a ||| 0 := by
   bv_multi_width
 
 theorem check_add_comm (w : Nat) (a b : BitVec w) : a + b = b + a := by
-  bv_multi_width 
+  bv_multi_width
 
 -- For some reason, this fails. I don't understand why.
 example (w : Nat) (a : BitVec w) : (a = a + 0#w) := by
   bv_multi_width
 
 example (w : Nat) (a : BitVec w) :  (a * 3 = a + a + a)  := by
-  bv_multi_width 
+  bv_multi_width
 
 /-- We know that all bitvectors are equal at width 0 -/
 example (a b : BitVec 0) : a = b  := by
-  bv_multi_width 
+  bv_multi_width (config := { widthAbstraction := .never })
 
 
 /-- Can solve conjunctions. -/
 example (w : Nat) (a b : BitVec w) : (a + b = b + a) ∧ (a + a = a <<< 1) := by
-  bv_multi_width 
+  bv_multi_width
 
 example (w : Nat) (a b : BitVec w) : (a ≠ b) → (b ≠ a) := by
-  bv_multi_width 
+  bv_multi_width
 
 /-- either a < b or b ≤ a -/
 example (w : Nat) (a b : BitVec w) : (a < b) ∨ (b ≤ a) := by
@@ -215,7 +215,7 @@ def alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w + x =
 
 
 def test_OfNat_ofNat (x : BitVec 1) : 1#1 + x = x + 1#1 := by
-  bv_multi_width (config := { niter := 2 })
+  bv_multi_width (config := { niter := 2, widthAbstraction := .never  })
 
 def test0 {w : Nat} (x : BitVec w) : x + 0#w = x := by
   bv_multi_width
@@ -233,7 +233,7 @@ example (x y z : BitVec w) : (x + y + z) = (z + y + x) := by
   bv_multi_width
 
 def test11 (x y : BitVec w) : (x + y) = ((x |||  y) + (x &&&  y)) := by
-  bv_multi_width 
+  bv_multi_width
 
 def test15 (x y : BitVec w) : (x - y) = (( x &&& (~~~ y)) - ((~~~ x) &&&  y)) := by
   bv_multi_width
@@ -316,7 +316,7 @@ theorem mul_five (x : BitVec w) : 5 * x = x + x + x + x + x := by
 
 /-- Check that we support zero extension. -/
 theorem zext (b : BitVec 8) : (b.zeroExtend 10 |>.zeroExtend 8) = b := by
-  bv_multi_width
+  bv_multi_width (config := { widthAbstraction := .never })
 
 /-- Can solve width-constraints problems, when written with a width constraint. -/
 def width_specific_1 (x : BitVec w) : w = 1 →  x + x = x ^^^ x := by
