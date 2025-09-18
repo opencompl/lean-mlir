@@ -45,11 +45,11 @@ jobs:
         if: steps.cache-lake.outputs.cache-hit != 'true'
         continue-on-error: true
         run: |
-          (lake -R exe cache get ; true) # download cache of mathlib docs.
+          (pushd Blase; lake -R exe cache get ; popd) # download cache of mathlib docs.
 
       - name: Compile Blase
         run: |
-          lake -R build Blase --iofail
+          pushd Blase; lake -R build Blase --iofail; popd
 
       - name: Test Blase
         run: |
