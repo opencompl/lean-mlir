@@ -315,6 +315,35 @@ def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (_tctx : Expr)
   debugCheck out
   return out
 
+
+/-- info: MultiWidth.Predicate.Env.empty : Predicate.Env 0 -/
+#guard_msgs in #check MultiWidth.Predicate.Env.empty
+
+def mkPredicateEnvEmpty  : SolverM Expr := do
+  let out := mkAppN (mkConst ``MultiWidth.Predicate.Env.empty) #[]
+  debugCheck out
+  return out
+
+/--
+info: MultiWidth.Predicate.Env.cons {pcard : ℕ} (env : Predicate.Env pcard) (p : Prop) : Predicate.Env (pcard + 1)
+-/
+#guard_msgs in #check MultiWidth.Predicate.Env.cons
+
+def mkPredicateEnvCons (penv : Expr) (p : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.Term.Ctx.Env.cons)
+    #[penv, p]
+  debugCheck out
+  return out
+
+/-- Build an expression `penv` for the `Predicate.Env`. -/
+def CollectState.mkPenvExpr (reader : CollectState) : SolverM Expr := do
+  let mut out ← mkPredicateEnvEmpty 
+  for (p, _) in reader.pToIx.toArrayAsc.zipIdx.reverse do
+    out ← mkPredicateEnvCons  (penv := out) (p := p)
+    debugCheck out
+  debugCheck out
+  return out
+
 /-- info: MultiWidth.WidthExpr.Env.empty : WidthExpr.Env 0 -/
 #guard_msgs in #check MultiWidth.WidthExpr.Env.empty
 
@@ -562,6 +591,7 @@ info: MultiWidth.Predicate.or {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} 
 -/
 #guard_msgs in #check MultiWidth.Predicate.or
 
+
 def Expr.mkPredicateExpr (wcard tcard pcard : Nat) (tctx : Expr)
     (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
   match p with
@@ -581,7 +611,7 @@ def Expr.mkPredicateExpr (wcard tcard pcard : Nat) (tctx : Expr)
     let aExpr ← mkTermExpr wcard tcard tctx a
     let bExpr ← mkTermExpr wcard tcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
-      #[mkNatLit wcard, mkNatLit tcard, tctx,
+      #[mkNatLit wcard, mkNatLit tcard, tctx, mkNatLit pcard,
         mkConst ``MultiWidth.BinaryRelationKind.ne,
         wExpr,
         aExpr, bExpr]
@@ -591,14 +621,14 @@ def Expr.mkPredicateExpr (wcard tcard pcard : Nat) (tctx : Expr)
     let pExpr ← mkPredicateExpr wcard tcard pcard tctx p
     let qExpr ← mkPredicateExpr wcard tcard pcard tctx q
     let out := mkAppN (mkConst ``MultiWidth.Predicate.or)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, pExpr, qExpr]
+      #[mkNatLit wcard, mkNatLit tcard, tctx, mkNatLit pcard, pExpr, qExpr]
     debugCheck out
     return out
   | .and p q =>
     let pExpr ← mkPredicateExpr wcard tcard pcard tctx p
     let qExpr ← mkPredicateExpr wcard tcard pcard tctx q
     let out := mkAppN (mkConst ``MultiWidth.Predicate.and)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, pExpr, qExpr]
+      #[mkNatLit wcard, mkNatLit tcard, tctx, mkNatLit pcard, pExpr, qExpr]
     debugCheck out
     return out
   | _ => throwError m!"unhandled mkPredicateExpr {repr p}"
@@ -771,8 +801,17 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
   debugCheck out
   return out
 
-/-- info: `MultiWidth.Predicate.toProp_of_KInductionCircuits' : Name -/
-#guard_msgs in #check ``MultiWidth.Predicate.toProp_of_KInductionCircuits'
+/--
+info: MultiWidth.Predicate.toProp_of_KInductionCircuits' {wcard tcard pcard : ℕ} (P : Prop) (tctx : Term.Ctx wcard tcard)
+  (p : Predicate tctx pcard) (pNondep : Nondep.Predicate) (_hpNondep : pNondep = Nondep.Predicate.ofDep p)
+  (fsm : PredicateFSM wcard tcard pcard pNondep) (_hfsm : fsm = mkPredicateFSMNondep wcard tcard pcard pNondep) (n : ℕ)
+  (circs : ReflectVerif.BvDecide.KInductionCircuits fsm.toFsm n) (hCircs : circs.IsLawful)
+  (sCert : BVDecide.Frontend.LratCert) (hs : circs.mkSafetyCircuit.verifyCircuit sCert = true)
+  (indCert : BVDecide.Frontend.LratCert) (hind : circs.mkIndHypCycleBreaking.verifyCircuit indCert = true)
+  (wenv : WidthExpr.Env wcard) (tenv : tctx.Env wenv) (penv : Predicate.Env pcard)
+  (hp : Predicate.toProp tenv penv p = P) : P
+-/
+#guard_msgs in #check MultiWidth.Predicate.toProp_of_KInductionCircuits'
 
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
@@ -790,6 +829,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
+    let penv ← collect.mkPenvExpr 
     let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard collect.pcard tctx p
     let pNondepExpr := Lean.ToExpr.toExpr p
     -- let pToProp ← Expr.mkPredicateToPropExpr (pExpr := pExpr)
@@ -857,6 +897,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
             indCertProof,
             wenv,
             tenv,
+            penv,
             pEqVal]
         debugCheck prf
         let prf ←

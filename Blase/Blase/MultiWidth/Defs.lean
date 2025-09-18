@@ -261,6 +261,13 @@ deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 def Predicate.Env (pcard : Nat) : Type :=
   Fin pcard → Prop
 
+def Predicate.Env.empty : Predicate.Env 0 :=
+  fun v => v.elim0
+
+def Predicate.Env.cons {pcard : Nat} (env : Predicate.Env pcard) (p : Prop) :
+  Predicate.Env (pcard + 1) :=
+  fun v => v.cases p env
+
 inductive Predicate {wcard tcard}
   (tctx : Term.Ctx wcard tcard) (pcard : Nat) : Type
 | binRel (k : BinaryRelationKind) (w : WidthExpr wcard)
