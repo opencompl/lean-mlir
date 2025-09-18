@@ -22,3 +22,4 @@ For stable releases, please change the `rev` to the desired version tag.
 - Add support for nat, int, bool, and Prop sorts.
 - Add a `w` and `2^w` constraint, where for a unary width, we can build the bitvector that is `2^w` or `2^w - 1`. 
 - Check if a variable is used both as a width variable and a nat variable, and then throw a user warning.
+- Create a "stream differential equation" module that can compile down to FSMs.
