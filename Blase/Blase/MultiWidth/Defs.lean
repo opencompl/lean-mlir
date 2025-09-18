@@ -566,14 +566,14 @@ theorem HTermEnv.of_mkFsmEnvOfTenv {wcard tcard : Nat}
   · intros v
     simp [mkFsmEnvOfTenv]
 
-structure HPredicateEnv {wcard tcard : Nat}
+structure HPredicateEnv {wcard tcard pcard : Nat}
     (fsmEnv : StateSpace wcard tcard pcard → BitStream)
     (penv : Fin pcard → Prop) : Prop where
     heq_width : ∀ (v : Fin pcard),
       fsmEnv (StateSpace.predVar v) = BitStream.ofProp (penv v)
 
 @[simp]
-theorem HPredicateEnv.of_mkFsmEnvOfTenv {wcard tcard : Nat}
+theorem HPredicateEnv.of_mkFsmEnvOfTenv {wcard tcard pcard : Nat}
     {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
     (tenv : tctx.Env wenv) (penv : Predicate.Env pcard) :
     HPredicateEnv (HTermEnv.mkFsmEnvOfTenv tenv penv) penv := by
@@ -614,6 +614,7 @@ structure HPredFSMToBitStream {pcard : Nat}
       (penv : Predicate.Env pcard)
       (fsmEnv : StateSpace wcard tcard pcard → BitStream),
       (htenv : HTermEnv fsmEnv tenv) →
+      (hpenv : HPredicateEnv fsmEnv penv) →
         p.toProp tenv penv ↔ (fsm.toFsm.eval fsmEnv = .negOne)
 
 end ToFSM
