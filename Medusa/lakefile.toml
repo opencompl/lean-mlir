@@ -1,0 +1,22 @@
+name = "Medusa"
+version = "0.1.0"
+testDriver = "Test"
+defaultTargets = ["Medusa"]
+
+[[lean_lib]]
+name = "Medusa"
+
+[[lean_lib]]
+name = "Test"
+
+[[require]]
+name = "fp-lean"
+git = "https://github.com/opencompl/fp-lean"
+rev = "5e45c0f"
+
+[[require]]
+name = "SSA"
+# git = "https://github.com/opencompl/lean-mlir"
+path = "../"
+rev = "main"
+

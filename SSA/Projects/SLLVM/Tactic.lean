@@ -41,8 +41,10 @@ attribute [simp_sllvm]
   HVector.cons_isRefinedBy_cons HVector.nil_isRefinedBy_nil
   reduceIsRefinedBy
   -- Valuation append & accesses
-  Valuation.append_nil Valuation.append_cons
-  Valuation.snoc_last Valuation.snoc_toSnoc
+  Valuation.nil_append Valuation.cons_append
+  Valuation.cons_last Valuation.cons_toCons
+  Valuation.instAppendHVector
+  Valuation.ofHVector_nil Valuation.ofHVector_cons
   SSA.simpValuationApply
   -- Other general simp lemmas
   reduceIte bind_assoc
