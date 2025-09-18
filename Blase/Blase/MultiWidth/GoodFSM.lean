@@ -1377,6 +1377,17 @@ theorem eval_fsmTermSle_eq_decide_sle {wcard tcard : Nat}
     · simp [hw]
     · simp [hw]
 
+
+def fsmWidthEq (a b : FSM α) : FSM α :=
+  composeUnaryAux FSM.scanAnd (composeBinaryAux' FSM.nxor a b)
+
+-- a ≤ b ↔ b[0] => a[0]
+-- a ≤ b ↔ ! b[0] || a[0]
+def fsmWidthUle (a b : FSM α) : FSM α :=
+  composeUnaryAux FSM.scanAnd (b ||| ~~~ a)
+
+def fsmWidthNe (a b : FSM α) : FSM α :=
+  composeUnaryAux FSM.scanOr (composeBinaryAux' FSM.xor a b)
 /--
 info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 [propext, Classical.choice, Quot.sound]
@@ -1392,6 +1403,14 @@ def mkPredicateFSMAux (wcard tcard pcard : Nat) (p : Nondep.Predicate) :
       { toFsm := FSM.var' (StateSpace.predVar ⟨x, hx⟩) }
     else
       { toFsm := FSM.zero' } -- default, should not be used.
+  | .binWidthRel .eq a b =>
+    let fsmA := mkWidthFSM wcard tcard pcard a
+    let fsmB := mkWidthFSM wcard tcard pcard b
+    { toFsm := fsmWidthEq fsmA.toFsm fsmB.toFsm }
+  | .binWidthRel .le a b =>
+    let fsmA := mkWidthFSM wcard tcard pcard a
+    let fsmB := mkWidthFSM wcard tcard pcard b
+    { toFsm := fsmWidthUle fsmA.toFsm fsmB.toFsm }
   | .binRel .eq w a b =>
     let fsmW := mkWidthFSM wcard tcard pcard w
     let fsmA := mkTermFSM wcard tcard pcard a
@@ -1487,6 +1506,13 @@ private theorem BitVec.setWidth_le_setWidth_of_le {x y : BitVec w}
   rw [Nat.mod_eq_of_lt (by omega)]
   assumption
 
+private theorem eq_of_lt_iff_lt_of_le  (h : ∀ (a i : ℕ), i ≤ a → (i < v' ↔ i < w')) :
+    v' = w' := by
+  specialize h (max v' w') (min v' w')
+  simp at h
+  omega
+
+
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard pcard : Nat}
     {tctx : Term.Ctx wcard tcard}
     (p : MultiWidth.Predicate tctx pcard) :
@@ -1494,10 +1520,62 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard pcard : Nat}
   induction p
   case var v =>
     constructor
-    intros wenv tenv penv fsmEnv htermEnv hpenv
+    intros wenv tenv penv fsmEnv htenv hpenv
     simp [mkPredicateFSMAux, Nondep.Predicate.ofDep, Predicate.toProp]
     obtain ⟨hpenv⟩ := hpenv
     simp [hpenv v]
+  case binWidthRel rel v w =>
+    cases rel
+    case eq =>
+      constructor
+      intros wenv tenv penv fsmEnv htenv hpenv
+      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      simp [fsmWidthEq]
+      have hv := IsGoodNatFSM_mkWidthFSM tcard pcard v
+      have hw := IsGoodNatFSM_mkWidthFSM tcard pcard w
+      rw [hw.heq (henv := htenv.toHWidthEnv)]
+      rw [hv.heq (henv := htenv.toHWidthEnv)]
+      simp [Predicate.toProp]
+      constructor
+      · intros heq
+        ext i
+        rw [BitStream.scanAnd_eq_decide]
+        simp
+        intros j hj
+        rw [heq]
+      · intros heq
+        have hv := IsGoodNatFSM_mkWidthFSM tcard pcard v
+        have hw := IsGoodNatFSM_mkWidthFSM tcard pcard w
+        have := congrFun heq
+        simp [BitStream.scanAnd_eq_decide] at this
+        specialize this (max (v.toNat wenv) (w.toNat wenv)) (min (v.toNat wenv) (w.toNat wenv))
+        simp at this
+        omega
+    case le =>
+      constructor
+      intros wenv tenv penv fsmEnv htenv hpenv
+      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      simp [fsmWidthUle]
+      have hv := IsGoodNatFSM_mkWidthFSM tcard pcard v
+      have hw := IsGoodNatFSM_mkWidthFSM tcard pcard w
+      rw [hw.heq (henv := htenv.toHWidthEnv)]
+      rw [hv.heq (henv := htenv.toHWidthEnv)]
+      simp [Predicate.toProp]
+      constructor
+      · intros heq
+        ext i
+        rw [BitStream.scanAnd_eq_decide]
+        simp
+        intros j hj
+        omega
+      · intros heq
+        have hv := IsGoodNatFSM_mkWidthFSM tcard pcard v
+        have hw := IsGoodNatFSM_mkWidthFSM tcard pcard w
+        have := congrFun heq
+        simp [BitStream.scanAnd_eq_decide] at this
+        specialize this (max (v.toNat wenv) (w.toNat wenv)) (min (v.toNat wenv) (w.toNat wenv))
+        simp at this
+        omega
   case binRel rel w a b =>
     rcases rel
     case eq =>

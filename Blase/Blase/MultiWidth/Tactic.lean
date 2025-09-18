@@ -182,6 +182,7 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
       if let .some n ← getNatValue? e then
         return (MultiWidth.Nondep.WidthExpr.const n, state)
     let (wix, wToIx) := state.wToIx.findOrInsertVal e
+    -- TODO: implement 'w + K'.
     return (.var wix, { state with wToIx := wToIx })
 
 /-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
@@ -536,8 +537,20 @@ def collectPredicateAtom (state : CollectState)
 partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
     SolverM (MultiWidth.Nondep.Predicate × CollectState) := do
   match_expr e with
+  | LE.le α _inst v w =>
+    match_expr α with
+    | Nat =>
+      let (v, state) ← collectWidthAtom state v
+      let (w, state) ← collectWidthAtom state w
+      return (.binWidthRel .le v w, state)
+    | _ =>
+      throwError m!"expected (· ≤ ·) for natural numbers, found:  {indentD e}"
   | Eq α a b =>
     match_expr α with
+    | Nat =>
+      let (a, state) ← collectWidthAtom state a
+      let (b, state) ← collectWidthAtom state b
+      return (.binWidthRel .eq a b, state)
     | BitVec w =>
       let (w, state) ← collectWidthAtom state w
       let (ta, state) ← collectTerm state a
@@ -613,6 +626,12 @@ info: MultiWidth.Predicate.var {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard}
 #guard_msgs in #check MultiWidth.Predicate.var
 
 
+/--
+info: MultiWidth.Predicate.binWidthRel {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ}
+  (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) : Predicate tctx pcard
+-/
+#guard_msgs in #check MultiWidth.Predicate.binWidthRel
+
 def Expr.mkPredicateExpr (wcard tcard pcard : Nat) (tctx : Expr)
     (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
   match p with
@@ -622,9 +641,15 @@ def Expr.mkPredicateExpr (wcard tcard pcard : Nat) (tctx : Expr)
     let bExpr ← mkTermExpr wcard tcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
       #[mkNatLit wcard, mkNatLit tcard, tctx, mkNatLit pcard,
-        Lean.toExpr k,
-        wExpr,
-        aExpr, bExpr]
+        toExpr k, wExpr, aExpr, bExpr]
+    debugCheck out
+    return out
+  | .binWidthRel k v w =>
+    let vExpr ← mkWidthExpr wcard v
+    let wExpr ← mkWidthExpr wcard w
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.binWidthRel)
+      #[mkNatLit wcard, mkNatLit tcard, tctx, mkNatLit pcard,
+        Lean.toExpr k, vExpr, wExpr]
     debugCheck out
     return out
   | .or p q =>
@@ -656,12 +681,6 @@ info: MultiWidth.Predicate.toProp {wcard tcard pcard : ℕ} {wenv : WidthExpr.En
 def Expr.mkPredicateToPropExpr (pExpr : Expr)
   (_wcard _tcard _pcard : Nat) (_wenv : Expr) (_tctx : Expr) (tenv : Expr) (penv : Expr) : SolverM Expr := do
   let out ← mkAppM (``MultiWidth.Predicate.toProp) #[tenv, penv, pExpr]
-    -- #[(mkNatLit wcard),
-    --   (mkNatLit tcard),
-    --   wenv, -- wenv,
-    --   tctx,
-    --   tenv,
-    --   pExpr]
   debugCheck out
   return out
 
@@ -829,8 +848,38 @@ info: MultiWidth.Predicate.toProp_of_KInductionCircuits' {wcard tcard pcard : �
 -/
 #guard_msgs in #check MultiWidth.Predicate.toProp_of_KInductionCircuits'
 
+/--
+Revert all hypotheses that have to do with bitvectors, so that we can use them.
+
+Ideally, we would have a pass that quickly walks an expression to cheaply
+ee if it's in the BV fragment, and revert it if it is.
+For now, we use a sound overapproximation and revert anything that we can collect.
+-/
+def revertBvHyps (g : MVarId) : SolverM MVarId := do
+  let mut hypsToRevert : Array FVarId := #[]
+  for hyp in (← g.getNondepPropHyps) do
+    -- | Save and restore state, since we just want to test if we can collect.
+    let state ← get
+    try
+      let _ ← collectBVPredicateAux {} (← hyp.getType)
+      hypsToRevert := hypsToRevert.push hyp
+      set state
+    catch _ =>
+      set state
+      continue
+  let (_, g) ← g.revert hypsToRevert
+  return g
+
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM (List MVarId) := do
+  let .some g ← g.withContext (Normalize.runPreprocessing g)
+    | do
+        debugLog m!"Preprocessing automatically closed goal."
+        return []
+  let g ← revertBvHyps g
+  -- | We run preprocessing again after reverting,
+  -- | since we might have created new opportunities for simplification.
+  -- For one, we definitely can simplify `P → Q` into `¬ P ∨ Q`.
   let .some g ← g.withContext (Normalize.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."
