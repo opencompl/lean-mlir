@@ -34,10 +34,16 @@ LOGS_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/l
 def create_missing_folders(): 
     if not os.path.exists(MCA_LEANMLIR_DIR):
         os.makedirs(MCA_LEANMLIR_DIR)
+    else :
+        shutil.rmtree(MCA_LEANMLIR_DIR)
     if not os.path.exists(MCA_LLVM_DIR):
         os.makedirs(MCA_LLVM_DIR)
+    else :
+        shutil.rmtree(MCA_LLVM_DIR)
     if not os.path.exists(LOGS_DIR):
         os.makedirs(LOGS_DIR)
+    else :
+        shutil.rmtree(LOGS_DIR)
 
 
 def clear_folder(folder):
@@ -76,9 +82,8 @@ def mca_analysis(input_file, output_file, log_file):
     )
     cmd = LLVM_BUILD_DIR + cmd_base + input_file + " > " + output_file
     print(cmd)
-    run_command(cmd, log_file)
+    return cmd
     
-
 def clear_folders():
     clear_folder(LOGS_DIR)
     clear_folder(MCA_LEANMLIR_DIR)
@@ -117,29 +122,58 @@ def clear_empty_logs():
                     print("Failed to delete {filename}")
 
 
-def run_tests():
+def run_tests(jobs):
     # extract mlir blocks and put them all in separate files
     create_missing_folders()
-    clear_folders()
 
-    for filename in os.listdir(XDSL_ASM_DIR):
-        input_file = os.path.join(XDSL_ASM_DIR, filename)
-        basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(MCA_LEANMLIR_DIR, basename + '.out')
-        log_file = open(os.path.join(LOGS_DIR, 'xdsl_' + filename),'w')
-        mca_analysis(input_file, output_file, log_file)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
+        futures = {}
+        for filename in os.listdir(XDSL_ASM_DIR):
+            input_file = os.path.join(XDSL_ASM_DIR, filename)
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(MCA_LEANMLIR_DIR, basename + '.out')
+            log_file = open(os.path.join(LOGS_DIR, 'xdsl_' + filename),'w')
+            cmd = mca_analysis(input_file, output_file, log_file)
+            future = executor.submit(run_command, cmd, log_file)
+            futures[future] = output_file
+        total = len(futures)
+        for idx, future in enumerate(concurrent.futures.as_completed(futures)):
+            file_path = futures[future]
+            ret_code = future.result()
+            percentage = ((float(idx) + float(1)) / float(total)) * 100
+            print(f"{file_path} completed, {percentage:.2f}%")
 
-    for filename in os.listdir(LLC_ASM_DIR):
-        input_file = os.path.join(LLC_ASM_DIR, filename)
-        basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(MCA_LLVM_DIR, basename + '.out')
-        log_file = open(os.path.join(LOGS_DIR, 'llvm_' + filename),'w')
-        mca_analysis(input_file, output_file, log_file)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
+        futures = {}
+        for filename in os.listdir(LLC_ASM_DIR):
+            input_file = os.path.join(LLC_ASM_DIR, filename)
+            basename, _ = os.path.splitext(filename)
+            output_file = os.path.join(MCA_LLVM_DIR, basename + '.out')
+            log_file = open(os.path.join(LOGS_DIR, 'llvm_' + filename),'w')
+            cmd = mca_analysis(input_file, output_file, log_file)
+            future = executor.submit(run_command, cmd, log_file)
+            futures[future] = output_file
+        total = len(futures)
+        for idx, future in enumerate(concurrent.futures.as_completed(futures)):
+            file_path = futures[future]
+            ret_code = future.result()
+            percentage = ((float(idx) + float(1)) / float(total)) * 100
+            print(f"{file_path} completed, {percentage:.2f}%")
 
     clear_empty_logs()
 
 def main():
-    run_tests()
+    parser = argparse.ArgumentParser(
+        prog="Run MCA analysis",
+        description="Run LLVM's MCA analysis tool on RISCV assembly.",
+    )
+
+    parser.add_argument(
+        "-j", "--jobs", type=int, default=1, help="Parallel jobs for all benchmarks"
+    )
+
+    args = parser.parse_args()
+    run_tests(args.jobs)
 
 
 if __name__ == "__main__":
