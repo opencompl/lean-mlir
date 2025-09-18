@@ -55,6 +55,20 @@ def mux (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
       | none => (none, x, y.tail, c) -- hace 'c', wait on 'y'.
       | some _ => (some (), x, y.tail, c.tail) -- consume 'c' and 'y'.
 
+def muxVal (x y c : ValueStream (BitVec 1)): ValueStream (BitVec 1) :=
+  Stream.corec (β := ValueStream (BitVec 1) × ValueStream (BitVec 1) × ValueStream (BitVec 1)) (x, y, c)
+  fun ⟨x, y, c⟩ =>
+    match (c 0) with
+    | none => (none, x, y, c.tail) -- wait on 'c'.
+    | some 1#1 =>
+      match (x 0) with
+      | none => (none, x.tail, y, c) -- have 'c', wait on 'x'.
+      | some e => (some e, x.tail, y, c.tail) -- consume 'c' and 'x'.
+    | some 0#1 =>
+      match (y 0) with
+      | none => (none, x, y.tail, c) -- hace 'c', wait on 'y'.
+      | some e => (some e, x, y.tail, c.tail) -- consume 'c' and 'y'.
+
 def cMerge (x y : TokenStream) : ValueStream (BitVec 1) × TokenStream :=
   Stream.corec₂ (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
@@ -76,6 +90,10 @@ def branch (c : ValueStream (BitVec 1)) (x : TokenStream) : TokenStream × Token
 
 def source : TokenStream :=
   Stream.corec () fun () => (some (), ())
+
+def sourceOnes : ValueStream (BitVec 1) :=
+  Stream.corec () fun () => (1#1, ())
+
 
 def sink (x : TokenStream) : TokenStream :=
   Stream.corec (β := TokenStream) x fun x => (none, x.tail)

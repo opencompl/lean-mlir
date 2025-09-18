@@ -39,9 +39,11 @@ inductive Op
 | join
 | merge
 | mux
+| muxVal
 | cMerge
 | branch
 | source
+| sourceOnes
 | sink
 | supp
 | not
@@ -68,8 +70,10 @@ def_signature for DCPlus where
   | .forkVal => (Ty.valuestream 1) → Ty.valuestream2 1
   | .join => (Ty.tokenstream, Ty.tokenstream) → Ty.tokenstream
   | .mux => (Ty.tokenstream, Ty.tokenstream, Ty.valuestream 1) → Ty.tokenstream
+  | .muxVal => (Ty.valuestream 1, Ty.valuestream 1, Ty.valuestream 1) → Ty.valuestream 1
   | .sink => (Ty.tokenstream) → Ty.tokenstream
   | .source => () → Ty.tokenstream
+  | .sourceOnes => () → Ty.valuestream 1
   | .cMerge => (Ty.tokenstream, Ty.tokenstream) → Ty.valuetokenstream 1
   | .supp => (Ty.valuestream 1, Ty.tokenstream) → Ty.tokenstream
   | .not => (Ty.valuestream 1) → Ty.valuestream 1
@@ -101,8 +105,10 @@ def_denote for DCPlus where
   | .forkVal => fun s => [CIRCTStream.DCPlusOp.forkVal s]ₕ
   | .join => fun s₁ s₂ => [CIRCTStream.DCPlusOp.join s₁ s₂]ₕ
   | .mux => fun s₁ s₂ c => [CIRCTStream.DCPlusOp.mux s₁ s₂ c]ₕ
+  | .muxVal => fun s₁ s₂ c => [CIRCTStream.DCPlusOp.muxVal s₁ s₂ c]ₕ
   | .sink => fun s => [CIRCTStream.DCPlusOp.sink s]ₕ
   | .source => [CIRCTStream.DCPlusOp.source]ₕ
+  | .sourceOnes => [CIRCTStream.DCPlusOp.sourceOnes]ₕ
   | .cMerge => fun s₁ s₂ => [CIRCTStream.DCPlusOp.cMerge s₁ s₂]ₕ
   | .supp => fun s₁ s₂ => [CIRCTStream.DCPlusOp.supp s₁ s₂]ₕ
   | .not => fun s₁ => [CIRCTStream.DCPlusOp.not s₁]ₕ
@@ -143,6 +149,14 @@ open LeanMLIR.SingleReturnCompat (Expr)
 def source : Expr (DCPlus) Γ .pure (.tokenstream) :=
   Expr.mk
     (op := .source)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .nil)
+    (regArgs := .nil)
+
+def sourceOnes : Expr (DCPlus) Γ .pure (.valuestream 1) :=
+  Expr.mk
+    (op := .sourceOnes)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .nil)
@@ -214,6 +228,15 @@ def mux {Γ : Ctxt _}  (a b : Γ.Var (MLIR2DCPlus.Ty.tokenstream)) (c : Γ.Var (
     (args := .cons a <| .cons b <| .cons c <| .nil)
     (regArgs := .nil)
 
+def muxVal {Γ : Ctxt _}  (a b c : Γ.Var (MLIR2DCPlus.Ty.valuestream 1)) : Expr (DCPlus) Γ .pure (.valuestream 1) :=
+  Expr.mk
+    (op := .muxVal)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .cons c <| .nil)
+    (regArgs := .nil)
+
+
 def cMerge {Γ : Ctxt _} (a b : Γ.Var (MLIR2DCPlus.Ty.tokenstream)) : Expr (DCPlus) Γ .pure (.valuetokenstream 1) :=
   Expr.mk
     (op := .cMerge)
@@ -233,6 +256,22 @@ def fst (a : Γ.Var (MLIR2DCPlus.Ty.tokenstream2)) : Expr (DCPlus) Γ .pure (.to
 def snd {Γ} (a : Γ.Var (MLIR2DCPlus.Ty.tokenstream2)) : Expr (DCPlus) Γ .pure (.tokenstream) :=
     Expr.mk
     (op := .snd)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
+def fstVal (a : Γ.Var (MLIR2DCPlus.Ty.valuetokenstream r)) : Expr (DCPlus) Γ .pure (.valuestream r) :=
+    Expr.mk
+    (op := .fstVal r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
+def sndVal {Γ} (a : Γ.Var (MLIR2DCPlus.Ty.valuetokenstream r)) : Expr (DCPlus) Γ .pure (.tokenstream) :=
+    Expr.mk
+    (op := .sndVal r)
     (ty_eq := rfl)
     (eff_le := by constructor)
     (args := .cons a <| .nil)
@@ -267,17 +306,22 @@ end Compat
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     MLIR.AST.ReaderM (DCPlusOp) (Σ eff ty, Expr (DCPlus) Γ eff ty) := do
   match opStx.name with
-  | op@"DCPlus.source" =>
+  | op@"DCPlus.source" | op@"DCPlus.sourceOnes"=>
     if opStx.args.length > 0 then
-      throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+      throw <| .generic s!"expected zero operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
     else
-      return ⟨_, [.tokenstream], source⟩
-  | op@"DCPlus.fork" | op@"DCPlus.forkVal" | op@"DCPlus.sink" | op@"DCPlus.fst" | op@"DCPlus.snd" | op@"DCPlus.fstValPure" | op@"DCPlus.sndValPure" |  op@"DCPlus.not" =>
+    match op with
+      | "DCPlus.source" => return ⟨_, [.tokenstream], source⟩
+      | "DCPlus.sourceOnes" => return ⟨_, [.valuestream 1], sourceOnes⟩
+      | _ => throw <| .generic s!"unknown '{repr opStx.args}'"
+  | op@"DCPlus.fork" | op@"DCPlus.forkVal" | op@"DCPlus.sink" | op@"DCPlus.fst" | op@"DCPlus.snd" | op@"DCPlus.fstVal" | op@"DCPlus.sndVal" | op@"DCPlus.fstValPure" | op@"DCPlus.sndValPure" |  op@"DCPlus.not" =>
     match opStx.args with
     | v₁Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
       match ty₁, op with
       | .tokenstream2, "DCPlus.fst" => return ⟨_, [.tokenstream], fst v₁⟩
+      | .valuetokenstream r, "DCPlus.fstVal" => return ⟨_, [.valuestream r], fstVal v₁⟩
+      | .valuetokenstream _, "DCPlus.sndVal" => return ⟨_, [.tokenstream ], sndVal v₁⟩
       | .valuestream2 r, "DCPlus.fstValPure" => return ⟨_, [.valuestream r], fstValPure v₁⟩
       | .valuestream2 r, "DCPlus.sndValPure" => return ⟨_, [.valuestream r], sndValPure v₁⟩
       | .tokenstream2, "DCPlus.snd"  => return ⟨_, [.tokenstream], snd v₁⟩
@@ -300,7 +344,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .tokenstream, .tokenstream, "DCPlus.cMerge" => return ⟨_, [.valuetokenstream 1], cMerge v₁ v₂⟩
       | _, _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
-  | op@"DCPlus.mux"   =>
+  | op@"DCPlus.mux" | op@"DCPlus.muxVal"  =>
     match opStx.args with
     | v₁Stx::v₂Stx::v₃Stx::[] =>
       let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
@@ -308,6 +352,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       let ⟨ty₃, v₃⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₃Stx
       match ty₁, ty₂, ty₃, op with
       | .tokenstream, .tokenstream, .valuestream 1, "DCPlus.mux" => return ⟨_, [.tokenstream], mux v₁ v₂ v₃⟩
+      | .valuestream 1, .valuestream 1, .valuestream 1, "DCPlus.muxVal" => return ⟨_, [.valuestream 1], muxVal v₁ v₂ v₃⟩
       | _, _, _, _=> throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected three operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
