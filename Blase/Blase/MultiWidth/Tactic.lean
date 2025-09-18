@@ -522,6 +522,16 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 #guard_msgs in
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
 
+
+/-- Visit a raw BV expr, and collect information about it. -/
+def collectPredicateAtom (state : CollectState)
+  (e : Expr) : SolverM (MultiWidth.Nondep.Predicate × CollectState) := do
+  let t ← inferType e
+  if !t.isProp then
+    throwError m!"expected type 'Prop', found: {t} (expression: {indentD e})"
+  let (pix, pToIx) := state.pToIx.findOrInsertVal e
+  return (.var pix, { state with pToIx })
+
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
     SolverM (MultiWidth.Nondep.Predicate × CollectState) := do
@@ -535,7 +545,7 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       return (.binRel .eq w ta tb, state)
     | Bool =>
       let_expr true := b
-        | throwError m!"Boolean conditional not of the form '<bool> = <true>'. {indentD e}."
+        | mkAtom
       match_expr a with
       | BitVec.slt w a b =>
         let (w, state) ← collectWidthAtom state w
@@ -558,8 +568,8 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
         let (tb, state) ← collectTerm state b
         return (.binRel .ule w ta tb, state)
       | _ =>
-        throwError m!"unknown boolean equality predicate: {indentD e}"
-    | _ => throwError m!"expected bitvector equality, found equality of type '{α}': {indentD e}"
+        mkAtom
+    | _ => mkAtom
   | Ne α a b =>
     match_expr α with
     | BitVec w =>
@@ -567,7 +577,7 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .ne w ta tb, state)
-    | _ => throwError m!"expected bitvector disequality, found disequality of type '{α}': {indentD e}"
+    | _ => collectPredicateAtom state e
   | Or p q =>
     let (ta, state) ← collectBVPredicateAux state p
     let (tb, state) ← collectBVPredicateAux state q
@@ -577,7 +587,11 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
     let (tb, state) ← collectBVPredicateAux state q
     return (.and ta tb, state)
   | _ =>
-     throwError m!"expected predicate over bitvectors (no quantification), found:  {indentD e}"
+    mkAtom
+  where
+    mkAtom := do
+      let (t, state) ← collectPredicateAtom state e
+      return (t, state)
 
 /--
 info: MultiWidth.Predicate.binRel {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ} (k : BinaryRelationKind)
