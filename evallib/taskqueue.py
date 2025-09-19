@@ -1,7 +1,9 @@
-from typing import Callable, TypeVar, List, Optional, Any
+from typing import Callable, TypeVar, List, Optional, Any, Union, TextIO
 from concurrent.futures import ThreadPoolExecutor
 from tqdm import tqdm # Fancy Progress Bar
 from argparse import ArgumentParser
+
+import sys
 
 #
 # Task Queue implementation
@@ -26,7 +28,7 @@ class TaskQueue:
         tasks: List[T],
         *,
         run: Callable[[T], Optional[str]],
-        output_file: Optional[str] = None,
+        output_file: Optional[Union[str, TextIO]] = None,
     ):
         """
         `run_tasks` is a light-weight, static distributed task-queue.
@@ -66,17 +68,19 @@ class TaskQueue:
             if self.show_progress_bar:
                 futures = tqdm(futures)
 
-            if output_file is None:
+            def process(f_out):
                 for future in futures:
                     result = future.result()
                     if result is not None:
-                        print(result)
-            else:
+                        f_out.write(str(result) + '\n')
+
+            if output_file is None:
+                process(sys.stdout)
+            elif type(output_file) == str:
                 with open(output_file, "w") as f_out:
-                    for future in futures:
-                        result = future.result()
-                        if result is not None:
-                            f_out.write(str(result) + '\n')
+                    process(f_out)
+            else:
+                process(output_file)
             
         return
 
