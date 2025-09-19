@@ -70,9 +70,9 @@ instance : DialectParse TestDialect 0 where
   isValidReturn _ stx := return (stx.name == "return")
   mkExpr Γ opStx := do
     let op : TestDialect.Op ← match opStx.name with
-      | "test.noop"     => pure .noop
-      | "test.un_pair"  => pure .unPair
-      | "test.pair"     => pure .mkPair
+      | "noop"     => pure .noop
+      | "un_pair"  => pure .unPair
+      | "pair"     => pure .mkPair
       | opName => throw <| .unsupportedOp opName
     opStx.mkExprOf Γ op
 
