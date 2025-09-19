@@ -50,7 +50,7 @@ info: {
 
 Note: for each operation we have a test without flags for each of the three
 printing methods. If the operation takes flags, we additionally have flagged
-test-cases *only* for `toPrint`, as it's the only printing method that handles
+test-cases *only* for `Com.print`, as it's the only printing method that handles
 flags well.
 
 The goal for these tests is that the output is parse-able, and the result of parsing

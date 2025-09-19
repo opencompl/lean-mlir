@@ -70,33 +70,34 @@ instance LLVMPlusRiscVSignature : DialectSignature LLVMPlusRiscV where
 
 /-! ### Printing -/
 
-instance : ToString LLVMPlusRiscV.Op  where
-  toString := fun
-  | .llvm llvm    => toString llvm
-  | .riscv riscv  => toString riscv
-  | .castLLVM _ => "builtin.unrealized_conversion_cast"
-  | .castRiscv _  => "builtin.unrealized_conversion_cast"
+-- instance : ToString LLVMPlusRiscV.Op  where
+--   toString := fun
+--   | .llvm llvm    => toString llvm
+--   | .riscv riscv  => toString riscv
+--   | .castLLVM _ => "builtin.unrealized_conversion_cast"
+--   | .castRiscv _  => "builtin.unrealized_conversion_cast"
 
-instance LLVMAndRiscvPrint : ToPrint (LLVMPlusRiscV) where
+open DialectPrint in
+instance LLVMAndRiscvPrint : DialectPrint LLVMPlusRiscV where
   printOpName
-    |.llvm llvmOp => ToPrint.printOpName llvmOp
-    |.riscv riscvOp => ToPrint.printOpName riscvOp
-    |_ => "builtin.unrealized_conversion_cast"
+    | .llvm llvmOp => printOpName llvmOp
+    | .riscv riscvOp => printOpName riscvOp
+    | _ => "builtin.unrealized_conversion_cast"
   printTy
-    | .llvm llvmTy => ToPrint.printTy llvmTy
-    | .riscv riscvTy => ToPrint.printTy riscvTy
+    | .llvm llvmTy => printTy llvmTy
+    | .riscv riscvTy => printTy riscvTy
   printAttributes
-    |.llvm llvmOp => ToPrint.printAttributes llvmOp
-    |.riscv riscvOp => ToPrint.printAttributes riscvOp
-    |_ => ""
-  printDialect := "riscv"
-  printReturn ty := match ty with
-    | [.llvm llvmTy] => ToPrint.printReturn [llvmTy]
-    | [.riscv riscvTy] =>  ToPrint.printReturn [riscvTy]
+    | .llvm llvmOp => printAttributes llvmOp
+    | .riscv riscvOp => printAttributes riscvOp
+    | _ => ""
+  dialectName := "riscv"
+  printReturn := fun
+    | [.llvm llvmTy] => printReturn [llvmTy]
+    | [.riscv riscvTy] =>  printReturn [riscvTy]
     | _ => s!"<ERROR: mallformed return>"
-  printFunc ty := match ty with
-    | [.llvm llvmTy]   => ToPrint.printFunc [llvmTy]
-    | [.riscv riscvTy] => ToPrint.printFunc [riscvTy]
+  printFunc := fun
+    | [.llvm llvmTy]   => printFunc [llvmTy]
+    | [.riscv riscvTy] => printFunc [riscvTy]
     | _ => s!"<ERROR: mallformed func>"
 
 instance : ToString LLVMPlusRiscV.Ty where

@@ -266,15 +266,17 @@ def Expr.printType (e : Expr d Γ eff ts) : Format :=
 /--
 Print an `Expr` in generic MLIR syntax.
 
-Note: this prints just the operation, it's argument
-
-Converts an expression within a dialect to its MLIR string representation.
-Since MLIR generic syntax uses double quotes (`"..."`) to print operations, this function uses
-the ToPrint typeclass of each dialect to print the various parts of an expressiom such as
-operation and types. Lastly, it arranges the expression printing according to MLIR syntax.
+Note: this prints the entire let-binding, i.e.:
+- The return variable binders
+- The operation
+- The arguments
+- The attributes, and
+- The type annotation
 -/
 partial def Expr.print (e : Expr d Γ eff t) : Format :=
-  f!"\"{printOpName e.op}\"{e.printArgs}{printAttributes e.op} : {e.printType}"
+  let lhs := f!"%{Γ.length}"
+  let rhs := f!"\"{printOpName e.op}\"{e.printArgs}{printAttributes e.op} : {e.printType}"
+  Format.align true ++ f!"{lhs} = {rhs}"
 
 /--
 Recursively print a `Com` in generic MLIR syntax.
@@ -282,23 +284,22 @@ Each bound variable is printed with its index and corresponding expression.
 -/
 private partial def Com.printAux : Com d Γ eff ts → Format
   | .rets vs =>
-      let vs := (vs.map fun _ v => s!"{_root_.repr v}").toListOf String (by intros; rfl)
-      let vs := ", ".intercalate vs
+      let vs :=
+        vs.mapToList printVar
+        |> (Format.joinSep · ", ") |> Format.group
       let ret := printReturn ts
-      let ts := ", ".intercalate <| ts.map printTy
+      let ts :=
+        ts.map printTy
+        |> (Format.joinSep · ", ") |> Format.group
       Format.align true ++ f!"\"{ret}\"({vs}) : ({ts}) -> ()"
-  | .var e body =>
-    Format.align true ++ f!"%{Γ.length} = {e.print}" ++
-    Com.printAux body
+  | .var e body => e.print ++ Com.printAux body
 
 /--
 Print a `Com` in generic MLIR syntax.
 -/
 partial def Com.print (com : Com d Γ eff ts) : Format :=
   Format.align true ++ f!"{printFunc ts}{printBlockArgs Γ}:\n"
-  ++ (Format.nest 2 <|
-    com.printAux
-  )
+  ++ (Format.nest 2 com.printAux)
 
 /--
 Print a `Com` in generic MLIR syntax, wrapped in an implicit `builtin.module`.
