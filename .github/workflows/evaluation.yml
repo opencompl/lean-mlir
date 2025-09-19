@@ -16,22 +16,18 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Cache `.lake` and `.elan` folders
-        id: cache-lake
+      - name: Cache `.elan` folders
+        id: cache-lean
         uses: actions/cache@v4
         with:
           path: |
             ~/.elan
-            .lake/packages
-            .lake/build
-            TacBench/.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
           restore-keys: |
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+            ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
 
       - name: Install Elan & Lean
-        if: steps.cache-lake.outputs.cache-hit != 'true'
+        if: steps.cache-lean.outputs.cache-hit != 'true'
         run: |
           set -o pipefail
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
@@ -40,6 +36,19 @@ jobs:
       - name: Make lake available
         run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache `.lake` folders
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          path: |
+            .lake/packages
+            .lake/build
+            */.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Build Lean-MLIR & Mathlib
         # We build Mathlib from scratch as this reduces the build artifacts that are stored in the cache. Previous experiments
@@ -61,15 +70,22 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Load Lean and Lean-MLIR from Cache
-        id: cache-lake
+      - name: Load Lean from Cache
+        id: cache-lean
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
             .lake/packages
             .lake/build
-            TacBench/.lake
+            */.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Add Lean to PATH
@@ -84,6 +100,46 @@ jobs:
         run: |
           bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh --nfiles 9000 -j7  --stride ${{matrix.extract_stride}} --offset ${{matrix.extract_offset}}
 
+  test-blase:
+    name: Test Blase
+    runs-on: ubuntu-latest
+    needs: eval-build
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Load Lean from Cache
+        id: cache-lean
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            .lake/packages
+            .lake/build
+            */.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Add Lean to PATH
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR (should be all in cache)
+        run: |
+          lake -R build
+
+      - name: Run Blase Test Suite
+        run: |
+          lake build BlaseTest
+
   evaluation-LLVM:
     name: Evaluate LLVM
     runs-on: ubuntu-latest
@@ -94,15 +150,22 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Load Lean and Lean-MLIR from Cache
-        id: cache-lake
+      - name: Load Lean from Cache
+        id: cache-lean
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
             .lake/packages
             .lake/build
-            TacBench/.lake
+            */.lake
           key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Add Lean to PATH
@@ -150,6 +213,161 @@ jobs:
           name: LLVM evaluation
           path: bv-evaluation/results
 
+  test-tools-scaling-auto-generated-stmts:
+    name: Test tools, scaling, and auto-generated statements
+    runs-on: ubuntu-latest
+    needs: eval-build
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Load Lean from Cache
+        id: cache-lean
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            .lake/packages
+            .lake/build
+            */.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Add Lean to PATH
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR (should be all in cache)
+        run: |
+          lake -R build
+          
+      - name: Compile `mlirnatural` Executable 🧐
+        run: |
+          lake -R build mlirnatural
+
+      - name: Compile `opt` Executable 🧐
+        run: |
+          lake -R build opt
+
+      - name: Compile `LLVMRiscV` Tests 
+        run: |
+          lake -R build SSA.Projects.LLVMRiscV.Tests.Tests
+
+#      This broke the build during a recent update
+#      - name: LLVM opt round trip test
+#        run: |
+#          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
+      
+      - name: Compile ISL
+        run: |
+          lake -R build ISL
+
+      - name: Compile Alive Scaling
+        run: |
+          lake -R build SSA.Projects.InstCombine.ScalingTest
+
+      - name: Check for changes in AliveStatements
+        run: |
+          lake build AliveExamples
+          (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
+          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+          
+  test-core-library:
+    name: Test Core Library
+    runs-on: ubuntu-latest
+    needs: eval-build
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Load Lean from Cache
+        id: cache-lean
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            .lake/packages
+            .lake/build
+            */.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Add Lean to PATH
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR (should be all in cache)
+        run: |
+          lake -R build
+
+      - name: Test Core Library
+        run: |
+          lake -R build SSA.Tests.Tests
+
+      - name: Test InstCombine (unit-tests)
+        run: |
+          lake -R build SSA.Projects.InstCombine.Tests.Tests
+
+      - name: Compile Decide Experiment 🧐
+        run: |
+          lake -R build Blase.Fast.Decide
+
+      - name: Compile Hacker's Delight Theorems 🧮
+        run: |
+          sed -i -E 's/WIDTH/16/' SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean
+          sed -i -E 's/WIDTH/16/' SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean
+          lake -R build SSA.Projects.InstCombine.HackersDelight.ch2_1DeMorgan # compile and check the Hacker's Delight theorems chapter 2-1
+          lake -R build SSA.Projects.InstCombine.HackersDelight.ch2_2AdditionAndLogicalOps # compile and check the Hacker's Delight theorems chapter 2-2
+          sed -i -E 's/16/WIDTH/' SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean
+          sed -i -E 's/16/WIDTH/' SSA/Projects/InstCombine/HackersDelight/ch2_2AdditionAndLogicalOps.lean
+
+      - name: Compile Alive Examples
+        run: |
+          lake -R build SSA.Projects.InstCombine.AliveAutoGenerated
+          sed -i 's/set_option warn.sorry false/set_option warn.sorry true/' SSA/Projects/InstCombine/AliveStatements.lean
+          lake -R build SSA.Projects.InstCombine.AliveStatements 2>&1 | tee out
+          git checkout SSA/Projects/InstCombine/AliveStatements.lean
+          echo `grep theorem SSA/Projects/InstCombine/AliveStatements.lean | wc -l` > all
+          grep 'Alive.*sorry' out | wc -l > failed
+          x=$((`cat all`  -  `cat failed`)); echo $x > diff
+          echo "ALIVE_SUCCESS=$(cat diff)" >> $GITHUB_ENV
+          echo "ALIVE_ALL=$(cat all)" >> $GITHUB_ENV
+          echo "ALIVE_FAILED=$(cat failed)" >> $GITHUB_ENV
+
+      - name: Compile Alive Examples (With UB)
+        run: |
+          lake -R build SSA.Projects.SLLVM.Evaluation.AliveAutoGeneratedCopy
+
+      - name: Compile CIRCT Dialects (DC/Handshake)
+        run: |
+          lake -R build CIRCT
+
+      - if: github.event_name == 'pull_request'
+        run: |
+          echo "Alive Statistics: ${{env.ALIVE_SUCCESS}} / ${{env.ALIVE_ALL}} (${{env.ALIVE_FAILED}} failed)"
+          if  [ "${{env.ALIVE_SUCCESS}}" -ne "90" ] ||
+              [ "${{env.ALIVE_ALL}}" -ne "93" ] ||
+              [ "${{env.ALIVE_FAILED}}" -ne "3" ]; then
+            echo "ERROR: Alive statistics do not match the expected values!"
+            exit 1
+          fi
+
   evaluation-alive-hdel:
     name: Evaluation Alive and Hacker's Delight
     runs-on: ubuntu-latest
@@ -160,20 +378,23 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Load Lean and Lean-MLIR from Cache
-        id: cache-lake
+      - name: Load Lean from Cache
+        id: cache-lean
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
             .lake/packages
             .lake/build
-            TacBench/.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
-          restore-keys: |
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
-
+            */.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Add Lean to PATH
         run: |
