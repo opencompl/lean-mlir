@@ -265,6 +265,10 @@ jobs:
 #      - name: LLVM opt round trip test
 #        run: |
 #          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
+      
+      - name: Compile ISL
+        run: |
+          lake -R build ISL
 
       - name: Compile Alive Scaling
         run: |

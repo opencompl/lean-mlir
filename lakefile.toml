@@ -76,3 +76,7 @@ roots = ["SSA.Core"]
 [[lean_lib]]
 name = "CIRCT"
 roots = ["SSA.Projects.CIRCT.CIRCT"]
+
+[[lean_lib]]
+name = "ISL"
+roots = ["SSA.Projects.ISL.ISL"]
