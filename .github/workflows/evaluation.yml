@@ -77,7 +77,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -117,7 +117,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -157,7 +157,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -230,7 +230,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -293,7 +293,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -381,7 +381,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
