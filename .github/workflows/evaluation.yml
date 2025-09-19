@@ -245,7 +245,6 @@ jobs:
           
   test-core-library:
     name: Test Core Library
-    name: Test tools, scaling, and auto-generated statements
     runs-on: ubuntu-latest
     needs: eval-build
     permissions:
