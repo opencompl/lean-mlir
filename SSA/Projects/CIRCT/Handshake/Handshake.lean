@@ -169,6 +169,15 @@ def sync (x y : Stream α) : Stream α × Stream α :=
     | none, some _ => (none, none, (x.tail, y))
     | none, none => (none, none, (x.tail, y.tail))
 
+def not (x : Stream (BitVec 1)) : Stream (BitVec 1) :=
+  Stream.corec (β := Stream (BitVec 1)) x fun x =>
+    match x 0 with
+    | some 1 => (some 0, (x.tail))
+    | some 0 => (some 0,  (x.tail))
+    | none => (none, (x.tail))
+
+def supp (x : Stream α) (c : Stream (BitVec 1)) : Stream α := (branch x c).snd
+
 -- The pack operation constructs a tuple from separate values.
 -- The number of operands corresponds to the number of tuple elements.
 -- Similar to join, the output is ready when all inputs are ready.
@@ -214,6 +223,8 @@ inductive Op
 | mux (t : Ty2)
 | sink (t : Ty2)
 | sync (t : Ty2)
+| supp (t : Ty2)
+| not
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
 abbrev Handshake : Dialect where
@@ -232,6 +243,8 @@ def_signature for Handshake where
 | .mux t => (Ty.stream t, Ty.stream t, Ty.stream (Ty2.bitvec 1)) → Ty.stream t
 | .sink t => (Ty.stream t) → (Ty.stream (Ty2.bitvec 1))
 | .sync t => (Ty.stream t, Ty.stream t) → Ty.stream2 t
+| .supp t => (Ty.stream t, Ty.stream (Ty2.bitvec 1)) → Ty.stream t
+| .not => (Ty.stream (Ty2.bitvec 1)) → Ty.stream (Ty2.bitvec 1)
 
 instance instHandshakeTyDenote : TyDenote Ty where
 toType := fun
@@ -251,8 +264,8 @@ def_denote for Handshake where
 | .mux _ => fun s₁ s₂ c => [HandshakeOp.mux s₁ s₂ c]ₕ
 | .sink _ => fun s => [HandshakeOp.sink s]ₕ
 | .sync _ => fun s₁ s₂ => [HandshakeOp.sync s₁ s₂]ₕ
-
-
+| .supp _ => fun s₁ s₂ => [HandshakeOp.supp s₁ s₂]ₕ
+| .not => fun s₁ => [HandshakeOp.not s₁]ₕ
 
 end Dialect
 
@@ -327,6 +340,23 @@ def sync {Γ : Ctxt _} (a b : Var Γ (.stream r)) : Expr (Handshake) Γ .pure (.
     (args := .cons a <| .cons b <| .nil)
     (regArgs := .nil)
 
+def not {Γ : Ctxt _} (a : Var Γ (.stream (.bitvec 1))) : Expr (Handshake) Γ .pure (.stream (.bitvec 1))  :=
+  Expr.mk
+    (op := .not)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .nil)
+    (regArgs := .nil)
+
+def supp {Γ : Ctxt _} (a : Var Γ (.stream r)) (b : Var Γ (.stream (.bitvec 1))) : Expr (Handshake) Γ .pure (.stream r)  :=
+  Expr.mk
+    (op := .supp r)
+    (ty_eq := rfl)
+    (eff_le := by constructor)
+    (args := .cons a <| .cons b <| .nil)
+    (regArgs := .nil)
+
+
 end Compat
 
 def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
@@ -352,6 +382,23 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
       | .stream2 r, "handshake.snd"  => return ⟨_, [.stream r], snd v₁⟩
       | _, _ => throw <| .generic s!"type mismatch"
     | _ => throw <| .generic s!"expected two operands for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+  | op@"handshake.not" =>
+    match opStx.args with
+    | v₁Stx::[] =>
+      let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      match ty₁, op with
+      | .stream (.bitvec 1), "handshake.not" => return ⟨_, [.stream (.bitvec 1)], not v₁⟩
+      | _, _ => throw <| .generic s!"type mismatch"
+    | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
+  | op@"handshake.supp" =>
+    match opStx.args with
+    | v₁Stx::v₂Stx::[] =>
+      let ⟨ty₁, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
+      let ⟨ty₂, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
+      match ty₁, ty₂, op with
+      | .stream r, .stream (.bitvec 1), "handshake.supp" => return ⟨_, [.stream r], supp v₁ v₂⟩
+      | _, _, _ => throw <| .generic s!"type mismatch"
+    | _ => throw <| .generic s!"expected one operand for `monomial`, found #'{opStx.args.length}' in '{repr opStx.args}'"
   | op@"handshake.sync" =>
     match opStx.args with
     | v₁Stx::v₂Stx::[] =>
