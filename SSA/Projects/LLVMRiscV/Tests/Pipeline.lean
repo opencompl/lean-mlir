@@ -1,5 +1,3 @@
-import SSA.Projects.LLVMRiscV.Pipeline.add
-import SSA.Projects.LLVMRiscV.Pipeline.and
 import SSA.Projects.InstCombine.LLVM.Opt
 
 /--
