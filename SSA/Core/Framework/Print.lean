@@ -206,8 +206,8 @@ variable {d} [DialectPrint d]
 
 namespace DialectPrint
 
-instance instToStringTy : ToString (Dialect.Ty d) where
-  toString := printTy
+instance instToStringTy : ToString (Dialect.Ty d) where toString := printTy
+instance instReprTy : Repr (Dialect.Ty d) where reprPrec t _ := printTy t
 
 /--
 Given the context `Γ` of a `Com`, print the arguments and their types of the
