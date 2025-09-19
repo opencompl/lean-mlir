@@ -15,8 +15,6 @@ ROOT_DIR = (
 )
 TIMEOUT = 1800  # seconds
 
-LLVM_BUILD_DIR = "~/llvm-project/build/bin/"
-
 LLC_ASM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/"
 )
@@ -74,7 +72,7 @@ def mca_analysis(input_file, output_file, log_file):
     cmd_base = (
         "llvm-mca -mtriple=riscv64 -mcpu=sifive-u74 -mattr=+m,+zba,+zbb,+zbs "
     )
-    cmd = LLVM_BUILD_DIR + cmd_base + input_file + " > " + output_file
+    cmd = cmd_base + input_file + " > " + output_file
     print(cmd)
     run_command(cmd, log_file)
     
