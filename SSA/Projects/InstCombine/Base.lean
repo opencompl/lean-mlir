@@ -374,49 +374,72 @@ instance : ToString (MOp φ) where
 -- instance : ToString Op where
 --   toString o := repr o |>.pretty
 
-def printOverflowFlags (flags : NoWrapFlags) : String :=
-  match flags with
-  | ⟨false, false⟩ => "<{overflowFlags = #llvm.overflow<none>}>"
-  | ⟨true, false⟩  => "<{overflowFlags = #llvm.overflow<nsw>}>"
-  | ⟨false, true⟩  => "<{overflowFlags = #llvm.overflow<nuw>}>"
-  | ⟨true, true⟩   => "<{overflowFlags = #llvm.overflow<nsw,nuw>}>"
+instance : ToString LLVM.Op := by unfold LLVM; infer_instance
+instance : Repr LLVM.Op     := by unfold LLVM; infer_instance
 
-def attributesToPrint (op : LLVM.Op) : String :=
-  match op with
+/-! ### Type Formatting -/
+
+def MetaLLVM.printType : (MetaLLVM φ).Ty → String
+  | .bitvec (.concrete w)  => s!"i{w}"
+  | .bitvec (.mvar ⟨i, _⟩) => s!"i$\{%{i}}"
+
+instance : ToString (MetaLLVM φ).Ty := ⟨MetaLLVM.printType⟩
+instance : Repr (MetaLLVM φ).Ty where
+  reprPrec ty _ := s!"{ty}"
+
+instance : ToString LLVM.Ty := by unfold LLVM; infer_instance
+instance : Repr LLVM.Ty     := by unfold LLVM; infer_instance
+
+def MetaLLVM.opName : (MetaLLVM φ).Op → String
+  | .and _      => "llvm.and"
+  | .or _ _     => "llvm.or"
+  | .not _      => "llvm.not"
+  | .xor _      => "llvm.xor"
+  | .shl _ _    => "llvm.shl"
+  | .lshr _ _   => "llvm.lshr"
+  | .ashr _ _   => "llvm.ashr"
+  | .urem _     => "llvm.urem"
+  | .srem _     => "llvm.srem"
+  | .select _   => "llvm.select"
+  | .add _ _    => "llvm.add"
+  | .mul _ _    => "llvm.mul"
+  | .sub _ _    => "llvm.sub"
+  | .neg _      => "llvm.neg"
+  | .copy _     => "llvm.copy"
+  | .trunc ..   => "llvm.trunc"
+  | .zext ..    => "llvm.zext"
+  | .sext _ _   => "llvm.sext"
+  | .sdiv _ _   => "llvm.sdiv"
+  | .udiv _ _   => "llvm.udiv"
+  | .icmp ty _  => s!"llvm.icmp.{ty}"
+  | .const _ _  => "llvm.const"
+
+def MetaLLVM.printAttributes : (MetaLLVM φ).Op → String
   | .const w v => s!"\{value = {v} : {w}}"
   | .or w ⟨true⟩ => s!"\{disjoint = true : {w}}"
   | .add _ f |.shl _ f | .sub _ f | .mul _ f => printOverflowFlags f
   | .udiv _ ⟨true⟩ | .sdiv _ ⟨true⟩ | .lshr _ ⟨true⟩ => "<{isExact}> "
   | .icmp ty _ => s!"{ty}"
-  |_ => ""
+  | _ => ""
+where
+  printOverflowFlags : NoWrapFlags → String
+  | ⟨false, false⟩ => "<{overflowFlags = #llvm.overflow<none>}>"
+  -- TODO: ^^ since this case matches the default, do we even want to print any
+  --          flags in this case?
+  | ⟨true, false⟩  => "<{overflowFlags = #llvm.overflow<nsw>}>"
+  | ⟨false, true⟩  => "<{overflowFlags = #llvm.overflow<nuw>}>"
+  | ⟨true, true⟩   => "<{overflowFlags = #llvm.overflow<nsw,nuw>}>"
 
-instance : ToString LLVM.Op := by unfold LLVM; infer_instance
-instance : Repr LLVM.Op := by unfold LLVM; infer_instance
-
-/-! ### Type Formatting -/
-
-instance : Repr (MTy φ) where
-  reprPrec
-    | .bitvec (.concrete w), _ => "i" ++ repr w
-    | .bitvec (.mvar ⟨i, _⟩), _ => f!"i$\{%{i}}"
-instance : Repr LLVM.Ty := by unfold LLVM; infer_instance
-
-instance : Lean.ToFormat (MTy φ) where
-  format := repr
-instance : Lean.ToFormat LLVM.Ty := by unfold LLVM; infer_instance
-
-instance : ToString (MTy φ) where
-  toString t := repr t |>.pretty
-instance : ToString LLVM.Ty := by unfold LLVM; infer_instance
-
-instance : ToPrint (LLVM) where
-  printOpName
-  | op => "llvm." ++ toString op
-  printTy := toString
-  printAttributes := attributesToPrint
-  printDialect:= "llvm"
+instance : DialectPrint (MetaLLVM φ) where
+  printOpName := MetaLLVM.opName
+  printTy := MetaLLVM.printType
+  printAttributes := MetaLLVM.printAttributes
+  dialectName := "llvm"
   printReturn _:= "llvm.return"
   printFunc _:= "^bb0"
+
+instance : DialectPrint LLVM := by unfold LLVM; infer_instance
+
 /-! ### Signature -/
 
 @[simp, reducible]
