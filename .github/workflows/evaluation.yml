@@ -183,6 +183,66 @@ jobs:
           name: LLVM evaluation
           path: bv-evaluation/results
 
+  test-tools-scaling-auto-generated-stmts:
+    name: Test tools, scaling, and auto-generated statements
+    runs-on: ubuntu-latest
+    needs: eval-build
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Load Lean and Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+            .lake/build
+            */.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+
+
+      - name: Add Lean to PATH
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR (should be all in cache)
+        run: |
+          lake -R build
+          
+      - name: Compile `mlirnatural` Executable 🧐
+        run: |
+          lake -R build mlirnatural
+
+      - name: Compile `opt` Executable 🧐
+        run: |
+          lake -R build opt
+
+      - name: Compile `LLVMRiscV` Tests 
+        run: |
+          lake -R build SSA.Projects.LLVMRiscV.Tests.Tests
+
+#      This broke the build during a recent update
+#      - name: LLVM opt round trip test
+#        run: |
+#          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
+
+      - name: Compile Alive Scaling
+        run: |
+          lake -R build SSA.Projects.InstCombine.ScalingTest
+
+      - name: Check for changes in AliveStatements
+        run: |
+          lake build AliveExamples
+          (cd SSA/Projects/InstCombine/; ./update_alive_statements.py)
+          bash -c '! git diff | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+          
   test-core-library:
     name: Test Core Library
     runs-on: ubuntu-latest
