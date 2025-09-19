@@ -16,22 +16,19 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Cache `.lake` and `.elan` folders
-        id: cache-lake
+      - name: Cache `.elan` folders
+        id: cache-lean
         uses: actions/cache@v4
         with:
           path: |
             ~/.elan
-            .lake/packages
-            .lake/build
-            */.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
+            ${{ runner.os }}-elan-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+            ${{ runner.os }}-elan-${{ hashFiles('lake-manifest.json') }}
 
       - name: Install Elan & Lean
-        if: steps.cache-lake.outputs.cache-hit != 'true'
+        if: steps.cache-lean.outputs.cache-hit != 'true'
         run: |
           set -o pipefail
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
@@ -40,6 +37,19 @@ jobs:
       - name: Make lake available
         run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache `.lake` folders
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          path: |
+            .lake/packages
+            .lake/build
+            */.lake
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Build Lean-MLIR & Mathlib
         # We build Mathlib from scratch as this reduces the build artifacts that are stored in the cache. Previous experiments
@@ -61,12 +71,19 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Load Lean and Lean-MLIR from Cache
-        id: cache-lake
+      - name: Load Lean from Cache
+        id: cache-lean
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
+          key: ${{ runner.os }}-lean-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
             .lake/packages
             .lake/build
             */.lake
@@ -94,12 +111,19 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Load Lean and Lean-MLIR from Cache
-        id: cache-lake
+      - name: Load Lean from Cache
+        id: cache-lean
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
+          key: ${{ runner.os }}-lean-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
             .lake/packages
             .lake/build
             */.lake
@@ -127,12 +151,19 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Load Lean and Lean-MLIR from Cache
-        id: cache-lake
+      - name: Load Lean from Cache
+        id: cache-lean
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
+          key: ${{ runner.os }}-lean-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
             .lake/packages
             .lake/build
             */.lake
@@ -193,20 +224,23 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Load Lean and Lean-MLIR from Cache
-        id: cache-lake
+      - name: Load Lean from Cache
+        id: cache-lean
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
+          key: ${{ runner.os }}-lean-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
             .lake/packages
             .lake/build
             */.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
-          restore-keys: |
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
-
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Add Lean to PATH
         run: |
@@ -253,20 +287,23 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Load Lean and Lean-MLIR from Cache
-        id: cache-lake
+      - name: Load Lean from Cache
+        id: cache-lean
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
+          key: ${{ runner.os }}-lean-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
             .lake/packages
             .lake/build
             */.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
-          restore-keys: |
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
-
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Add Lean to PATH
         run: |
@@ -338,20 +375,23 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
 
-      - name: Load Lean and Lean-MLIR from Cache
-        id: cache-lake
+      - name: Load Lean from Cache
+        id: cache-lean
         uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
+          key: ${{ runner.os }}-lean-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
             .lake/packages
             .lake/build
             */.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
-          restore-keys: |
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
-
+          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Add Lean to PATH
         run: |
