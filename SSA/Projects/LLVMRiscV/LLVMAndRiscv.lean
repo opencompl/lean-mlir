@@ -48,11 +48,15 @@ abbrev LLVMPlusRiscV : Dialect where
   Op := Op
   Ty := Ty
 
+/-! ### Type Semantics -/
+
 @[simp]
 instance : TyDenote LLVMPlusRiscV.Ty where
   toType := fun
     | .llvm llvmTy => TyDenote.toType llvmTy
     | .riscv riscvTy => TyDenote.toType riscvTy
+
+/-! ### Operation Signatures -/
 
 @[simp]
 instance LLVMPlusRiscVSignature : DialectSignature LLVMPlusRiscV where
@@ -63,6 +67,8 @@ instance LLVMPlusRiscVSignature : DialectSignature LLVMPlusRiscV where
       {sig := [Ty.riscv .bv], returnTypes := [Ty.llvm (.bitvec w)], regSig := []}
   | .castLLVM w =>
       {sig := [Ty.llvm (.bitvec w)], returnTypes := [Ty.riscv .bv], regSig := []}
+
+/-! ### Printing -/
 
 instance : ToString LLVMPlusRiscV.Op  where
   toString := fun

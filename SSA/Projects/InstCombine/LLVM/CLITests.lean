@@ -28,9 +28,6 @@ abbrev Context := Ctxt LLVM.Ty
 abbrev MCom φ := Com (MetaLLVM φ)
 abbrev MExpr φ := Expr (MetaLLVM φ)
 
-instance : ToString Context where
-  toString Γ := toString Γ.toList
-
 structure CliTest where
   name : Name
   mvars : Nat
@@ -211,9 +208,6 @@ def ConcreteCliTest.parseableInputs (test : ConcreteCliTest) :
 def CocreteCliTest.signature (test : ConcreteCliTest) :
     Ctxt (InstCombine.MTy 0) × (InstCombine.MTy 0) :=
   (⟨test.context.toList.reverse⟩, test.ty)
-
-def ConcreteCliTest.printSignature (test : ConcreteCliTest) : String :=
-  s!"{test.context.toList.reverse} → {test.ty}"
 
 open LLVM.Ty in
 instance {test : ConcreteCliTest} : ToString (toType test.ty) where

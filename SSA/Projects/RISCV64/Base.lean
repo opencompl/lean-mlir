@@ -405,6 +405,8 @@ abbrev RV64 : Dialect where
 instance : DialectSignature RV64 where
   signature o := {sig := Op.sig o, returnTypes := [Op.outTy o], regSig := []}
 
+/-! ## Printing -/
+
 def opToString (op : RISCV64.Op) : String :=
   let op  : String := match op with
   | .li (_imm : BitVec 64) => "li"
