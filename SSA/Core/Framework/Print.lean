@@ -264,6 +264,21 @@ def Expr.printType (e : Expr d Γ eff ts) : Format :=
   f!"({argTys}) -> ({retTys})"
 
 /--
+Print the results of an expression, e.g., `%x =`.
+
+Returns an empty string if the expression has no results.
+-/
+def Expr.printResultList (_e : Expr d Γ eff ts) : Format :=
+  if ts.length = 0 then
+    ""
+  else
+    let rs :=
+      List.range ts.length
+      |>.map (f!"%{· + Γ.length}")
+      |> f!", ".joinSep
+    f!"{rs} = "
+
+/--
 Print an `Expr` in generic MLIR syntax.
 
 Note: this prints the entire let-binding, i.e.:
@@ -274,9 +289,8 @@ Note: this prints the entire let-binding, i.e.:
 - The type annotation
 -/
 partial def Expr.print (e : Expr d Γ eff t) : Format :=
-  let lhs := f!"%{Γ.length}"
   let rhs := f!"\"{printOpName e.op}\"{e.printArgs}{printAttributes e.op} : {e.printType}"
-  Format.align true ++ f!"{lhs} = {rhs}"
+  Format.align true ++ f!"{e.printResultList}{rhs}"
 
 /--
 Recursively print a `Com` in generic MLIR syntax.
