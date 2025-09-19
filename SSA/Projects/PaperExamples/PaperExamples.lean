@@ -140,7 +140,7 @@ def lhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
     ^bb0(%x : i32):
       %c0 = "const" () { value = 0 : i32 } : () -> i32
       %out = "add" (%x, %c0) : (i32, i32) -> i32
-      "return" (%out) : (i32) -> (i32)
+      "return" (%out) : (i32) -> ()
   }]
 
 /--
@@ -158,7 +158,7 @@ open MLIR AST MLIR2Simple in
 def rhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
   [simple_com| {
     ^bb0(%x : i32):
-      "return" (%x) : (i32) -> (i32)
+      "return" (%x) : (i32) -> ()
   }]
 
 
