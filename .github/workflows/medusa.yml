@@ -45,12 +45,12 @@ jobs:
         if: steps.cache-lake.outputs.cache-hit != 'true'
         continue-on-error: true
         run: |
-          (lake -R exe cache get ; true) # download cache of mathlib docs.
+          (pushd Medusa; lake -R exe cache get; true; popd) # download cache of mathlib docs.
 
       - name: Compile Medusa
         run: |
-          lake -R build Medusa --iofail
+          pushd Medusa; lake -R build Medusa --iofail
 
       - name: Test Medusa
         run: |
-          pushd Medusa && lake test; popd
+          pushd Medusa; lake test; popd

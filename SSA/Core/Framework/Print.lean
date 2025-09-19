@@ -37,9 +37,9 @@ private def formatArgTuple [Repr Ty] {Γ : List Ty}
       match args with
       | .cons a as => (repr a) :: (formatArgTupleAux as)
 
-/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
+/-- Format a list of formal arguments as `(%0 : tₙ , ... %n : t₀)` -/
 private def formatFormalArgListTuple [Repr Ty] (ts : List Ty) : Format :=
-  Format.paren <| Format.joinSep ((List.range ts.length).zip ts |>.map
+  Format.paren <| Format.joinSep ((List.range ts.length).zip ts.reverse |>.map
     (fun it => f!"%{it.fst} : {repr it.snd}")) ", "
 
 private def Expr.formatBoundVariables : Expr d Γ eff ts → String
@@ -103,9 +103,9 @@ end Repr
 section ToString
 variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
 
-/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
+/-- Format a list of formal arguments as `(%0 : tₙ , ... %n : t₀)` -/
 partial def formatFormalArgListTupleStr [ToString Ty] (ts : List Ty) : String :=
-  let args := (List.range ts.length).zip ts |>.map
+  let args := (List.range ts.length).zip ts.reverse |>.map
     (fun (i, t) => s!"%{i} : {toString t}")
   "(" ++ String.intercalate ", " args ++ ")"
 
@@ -157,9 +157,9 @@ section ToPrint
 open Std (Format)
 variable {d} [ToPrint d] [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
 
-/-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
+/-- Format a list of formal arguments as `(%0 : tₙ , ... %n : t₀)` -/
 partial def formatFormalArgListTuplePrint [ToString d.Ty] (ts : List d.Ty) : String :=
-  let args := (List.range ts.length).zip ts |>.map
+  let args := (List.range ts.length).zip ts.reverse |>.map
     (fun (i, t) => s!"%{i} : {ToPrint.printTy t}")
   "(" ++ String.intercalate ", " args ++ ")"
 

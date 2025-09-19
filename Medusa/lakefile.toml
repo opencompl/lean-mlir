@@ -10,7 +10,13 @@ name = "Medusa"
 name = "Test"
 
 [[require]]
-name = "mathlib"
-git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
-rev = "nightly-testing-2025-08-11"
+name = "fp-lean"
+git = "https://github.com/opencompl/fp-lean"
+rev = "5e45c0f"
+
+[[require]]
+name = "SSA"
+# git = "https://github.com/opencompl/lean-mlir"
+path = "../"
+rev = "main"
 
