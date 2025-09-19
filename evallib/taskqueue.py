@@ -17,6 +17,7 @@ class TaskQueue:
         self.stride = stride
         # Starting index for processing tasks
         self.offset = offset
+        assert self.offset < self.stride
         # Whether to show a progress bar on stdout
         self.show_progress_bar = show_progress_bar
 
