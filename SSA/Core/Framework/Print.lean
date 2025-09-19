@@ -99,57 +99,6 @@ instance : Repr (Lets d Γ eff t) := ⟨flip Lets.repr⟩
 
 end Repr
 
-/- # ToString instances for Com and Expr  -/
-section ToString
-variable {d} [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString d.Ty] [ToString d.Op]
-
-/-- Format a list of formal arguments as `(%0 : tₙ , ... %n : t₀)` -/
-partial def formatFormalArgListTupleStr [ToString Ty] (ts : List Ty) : String :=
-  let args := (List.range ts.length).zip ts.reverse |>.map
-    (fun (i, t) => s!"%{i} : {toString t}")
-  "(" ++ String.intercalate ", " args ++ ")"
-
--- Format a sequence of types as `(t₁, ..., tₙ)` using toString instances -/
-private def formatTypeTupleToString [ToString Ty] (xs : List Ty) : String :=
-  "(" ++ String.intercalate ", " (xs.map toString) ++ ")"
-
-/--
-Converts an expression to its string representation.
-Assumes that `toString` instances exist for both the dialect's operations (`d.Op`)
-and types (`d.Ty`). The output includes the operation name, argument list,
-their types, and the resulting output type.
--/
-partial def Expr.toString [ToString d.Op] : Expr d Γ eff t → String
-  | Expr.mk (op : d.Op) _ _ args _regArgs =>
-    let returnTypes := DialectSignature.returnTypes op
-    let returnTypes := ", ".intercalate <| returnTypes.map ToString.toString
-    let argTys := DialectSignature.sig op
-    s!"{ToString.toString op}{formatArgTuple args} : {formatTypeTupleToString argTys} -> ({returnTypes})"
-
-/-- This function recursivly converts the body of a `Com` into its string representation.
-Each bound variable is printed with its index and corresponding expression. -/
-partial def Com.ToStringBody : Com d Γ eff ts → String
-  | .rets vs =>
-    let vs := (vs.map fun _ v => s!"{_root_.repr v}").toListOf String (by intros; rfl)
-    let vs := ", ".intercalate vs
-    let ts := ", ".intercalate <| ts.map ToString.toString
-    s!"  \"return\"({vs}) : ({ts}) -> ()"
-  | .var e@⟨op, _ , _,_ , _⟩ body =>
-    let vs := e.formatBoundVariables
-    s!"  {vs} = {Expr.toString e}" ++ "\n" ++
-    Com.ToStringBody body
-
-/- `Com.toString` implements a toString instance for the type `Com`.  -/
-partial def Com.toString (com : Com d Γ eff t) : String :=
-   "{ \n"
-  ++ "^entry" ++  ((formatFormalArgListTupleStr Γ.toList)) ++ ":" ++ "\n"
-  ++ (Com.ToStringBody com) ++
-   "\n }"
-
-instance : ToString (Com d Γ eff t)  where toString := Com.toString
-instance : ToString (Expr d Γ eff t) where toString := Expr.toString
-
-end ToString
 
 /-!
 ## DialectPrint infrastructure
@@ -312,14 +261,19 @@ private partial def Com.printAux : Com d Γ eff ts → Format
 Print a `Com` in generic MLIR syntax.
 -/
 partial def Com.print (com : Com d Γ eff ts) : Format :=
-  Format.align true ++ f!"{printFunc ts}{printBlockArgs Γ}:\n"
-  ++ (Format.nest 2 com.printAux)
+  f!"\{\n"
+  ++ (Format.nest 2 <|
+    Format.align true ++ f!"{printFunc ts}{printBlockArgs Γ}:\n"
+    ++ (Format.nest 2 com.printAux))
+  ++ Format.align true ++ f!"}"
 
 /--
 Print a `Com` in generic MLIR syntax, wrapped in an implicit `builtin.module`.
 -/
 partial def Com.printModule (com : Com d Γ eff ts) : Format :=
-  f!"builtin.module \{\n" ++ (Format.nest 2 com.print) ++ f!"\n}"
+  f!"builtin.module {com.print}"
 
+instance : ToString (Com d Γ eff t)  where toString com  := s!"{com.print}"
+instance : ToString (Expr d Γ eff t) where toString expr := s!"{expr.print}"
 
 end DialectPrint
