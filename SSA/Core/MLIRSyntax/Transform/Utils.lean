@@ -163,3 +163,51 @@ def mkExprOf (Γ : Ctxt d.Ty) (parsedOp : d.Op)
     ⟩⟩
 
 end Op
+end MLIR.AST
+
+/-! ## DialectParse Convenience Class -/
+namespace LeanMLIR
+open MLIR.AST
+
+variable (d : Dialect) [DialectSignature d] [DecidableEq d.Ty] [ToString d.Ty]
+
+/--
+`DialectParse` is a convenience class for defining instances of `TransformTy`,
+  `TransformReturn` and `TransformExpr`. Whenever an instance of these classes
+  is required, strongly consider implementing `DialectParse` instead!
+-/
+class DialectParse (d : Dialect) (φ : outParam Nat) [DialectSignature d]
+    [DecidableEq d.Ty] [ToString d.Ty]
+    extends TransformTy d φ where
+  /--
+  Return whether `opStx` is a valid return operation.
+
+  If this function returns `false`, a generic parse failure error is thrown;
+  dialects may also opt to throw more informative errors direclty.
+
+  NOTE: Dialect implementors do **not** have to check whether the variables are
+  in-scope, that will be checked in the framework
+  -/
+  isValidReturn : (Γ : Ctxt d.Ty) → (opStx : Op φ) → ReaderM d Bool
+
+  /--
+  See `TransformExpr.mkExpr`; We duplicate the field, rather than use `extends`
+  so that we can add the `TransformTy` instance.
+  -/
+  --
+  mkExpr [TransformTy d φ] : (Γ : Ctxt d.Ty) → (opStx : Op φ) → ReaderM d (Σ eff ty, Expr d Γ eff ty)
+
+
+variable {d}
+
+variable [DialectParse d φ]
+
+instance : TransformReturn d φ where
+  mkReturn Γ opStx := do
+    unless (← DialectParse.isValidReturn Γ opStx) do
+      throw <| .generic s!"Invalid return statement: {opStx.name}"
+    let args ← opStx.parseArgs Γ
+    return ⟨.pure, args.types, Com.rets args.toHVector⟩
+
+instance : TransformExpr d φ where
+  mkExpr := DialectParse.mkExpr
