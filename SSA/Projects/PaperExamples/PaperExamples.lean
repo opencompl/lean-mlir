@@ -8,6 +8,7 @@ import Mathlib.Tactic.Ring
 
 import SSA.Core
 
+open LeanMLIR
 open BitVec
 open Ctxt(Var)
 
@@ -20,7 +21,7 @@ namespace ToyNoRegion
 
 inductive Ty
   | int
-  deriving DecidableEq, Repr, Lean.ToExpr
+  deriving DecidableEq, Lean.ToExpr
 
 @[reducible]
 instance : TyDenote Ty where
@@ -30,19 +31,17 @@ instance : TyDenote Ty where
 inductive Op : Type
   | add : Op
   | const : (val : ℤ) → Op
-  deriving DecidableEq, Repr, Lean.ToExpr
+  deriving DecidableEq, Lean.ToExpr
 
 /-- `Simple` is a very basic example dialect -/
 abbrev Simple : Dialect where
   Op := Op
   Ty := Ty
 
-instance : ToString Ty where
-  toString t := repr t |>.pretty
-
 instance : DialectToExpr Simple where
   toExprM := .const ``Id [0]
   toExprDialect := .const ``Simple []
+
 
 def_signature for Simple
   | .add      => (.int, .int) → .int
@@ -52,74 +51,43 @@ def_denote for Simple
   | .const n => BitVec.ofInt 32 n ::ₕ .nil
   | .add     => fun a b => a + b ::ₕ .nil
 
-def cst {Γ : Ctxt _} (n : ℤ) : Expr Simple Γ .pure [.int]  :=
-  Expr.mk
-    (op := .const n)
-    (eff_le := by constructor)
-    (ty_eq := rfl)
-    (args := .nil)
-    (regArgs := .nil)
+/-! ### Printing -/
 
-def add {Γ : Ctxt _} (e₁ e₂ : Var Γ .int) : Expr Simple Γ .pure [.int] :=
-  Expr.mk
-    (op := .add)
-    (eff_le := by constructor)
-    (ty_eq := rfl)
-    (args := .cons e₁ <| .cons e₂ .nil)
-    (regArgs := .nil)
+instance instPrint : DialectPrint Simple where
+  printOpName
+  | .add => "add"
+  | .const _ => "const"
+  printTy
+  | .int => "i32"
+  printAttributes
+  | .const val => s!"\{value = {val} : i32}"
+  | _ => ""
+  dialectName := "simple"
+  printReturn _ := "return"
 
-attribute [local simp] Ctxt.cons
+/-! ### Parsing -/
 
-namespace MLIR2Simple
+@[instance] def instToStringTy := instPrint.instToStringTy
+@[instance] def instReprTy := instPrint.instReprTy
 
-def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM Simple Ty
-  | MLIR.AST.MLIRType.int MLIR.AST.Signedness.Signless _ => do
-    return .int
+instance : DialectParse Simple 0 where
+  mkTy
+  | .int .Signless 32 => return .int
   | _ => throw .unsupportedType
 
-instance instTransformTy : MLIR.AST.TransformTy Simple 0 where
-  mkTy := mkTy
+  isValidReturn _Γ opStx := return opStx.name == "return"
 
-def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
-    MLIR.AST.ReaderM Simple (Σ eff ty, Expr Simple Γ eff ty) := do
-  match opStx.name with
-  | "const" =>
-    match opStx.attrs.find_int "value" with
-    | .some (v, _ty) => return ⟨.pure, [.int], cst v⟩
-    | .none => throw <| .generic s!"expected 'const' to have int attr 'value', found: {repr opStx}"
-  | "add" =>
-    match opStx.args with
-    | v₁Stx::v₂Stx::[] =>
-      let ⟨.int, v₁⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₁Stx
-      let ⟨.int, v₂⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ v₂Stx
-      return ⟨.pure, [.int], add v₁ v₂⟩
-    | _ => throw <| .generic (
-        s!"expected two operands for `add`, found #'{opStx.args.length}' in '{repr opStx.args}'")
-  | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
+  mkExpr Γ opStx := do opStx.mkExprOf Γ <|← match opStx.name with
+    | "add"   => return .add
+    | "const" => do
+        let ⟨val, _type⟩ ← opStx.getIntAttr "value"
+        return .const val
+    | opName => throw <| .unsupportedOp opName
 
-instance : MLIR.AST.TransformExpr Simple 0 where
-  mkExpr := mkExpr
-
-def mkReturn (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
-    MLIR.AST.ReaderM Simple (Σ eff ty, Com Simple Γ eff ty) :=
-  if opStx.name == "return"
-  then match opStx.args with
-  | vStx::[] => do
-    let ⟨ty, v⟩ ← MLIR.AST.TypedSSAVal.mkVal Γ vStx
-    return ⟨.pure, [ty], Com.ret v⟩
-  | _ => throw <| .generic (
-      s!"Ill-formed return statement (wrong arity, expected 1, got {opStx.args.length})")
-  else throw <| .generic s!"Tried to build return out of non-return statement {opStx.name}"
-
-instance : MLIR.AST.TransformReturn Simple 0 where
-  mkReturn := mkReturn
-
-open Qq in
 elab "[simple_com| " reg:mlir_region "]" : term => SSA.elabIntoCom' reg (Simple)
 
-end MLIR2Simple
+/-! ### Examples -/
 
-open MLIR AST MLIR2Simple in
 def eg₀ : Com Simple (Ctxt.ofList []) .pure [.int] :=
   [simple_com| {
     %c2 = "const"() {value = 2} : () -> i32
@@ -133,7 +101,6 @@ def eg₀val := Com.denote eg₀ Ctxt.Valuation.nil
 /-- info: [0x00000008#32] -/
 #guard_msgs in #eval eg₀val
 
-open MLIR AST MLIR2Simple in
 /-- x + 0 -/
 def lhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
   [simple_com| {
@@ -145,15 +112,15 @@ def lhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
 
 /--
 info: {
-  ^entry(%0 : ToyNoRegion.Ty.int):
-    %1 = ToyNoRegion.Op.const 0 : () → (ToyNoRegion.Ty.int)
-    %2 = ToyNoRegion.Op.add(%0, %1) : (ToyNoRegion.Ty.int, ToyNoRegion.Ty.int) → (ToyNoRegion.Ty.int)
-    return %2 : (ToyNoRegion.Ty.int) → ()
+  ^entry(%0 : i32):
+    %1 = "const"(){value = 0 : i32} : () -> (i32)
+    %2 = "add"(%0, %1) : (i32, i32) -> (i32)
+    "return"(%2) : (i32) -> ()
 }
 -/
 #guard_msgs in #eval lhs
 
-open MLIR AST MLIR2Simple in
+
 /-- x -/
 def rhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
   [simple_com| {
@@ -164,13 +131,13 @@ def rhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
 
 /--
 info: {
-  ^entry(%0 : ToyNoRegion.Ty.int):
-    return %0 : (ToyNoRegion.Ty.int) → ()
+  ^entry(%0 : i32):
+    "return"(%0) : (i32) -> ()
 }
 -/
 #guard_msgs in #eval rhs
 
-open MLIR AST MLIR2Simple in
+
 def p1 : PeepholeRewrite Simple [.int] [.int] :=
   { lhs := lhs, rhs := rhs, correct :=
     by
@@ -191,10 +158,10 @@ def p1 : PeepholeRewrite Simple [.int] [.int] :=
 
 /--
 info: {
-  ^entry(%0 : ToyNoRegion.Ty.int):
-    %1 = ToyNoRegion.Op.const 0 : () → (ToyNoRegion.Ty.int)
-    %2 = ToyNoRegion.Op.add(%0, %1) : (ToyNoRegion.Ty.int, ToyNoRegion.Ty.int) → (ToyNoRegion.Ty.int)
-    return %0 : (ToyNoRegion.Ty.int) → ()
+  ^entry(%0 : i32):
+    %1 = "const"(){value = 0 : i32} : () -> (i32)
+    %2 = "add"(%0, %1) : (i32, i32) -> (i32)
+    "return"(%0) : (i32) -> ()
 }
 -/
 #guard_msgs (whitespace := lax) in #eval rewritePeepholeAt p1 1 lhs
@@ -207,12 +174,10 @@ namespace ToyRegion
 
 inductive Ty
   | int
-  deriving DecidableEq, Repr
+  deriving DecidableEq
 
-@[reducible]
-instance : TyDenote Ty where
-  toType
-    | .int => BitVec 32
+instance : TyDenote Ty where toType
+  | .int => BitVec 32
 
 instance : Inhabited (TyDenote.toType (t : Ty)) where
   default := by
@@ -223,13 +188,7 @@ inductive Op :  Type
   | add : Op
   | const : (val : ℤ) → Op
   | iterate (k : ℕ) : Op
-  deriving DecidableEq, Repr
-
-instance : Repr Op where
-  reprPrec
-    | .add, _ => "ToyRegion.Op.add"
-    | .const n , _ => f!"ToyRegion.Op.const {n}"
-    | .iterate n , _ => f!"ToyRegion.Op.iterate {n} "
+  deriving DecidableEq
 
 /-- A simple example dialect with regions -/
 abbrev SimpleReg : Dialect where
@@ -272,6 +231,24 @@ instance : DialectDenote SimpleReg where
       let f' (v :  BitVec 32) : BitVec 32 := f (Ctxt.Valuation.nil.cons v)
       let y := k.iterate f' x
       [y]ₕ
+
+/-! ### Printing -/
+
+instance instPrint : DialectPrint SimpleReg where
+  printOpName
+  | .add => "add"
+  | .const _ => "const"
+  | .iterate _ => "iterate"
+  printTy
+  | .int => "i32"
+  printAttributes
+  | .const val => s!"\{value = {val} : i32}"
+  | .iterate k => s!"\{iterations = {k}}"
+  | _ => ""
+  dialectName := "simple"
+  printReturn _ := "return"
+
+/-! ### Helpers -/
 
 @[simp_denote]
 def cst {Γ : Ctxt _} (n : ℤ) : Expr SimpleReg Γ .pure [int] :=
@@ -377,16 +354,16 @@ def egLhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
 
 /--
 info: {
-  ^entry(%0 : ToyRegion.Ty.int):
-    %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
-    %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
-    %3 = ToyRegion.Op.iterate 0 (%2) ({
-      ^entry(%0 : ToyRegion.Ty.int):
-        %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
-        %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
-        return %2 : (ToyRegion.Ty.int) → ()
-    }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
-    return %3 : (ToyRegion.Ty.int) → ()
+  ^entry(%0 : i32):
+    %1 = "const"(){value = 0 : i32} : () -> (i32)
+    %2 = "add"(%1, %0) : (i32, i32) -> (i32)
+    %3 = "iterate"(%2){iterations = 0} ({
+      ^entry(%0 : i32):
+        %1 = "const"(){value = 0 : i32} : () -> (i32)
+        %2 = "add"(%1, %0) : (i32, i32) -> (i32)
+        "return"(%2) : (i32) -> ()
+    }) : (i32) -> (i32)
+    "return"(%3) : (i32) -> ()
 }
 -/
 #guard_msgs in #eval egLhs
@@ -396,16 +373,16 @@ def runRewriteOnLhs : Com SimpleReg ⟨[int]⟩ .pure [int] :=
 
 /--
 info: {
-  ^entry(%0 : ToyRegion.Ty.int):
-    %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
-    %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
-    %3 = ToyRegion.Op.iterate 0 (%0) ({
-      ^entry(%0 : ToyRegion.Ty.int):
-        %1 = ToyRegion.Op.const 0 : () → (ToyRegion.Ty.int)
-        %2 = ToyRegion.Op.add(%1, %0) : (ToyRegion.Ty.int, ToyRegion.Ty.int) → (ToyRegion.Ty.int)
-        return %0 : (ToyRegion.Ty.int) → ()
-    }) : (ToyRegion.Ty.int) → (ToyRegion.Ty.int)
-    return %3 : (ToyRegion.Ty.int) → ()
+  ^entry(%0 : i32):
+    %1 = "const"(){value = 0 : i32} : () -> (i32)
+    %2 = "add"(%1, %0) : (i32, i32) -> (i32)
+    %3 = "iterate"(%0){iterations = 0} ({
+      ^entry(%0 : i32):
+        %1 = "const"(){value = 0 : i32} : () -> (i32)
+        %2 = "add"(%1, %0) : (i32, i32) -> (i32)
+        "return"(%0) : (i32) -> ()
+    }) : (i32) -> (i32)
+    "return"(%3) : (i32) -> ()
 }
 -/
 #guard_msgs in #eval runRewriteOnLhs
