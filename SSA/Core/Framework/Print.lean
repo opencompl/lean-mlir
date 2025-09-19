@@ -151,7 +151,27 @@ instance : ToString (Expr d Γ eff t) where toString := Expr.toString
 
 end ToString
 
-/- # ToPrint instances for Com and Expr  -/
+/-!
+## DialectPrint infrastructure
+-/
+
+/--
+ToPrint includes the functions to print the components of a dialect.
+-/
+class ToPrint (d : Dialect) where
+  /-- Prints the operation in the dialect. -/
+  printOpName : d.Op → String
+  /-- Prints the type in the dialect. -/
+  printTy : d.Ty → String
+  /-- Prints the attributes of the operation. -/
+  printAttributes : d.Op → String
+  /-- Prints the name of the dialect. -/
+  printDialect : String
+  /-- Prints the return instruction of the dialect. -/
+  printReturn : List d.Ty → String
+  /-- Prints the function header of the dialect. -/
+  printFunc : List d.Ty → String
+
 section ToPrint
 
 open Std (Format)
