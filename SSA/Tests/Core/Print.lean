@@ -53,8 +53,8 @@ instance : DialectPrint TestDialect where
     | .mkPair => "pair"
   printAttributes _ := ""
   printTy
-    | .int => "int"
-    | .int2 => "int2"
+    | .int => "!int"
+    | .int2 => "!int2"
   dialectName := "test"
   printReturn _ := "return"
   printFunc _ := "^entry"
@@ -70,9 +70,9 @@ instance : DialectParse TestDialect 0 where
   isValidReturn _ stx := return (stx.name == "return")
   mkExpr Γ opStx := do
     let op : TestDialect.Op ← match opStx.name with
-      | "test.noop"     => pure .noop
-      | "test.un_pair"  => pure .unPair
-      | "test.pair"     => pure .mkPair
+      | "noop"     => pure .noop
+      | "un_pair"  => pure .unPair
+      | "pair"     => pure .mkPair
       | opName => throw <| .unsupportedOp opName
     opStx.mkExprOf Γ op
 
@@ -88,3 +88,30 @@ instance : DialectToExpr TestDialect where
 
 elab "[test| "  reg:mlir_region "]" : term => do
   SSA.elabIntoCom' reg TestDialect
+
+/-!
+## Test Cases
+Now come the actual test cases
+-/
+
+-- Test an operation without any results
+/--
+info:
+^entry(%0 : !int):
+  "noop"() : () -> ()
+  "return"(%0) : (!int) -> ()
+-/
+#guard_msgs in #eval Com.print [test| {
+  ^entry(%0 : !int):
+    "noop"() : () -> ()
+    "return"(%0) : (!int) -> ()
+}]
+
+-- Test an operation with multiple results
+-- FIXME: the following test case fails to even parse, but it ought to
+-- #guard_msgs in #eval Com.print [test| {
+--   ^entry(%0 : !int, %1 : !int):
+--     %2 = "pair"(%0, %1) : (!int, !int) -> (!int2)
+--     %3, %4 = "unpair"(%2) : (!int2) -> (!int)
+--     "return"(%3) : (!int) -> ()
+-- }]
