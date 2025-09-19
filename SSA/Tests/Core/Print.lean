@@ -48,8 +48,8 @@ def_denote for TestDialect
 
 instance : DialectPrint TestDialect where
   printOpName
-    | .noop => "noop"
-    | .unPair => "un_pair"
+    | .noop   => "noop"
+    | .unPair => "unpair"
     | .mkPair => "pair"
   printAttributes _ := ""
   printTy
@@ -71,7 +71,7 @@ instance : DialectParse TestDialect 0 where
   mkExpr Γ opStx := do
     let op : TestDialect.Op ← match opStx.name with
       | "noop"     => pure .noop
-      | "un_pair"  => pure .unPair
+      | "unpair"   => pure .unPair
       | "pair"     => pure .mkPair
       | opName => throw <| .unsupportedOp opName
     opStx.mkExprOf Γ op
@@ -108,10 +108,16 @@ info:
 }]
 
 -- Test an operation with multiple results
--- FIXME: the following test case fails to even parse, but it ought to
--- #guard_msgs in #eval Com.print [test| {
---   ^entry(%0 : !int, %1 : !int):
---     %2 = "pair"(%0, %1) : (!int, !int) -> (!int2)
---     %3, %4 = "unpair"(%2) : (!int2) -> (!int)
---     "return"(%3) : (!int) -> ()
--- }]
+/--
+info:
+^entry(%0 : !int, %1 : !int):
+  %2 = "pair"(%0, %1) : (!int, !int) -> (!int2)
+  %3, %4 = "unpair"(%2) : (!int2) -> (!int, !int)
+  "return"(%3) : (!int) -> ()
+-/
+#guard_msgs in #eval Com.print [test| {
+  ^entry(%0 : !int, %1 : !int):
+    %2 = "pair"(%0, %1) : (!int, !int) -> (!int2)
+    %3, %4 = "unpair"(%2) : (!int2) -> (!int, !int)
+    "return"(%3) : (!int) -> ()
+}]
