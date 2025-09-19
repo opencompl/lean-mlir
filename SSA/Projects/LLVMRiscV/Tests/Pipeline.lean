@@ -4,469 +4,299 @@ import SSA.Projects.InstCombine.LLVM.Opt
 
 /--
 info: builtin.module { ⏎
-^bb0(%0 : i1, %1 : i1):
-  %2 = "llvm."llvm.add""(%0, %1)<{overflowFlags = #llvm.overflow<none>}> : (i1, i1) -> (i1)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i1) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i1) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+^bb0(%0 : i32, %1 : i32):
+  %2 = "llvm.icmp"(%0, %1)ugt : (i32, i32) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
+  %5 = "riscv.sltu"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
   %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i1)
   "llvm.return"(%6) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_no_flags_1)
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_ugt_llvm_32)
 
 
 /--
 info: builtin.module { ⏎
-^bb0(%0 : i1, %1 : i1):
-  %2 = "llvm."llvm.add true false""(%0, %1)<{overflowFlags = #llvm.overflow<nsw>}> : (i1, i1) -> (i1)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i1) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i1) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+^bb0(%0 : i32, %1 : i32):
+  %2 = "llvm.icmp"(%0, %1)uge : (i32, i32) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
+  %5 = "riscv.sltu"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.xori"(%5){immediate = 1 : si12 } : (!riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  "llvm.return"(%7) : (i1) -> ()
+ }
+-/
+#guard_msgs in
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_uge_llvm_32)
+
+
+/--
+info: builtin.module { ⏎
+^bb0(%0 : i32, %1 : i32):
+  %2 = "llvm.icmp"(%0, %1)ult : (i32, i32) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
+  %5 = "riscv.sltu"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
   %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i1)
   "llvm.return"(%6) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nsw_flags_1)
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_ult_llvm_32)
 
 
 /--
 info: builtin.module { ⏎
-^bb0(%0 : i1, %1 : i1):
-  %2 = "llvm."llvm.add false true""(%0, %1)<{overflowFlags = #llvm.overflow<nuw>}> : (i1, i1) -> (i1)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i1) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i1) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+^bb0(%0 : i32, %1 : i32):
+  %2 = "llvm.icmp"(%0, %1)ule : (i32, i32) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
+  %5 = "riscv.sltu"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.xori"(%5){immediate = 1 : si12 } : (!riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  "llvm.return"(%7) : (i1) -> ()
+ }
+-/
+#guard_msgs in
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_ule_llvm_32)
+
+
+/--
+info: builtin.module { ⏎
+^bb0(%0 : i32, %1 : i32):
+  %2 = "llvm.icmp"(%0, %1)sgt : (i32, i32) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
+  %5 = "riscv.slt"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
   %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i1)
   "llvm.return"(%6) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nuw_flags_1)
-
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_sgt_llvm_32)
 
 /--
 info: builtin.module { ⏎
-^bb0(%0 : i1, %1 : i1):
-  %2 = "llvm."llvm.add true true""(%0, %1)<{overflowFlags = #llvm.overflow<nsw,nuw>}> : (i1, i1) -> (i1)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i1) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i1) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+^bb0(%0 : i32, %1 : i32):
+  %2 = "llvm.icmp"(%0, %1)sge : (i32, i32) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
+  %5 = "riscv.slt"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.xori"(%5){immediate = 1 : si12 } : (!riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  "llvm.return"(%7) : (i1) -> ()
+ }
+-/
+#guard_msgs in
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_sge_llvm_32)
+
+/--
+info: builtin.module { ⏎
+^bb0(%0 : i32, %1 : i32):
+  %2 = "llvm.icmp"(%0, %1)slt : (i32, i32) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
+  %5 = "riscv.slt"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
   %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i1)
   "llvm.return"(%6) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nsw_nuw_flags_1)
-
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i8, %1 : i8):
-  %2 = "llvm."llvm.add""(%0, %1)<{overflowFlags = #llvm.overflow<none>}> : (i8, i8) -> (i8)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i8) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i8) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i8)
-  "llvm.return"(%6) : (i8) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_no_flags_8)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i8, %1 : i8):
-  %2 = "llvm."llvm.add true false""(%0, %1)<{overflowFlags = #llvm.overflow<nsw>}> : (i8, i8) -> (i8)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i8) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i8) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i8)
-  "llvm.return"(%6) : (i8) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nsw_flags_8)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i8, %1 : i8):
-  %2 = "llvm."llvm.add false true""(%0, %1)<{overflowFlags = #llvm.overflow<nuw>}> : (i8, i8) -> (i8)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i8) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i8) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i8)
-  "llvm.return"(%6) : (i8) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nuw_flags_8)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i8, %1 : i8):
-  %2 = "llvm."llvm.add true true""(%0, %1)<{overflowFlags = #llvm.overflow<nsw,nuw>}> : (i8, i8) -> (i8)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i8) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i8) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i8)
-  "llvm.return"(%6) : (i8) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nsw_nuw_flags_8)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i16, %1 : i16):
-  %2 = "llvm."llvm.add""(%0, %1)<{overflowFlags = #llvm.overflow<none>}> : (i16, i16) -> (i16)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i16) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i16) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i16)
-  "llvm.return"(%6) : (i16) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_no_flags_16)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i16, %1 : i16):
-  %2 = "llvm."llvm.add true false""(%0, %1)<{overflowFlags = #llvm.overflow<nsw>}> : (i16, i16) -> (i16)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i16) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i16) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i16)
-  "llvm.return"(%6) : (i16) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nsw_flags_16)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i16, %1 : i16):
-  %2 = "llvm."llvm.add false true""(%0, %1)<{overflowFlags = #llvm.overflow<nuw>}> : (i16, i16) -> (i16)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i16) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i16) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i16)
-  "llvm.return"(%6) : (i16) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nuw_flags_16)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i16, %1 : i16):
-  %2 = "llvm."llvm.add true true""(%0, %1)<{overflowFlags = #llvm.overflow<nsw,nuw>}> : (i16, i16) -> (i16)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i16) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i16) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i16)
-  "llvm.return"(%6) : (i16) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nsw_nuw_flags_16)
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_slt_llvm_32)
 
 /--
 info: builtin.module { ⏎
 ^bb0(%0 : i32, %1 : i32):
-  %2 = "llvm."llvm.add""(%0, %1)<{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> (i32)
+  %2 = "llvm.icmp"(%0, %1)sle : (i32, i32) -> (i1)
   %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
   %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i32)
-  "llvm.return"(%6) : (i32) -> ()
+  %5 = "riscv.slt"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.xori"(%5){immediate = 1 : si12 } : (!riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  "llvm.return"(%7) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_no_flags_32)
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_sle_llvm_32)
 
 /--
 info: builtin.module { ⏎
 ^bb0(%0 : i32, %1 : i32):
-  %2 = "llvm."llvm.add true false""(%0, %1)<{overflowFlags = #llvm.overflow<nsw>}> : (i32, i32) -> (i32)
+  %2 = "llvm.icmp"(%0, %1)eq : (i32, i32) -> (i1)
   %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
   %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i32)
-  "llvm.return"(%6) : (i32) -> ()
+  %5 = "riscv.xor"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.sltiu"(%5){immediate = 1 : i12 } : (!riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  "llvm.return"(%7) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nsw_flags_32)
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_eq_llvm_32)
 
 /--
 info: builtin.module { ⏎
 ^bb0(%0 : i32, %1 : i32):
-  %2 = "llvm."llvm.add false true""(%0, %1)<{overflowFlags = #llvm.overflow<nuw>}> : (i32, i32) -> (i32)
+  %2 = "llvm.icmp"(%0, %1)ne : (i32, i32) -> (i1)
   %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
   %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i32)
-  "llvm.return"(%6) : (i32) -> ()
+  %5 = "riscv.xor"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.li"() {immediate = 0 : i64 } : () -> (!riscv.reg)
+  %7 = "riscv.sltu"(%6, %5) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %8 = "builtin.unrealized_conversion_cast"(%7) : (!riscv.reg) -> (i1)
+  "llvm.return"(%8) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nuw_flags_32)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i32, %1 : i32):
-  %2 = "llvm."llvm.add true true""(%0, %1)<{overflowFlags = #llvm.overflow<nsw,nuw>}> : (i32, i32) -> (i32)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i32)
-  "llvm.return"(%6) : (i32) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nsw_nuw_flags_32)
-
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_neq_llvm_32)
 
 /--
 info: builtin.module { ⏎
 ^bb0(%0 : i64, %1 : i64):
-  %2 = "llvm."llvm.add""(%0, %1)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+  %2 = "llvm.icmp"(%0, %1)ugt : (i64, i64) -> (i1)
   %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
   %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i64)
-  "llvm.return"(%6) : (i64) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_no_flags_64)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i64, %1 : i64):
-  %2 = "llvm."llvm.add true false""(%0, %1)<{overflowFlags = #llvm.overflow<nsw>}> : (i64, i64) -> (i64)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i64)
-  "llvm.return"(%6) : (i64) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nsw_flags_64)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i64, %1 : i64):
-  %2 = "llvm."llvm.add false true""(%0, %1)<{overflowFlags = #llvm.overflow<nuw>}> : (i64, i64) -> (i64)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i64)
-  "llvm.return"(%6) : (i64) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nuw_flags_64)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i64, %1 : i64):
-  %2 = "llvm."llvm.add true true""(%0, %1)<{overflowFlags = #llvm.overflow<nsw,nuw>}> : (i64, i64) -> (i64)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
-  %5 = "riscv.add"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i64)
-  "llvm.return"(%6) : (i64) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 add_llvm_nsw_nuw_flags_64)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i1, %1 : i1):
-  %2 = "llvm."llvm.and""(%0, %1) : (i1, i1) -> (i1)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i1) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i1) -> (!riscv.reg)
-  %5 = "riscv.and"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %5 = "riscv.sltu"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
   %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i1)
   "llvm.return"(%6) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 and_llvm_1)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i8, %1 : i8):
-  %2 = "llvm."llvm.and""(%0, %1) : (i8, i8) -> (i8)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i8) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i8) -> (!riscv.reg)
-  %5 = "riscv.and"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i8)
-  "llvm.return"(%6) : (i8) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 and_llvm_8)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i16, %1 : i16):
-  %2 = "llvm."llvm.and""(%0, %1) : (i16, i16) -> (i16)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i16) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i16) -> (!riscv.reg)
-  %5 = "riscv.and"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i16)
-  "llvm.return"(%6) : (i16) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 and_llvm_16)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i32, %1 : i32):
-  %2 = "llvm."llvm.and""(%0, %1) : (i32, i32) -> (i32)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
-  %5 = "riscv.and"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i32)
-  "llvm.return"(%6) : (i32) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 and_llvm_32)
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_ugt_llvm_64)
 
 /--
 info: builtin.module { ⏎
 ^bb0(%0 : i64, %1 : i64):
-  %2 = "llvm."llvm.and""(%0, %1) : (i64, i64) -> (i64)
+  %2 = "llvm.icmp"(%0, %1)uge : (i64, i64) -> (i1)
   %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
   %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
-  %5 = "riscv.and"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i64)
-  "llvm.return"(%6) : (i64) -> ()
+  %5 = "riscv.sltu"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.xori"(%5){immediate = 1 : si12 } : (!riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  "llvm.return"(%7) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 and_llvm_64)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i8, %1 : i8):
-  %2 = "llvm."llvm.ashr""(%0, %1) : (i8, i8) -> (i8)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i8) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i8) -> (!riscv.reg)
-  %5 = "riscv.sra"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i8)
-  "llvm.return"(%6) : (i8) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 ashr_llvm_no_flag_8)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i8, %1 : i8):
-  %2 = "llvm."llvm.ashr exact""(%0, %1) : (i8, i8) -> (i8)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i8) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i8) -> (!riscv.reg)
-  %5 = "riscv.sra"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i8)
-  "llvm.return"(%6) : (i8) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 ashr_llvm_exact_flag_8)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i16, %1 : i16):
-  %2 = "llvm."llvm.ashr""(%0, %1) : (i16, i16) -> (i16)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i16) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i16) -> (!riscv.reg)
-  %5 = "riscv.sra"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i16)
-  "llvm.return"(%6) : (i16) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 ashr_llvm_no_flag_16)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i16, %1 : i16):
-  %2 = "llvm."llvm.ashr exact""(%0, %1) : (i16, i16) -> (i16)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i16) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i16) -> (!riscv.reg)
-  %5 = "riscv.sra"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i16)
-  "llvm.return"(%6) : (i16) -> ()
- }
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 ashr_llvm_exact_flag_16)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i32, %1 : i32):
-  %2 = "llvm."llvm.ashr""(%0, %1) : (i32, i32) -> (i32)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
-  %5 = "riscv.sra"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i32)
-  "llvm.return"(%6) : (i32) -> ()
- }
-
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 ashr_llvm_no_flag_32)
-
-/--
-info: builtin.module { ⏎
-^bb0(%0 : i32, %1 : i32):
-  %2 = "llvm."llvm.ashr exact""(%0, %1) : (i32, i32) -> (i32)
-  %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
-  %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
-  %5 = "riscv.sra"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i32)
-  "llvm.return"(%6) : (i32) -> ()
- }
-
--/
-#guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 ashr_llvm_exact_flag_32)
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_uge_llvm_64)
 
 /--
 info: builtin.module { ⏎
 ^bb0(%0 : i64, %1 : i64):
-  %2 = "llvm."llvm.ashr""(%0, %1) : (i64, i64) -> (i64)
+  %2 = "llvm.icmp"(%0, %1)ult : (i64, i64) -> (i1)
   %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
   %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
-  %5 = "riscv.sra"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i64)
-  "llvm.return"(%6) : (i64) -> ()
+  %5 = "riscv.sltu"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i1)
+  "llvm.return"(%6) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 ashr_llvm_no_flag_64)
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_ult_llvm_64)
 
 /--
 info: builtin.module { ⏎
 ^bb0(%0 : i64, %1 : i64):
-  %2 = "llvm."llvm.ashr exact""(%0, %1) : (i64, i64) -> (i64)
+  %2 = "llvm.icmp"(%0, %1)ule : (i64, i64) -> (i1)
   %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
   %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
-  %5 = "riscv.sra"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i64)
-  "llvm.return"(%6) : (i64) -> ()
+  %5 = "riscv.sltu"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.xori"(%5){immediate = 1 : si12 } : (!riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  "llvm.return"(%7) : (i1) -> ()
  }
 -/
 #guard_msgs in
-#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 ashr_llvm_exact_flag_64)
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_ule_llvm_64)
+
+/--
+info: builtin.module { ⏎
+^bb0(%0 : i64, %1 : i64):
+  %2 = "llvm.icmp"(%0, %1)sgt : (i64, i64) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+  %5 = "riscv.slt"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i1)
+  "llvm.return"(%6) : (i1) -> ()
+ }
+-/
+#guard_msgs in
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_sgt_llvm_64)
+
+/--
+info: builtin.module { ⏎
+^bb0(%0 : i64, %1 : i64):
+  %2 = "llvm.icmp"(%0, %1)sge : (i64, i64) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+  %5 = "riscv.slt"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.xori"(%5){immediate = 1 : si12 } : (!riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  "llvm.return"(%7) : (i1) -> ()
+ }
+-/
+#guard_msgs in
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_sge_llvm_64)
+
+
+/--
+info: builtin.module { ⏎
+^bb0(%0 : i64, %1 : i64):
+  %2 = "llvm.icmp"(%0, %1)slt : (i64, i64) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+  %5 = "riscv.slt"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "builtin.unrealized_conversion_cast"(%5) : (!riscv.reg) -> (i1)
+  "llvm.return"(%6) : (i1) -> ()
+ }
+-/
+#guard_msgs in
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_slt_llvm_64)
+
+/--
+info: builtin.module { ⏎
+^bb0(%0 : i64, %1 : i64):
+  %2 = "llvm.icmp"(%0, %1)sle : (i64, i64) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+  %5 = "riscv.slt"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.xori"(%5){immediate = 1 : si12 } : (!riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  "llvm.return"(%7) : (i1) -> ()
+ }
+-/
+#guard_msgs in
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_sle_llvm_64)
+
+/--
+info: builtin.module { ⏎
+^bb0(%0 : i64, %1 : i64):
+  %2 = "llvm.icmp"(%0, %1)eq : (i64, i64) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+  %5 = "riscv.xor"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.sltiu"(%5){immediate = 1 : i12 } : (!riscv.reg) -> (!riscv.reg)
+  %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
+  "llvm.return"(%7) : (i1) -> ()
+ }
+-/
+#guard_msgs in
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_eq_llvm_64)
+
+/--
+info: builtin.module { ⏎
+^bb0(%0 : i64, %1 : i64):
+  %2 = "llvm.icmp"(%0, %1)ne : (i64, i64) -> (i1)
+  %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+  %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+  %5 = "riscv.xor"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %6 = "riscv.li"() {immediate = 0 : i64 } : () -> (!riscv.reg)
+  %7 = "riscv.sltu"(%6, %5) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+  %8 = "builtin.unrealized_conversion_cast"(%7) : (!riscv.reg) -> (i1)
+  "llvm.return"(%8) : (i1) -> ()
+ }
+-/
+#guard_msgs in
+#eval! String.toFormat <| Com.toPrint (multiRewritePeephole 100 rewritingPatterns0 icmp_neq_llvm_64)
