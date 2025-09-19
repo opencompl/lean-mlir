@@ -24,9 +24,12 @@ where each element `aᵢ` is not further reduced -/
 partial def ctxtNf (as : Expr) : MetaM Expr := do
   let as ← whnf as
   match_expr as with
+    | Ctxt.cons _ a as =>
+        let as ← ctxtNf as
+        mkAppM ``Ctxt.cons #[a, as]
     | List.cons _ a as =>
         let as ← ctxtNf as
-        mkAppM ``Ctxt.snoc #[as, a]
+        mkAppM ``Ctxt.cons #[a, as]
     | _ => return as
 
 /-- `comNf` reduces an expression of type `Com` to something in between whnf and normal form.
