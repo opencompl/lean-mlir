@@ -3,7 +3,7 @@ import SSA.Projects.InstCombine.LLVM.EDSL
 /--
 info: builtin.module { ⏎
 ^bb0(%0 : i64, %1 : i64):
-  %2 = "llvm."llvm.add true true""(%0, %1)<{overflowFlags = #llvm.overflow<nsw,nuw>}> : (i64, i64) -> (i64)
+  %2 = "llvm."add true true""(%0, %1)<{overflowFlags = #llvm.overflow<nsw,nuw>}> : (i64, i64) -> (i64)
   "llvm.return"(%2) : (i64) -> ()
  }
 -/
