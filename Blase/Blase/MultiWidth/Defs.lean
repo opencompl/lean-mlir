@@ -170,6 +170,18 @@ def Term.Ctx.Env.cons
   fun v => v.cases (bv.cast hw) (fun w => tenv w)
 
 
+/-- Set an index in the context. -/
+def Term.Ctx.Env.set {tcard : Nat}
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv) (i : Nat) (hi : i < tcard)
+  (v : BitVec ((tctx ⟨i, hi⟩).toNat wenv)) :
+  tctx.Env wenv := 
+  fun j => if hj : j = ⟨i, hi⟩
+  then v.cast (by simp[hj])
+  else tenv j
+
+
 
 /-- get the value of a variable from the environment. -/
 def Term.Ctx.Env.get {tcard : Nat}
@@ -178,6 +190,26 @@ def Term.Ctx.Env.get {tcard : Nat}
   (tenv : tctx.Env wenv) (i : Nat) (hi : i < tcard) :
   BitVec ((tctx ⟨i, hi⟩).toNat wenv) :=
   tenv ⟨i, hi⟩
+
+@[simp]
+def Term.Ctx.Env.get_set_eq_self {tcard : Nat}
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv) (i : Nat) (hi : i < tcard)
+  (v : BitVec ((tctx ⟨i, hi⟩).toNat wenv)) :
+  (tenv.set i hi v).get i hi = v := by simp [get, set]
+
+@[simp]
+def Term.Ctx.Env.get_set_eq_of_ne {tcard : Nat}
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv) (i : Nat) (hi : i < tcard) (j : Nat) (hj : j < tcard)
+  (hij : i ≠ j)
+  (v : BitVec ((tctx ⟨i, hi⟩).toNat wenv)) :
+  (tenv.set i hi v).get j hj = tenv.get j hj := by 
+    simp [get, set]
+    intros h 
+    simp [h] at hij
 
 @[simp]
 def Term.Ctx.Env.cons_get_zero
@@ -283,6 +315,7 @@ inductive Predicate
 | and (p1 p2 : Predicate tctx pcard) : Predicate tctx pcard
 | or (p1 p2 : Predicate tctx pcard) : Predicate tctx pcard
 | var (v : Fin pcard) : Predicate tctx pcard
+| exists (v : Nat) (hv : v < tcard) (p : Predicate tctx pcard) : Predicate tctx pcard
 
 -- add predicate NOT, <= for bitvectors, < for bitvectors, <=
 -- for widths, =, not equals for widths.
@@ -308,6 +341,8 @@ def Predicate.toProp {wcard tcard pcard : Nat} {wenv : WidthExpr.Env wcard}
     | .sle => (a.toBV tenv).sle (b.toBV tenv) = true
   | .and p1 p2 => p1.toProp tenv penv ∧ p2.toProp tenv penv
   | .or p1 p2 => p1.toProp tenv penv ∨ p2.toProp tenv penv
+  | .exists v hv p => ∃ (x : BitVec ((tctx ⟨v, hv⟩).toNat wenv)),
+    p.toProp (tenv.set v hv x) penv
 
 namespace Nondep
 
