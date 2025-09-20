@@ -276,7 +276,7 @@ inductive WidthBinaryRelationKind
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 inductive Predicate
-  (tctx : Term.Ctx wcard tcard) (pcard : Nat) : Type
+  (tctx : Term.Ctx wcard tcard) : (pcard : Nat) →  Type
 | binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) : Predicate tctx pcard
 | binRel (k : BinaryRelationKind) (w : WidthExpr wcard)
     (a : Term tctx w) (b : Term tctx w) : Predicate tctx pcard
@@ -635,4 +635,7 @@ structure HPredFSMToBitStream {pcard : Nat}
         p.toProp tenv penv ↔ (fsm.toFsm.eval fsmEnv = .negOne)
 
 end ToFSM
+
+namespace ModelReconstruction
+end ModelReconstruction
 end MultiWidth
