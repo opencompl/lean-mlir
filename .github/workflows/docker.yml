@@ -43,7 +43,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          tags: tenant_2411cf8f8l302/lean-mlir:latest
 
 
 
