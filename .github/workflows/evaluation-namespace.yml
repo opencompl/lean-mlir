@@ -23,6 +23,8 @@ jobs:
           path: |
             ~/.elan
             ~/.lake
+            ~/Blase/.lake
+            ~/TacBench/.lake
 
       - name: Install Elan & Lean
         run: |
