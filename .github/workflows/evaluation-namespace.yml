@@ -13,8 +13,8 @@ jobs:
     name: Build Lean-MLIR
     runs-on: namespace-profile-lean-mlir-default
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: namespacelabs/nscloud-checkout-action@v7
 
       - name: Cache `.elan` folders
         id: cache-lean
