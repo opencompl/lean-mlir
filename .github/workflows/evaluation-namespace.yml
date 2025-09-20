@@ -21,10 +21,10 @@ jobs:
         uses: namespacelabs/nscloud-cache-action@v1
         with:
           path: |
-            ~/.elan
-            ~/.lake
-            ~/Blase/.lake
-            ~/TacBench/.lake
+            .elan
+            .lake
+            Blase/.lake
+            TacBench/.lake
 
       - name: Install Elan & Lean
         run: |
