@@ -11,7 +11,10 @@ permissions:
 jobs:
   build:
     name: Build Lean-MLIR on NS
-    runs-on: namespace-profile-lean-mlir-default;overrides.cache-tag=mlir-build-cache
+    runs-on:
+      - nscloud-ubuntu-24.04-amd64-4x16-with-cache
+      - nscloud-cache-tag-my-custom-cache
+      - nscloud-cache-size-100gb
     steps:
       - name: Checkout code (use nscloud)
         uses: namespacelabs/nscloud-checkout-action@v7
@@ -43,7 +46,10 @@ jobs:
 
   test-blase:
     name: Test Blase
-    runs-on: namespace-profile-lean-mlir-default;overrides.cache-tag=mlir-build-cache
+    runs-on:
+      - nscloud-ubuntu-24.04-amd64-4x16-with-cache
+      - nscloud-cache-tag-my-custom-cache
+      - nscloud-cache-size-100gb
     needs: build
     permissions:
       pull-requests: write
