@@ -1,11 +1,11 @@
 name: Build & Evaluate (in Docker)
 on: 
   workflow_dispatch
-  # push:
-  #   branches:
-  #     - "main"
-  # pull_request:
-  # merge_group:
+  push:
+    branches:
+      - "main"
+  pull_request:
+  merge_group:
 
 # ^^ This workflow does not run automatically, to make sure we don't burn through too many
 # namespace.so credits. For now, it is only triggered manually if desired.

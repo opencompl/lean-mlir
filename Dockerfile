@@ -41,7 +41,7 @@ RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private,uid=$UID \
   # \
   # Actual Build \
   # \
-  lake exe cache get && lake build && \
+  lake build && \
   # \
   # Persist .lake into Docker image \
   # \
