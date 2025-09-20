@@ -20,7 +20,7 @@ jobs:
         uses: namespacelabs/nscloud-cache-action@v1
         with:
           path: |
-            .elan
+            ~/.elan
             .lake
             Blase/.lake
             TacBench/.lake
