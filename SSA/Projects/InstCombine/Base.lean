@@ -136,7 +136,7 @@ def toStringWithFlags (op : MOp.BinaryOp) : String :=
     | .sdiv ⟨true⟩          => "sdiv exact"
     | .udiv ⟨false⟩         => "udiv"
     | .udiv ⟨true⟩          => "udiv exact"
-  s!"llvm.{op}"
+  s!"{op}"
 
 instance : ToString (MOp.BinaryOp) where
   toString := toStringWithFlags
