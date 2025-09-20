@@ -16,18 +16,13 @@ jobs:
       - name: Checkout code (use nscloud)
         uses: namespacelabs/nscloud-checkout-action@v7
 
-      - name: Cache `.elan` folders
-        id: cache-lean
-        uses: actions/cache@v4
+      - name: Cache Elan Install
+        uses: namespacelabs/nscloud-cache-action@v1
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
-          restore-keys: |
-            ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
       - name: Install Elan & Lean
-        if: steps.cache-lean.outputs.cache-hit != 'true'
         run: |
           set -o pipefail
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
