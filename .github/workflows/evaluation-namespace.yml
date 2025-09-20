@@ -38,3 +38,4 @@ jobs:
         # led to savings from avoiding a full Mathlib cache in the order of a couple hundred MBs.
         run: |
           lake -R build
+
