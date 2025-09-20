@@ -16,7 +16,7 @@ jobs:
       - name: Checkout code (use nscloud)
         uses: namespacelabs/nscloud-checkout-action@v7
 
-      - name: Cache Elan Install
+      - name: Cache Elan && Lake Folders
         uses: namespacelabs/nscloud-cache-action@v1
         with:
           path: |
@@ -32,19 +32,6 @@ jobs:
       - name: Make lake available
         run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: Cache `.lake` folders
-        id: cache-lake
-        uses: actions/cache@v4
-        with:
-          path: |
-            .lake/packages
-            .lake/build
-            */.lake
-          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
-            ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Build Lean-MLIR & Mathlib
         # We build Mathlib from scratch as this reduces the build artifacts that are stored in the cache. Previous experiments
