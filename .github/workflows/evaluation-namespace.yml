@@ -11,7 +11,7 @@ permissions:
 jobs:
   eval-build:
     name: Build Lean-MLIR
-    runs-on: namespace-profile-default
+    runs-on: namespace-profile-lean-mlir-default
     steps:
       - name: Checkout 🛎️
         uses: actions/checkout@v3
@@ -58,7 +58,7 @@ jobs:
 
   extract-goals:
     name: Extract goals
-    runs-on: namespace-profile-default
+    runs-on: namespace-profile-lean-mlir-default
     needs: eval-build
     strategy:
       matrix:
@@ -102,7 +102,7 @@ jobs:
 
   test-blase:
     name: Test Blase
-    runs-on: namespace-profile-default
+    runs-on: namespace-profile-lean-mlir-default
     needs: eval-build
     permissions:
       pull-requests: write
@@ -142,7 +142,7 @@ jobs:
 
   evaluation-LLVM:
     name: Evaluate LLVM
-    runs-on: namespace-profile-default
+    runs-on: namespace-profile-lean-mlir-default
     needs: eval-build
     permissions:
       pull-requests: write
@@ -215,7 +215,7 @@ jobs:
 
   test-tools-scaling-auto-generated-stmts:
     name: Test tools, scaling, and auto-generated statements
-    runs-on: namespace-profile-default
+    runs-on: namespace-profile-lean-mlir-default
     needs: eval-build
     permissions:
       pull-requests: write
@@ -282,7 +282,7 @@ jobs:
           
   test-core-library:
     name: Test Core Library
-    runs-on: namespace-profile-default
+    runs-on: namespace-profile-lean-mlir-default
     needs: eval-build
     permissions:
       pull-requests: write
@@ -370,7 +370,7 @@ jobs:
 
   evaluation-alive-hdel:
     name: Evaluation (Namespace) Alive and Hacker's Delight
-    runs-on: namespace-profile-default
+    runs-on: namespace-profile-lean-mlir-default
     needs: eval-build
     permissions:
       pull-requests: write
