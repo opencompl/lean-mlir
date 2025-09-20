@@ -9,8 +9,8 @@ permissions:
   contents: write
 
 jobs:
-  eval-build:
-    name: Build Lean-MLIR
+  build:
+    name: Build Lean-MLIR on NS
     runs-on: namespace-profile-lean-mlir-default
     steps:
       - name: Checkout code (use nscloud)
