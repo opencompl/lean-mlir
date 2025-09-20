@@ -11,7 +11,7 @@ permissions:
 jobs:
   build:
     name: Build Lean-MLIR on NS
-    runs-on: namespace-profile-lean-mlir-default
+    runs-on: namespace-profile-lean-mlir-default;overrides.cache-tag=mlir-build-cache
     steps:
       - name: Checkout code (use nscloud)
         uses: namespacelabs/nscloud-checkout-action@v7
@@ -43,7 +43,7 @@ jobs:
 
   test-blase:
     name: Test Blase
-    runs-on: namespace-profile-lean-mlir-default
+    runs-on: namespace-profile-lean-mlir-default;overrides.cache-tag=mlir-build-cache
     needs: build
     permissions:
       pull-requests: write
