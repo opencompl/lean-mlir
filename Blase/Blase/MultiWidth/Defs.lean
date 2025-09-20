@@ -488,6 +488,7 @@ inductive Predicate
 | or (p1 p2 : Predicate) : Predicate
 | and (p1 p2 : Predicate) : Predicate
 | var (v : Nat) : Predicate
+| exists (v : Nat) (p : Predicate) : Predicate
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Predicate.wcard (p : Predicate) : Nat :=
@@ -502,6 +503,7 @@ def Predicate.wcard (p : Predicate) : Nat :=
   | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
   | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
+  | .exists _v p => p.wcard
 
 def Predicate.tcard (p : Predicate) : Nat :=
   match p with
@@ -515,6 +517,7 @@ def Predicate.tcard (p : Predicate) : Nat :=
   | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
   | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
+  | .exists _v p => p.tcard
 
 def Predicate.pcard (p : Predicate) : Nat :=
   match p with
@@ -523,6 +526,7 @@ def Predicate.pcard (p : Predicate) : Nat :=
   | .binRel .. => 0
   | .or p1 p2 => max (Predicate.pcard p1) (Predicate.pcard p2)
   | .and p1 p2 => max (Predicate.pcard p1) (Predicate.pcard p2)
+  | .exists v p => max v (p.pcard)
 
 def Predicate.ofDep {wcard tcard pcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate tctx pcard) : Predicate :=
@@ -538,6 +542,7 @@ def Predicate.ofDep {wcard tcard pcard : Nat}
   | .binRel .sle w a b => .binRel .sle (.ofDep w) (.ofDep a) (.ofDep b)
   | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
   | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
+  | .exists v _hv p => .exists v (.ofDep p)
 
 end Nondep
 
