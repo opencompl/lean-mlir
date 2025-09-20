@@ -10,4 +10,4 @@ SED=gsed
 
 cp evaluation.yml evaluation-namespace.yml
 ${SED} -e 's/Evaluation/Evaluation (Namespace)/' -i evaluation-namespace.yml
-${SED} -e 's/ubuntu-latest/namespace-profile-default/' -i evaluation-namespace.yml
+${SED} -e 's/ubuntu-latest/namespace-profile-lean-mlir-default/' -i evaluation-namespace.yml
