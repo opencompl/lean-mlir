@@ -12,7 +12,7 @@ jobs:
   build:
     name: Build Lean-MLIR on NS
     runs-on:
-      - nscloud-ubuntu-24.04-amd64-4x16-with-cache
+      - nscloud-ubuntu-24.04-amd64-32x64-with-cache
       - nscloud-cache-tag-my-custom-cache
       - nscloud-cache-size-100gb
       - nscloud-git-mirror-5gb
@@ -48,7 +48,7 @@ jobs:
   test-blase:
     name: Test Blase
     runs-on:
-      - nscloud-ubuntu-24.04-amd64-4x16-with-cache
+      - nscloud-ubuntu-24.04-amd64-32x64-with-cache
       - nscloud-cache-tag-my-custom-cache
       - nscloud-cache-size-100gb
       - nscloud-git-mirror-5gb
