@@ -144,7 +144,17 @@ jobs:
           key: nstest-gac-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Cache `.elan` folders
+        id: cache-lean-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+          key: nstest-gac-${{ runneor.os }}-elan-${{ hashFiles('lean-toolchain') }}
+          lookup-only: true
+
+      - name: Cache `.elan` folders
         id: cache-lean
+        if: steps.cache-lean-restore.outputs.cache-hit != 'true'
         uses: actions/cache/save@v4
         with:
           path: |
