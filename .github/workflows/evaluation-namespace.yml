@@ -52,7 +52,7 @@ jobs:
   test-blase:
     name: Test Blase
     runs-on:
-      - nscloud-ubuntu-24.04-amd64-16x32
+      - nscloud-ubuntu-24.04-amd64-16x32-with-cache
       - nscloud-cache-tag-my-custom-cache
       - nscloud-cache-size-100gb
       - nscloud-git-mirror-5gb
@@ -155,7 +155,7 @@ jobs:
   test-blase-github-action-cache:
     name: Test Blase (GitHub Action Cache)
     runs-on:
-      - nscloud-ubuntu-24.04-amd64-16x32
+      - nscloud-ubuntu-24.04-amd64-16x32-with-cache
       - nscloud-cache-tag-my-custom-cache-2
       - nscloud-cache-size-100gb
       - nscloud-git-mirror-5gb
