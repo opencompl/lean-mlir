@@ -149,7 +149,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: nstest-gac-${{ runneor.os }}-elan-${{ hashFiles('lean-toolchain') }}
+          key: nstest-gac-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
           lookup-only: true
 
       - name: Cache `.elan` folders
