@@ -95,7 +95,7 @@ jobs:
           lake build BlaseTest
 
   build-github-action-cache:
-    name: Build Lean-MLIR on NS
+    name: Build Lean-MLIR on NS (GitHub Action Cache)
     runs-on:
       - nscloud-ubuntu-24.04-amd64-16x32-with-cache
       - nscloud-cache-tag-my-custom-cache-2
@@ -153,7 +153,7 @@ jobs:
 
 
   test-blase-github-action-cache:
-    name: Test Blase
+    name: Test Blase (GitHub Action Cache)
     runs-on:
       - nscloud-ubuntu-24.04-amd64-16x32-with-cache
       - nscloud-cache-tag-my-custom-cache-2
