@@ -141,7 +141,7 @@ jobs:
             .lake/packages
             .lake/build
             */.lake
-          key: nstest-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: nstest-gac-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Cache `.elan` folders
         id: cache-lean
@@ -149,7 +149,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: nstest-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+          key: nstest-gac-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
 
   test-blase-github-action-cache:
@@ -176,7 +176,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: nstest-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+          key: nstest-gac-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -186,7 +186,7 @@ jobs:
             .lake/packages
             .lake/build
             */.lake
-          key: nstest-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+          key: nstest-gac-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
       - name: Install Elan & Lean
         run: |
