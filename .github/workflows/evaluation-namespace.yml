@@ -142,9 +142,6 @@ jobs:
             .lake/build
             */.lake
           key: nstest-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
-          restore-keys: |
-            nstest-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
-            nstest-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}
 
       - name: Cache `.elan` folders
         id: cache-lean
@@ -153,8 +150,6 @@ jobs:
           path: |
             ~/.elan
           key: nstest-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
-          restore-keys: |
-            nstest-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
 
   test-blase-github-action-cache:
