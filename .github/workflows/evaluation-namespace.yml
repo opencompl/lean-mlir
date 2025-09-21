@@ -193,7 +193,6 @@ jobs:
             */.lake
           key: nstest-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
 
-
       - name: Install Elan & Lean
         run: |
           set -o pipefail
