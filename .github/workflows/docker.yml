@@ -1,6 +1,6 @@
 name: Build & Evaluate (in Docker)
 on:
-  workflow_dispatch
+  workflow_dispatch:
   push:
    branches:
      - "main"
