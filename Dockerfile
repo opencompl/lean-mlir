@@ -67,7 +67,7 @@ RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR/packages,sharing=private \
 
 # Build the framework.
 # See note at the end for more details about the caching boilerplate
-COPY . ./
+COPY --exclude=.git . ./
 RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private \
     --mount=type=cache,target=$HOME/.cache/LeanMLIR/build,sharing=private \
   # Symlink cache into place
@@ -77,6 +77,10 @@ RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private \
   # Persist .lake into Docker image
   rm .lake/build && \
   cp -Ra $HOME/.cache/LeanMLIR/build .lake
+
+# Copy .git for evaluation scripts that query git history
+# This happens in a separate COPY to optimize the layer cache
+COPY .git ./
 
 # The previous RUN uses cache-mounts to speed up 
 # builds. Note, however, that the paths which were
