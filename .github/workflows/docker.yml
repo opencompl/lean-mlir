@@ -96,7 +96,22 @@ jobs:
   # Evaluation & test jobs
   #
   build-tools:
-    name: tools, scaling, and auto-generated stmts
+    name: use docker (runs on namespace)
+    runs-on: namespace-profile-leanmlir-docker-cached
+    needs: core-docker-img
+    container: "ghcr.io/opencompl/lean-mlir:${{ github.sha }}"
+    defaults:
+      run:
+        working-directory: /code/lean-mlir
+    steps:
+      - name: Symlink .elan (to correct for GHA changing $HOME)
+        run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
+      - name: Run lake build
+        run: |
+          lake -R build
+
+  build-tools-github:
+    name: use docker (runs on GitHub)
     runs-on: ubuntu-latest # Run on GH-provided runner
     needs: core-docker-img
     container: "ghcr.io/opencompl/lean-mlir:${{ github.sha }}"
@@ -106,22 +121,9 @@ jobs:
     steps:
       - name: Symlink .elan (to correct for GHA changing $HOME)
         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
-      - name: Compile `mlirnatural` Executable 🧐
+      - name: Run lake build
         run: |
-          lake -R build mlirnatural
-
-      - name: Compile `opt` Executable 🧐
-        run: |
-          lake -R build opt
-
-#      This broke the build during a recent update
-#      - name: LLVM opt round trip test
-#        run: |
-#          lake exec opt test/LLVMDialect/InstCombine/bb0.mlir
-
-      - name: Compile Alive Scaling
-        run: |
-          lake -R build SSA.Projects.InstCombine.ScalingTest
+          lake -R build
 
 #   alive-check-changes:
 #     name: Check for changes in AliveStatements
