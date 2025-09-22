@@ -151,6 +151,12 @@ def toListOf {A : α → _} {as} (β : Type _)
     let ys := xs.toListOf β (fun a h => hα a <| by simpa using .inr h)
     y :: ys
 
+/--
+Map a function with a constant output type over an hvector to produce a list.
+-/
+def mapToList (f : ∀ {a : α}, A a → β) {as : List α} (xs : HVector A as) : List β :=
+  xs.map @f |>.toListOf β
+
 /-!
 ## Repr
 -/

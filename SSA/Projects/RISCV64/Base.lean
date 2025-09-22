@@ -1,11 +1,13 @@
 import SSA.Projects.RISCV64.Semantics
 import SSA.Projects.RISCV64.PseudoOpSemantics
-import SSA.Core.Framework
+import SSA.Core
 
 open RV64Semantics
 open RV64PseudoOpSemantics
 
 namespace RISCV64
+open LeanMLIR
+
 /-! ## The `RISCV64` dialect -/
 
 /-! ## Dialect operation definitions -/
@@ -158,25 +160,17 @@ inductive Ty
   | bv : Ty
   deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
-instance : ToString (Ty) where
-  toString t := match t with
-  | Ty.bv => "bv"
-
 /-!
 Connecting the `bv` type to its underlying Lean type `BitVec 64`. By providing a `TyDenote` instance,
 we define how the `RISCV64` types transalte into actual Lean types.
 -/
 instance : TyDenote Ty where
-  toType := fun
+  toType
   | Ty.bv => BitVec 64
 
 instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
   default := match ty with
   | .bv  => 0#64
-
-instance : ToString (Ty) where
-  toString t :=  match t with
-  | Ty.bv => "!riscv.reg"
 
 /-! ## Dialect operation definitions-/
 /--
@@ -405,24 +399,31 @@ abbrev RV64 : Dialect where
 instance : DialectSignature RV64 where
   signature o := {sig := Op.sig o, returnTypes := [Op.outTy o], regSig := []}
 
-def opToString (op : RISCV64.Op) : String :=
+/-! ## Printing -/
+
+instance : ToString Ty where
+  toString
+  | Ty.bv => "!riscv.reg"
+
+open RISCV64.Op in
+def opName (op : RISCV64.Op) : String :=
   let op  : String := match op with
-  | .li (_imm : BitVec 64) => "li"
+  | .li _ => "li"
   | .mulh => "mulh"
   | .mulhu => "mulhu"
   | .mulhsu => "mulhsu"
   | .divu => "divu"
   | .remuw => "remuw"
   | .remu => "remu"
-  | .addiw (_imm : BitVec 12) => "addiw"
-  | .lui (_imm : BitVec 20) => "lui"
-  | .auipc (_imm : BitVec 20) => "auipc"
-  | .slliw (_shamt : BitVec 5) => "slliw"
-  | .srliw (_shamt : BitVec 5) => "srliw"
-  | .sraiw (_shamt : BitVec 5) => "sraiw"
-  | .slli (_shamt : BitVec 6) => "slli"
-  | .srli (_shamt : BitVec 6) => "srli"
-  | .srai (_shamt : BitVec 6) => "srai"
+  | .addiw _ => "addiw"
+  | .lui _ => "lui"
+  | .auipc _ => "auipc"
+  | .slliw _ => "slliw"
+  | .srliw _ => "srliw"
+  | .sraiw _ => "sraiw"
+  | .slli _ => "slli"
+  | .srli _ => "srli"
+  | .srai _ => "srai"
   | .addw => "addw"
   | .subw => "subw"
   | .sllw => "sllw"
@@ -445,68 +446,60 @@ def opToString (op : RISCV64.Op) : String :=
   | .div => "div"
   | .divw => "divw"
   | .divuw => "divuw"
-  | .addi (_imm : BitVec 12) => "addi"
-  | .slti (_imm : BitVec 12) => "slti"
-  | .sltiu (_imm : BitVec 12) => "sltiu"
-  | .andi (_imm : BitVec 12) => "andi"
-  | .ori (_imm : BitVec 12) => "ori"
-  | .xori (_imm : BitVec 12) => "xori"
-  | RISCV64.Op.czero.eqz => "czero.eqz"
-  | RISCV64.Op.czero.nez => "czero.nez"
+  | .addi _ => "addi"
+  | .slti _ => "slti"
+  | .sltiu _ => "sltiu"
+  | .andi _ => "andi"
+  | .ori _ => "ori"
+  | .xori _ => "xori"
+  | czero.eqz => "czero.eqz"
+  | czero.nez => "czero.nez"
   | .bclr => "bclr"
   | .bext => "bext"
   | .binv => "binv"
   | .bset => "bset"
-  | .bclri (_shamt : BitVec 6) => "bclri"
-  | .bexti (_shamt : BitVec 6) => "bexti"
-  | .binvi (_shamt : BitVec 6) => "binvi"
-  | .bseti (_shamt : BitVec 6) => "bseti"
-  | RISCV64.Op.add.uw => "add.uw"
-  | RISCV64.Op.sh1add.uw => "sh1add.uw"
-  | RISCV64.Op.sh2add.uw => "sh2add.uw"
-  | RISCV64.Op.sh3add.uw => "sh3add.uw"
+  | .bclri _ => "bclri"
+  | .bexti _ => "bexti"
+  | .binvi _ => "binvi"
+  | .bseti _ => "bseti"
+  | add.uw => "add.uw"
+  | sh1add.uw => "sh1add.uw"
+  | sh2add.uw => "sh2add.uw"
+  | sh3add.uw => "sh3add.uw"
   | .sh1add => "sh1add"
   | .sh2add => "sh2add"
   | .sh3add => "sh3add"
-  | RISCV64.Op.slli.uw (_shamt : BitVec 6) => "slli.uw"
+  | slli.uw _ => "slli.uw"
   | .andn => "andn"
   | .orn => "orn"
   | .xnor => "xnor"
-  -- | clz
-  -- | clzw
-  -- | ctz
-  -- | ctzw
-  -- | cpop
-  -- | cpopw
   | .max => "max"
   | .maxu => "maxu"
   | .min  => "min"
   | .minu  => "minu"
-  | RISCV64.Op.sext.b => "sext.b"
-  | RISCV64.Op.sext.h => "sext.h"
-  | RISCV64.Op.zext.h => "zext.h"
+  | sext.b => "sext.b"
+  | sext.h => "sext.h"
+  | zext.h => "zext.h"
   | .rol => "rol"
   | .rolw => "rolw"
   | .ror => "ror"
-  | .rori (_shamt : BitVec 5) => "rori"
-  | .roriw (_shamt : BitVec 5) => "roriw"
+  | .rori _ => "rori"
+  | .roriw _ => "roriw"
   | .rorw => "rorw"
-  -- orc.b
-  -- rev8
   -- pseudo-instructions
   | .mv => "mv"
   | .not => "not"
   | .neg => "neg"
   | .negw => "negw"
-  | RISCV64.Op.sext.w => "sext.w"
-  | RISCV64.Op.zext.b => "zext.b"
+  | sext.w => "sext.w"
+  | zext.b => "zext.b"
   | .seqz => "seqz"
   | .snez => "snez"
   | .sltz => "sltz"
   | .sgtz => "sgtz"
   op
 
-def attributesToPrint: RISCV64.Op → String
+def printAttributes: RISCV64.Op → String
   | .li imm => s! "\{immediate = { imm.toInt } : i64 }"
   | .addiw (imm : BitVec 12) => s!"\{immediate = { imm.toInt} : i12 }"
   | .lui (imm : BitVec 20) => s!"\{immediate = { imm.toInt} : i20 } "
@@ -532,15 +525,11 @@ def attributesToPrint: RISCV64.Op → String
   | .roriw (imm : BitVec 5) => s!"\{immediate = { imm.toInt} : i5 }"
   | _ => ""
 
-instance : ToString (Op) where
-  toString := opToString
-
-instance : ToPrint (RV64) where
-  printOpName
-  | op => "riscv." ++ toString op
+instance : DialectPrint RV64 where
+  printOpName op := "riscv." ++ opName op
   printTy := toString
-  printAttributes := attributesToPrint
-  printDialect:= "riscv"
+  printAttributes := printAttributes
+  dialectName := "riscv"
   printReturn _ := "riscv.ret"
   printFunc _ := "riscv_func.func @f"
 

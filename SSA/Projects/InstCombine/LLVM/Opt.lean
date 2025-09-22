@@ -22,7 +22,7 @@ def wellformed (fileName : String ) : IO UInt32 := do
     match icom? with
     | none => return 1
     | some (Sigma.mk _Γ ⟨_eff, ⟨_retTy, c⟩⟩) => do
-      IO.println s!"{Com.toPrint c}"
+      IO.println s!"{Com.printModule c}"
       return 0
 
 def runMainCmd (args : Cli.Parsed) : IO UInt32 := do

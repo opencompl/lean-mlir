@@ -1,11 +1,11 @@
 name: Build & Evaluate (in Docker)
-on: 
-  workflow_dispatch
-  # push:
-  #   branches:
-  #     - "main"
-  # pull_request:
-  # merge_group:
+on:
+  workflow_dispatch:
+  push:
+   branches:
+     - "main"
+  pull_request:
+  merge_group:
 
 # ^^ This workflow does not run automatically, to make sure we don't burn through too many
 # namespace.so credits. For now, it is only triggered manually if desired.
@@ -20,7 +20,7 @@ jobs:
   #
   core-docker-img:
     name: Build Docker image for core library
-    runs-on: namespace-profile-leanmlir-docker-cached 
+    runs-on: namespace-profile-leanmlir-docker-cached
     steps:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -51,50 +51,50 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  instcombine-docker-img:
-    name: Build Docker image for InstCombine Evaluation
-    runs-on: ubuntu-latest # Run on GH-provided runner
-    needs: core-docker-img
-    steps:
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Checkout 🛎️
-        uses: actions/checkout@v3
-
-      - name: Setup Docker metadata
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ghcr.io/opencompl/lean-mlir-instcombine
-          tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=raw,value=${{ github.sha }}
-            type=raw,value=latest,enable={{is_default_branch}}
-
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: "./bv-evaluation"
-          build-args: |
-            LEANMLIR_TAG=${{ github.sha }}
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+#   instcombine-docker-img:
+#     name: Build Docker image for InstCombine Evaluation
+#     runs-on: ubuntu-latest # Run on GH-provided runner
+#     needs: core-docker-img
+#     steps:
+#       - name: Set up Docker Buildx
+#         uses: docker/setup-buildx-action@v3
+#
+#       - name: Login to GitHub Container Registry
+#         uses: docker/login-action@v3
+#         with:
+#           registry: ghcr.io
+#           username: ${{ github.repository_owner }}
+#           password: ${{ secrets.GITHUB_TOKEN }}
+#
+#       - name: Checkout 🛎️
+#         uses: actions/checkout@v3
+#
+#       - name: Setup Docker metadata
+#         id: meta
+#         uses: docker/metadata-action@v5
+#         with:
+#           images: ghcr.io/opencompl/lean-mlir-instcombine
+#           tags: |
+#             type=ref,event=branch
+#             type=ref,event=pr
+#             type=raw,value=${{ github.sha }}
+#             type=raw,value=latest,enable={{is_default_branch}}
+#
+#       - name: Build and push Docker image
+#         uses: docker/build-push-action@v6
+#         with:
+#           context: "./bv-evaluation"
+#           build-args: |
+#             LEANMLIR_TAG=${{ github.sha }}
+#           push: true
+#           tags: ${{ steps.meta.outputs.tags }}
+#           labels: ${{ steps.meta.outputs.labels }}
+#           cache-from: type=gha
+#           cache-to: type=gha,mode=max
 
   #
   # Evaluation & test jobs
-  # 
+  #
   build-tools:
     name: tools, scaling, and auto-generated stmts
     runs-on: ubuntu-latest # Run on GH-provided runner
@@ -123,87 +123,87 @@ jobs:
         run: |
           lake -R build SSA.Projects.InstCombine.ScalingTest
 
-  alive-check-changes:
-    name: Check for changes in AliveStatements
-    runs-on: ubuntu-latest # Run on GH-provided runner
-    needs: instcombine-docker-img
-    container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
-    defaults:
-      run:
-        working-directory: /code/lean-mlir
-    steps:
-      - name: Symlink .elan (to correct for GHA changing $HOME)
-        run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
-
-      - run: |
-          lake build AliveExamples
-          (cd SSA/Projects/InstCombine/; uv run ./update_alive_statements.py)
-          # /--------------------------- ^^^^^^
-          # | TODO: this could be removed if we add a uv shebang to the python file
-          bash -c '! git diff -- SSA/Projects/InstCombine | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
-
-  evaluation-LLVM:
-    name: Evaluate LLVM
-    runs-on: ubuntu-latest # Run on GH-provided runner
-    needs: instcombine-docker-img
-    container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
-    defaults:
-      run:
-        working-directory: /code/lean-mlir/bv-evaluation
-    permissions:
-      pull-requests: write
-    steps:     
-      - name: Symlink .elan (to correct for GHA changing $HOME)
-        run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
-
-      - name: Run LLVM
-        continue-on-error: true
-        run: |
-          uv run ./compare.py instcombine -j48 \
-            || (echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV; exit 1)
-
-      - name: Collect data LLVM
-        continue-on-error: true
-        run: |
-          (uv run ./collect.py instcombine | tee llvm-stats) \
-            || (echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV; exit 1)
-
-      - uses: actions/github-script@v6
-        if: env.LEANMLIR_STATUS != 'fail' && github.event_name == 'pull_request'
-        with: 
-          script: |
-            const fs = require('fs')
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: fs.readFileSync('/code/lean-mlir/bv-evaluation/llvm-stats', 'utf8')
-            })
-
-      - name: Upload LLVM artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: LLVM evaluation
-          path: results
-
-  extract-goals:
-    name: Extract goals
-    runs-on: ubuntu-latest # Run on GH-provided runner
-    needs: instcombine-docker-img
-    container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
-    defaults:
-      run:
-        working-directory: /code/lean-mlir
-    strategy:
-      matrix:
-        extract_offset: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        extract_stride: [10]
-    steps:
-      - name: Symlink .elan (to correct for GHA changing $HOME)
-        run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
-
-      - name: Ensure InstCombine goals are up-to-date
-        env: 
-          GIT_DIR: ${{ github.workspace }}/.git
-        run: |
-          bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh --nfiles 9000 -j7  --stride ${{matrix.extract_stride}} --offset ${{matrix.extract_offset}}
+#   alive-check-changes:
+#     name: Check for changes in AliveStatements
+#     runs-on: ubuntu-latest # Run on GH-provided runner
+#     needs: instcombine-docker-img
+#     container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
+#     defaults:
+#       run:
+#         working-directory: /code/lean-mlir
+#     steps:
+#       - name: Symlink .elan (to correct for GHA changing $HOME)
+#         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
+#
+#       - run: |
+#           lake build AliveExamples
+#           (cd SSA/Projects/InstCombine/; uv run ./update_alive_statements.py)
+#           # /--------------------------- ^^^^^^
+#           # | TODO: this could be removed if we add a uv shebang to the python file
+#           bash -c '! git diff -- SSA/Projects/InstCombine | grep .'  # iff git diff is empty, 'grep .' fails, '!' inverts the failure, and in the forced bash
+#
+#   evaluation-LLVM:
+#     name: Evaluate LLVM
+#     runs-on: ubuntu-latest # Run on GH-provided runner
+#     needs: instcombine-docker-img
+#     container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
+#     defaults:
+#       run:
+#         working-directory: /code/lean-mlir/bv-evaluation
+#     permissions:
+#       pull-requests: write
+#     steps:
+#       - name: Symlink .elan (to correct for GHA changing $HOME)
+#         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
+#
+#       - name: Run LLVM
+#         continue-on-error: true
+#         run: |
+#           uv run ./compare.py instcombine -j48 \
+#             || (echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV; exit 1)
+#
+#       - name: Collect data LLVM
+#         continue-on-error: true
+#         run: |
+#           (uv run ./collect.py instcombine | tee llvm-stats) \
+#             || (echo "LEANMLIR_STATUS=fail" >> $GITHUB_ENV; exit 1)
+#
+#       - uses: actions/github-script@v6
+#         if: env.LEANMLIR_STATUS != 'fail' && github.event_name == 'pull_request'
+#         with:
+#           script: |
+#             const fs = require('fs')
+#             github.rest.issues.createComment({
+#               issue_number: context.issue.number,
+#               owner: context.repo.owner,
+#               repo: context.repo.repo,
+#               body: fs.readFileSync('/code/lean-mlir/bv-evaluation/llvm-stats', 'utf8')
+#             })
+#
+#       - name: Upload LLVM artifact
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: LLVM evaluation
+#           path: results
+#
+#   extract-goals:
+#     name: Extract goals
+#     runs-on: ubuntu-latest # Run on GH-provided runner
+#     needs: instcombine-docker-img
+#     container: "ghcr.io/opencompl/lean-mlir-instcombine:${{ github.sha }}"
+#     defaults:
+#       run:
+#         working-directory: /code/lean-mlir
+#     strategy:
+#       matrix:
+#         extract_offset: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+#         extract_stride: [10]
+#     steps:
+#       - name: Symlink .elan (to correct for GHA changing $HOME)
+#         run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
+#
+#       - name: Ensure InstCombine goals are up-to-date
+#         env:
+#           GIT_DIR: ${{ github.workspace }}/.git
+#         run: |
+#           bash SSA/Projects/InstCombine/scripts/test-extract-goals.sh --nfiles 9000 -j7  --stride ${{matrix.extract_stride}} --offset ${{matrix.extract_offset}}

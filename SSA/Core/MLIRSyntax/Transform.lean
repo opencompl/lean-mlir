@@ -73,6 +73,8 @@ class TransformTy (d : Dialect) (φ : outParam Nat) [DialectSignature d]  where
 class TransformExpr (d : Dialect) (φ : outParam Nat) [DialectSignature d] [TransformTy d φ]  where
   mkExpr   : (Γ : Ctxt d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ eff ty, Expr d Γ eff ty)
 
+/-- NOTE: You probably don't wan't to implement this class directly, consider
+implementing `LeanMLIR.DialectParse` instead! -/
 class TransformReturn (d : Dialect) (φ : outParam Nat) [DialectSignature d] [TransformTy d φ] where
   mkReturn : (Γ : Ctxt d.Ty) → (opStx : AST.Op φ) → ReaderM d (Σ eff ty, Com d Γ eff ty)
 

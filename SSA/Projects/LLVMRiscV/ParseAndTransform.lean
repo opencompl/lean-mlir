@@ -44,7 +44,7 @@ def passriscv64 (fileName : String) : IO UInt32 := do
             `true` indicates pseudo variable lowering, `fuel` is 150-/
           let lowered := selectionPipeFuelWithCSE 150 c true
 
-          IO.println s!"{Com.toPrint (lowered) }"
+          IO.println <| lowered.printModule
           return 0
         | _ =>
         IO.println s!" debug: WRONG RETURN TYPE : expected Ty.llvm (Ty.bitvec 64) "
@@ -70,7 +70,7 @@ def passriscv64_optimized (fileName : String) : IO UInt32 := do
           /- calls to the optimized instruction selector defined in `InstructionLowering`,
           `true` indicates pseudo variable lowering, `fuel` is 150 -/
           let lowered := selectionPipeFuelWithCSEWithOpt 150 c true
-          IO.println s!"{Com.toPrint (lowered) }"
+          IO.println <| lowered.printModule
           return 0
         | _ =>
         IO.println s!" debug: WRONG RETURN TYPE : expected Ty.llvm (Ty.bitvec 64) "
