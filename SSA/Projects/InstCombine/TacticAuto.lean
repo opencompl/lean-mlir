@@ -6,8 +6,6 @@ import Std.Tactic.BVDecide
 import Leanwuzla
 
 import SSA.Projects.InstCombine.Tactic.SimpLLVM
-import Blase.SingleWidth.Tactic
-import Blase.Fast.MBA
 import TacBench
 import SSA.Core.Tactic.ExtractGoals
 
@@ -116,7 +114,7 @@ macro "bv_auto": tactic =>
           | bv_distrib
           | bv_ring
           | bv_of_bool
-          | bool_to_prop; bv_automata_classic
+          /- | bool_to_prop; bv_automata_classic -/
           | bv_decide
       )
    )
@@ -171,11 +169,11 @@ macro "bv_bench_automata": tactic =>
           tac_bench (config := { outputType := .csv }) [
             -- "bv_normalize" : (bv_normalize; done),
             -- "presburger" : (bv_automata_gen (config := { backend := .presburger }); done),
-            "normPresburger" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .presburger })); done),
+            /- "normPresburger" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .presburger })); done), -/
            --  "circuitUnverified" : (bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 }); done),
             -- "circuitVerified" : (bv_automata_gen (config := { backend := .circuit_cadical_verified /- maxIter -/ 4 }); done),
             -- "normCircuitUnverified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_unverified /- maxIter -/ 4 })); done),
-            "normCircuitVerified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_verified /- maxIter -/ 4 })); done),
+            /- "normCircuitVerified" : ((try (solve | bv_normalize)); (try bv_automata_gen (config := { backend := .circuit_cadical_verified /1- maxIter -1/ 4 })); done), -/
             -- "no_uninterpreted" : (bv_automata_fragment_no_uninterpreted),
             -- "width_ok" : (bv_automata_fragment_width_legal),
             -- "reflect_ok" : (bv_automata_fragment_reflect),
