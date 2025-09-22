@@ -1,3 +1,1 @@
-/-!
-Import all LLVMRiscV tests here
--/
+import SSA.Projects.LLVMRiscV.Tests.Pipeline
