@@ -73,7 +73,7 @@ RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private \
   # Symlink cache into place
   ln -s $HOME/.cache/LeanMLIR/build .lake/build && \
   # Actual Build
-  lake build core && \
+  lake build && \
   # Persist .lake into Docker image
   rm .lake/build && \
   cp -Ra $HOME/.cache/LeanMLIR/build .lake
