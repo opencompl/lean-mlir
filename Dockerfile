@@ -52,11 +52,11 @@ RUN lake --version
 # See note at the end for more details about the caching boilerplate
 COPY --parents **/lakefile.* **/lake-manifest.* ./
 COPY --from=mathlib-files /code/Dependencies.lean ./SSA/Dependencies.lean
-RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR/packages,sharing=private \
+RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
   # Symlink cache into place
   mkdir .lake && \
-  mkdir -p $HOME/.cache/LeanMLIR/packages && \
-  ln -s $HOME/.cache/LeanMLIR/packages .lake/packages && \
+  mkdir -p $HOME/.cache/LeanMLIR/.lake/packages && \
+  ln -s $HOME/.cache/LeanMLIR/.lake/packages .lake/packages && \
   # Build
   lake build SSA.Dependencies && \
   rm -r .lake/build && \ 
@@ -69,14 +69,17 @@ RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR/packages,sharing=private \
 # See note at the end for more details about the caching boilerplate
 COPY --exclude=.git . ./
 RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private \
-    --mount=type=cache,target=$HOME/.cache/LeanMLIR/build,sharing=private \
+    --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
   # Symlink cache into place
-  ln -s $HOME/.cache/LeanMLIR/build .lake/build && \
+  mkdir -p $HOME/.cache/LeanMLIR/Blase/.lake Blase/ && \
+  ln -s $HOME/.cache/LeanMLIR/Blase/.lake Blase/.lake && \
+  ln -s $HOME/.cache/LeanMLIR/.lake/build .lake && \
   # Actual Build
   lake build && \
   # Persist .lake into Docker image
-  rm .lake/build && \
-  cp -Ra $HOME/.cache/LeanMLIR/build .lake
+  rm .lake/build Blase/.lake && \
+  cp -Ra $HOME/.cache/LeanMLIR/Blase/.lake .lake && \
+  cp -Ra $HOME/.cache/LeanMLIR/.lake/build .lake
 
 # Copy .git for evaluation scripts that query git history
 # This happens in a separate COPY to optimize the layer cache
