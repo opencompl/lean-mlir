@@ -97,7 +97,7 @@ jobs:
   #
   build-tools:
     name: tools, scaling, and auto-generated stmts
-    runs-on: namespace-profile-leanmlir-docker-cached
+    runs-on: namespace-profile-leanmlir-docker-cached (runs on NS)
     needs: core-docker-img
     container: "ghcr.io/opencompl/lean-mlir:${{ github.sha }}"
     defaults:
@@ -115,7 +115,7 @@ jobs:
           lake -R build opt
 
   build-tools-github:
-    name: tools, scaling, and auto-generated stmts
+    name: tools, scaling, and auto-generated stmts (runs on GH)
     runs-on: ubuntu-latest # Run on GH-provided runner
     needs: core-docker-img
     container: "ghcr.io/opencompl/lean-mlir:${{ github.sha }}"
