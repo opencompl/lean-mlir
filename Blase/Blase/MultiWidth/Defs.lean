@@ -170,6 +170,18 @@ def Term.Ctx.Env.cons
   fun v => v.cases (bv.cast hw) (fun w => tenv w)
 
 
+/-- Set an index in the context. -/
+def Term.Ctx.Env.set {tcard : Nat}
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv) (i : Nat) (hi : i < tcard)
+  (v : BitVec ((tctx ⟨i, hi⟩).toNat wenv)) :
+  tctx.Env wenv := 
+  fun j => if hj : j = ⟨i, hi⟩
+  then v.cast (by simp[hj])
+  else tenv j
+
+
 
 /-- get the value of a variable from the environment. -/
 def Term.Ctx.Env.get {tcard : Nat}
@@ -178,6 +190,26 @@ def Term.Ctx.Env.get {tcard : Nat}
   (tenv : tctx.Env wenv) (i : Nat) (hi : i < tcard) :
   BitVec ((tctx ⟨i, hi⟩).toNat wenv) :=
   tenv ⟨i, hi⟩
+
+@[simp]
+def Term.Ctx.Env.get_set_eq_self {tcard : Nat}
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv) (i : Nat) (hi : i < tcard)
+  (v : BitVec ((tctx ⟨i, hi⟩).toNat wenv)) :
+  (tenv.set i hi v).get i hi = v := by simp [get, set]
+
+@[simp]
+def Term.Ctx.Env.get_set_eq_of_ne {tcard : Nat}
+  {wcard : Nat} {wenv : Fin wcard → Nat}
+  {tctx : Term.Ctx wcard tcard}
+  (tenv : tctx.Env wenv) (i : Nat) (hi : i < tcard) (j : Nat) (hj : j < tcard)
+  (hij : i ≠ j)
+  (v : BitVec ((tctx ⟨i, hi⟩).toNat wenv)) :
+  (tenv.set i hi v).get j hj = tenv.get j hj := by 
+    simp [get, set]
+    intros h 
+    simp [h] at hij
 
 @[simp]
 def Term.Ctx.Env.cons_get_zero
@@ -276,13 +308,14 @@ inductive WidthBinaryRelationKind
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 inductive Predicate
-  (tctx : Term.Ctx wcard tcard) (pcard : Nat) : Type
+  (tctx : Term.Ctx wcard tcard) : (pcard : Nat) →  Type
 | binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) : Predicate tctx pcard
 | binRel (k : BinaryRelationKind) (w : WidthExpr wcard)
     (a : Term tctx w) (b : Term tctx w) : Predicate tctx pcard
 | and (p1 p2 : Predicate tctx pcard) : Predicate tctx pcard
 | or (p1 p2 : Predicate tctx pcard) : Predicate tctx pcard
 | var (v : Fin pcard) : Predicate tctx pcard
+| exists (v : Nat) (hv : v < tcard) (p : Predicate tctx pcard) : Predicate tctx pcard
 
 -- add predicate NOT, <= for bitvectors, < for bitvectors, <=
 -- for widths, =, not equals for widths.
@@ -308,6 +341,8 @@ def Predicate.toProp {wcard tcard pcard : Nat} {wenv : WidthExpr.Env wcard}
     | .sle => (a.toBV tenv).sle (b.toBV tenv) = true
   | .and p1 p2 => p1.toProp tenv penv ∧ p2.toProp tenv penv
   | .or p1 p2 => p1.toProp tenv penv ∨ p2.toProp tenv penv
+  | .exists v hv p => ∃ (x : BitVec ((tctx ⟨v, hv⟩).toNat wenv)),
+    p.toProp (tenv.set v hv x) penv
 
 namespace Nondep
 
@@ -453,6 +488,7 @@ inductive Predicate
 | or (p1 p2 : Predicate) : Predicate
 | and (p1 p2 : Predicate) : Predicate
 | var (v : Nat) : Predicate
+| exists (v : Nat) (p : Predicate) : Predicate
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Predicate.wcard (p : Predicate) : Nat :=
@@ -467,6 +503,7 @@ def Predicate.wcard (p : Predicate) : Nat :=
   | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
   | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
+  | .exists _v p => p.wcard
 
 def Predicate.tcard (p : Predicate) : Nat :=
   match p with
@@ -480,6 +517,7 @@ def Predicate.tcard (p : Predicate) : Nat :=
   | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
   | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
+  | .exists _v p => p.tcard
 
 def Predicate.pcard (p : Predicate) : Nat :=
   match p with
@@ -488,6 +526,7 @@ def Predicate.pcard (p : Predicate) : Nat :=
   | .binRel .. => 0
   | .or p1 p2 => max (Predicate.pcard p1) (Predicate.pcard p2)
   | .and p1 p2 => max (Predicate.pcard p1) (Predicate.pcard p2)
+  | .exists v p => max v (p.pcard)
 
 def Predicate.ofDep {wcard tcard pcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate tctx pcard) : Predicate :=
@@ -503,6 +542,7 @@ def Predicate.ofDep {wcard tcard pcard : Nat}
   | .binRel .sle w a b => .binRel .sle (.ofDep w) (.ofDep a) (.ofDep b)
   | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
   | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
+  | .exists v _hv p => .exists v (.ofDep p)
 
 end Nondep
 
@@ -635,4 +675,7 @@ structure HPredFSMToBitStream {pcard : Nat}
         p.toProp tenv penv ↔ (fsm.toFsm.eval fsmEnv = .negOne)
 
 end ToFSM
+
+namespace ModelReconstruction
+end ModelReconstruction
 end MultiWidth
