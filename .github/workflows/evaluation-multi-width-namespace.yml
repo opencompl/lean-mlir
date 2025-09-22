@@ -1,0 +1,35 @@
+name: Evaluation Multi-Width (Namespace) 
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build & Eval Blase on NS
+    runs-on:
+      - nscloud-ubuntu-24.04-amd64-16x32-with-cache
+      - nscloud-cache-tag-my-custom-cache
+      - nscloud-cache-size-100gb
+      - nscloud-git-mirror-5gb
+      - nscloud-container-image-cache
+      - nscloud-runner-tool-cache-20gb
+
+    steps:
+      - name: Setup Ephemeral NS Cluster
+        uses: namespacelabs/nscloud-setup@v0
+
+      # https://namespace.so/docs/reference/github-actions/nscloud-checkout-action
+      - name: Checkout Evaluation Repisitory via NS
+        uses: namespacelabs/nscloud-checkout@v7
+        with:
+          repository: "github.com/opencompl/evaluation-multi-width-bv"
+          ref: "main"
+          token: ${{ secrets.NSCLOUD_GITHUB_TOKEN }}
+
+        
