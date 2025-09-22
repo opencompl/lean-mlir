@@ -63,7 +63,7 @@ RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
   # ^^ We don't actually want the oleans for the `Dependencies` file
   # Persist .lake into Docker image 
   rm .lake/packages && \
-  cp -Ra $HOME/.cache/LeanMLIR/packages .lake/packages
+  cp -Ra $HOME/.cache/LeanMLIR/.lake/packages .lake/packages
 
 # Build the framework.
 # See note at the end for more details about the caching boilerplate
