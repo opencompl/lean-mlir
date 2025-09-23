@@ -116,7 +116,7 @@ jobs:
     name: use docker (runs on namespace, via ghcr.io)
     runs-on: namespace-profile-leanmlir-docker-cached
     needs: core-docker-img
-    container: "ghcr.io/lean-mlir:${{ github.sha }}"
+    container: "ghcr.io/opencompl/lean-mlir:${{ github.sha }}"
     defaults:
       run:
         working-directory: /code/lean-mlir
