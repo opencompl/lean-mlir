@@ -36,7 +36,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/opencompl/lean-mlir
+          images: |
+            ghcr.io/opencompl/lean-mlir
+            nscr.io/2411cf8f8l302/lean-mlir
           tags: |
             type=ref,event=branch
             type=ref,event=pr
@@ -97,6 +99,21 @@ jobs:
   #
   build-tools:
     name: use docker (runs on namespace)
+    runs-on: namespace-profile-leanmlir-docker-cached
+    needs: core-docker-img
+    container: "nscr.io/2411cf8f8l302/lean-mlir:${{ github.sha }}"
+    defaults:
+      run:
+        working-directory: /code/lean-mlir
+    steps:
+      - name: Symlink .elan (to correct for GHA changing $HOME)
+        run: '[ -e ~/.elan ] || ln -s /root/.elan ~/.elan'
+      - name: Run lake build
+        run: |
+          lake -R build
+
+  build-tools-ghcr:
+    name: use docker (runs on namespace, via ghcr.io)
     runs-on: namespace-profile-leanmlir-docker-cached
     needs: core-docker-img
     container: "ghcr.io/opencompl/lean-mlir:${{ github.sha }}"
