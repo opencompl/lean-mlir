@@ -38,7 +38,7 @@ jobs:
         with:
           images: |
             ghcr.io/opencompl/lean-mlir
-            nscr.io/tenant_2411cf8f8l302/lean-mlir
+            nscr.io/2411cf8f8l302/lean-mlir
           tags: |
             type=ref,event=branch
             type=ref,event=pr
