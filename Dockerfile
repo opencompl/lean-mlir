@@ -56,14 +56,14 @@ RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
   # Symlink cache into place
   mkdir .lake && \
   mkdir -p $HOME/.cache/LeanMLIR/.lake/packages && \
-  ln -s $HOME/.cache/LeanMLIR/.lake/packages .lake/packages && \
+  ln -Ts $HOME/.cache/LeanMLIR/.lake/packages .lake/packages && \
   # Build
   lake build SSA.Dependencies && \
   rm -r .lake/build && \ 
   # ^^ We don't actually want the oleans for the `Dependencies` file
   # Persist .lake into Docker image 
   rm .lake/packages && \
-  cp -Ra $HOME/.cache/LeanMLIR/.lake/packages .lake/packages
+  cp -TRa $HOME/.cache/LeanMLIR/.lake/packages .lake/packages
 
 # Build the framework.
 # See note at the end for more details about the caching boilerplate
