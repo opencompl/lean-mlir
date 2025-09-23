@@ -93,12 +93,12 @@ RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private \
 #
 # Thus, to work around this behaviour, we:
 # - Mount a different path (under `/root/.cache`), and symlink
-#     `.lake` to this cache-mounted path. 
-# - Run the build as usual; this will both use
-#     the cached outputs of previous builds and ensures
-#     the outputs of the current build are made cached.
+#     `.lake` or a subfolder like `.lake/build` to this cache-mounted path. 
+# - Run the build as usual; this will use cached outputs of previous builds, if 
+#     available, and ensures the outputs of the current build are written to the 
+#     cache for use by subsequent builds.
 # - Finally, we remove the symlink, and *copy* all files,
-#     which copies the file from the cached directory into
+#     which copies the file from the cache-mounted directory into
 #     the actual Docker image.
 #
 
