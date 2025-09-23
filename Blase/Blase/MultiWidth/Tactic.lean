@@ -856,6 +856,9 @@ ee if it's in the BV fragment, and revert it if it is.
 For now, we use a sound overapproximation and revert anything that we can collect.
 -/
 def revertBvHyps (g : MVarId) : SolverM MVarId := do
+  let (_, g) ← g.revert (← g.getNondepPropHyps)
+  return g
+  /-
   let mut hypsToRevert : Array FVarId := #[]
   for hyp in (← g.getNondepPropHyps) do
     -- | Save and restore state, since we just want to test if we can collect.
@@ -869,21 +872,14 @@ def revertBvHyps (g : MVarId) : SolverM MVarId := do
       continue
   let (_, g) ← g.revert hypsToRevert
   return g
+  -/
 
 open Lean Meta Elab Tactic in
-def solve (g : MVarId) : SolverM (List MVarId) := do
-  let .some g ← g.withContext (Normalize.runPreprocessing g)
-    | do
-        debugLog m!"Preprocessing automatically closed goal."
-        return []
+def solve (g : MVarId) : SolverM Unit := do
   let g ← revertBvHyps g
-  -- | We run preprocessing again after reverting,
-  -- | since we might have created new opportunities for simplification.
-  -- For one, we definitely can simplify `P → Q` into `¬ P ∨ Q`.
   let .some g ← g.withContext (Normalize.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."
-        return []
   debugLog m!"goal after preprocessing: {indentD g}"
 
   g.withContext do
@@ -979,10 +975,14 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
         for g in gs do
           msg := msg ++ m!"{indentD g}"
         throwError msg
-      return []
 
-def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
-  (solve g).run { toConfig := cfg }
+def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM Unit := 
+  let ctx := { toConfig := cfg} 
+  SolverM.run (ctx := ctx) do
+    forallTelescope (← g.getType) fun xs gTy => do
+      let goalMVar ← mkFreshExprMVar gTy
+      solve goalMVar.mvarId!
+      g.assign (← mkLambdaFVars xs goalMVar)
 
 declare_config_elab elabBvMultiWidthConfig Config
 
@@ -993,11 +993,7 @@ def evalBvMultiWidth : Tactic := fun
   let cfg ← elabBvMultiWidthConfig cfg
   let g ← getMainGoal
   g.withContext do
-    let gs ← solveEntrypoint g cfg
-    replaceMainGoal gs
-    match gs with
-    | [] => return ()
-    | _gs => throwError m!"expected single goal after reflecting, found multiple goals. quitting"
+    solveEntrypoint g cfg
 | _ => throwUnsupportedSyntax
 
 
