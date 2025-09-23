@@ -71,15 +71,16 @@ COPY . ./
 RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private \
     --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
   # Symlink cache into place
-  mkdir -p $HOME/.cache/LeanMLIR/Blase/.lake $HOME/.cache/LeanMLIR/.lake/build Blase/ && \
-  ln -s $HOME/.cache/LeanMLIR/Blase/.lake Blase/.lake && \
-  ln -s $HOME/.cache/LeanMLIR/.lake/build .lake && \
+  CACHE="$HOME/.cache/LeanMLIR" && \
+  mkdir -p $CACHE/Blase/.lake $CACHE/.lake/build Blase/ && \
+  ln -Ts $CACHE/Blase/.lake Blase/.lake && \
+  ln -Ts $CACHE/.lake/build .lake/build && \
   # Actual Build
   lake build && \
   # Persist .lake into Docker image
   rm .lake/build Blase/.lake && \
-  cp -Ra $HOME/.cache/LeanMLIR/Blase/.lake .lake && \
-  cp -Ra $HOME/.cache/LeanMLIR/.lake/build .lake
+  cp -TRa $CACHE/.lake/build .lake/build && \
+  cp -TRa $CACHE/Blase/.lake Blase/.lake
 
 # The previous RUN uses cache-mounts to speed up 
 # builds. Note, however, that the paths which were
