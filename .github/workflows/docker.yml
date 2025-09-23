@@ -99,7 +99,7 @@ jobs:
   #
   build-tools:
     name: use docker (runs on namespace)
-    runs-on: namespace-profile-leanmlir-docker-cached
+    runs-on: namespace-profile-leanmlir-small
     needs: core-docker-img
     container: "nscr.io/2411cf8f8l302/lean-mlir:${{ github.sha }}"
     defaults:
@@ -114,7 +114,7 @@ jobs:
 
   build-tools-ghcr:
     name: use docker (runs on namespace, via ghcr.io)
-    runs-on: namespace-profile-leanmlir-docker-cached
+    runs-on: namespace-profile-leanmlir-small
     needs: core-docker-img
     container: "ghcr.io/opencompl/lean-mlir:${{ github.sha }}"
     defaults:
