@@ -71,7 +71,7 @@ COPY . ./
 RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private \
     --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
   # Symlink cache into place
-  mkdir -p $HOME/.cache/LeanMLIR/Blase/.lake Blase/ && \
+  mkdir -p $HOME/.cache/LeanMLIR/Blase/.lake $HOME/.cache/LeanMLIR/.lake/build Blase/ && \
   ln -s $HOME/.cache/LeanMLIR/Blase/.lake Blase/.lake && \
   ln -s $HOME/.cache/LeanMLIR/.lake/build .lake && \
   # Actual Build
