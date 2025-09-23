@@ -101,7 +101,7 @@ jobs:
     name: use docker (runs on namespace)
     runs-on: namespace-profile-leanmlir-docker-cached
     needs: core-docker-img
-    container: "nscr.io/tenant_2411cf8f8l302/lean-mlir/lean-mlir:${{ github.sha }}"
+    container: "nscr.io/2411cf8f8l302/lean-mlir/lean-mlir:${{ github.sha }}"
     defaults:
       run:
         working-directory: /code/lean-mlir
