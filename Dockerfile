@@ -1,4 +1,7 @@
-FROM ubuntu:25.04
+# syntax=docker/dockerfile:1.7-labs
+# ^^ Needed for `COPY --parent` flag
+
+FROM ubuntu:25.04 AS lean-mlir-base
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   apt-get update && \
@@ -28,25 +31,38 @@ COPY lean-toolchain ./
 RUN lake --version 
 # ^^ Force lake to install the specified version
 
-# Build the framework.
-# See note at the end for more details
-# about the caching boilerplate
+#
+# For cache optimality, we want dependencies to be built in a separate layer
+# from our own code. However, actually separating this into separate `RUN` 
+# commands is complex. Thus, we introduce a builder phase which builds everything
+# in a straightforward, non-optimized way.
+# Then, in the actual image is based on `lean-mlir-base`, but copies the source
+# code and build artifacts in cache-optimized layers.
+#
+FROM lean-mlir-base as lean-mlir-build
+
+# Build everything (dependencies & our code)
 COPY . ./
-RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private,uid=$UID \
-    --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private,uid=$UID \
-  # \
-  # Symlink cache into place \
-  # \
-  ln -s $HOME/.cache/LeanMLIR/ .lake && \
-  # \
-  # Actual Build \
-  # \
+RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
+  # Symlink cache into place
+  CACHE="$HOME/.cache/LeanMLIR" && \
+  mkdir -p $CACHE/.lake && \
+  ln -Ts $CACHE/.lake .lake && \
+  #
+  # Build
   lake build && \
-  # \
-  # Persist .lake into Docker image \
-  # \
+  #
+  # Persist .lake into Docker image 
   rm .lake && \
-  cp -Ra $HOME/.cache/LeanMLIR .lake
+  # ^^ Removes the symlink
+  cp -TRa $CACHE/.lake .lake
+  # ^^ Copies the contents to a new `.lake` folder
+
+# NOTE: we deliberately don't use `lake exe cache get`, as that would download
+# all of Mathlib, which is much more than we need, and the extra codesize 
+# significantly increases the image size, slowing down downloads.
+# By building Mathlib from scratch, we ensure we only build the files we actually
+# use, making the image smaller.
 
 # The previous RUN uses cache-mounts to speed up 
 # builds. Note, however, that the paths which were
@@ -60,16 +76,33 @@ RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private,uid=$UID \
 #
 # Thus, to work around this behaviour, we:
 # - Mount a different path (under `/root/.cache`), and symlink
-#     `.lake` to this cache-mounted path. 
-# - Run the build as usual; this will both use
-#     the cached outputs of previous builds and ensures
-#     the outputs of the current build are made cached.
+#     `.lake` or a subfolder like `.lake/build` to this cache-mounted path. 
+# - Run the build as usual; this will use cached outputs of previous builds, if 
+#     available, and ensures the outputs of the current build are written to the 
+#     cache for use by subsequent builds.
 # - Finally, we remove the symlink, and *copy* all files,
-#     which copies the file from the cached directory into
+#     which copies the file from the cache-mounted directory into
 #     the actual Docker image.
 #
-# Because we have this cache setup, we don't have to worry
-# about installing dependencies in a separate layer.
-# Instead, we cache our dependencies the same way 
-# we cache our incremental build artifacts.
+
+
+FROM lean-mlir-base as lean-mlir
+
+# The following is functionally equivalent to COPYing `/code/lean-mlir` from the
+# builder phase into the current image. However, we spread this copy out over
+# multiple, partitioned copies, so that we get multiple layers.
+#
+# Furthermore, using `--link`[1] creates independent layers, so that a COPY won't
+# get cache invalidated just because a previous layer changed.
+#
+# [1]: https://docs.docker.com/reference/dockerfile/#copy---link
+
+COPY --link --from=lean-mlir-build /code/lean-mlir/.lake/packages ./.lake/packages/
+COPY --link --from=lean-mlir-build /code/lean-mlir/.lake/build ./.lake/build/
+COPY --link --from=lean-mlir-build --parents /code/lean-mlir/./*/.lake ./
+# --------------------------------------------------------- ^^^
+# NOTE: this path component seems superfluous, but it is in fact load-bearing.
+# `./` indicates to the `--parent` flag which part of the path to preserve
+
+COPY --link --from=lean-mlir-build --exclude=**/.lake /code/lean-mlir ./
 
