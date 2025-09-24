@@ -97,8 +97,8 @@ FROM lean-mlir-base as lean-mlir
 #
 # [1]: https://docs.docker.com/reference/dockerfile/#copy---link
 
-COPY --link --from=lean-mlir-build /code/lean-mlir/.lake/packages ./lake/packages/
-COPY --link --from=lean-mlir-build /code/lean-mlir/.lake/build ./lake/build/
+COPY --link --from=lean-mlir-build /code/lean-mlir/.lake/packages ./.lake/packages/
+COPY --link --from=lean-mlir-build /code/lean-mlir/.lake/build ./.lake/build/
 COPY --link --from=lean-mlir-build --parents /code/lean-mlir/*/.lake ./
 COPY --link --from=lean-mlir-build --exclude=**/.lake /code/lean-mlir ./
 
