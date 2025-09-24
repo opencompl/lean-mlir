@@ -158,10 +158,8 @@ def TotalOrder.toArrayAsc {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrd
 
 structure CollectState where
     wToIx : TotalOrder Expr := ∅
-    bvToIx : TotalOrder Expr := ∅
+    bvToIx : TotalOrder (Expr × MultiWidth.Nondep.WidthExpr) := ∅
     pToIx : TotalOrder Expr := ∅
-    -- | TODO: just put this in the total order?
-    bvIxToWidthExpr : Std.HashMap Nat MultiWidth.Nondep.WidthExpr := ∅ -- map from BitVec to width
 
 @[simp]
 def CollectState.wcard (state : CollectState) : Nat :=
@@ -269,9 +267,7 @@ def mkTermCtxConsExpr (reader : CollectState) (tctx : Expr) (w : MultiWidth.Nond
 def CollectState.mkTctxExpr (reader : CollectState) : SolverM Expr := do
   let mut ctx ← mkTermCtxEmptyExpr reader
   -- NOTE: this indexes backwards, as usual, we need to use De Bruijn levels vs indexes
-  for i in [reader.tcard:reader.tcard].toList.reverse do
-    let some wexpr := reader.bvIxToWidthExpr.get? i
-      | throwError "unable to find width for BitVec at index {i}"
+  for (_bv, wexpr) in reader.bvToIx.toArrayAsc.reverse do
     ctx ← mkTermCtxConsExpr reader ctx wexpr
   debugCheck ctx
   return ctx
@@ -315,9 +311,7 @@ def mkTermEnvCons (reader : CollectState)
 def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (_tctx : Expr) : SolverM Expr := do
   let mut out ← mkTermEnvEmpty reader (wenv := wenv)
   debugCheck out
-  for (bv, ix) in reader.bvToIx.toArrayAsc.zipIdx.reverse do
-    let some wexpr := reader.bvIxToWidthExpr.get? ix
-      | throwError "unable to find width for '{bv}' at index {ix}"
+  for ((bv, wexpr)) in reader.bvToIx.toArrayAsc.reverse do
     out ← mkTermEnvCons (reader := reader) (wenv := wenv) (tenv := out) (w := wexpr) (bv := bv)
     debugCheck out
   debugCheck out
@@ -387,9 +381,8 @@ def collectBVAtom (state : CollectState)
   let_expr BitVec w := t
     | throwError m!"expected type 'BitVec w', found: {indentD t} (expression: {indentD e})"
   let (wexpr, state) ← collectWidthAtom state w
-  let (bvix, bvToIx) := state.bvToIx.findOrInsertVal e
-  let bvIxToWidthExpr := state.bvIxToWidthExpr.insert bvix wexpr
-  return (.var bvix wexpr, { state with bvToIx, bvIxToWidthExpr })
+  let (bvix, bvToIx) := state.bvToIx.findOrInsertVal (e, wexpr)
+  return (.var bvix wexpr, { state with bvToIx })
 
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
@@ -771,7 +764,7 @@ def mkDecideTy : SolverM Expr := do
   return ty
 
 def CollectState.logSuspiciousFvars (state : CollectState) : SolverM Unit := do
-  for e in state.bvToIx.toArrayAsc do
+  for (e, _w) in state.bvToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted non-variable bitvector: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
   for e in state.wToIx.toArrayAsc do
