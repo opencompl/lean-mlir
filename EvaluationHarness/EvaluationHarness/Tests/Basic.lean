@@ -19,6 +19,16 @@ namespace EvaluationHarness.Tests
   let cmd ← `(command| def baz : False := sorry)
   return getDefLikeName? cmd
 
+/-- info: some "privateBaz" -/
+#guard_msgs in #eval do
+  let cmd ← `(command| private def privateBaz : False := sorry)
+  return getDefLikeName? cmd
+
+/-- info: some "protBaz" -/
+#guard_msgs in #eval do
+  let cmd ← `(command| protected def protBaz : False := sorry)
+  return getDefLikeName? cmd
+
 /-! ## `#evaluation`-/
 
 /-
