@@ -4,7 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 
 import Lean
 
-/- NOTE: copied and adapted from InstCombine.LLVM to be bitblastable. -/
+/-
+NOTE: copied and adapted from InstCombine.LLVM to be bitblastable. 
+From commit 77a97d888ef8cea715e2b96aebd8edf125c48180
+-/
 
 notation:50 x " ≥ᵤ " y => BitVec.ule y x
 notation:50 x " >ᵤ " y => BitVec.ult y x
@@ -30,7 +33,7 @@ instance: Monad PoisonOr where
     ⟨y.val, x.poisonous || y.poisonous⟩
 
 def PoisonOr.value {α : Type} (x : α) : PoisonOr α := ⟨x, false⟩ 
-def PoisonOr.poison {α : Type} [Inhabited α] : PoisonOr α := ⟨default, false⟩ 
+def PoisonOr.poison {α : Type} [Inhabited α] : PoisonOr α := ⟨default, true⟩ 
 
 /- @[match_pattern] def poison : PoisonOr α := ⟨_, true⟩ -/
 /- @[match_pattern] def value : α → PoisonOr α := (⟨some ·⟩) -/
