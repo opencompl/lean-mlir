@@ -30,4 +30,8 @@ with `IO.println` instead of `logInfo` or the like.
   def foo : False := sorry
 
 #evaluation (strategy := "barStrat") in
-  def foo : False := sorry
+  def bar : False := sorry
+
+#evaluation in
+  def shouldError : False := by
+    fail
