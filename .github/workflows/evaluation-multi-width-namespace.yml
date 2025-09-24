@@ -35,6 +35,8 @@ jobs:
       - name: Run MiniEval
         run: |
           ls
+          set -o pipefail
+          curl -LsSf https://astral.sh/uv/install.sh | sh
           # cd evaluation-multi-width-bv
           cp config.tiny.yaml config.yaml
           ./run-on-container.sh
