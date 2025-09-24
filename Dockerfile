@@ -5,9 +5,14 @@
 FROM ubuntu:25.04 AS mathlib-files
 
 # 
-# First, we search for any imports of Mathlib, Qq or Lean, and collect them
+# First, we search for any imports of (external) dependencies, and collect them
 # in a `Dependencies.lean` file. This file is used in the main build stage
 # to build dependencies in a separate layer, for better caching.
+#
+# In particular, this `RUN` command will be re-run every time the source code
+# changes. But, only the `Dependencies.lean` file is used in the main build.
+# Even when the file is re-computed, the file is hashed, and if the hash is the
+# same as for a previous run, downstream cached layers can be re-used.
 #
 # If you see a dependency being (re)built in the main build layer, where you 
 # expected it be built in the dependencies layer, double check that the `grep`
@@ -15,7 +20,7 @@ FROM ubuntu:25.04 AS mathlib-files
 #
 RUN --mount=type=bind,source=.,target=/code/lean-mlir-src \
   cd /code/lean-mlir-src && \
-  grep --no-filename --recursive --only-matching -E 'import (Mathlib|Qq|Lean|Batteries|Cli)\S*' SSA/ \
+  grep --no-filename --recursive --only-matching -E 'import (Mathlib|Qq|Batteries|Cli)\S*' SSA/ \
     | sort -u > /code/Dependencies.lean 
 
 FROM ubuntu:25.04
@@ -51,7 +56,10 @@ RUN lake --version
 # Download and build dependencies.
 # See note at the end for more details about the caching boilerplate
 COPY --parents **/lakefile.* **/lake-manifest.* ./
+## ^^ Copy *just* the lake dependency information
 COPY --from=mathlib-files /code/Dependencies.lean ./SSA/Dependencies.lean
+## ^^ This copies the `Dependencies.lean` file from the first stage
+
 RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
   # Symlink cache into place
   mkdir .lake && \
@@ -63,7 +71,15 @@ RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
   # ^^ We don't actually want the oleans for the `Dependencies` file
   # Persist .lake into Docker image 
   rm .lake/packages && \
+  # ^^ Removes the symlink
   cp -TRa $HOME/.cache/LeanMLIR/.lake/packages .lake/packages
+  # ^^ Copies the contents to a new `.lake/packages` folder
+
+# NOTE: we deliberately don't use `lake exe cache get`, as that would download
+# all of Mathlib, which is much more than we need, and the extra codesize 
+# significantly increases the image size, slowing down downloads.
+# By building Mathlib from scratch, we ensure we only build the files we actually
+# use, making the image smaller.
 
 # Build the framework.
 # See note at the end for more details about the caching boilerplate
