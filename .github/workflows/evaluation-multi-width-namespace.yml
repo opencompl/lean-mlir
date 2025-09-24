@@ -39,7 +39,7 @@ jobs:
           curl -LsSf https://astral.sh/uv/install.sh | sh
           # cd evaluation-multi-width-bv
           cp config.tiny.yaml config.yaml
-          ./run-on-container.sh
+          ./run-on-host.sh
 
       - name: Upload Warm Cache as Artifact
         uses: namespace-actions/upload-artifact@v1
