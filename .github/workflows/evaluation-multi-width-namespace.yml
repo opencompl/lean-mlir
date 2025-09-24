@@ -1,4 +1,4 @@
-name: Evaluation Multi-Width (Namespace)
+name: Evaluation Multi-Width (NS)
 on:
   push:
     branches:
@@ -10,8 +10,8 @@ permissions:
   id-token: write
 
 jobs:
-  build:
-    name: Build & Eval Blase on NS
+  warm-cache:
+    name: Warm Cache via MiniEval
     runs-on:
       - nscloud-ubuntu-24.04-amd64-16x32-with-cache
       - nscloud-cache-tag-my-custom-cache
@@ -32,4 +32,42 @@ jobs:
           ref: "master"
           token: ${{ secrets.NSCLOUD_GITHUB_TOKEN }}
 
+      - name: Run MiniEval
+        run: |
+          cd evaluation-multi-width-bv
+          cp config.tiny.yaml config.yaml
+          ./run-on-container.sh
+
+      - name: Upload Warm Cache as Artifact
+        uses: namespace-actions/upload-artifact@v1
+        with:
+          name: evaluation-multi-width-bv-cache
+          path: evaluation-multi-width-bv
+          compression-level: 9
+
+  run-full-eval:
+    needs: warm-cache
+    name: Run Full Evaluation
+    runs-on:
+      - nscloud-ubuntu-24.04-amd64-16x32-with-cache
+      - nscloud-cache-tag-my-custom-cache
+      - nscloud-cache-size-100gb
+      - nscloud-git-mirror-5gb
+      - nscloud-container-image-cache
+      - nscloud-runner-tool-cache-20gb
+    steps:
+      - name: Setup Ephemeral NS Cluster
+        uses: namespacelabs/nscloud-setup@v0
+
+      - name: Download Warm Cache Artifact
+        uses: namespace-actions/download-artifact@v1
+        with:
+          name: evaluation-multi-width-bv-cache
+          path: evaluation-multi-width-bv
+
+      - name: Run Full Evaluateion
+        run: |
+          cd evaluation-multi-width-bv
+          cp config.full.yaml config.yaml
+          ./run-on-container.sh
 
