@@ -5,6 +5,12 @@
 import Blase
 open BitVec
 
+/-- Bug due to reflection of multiple widths. -/
+theorem minimized :
+    ∀ (x_1 : BitVec v) (x_2 : BitVec w), x_1 = 0#v ↔ x_2 = 0#w := by
+  intros;
+  bv_multi_width
+
 theorem t7_thm.extracted_1._2 :
     ∀ (x : BitVec 8) (x_1 : BitVec 1) (x_2 : BitVec 8), x_1 = 1#1 → x_2 - 0#8 = 0#8 + x_2 := by
   intros;
