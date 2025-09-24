@@ -30,18 +30,72 @@ namespace EvaluationHarness.Tests
   return getDefLikeName? cmd
 
 /-! ## `#evaluation`-/
+set_option evaluation.outputAsLog true
+set_option evaluation.includePosition false
 
-/-
-NOTE: `#guard_msgs` doesn't work, presumably because we output the data
-with `IO.println` instead of `logInfo` or the like.
+/--
+info: {"wallTime": null,
+ "strategy": null,
+ "name": "foo",
+ "messages":
+ [{"severity": "warning",
+   "pos": {"line": 0, "column": 0},
+   "data": "declaration uses 'sorry'",
+   "caption": ""}],
+ "line": 0,
+ "hasErrors": false,
+ "filename":
+ "/home/alex/Workspace/PhD/lean-mlir-alt/EvaluationHarness/EvaluationHarness/Tests/Basic.lean"}
 -/
-
-#evaluation in
+#guard_msgs in #evaluation in
   def foo : False := sorry
 
-#evaluation (strategy := "barStrat") in
+/--
+info: {"wallTime": null,
+ "strategy": "barStrat",
+ "name": "bar",
+ "messages":
+ [{"severity": "warning",
+   "pos": {"line": 0, "column": 0},
+   "data": "declaration uses 'sorry'",
+   "caption": ""}],
+ "line": 0,
+ "hasErrors": false,
+ "filename":
+ "/home/alex/Workspace/PhD/lean-mlir-alt/EvaluationHarness/EvaluationHarness/Tests/Basic.lean"}
+-/
+#guard_msgs in #evaluation (strategy := "barStrat") in
   def bar : False := sorry
 
-#evaluation in
+/--
+info: {"wallTime": null,
+ "strategy": null,
+ "name": "shouldError",
+ "messages":
+ [{"severity": "error",
+   "pos": {"line": 0, "column": 0},
+   "data": "Failed: `fail` tactic was invoked\n⊢ False",
+   "caption": ""}],
+ "line": 0,
+ "hasErrors": true,
+ "filename":
+ "/home/alex/Workspace/PhD/lean-mlir-alt/EvaluationHarness/EvaluationHarness/Tests/Basic.lean"}
+-/
+#guard_msgs in #evaluation in
   def shouldError : False := by
+    fail
+
+set_option evaluation.includeMessages false in
+/--
+info: {"wallTime": null,
+ "strategy": null,
+ "name": "shouldErrorWithoutMsg",
+ "messages": null,
+ "line": 0,
+ "hasErrors": true,
+ "filename":
+ "/home/alex/Workspace/PhD/lean-mlir-alt/EvaluationHarness/EvaluationHarness/Tests/Basic.lean"}
+-/
+#guard_msgs in #evaluation in
+  def shouldErrorWithoutMsg : False := by
     fail
