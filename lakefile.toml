@@ -15,10 +15,6 @@ path = "Blase"
 rev = "main"
 
 [[require]]
-name = "EvaluationHarness"
-path = "EvaluationHarness"
-
-[[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
 rev = "nightly-testing-2025-08-11"
