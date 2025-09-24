@@ -45,7 +45,7 @@ jobs:
         uses: namespace-actions/upload-artifact@v1
         with:
           name: evaluation-multi-width-bv-cache
-          path:
+          path: |
             .
             !./snakemake
 
