@@ -1,4 +1,4 @@
-name: Evaluation Multi-Width (Namespace) 
+name: Evaluation Multi-Width (Namespace)
 on:
   push:
     branches:
@@ -26,10 +26,10 @@ jobs:
 
       # https://namespace.so/docs/reference/github-actions/nscloud-checkout-action
       - name: Checkout Evaluation Repisitory via NS
-        uses: namespacelabs/nscloud-checkout@v7
+        uses: namespacelabs/nscloud-checkout-action@v7
         with:
           repository: "github.com/opencompl/evaluation-multi-width-bv"
           ref: "main"
           token: ${{ secrets.NSCLOUD_GITHUB_TOKEN }}
 
-        
+
