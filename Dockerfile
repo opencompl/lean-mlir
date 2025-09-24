@@ -1,29 +1,7 @@
 # syntax=docker/dockerfile:1.7-labs
 # ^^ Needed for `COPY --parent` flag
 
-
-FROM ubuntu:25.04 AS mathlib-files
-
-# 
-# First, we search for any imports of (external) dependencies, and collect them
-# in a `Dependencies.lean` file. This file is used in the main build stage
-# to build dependencies in a separate layer, for better caching.
-#
-# In particular, this `RUN` command will be re-run every time the source code
-# changes. But, only the `Dependencies.lean` file is used in the main build.
-# Even when the file is re-computed, the file is hashed, and if the hash is the
-# same as for a previous run, downstream cached layers can be re-used.
-#
-# If you see a dependency being (re)built in the main build layer, where you 
-# expected it be built in the dependencies layer, double check that the `grep`
-# line below finds your import.
-#
-RUN --mount=type=bind,source=.,target=/code/lean-mlir-src \
-  cd /code/lean-mlir-src && \
-  grep --no-filename --recursive --only-matching -E 'import (Mathlib|Qq|Batteries|Cli)\S*' SSA/ \
-    | sort -u > /code/Dependencies.lean 
-
-FROM ubuntu:25.04
+FROM ubuntu:25.04 AS lean-mlir-base
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
   apt-get update && \
@@ -53,50 +31,38 @@ COPY lean-toolchain ./
 RUN lake --version 
 # ^^ Force lake to install the specified version
 
-# Download and build dependencies.
-# See note at the end for more details about the caching boilerplate
-COPY --parents **/lakefile.* **/lake-manifest.* ./
-## ^^ Copy *just* the lake dependency information
-COPY --from=mathlib-files /code/Dependencies.lean ./SSA/Dependencies.lean
-## ^^ This copies the `Dependencies.lean` file from the first stage
+#
+# For cache optimality, we want dependencies to be built in a separate layer
+# from our own code. However, actually separating this into separate `RUN` 
+# commands is complex. Thus, we introduce a builder phase which builds everything
+# in a straightforward, non-optimized way.
+# Then, in the actual image is based on `lean-mlir-base`, but copies the source
+# code and build artifacts in cache-optimized layers.
+#
+FROM lean-mlir-base as lean-mlir-build
 
+# Build everything (dependencies & our code)
+COPY . ./
 RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
   # Symlink cache into place
-  mkdir .lake && \
-  mkdir -p $HOME/.cache/LeanMLIR/.lake/packages && \
-  ln -Ts $HOME/.cache/LeanMLIR/.lake/packages .lake/packages && \
+  CACHE="$HOME/.cache/LeanMLIR" && \
+  mkdir -p $CACHE/.lake && \
+  ln -Ts $CACHE/.lake .lake && \
+  #
   # Build
-  lake build SSA.Dependencies && \
-  rm -r .lake/build && \ 
-  # ^^ We don't actually want the oleans for the `Dependencies` file
+  lake build && \
+  #
   # Persist .lake into Docker image 
-  rm .lake/packages && \
+  rm .lake && \
   # ^^ Removes the symlink
-  cp -TRa $HOME/.cache/LeanMLIR/.lake/packages .lake/packages
-  # ^^ Copies the contents to a new `.lake/packages` folder
+  cp -TRa $CACHE/.lake .lake
+  # ^^ Copies the contents to a new `.lake` folder
 
 # NOTE: we deliberately don't use `lake exe cache get`, as that would download
 # all of Mathlib, which is much more than we need, and the extra codesize 
 # significantly increases the image size, slowing down downloads.
 # By building Mathlib from scratch, we ensure we only build the files we actually
 # use, making the image smaller.
-
-# Build the framework.
-# See note at the end for more details about the caching boilerplate
-COPY . ./
-RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private \
-    --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
-  # Symlink cache into place
-  CACHE="$HOME/.cache/LeanMLIR" && \
-  mkdir -p $CACHE/Blase/.lake $CACHE/.lake/build Blase/ && \
-  ln -Ts $CACHE/Blase/.lake Blase/.lake && \
-  ln -Ts $CACHE/.lake/build .lake/build && \
-  # Actual Build
-  lake build && \
-  # Persist .lake into Docker image
-  rm .lake/build Blase/.lake && \
-  cp -TRa $CACHE/.lake/build .lake/build && \
-  cp -TRa $CACHE/Blase/.lake Blase/.lake
 
 # The previous RUN uses cache-mounts to speed up 
 # builds. Note, however, that the paths which were
@@ -119,4 +85,20 @@ RUN --mount=type=cache,target=$HOME/.cache/mathlib,sharing=private \
 #     the actual Docker image.
 #
 
+
+FROM lean-mlir-base as lean-mlir
+
+# The following is functionally equivalent to COPYing `/code/lean-mlir` from the
+# builder phase into the current image. However, we spread this copy out over
+# multiple, partitioned copies, so that we get multiple layers.
+#
+# Furthermore, using `--link`[1] creates independent layers, so that a COPY won't
+# get cache invalidated just because a previous layer changed.
+#
+# [1]: https://docs.docker.com/reference/dockerfile/#copy---link
+
+COPY --link --from=lean-mlir-build /code/lean-mlir/.lake/packages ./lake/packages/
+COPY --link --from=lean-mlir-build /code/lean-mlir/.lake/build ./lake/build/
+COPY --link --from=lean-mlir-build --parents /code/lean-mlir/*/.lake ./
+COPY --link --from=lean-mlir-build --exclude=**/.lake /code/lean-mlir ./
 
