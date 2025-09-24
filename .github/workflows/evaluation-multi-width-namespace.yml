@@ -34,7 +34,8 @@ jobs:
 
       - name: Run MiniEval
         run: |
-          cd evaluation-multi-width-bv
+          ls
+          # cd evaluation-multi-width-bv
           cp config.tiny.yaml config.yaml
           ./run-on-container.sh
 
@@ -42,7 +43,7 @@ jobs:
         uses: namespace-actions/upload-artifact@v1
         with:
           name: evaluation-multi-width-bv-cache
-          path: evaluation-multi-width-bv
+          path: .
           compression-level: 9
 
   run-full-eval:
