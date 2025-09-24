@@ -28,7 +28,7 @@ jobs:
       - name: Checkout Evaluation Repisitory via NS
         uses: namespacelabs/nscloud-checkout-action@v7
         with:
-          repository: "github.com/opencompl/evaluation-multi-width-bv"
+          repository: "opencompl/evaluation-multi-width-bv"
           ref: "main"
           token: ${{ secrets.NSCLOUD_GITHUB_TOKEN }}
 
