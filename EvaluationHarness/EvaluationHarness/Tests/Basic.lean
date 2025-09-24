@@ -18,3 +18,16 @@ namespace EvaluationHarness.Tests
 #guard_msgs in #eval do
   let cmd ← `(command| def baz : False := sorry)
   return getDefLikeName? cmd
+
+/-! ## `#evaluation`-/
+
+/-
+NOTE: `#guard_msgs` doesn't work, presumably because we output the data
+with `IO.println` instead of `logInfo` or the like.
+-/
+
+#evaluation in
+  def foo : False := sorry
+
+#evaluation (strategy := "barStrat") in
+  def foo : False := sorry
