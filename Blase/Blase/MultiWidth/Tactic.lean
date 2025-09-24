@@ -24,7 +24,7 @@ deriving DecidableEq, Repr
 structure Config where
   check? : Bool := true
   -- number of k-induction iterations.
-  niter : Nat := 10
+  niter : Nat := 30
   /-- debug printing verbosity. -/
   verbose?: Bool := false
   /-- By default, widths are always abstracted. -/

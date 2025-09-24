@@ -33,7 +33,7 @@ error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.b
 -/
 #guard_msgs in theorem abstract_prop_check_warn : ∀ (x : Nat), x = x + 1  := by
   -- | check that prop is abstracted.
-  bv_multi_width 
+  bv_multi_width
 
 theorem eg5 (u w : Nat) (x : BitVec w) :
     (x.signExtend u).zeroExtend u = x.signExtend u := by
@@ -145,24 +145,20 @@ theorem imp2 (w : Nat) (a b : BitVec w) : ((a ≤ b) ∧ (b ≤ a)) → (a = b) 
 
 -- This should succeed.
 theorem slt0 (w : Nat) (a b : BitVec w) : ((a - b).slt 0 → a.slt b) := by
-  -- | TODO: handle width constraints.
   fail_if_success bv_multi_width
   sorry
 
 /-- Tricohotomy of slt. Currently runs out of k-induction iterations! -/
 theorem slt1 (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.sle a) := by
-  fail_if_success bv_multi_width (config := { niter := 10 })
-  sorry
+  bv_multi_width
 
 /-- Tricohotomy of slt. Currently fails! -/
 theorem slt2 (w : Nat) (a b : BitVec w) : (a.slt b) ∨ (b.slt a) ∨ (a = b) := by
-  fail_if_success bv_multi_width (config := { niter := 15 })
-  sorry
+  bv_multi_width
 
 /-- a <=s b and b <=s a implies a = b-/
 theorem slt3 (w : Nat) (a b : BitVec w) : ((a.sle b) ∧ (b.sle a)) → a = b := by
-  fail_if_success bv_multi_width (config := { niter := 15 })
-  sorry
+  bv_multi_width
 
 /-- In bitwidth 0, all values are equal.
 In bitwidth 1, 1 + 1 = 0.
