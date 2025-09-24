@@ -1,6 +1,0 @@
-name = "EvaluationHarness"
-version = "0.1.0"
-defaultTargets = ["EvaluationHarness"]
-
-[[lean_lib]]
-name = "EvaluationHarness"
