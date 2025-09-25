@@ -973,7 +973,8 @@ def solve (g : MVarId) : SolverM Unit := do
   let .some g ← g.withContext (Normalize.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."
-  debugLog m!"goal after preprocessing: {indentD g}"
+  g.withContext do
+    debugLog m!"goal after preprocessing: {indentD g}"
 
   g.withContext do
     let collect : CollectState := {}

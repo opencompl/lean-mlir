@@ -735,6 +735,14 @@ def mkTermFSM (wcard tcard bcard pcard : Nat) (t : Nondep.Term) :
       width := wFsm
     }
   | .boolVar v =>
+    -- we cannot make a variable that allows all possible
+    -- bitstreams, we should only allow '00000000' or '11111111'.
+    -- For this, build an FSM that repeats its input bit at
+    -- index 0 forever. So that's latchImmediate?
+    -- another good example where a stream diffeq is great.
+    -- out[0] = in[0]
+    -- out[n+1] = out[n]
+    XXX
     if h : v < bcard then
       let varFsm : FSM (StateSpace wcard tcard bcard pcard) :=
        (FSM.var' (StateSpace.boolVar ⟨v, h⟩))

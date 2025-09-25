@@ -140,6 +140,18 @@ def nextBit : p.State → (arity → Bool) → p.State × Bool :=
     let outBit : Bool       := (p.outputCirc).eval input
     (newState, outBit)
 
+/-- Produce next bit of the state. -/
+def nextBitState (p : FSM arity)
+    (carryState : p.α → Bool)
+    (carryIn : arity → Bool) : p.α → Bool :=
+  (p.nextBit carryState carryIn).1
+
+/-- Produce next bit of the state. -/
+def nextBitOutput (p : FSM arity)
+    (carryState : p.α → Bool)
+    (carryIn : arity → Bool) :  Bool :=
+  (p.nextBit carryState carryIn).2
+
 /-- `p.carry in i` computes the internal carry state at step `i`, given input *streams* `in` -/
 def carry (x : arity → BitStream) : ℕ → p.State
   | 0 => p.initCarry
@@ -1161,11 +1173,101 @@ theorem eval_eq_zero_of_set {arity : Type _} (p : FSM arity)
   rw [eval]
   exact (evalAux_eq_zero_of_set p R hR hi hr1 x n).1
 
-def repeatBit : FSM Unit where
-  α := Unit
-  initCarry := fun () => false
-  outputCirc :=  (.var true <| .inl ()) ||| (.var true <| .inr ())
-  nextStateCirc := fun () => (.var true <| .inl ()) ||| (.var true <| .inr ())
+
+section EvalInduction
+
+@[elab_as_elim]
+theorem eval_induction.go_state {fsm : FSM arity}
+    (StateStepIndexedPredicate : Nat → (fsm.α → Bool) → Prop)
+    (hstate0 : StateStepIndexedPredicate 0 (fsm.initCarry))
+    (hStateSucc : ∀ (n : Nat) (state : fsm.α → Bool) (inputs : arity → Bool),
+      StateStepIndexedPredicate n state →
+      StateStepIndexedPredicate (n + 1) (fsm.nextBitState state inputs)) :
+    ∀ (input : arity → BitStream) (k : Nat), StateStepIndexedPredicate k (fsm.carry input k) := by
+  intros input k
+  induction k
+  case zero =>
+    exact hstate0
+  case succ k ih =>
+    apply hStateSucc
+    apply ih
+
+set_option autoImplicit false in
+/-
+Prove a property of the output iff it holds for all inputs,
+when implied by a step indexed output predicate.
+-/
+@[elab_as_elim]
+def eval_induction_1 {fsm : FSM arity}
+  (OutputStepIndexedPredicate : Nat → Bool → Prop)
+  (StateStepIndexedPredicate : Nat → (fsm.α → Bool) → Prop)
+  (hstate0 : StateStepIndexedPredicate 0 (fsm.initCarry))
+  (hStateSucc : ∀ (n : Nat) (state : fsm.α → Bool) (inputs : arity → Bool),
+    StateStepIndexedPredicate n state →
+    StateStepIndexedPredicate (n + 1) (fsm.nextBitState state inputs))
+  (hEval: ∀ (n : Nat) (state : fsm.α → Bool) (inputs : arity → Bool),
+    StateStepIndexedPredicate n state →
+    OutputStepIndexedPredicate n (fsm.nextBitOutput state inputs)) :
+    ∀ (input : arity → BitStream) (i : Nat), OutputStepIndexedPredicate i (fsm.eval input i) := by
+  intros input i
+  induction i
+  · case zero =>
+    apply hEval
+    apply hstate0
+  · case succ k ih =>
+      apply hEval
+      apply hStateSucc
+      apply eval_induction.go_state
+      · apply hstate0
+      · apply hStateSucc
+
+end EvalInduction
+
+-- hold the input stream's value at 0 forever.
+def hold0Forever : FSM Unit where
+  α := Fin 2
+  -- bit 0: if we are in state 0.
+  -- bit 1: held value.
+  initCarry := fun _  => true -- currently in the state that receives the input.
+  outputCirc :=
+    let state0? := Circuit.var true <| Sum.inl 0
+    let heldValue := Circuit.var true <| Sum.inl 1
+    let input := Circuit.var true <| Sum.inr ()
+    Circuit.ite state0? input heldValue -- in state0
+  nextStateCirc := fun bit =>
+    match bit with
+    | 0 => Circuit.ofBool false
+    | 1 =>
+      let state0? := Circuit.var true <| Sum.inl 0
+      let heldValue := Circuit.var true <| Sum.inl 1
+      let input := Circuit.var true <| Sum.inr ()
+      Circuit.ite state0? input heldValue
+
+@[simp]
+theorem eval_hold0Forever (xs : Unit → BitStream) :
+    hold0Forever.eval xs = fun i => xs () 0  := by
+  ext i
+  induction i using eval_induction_1 (input := xs) (fsm := hold0Forever)
+    (StateStepIndexedPredicate := fun (i : Nat) (state : Fin 2 → Bool) =>
+       (i = 0 → state 0 = true) ∧
+       ((i ≥ 1) → state 0 = false ∧ state 1 = xs () 0)
+    )
+
+  · case h.hstate0 =>
+      simp [hold0Forever]
+  · case h.hStateSucc n state inputs ih =>
+      obtain ⟨h0, h1⟩ := ih
+      simp [nextBitState, hold0Forever, nextBit]
+      rcases n with rfl | n
+      · simp [h0 (by omega)]
+        sorry
+      · simp [h1 (by omega)]
+
+
+  -- apply eval_induction_1 (fsm := hold0Forever) (input := xs)
+  --   (OutputStepIndexedPredicate := fun n b => b = xs () 0)
+  --   (StateStepIndexedPredicate := fun (state : Fin 2 → Bool) =>
+      -- state 0 = true ∧ state 1 = xs () 0)
 
 /--
 (xval:false, control:true)
