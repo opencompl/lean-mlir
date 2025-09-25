@@ -1176,15 +1176,21 @@ theorem eval_eq_zero_of_set {arity : Type _} (p : FSM arity)
 
 section EvalInduction
 
+/--
+Custom induction principle for FSM state evolution.
+To show a property holds for an input stream,
+show that it holds at index 0, and that if it holds at index n,
+it continues to hold at index n+1.
+-/
 @[elab_as_elim]
-theorem eval_induction.go_state {fsm : FSM arity}
+theorem eval_induction.go_state {fsm : FSM arity} (inputs : arity → BitStream)
     (StateStepIndexedPredicate : Nat → (fsm.α → Bool) → Prop)
     (hstate0 : StateStepIndexedPredicate 0 (fsm.initCarry))
-    (hStateSucc : ∀ (n : Nat) (state : fsm.α → Bool) (inputs : arity → Bool),
+    (hStateSucc : ∀ (n : Nat) (state : fsm.α → Bool),
       StateStepIndexedPredicate n state →
-      StateStepIndexedPredicate (n + 1) (fsm.nextBitState state inputs)) :
-    ∀ (input : arity → BitStream) (k : Nat), StateStepIndexedPredicate k (fsm.carry input k) := by
-  intros input k
+      StateStepIndexedPredicate (n + 1) (fsm.nextBitState state (fun a => inputs a n))) :
+    ∀ (k : Nat), StateStepIndexedPredicate k (fsm.carry inputs k) := by
+  intros k
   induction k
   case zero =>
     exact hstate0
@@ -1194,22 +1200,22 @@ theorem eval_induction.go_state {fsm : FSM arity}
 
 set_option autoImplicit false in
 /-
-Prove a property of the output iff it holds for all inputs,
-when implied by a step indexed output predicate.
+Prove a property of the output stream by proving it
+as a consequence of the state evolution, looking 1 state ahead.
 -/
 @[elab_as_elim]
-def eval_induction_1 {fsm : FSM arity}
-  (OutputStepIndexedPredicate : Nat → Bool → Prop)
-  (StateStepIndexedPredicate : Nat → (fsm.α → Bool) → Prop)
-  (hstate0 : StateStepIndexedPredicate 0 (fsm.initCarry))
-  (hStateSucc : ∀ (n : Nat) (state : fsm.α → Bool) (inputs : arity → Bool),
-    StateStepIndexedPredicate n state →
-    StateStepIndexedPredicate (n + 1) (fsm.nextBitState state inputs))
-  (hEval: ∀ (n : Nat) (state : fsm.α → Bool) (inputs : arity → Bool),
-    StateStepIndexedPredicate n state →
-    OutputStepIndexedPredicate n (fsm.nextBitOutput state inputs)) :
-    ∀ (input : arity → BitStream) (i : Nat), OutputStepIndexedPredicate i (fsm.eval input i) := by
-  intros input i
+def eval_induction_1 {fsm : FSM arity} {inputs : arity → BitStream}
+  {P : Nat → Bool → Prop}
+  (SInv : Nat → (fsm.α → Bool) → Prop)
+  (hstate0 : SInv 0 (fsm.initCarry))
+  (hStateSucc : ∀ (n : Nat) (state : fsm.α → Bool),
+    SInv n state →
+    SInv (n + 1) (fsm.nextBitState state (fun a => inputs a n)))
+  (hEval: ∀ (n : Nat) (state : fsm.α → Bool),
+    SInv n state →
+    P n (fsm.nextBitOutput state (fun a => inputs a n))) :
+    ∀  (i : Nat), P i (fsm.eval inputs i) := by
+  intros  i
   induction i
   · case zero =>
     apply hEval
@@ -1245,29 +1251,26 @@ def hold0Forever : FSM Unit where
 
 @[simp]
 theorem eval_hold0Forever (xs : Unit → BitStream) :
-    hold0Forever.eval xs = fun i => xs () 0  := by
+    hold0Forever.eval xs = fun _ => xs () 0  := by
   ext i
-  induction i using eval_induction_1 (input := xs) (fsm := hold0Forever)
-    (StateStepIndexedPredicate := fun (i : Nat) (state : Fin 2 → Bool) =>
+  induction i using eval_induction_1 (fsm := hold0Forever) (inputs := xs)
+    (SInv := fun (i : Nat) (state : Fin 2 → Bool) =>
        (i = 0 → state 0 = true) ∧
        ((i ≥ 1) → state 0 = false ∧ state 1 = xs () 0)
     )
-
   · case h.hstate0 =>
       simp [hold0Forever]
-  · case h.hStateSucc n state inputs ih =>
+  · case h.hStateSucc n state ih =>
       obtain ⟨h0, h1⟩ := ih
       simp [nextBitState, hold0Forever, nextBit]
       rcases n with rfl | n
       · simp [h0 (by omega)]
-        sorry
       · simp [h1 (by omega)]
-
-
-  -- apply eval_induction_1 (fsm := hold0Forever) (input := xs)
-  --   (OutputStepIndexedPredicate := fun n b => b = xs () 0)
-  --   (StateStepIndexedPredicate := fun (state : Fin 2 → Bool) =>
-      -- state 0 = true ∧ state 1 = xs () 0)
+  · case h.hEval n state ih =>
+      simp [hold0Forever, nextBitOutput, nextBit]
+      rcases n with rfl | n
+      · simp [ih]
+      · simp [ih]
 
 /--
 (xval:false, control:true)
