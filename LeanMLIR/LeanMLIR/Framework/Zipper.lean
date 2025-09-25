@@ -1,4 +1,4 @@
-import LeanMLIR.Framework
+import LeanMLIR.Framework.Basic
 import LeanMLIR.Transforms.Rewrite.Match
 
 open Ctxt (Valuation Var Hom)
