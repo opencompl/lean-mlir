@@ -1,0 +1,347 @@
+name: Evaluation (Namespace) - Experimental
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build Lean-MLIR on NS
+    runs-on:
+      - nscloud-ubuntu-24.04-amd64-16x32-with-cache
+      - nscloud-cache-tag-my-custom-cache
+      - nscloud-cache-size-100gb
+      - nscloud-git-mirror-5gb
+      - nscloud-container-image-cache
+      - nscloud-runner-tool-cache-20gb
+
+    steps:
+      - name: Checkout code (use nscloud)
+        uses: namespacelabs/nscloud-checkout-action@v7
+
+      - name: Cache Elan && Lake Folders
+        uses: namespacelabs/nscloud-cache-action@v1
+        with:
+          path: |
+            ~/.elan
+            .lake
+            Blase/.lake
+            TacBench/.lake
+
+      - name: Install Elan & Lean
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+
+      - name: Make lake available
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR & Mathlib
+        # We build Mathlib from scratch as this reduces the build artifacts that are stored in the cache. Previous experiments
+        # led to savings from avoiding a full Mathlib cache in the order of a couple hundred MBs.
+        run: |
+          lake -R build
+
+  test-blase:
+    name: Test Blase
+    runs-on:
+      - nscloud-ubuntu-24.04-amd64-16x32-with-cache
+      - nscloud-cache-tag-my-custom-cache
+      - nscloud-cache-size-100gb
+      - nscloud-git-mirror-5gb
+      - nscloud-container-image-cache
+      - nscloud-runner-tool-cache-20gb
+      - nscloud-cache-exp-do-not-commit
+
+    needs: build
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout code (use nscloud)
+        uses: namespacelabs/nscloud-checkout-action@v7
+
+      - name: Cache Elan && Lake Folders
+        uses: namespacelabs/nscloud-cache-action@v1
+        with:
+          path: |
+            ~/.elan
+            .lake
+            Blase/.lake
+            TacBench/.lake
+
+      - name: Install Elan & Lean
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+
+      - name: Add Lean to PATH
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR (should be all in cache)
+        run: |
+          lake -R build
+
+      - name: Run Blase Test Suite
+        run: |
+          lake build BlaseTest
+
+  build-github-action-cache:
+    name: Build Lean-MLIR on NS (GitHub Action Cache)
+    runs-on:
+      - nscloud-ubuntu-24.04-amd64-16x32-with-cache
+      - nscloud-cache-tag-my-custom-cache-2
+      - nscloud-cache-size-100gb
+      - nscloud-git-mirror-5gb
+      - nscloud-container-image-cache
+      - nscloud-runner-tool-cache-20gb
+
+    steps:
+      - name: Checkout code (use nscloud)
+        uses: namespacelabs/nscloud-checkout-action@v7
+
+      - name: Cache Elan && Lake Folders
+        uses: namespacelabs/nscloud-cache-action@v1
+        with:
+          path: |
+            ~/.elan
+            .lake
+            Blase/.lake
+            TacBench/.lake
+
+      - name: Install Elan & Lean
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+
+      - name: Make lake available
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR & Mathlib
+        # We build Mathlib from scratch as this reduces the build artifacts that are stored in the cache. Previous experiments
+        # led to savings from avoiding a full Mathlib cache in the order of a couple hundred MBs.
+        run: |
+          lake -R build
+
+      - name: Cache `.lake` folders
+        id: cache-lake
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .lake/packages
+            .lake/build
+            */.lake
+          key: nstest-gac-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Cache `.elan` folders
+        id: cache-lean-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+          key: nstest-gac-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+          lookup-only: true
+
+      - name: Cache `.elan` folders
+        id: cache-lean
+        if: steps.cache-lean-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+          key: nstest-gac-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+
+
+  test-blase-github-action-cache:
+    name: Test Blase (GitHub Action Cache)
+    runs-on:
+      - nscloud-ubuntu-24.04-amd64-16x32-with-cache
+      - nscloud-cache-tag-my-custom-cache-2
+      - nscloud-cache-size-100gb
+      - nscloud-git-mirror-5gb
+      - nscloud-container-image-cache
+      - nscloud-runner-tool-cache-20gb
+      - nscloud-cache-exp-do-not-commit
+
+    needs: build-github-action-cache
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout code (use nscloud)
+        uses: namespacelabs/nscloud-checkout-action@v7
+
+      - name: Load Lean from Cache
+        id: cache-lean
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+          key: nstest-gac-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+
+      - name: Load Lean-MLIR from Cache
+        id: cache-lake
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            .lake/packages
+            .lake/build
+            */.lake
+          key: nstest-gac-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Install Elan & Lean
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+
+      - name: Add Lean to PATH
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR (should be all in cache)
+        run: |
+          lake -R build
+
+      - name: Run Blase Test Suite
+        run: |
+          lake build BlaseTest
+
+
+  build-ns-artifact:
+    name: Build Lean-MLIR on NS (Namespace Artifact)
+    runs-on:
+      - nscloud-ubuntu-24.04-amd64-16x32-with-cache
+      - nscloud-cache-tag-my-custom-cache-3
+      - nscloud-cache-size-100gb
+      - nscloud-git-mirror-5gb
+      - nscloud-container-image-cache
+      - nscloud-runner-tool-cache-20gb
+
+    steps:
+      - name: Checkout code (use nscloud)
+        uses: namespacelabs/nscloud-checkout-action@v7
+
+      - name: Cache Elan && Lake Folders
+        uses: namespacelabs/nscloud-cache-action@v1
+        with:
+          path: |
+            ~/.elan
+            .lake
+            Blase/.lake
+            TacBench/.lake
+
+      - name: Install Elan & Lean
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+
+      - name: Make lake available
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR & Mathlib
+        # We build Mathlib from scratch as this reduces the build artifacts that are stored in the cache. Previous experiments
+        # led to savings from avoiding a full Mathlib cache in the order of a couple hundred MBs.
+        run: |
+          lake -R build
+
+      - name: Cache `.lake` folders
+        id: cache-lake
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .lake/packages
+            .lake/build
+            */.lake
+          key: nstest-gac-${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+
+      - name: Upload Archive
+        uses: namespace-actions/upload-artifact@v1
+        with:
+          name: lake-folder
+          path: |
+            .lake/packages
+            .lake/build
+            */.lake
+
+      - name: Cache `.elan` folders
+        id: cache-lean-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+          key: nstest-gac-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+          lookup-only: true
+
+      - name: Cache `.elan` folders
+        id: cache-lean
+        if: steps.cache-lean-restore.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+          key: nstest-gac-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+
+
+  test-blase-ns-artifact:
+    name: Test Blase (Namespace Aritfact)
+    runs-on:
+      - nscloud-ubuntu-24.04-amd64-16x32-with-cache
+      - nscloud-cache-tag-my-custom-cache-3
+      - nscloud-cache-size-100gb
+      - nscloud-git-mirror-5gb
+      - nscloud-container-image-cache
+      - nscloud-runner-tool-cache-20gb
+      - nscloud-cache-exp-do-not-commit
+
+    needs: build-ns-artifact
+    permissions:
+      pull-requests: write
+    steps:
+      - name: Checkout code (use nscloud)
+        uses: namespacelabs/nscloud-checkout-action@v7
+
+      - name: Load Lean from Cache
+        id: cache-lean
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+          key: nstest-gac-${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+
+      - name: Download Archive
+        uses: namespace-actions/download-artifact@v1
+        with:
+          name: lake-folder
+          path: |
+            .lake/packages
+            .lake/build
+            */.lake
+
+      - name: Install Elan & Lean
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+
+      - name: Add Lean to PATH
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Build Lean-MLIR (should be all in cache)
+        run: |
+          lake -R build
+
+      - name: Run Blase Test Suite
+        run: |
+          lake build BlaseTest

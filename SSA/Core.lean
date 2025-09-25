@@ -10,5 +10,6 @@ import SSA.Core.Util
 
 import SSA.Core.MLIRSyntax
 import SSA.Core.MLIRSyntax.EDSL2
+import SSA.Core.MLIRSyntax.Transform.Utils
 
 import SSA.Core.Transforms.Rewrite

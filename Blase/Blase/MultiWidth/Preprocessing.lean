@@ -347,6 +347,75 @@ theorem Nat.lt_of_not_le (v w : Nat) : ¬ (v ≤ w) ↔ w < v := by omega
 @[bv_multi_width_normalize]
 theorem Nat.le_of_not_lt (v w : Nat) : ¬ (v < w) ↔ w ≤ v := by omega
 
+/-#
+Boolean normalization:
+- rewrite constants to `ofBool true`, `ofBool false`.
+- pull `ofBool` outside.
+
+-/
+
+@[bv_multi_width_normalize] theorem one_eq_ofBool_true :
+  1#1 = BitVec.ofBool true  := by rfl
+
+@[bv_multi_width_normalize] theorem zero_eq_ofBool_false :
+  0#1 = BitVec.ofBool false  := by rfl
+
+/-- rewrite ofBool x = 1#1 to x = True -/
+@[bv_multi_width_normalize] theorem ofBool_eq_ofBool_iff (x y : Bool) :
+  BitVec.ofBool x = BitVec.ofBool y ↔ (x = y) := by
+    rcases x with rfl | rfl <;> rcases y with rfl | rfl <;> simp [BitVec.ofBool]
+
+/-- rewrite ofBool x = 1#1 to x = True -/
+@[bv_multi_width_normalize] theorem ofBool_ne_ofBool_iff (x y : Bool) :
+  (BitVec.ofBool x ≠ BitVec.ofBool y) ↔ (x ≠ y) := by
+    rcases x with rfl | rfl <;> rcases y with rfl | rfl <;> simp [BitVec.ofBool]
+
+@[bv_multi_width_normalize] theorem not_ofBool_eq_ofBool_ne (x y : Bool) :
+  (¬ (BitVec.ofBool x = BitVec.ofBool y)) ↔ (x ≠ y) := by
+    rcases x with rfl | rfl <;> rcases y with rfl | rfl <;> simp [BitVec.ofBool]
+
+/-- rewrite ofBool x = 1#1 to x = True -/
+@[bv_multi_width_normalize] theorem ofBool_xor_ofBool (x y : Bool) :
+  (BitVec.ofBool x ^^^ BitVec.ofBool y) = BitVec.ofBool (x ^^ y) := by
+    rcases x with rfl | rfl <;> rcases y with rfl | rfl <;> simp [BitVec.ofBool]
+
+
+@[bv_multi_width_normalize] theorem ofBool_or_ofBool (x y : Bool) :
+  (BitVec.ofBool x ||| BitVec.ofBool y) = BitVec.ofBool (x || y) := by
+    rcases x with rfl | rfl <;> rcases y with rfl | rfl <;> simp [BitVec.ofBool]
+
+
+@[bv_multi_width_normalize] theorem ofBool_and_ofBool (x y : Bool) :
+  (BitVec.ofBool x &&& BitVec.ofBool y) = BitVec.ofBool (x && y) := by
+    rcases x with rfl | rfl <;> rcases y with rfl | rfl <;> simp [BitVec.ofBool]
+
+@[bv_multi_width_normalize] theorem complement_ofBool_eq (x : Bool) :
+  ~~~ (BitVec.ofBool x) = BitVec.ofBool (!x) := by
+    rcases x with rfl | rfl <;> simp [BitVec.ofBool]
+
+
+@[bv_multi_width_normalize] theorem add_ofBool_eq (x y : Bool) :
+  (BitVec.ofBool x) + (BitVec.ofBool y) = BitVec.ofBool (x ^^ y) := by
+    rcases x with rfl | rfl <;>
+    rcases y with rfl | rfl <;> simp [BitVec.ofBool]
+
+@[bv_multi_width_normalize] theorem sub_ofBool_eq (x y : Bool) :
+  (BitVec.ofBool x) - (BitVec.ofBool y) = BitVec.ofBool (x ^^ y) := by
+    rcases x with rfl | rfl <;>
+    rcases y with rfl | rfl <;> simp [BitVec.ofBool]
+
+@[bv_multi_width_normalize] theorem mul_ofBool_eq (x y : Bool) :
+  (BitVec.ofBool x) * (BitVec.ofBool y) = BitVec.ofBool (x && y) := by
+    rcases x with rfl | rfl <;>
+    rcases y with rfl | rfl <;> simp [BitVec.ofBool]
+
+@[bv_multi_width_normalize] theorem neg_ofBool_eq (x : Bool) :
+  - (BitVec.ofBool x) = BitVec.ofBool x := by
+    rcases x with rfl | rfl <;> simp [BitVec.ofBool]
+
+@[bv_multi_width_normalize] theorem not_eq_iff_ne {α : Sort u} (x y : α) :
+  ¬ (x = y) ↔ x ≠ y := by simp
+
 open Lean in
 simproc [bv_multi_width_normalize] boolEqIff (@Eq Bool _ _) := fun e => do
   match_expr e with
@@ -366,6 +435,8 @@ simproc [bv_multi_width_normalize] boolEqIff (@Eq Bool _ _) := fun e => do
         let pf := mkApp2 (.const ``bool_eq_iff []) e₁ e₂
         pure $ .done { expr := e', proof? := some pf }
   | _ => pure .continue
+
+
 
 open Lean Elab Meta
 def getSimpData (simpsetName : Name) : MetaM (SimpTheorems × Simprocs) := do
@@ -392,9 +463,11 @@ def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
   let ctx ← Simp.mkContext (config := config)
     (simpTheorems := theorems)
     (congrTheorems := ← Meta.getSimpCongrTheorems)
-  match ← simpGoal g ctx (simprocs := simprocs) with
-  | (none, _) => return none
-  | (some (_newHyps, g'), _) => pure g'
+  let lctx ← g.withContext <| getLCtx
+  let fvars := lctx.getFVarIds
+  match ← simpGoal g ctx (simprocs := simprocs) (fvarIdsToSimp := fvars) with
+  | (.none, _stats) => return none
+  | (.some (_fs, g), _stats) => return some g
 
 open Lean Elab Meta
 open Lean Elab Meta Tactic in
@@ -414,6 +487,9 @@ elab "bv_multi_width_normalize" : tactic => do
 
 /--
 trace: w : ℕ
+_example :
+  (∀ (x : ℕ) (x_1 x_2 : BitVec x), x_2.ule x_1 = true) ∧
+    ∀ (x : ℕ) (x_1 x_2 : BitVec x), x_1.ule x_2 = true ∨ x_2.ult x_1 = true ∨ x_1.ule x_2 = true ∨ x_1 ≠ x_2
 ⊢ (∀ (x x_1 : BitVec w), x_1.ule x = true) ∧
     ∀ (x x_1 : BitVec w), x.ule x_1 = true ∨ x_1.ult x = true ∨ x.ule x_1 = true ∨ x ≠ x_1
 ---
@@ -425,6 +501,7 @@ warning: declaration uses 'sorry'
 
 /--
 trace: w : ℕ
+_example : ∀ {w : ℕ} (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
 ⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
 ---
 warning: declaration uses 'sorry'

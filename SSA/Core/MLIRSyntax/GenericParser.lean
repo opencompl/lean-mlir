@@ -834,7 +834,7 @@ end Test
 
 -- Op with potential result
 syntax
-  (mlir_op_operand "=")?
+  (mlir_op_operand,* "=")?
   str "(" mlir_op_operand,* ")"
          ( "(" mlir_region,* ")" )?
          (mlir_attr_dict)?
@@ -848,46 +848,41 @@ macro_rules
 
 macro_rules
   | `(mlir_op|
-        $[ $resName = ]?
+        $[ $resNamesStx,* = ]?
         $name:str
         ( $operandsNames,* )
         $[ ( $rgns,* ) ]?
         $[ $attrDict ]?
-        : ( $operandsTypes,* ) -> ( $resTypes,* ) ) => do
+        : ( $operandsTypes,* ) -> ( $resTypesStx,* ) ) => do
+      let resNames := resNamesStx.map Syntax.TSepArray.getElems |>.getD #[]
+      let resTypes := resTypesStx.getElems
+      if resTypes.size != resNames.size then
+        Macro.throwError s!"expected {resNames.size} return types,
+          based on the results list, but found {resTypes.size}"
+      let res ←
+        Array.zipWithM (fun v t => `(([mlir_op_operand| $v], [mlir_type| $t])))
+          resNames resTypes
+      let res ← quoteMList res.toList (← `(MLIR.AST.TypedSSAVal _))
 
-        -- TODO: Needs a consistency check that `resName=none ↔ resType=.unit`
-        let res ← match resName with
-        | none => `(@List.nil (MLIR.AST.TypedSSAVal _))
-        | some name =>
-           match resTypes.getElems with
-           | #[resType] => `([([mlir_op_operand| $name], [mlir_type| $resType])])
-           | #[] =>
-              Macro.throwErrorAt name
-                s!"expected to have return type since result '{resName}' exists"
-           | tys =>
-              let ty₁ := (tys : Array _)[1]?.getD (TSyntax.mk .missing) |>.raw
-              Macro.throwErrorAt ty₁ s!"expected single return type, found multiple '{tys}'"
+      -- TODO: Needs a consistency check that `operandsNames.length = operandsTypes.length`
+      let operands: List (MacroM <| TSyntax `term) :=
+        List.zipWith (fun x y => `(([mlir_op_operand| $x], [mlir_type| $y])))
+        operandsNames.getElems.toList operandsTypes.getElems.toList
+      let operands ← quoteMList (← operands.mapM id) (← `(MLIR.AST.TypedSSAVal _))
+      let attrDict <- match attrDict with
+                        | none => `(AttrDict.mk [])
+                        | some dict => `([mlir_attr_dict| $dict])
+      let rgnsList <- match rgns with
+                | none => `(@List.nil (MLIR.AST.Region _))
+                | some rgns => do
+                  let rngs <- rgns.getElems.mapM (fun x => `([mlir_region| $x]))
+                  quoteMList rngs.toList (<- `(MLIR.AST.Region _))
 
-
-        -- TODO: Needs a consistency check that `operandsNames.length = operandsTypes.length`
-        let operands: List (MacroM <| TSyntax `term) :=
-          List.zipWith (fun x y => `(([mlir_op_operand| $x], [mlir_type| $y])))
-          operandsNames.getElems.toList operandsTypes.getElems.toList
-        let operands ← quoteMList (← operands.mapM id) (← `(MLIR.AST.TypedSSAVal _))
-        let attrDict <- match attrDict with
-                          | none => `(AttrDict.mk [])
-                          | some dict => `([mlir_attr_dict| $dict])
-        let rgnsList <- match rgns with
-                  | none => `(@List.nil (MLIR.AST.Region _))
-                  | some rgns => do
-                    let rngs <- rgns.getElems.mapM (fun x => `([mlir_region| $x]))
-                    quoteMList rngs.toList (<- `(MLIR.AST.Region _))
-
-        `(Op.mk $name -- name
-                $res -- results
-                $operands -- operands
-                $rgnsList -- regions
-                $attrDict) -- attrs
+      `(Op.mk $name -- name
+              $res -- results
+              $operands -- operands
+              $rgnsList -- regions
+              $attrDict) -- attrs
 
 -- Op with definite result
 syntax mlir_op_operand "="
@@ -919,7 +914,7 @@ macro_rules
 section Test
 
 private def op1 : Op φ :=
-  [mlir_op| "foo"(%x, %y) : (i32, i32) -> (i32) ]
+  [mlir_op| "foo"(%x, %y) : (i32, i32) -> () ]
 /--
 info: private def MLIR.EDSL.op1 : {φ : ℕ} → Op φ :=
 fun {φ} =>
@@ -958,7 +953,7 @@ fun {φ} => (SSAVal.name "x", MLIRType.int Signedness.Signless 32)
 private def bb1NoArgs : Region φ :=
   [mlir_region| {
      ^entry:
-     "foo"(%x, %y) : (i32, i32) -> (i32)
+     "foo"(%x, %y) : (i32, i32) -> ()
       %z = "bar"(%x) : (i32) -> (i32)
       "std.return"(%x0) : (i42) -> ()
   }]
@@ -989,7 +984,7 @@ private def bb1NoArgsAntiQuot : Region φ := [mlir_region| $bb1NoArgs]
 private def bb2SingleArg : Region φ :=
   [mlir_region| {
      ^entry(%argp : i32):
-     "foo"(%x, %y) : (i32, i32) -> (i32)
+     "foo"(%x, %y) : (i32, i32) -> ()
       %z = "bar"(%x) : (i32) -> (i32)
       "std.return"(%x0) : (i42) -> ()
   }]
@@ -1014,7 +1009,7 @@ fun {φ} =>
 private def bb3MultipleArgs : Region φ :=
   [mlir_region| {
      ^entry(%argp : i32, %argq : i64):
-     "foo"(%x, %y) : (i32, i32) -> (i32)
+     "foo"(%x, %y) : (i32, i32) -> ()
       %z = "bar"(%x) : (i32) -> (i32)
       "std.return"(%x0) : (i42) -> ()
   }]
@@ -1095,7 +1090,7 @@ fun {φ} =>
 
 /-! ## test simple ops (no regions) -/
 
-private def opcall1 : Op φ := [mlir_op| "foo" (%x, %y) : (i32, i32) -> (i32) ]
+private def opcall1 : Op φ := [mlir_op| "foo" (%x, %y) : (i32, i32) -> () ]
 /--
 info: private def MLIR.EDSL.opcall1 : {φ : ℕ} → Op φ :=
 fun {φ} =>
