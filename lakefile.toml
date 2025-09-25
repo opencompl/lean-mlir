@@ -69,10 +69,6 @@ name = "Tests"
 root = "SSA.Tests.Tests"
 
 [[lean_lib]]
-name = "core"
-roots = ["SSA.Core"]
-
-[[lean_lib]]
 name = "CIRCT"
 roots = ["SSA.Projects.CIRCT.CIRCT"]
 
