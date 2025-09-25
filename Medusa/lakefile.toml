@@ -1,13 +1,13 @@
 name = "Medusa"
 version = "0.1.0"
-testDriver = "Test"
+testDriver = "MedusaTest"
 defaultTargets = ["Medusa"]
 
 [[lean_lib]]
 name = "Medusa"
 
 [[lean_lib]]
-name = "Test"
+name = "MedusaTest"
 
 [[require]]
 name = "fp-lean"
