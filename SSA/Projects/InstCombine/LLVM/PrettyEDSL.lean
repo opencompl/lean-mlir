@@ -1,4 +1,4 @@
-import SSA.Core.MLIRSyntax.PrettyEDSL
+import LeanMLIR.MLIRSyntax.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLOverflow
 import SSA.Projects.InstCombine.LLVM.PrettyEDSLExact

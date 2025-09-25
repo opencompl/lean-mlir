@@ -1,4 +1,4 @@
-import SSA.Core.Framework.Refinement
+import LeanMLIR.Framework.Refinement
 import SSA.Projects.InstCombine.Base
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.Tactic

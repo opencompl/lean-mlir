@@ -1,4 +1,4 @@
-import SSA.Core
+import LeanMLIR
 
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim

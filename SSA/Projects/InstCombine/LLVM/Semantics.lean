@@ -1,7 +1,7 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Core.Util.Poison
+import LeanMLIR.Util.Poison
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.LLVM.SimpSet
 

@@ -1,0 +1,12 @@
+name = "LeanMLIR"
+version = "0.1.0"
+defaultTargets = ["LeanMLIR"]
+
+[[lean_lib]]
+name = "LeanMLIR"
+
+
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
+rev = "nightly-testing-2025-08-11"

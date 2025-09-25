@@ -5,6 +5,10 @@ moreLeanArgs = ["--tstack=400000"]
 moreServerArgs = ["--tstack=400000"]
 
 [[require]]
+name = "LeanMLIR"
+path = "LeanMLIR"
+
+[[require]]
 name = "TacBench"
 path = "TacBench"
 rev = "main"
@@ -13,11 +17,6 @@ rev = "main"
 name = "Blase"
 path = "Blase"
 rev = "main"
-
-[[require]]
-name = "mathlib"
-git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
-rev = "nightly-testing-2025-08-11"
 
 [[require]]
 name = "Cli"
@@ -68,10 +67,6 @@ root = "SSA.Projects.InstCombine.LLVM.Enumerator"
 [[lean_lib]]
 name = "Tests"
 root = "SSA.Tests.Tests"
-
-[[lean_lib]]
-name = "core"
-roots = ["SSA.Core"]
 
 [[lean_lib]]
 name = "CIRCT"

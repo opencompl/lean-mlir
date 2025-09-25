@@ -4,7 +4,7 @@ analogous to FHE's `[poly| ...]`.
 
 Authors: Jaeho Choi<zerozerozero0216@gmail.com>
 -/
-import SSA.Core.MLIRSyntax.EDSL
+import LeanMLIR.MLIRSyntax.EDSL
 import SSA.Projects.ModArith.Basic
 
 open MLIR AST Ctxt

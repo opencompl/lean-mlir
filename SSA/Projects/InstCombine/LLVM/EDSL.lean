@@ -3,8 +3,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Qq
 import SSA.Projects.InstCombine.Base
-import SSA.Core.MLIRSyntax.EDSL2
-import SSA.Core.MLIRSyntax.Transform.Utils
+import LeanMLIR.MLIRSyntax.EDSL2
+import LeanMLIR.MLIRSyntax.Transform.Utils
 import SSA.Projects.InstCombine.LLVM.CLITests
 
 open Qq Lean Meta Elab.Term Elab Command
@@ -50,7 +50,7 @@ def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags := do
     | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"]
     | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] =>
         return ⟨true, true⟩
-    | _ => 
+    | _ =>
       -- Parse oveflowFlags passed as integer attribute
           let ⟨n, _ ⟩ ← op.getIntAttr "overflowFlags"
           match n with

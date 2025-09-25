@@ -6,7 +6,7 @@ import Lean
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Tactic.Ring
 
-import SSA.Core
+import LeanMLIR
 
 open BitVec
 open Ctxt(Var)

@@ -2,7 +2,7 @@ import SSA.Projects.CIRCT.DC.DC
 import SSA.Projects.CIRCT.Handshake.Handshake
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.Tactic
+import LeanMLIR.Tactic
 
 namespace CIRCTStream
 namespace Stream.Bisim
