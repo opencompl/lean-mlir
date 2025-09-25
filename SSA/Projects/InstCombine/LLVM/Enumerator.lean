@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -- Script that exhaustive enumerates the our LLVM semantics.
 import Init.System.IO
 import LeanMLIR.Util
-import SSA.Projects.InstCombine.LLVM.Semantics
+import LeanMLIR.Dialects.LLVM.Semantics
 import SSA.Projects.InstCombine.TestLLVMOps
 import SSA.Projects.InstCombine.LLVM.CLITests
 import LeanMLIR.Dialects.LLVM.Basic

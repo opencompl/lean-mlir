@@ -1,7 +1,7 @@
 import SSA.Projects.InstCombine.tests.proofs.g2012h08h28hudiv_ashl_proof
 import SSA.Projects.InstCombine.LLVM.PrettyEDSL
 import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.LLVM.Semantics
+import LeanMLIR.Dialects.LLVM.Semantics
 open LLVM
 open BitVec
 
