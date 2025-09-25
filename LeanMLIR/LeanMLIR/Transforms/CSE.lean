@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 /-
 This file implements common subexpression elimination for our SSA based IR.
 -/
-import LeanMLIR
-import SSA.Projects.DCE.DCE
+import LeanMLIR.Framework
+import LeanMLIR.Transforms.DCE
 
 /-! ## Prelims  -/
 
