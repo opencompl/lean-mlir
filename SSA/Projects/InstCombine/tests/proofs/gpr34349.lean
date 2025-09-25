@@ -1,5 +1,5 @@
 import SSA.Projects.InstCombine.tests.proofs.gpr34349_proof
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 import SSA.Projects.InstCombine.TacticAuto
 import LeanMLIR.Dialects.LLVM.Semantics
 open LLVM

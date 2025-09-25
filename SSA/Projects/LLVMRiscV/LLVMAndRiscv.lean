@@ -3,7 +3,7 @@ import SSA.Projects.RISCV64.Base
 import SSA.Projects.RISCV64.Syntax
 import LeanMLIR.Dialects.LLVM.Syntax
 import SSA.Projects.RISCV64.PrettyEDSL
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 open InstCombine(LLVM)
 namespace LLVMRiscV
 
