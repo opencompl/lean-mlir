@@ -1,11 +1,11 @@
 import SSA.Projects.CIRCT.HSxComb.HSxCombFunctor
 import SSA.Projects.CIRCT.Stream.Stream
 import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.Tactic
-import SSA.Core.ErasedContext
-import SSA.Core.HVector
-import SSA.Core.EffectKind
-import SSA.Core.Util
+import LeanMLIR.Tactic
+import LeanMLIR.ErasedContext
+import LeanMLIR.HVector
+import LeanMLIR.EffectKind
+import LeanMLIR.Util
 
 namespace CIRCTStream
 

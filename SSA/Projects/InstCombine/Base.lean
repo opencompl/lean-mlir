@@ -1,8 +1,8 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Core
-import SSA.Core.Tactic.SimpSet
+import LeanMLIR
+import LeanMLIR.Tactic.SimpSet
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.LLVM.Semantics
 

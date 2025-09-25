@@ -5,6 +5,10 @@ moreLeanArgs = ["--tstack=400000"]
 moreServerArgs = ["--tstack=400000"]
 
 [[require]]
+name = "LeanMLIR"
+path = "LeanMLIR"
+
+[[require]]
 name = "TacBench"
 path = "TacBench"
 rev = "main"

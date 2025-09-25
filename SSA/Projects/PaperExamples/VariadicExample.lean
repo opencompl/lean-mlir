@@ -1,6 +1,6 @@
-import SSA.Core.Framework
-import SSA.Core.Framework.Macro
-import SSA.Core.Tactic.SimpSet
+import LeanMLIR.Framework
+import LeanMLIR.Framework.Macro
+import LeanMLIR.Tactic.SimpSet
 
 /-!
 ## Variadic Example Dialect

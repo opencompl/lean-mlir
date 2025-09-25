@@ -1,11 +1,11 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Core.Util
+import LeanMLIR.Util
 import Batteries
 import Lean.Environment
 import Cli
-import SSA.Core.MLIRSyntax.Transform
+import LeanMLIR.MLIRSyntax.Transform
 import SSA.Projects.InstCombine.Base
 
 open Lean TyDenote InstCombine

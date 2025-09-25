@@ -1,0 +1,10 @@
+name = "LeanMLIR"
+version = "0.1.0"
+defaultTargets = ["leanmlir"]
+
+[[lean_lib]]
+name = "LeanMLIR"
+
+[[lean_exe]]
+name = "leanmlir"
+root = "Main"

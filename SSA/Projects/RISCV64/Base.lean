@@ -1,6 +1,6 @@
 import SSA.Projects.RISCV64.Semantics
 import SSA.Projects.RISCV64.PseudoOpSemantics
-import SSA.Core
+import LeanMLIR
 
 open RV64Semantics
 open RV64PseudoOpSemantics

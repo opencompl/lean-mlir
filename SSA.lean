@@ -6,7 +6,7 @@ import Mathlib.Algebra.Order.Group.Unbundled.Int
 
 -- Core
 -- ====
-import SSA.Core
+import LeanMLIR
 
 
 -- Projects
@@ -28,4 +28,3 @@ import SSA.Projects.SLLVM.SLLVM
 
 -- EXPERIMENTAL
 -- ============
-

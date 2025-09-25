@@ -1,12 +1,12 @@
 import Qq
-import SSA.Core.Framework
-import SSA.Core.Framework.Macro
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.EDSL2
-import SSA.Core.Tactic.SimpSet
+import LeanMLIR.Framework
+import LeanMLIR.Framework.Macro
+import LeanMLIR.MLIRSyntax.GenericParser
+import LeanMLIR.MLIRSyntax.EDSL2
+import LeanMLIR.Tactic.SimpSet
 import SSA.Projects.CIRCT.Comb.CombSemantics
 import SSA.Projects.InstCombine.Base
-import SSA.Core.MLIRSyntax.Transform.Utils
+import LeanMLIR.MLIRSyntax.Transform.Utils
 import SSA.Projects.InstCombine.LLVM.CLITests
 
 open Qq Lean Meta Elab.Term Elab Command

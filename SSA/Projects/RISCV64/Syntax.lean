@@ -1,4 +1,4 @@
-import SSA.Core.MLIRSyntax.EDSL
+import LeanMLIR.MLIRSyntax.EDSL
 import SSA.Projects.RISCV64.Base
 
 open MLIR AST Ctxt

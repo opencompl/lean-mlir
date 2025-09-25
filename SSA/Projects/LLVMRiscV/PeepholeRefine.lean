@@ -1,4 +1,4 @@
-import SSA.Core
+import LeanMLIR
 
 import SSA.Projects.LLVMRiscV.LLVMAndRiscv
 import SSA.Projects.RISCV64.Tactic.SimpRiscV

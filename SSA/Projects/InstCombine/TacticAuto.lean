@@ -9,7 +9,7 @@ import SSA.Projects.InstCombine.Tactic.SimpLLVM
 import Blase.SingleWidth.Tactic
 import Blase.Fast.MBA
 import TacBench
-import SSA.Core.Tactic.ExtractGoals
+import LeanMLIR.Tactic.ExtractGoals
 
 open Lean
 open Lean.Elab.Tactic
