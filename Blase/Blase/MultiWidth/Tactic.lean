@@ -417,6 +417,11 @@ def collectBoolAtom (state : CollectState)
   let (ix, boolToIx) := state.boolToIx.findOrInsertVal (e)
   return (.boolVar ix, { state with boolToIx })
 
+def getBoolValue? (e : Expr) : Option Bool :=
+  match_expr e with
+  | Bool.true => some true
+  | Bool.false => some false
+  | _ => none
 
 def collectBoolTerm (state : CollectState)
   (e : Expr) : SolverM (MultiWidth.Nondep.Term × CollectState) := do
@@ -424,11 +429,15 @@ def collectBoolTerm (state : CollectState)
   let_expr Bool := t
     | throwError m!"expected type 'Bool', found: {indentD t} (expression: {indentD e})"
   -- | make a boolean atom.
-  mkAtom
+  if let some b := getBoolValue? e then
+    return (.boolConst b, state)
+  else
+    mkAtom
   where
     mkAtom := do
     let (t, state) ← collectBoolAtom state e
     return (t, state)
+
 
 /-- Visit a raw BV expr, and collect information about it. -/
 def collectBVAtom (state : CollectState)
@@ -553,7 +562,8 @@ def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
       let aExpr ← mkTermExpr wcard tcard bcard tctx a
       let bExpr ← mkTermExpr wcard tcard bcard tctx b
       let out := mkAppN (mkConst ``MultiWidth.Term.band)
-        #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, aExpr, bExpr]
+        #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+          wExpr, aExpr, bExpr]
       debugCheck out
       return out
   | .bor w a b =>
@@ -561,7 +571,8 @@ def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
     let aExpr ← mkTermExpr wcard tcard bcard tctx a
     let bExpr ← mkTermExpr wcard tcard bcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Term.bor)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, aExpr, bExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        wExpr, aExpr, bExpr]
     debugCheck out
     return out
   | .bxor w a b =>
@@ -569,22 +580,30 @@ def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
     let aExpr ← mkTermExpr wcard tcard bcard tctx a
     let bExpr ← mkTermExpr wcard tcard bcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Term.bxor)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, aExpr, bExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        wExpr, aExpr, bExpr]
     debugCheck out
     return out
   | .bnot w a =>
     let wExpr ← mkWidthExpr wcard w
     let aExpr ← mkTermExpr wcard tcard bcard tctx a
     let out := mkAppN (mkConst ``MultiWidth.Term.bnot)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, aExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        wExpr, aExpr]
     debugCheck out
     return out
   | .boolVar v =>
     let out := mkAppN (mkConst ``MultiWidth.Term.boolVar [])
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, ← mkFinLit bcard v]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        ← mkFinLit bcard v]
     debugCheck out
     return out
-
+  | .boolConst b =>
+    let out := mkAppN (mkConst ``MultiWidth.Term.boolConst [])
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        mkBoolLit b]
+    debugCheck out
+    return out
 
 set_option pp.explicit true in
 /--
