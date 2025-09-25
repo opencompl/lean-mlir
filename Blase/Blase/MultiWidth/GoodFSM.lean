@@ -1989,8 +1989,9 @@ theorem Predicate.toProp_of_KInductionCircuits
     (hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
     (wenv : WidthExpr.Env wcard)
     (penv : Predicate.Env pcard)
+    (tenv : tctx.Env wenv)
     (benv : Term.BoolEnv bcard)
-    (tenv : tctx.Env wenv) :
+    :
     p.toProp benv tenv penv := by
   have hGoodPredicateFSM := isGoodPredicateFSM_mkPredicateFSMAux p
   rw [hGoodPredicateFSM.heq (tenv := tenv)
@@ -2027,8 +2028,8 @@ theorem Predicate.toProp_of_KInductionCircuits'
     (indCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
     (hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
     (wenv : WidthExpr.Env wcard)
-    (benv : Term.BoolEnv bcard)
     (tenv : tctx.Env wenv)
+    (benv : Term.BoolEnv bcard)
     (penv : Predicate.Env pcard)
     (hp : p.toProp benv tenv penv = P) :
     P := by

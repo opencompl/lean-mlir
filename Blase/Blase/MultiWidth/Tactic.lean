@@ -495,67 +495,67 @@ info: MultiWidth.Term.ofNat {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tca
 
 /-- Convert a raw expression into a `Term`.
 This needs to be checked carefully for equivalence. -/
-def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
+def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
     (t : MultiWidth.Nondep.Term) : SolverM Expr := do
   match t with
   | .ofNat w n =>
     let wExpr ← mkWidthExpr wcard w
     let out := mkAppN (mkConst ``MultiWidth.Term.ofNat [])
-      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, mkNatLit n]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, mkNatLit n]
     debugCheck out
     return out
   | .var v _wexpr =>
     let out := mkAppN (mkConst ``MultiWidth.Term.var [])
-      #[mkNatLit wcard, mkNatLit tcard, tctx, ← mkFinLit tcard v]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, ← mkFinLit tcard v]
     debugCheck out
     return out
   | .add _w a b =>
      let out ← mkAppM ``MultiWidth.Term.add
-        #[← mkTermExpr wcard tcard tctx a,
-        ← mkTermExpr wcard tcard tctx b]
+        #[← mkTermExpr wcard tcard bcard tctx a,
+        ← mkTermExpr wcard tcard bcard tctx b]
      debugCheck out
      return out
   | .zext a v =>
     let vExpr ← mkWidthExpr wcard v
     let out ← mkAppM ``MultiWidth.Term.zext
-      #[← mkTermExpr wcard tcard tctx a, vExpr]
+      #[← mkTermExpr wcard tcard bcard tctx a, vExpr]
     debugCheck out
     return out
   | .sext a v =>
     let vExpr ← mkWidthExpr wcard v
     let out ← mkAppM ``MultiWidth.Term.sext
-      #[← mkTermExpr wcard tcard tctx a, vExpr]
+      #[← mkTermExpr wcard tcard bcard tctx a, vExpr]
     debugCheck out
     return out
   | .band w a b =>
       let wExpr ← mkWidthExpr wcard w
-      let aExpr ← mkTermExpr wcard tcard tctx a
-      let bExpr ← mkTermExpr wcard tcard tctx b
+      let aExpr ← mkTermExpr wcard tcard bcard tctx a
+      let bExpr ← mkTermExpr wcard tcard bcard tctx b
       let out := mkAppN (mkConst ``MultiWidth.Term.band)
-        #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+        #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, aExpr, bExpr]
       debugCheck out
       return out
   | .bor w a b =>
     let wExpr ← mkWidthExpr wcard w
-    let aExpr ← mkTermExpr wcard tcard tctx a
-    let bExpr ← mkTermExpr wcard tcard tctx b
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
+    let bExpr ← mkTermExpr wcard tcard bcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Term.bor)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, aExpr, bExpr]
     debugCheck out
     return out
   | .bxor w a b =>
     let wExpr ← mkWidthExpr wcard w
-    let aExpr ← mkTermExpr wcard tcard tctx a
-    let bExpr ← mkTermExpr wcard tcard tctx b
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
+    let bExpr ← mkTermExpr wcard tcard bcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Term.bxor)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, aExpr, bExpr]
     debugCheck out
     return out
   | .bnot w a =>
     let wExpr ← mkWidthExpr wcard w
-    let aExpr ← mkTermExpr wcard tcard tctx a
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
     let out := mkAppN (mkConst ``MultiWidth.Term.bnot)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, aExpr]
     debugCheck out
     return out
 
@@ -682,10 +682,10 @@ def Expr.mkPredicateExpr (wcard tcard bcard pcard : Nat) (tctx : Expr)
   match p with
   | .binRel k w a b =>
     let wExpr ← mkWidthExpr wcard w
-    let aExpr ← mkTermExpr wcard tcard tctx a
-    let bExpr ← mkTermExpr wcard tcard tctx b
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
+    let bExpr ← mkTermExpr wcard tcard bcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
-      #[mkNatLit wcard, mkNatLit tcard,
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard,
         tctx, mkNatLit pcard,
         toExpr k,
         wExpr, aExpr, bExpr]
@@ -695,7 +695,8 @@ def Expr.mkPredicateExpr (wcard tcard bcard pcard : Nat) (tctx : Expr)
     let vExpr ← mkWidthExpr wcard v
     let wExpr ← mkWidthExpr wcard w
     let out := mkAppN (mkConst ``MultiWidth.Predicate.binWidthRel)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, mkNatLit pcard,
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard,
+        tctx, mkNatLit pcard,
         Lean.toExpr k, vExpr, wExpr]
     debugCheck out
     return out
@@ -703,19 +704,19 @@ def Expr.mkPredicateExpr (wcard tcard bcard pcard : Nat) (tctx : Expr)
     let pExpr ← mkPredicateExpr wcard tcard bcard pcard tctx p
     let qExpr ← mkPredicateExpr wcard tcard bcard pcard tctx q
     let out := mkAppN (mkConst ``MultiWidth.Predicate.or)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, mkNatLit pcard, pExpr, qExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, pExpr, qExpr]
     debugCheck out
     return out
   | .and p q =>
     let pExpr ← mkPredicateExpr wcard tcard bcard pcard tctx p
     let qExpr ← mkPredicateExpr wcard tcard bcard pcard tctx q
     let out := mkAppN (mkConst ``MultiWidth.Predicate.and)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, mkNatLit pcard, pExpr, qExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, pExpr, qExpr]
     debugCheck out
     return out
   | .var v =>
     let out := mkAppN (mkConst ``MultiWidth.Predicate.var)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, mkNatLit pcard, ← mkFinLit pcard v]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, ← mkFinLit pcard v]
     debugCheck out
     return out
 
@@ -892,40 +893,21 @@ info: MultiWidth.Predicate.toProp_of_KInductionCircuits' {wcard tcard bcard pcar
   (circs : ReflectVerif.BvDecide.KInductionCircuits fsm.toFsm n) (hCircs : circs.IsLawful)
   (sCert : BVDecide.Frontend.LratCert) (hs : circs.mkSafetyCircuit.verifyCircuit sCert = true)
   (indCert : BVDecide.Frontend.LratCert) (hind : circs.mkIndHypCycleBreaking.verifyCircuit indCert = true)
-  (wenv : WidthExpr.Env wcard) (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv) (penv : Predicate.Env pcard)
+  (wenv : WidthExpr.Env wcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard)
   (hp : Predicate.toProp benv tenv penv p = P) : P
 -/
 #guard_msgs in #check MultiWidth.Predicate.toProp_of_KInductionCircuits'
 
 /--
-Revert all hypotheses that have to do with bitvectors, so that we can use them.
-
-Ideally, we would have a pass that quickly walks an expression to cheaply
-ee if it's in the BV fragment, and revert it if it is.
-For now, we use a sound overapproximation and revert anything that we can collect.
+Revert all prop-valued hyps.
 -/
-def revertBvHyps (g : MVarId) : SolverM MVarId := do
+def revertPropHyps (g : MVarId) : SolverM MVarId := do
   let (_, g) ← g.revert (← g.getNondepPropHyps)
   return g
-  /-
-  let mut hypsToRevert : Array FVarId := #[]
-  for hyp in (← g.getNondepPropHyps) do
-    -- | Save and restore state, since we just want to test if we can collect.
-    let state ← get
-    try
-      let _ ← collectBVPredicateAux {} (← hyp.getType)
-      hypsToRevert := hypsToRevert.push hyp
-      set state
-    catch _ =>
-      set state
-      continue
-  let (_, g) ← g.revert hypsToRevert
-  return g
-  -/
 
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM Unit := do
-  let g ← revertBvHyps g
+  let g ← revertPropHyps g
   let .some g ← g.withContext (Normalize.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."
@@ -939,7 +921,7 @@ def solve (g : MVarId) : SolverM Unit := do
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
-    -- let benv ← collect.mkBenvExpr
+    let benv ← collect.mkBenvExpr
     let penv ← collect.mkPenvExpr
     let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard collect.bcard collect.pcard tctx p
     let pNondepExpr := Lean.ToExpr.toExpr p
@@ -1001,6 +983,7 @@ def solve (g : MVarId) : SolverM Unit := do
             indCertProof,
             wenv,
             tenv,
+            benv,
             penv,
             pEqVal]
         debugCheck prf

@@ -33,7 +33,7 @@ error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.b
 -/
 #guard_msgs in theorem abstract_prop_check_warn : ∀ (x : Nat), x = x + 1  := by
   -- | check that prop is abstracted.
-  bv_multi_width 
+  bv_multi_width
 
 theorem eg5 (u w : Nat) (x : BitVec w) :
     (x.signExtend u).zeroExtend u = x.signExtend u := by
