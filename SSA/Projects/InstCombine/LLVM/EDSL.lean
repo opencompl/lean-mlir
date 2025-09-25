@@ -40,7 +40,7 @@ In future, this might start throwing errors, if the type is not a bitvec.
 def getVarWidth {Γ : Ctxt (MetaLLVM φ).Ty} : (Σ t, Γ.Var t) → Width φ
   | ⟨.bitvec w, _⟩ => w
 
-def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags :=
+def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags := do
   match op.getAttr? "overflowFlags" with
   | .none => return {}
   | .some y => match y with
@@ -50,10 +50,16 @@ def parseOverflowFlags (op : AST.Op φ) : ReaderM φ LLVM.NoWrapFlags :=
     | .list [.opaque_ "llvm.overflow" "nuw", .opaque_ "llvm.overflow" "nsw"]
     | .list [.opaque_ "llvm.overflow" "nsw", .opaque_ "llvm.overflow" "nuw"] =>
         return ⟨true, true⟩
-    | .opaque_ "llvm.overflow" s => throw <| .generic s!"The overflow flag {s} not allowed. \
-        We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
-    | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. \
-        We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
+    | _ => 
+      -- Parse oveflowFlags passed as integer attribute
+          let ⟨n, _ ⟩ ← op.getIntAttr "overflowFlags"
+          match n with
+          | 0 => return { nsw := false, nuw := false}
+          | 1 => return { nsw := true, nuw := false}
+          | 2 => return { nsw := false, nuw := true}
+          | 3 => return { nsw := true, nuw := true}
+          | s => throw <| .generic s!"The overflow flag with predicate {s} is not allowed. \
+            We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
 /--
 Maps integer predicate codes (as defined in the MLIR LLVM dialect) to their corresponding
 `LLVM.IntPred` constructors.
