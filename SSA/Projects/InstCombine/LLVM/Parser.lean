@@ -1,5 +1,5 @@
 import LeanMLIR.MLIRSyntax.Parser
-import SSA.Projects.InstCombine.LLVM.EDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 import Init.Data.Repr
 
 open MLIR AST InstCombine

@@ -7,7 +7,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import SSA.Projects.InstCombine.AliveStatements
 
 -- The semantics for the MLIR base dialect
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 
 import SSA.Projects.InstCombine.ComWrappers
 

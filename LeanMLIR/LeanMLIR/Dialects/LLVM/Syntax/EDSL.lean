@@ -1,11 +1,10 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
+import LeanMLIR.MLIRSyntax
+import LeanMLIR.Dialects.LLVM.Basic
+
 import Qq
-import SSA.Projects.InstCombine.Base
-import LeanMLIR.MLIRSyntax.EDSL2
-import LeanMLIR.MLIRSyntax.Transform.Utils
-import SSA.Projects.InstCombine.LLVM.CLITests
 
 open Qq Lean Meta Elab.Term Elab Command
 open InstCombine (LLVM MetaLLVM MOp Width)

@@ -7,7 +7,7 @@ import LeanMLIR.Util
 import SSA.Projects.InstCombine.LLVM.Semantics
 import SSA.Projects.InstCombine.TestLLVMOps
 import SSA.Projects.InstCombine.LLVM.CLITests
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 
 open System
 open IO FS

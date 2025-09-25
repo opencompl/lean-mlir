@@ -6,7 +6,7 @@ import Batteries
 import Lean.Environment
 import Cli
 import LeanMLIR.MLIRSyntax.Transform
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 
 open Lean TyDenote InstCombine
 
