@@ -558,6 +558,11 @@ def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
       #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, aExpr]
     debugCheck out
     return out
+  | .boolVar v =>
+    let out := mkAppN (mkConst ``MultiWidth.Term.boolVar [])
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, ← mkFinLit bcard v]
+    debugCheck out
+    return out
 
 
 set_option pp.explicit true in
@@ -862,8 +867,8 @@ def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : SolverM Expr 
   return out
 
 /--
-info: MultiWidth.mkPredicateFSMDep {wcard bcard tcard pcard : ℕ} {tctx : Term.Ctx wcard tcard}
-  (p : Predicate bcard tctx pcard) : PredicateFSM wcard tcard pcard (Nondep.Predicate.ofDep p)
+info: MultiWidth.mkPredicateFSMDep {wcard tcard bcard pcard : ℕ} {tctx : Term.Ctx wcard tcard}
+  (p : Predicate bcard tctx pcard) : PredicateFSM wcard tcard bcard pcard (Nondep.Predicate.ofDep p)
 -/
 #guard_msgs in #check MultiWidth.mkPredicateFSMDep
 def Expr.mkPredicateFSMDep (_wcard _tcard _bcard _pcard : Nat) (_tctx : Expr) (p : Expr) : SolverM Expr := do
@@ -872,11 +877,12 @@ def Expr.mkPredicateFSMDep (_wcard _tcard _bcard _pcard : Nat) (_tctx : Expr) (p
   return out
 
 /--
-info: MultiWidth.mkPredicateFSMNondep (wcard tcard pcard : ℕ) (p : Nondep.Predicate) : PredicateFSM wcard tcard pcard p
+info: MultiWidth.mkPredicateFSMNondep (wcard tcard bcard pcard : ℕ) (p : Nondep.Predicate) :
+  PredicateFSM wcard tcard bcard pcard p
 -/
 #guard_msgs in #check MultiWidth.mkPredicateFSMNondep
-def Expr.mkPredicateFSMNondep (wcard tcard pcard : Nat) (pNondep : Expr) : SolverM Expr := do
-  let out ← mkAppM (``MultiWidth.mkPredicateFSMNondep) #[toExpr wcard, toExpr tcard, toExpr pcard, pNondep]
+def Expr.mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (pNondep : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.mkPredicateFSMNondep) #[toExpr wcard, toExpr tcard, toExpr bcard, toExpr pcard, pNondep]
   debugCheck out
   return out
 
@@ -888,8 +894,8 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
 /--
 info: MultiWidth.Predicate.toProp_of_KInductionCircuits' {wcard tcard bcard pcard : ℕ} (P : Prop)
   (tctx : Term.Ctx wcard tcard) (p : Predicate bcard tctx pcard) (pNondep : Nondep.Predicate)
-  (_hpNondep : pNondep = Nondep.Predicate.ofDep p) (fsm : PredicateFSM wcard tcard pcard pNondep)
-  (_hfsm : fsm = mkPredicateFSMNondep wcard tcard pcard pNondep) (n : ℕ)
+  (_hpNondep : pNondep = Nondep.Predicate.ofDep p) (fsm : PredicateFSM wcard tcard bcard pcard pNondep)
+  (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep) (n : ℕ)
   (circs : ReflectVerif.BvDecide.KInductionCircuits fsm.toFsm n) (hCircs : circs.IsLawful)
   (sCert : BVDecide.Frontend.LratCert) (hs : circs.mkSafetyCircuit.verifyCircuit sCert = true)
   (indCert : BVDecide.Frontend.LratCert) (hind : circs.mkIndHypCycleBreaking.verifyCircuit indCert = true)
@@ -925,7 +931,7 @@ def solve (g : MVarId) : SolverM Unit := do
     let penv ← collect.mkPenvExpr
     let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard collect.bcard collect.pcard tctx p
     let pNondepExpr := Lean.ToExpr.toExpr p
-    let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard collect.pcard p
+    let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard p
     debugLog m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
     debugLog m!"fsm circuit size: {fsm.toFsm.circuitSize}"
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter)
@@ -942,7 +948,7 @@ def solve (g : MVarId) : SolverM Unit := do
       debugLog m!"proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
         -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
-        let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.pcard pNondepExpr
+        let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
         -- let fsmExpr ← Expr.mkPredicateFSMtoFSM predFsmExpr
         let fsmExpr ← Expr.mkPredicateFSMtoFSM predNondepFsmExpr
         let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
