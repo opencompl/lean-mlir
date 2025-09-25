@@ -408,6 +408,27 @@ def CollectState.mkBenvExpr (reader : CollectState) : SolverM Expr := do
     (mkBoolEnvEmpty)
     (mkBoolEnvCons) (reader.boolToIx.toArrayAsc.reverse)
 
+/-- Visit a raw BV expr, and collect information about it. -/
+def collectBoolAtom (state : CollectState)
+  (e : Expr) : SolverM (MultiWidth.Nondep.Term × CollectState) := do
+  let t ← inferType e
+  let_expr Bool := t
+    | throwError m!"expected type Bool, found: {indentD t} (expression: {indentD e})"
+  let (ix, boolToIx) := state.boolToIx.findOrInsertVal (e)
+  return (.boolVar ix, { state with boolToIx })
+
+
+def collectBoolTerm (state : CollectState)
+  (e : Expr) : SolverM (MultiWidth.Nondep.Term × CollectState) := do
+  let t ← inferType e
+  let_expr Bool := t
+    | throwError m!"expected type 'Bool', found: {indentD t} (expression: {indentD e})"
+  -- | make a boolean atom.
+  mkAtom
+  where
+    mkAtom := do
+    let (t, state) ← collectBoolAtom state e
+    return (t, state)
 
 /-- Visit a raw BV expr, and collect information about it. -/
 def collectBVAtom (state : CollectState)
@@ -582,6 +603,29 @@ def collectPredicateAtom (state : CollectState)
   let (pix, pToIx) := state.pToIx.findOrInsertVal e
   return (.var pix, { state with pToIx })
 
+/-
+Certain predicates like `ult, slt` etc return booleans, and are thus
+encoded as `a.slt b = true` instead of a prop level `a.slt b`.
+To fix this, we have a special case in the reflection that looks for this pattern,
+and then reflects it into the appropriate prop.
+-/
+def collectBVBooleanEqPredicateAux (state : CollectState) (a b : Expr) :
+  Option (SolverM (MultiWidth.Nondep.Predicate × CollectState)) :=
+  let_expr true := b | none
+  let out? := match_expr a with
+    | BitVec.slt w _a _b => some (w, MultiWidth.BinaryRelationKind.slt)
+    | BitVec.sle w _a _b => some (w, MultiWidth.BinaryRelationKind.sle)
+    | BitVec.ult w _a _b => some (w, MultiWidth.BinaryRelationKind.ult)
+    | BitVec.ule w _a _b => some (w, MultiWidth.BinaryRelationKind.ule)
+    | _ => none
+  -- NOTE: Lean bug prevents us from writing this with do-notation,
+  -- so we suffer as haskellers once did.
+  out? >>= fun ((w, kind)) => some do
+    let (w, state) ← collectWidthAtom state w
+    let (ta, state) ← collectTerm state a
+    let (tb, state) ← collectTerm state b
+    pure (.binRel kind w ta tb, state)
+
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
     SolverM (MultiWidth.Nondep.Predicate × CollectState) := do
@@ -606,31 +650,13 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (tb, state) ← collectTerm state b
       return (.binRel .eq w ta tb, state)
     | Bool =>
-      let_expr true := b
-        | mkAtom
-      match_expr a with
-      | BitVec.slt w a b =>
-        let (w, state) ← collectWidthAtom state w
-        let (ta, state) ← collectTerm state a
-        let (tb, state) ← collectTerm state b
-        return (.binRel .slt w ta tb, state)
-      | BitVec.sle w a b =>
-        let (w, state) ← collectWidthAtom state w
-        let (ta, state) ← collectTerm state a
-        let (tb, state) ← collectTerm state b
-        return (.binRel .sle w ta tb, state)
-      | BitVec.ult w a b =>
-        let (w, state) ← collectWidthAtom state w
-        let (ta, state) ← collectTerm state a
-        let (tb, state) ← collectTerm state b
-        return (.binRel .ult w ta tb, state)
-      | BitVec.ule w a b =>
-        let (w, state) ← collectWidthAtom state w
-        let (ta, state) ← collectTerm state a
-        let (tb, state) ← collectTerm state b
-        return (.binRel .ule w ta tb, state)
-      | _ =>
-        mkAtom
+      -- | TODO: Refactor to use our spanky new bool sort!
+      if let .some mkBoolPredicate := collectBVBooleanEqPredicateAux state a b then
+        mkBoolPredicate
+      else
+        let (a, state) ← collectBoolTerm state a
+        let (b, state) ← collectBoolTerm state b
+        return (.boolBinRel .eq a b, state)
     | _ => mkAtom
   | Ne α a b =>
     match_expr α with
@@ -815,6 +841,9 @@ def CollectState.logSuspiciousFvars (state : CollectState) : SolverM Unit := do
   for e in state.pToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted prop: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+  for e in state.boolToIx.toArrayAsc do
+    if !e.isFVar then
+      logWarning m!"abstracted boolean: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
 
 /--
 info: Circuit.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool
