@@ -745,6 +745,14 @@ def Expr.mkPredicateExpr (wcard tcard bcard pcard : Nat) (tctx : Expr)
       #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, pExpr, qExpr]
     debugCheck out
     return out
+  | .boolBinRel k a b =>
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
+    let bExpr ← mkTermExpr wcard tcard bcard tctx b
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.boolBinRel)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard,
+        Lean.toExpr k, aExpr, bExpr]
+    debugCheck out
+    return out
   | .var v =>
     let out := mkAppN (mkConst ``MultiWidth.Predicate.var)
       #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, ← mkFinLit pcard v]
