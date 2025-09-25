@@ -147,7 +147,7 @@ inductive Term {wcard tcard : Nat} (bcard : Nat)
 | sext (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard tctx (.bv v)
 -- | bvOfBool (b : Term bcard tctx .bool) : Term bcard tctx (.bv (.const 1))
 -- | boolMsb (w : WidthExpr wcard) (x : Term bcard tctx (.bv w)) : Term bcard tctx .bool
--- | boolOfBool (b : Bool) : Term bcard tctx .bool
+| boolConst (b : Bool) : Term bcard tctx .bool
 | boolVar (v : Fin bcard) : Term bcard tctx .bool
 
 
@@ -231,6 +231,7 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv) :
   Term bcard tctx k → k.denote wenv
 | .ofNat w n => BitVec.ofNat (w.toNat wenv) n
+| .boolConst b => b
 | .var v => tenv.get v.1 v.2
 | .add (w := w) a b =>
     let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
@@ -260,6 +261,7 @@ def BoolExpr.toBool
     (benv : Term.BoolEnv bcard)  :
   Term bcard tctx .bool → Bool
 | .boolVar v => benv v
+| .boolConst b => b
 
 @[simp]
 theorem Term.toBV_ofNat
@@ -430,7 +432,7 @@ inductive Term
 | bxor (w : WidthExpr) (a b : Term) : Term
 | bnot (w : WidthExpr)  (a : Term) : Term
 | boolVar (v : Nat) : Term
--- | ofBool (b : BoolExpr) : Term
+| boolConst (b : Bool) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Term.ofDep {wcard tcard bcard : Nat}
@@ -451,6 +453,7 @@ def Term.ofDep {wcard tcard bcard : Nat}
   | .bxor (w := w) a b => .bxor (.ofDep w) (.ofDep a) (.ofDep b)
   | .bnot (w := w) a => .bnot (.ofDep w) (.ofDep a)
   | .boolVar v => .boolVar v
+  | .boolConst b => .boolConst b
 
 
 /-
@@ -483,6 +486,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .bxor w _a _b => w
   | .bnot w _a => w
   | .boolVar _v => WidthExpr.const 1 -- dummy width.
+  | .boolConst _b => WidthExpr.const 1
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -526,6 +530,7 @@ def Term.tcard (t : Term) : Nat :=
   | .bxor _w a b => (max (Term.tcard a) (Term.tcard b))
   | .bnot _w a => (Term.tcard a)
   | .boolVar _v => 0
+  | .boolConst _b => 0
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -539,6 +544,8 @@ def Term.bcard (t : Term) : Nat :=
   | .bxor _w a b => (max (Term.bcard a) (Term.bcard b))
   | .bnot _w a => (Term.bcard a)
   | .boolVar v => v + 1
+  | .boolConst _b => 0
+
 
 inductive Predicate
 | binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr) : Predicate

@@ -1382,6 +1382,23 @@ instance {α β : Type} [Fintype α] [Fintype β] (b : Bool) :
 
 namespace FSM
 
+/-- repeat the bit 'b' forever. -/
+def repeatForever (b : Bool) : FSM (Fin 0) :=
+  match b with
+  | false => FSM.zero
+  | true => FSM.negOne
+
+
+@[simp]
+theorem eval_repeatForever_eq_self (b : Bool) : (FSM.repeatForever b).eval env = fun _ => b := by
+  simp [FSM.repeatForever]
+  ext i
+  rcases b with rfl | rfl <;> simp
+
+@[simp]
+theorem eval_repeatForever_eq_self' (b : Bool) {i : Nat} : (FSM.repeatForever b).eval env i = b := by
+  simp
+
 /--
 A finite state machine whose outputs are the bits of the natural number `n`,
 in least to most significant bit order.
@@ -1406,6 +1423,7 @@ def ofNat (n : Nat)  : FSM (Fin 0) :=
 @[simp]
 theorem ofNat_zero : ofNat 0 = FSM.zero :=
   by simp [ofNat]
+
 
 /-- Evaluating 'const n' gives us the bits of the value of 'const n'.-/
 @[simp]

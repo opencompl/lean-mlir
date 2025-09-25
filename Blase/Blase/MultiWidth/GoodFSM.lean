@@ -744,8 +744,15 @@ def mkTermFSM (wcard tcard bcard pcard : Nat) (t : Nondep.Term) :
       }
     else
       -- default, should not be used.
-      { toFsmZext := FSM.zero.map Fin.elim0, width := mkWidthFSM wcard tcard bcard pcard (.const 1) }
-
+      {
+        toFsmZext := FSM.zero.map Fin.elim0,
+        width := mkWidthFSM wcard tcard bcard pcard (.const 1)
+      }
+  | .boolConst b =>
+      {
+        toFsmZext := (FSM.repeatForever b).map Fin.elim0,
+        width := mkWidthFSM wcard tcard bcard pcard (.const 1)
+      }
 /-- if we concatenate, then the bitstreams remain equal. -/
 @[simp]
 theorem BitStream.EqualUpTo_of_concat_EqualUpTo_concat
@@ -793,14 +800,18 @@ theorem ofBitVecZextMsb_eq_ofNatUnary_and_ofBitVecZextMsb {w} (x : BitVec w) :
 def IsGoodTermBoolFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wcard tcard}
     (t : Term bcard tctx .bool) :
     (HTermBoolFSMToBitStream (mkTermFSM wcard tcard bcard pcard (.ofDep t))) := by
+  constructor
+  intros wenv benv tenv fsmEnv htenv
   cases t
   case boolVar v =>
-    constructor
-    intros wenv benv tenv fsmEnv htenv
     simp [mkTermFSM, Nondep.Term.ofDep]
     simp [Term.toBV]
     rw [htenv.heq_bool]
-
+  case boolConst b =>
+    simp [mkTermFSM, Nondep.Term.ofDep]
+    simp [Term.toBV]
+    ext i
+    simp
 
 def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wcard tcard}
     {wold : WidthExpr wcard}
