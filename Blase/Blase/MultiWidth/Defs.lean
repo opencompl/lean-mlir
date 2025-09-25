@@ -125,7 +125,6 @@ inductive TermKind (wcard : Nat) : Type
 | bool
 | bv (w : WidthExpr wcard)  : TermKind wcard
 
-
 inductive Term {wcard tcard : Nat} (bcard : Nat)
   (tctx : Term.Ctx wcard tcard) : TermKind wcard → Type
 /-- A bitvector built from a natural number. -/
@@ -325,6 +324,10 @@ inductive WidthBinaryRelationKind
 -- a ≠ b: (a < b ∨ b < a)
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
+inductive BoolBinaryRelationKind
+| eq
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
 inductive Predicate (bcard : Nat)
   (tctx : Term.Ctx wcard tcard)  (pcard : Nat) : Type
 | binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard)
@@ -333,6 +336,8 @@ inductive Predicate (bcard : Nat)
 | and (p1 p2 : Predicate bcard tctx pcard)
 | or (p1 p2 : Predicate bcard tctx pcard)
 | var (v : Fin pcard)
+| boolBinRel (k : BoolBinaryRelationKind)
+  (a b : Term bcard tctx .bool)
 
 -- add predicate NOT, <= for bitvectors, < for bitvectors, <=
 -- for widths, =, not equals for widths.
@@ -359,7 +364,10 @@ def Predicate.toProp {wcard tcard bcard pcard : Nat} {wenv : WidthExpr.Env wcard
     | .sle => (a.toBV benv tenv).sle (b.toBV benv tenv) = true
   | .and p1 p2 => p1.toProp benv tenv penv ∧ p2.toProp benv tenv penv
   | .or p1 p2 => p1.toProp benv tenv penv ∨ p2.toProp benv tenv penv
-
+  | .boolBinRel rel a b =>
+    match rel with
+    -- | TODO: rename 'toBV' to 'toBool'.
+    | .eq => (a.toBV benv tenv) = (b.toBV benv tenv)
 namespace Nondep
 
 inductive WidthExpr where
@@ -539,6 +547,8 @@ inductive Predicate
 | or (p1 p2 : Predicate) : Predicate
 | and (p1 p2 : Predicate) : Predicate
 | var (v : Nat) : Predicate
+| boolBinRel (k : BoolBinaryRelationKind)
+    (a b : Term) : Predicate
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Predicate.wcard (p : Predicate) : Nat :=
@@ -553,7 +563,7 @@ def Predicate.wcard (p : Predicate) : Nat :=
   | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
   | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
-
+  | .boolBinRel .eq a b => max (a.wcard) (b.wcard)
 def Predicate.tcard (p : Predicate) : Nat :=
   match p with
   | .var _ => 0
@@ -566,6 +576,7 @@ def Predicate.tcard (p : Predicate) : Nat :=
   | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
   | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
+  | .boolBinRel .eq a b => max (a.tcard) (b.tcard)
 
 def Predicate.pcard (p : Predicate) : Nat :=
   match p with
@@ -574,6 +585,8 @@ def Predicate.pcard (p : Predicate) : Nat :=
   | .binRel .. => 0
   | .or p1 p2 => max (Predicate.pcard p1) (Predicate.pcard p2)
   | .and p1 p2 => max (Predicate.pcard p1) (Predicate.pcard p2)
+  | .boolBinRel .. => 0
+
 
 def Predicate.ofDep {wcard tcard pcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate bctx tctx pcard) : Predicate :=
@@ -589,6 +602,7 @@ def Predicate.ofDep {wcard tcard pcard : Nat}
   | .binRel .sle w a b => .binRel .sle (.ofDep w) (.ofDep a) (.ofDep b)
   | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
   | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
+  | .boolBinRel .eq a b => .boolBinRel .eq (.ofDep a) (.ofDep b)
 
 end Nondep
 
@@ -615,15 +629,23 @@ structure HWidthEnv {wcard tcard : Nat}
     heq_width : ∀ (v : Fin wcard),
       fsmEnv (StateSpace.widthVar v) = BitStream.ofNatUnary (wenv v)
 
+noncomputable def BitStream.ofBool (b : Bool) : BitStream := fun _i => b
+@[simp]
+theorem BitStream.ofBool_eq (b : Bool) : (BitStream.ofBool b i) = b := rfl
+
 /--
 Preconditions on the environments: 2. The terms are encoded in binary bitstreams.
 -/
-structure HTermEnv {wcard tcard : Nat}
+structure HTermEnv {wcard tcard bcard : Nat}
     {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
-  (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream) (tenv : tctx.Env wenv) : Prop
+    (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream)
+    (tenv : tctx.Env wenv)
+    (benv : Term.BoolEnv bcard) : Prop
   extends HWidthEnv fsmEnv wenv where
     heq_term : ∀ (v : Fin tcard),
       fsmEnv (StateSpace.termVar v) = BitStream.ofBitVecZext (tenv v)
+    heq_bool : ∀ (v : Fin bcard),
+      fsmEnv (StateSpace.boolVar v) = BitStream.ofBool (benv v)
 
 
 open Classical in
@@ -646,14 +668,6 @@ open Classical in
 theorem BitStream.ofProp_eq (p : Prop) : (BitStream.ofProp p i) = decide p := rfl
 
 open Classical in
-noncomputable def BitStream.ofBool (b : Bool) : BitStream := fun _i => b
-@[simp]
-theorem BitStream.ofBool_eq (b : Bool) : (BitStream.ofBool b i) = b := rfl
-
-
-
-
-open Classical in
 /-- make a 'HTermEnv' of 'ofTenv'. -/
 noncomputable def HTermEnv.mkFsmEnvOfTenv {wcard tcard bcard : Nat}
     {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
@@ -670,13 +684,8 @@ noncomputable def HTermEnv.mkFsmEnvOfTenv {wcard tcard bcard : Nat}
 theorem HTermEnv.of_mkFsmEnvOfTenv {wcard tcard : Nat}
     {wenv : Fin wcard → Nat} {tctx : Term.Ctx wcard tcard}
     (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard) :
-    HTermEnv (mkFsmEnvOfTenv tenv benv penv) tenv := by
-  constructor
-  · constructor
-    · intros v
-      simp [mkFsmEnvOfTenv]
-  · intros v
-    simp [mkFsmEnvOfTenv]
+    HTermEnv (mkFsmEnvOfTenv tenv benv penv) tenv benv := by
+  repeat (constructor <;> try (intros; rfl))
 
 structure HPredicateEnv {wcard tcard bcard pcard : Nat}
     (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream)
@@ -704,6 +713,7 @@ structure HNatFSMToBitstream {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat} {
       fsm.toFsm.eval fsmEnv =
       BitStream.ofNatUnary (v.toNat wenv)
 
+-- | TODO: Rename to be BV focused.
 /--
 Our term FSMs start unconditionally with a '0',
 and then proceed to produce outputs.
@@ -717,9 +727,21 @@ structure HTermFSMToBitStream {w : WidthExpr wcard}
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
-      (henv : HTermEnv fsmEnv tenv) →
+      (henv : HTermEnv fsmEnv tenv benv) →
         fsm.toFsmZext.eval fsmEnv =
         BitStream.ofBitVecZext (t.toBV benv tenv)
+
+structure HTermBoolFSMToBitStream
+  {tctx : Term.Ctx wcard tcard}
+  {t : Term bcard tctx .bool}
+  (fsm : TermFSM wcard tcard bcard pcard (.ofDep t)) : Prop where
+  heq :
+    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv)
+      (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
+      (henv : HTermEnv fsmEnv tenv benv) →
+        fsm.toFsmZext.eval fsmEnv =
+        BitStream.ofBool (t.toBV benv tenv)
+
 
 structure HPredFSMToBitStream {pcard : Nat}
   {tctx : Term.Ctx wcard tcard}
@@ -728,7 +750,7 @@ structure HPredFSMToBitStream {pcard : Nat}
     ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv)
       (penv : Predicate.Env pcard)
       (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
-      (htenv : HTermEnv fsmEnv tenv) →
+      (htenv : HTermEnv fsmEnv tenv benv) →
       (hpenv : HPredicateEnv fsmEnv penv) →
         p.toProp benv tenv penv ↔ (fsm.toFsm.eval fsmEnv = .negOne)
 

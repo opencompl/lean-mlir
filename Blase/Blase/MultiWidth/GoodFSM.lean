@@ -143,15 +143,15 @@ theorem eval_fsmMsb_eq {wcard bcard tcard : Nat}
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard bcard pcard → BitStream}
     {tctx : Term.Ctx wcard tcard}
-    {benv : Term.BoolEnv bcard}
     (tenv : Term.Ctx.Env tctx wenv)
+    (benv : Term.BoolEnv bcard)
     (w : WidthExpr wcard)
     (x : Term bcard tctx (.bv w))
     (xfsm : TermFSM wcard tcard bcard pcard (.ofDep x))
     (hxfsm : HTermFSMToBitStream xfsm)
     (wfsm : NatFSM wcard tcard bcard pcard (.ofDep w))
     (hwfsm : HNatFSMToBitstream wfsm)
-    (htenv : HTermEnv fsmEnv tenv) :
+    (htenv : HTermEnv fsmEnv tenv benv) :
     (fsmMsb xfsm.toFsmZext wfsm.toFsm).eval fsmEnv = (fun i =>
       BitStream.ofBitVecZext (x.toBV benv tenv) (min i (w.toNat wenv - 1))) := by
   simp [fsmMsb]
@@ -199,15 +199,15 @@ theorem eval_fsmMsb_eq {wcard bcard tcard : Nat}
 theorem eval_fsmMsb_eq_BitStream_ofBitVecSext {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard bcard pcard → BitStream}
     {tctx : Term.Ctx wcard tcard}
-    {benv : Term.BoolEnv bcard}
     (tenv : Term.Ctx.Env tctx wenv)
+    (benv : Term.BoolEnv bcard)
     (w : WidthExpr wcard)
     (x : Term bcard tctx (.bv w))
     (xfsm : TermFSM wcard tcard bcard pcard (.ofDep x))
     (hxfsm : HTermFSMToBitStream xfsm)
     (wfsm : NatFSM wcard tcard bcard pcard (.ofDep w))
     (hwfsm : HNatFSMToBitstream wfsm)
-    (htenv : HTermEnv fsmEnv tenv) :
+    (htenv : HTermEnv fsmEnv tenv benv) :
     (fsmMsb xfsm.toFsmZext wfsm.toFsm).eval fsmEnv =
       BitStream.ofBitVecSext (x.toBV benv tenv) := by
   rw [eval_fsmMsb_eq (wfsm := wfsm) (hwfsm := hwfsm) (hxfsm := hxfsm)
@@ -580,13 +580,14 @@ theorem fsmZext_eval_eq
     {wenv : WidthExpr.Env wcard}
     {fsmEnv : StateSpace wcard tcard bcard pcard → BitStream}
     (hwnew : HNatFSMToBitstream wnewFsm)
-    (benv : Term.BoolEnv bcard)
     {tctx : Term.Ctx wcard tcard}
     (tenv : Term.Ctx.Env tctx wenv)
+    (benv : Term.BoolEnv bcard)
     (t : Term bcard tctx (.bv w))
     (tFsm : TermFSM wcard tcard bcard pcard (.ofDep t))
     (ht : HTermFSMToBitStream tFsm)
-    (htenv : HTermEnv fsmEnv tenv) :
+    (htenv : HTermEnv fsmEnv tenv benv)
+    :
     (fsmZext tFsm.toFsmZext wnewFsm.toFsm).eval fsmEnv = fun i =>
       ((BitStream.ofBitVecZext ((Term.zext t wnew).toBV benv tenv))) i := by
   ext i
@@ -608,12 +609,12 @@ theorem fsmSext_eval_eq
     (hwnew : HNatFSMToBitstream wnewFsm)
     (hwold : HNatFSMToBitstream woldFsm)
     {tctx : Term.Ctx wcard tcard}
-    (benv : Term.BoolEnv bcard)
     (tenv : Term.Ctx.Env tctx wenv)
+    (benv : Term.BoolEnv bcard)
     (t : Term bcard tctx (.bv wold))
     (tFsm : TermFSM wcard tcard bcard pcard (.ofDep t))
     (htfsm : HTermFSMToBitStream tFsm)
-    (htenv : HTermEnv fsmEnv tenv) :
+    (htenv : HTermEnv fsmEnv tenv benv) :
     (fsmSext tFsm.toFsmZext woldFsm.toFsm  wnewFsm.toFsm).eval fsmEnv = fun i =>
       ((BitStream.ofBitVecZext ((Term.sext t wnew).toBV benv tenv))) i := by
   ext i
@@ -787,6 +788,18 @@ theorem ofBitVecZextMsb_eq_ofNatUnary_and_ofBitVecZextMsb {w} (x : BitVec w) :
   intros hi
   have := BitVec.lt_of_getLsbD hi
   omega
+
+
+def IsGoodTermBoolFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wcard tcard}
+    (t : Term bcard tctx .bool) :
+    (HTermBoolFSMToBitStream (mkTermFSM wcard tcard bcard pcard (.ofDep t))) := by
+  cases t
+  case boolVar v =>
+    constructor
+    intros wenv benv tenv fsmEnv htenv
+    simp [mkTermFSM, Nondep.Term.ofDep]
+    simp [Term.toBV]
+    rw [htenv.heq_bool]
 
 
 def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wcard tcard}
@@ -1107,8 +1120,8 @@ info: BitVec.ult_eq_not_carry {w : ℕ} (x y : BitVec w) :
 theorem eval_fsmTermUlt_eq_decide_lt {wcard tcard : Nat}
     (tctx : Term.Ctx wcard tcard)
     {wenv : WidthExpr.Env wcard}
-    (benv : Term.BoolEnv bcard)
     (tenv : tctx.Env wenv)
+    (benv : Term.BoolEnv bcard)
     (w : WidthExpr wcard)
     (a : Term bcard tctx (.bv w))
     (b : Term bcard tctx (.bv w))
@@ -1117,7 +1130,7 @@ theorem eval_fsmTermUlt_eq_decide_lt {wcard tcard : Nat}
     (bfsm : TermFSM wcard tcard bcard pcard (.ofDep b))
     (hbfsm : HTermFSMToBitStream bfsm)
     (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream)
-    (henv : HTermEnv fsmEnv tenv)
+    (henv : HTermEnv fsmEnv tenv benv)
     :
     ((fsmTermUlt
       afsm
@@ -1168,8 +1181,8 @@ info: BitVec.ult_eq_not_carry {w : ℕ} (x y : BitVec w) :
 theorem eval_fsmTermUle_eq_decide_le {wcard tcard : Nat}
     (tctx : Term.Ctx wcard tcard)
     {wenv : WidthExpr.Env wcard}
-    (benv : Term.BoolEnv bcard)
     (tenv : tctx.Env wenv)
+    (benv : Term.BoolEnv bcard)
     (w : WidthExpr wcard)
     (a : Term bcard tctx (.bv w))
     (b : Term bcard tctx (.bv w))
@@ -1178,7 +1191,7 @@ theorem eval_fsmTermUle_eq_decide_le {wcard tcard : Nat}
     (bfsm : TermFSM wcard tcard bcard pcard (.ofDep b))
     (hbfsm : HTermFSMToBitStream bfsm)
     (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream)
-    (henv : HTermEnv fsmEnv tenv)
+    (henv : HTermEnv fsmEnv tenv benv)
     :
     ((fsmTermUle
       afsm
@@ -1260,8 +1273,8 @@ private theorem BitVec.signExtend_slt_signExtend_of_slt {x y : BitVec w}
 theorem eval_fsmTermSlt_eq_decide_slt {wcard tcard : Nat}
     (tctx : Term.Ctx wcard tcard)
     {wenv : WidthExpr.Env wcard}
-    (benv : Term.BoolEnv bcard)
     (tenv : tctx.Env wenv)
+    (benv : Term.BoolEnv bcard)
     (w : WidthExpr wcard)
     (a : Term bcard tctx (.bv w))
     (b : Term bcard tctx (.bv w))
@@ -1272,7 +1285,7 @@ theorem eval_fsmTermSlt_eq_decide_slt {wcard tcard : Nat}
     (bfsm : TermFSM wcard tcard bcard pcard (.ofDep b))
     (hbfsm : HTermFSMToBitStream bfsm)
     (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream)
-    (henv : HTermEnv fsmEnv tenv)
+    (henv : HTermEnv fsmEnv tenv benv)
     :
     ((fsmTermSlt
       wfsm
@@ -1358,10 +1371,11 @@ def fsmTermSle
     let xorFsm := fsmMsbEq afsm bfsm
     ~~~ ((~~~ xorFsm) ^^^ carryFsm)
 
-theorem eval_fsmTermSle_eq_decide_sle {wcard tcard : Nat}
+theorem eval_fsmTermSle_eq_decide_sle {wcard tcard bcard : Nat}
     (tctx : Term.Ctx wcard tcard)
     {wenv : WidthExpr.Env wcard}
     (tenv : tctx.Env wenv)
+    (benv : Term.BoolEnv bcard)
     (w : WidthExpr wcard)
     (wfsm : NatFSM wcard tcard bcard pcard (.ofDep w))
     (hwfsm : HNatFSMToBitstream wfsm)
@@ -1372,7 +1386,7 @@ theorem eval_fsmTermSle_eq_decide_sle {wcard tcard : Nat}
     (bfsm : TermFSM wcard tcard bcard pcard (.ofDep b))
     (hbfsm : HTermFSMToBitStream bfsm)
     (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream)
-    (henv : HTermEnv fsmEnv tenv)
+    (henv : HTermEnv fsmEnv tenv benv)
     :
     ((fsmTermSle
       wfsm
@@ -1525,7 +1539,14 @@ def mkPredicateFSMAux (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
     let fsmP := mkPredicateFSMAux wcard tcard bcard pcard p
     let fsmQ := mkPredicateFSMAux wcard tcard bcard pcard q
     { toFsm := (fsmP.toFsm &&& fsmQ.toFsm) }
-
+  | .boolBinRel k a b  =>
+    let fsmA := mkTermFSM wcard tcard bcard pcard a
+    let fsmB := mkTermFSM wcard tcard bcard pcard b
+    match k with
+    | .eq =>
+      -- TODO: rename this Aux' business, it's ugly.
+      let fsmEq := composeBinaryAux' FSM.nxor (fsmA.toFsmZext) (fsmB.toFsmZext)
+      { toFsm := composeUnaryAux FSM.scanAnd (fsmEq) }
 
 theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
   exact Function.ne_iff.mp h
@@ -1958,6 +1979,24 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
         have := congrFun h i
         simp at this
         simp [this]
+
+  case boolBinRel k a b =>
+    constructor
+    intros wenv benv tenv penv fsmEnv htenv hpenv
+    have ha := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard pcard a
+    have hb := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard pcard b
+    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    rw [ha.heq (benv := benv) (tenv := tenv) (henv := htenv)]
+    rw [hb.heq (benv := benv) (tenv := tenv) (henv := htenv)]
+    simp [Predicate.toProp]
+    rw [BitStream.ext_iff]
+    simp [BitStream.scanAnd_eq_decide] -- TODO: mark this a simp lemma.
+    constructor
+    · intros hp
+      simp [hp]
+    · intros hp
+      specialize hp 0 0 (by decide)
+      exact hp
 
 /-- Negate the FSM so we can decide if zeroes. -/
 def mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
