@@ -21,8 +21,9 @@ import SSA.Projects.LLVMRiscV.Pipeline.const
 import SSA.Projects.LLVMRiscV.Pipeline.select
 import SSA.Projects.LLVMRiscV.Pipeline.pseudo
 import SSA.Projects.LLVMRiscV.Pipeline.Combiners
-import SSA.Projects.DCE.DCE
-import SSA.Projects.CSE.CSE
+
+import LeanMLIR.Transforms.DCE
+import LeanMLIR.Transforms.CSE
 
 open LLVMRiscV
 open LeanMLIR.SingleReturnCompat

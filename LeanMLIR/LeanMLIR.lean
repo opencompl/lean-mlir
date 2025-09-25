@@ -13,3 +13,5 @@ import LeanMLIR.MLIRSyntax.EDSL2
 import LeanMLIR.MLIRSyntax.Transform.Utils
 
 import LeanMLIR.Transforms.Rewrite
+import LeanMLIR.Transforms.CSE
+import LeanMLIR.Transforms.DCE
