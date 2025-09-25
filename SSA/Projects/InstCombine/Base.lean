@@ -417,7 +417,7 @@ def MetaLLVM.opName : (MetaLLVM φ).Op → String
 def MetaLLVM.printAttributes : (MetaLLVM φ).Op → String
   | .const w v => s!"\{value = {v} : {w}}"
   | .or w ⟨true⟩ => s!"\{disjoint = true : {w}}"
-  | .add _ f |.shl _ f | .sub _ f | .mul _ f => printOverflowFlags f
+  | .add _ f | .shl _ f | .sub _ f | .mul _ f => printOverflowFlags f
   | .udiv _ ⟨true⟩ | .sdiv _ ⟨true⟩ | .lshr _ ⟨true⟩ => "<{isExact}> "
   | .icmp ty _ => s!"{ty}"
   | _ => ""
