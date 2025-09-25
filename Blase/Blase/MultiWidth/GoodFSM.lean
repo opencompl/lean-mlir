@@ -742,12 +742,11 @@ def mkTermFSM (wcard tcard bcard pcard : Nat) (t : Nondep.Term) :
     -- another good example where a stream diffeq is great.
     -- out[0] = in[0]
     -- out[n+1] = out[n]
-    XXX
     if h : v < bcard then
       let varFsm : FSM (StateSpace wcard tcard bcard pcard) :=
        (FSM.var' (StateSpace.boolVar ⟨v, h⟩))
       {
-        toFsmZext := varFsm,
+        toFsmZext := composeUnaryAux FSM.hold0Forever varFsm,
         width := mkWidthFSM wcard tcard bcard pcard (.const 1)
       }
     else
@@ -815,6 +814,8 @@ def IsGoodTermBoolFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx
     simp [mkTermFSM, Nondep.Term.ofDep]
     simp [Term.toBV]
     rw [htenv.heq_bool]
+    ext i
+    simp
   case boolConst b =>
     simp [mkTermFSM, Nondep.Term.ofDep]
     simp [Term.toBV]
