@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 import LeanMLIR.Framework
 import LeanMLIR.Util
 import LeanMLIR.MLIRSyntax.EDSL
-import TacBench
 import LeanMLIR.Tactic.SimpSet
 
 import Qq
