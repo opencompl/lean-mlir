@@ -5,9 +5,6 @@ import LeanMLIR.Framework
 import LeanMLIR.Tactic
 import LeanMLIR.Util
 import LeanMLIR.MLIRSyntax
--- TODO: the following two imports should be moved to LeanMLIR.MLIRSyntax
-import LeanMLIR.MLIRSyntax.EDSL2
-import LeanMLIR.MLIRSyntax.Transform.Utils
 
 -- ## Transformations
 import LeanMLIR.Transforms.Rewrite
