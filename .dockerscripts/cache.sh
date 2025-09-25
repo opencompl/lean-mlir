@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [[ -z "$CACHE_MOUNT" ]]; then
-    echo "error: \$CACHE not set"
+    echo "error: \$CACHE_MOUNT not set"
     exit 1
 fi
 
