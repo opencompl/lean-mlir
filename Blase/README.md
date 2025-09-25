@@ -17,6 +17,9 @@ For stable releases, please change the `rev` to the desired version tag.
 #### Algorithms Improvements TODO
 
 - Model reconstruction for counterexamples.
+- Add support for Nat and Int sort by adding a fresh width variable that is universally quantified, and then rewriting along this fresh variable.
+Hm, but no, that doesn't actually work? Oh wait, maybe it does? Hm, not if it's behind an arrow.
+- So, relatedly, add quantifier elimination support for existentials.
 - Check if it is possible to entirely drop the dependent syntax, and just use the
   non-dependent AST.
 - Add support for nat, int, bool, and Prop sorts.

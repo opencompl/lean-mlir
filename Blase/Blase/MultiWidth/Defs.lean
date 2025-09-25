@@ -151,6 +151,14 @@ inductive Term {wcard tcard : Nat} (bcard : Nat)
 
 def Term.BoolEnv (bcard : Nat) : Type := Fin bcard → Bool
 
+def Term.BoolEnv.empty : Term.BoolEnv 0 :=
+  fun x => x.elim0
+
+def Term.BoolEnv.cons {bcard : Nat}
+    (env : Term.BoolEnv bcard) (b : Bool) :
+  Term.BoolEnv (bcard + 1) :=
+    fun v => v.cases b env
+
 /--
 Environments are for evaluation.
 -/
@@ -325,7 +333,7 @@ inductive Predicate (bcard : Nat)
 -- add predicate NOT, <= for bitvectors, < for bitvectors, <=
 -- for widths, =, not equals for widths.
 
-def Predicate.toProp {wcard tcard pcard : Nat} {wenv : WidthExpr.Env wcard}
+def Predicate.toProp {wcard tcard bcard pcard : Nat} {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
     (tenv : tctx.Env wenv)
