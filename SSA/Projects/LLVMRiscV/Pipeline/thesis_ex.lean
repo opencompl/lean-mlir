@@ -1,5 +1,5 @@
 import SSA.Projects.RISCV64.PrettyEDSL
-import SSA.Core.Framework
+import LeanMLIR.Framework
 import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.Simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV

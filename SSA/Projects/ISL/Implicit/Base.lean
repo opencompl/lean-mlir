@@ -1,4 +1,4 @@
-import SSA.Core
+import LeanMLIR
 import SSA.Projects.ISL.Semantics
 
 import Lean

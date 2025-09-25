@@ -9,7 +9,7 @@ etc., into the uniform EDSL used by the MLIR translation in Lean.
 
 Authors: Jaeho Choi <zerozerozero0216@gmail.com>
 -/
-import SSA.Core.MLIRSyntax.PrettyEDSL
+import LeanMLIR.MLIRSyntax.PrettyEDSL
 import SSA.Projects.ModArith.Syntax
 
 namespace MLIR.EDSL.Pretty

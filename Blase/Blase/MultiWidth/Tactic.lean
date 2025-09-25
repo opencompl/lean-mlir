@@ -24,7 +24,7 @@ deriving DecidableEq, Repr
 structure Config where
   check? : Bool := true
   -- number of k-induction iterations.
-  niter : Nat := 10
+  niter : Nat := 30
   /-- debug printing verbosity. -/
   verbose?: Bool := false
   /-- By default, widths are always abstracted. -/
@@ -632,18 +632,18 @@ def collectBVBooleanEqPredicateAux (state : CollectState) (a b : Expr) :
   Option (SolverM (MultiWidth.Nondep.Predicate × CollectState)) :=
   let_expr true := b | none
   let out? := match_expr a with
-    | BitVec.slt w _a _b => some (w, MultiWidth.BinaryRelationKind.slt)
-    | BitVec.sle w _a _b => some (w, MultiWidth.BinaryRelationKind.sle)
-    | BitVec.ult w _a _b => some (w, MultiWidth.BinaryRelationKind.ult)
-    | BitVec.ule w _a _b => some (w, MultiWidth.BinaryRelationKind.ule)
+    | BitVec.slt w x y => some (w, MultiWidth.BinaryRelationKind.slt, x, y)
+    | BitVec.sle w x y => some (w, MultiWidth.BinaryRelationKind.sle, x, y)
+    | BitVec.ult w x y => some (w, MultiWidth.BinaryRelationKind.ult, x, y)
+    | BitVec.ule w x y => some (w, MultiWidth.BinaryRelationKind.ule, x, y)
     | _ => none
   -- NOTE: Lean bug prevents us from writing this with do-notation,
   -- so we suffer as haskellers once did.
-  out? >>= fun ((w, kind)) => some do
+  out? >>= fun ((w, kind, x, y)) => some do
     let (w, state) ← collectWidthAtom state w
-    let (ta, state) ← collectTerm state a
-    let (tb, state) ← collectTerm state b
-    pure (.binRel kind w ta tb, state)
+    let (tx, state) ← collectTerm state x
+    let (ty, state) ← collectTerm state y
+    pure (.binRel kind w tx ty, state)
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def collectBVPredicateAux (state : CollectState) (e : Expr) :

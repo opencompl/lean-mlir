@@ -1,7 +1,7 @@
-import SSA.Core.Framework
-import SSA.Core.Framework.Macro
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.EDSL2
+import LeanMLIR.Framework
+import LeanMLIR.Framework.Macro
+import LeanMLIR.MLIRSyntax.GenericParser
+import LeanMLIR.MLIRSyntax.EDSL2
 
 namespace CombOp
 

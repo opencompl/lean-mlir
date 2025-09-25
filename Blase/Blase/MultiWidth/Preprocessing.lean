@@ -389,27 +389,27 @@ Boolean normalization:
   (BitVec.ofBool x &&& BitVec.ofBool y) = BitVec.ofBool (x && y) := by
     rcases x with rfl | rfl <;> rcases y with rfl | rfl <;> simp [BitVec.ofBool]
 
-@[bv_multi_width_normalize] theorem complement_ofBool_eq (x : Bool) : 
+@[bv_multi_width_normalize] theorem complement_ofBool_eq (x : Bool) :
   ~~~ (BitVec.ofBool x) = BitVec.ofBool (!x) := by
     rcases x with rfl | rfl <;> simp [BitVec.ofBool]
 
 
-@[bv_multi_width_normalize] theorem add_ofBool_eq (x y : Bool) : 
+@[bv_multi_width_normalize] theorem add_ofBool_eq (x y : Bool) :
   (BitVec.ofBool x) + (BitVec.ofBool y) = BitVec.ofBool (x ^^ y) := by
-    rcases x with rfl | rfl <;> 
+    rcases x with rfl | rfl <;>
     rcases y with rfl | rfl <;> simp [BitVec.ofBool]
 
-@[bv_multi_width_normalize] theorem sub_ofBool_eq (x y : Bool) : 
+@[bv_multi_width_normalize] theorem sub_ofBool_eq (x y : Bool) :
   (BitVec.ofBool x) - (BitVec.ofBool y) = BitVec.ofBool (x ^^ y) := by
-    rcases x with rfl | rfl <;> 
+    rcases x with rfl | rfl <;>
     rcases y with rfl | rfl <;> simp [BitVec.ofBool]
 
-@[bv_multi_width_normalize] theorem mul_ofBool_eq (x y : Bool) : 
+@[bv_multi_width_normalize] theorem mul_ofBool_eq (x y : Bool) :
   (BitVec.ofBool x) * (BitVec.ofBool y) = BitVec.ofBool (x && y) := by
-    rcases x with rfl | rfl <;> 
+    rcases x with rfl | rfl <;>
     rcases y with rfl | rfl <;> simp [BitVec.ofBool]
 
-@[bv_multi_width_normalize] theorem neg_ofBool_eq (x : Bool) : 
+@[bv_multi_width_normalize] theorem neg_ofBool_eq (x : Bool) :
   - (BitVec.ofBool x) = BitVec.ofBool x := by
     rcases x with rfl | rfl <;> simp [BitVec.ofBool]
 

@@ -1,8 +1,8 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Core
-import SSA.Core.Tactic.SimpSet
+import LeanMLIR
+import LeanMLIR.Tactic.SimpSet
 import SSA.Projects.InstCombine.ForStd
 import SSA.Projects.InstCombine.LLVM.Semantics
 
@@ -417,7 +417,7 @@ def MetaLLVM.opName : (MetaLLVM φ).Op → String
 def MetaLLVM.printAttributes : (MetaLLVM φ).Op → String
   | .const w v => s!"\{value = {v} : {w}}"
   | .or w ⟨true⟩ => s!"\{disjoint = true : {w}}"
-  | .add _ f |.shl _ f | .sub _ f | .mul _ f => printOverflowFlags f
+  | .add _ f | .shl _ f | .sub _ f | .mul _ f => printOverflowFlags f
   | .udiv _ ⟨true⟩ | .sdiv _ ⟨true⟩ | .lshr _ ⟨true⟩ => "<{isExact}> "
   | .icmp ty _ => s!"{ty}"
   | _ => ""

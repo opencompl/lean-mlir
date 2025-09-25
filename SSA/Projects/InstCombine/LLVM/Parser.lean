@@ -1,4 +1,4 @@
-import SSA.Core.MLIRSyntax.Parser
+import LeanMLIR.MLIRSyntax.Parser
 import SSA.Projects.InstCombine.LLVM.EDSL
 import Init.Data.Repr
 

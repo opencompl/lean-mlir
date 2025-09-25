@@ -1,4 +1,4 @@
-import SSA.Core.MLIRSyntax.PrettyEDSL
+import LeanMLIR.MLIRSyntax.PrettyEDSL
 import SSA.Projects.InstCombine.Tactic
 open Lean
 

@@ -1,9 +1,9 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Core.WellTypedFramework
-import SSA.Core.Tactic
-import SSA.Core.Util
+import LeanMLIR.WellTypedFramework
+import LeanMLIR.Tactic
+import LeanMLIR.Util
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.Base
 
