@@ -42,21 +42,14 @@ RUN lake --version
 FROM lean-mlir-base as lean-mlir-build
 
 # Build everything (dependencies & our code)
+ENV CACHE_MOUNT="$HOME/.cache/LeanMLIR"
 COPY . ./
-RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
-  # Symlink cache into place
-  CACHE="$HOME/.cache/LeanMLIR" && \
-  mkdir -p $CACHE/.lake && \
-  ln -Ts $CACHE/.lake .lake && \
-  #
+RUN --mount=type=cache,target="$CACHE_MOUNT",sharing=private \
+  ./.dockerscripts/cache.sh setup && \
   # Build
   lake build && \
   #
-  # Persist .lake into Docker image 
-  rm .lake && \
-  # ^^ Removes the symlink
-  cp -TRa $CACHE/.lake .lake
-  # ^^ Copies the contents to a new `.lake` folder
+  ./.dockerscripts/cache.sh teardown
 
 # NOTE: we deliberately don't use `lake exe cache get`, as that would download
 # all of Mathlib, which is much more than we need, and the extra codesize 
@@ -76,13 +69,15 @@ RUN --mount=type=cache,target=$HOME/.cache/LeanMLIR,sharing=private \
 #
 # Thus, to work around this behaviour, we:
 # - Mount a different path (under `/root/.cache`), and symlink
-#     `.lake` or a subfolder like `.lake/build` to this cache-mounted path. 
+#     `.lake` or to this cache-mounted path. 
 # - Run the build as usual; this will use cached outputs of previous builds, if 
 #     available, and ensures the outputs of the current build are written to the 
 #     cache for use by subsequent builds.
 # - Finally, we remove the symlink, and *copy* all files,
 #     which copies the file from the cache-mounted directory into
 #     the actual Docker image.
+#
+# This logic is implemented in the `.dockerscripts/cache.sh` file
 #
 
 
