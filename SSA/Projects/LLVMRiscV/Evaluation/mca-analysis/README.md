@@ -16,7 +16,7 @@ export PATH=$PATH:~/llvm-project/build/bin/
 
 ## How to run
 
-To repreoduce the mca analysis results, run:
+To reproduce the mca analysis results, run:
 ```
 python3 run_mca.py 
 ```
