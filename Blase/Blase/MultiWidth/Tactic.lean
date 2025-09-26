@@ -4,6 +4,7 @@ import Blase.MultiWidth.GoodFSM
 import Blase.MultiWidth.Preprocessing
 import Blase.KInduction.KInduction
 import Blase.AutoStructs.FormulaToAuto
+import Blase.StreamDiffEq
 import Blase.ReflectMap
 
 initialize Lean.registerTraceClass `Bits.MultiWidth
