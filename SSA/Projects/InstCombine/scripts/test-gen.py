@@ -92,9 +92,9 @@ theorem {name}_proof : {name}_before ⊑ {name}_after := by
 
 def make_intro(stem):
     return f"""
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.LLVM.Semantics
+import LeanMLIR.Dialects.LLVM.Semantics
 open LLVM
 open BitVec
 

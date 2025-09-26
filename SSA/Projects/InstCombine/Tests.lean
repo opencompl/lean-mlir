@@ -1,7 +1,7 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 
 -- What do we have:
 -- ================
@@ -20,9 +20,9 @@ import SSA.Projects.InstCombine.Base
 -- ===============================
 --   - take *all* the alive tests, populate them.
 --   - gather them (using meta-code? `PersistentEnvAttribute`). [← goens]
---   - given a test program 
+--   - given a test program
 --        `alive_andorxor_input : (w : Nat) → Σ (Γ : SSA.Context [.bitvec 1, .bitvec w]), AliveProgram Γ`,
--- 
+--
 --    a. Pick a small bitwidth (w = 4), run with *all possible values of arguments*, dump to a CSV file.
 --    b. Generate an LLVM file that does the same thing. (`src/Lean/Compiler/IR/LLVMBindings.lean`)
 --    c. Check if alive can do this? If it can, consider not spending time on (b) before rebuttal.

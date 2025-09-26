@@ -1,4 +1,4 @@
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 
 /-!
 # Print Tests

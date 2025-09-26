@@ -1,6 +1,9 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
+import LeanMLIR.Util.ConcreteOrMVar
+import LeanMLIR.Util.Poison
+
 import Mathlib.Data.Vector.Basic
 import Cli
 import Lean

@@ -5,7 +5,7 @@ import LeanMLIR.MLIRSyntax.GenericParser
 import LeanMLIR.MLIRSyntax.EDSL2
 import LeanMLIR.Tactic.SimpSet
 import SSA.Projects.CIRCT.Comb.CombSemantics
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 import LeanMLIR.MLIRSyntax.Transform.Utils
 import SSA.Projects.InstCombine.LLVM.CLITests
 
