@@ -135,7 +135,10 @@ def select_same_val_self : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1), Ty
 def select_same_val : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
   [⟨_, select_same_val_self⟩]
 
-/-- ### select_constant_cmp
+/-! ### select_constant_cmp -/
+
+/- 
+Test the rewrite:
   (true ? x : y) -> x
   (false ? x : y) -> y
 -/
