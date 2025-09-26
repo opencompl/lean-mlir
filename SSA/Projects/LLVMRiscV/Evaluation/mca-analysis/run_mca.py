@@ -16,43 +16,52 @@ ROOT_DIR = (
 )
 TIMEOUT = 1800  # seconds
 
+LLC_ASM_globalisel_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM_globalisel/"
+)
+LLC_ASM_selectiondag_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM_selectiondag/"
+)
 LLC_ASM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/"
 )
 XDSL_ASM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_ASM/"
 )
-MCA_LEANMLIR_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/Lean-MLIR/"
+XDSL_opt_ASM_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_opt_ASM/"
 )
-MCA_LLVM_DIR = (
-    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM/"
+MCA_LEANMLIR_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LEANMLIR/"
+)
+MCA_LEANMLIR_opt_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LEANMLIR_opt/"
+)
+MCA_LLVM_globalisel_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM_globalisel/"
+)
+MCA_LLVM_selectiondag_DIR = (
+    f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM_selectiondag/"
 )
 LOGS_DIR = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/logs/"
 
-def create_missing_folders(): 
-    if not os.path.exists(MCA_LEANMLIR_DIR):
-        os.makedirs(MCA_LEANMLIR_DIR)
-    if not os.path.exists(MCA_LLVM_DIR):
-        os.makedirs(MCA_LLVM_DIR)
-    if not os.path.exists(LOGS_DIR):
-        os.makedirs(LOGS_DIR)
 
 
-def clear_folder(folder):
+AUTOGEN_DIR_PATHS = [MCA_LEANMLIR_DIR, MCA_LEANMLIR_opt_DIR, MCA_LLVM_globalisel_DIR, MCA_LLVM_selectiondag_DIR, LOGS_DIR]
+
+def setup_benchmarking_directories(): 
     """
-    Delete all the files in `folder`
+    Create clean directories to store the benchmarks.
     """
-    for filename in os.listdir(folder):
-        file_path = os.path.join(folder, filename)
-        try:
-            if os.path.isfile(file_path) or os.path.islink(file_path):
-                os.unlink(file_path)
-            elif os.path.isdir(file_path):
-                shutil.rmtree(file_path)
-        except Exception as e:
-            print("Failed to delete %s. Reason: %s" % (file_path, e))
-
+    results_dir = f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/"
+    if not os.path.exists(results_dir):
+        os.makedirs(results_dir)
+    for directory in AUTOGEN_DIR_PATHS:
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+        else:       
+            shutil.rmtree(directory)
+            os.makedirs(directory)
 
 def run_command(cmd, log_file, timeout=TIMEOUT):
     try:
@@ -77,85 +86,42 @@ def mca_analysis(input_file, output_file, log_file):
     print(cmd)
     run_command(cmd, log_file)
     
-
-def clear_folders():
-    clear_folder(LOGS_DIR)
-    clear_folder(MCA_LEANMLIR_DIR)
-    clear_folder(MCA_LLVM_DIR)
-
-
-def clear_empty_logs():
-    """
-    Only leave in the logs folder the files that contain something meaningful.
-    """
-    for filename in os.listdir(LOGS_DIR):
-        file_path = os.path.join(LOGS_DIR, filename)
-        if os.path.getsize(file_path) == 0:
-            try:
-                if os.path.isfile(file_path) or os.path.islink(file_path):
-                    os.unlink(file_path)
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
-            except Exception:
-                print("Failed to delete {filename}")
-        else :
-            lines = open(file_path).readlines()
-            meaningful_lines = 0
-            for line in lines:
-                if "error" in line:
-                    meaningful_lines += 1
-                elif "Error" in line:
-                    meaningful_lines += 1
-            if meaningful_lines == 0:
-                try:
-                    if os.path.isfile(file_path) or os.path.islink(file_path):
-                        os.unlink(file_path)
-                    elif os.path.isdir(file_path):
-                        shutil.rmtree(file_path)
-                except Exception:
-                    print("Failed to delete {filename}")
-
-def get_tasks():
-    tasks = []
-    for filename in os.listdir(XDSL_ASM_DIR):
-        basename, _ = os.path.splitext(filename)
-        tasks.append ({
-            "input_file": os.path.join(XDSL_ASM_DIR, filename),
-            "output_file": os.path.join(MCA_LEANMLIR_DIR, basename + '.out'),
-            "log_file": open(os.path.join(LOGS_DIR, 'xdsl_' + filename),'w'),
-        })
-
-    for filename in os.listdir(LLC_ASM_DIR):
-        basename, _ = os.path.splitext(filename)
-        tasks.append ({
-            "input_file": os.path.join(LLC_ASM_DIR, filename),
-            "output_file": os.path.join(MCA_LLVM_DIR, basename + '.out'),
-            "log_file": open(os.path.join(LOGS_DIR, 'llvm_' + filename),'w'),
-        })
-
-    return tasks
-
 def run_tests():
-    # extract mlir blocks and put them all in separate files
-    create_missing_folders()
-    clear_folders()
+    # clear results directory 
+    setup_benchmarking_directories()
 
     # Parse CLI arguments
     parser = argparse.ArgumentParser()
     taskqueue.add_cli_arguments(parser)
 
-    args = parser.parse_args()
-    queue = taskqueue.from_parsed_cli_arguments(args)
 
-    # Prepare task queue
-    tasks = get_tasks();
-    def run_task(t):
-        mca_analysis(t.input_file, t.output_file, t.log_file)
+    for filename in os.listdir(XDSL_ASM_DIR):
+        input_file = os.path.join(XDSL_ASM_DIR, filename)
+        basename, _ = os.path.splitext(filename)
+        output_file = os.path.join(MCA_LEANMLIR_DIR, basename + '.out')
+        log_file = open(os.path.join(LOGS_DIR, 'xdsl_' + filename),'w')
+        mca_analysis(input_file, output_file, log_file)
     
-    # Run tasks
-    queue.run_tasks(tasks, run=run_task)
+    for filename in os.listdir(XDSL_opt_ASM_DIR):
+        input_file = os.path.join(XDSL_opt_ASM_DIR, filename)
+        basename, _ = os.path.splitext(filename)
+        output_file = os.path.join(MCA_LEANMLIR_opt_DIR, basename + '.out')
+        log_file = open(os.path.join(LOGS_DIR, 'xdsl_opt_' + filename),'w')
+        mca_analysis(input_file, output_file, log_file)
 
-    clear_empty_logs()
+    for filename in os.listdir(LLC_ASM_globalisel_DIR):
+        input_file = os.path.join(LLC_ASM_globalisel_DIR, filename)
+        basename, _ = os.path.splitext(filename)
+        output_file = os.path.join(MCA_LLVM_globalisel_DIR, basename + '.out')
+        log_file = open(os.path.join(LOGS_DIR, 'llvm_globalisel_' + filename),'w')
+        mca_analysis(input_file, output_file, log_file)
+    
+    for filename in os.listdir(LLC_ASM_selectiondag_DIR):
+        input_file = os.path.join(LLC_ASM_selectiondag_DIR, filename)
+        basename, _ = os.path.splitext(filename)
+        output_file = os.path.join(MCA_LLVM_selectiondag_DIR, basename + '.out')
+        log_file = open(os.path.join(LOGS_DIR, 'llvm_selectiondag_' + filename),'w')
+        mca_analysis(input_file, output_file, log_file)
 
 def main():
     run_tests()
