@@ -217,9 +217,10 @@ def scatter_plot(parameter, selector1, selector2) :
 
     plt.xlim(plot_min, plot_max)
     plt.ylim(plot_min, plot_max)
-
-    plt.xticks(range(0, int(plot_max), int((plot_max)/5)))
-    plt.yticks(range(0, int(plot_max), int((plot_max)/5)))
+    
+    if not (int((plot_max)/5)) == 0: 
+        plt.xticks(range(0, int(plot_max), int((plot_max)/5)))
+        plt.yticks(range(0, int(plot_max), int((plot_max)/5)))
     plt.gca().set_aspect('equal', adjustable='box') 
 
     plt.tight_layout()

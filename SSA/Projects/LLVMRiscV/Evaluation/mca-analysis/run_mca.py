@@ -7,7 +7,6 @@ import subprocess
 import re
 import argparse
 import concurrent.futures
-from evallib import taskqueue
 
 ROOT_DIR = (
     subprocess.check_output(["git", "rev-parse", "--show-toplevel"])
@@ -92,9 +91,15 @@ def run_tests():
 
     # Parse CLI arguments
     parser = argparse.ArgumentParser()
-    taskqueue.add_cli_arguments(parser)
 
 
+    for filename in os.listdir(XDSL_ASM_DIR):
+        input_file = os.path.join(XDSL_ASM_DIR, filename)
+        basename, _ = os.path.splitext(filename)
+        output_file = os.path.join(MCA_LEANMLIR_DIR, basename + '.out')
+        log_file = open(os.path.join(LOGS_DIR, 'xdsl_' + filename),'w')
+        mca_analysis(input_file, output_file, log_file)
+    
     for filename in os.listdir(XDSL_opt_ASM_DIR):
         input_file = os.path.join(XDSL_opt_ASM_DIR, filename)
         basename, _ = os.path.splitext(filename)
@@ -121,4 +126,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    run_tests()
