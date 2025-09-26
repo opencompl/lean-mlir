@@ -17,6 +17,9 @@ For stable releases, please change the `rev` to the desired version tag.
 #### Algorithms Improvements TODO
 
 - Model reconstruction for counterexamples.
+- Add support for Nat and Int sort by adding a fresh width variable that is universally quantified, and then rewriting along this fresh variable.
+So to show `n = m`, show that `\forall w, BV.ofNat w n = BV.ofNat w m` for a fresh `w`. However, I don't think this works when it's behind an arrow. So we do need quantifier elimination for widths in that case?
+- So, relatedly, add quantifier elimination support for existentials.
 - Check if it is possible to entirely drop the dependent syntax, and just use the
   non-dependent AST.
 - Add support for nat, int, bool, and Prop sorts.
