@@ -50,10 +50,6 @@ jobs:
         run: |
           lake -R build SSA.Tests.Tests
 
-      - name: Compile Decide Experiment 🧐
-        run: |
-          lake -R build Blase.Fast.Decide
-
       - name: Compile Hacker's Delight Theorems 🧮
         run: |
           sed -i -E 's/WIDTH/16/' SSA/Projects/InstCombine/HackersDelight/ch2_1DeMorgan.lean

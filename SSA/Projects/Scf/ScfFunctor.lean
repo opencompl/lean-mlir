@@ -236,9 +236,9 @@ instance [Monad d.m] : DialectDenote (Scf d) where
     | .if t t', (.cons (cond ) (.cons v .nil)),
          (.cons (f : Ctxt.Valuation ⟨[t]⟩ → d.m (HVector toType [t'])) (.cons (g : _ → _) .nil)) =>
          let body := if B.denote_eq ▸ cond then f else g
-      body (Ctxt.Valuation.nil.snoc v)
+      body (Ctxt.Valuation.nil.cons v)
     | .run _t, (.cons v .nil), (.cons (f : _ → _) .nil) =>
-        f (Ctxt.Valuation.nil.snoc v)
+        f (Ctxt.Valuation.nil.cons v)
     | .for ty, (.cons istart (.cons istep (.cons niter (.cons vstart .nil)))),
         (.cons (f : _  → _) .nil) => do
         let istart : ℤ := Z.denote_eq ▸ istart
@@ -259,7 +259,7 @@ instance [Monad d.m] : DialectDenote (Scf d) where
       let coe : ℤ = toType Z.ty := Z.denote_eq.symm
       let f' (v : d.m ℤ) : d.m ℤ := do
         let v ← v
-        let xs ← f (Ctxt.Valuation.nil.snoc (cast coe v))
+        let xs ← f (Ctxt.Valuation.nil.cons (cast coe v))
         let x := xs.getN 0
         return coe ▸ x
       let y ← (k.iterate f' (pure x))
@@ -494,7 +494,6 @@ open Arith in
 theorem correct : Com.denote (lhs v0) = Com.denote (rhs v0) := by
   unfold lhs rhs
   simp_peephole
-
   intros A B
   rw [Scf.LoopBody.counterDecorator.const_index_fn_iterate (f' := fun v => v0 + v)] <;> try rfl
   simp only [add_left_iterate, nsmul_eq_mul, Int.mul_comm]
@@ -542,19 +541,6 @@ def rhs : Com ScfArith ⟨[/- start-/ .int, /- delta -/.int, /- steps -/ .nat, /
                         ⟨/- steps -/ 4, rfl⟩
                         ⟨/- v0 -/ 5, rfl⟩  rgn) <|
   Com.rets [⟨0, rfl⟩]ₕ
-
-
-/-- rewrite a variable whose index is '> 0' to a new variable which is the
-'snoc' of a smaller variable.  this enables rewriting with
-`Ctxt.Valuation.snoc_toSnoc`. -/
-theorem Ctxt.Var.toSnoc (ty snocty : Arith.Ty) (Γ : Ctxt Arith.Ty)  (V : Ctxt.Valuation Γ)
-    {snocval : ⟦snocty⟧}
-    {v: ℕ}
-    {hvproof : Γ[v]? = some ty}
-    {var : Γ.Var ty}
-    (hvar : var = ⟨v, hvproof⟩) :
-    V var = (V ::ᵥ snocval) ⟨v+1, by simp [hvproof]⟩ := by
-  simp [Ctxt.Valuation.snoc, hvar]
 
 theorem correct : Com.denote (lhs rgn) Γv = Com.denote (rhs rgn) Γv := by
   unfold lhs rhs
@@ -623,7 +609,7 @@ theorem correct :
 end ForFusion
 
 namespace IterateIdentity
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 
 /-- running `f(x) = x + x` 0 times is the identity. -/
 def lhs : Com ScfArith ⟨[.int]⟩ .impure .int :=
@@ -636,7 +622,7 @@ def lhs : Com ScfArith ⟨[.int]⟩ .impure .int :=
 def rhs : Com ScfArith ⟨[.int]⟩ .impure .int :=
   Com.ret ⟨0, by rfl⟩
 
-attribute [local simp] Ctxt.snoc
+attribute [local simp] Ctxt.cons
 
 -- TODO: Sadly we've lost the ability to phrase this as a `PeepHoleRewrite`, since we mandate
 --       that peephole must be pure, but we also have engineered the framework such that (for now)

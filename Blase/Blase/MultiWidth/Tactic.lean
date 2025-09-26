@@ -12,15 +12,26 @@ namespace MultiWidth
 namespace Tactic
 open Lean Meta Elab Tactic
 
+/-- Whether widths should be abstracted. -/
+inductive WidthAbstractionKind
+/-- widths should always be abstracted. -/
+| always
+/-- widths should never be abstracted. -/
+| never
+deriving DecidableEq, Repr
 
 /-- Tactic options for bv_automata_circuit -/
 structure Config where
   check? : Bool := true
   -- number of k-induction iterations.
   niter : Nat := 10
+  /-- debug printing verbosity. -/
   verbose?: Bool := false
+  /-- By default, widths are always abstracted. -/
+  widthAbstraction : WidthAbstractionKind := .always
   /-- Make the final reflection proof as a 'sorry' for debugging. -/
   debugFillFinalReflectionProofWithSorry : Bool := false
+deriving DecidableEq, Repr
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -32,7 +43,7 @@ abbrev SolverM := ReaderT Context TermElabM
 def SolverM.run (m : SolverM α) (ctx : Context) : TermElabM α :=
   ReaderT.run m ctx
 
-def check?  : SolverM Bool := do
+def check? : SolverM Bool := do
   return (← read).check?
 
 /-- Log a new information message using the given message data. The position is provided by `getRef`. -/
@@ -162,8 +173,10 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
     if ← check? then
       if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
         throwError m!"expected width to be a Nat, found: {indentD e}"
-    if let .some n ← getNatValue? e then
-      return (MultiWidth.Nondep.WidthExpr.const n, state)
+    -- If we do not want width abstraction, then try to interpret width as constant.
+    if (← read).widthAbstraction ≠ .always then
+      if let .some n ← getNatValue? e then
+        return (MultiWidth.Nondep.WidthExpr.const n, state)
     let (wix, wToIx) := state.wToIx.findOrInsertVal e
     return (.var wix, { state with wToIx := wToIx })
 

@@ -7,6 +7,9 @@ import SSA.Core.Tactic
 /-
 # Examples
 This file contains a few very simple example dialects and rewrites, to showcase the framework
+
+NOTE: this file is severely out-dated, and does not work with the current
+version of the framework.
 -/
 
 open Ctxt (Var VarSet Valuation)

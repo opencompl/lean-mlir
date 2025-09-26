@@ -90,7 +90,7 @@ def addValToMapping (Γ : Ctxt d.Ty) (name : String) (ty : d.Ty) :
   let some nm := (←get).add name
     | throw <| .nameAlreadyDeclared name
   set nm
-  return ⟨DerivedCtxt.ofCtxt Γ |>.snoc ty, Ctxt.Var.last ..⟩
+  return ⟨DerivedCtxt.ofCtxt Γ |>.cons ty, Ctxt.Var.last ..⟩
 
 variable [ToString d.Ty]
 
@@ -186,7 +186,7 @@ private def mkComHelper
       let _ ← (var.res.zip ty₁).foldlM (init:=Γ) fun Γ ⟨var, ty⟩ => do
         let ⟨Γ', _⟩ ← addValToMapping Γ (SSAValToString var.1) ty
         return Γ'
-      let ⟨_eff₂, ty₂, body⟩ ← mkComHelper (Γ ++ ty₁) rest
+      let ⟨_eff₂, ty₂, body⟩ ← mkComHelper (ty₁ ++ Γ) rest
       return ⟨_, ty₂, Com.letSup expr body⟩
   | [] => throw <| .generic "Ill-formed (empty) block"
 
