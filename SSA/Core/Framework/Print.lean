@@ -159,7 +159,7 @@ variable {d} [ToPrint d] [DialectSignature d] [Repr d.Op] [Repr d.Ty] [ToString 
 
 /-- Format a list of formal arguments as `(%0 : t₀, %1 : t₁, ... %n : tₙ)` -/
 partial def formatFormalArgListTuplePrint [ToString d.Ty] (ts : List d.Ty) : String :=
-  let args := (List.range ts.length).zip ts.reverse |>.map
+  let args := (List.range ts.length).zip ts |>.map
     (fun (i, t) => s!"%{i} : {ToPrint.printTy t}")
   "(" ++ String.intercalate ", " args ++ ")"
 
