@@ -1,4 +1,4 @@
-name: Evaluation Multi-Width (NS)
+name: +++ Evaluation Multi-Width (NS) +++
 on:
   push:
     branches:
@@ -106,7 +106,6 @@ jobs:
   generate-plots:
     needs: run-batch
     name: Generate Reports
-    needs: run-batch
     runs-on:
       - nscloud-ubuntu-24.04-amd64-16x32-with-cache
       - nscloud-cache-tag-my-custom-cache
