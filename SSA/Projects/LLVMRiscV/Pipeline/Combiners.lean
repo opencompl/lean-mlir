@@ -355,6 +355,20 @@ def binop_left_to_zero_srem : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)
     llvm.return %c : i64
   }]
 
+def urem_pow2_to_mask : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant (8) : i64
+    %0 = llvm.urem %x, %c : i64
+    llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64):
+    %c = llvm.mlir.constant (7) : i64
+    %0 = llvm.and %x, %c : i64
+    llvm.return %0 : i64
+  }]
+
 def binop_left_to_zero_urem : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
   ^entry (%x: i64):
