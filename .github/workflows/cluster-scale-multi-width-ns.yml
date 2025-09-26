@@ -70,6 +70,9 @@ jobs:
       - name: Make lake available
         run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Lake Build
+        run: |
           pushd leanharness; lake build; popd
 
       - name: Cache lake.
@@ -167,6 +170,9 @@ jobs:
       - name: Make lake available
         run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Lake Build
+        run: |
           pushd leanharness; lake build; popd
 
       - name: Cache lake.
