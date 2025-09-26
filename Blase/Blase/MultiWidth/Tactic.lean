@@ -24,7 +24,7 @@ deriving DecidableEq, Repr
 structure Config where
   check? : Bool := true
   -- number of k-induction iterations.
-  niter : Nat := 10
+  niter : Nat := 30
   /-- debug printing verbosity. -/
   verbose?: Bool := false
   /-- By default, widths are always abstracted. -/
@@ -158,9 +158,8 @@ def TotalOrder.toArrayAsc {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrd
 
 structure CollectState where
     wToIx : TotalOrder Expr := ∅
-    bvToIx : TotalOrder Expr := ∅
+    bvToIx : TotalOrder (Expr × MultiWidth.Nondep.WidthExpr) := ∅
     pToIx : TotalOrder Expr := ∅
-    bvIxToWidthExpr : Std.HashMap Nat MultiWidth.Nondep.WidthExpr := ∅ -- map from BitVec to width
 
 @[simp]
 def CollectState.wcard (state : CollectState) : Nat :=
@@ -225,14 +224,17 @@ def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
   | .min v w =>
     let out := mkAppN (mkConst ``MultiWidth.WidthExpr.min)
       #[mkNatLit wcard, ← mkWidthExpr wcard v, ← mkWidthExpr wcard w]
+    debugCheck out
     return out
   | .max v w =>
       let out := mkAppN (mkConst ``MultiWidth.WidthExpr.max)
         #[mkNatLit wcard, ← mkWidthExpr wcard v, ← mkWidthExpr wcard w]
+      debugCheck out
       return out
   | .addK v k =>
     let out := mkAppN (mkConst ``MultiWidth.WidthExpr.addK)
       #[mkNatLit wcard, ← mkWidthExpr wcard v, mkNatLit k]
+    debugCheck out
     return out
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : Term.Ctx wcard 0 -/
@@ -260,12 +262,12 @@ def mkTermCtxConsExpr (reader : CollectState) (tctx : Expr) (w : MultiWidth.Nond
   debugCheck out
   return out
 
+
 /-- Make the expression for the 'tctx' from the 'CollectState'. -/
 def CollectState.mkTctxExpr (reader : CollectState) : SolverM Expr := do
   let mut ctx ← mkTermCtxEmptyExpr reader
-  for i in [0:reader.tcard] do
-    let some wexpr := reader.bvIxToWidthExpr.get? i
-      | throwError "unable to find width for BitVec at index {i}"
+  -- NOTE: this indexes backwards, as usual, we need to use De Bruijn levels vs indexes
+  for (_bv, wexpr) in reader.bvToIx.toArrayAsc.reverse do
     ctx ← mkTermCtxConsExpr reader ctx wexpr
   debugCheck ctx
   return ctx
@@ -308,9 +310,8 @@ def mkTermEnvCons (reader : CollectState)
 /-- Build an expression `tenv` for the `Term.Ctx.Env`. -/
 def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (_tctx : Expr) : SolverM Expr := do
   let mut out ← mkTermEnvEmpty reader (wenv := wenv)
-  for (bv, ix) in reader.bvToIx.toArrayAsc.zipIdx.reverse do
-    let some wexpr := reader.bvIxToWidthExpr.get? ix
-      | throwError "unable to find width for '{bv}' at index {ix}"
+  debugCheck out
+  for ((bv, wexpr)) in reader.bvToIx.toArrayAsc.reverse do
     out ← mkTermEnvCons (reader := reader) (wenv := wenv) (tenv := out) (w := wexpr) (bv := bv)
     debugCheck out
   debugCheck out
@@ -338,7 +339,7 @@ def mkPredicateEnvCons (penv : Expr) (p : Expr) : SolverM Expr := do
 
 /-- Build an expression `penv` for the `Predicate.Env`. -/
 def CollectState.mkPenvExpr (reader : CollectState) : SolverM Expr := do
-  let mut out ← mkPredicateEnvEmpty 
+  let mut out ← mkPredicateEnvEmpty
   for (p, _) in reader.pToIx.toArrayAsc.zipIdx.reverse do
     out ← mkPredicateEnvCons (penv := out) (p := p)
     debugCheck out
@@ -365,9 +366,11 @@ def mkWidthEnvCons (wenv : Expr) (w : Expr) : SolverM Expr := do
 
 def CollectState.mkWenvExpr (reader : CollectState) : SolverM Expr := do
   let mut out ← mkWidthEnvEmpty
+  debugCheck out
   -- | needs to be reversed, because variable '0' is at the end of the array.
   for w in reader.wToIx.toArrayAsc.reverse do
     out ← mkWidthEnvCons out w
+    debugCheck out
   debugCheck out
   return out
 
@@ -378,9 +381,8 @@ def collectBVAtom (state : CollectState)
   let_expr BitVec w := t
     | throwError m!"expected type 'BitVec w', found: {indentD t} (expression: {indentD e})"
   let (wexpr, state) ← collectWidthAtom state w
-  let (bvix, bvToIx) := state.bvToIx.findOrInsertVal e
-  let bvIxToWidthExpr := state.bvIxToWidthExpr.insert bvix wexpr
-  return (.var bvix wexpr, { state with bvToIx, bvIxToWidthExpr })
+  let (bvix, bvToIx) := state.bvToIx.findOrInsertVal (e, wexpr)
+  return (.var bvix wexpr, { state with bvToIx })
 
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
@@ -445,9 +447,16 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       return (t, state)
 
 /--
-info: MultiWidth.Term.var {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (v : Fin tcard) : Term tctx (tctx v)
+info: MultiWidth.Term.var {wcard tcard : Nat}
+{tctx : Term.Ctx wcard tcard} (v : Fin tcard) : @Term wcard tcard tctx (tctx v)
 -/
-#guard_msgs in #check MultiWidth.Term.var
+#guard_msgs in set_option pp.explicit true in #check MultiWidth.Term.var
+
+/--
+info: MultiWidth.Term.ofNat {wcard tcard : Nat} {tctx : Term.Ctx wcard tcard} (w : WidthExpr wcard) (n : Nat) :
+  @Term wcard tcard tctx w
+-/
+#guard_msgs in set_option pp.explicit true in #check MultiWidth.Term.ofNat
 
 /-- Convert a raw expression into a `Term`.
 This needs to be checked carefully for equivalence. -/
@@ -607,10 +616,11 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       return (t, state)
 
 /--
-info: MultiWidth.Predicate.binRel {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ} (k : BinaryRelationKind)
-  (w : WidthExpr wcard) (a b : Term tctx w) : Predicate tctx pcard
+info: MultiWidth.Predicate.binRel {wcard tcard : Nat}
+{tctx : Term.Ctx wcard tcard} {pcard : Nat} (k : BinaryRelationKind)
+  (w : WidthExpr wcard) (a b : @Term wcard tcard tctx w) : @Predicate wcard tcard tctx pcard
 -/
-#guard_msgs in #check MultiWidth.Predicate.binRel
+#guard_msgs in set_option pp.explicit true in #check MultiWidth.Predicate.binRel
 
 /--
 info: MultiWidth.Predicate.or {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ} (p1 p2 : Predicate tctx pcard) :
@@ -640,8 +650,10 @@ def Expr.mkPredicateExpr (wcard tcard pcard : Nat) (tctx : Expr)
     let aExpr ← mkTermExpr wcard tcard tctx a
     let bExpr ← mkTermExpr wcard tcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, mkNatLit pcard,
-        toExpr k, wExpr, aExpr, bExpr]
+      #[mkNatLit wcard, mkNatLit tcard,
+        tctx, mkNatLit pcard,
+        toExpr k,
+        wExpr, aExpr, bExpr]
     debugCheck out
     return out
   | .binWidthRel k v w =>
@@ -752,7 +764,7 @@ def mkDecideTy : SolverM Expr := do
   return ty
 
 def CollectState.logSuspiciousFvars (state : CollectState) : SolverM Unit := do
-  for e in state.bvToIx.toArrayAsc do
+  for (e, _w) in state.bvToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted non-variable bitvector: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
   for e in state.wToIx.toArrayAsc do
@@ -856,6 +868,9 @@ ee if it's in the BV fragment, and revert it if it is.
 For now, we use a sound overapproximation and revert anything that we can collect.
 -/
 def revertBvHyps (g : MVarId) : SolverM MVarId := do
+  let (_, g) ← g.revert (← g.getNondepPropHyps)
+  return g
+  /-
   let mut hypsToRevert : Array FVarId := #[]
   for hyp in (← g.getNondepPropHyps) do
     -- | Save and restore state, since we just want to test if we can collect.
@@ -869,21 +884,14 @@ def revertBvHyps (g : MVarId) : SolverM MVarId := do
       continue
   let (_, g) ← g.revert hypsToRevert
   return g
+  -/
 
 open Lean Meta Elab Tactic in
-def solve (g : MVarId) : SolverM (List MVarId) := do
-  let .some g ← g.withContext (Normalize.runPreprocessing g)
-    | do
-        debugLog m!"Preprocessing automatically closed goal."
-        return []
+def solve (g : MVarId) : SolverM Unit := do
   let g ← revertBvHyps g
-  -- | We run preprocessing again after reverting,
-  -- | since we might have created new opportunities for simplification.
-  -- For one, we definitely can simplify `P → Q` into `¬ P ∨ Q`.
   let .some g ← g.withContext (Normalize.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."
-        return []
   debugLog m!"goal after preprocessing: {indentD g}"
 
   g.withContext do
@@ -894,7 +902,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
-    let penv ← collect.mkPenvExpr 
+    let penv ← collect.mkPenvExpr
     let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard collect.pcard tctx p
     let pNondepExpr := Lean.ToExpr.toExpr p
     -- let pToProp ← Expr.mkPredicateToPropExpr (pExpr := pExpr)
@@ -979,10 +987,14 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
         for g in gs do
           msg := msg ++ m!"{indentD g}"
         throwError msg
-      return []
 
-def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
-  (solve g).run { toConfig := cfg }
+def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM Unit :=
+  let ctx := { toConfig := cfg}
+  SolverM.run (ctx := ctx) do
+    forallTelescope (← g.getType) fun xs gTy => do
+      let goalMVar ← mkFreshExprMVar gTy
+      solve goalMVar.mvarId!
+      g.assign (← mkLambdaFVars xs goalMVar)
 
 declare_config_elab elabBvMultiWidthConfig Config
 
@@ -993,11 +1005,7 @@ def evalBvMultiWidth : Tactic := fun
   let cfg ← elabBvMultiWidthConfig cfg
   let g ← getMainGoal
   g.withContext do
-    let gs ← solveEntrypoint g cfg
-    replaceMainGoal gs
-    match gs with
-    | [] => return ()
-    | _gs => throwError m!"expected single goal after reflecting, found multiple goals. quitting"
+    solveEntrypoint g cfg
 | _ => throwUnsupportedSyntax
 
 

@@ -1,4 +1,4 @@
-import SSA.Core.MLIRSyntax.PrettyEDSL
+import LeanMLIR.MLIRSyntax.PrettyEDSL
 import SSA.Projects.RISCV64.Base
 import SSA.Projects.RISCV64.Syntax
 import SSA.Projects.InstCombine.Tactic

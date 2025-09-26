@@ -1,4 +1,4 @@
-import SSA.Core
+import LeanMLIR
 
 import SSA.Projects.CIRCT.DC.DC
 import SSA.Projects.CIRCT.Stream.Stream

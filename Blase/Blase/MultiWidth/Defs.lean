@@ -167,9 +167,7 @@ def Term.Ctx.Env.cons
   {w : Nat} (bv : BitVec w)
   (hw : w = wexpr.toNat wenv) :
   Term.Ctx.Env (tctx.cons wexpr) wenv :=
-  fun v => v.cases (bv.cast hw) (fun w => tenv w)
-
-
+  fun v => v.cases (bv.cast hw) tenv
 
 /-- get the value of a variable from the environment. -/
 def Term.Ctx.Env.get {tcard : Nat}

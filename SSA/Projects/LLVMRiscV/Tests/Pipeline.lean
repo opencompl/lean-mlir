@@ -1,5 +1,5 @@
 import SSA.Projects.InstCombine.LLVM.Opt
-import SSA.Core.Framework.Print
+import LeanMLIR.Framework.Print
 
 /--
 info:
