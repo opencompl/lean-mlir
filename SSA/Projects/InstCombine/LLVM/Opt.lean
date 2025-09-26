@@ -1,4 +1,3 @@
-import SSA.Projects.InstCombine.LLVM.Parser
 import Cli
 import SSA.Projects.LLVMRiscV.ParseAndTransform
 import SSA.Projects.RISCV64.ParseAndTransform
