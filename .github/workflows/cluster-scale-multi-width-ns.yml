@@ -71,10 +71,6 @@ jobs:
         run: |
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
-      - name: Lake Build
-        run: |
-          pushd leanharness; lake build; popd
-
       - name: Cache lake.
         id: cache-lake
         uses: actions/cache@v4
@@ -84,6 +80,10 @@ jobs:
           key: ${{ runner.os }}-lake-${{ hashFiles('leanharness/lake-manifest.json') }}
           restore-keys: |
             ${{ runner.os }}-lake-${{ hashFiles('leanharness/lake-manifest.json') }}
+
+      - name: Lake Build
+        run: |
+          pushd leanharness; lake build; popd
 
       - name: Unzip goals
         run: |
@@ -167,14 +167,6 @@ jobs:
           set -o pipefail
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
 
-      - name: Make lake available
-        run: |
-          echo "$HOME/.elan/bin" >> $GITHUB_PATH
-
-      - name: Lake Build
-        run: |
-          pushd leanharness; lake build; popd
-
       - name: Cache lake.
         id: cache-lake
         uses: actions/cache@v4
@@ -184,6 +176,15 @@ jobs:
           key: ${{ runner.os }}-lake-${{ hashFiles('leanharness/lake-manifest.json') }}
           restore-keys: |
             ${{ runner.os }}-lake-${{ hashFiles('leanharness/lake-manifest.json') }}
+            
+      - name: Make lake available
+        run: |
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Lake Build
+        run: |
+          pushd leanharness; lake build; popd
+
 
       - name: Unzip goals
         run: |
@@ -193,5 +194,7 @@ jobs:
         run: |
           cp config.tiny.yaml config.yaml
           sed -i 's@upload: False@upload: True/g' config.yaml
-          uv tool run snakemake all --cores all --config nbatch=${{matrix.nbatch}} ibatch=${{matrix.ibatch}}
-
+          # only allow rules to collate 'jsonl' and to plot.
+          uv tool run snakemake all --cores all \
+            --config nbatch=${{matrix.nbatch}} ibatch=${{matrix.ibatch}} \
+            --allowed-rules plot epoch_jsonl --cores all
