@@ -442,7 +442,7 @@ def productsList : List (List α) -> List (List α)
     out := out.append (xss'.map (fun xs => x :: xs))
   return out
 
-def _root_.List.product (l₁ : List α) (l₂ : List β) : List (α × β) := l₁.flatMap fun a => l₂.map (Prod.mk a)
+def List.product (l₁ : List α) (l₂ : List β) : List (α × β) := l₁.flatMap fun a => l₂.map (Prod.mk a)
 
 abbrev ExpressionSynthesisResult := Std.HashMap Nat (List BVExprWrapper)
 set_option warn.sorry false in

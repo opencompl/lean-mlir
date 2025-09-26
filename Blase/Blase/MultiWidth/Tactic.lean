@@ -24,7 +24,7 @@ deriving DecidableEq, Repr
 structure Config where
   check? : Bool := true
   -- number of k-induction iterations.
-  niter : Nat := 10
+  niter : Nat := 30
   /-- debug printing verbosity. -/
   verbose?: Bool := false
   /-- By default, widths are always abstracted. -/
@@ -158,8 +158,9 @@ def TotalOrder.toArrayAsc {α : Type} [Hashable α] [BEq α] (toOrder : TotalOrd
 
 structure CollectState where
     wToIx : TotalOrder Expr := ∅
-    bvToIx : TotalOrder Expr := ∅
-    bvIxToWidthExpr : Std.HashMap Nat MultiWidth.Nondep.WidthExpr := ∅ -- map from BitVec to width
+    bvToIx : TotalOrder (Expr × MultiWidth.Nondep.WidthExpr) := ∅
+    boolToIx : TotalOrder Expr := ∅
+    pToIx : TotalOrder Expr := ∅
 
 @[simp]
 def CollectState.wcard (state : CollectState) : Nat :=
@@ -167,6 +168,13 @@ def CollectState.wcard (state : CollectState) : Nat :=
 
 def CollectState.tcard (state : CollectState) : Nat :=
   state.bvToIx.size
+
+def CollectState.bcard (state : CollectState) : Nat :=
+  state.boolToIx.size
+
+def CollectState.pcard (state : CollectState) : Nat :=
+  state.pToIx.size
+
 
 def collectWidthAtom (state : CollectState) (e : Expr) :
     SolverM (MultiWidth.Nondep.WidthExpr × CollectState) := do
@@ -178,6 +186,7 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
       if let .some n ← getNatValue? e then
         return (MultiWidth.Nondep.WidthExpr.const n, state)
     let (wix, wToIx) := state.wToIx.findOrInsertVal e
+    -- TODO: implement 'w + K'.
     return (.var wix, { state with wToIx := wToIx })
 
 /-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
@@ -220,14 +229,17 @@ def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
   | .min v w =>
     let out := mkAppN (mkConst ``MultiWidth.WidthExpr.min)
       #[mkNatLit wcard, ← mkWidthExpr wcard v, ← mkWidthExpr wcard w]
+    debugCheck out
     return out
   | .max v w =>
       let out := mkAppN (mkConst ``MultiWidth.WidthExpr.max)
         #[mkNatLit wcard, ← mkWidthExpr wcard v, ← mkWidthExpr wcard w]
+      debugCheck out
       return out
   | .addK v k =>
     let out := mkAppN (mkConst ``MultiWidth.WidthExpr.addK)
       #[mkNatLit wcard, ← mkWidthExpr wcard v, mkNatLit k]
+    debugCheck out
     return out
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : Term.Ctx wcard 0 -/
@@ -255,12 +267,12 @@ def mkTermCtxConsExpr (reader : CollectState) (tctx : Expr) (w : MultiWidth.Nond
   debugCheck out
   return out
 
+
 /-- Make the expression for the 'tctx' from the 'CollectState'. -/
 def CollectState.mkTctxExpr (reader : CollectState) : SolverM Expr := do
   let mut ctx ← mkTermCtxEmptyExpr reader
-  for i in [0:reader.tcard] do
-    let some wexpr := reader.bvIxToWidthExpr.get? i
-      | throwError "unable to find width for BitVec at index {i}"
+  -- NOTE: this indexes backwards, as usual, we need to use De Bruijn levels vs indexes
+  for (_bv, wexpr) in reader.bvToIx.toArrayAsc.reverse do
     ctx ← mkTermCtxConsExpr reader ctx wexpr
   debugCheck ctx
   return ctx
@@ -303,13 +315,51 @@ def mkTermEnvCons (reader : CollectState)
 /-- Build an expression `tenv` for the `Term.Ctx.Env`. -/
 def CollectState.mkTenvExpr (reader : CollectState) (wenv : Expr) (_tctx : Expr) : SolverM Expr := do
   let mut out ← mkTermEnvEmpty reader (wenv := wenv)
-  for (bv, ix) in reader.bvToIx.toArrayAsc.zipIdx.reverse do
-    let some wexpr := reader.bvIxToWidthExpr.get? ix
-      | throwError "unable to find width for '{bv}' at index {ix}"
+  debugCheck out
+  for ((bv, wexpr)) in reader.bvToIx.toArrayAsc.reverse do
     out ← mkTermEnvCons (reader := reader) (wenv := wenv) (tenv := out) (w := wexpr) (bv := bv)
     debugCheck out
   debugCheck out
   return out
+
+
+/-- Build an expression `penv` for the `Predicate.Env`. -/
+def CollectState.mkEnvExpr
+    (empty : SolverM Expr)
+    (cons : (env : Expr) → (x : Expr) → SolverM Expr)
+    (xs : Array Expr) : SolverM Expr := do
+  let mut out ← empty
+  for x in xs do
+    out ← cons out x
+    debugCheck out
+  debugCheck out
+  return out
+
+
+/-- info: MultiWidth.Predicate.Env.empty : Predicate.Env 0 -/
+#guard_msgs in #check MultiWidth.Predicate.Env.empty
+
+def mkPredicateEnvEmpty  : SolverM Expr := do
+  let out := mkAppN (mkConst ``MultiWidth.Predicate.Env.empty) #[]
+  debugCheck out
+  return out
+
+/--
+info: MultiWidth.Predicate.Env.cons {pcard : ℕ} (env : Predicate.Env pcard) (p : Prop) : Predicate.Env (pcard + 1)
+-/
+#guard_msgs in #check MultiWidth.Predicate.Env.cons
+
+def mkPredicateEnvCons (penv : Expr) (p : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.Predicate.Env.cons)
+    #[penv, p]
+  debugCheck out
+  return out
+
+/-- Build an expression `penv` for the `Predicate.Env`. -/
+def CollectState.mkPenvExpr (reader : CollectState) : SolverM Expr := do
+  CollectState.mkEnvExpr
+    (mkPredicateEnvEmpty)
+    (mkPredicateEnvCons) (reader.pToIx.toArrayAsc.reverse)
 
 /-- info: MultiWidth.WidthExpr.Env.empty : WidthExpr.Env 0 -/
 #guard_msgs in #check MultiWidth.WidthExpr.Env.empty
@@ -330,12 +380,64 @@ def mkWidthEnvCons (wenv : Expr) (w : Expr) : SolverM Expr := do
   return out
 
 def CollectState.mkWenvExpr (reader : CollectState) : SolverM Expr := do
-  let mut out ← mkWidthEnvEmpty
-  -- | needs to be reversed, because variable '0' is at the end of the array.
-  for w in reader.wToIx.toArrayAsc.reverse do
-    out ← mkWidthEnvCons out w
+  CollectState.mkEnvExpr
+    (mkWidthEnvEmpty)
+    (mkWidthEnvCons) (reader.wToIx.ix2val.reverse)
+
+
+/-- info: MultiWidth.Term.BoolEnv.empty : Term.BoolEnv 0 -/
+#guard_msgs in #check MultiWidth.Term.BoolEnv.empty
+
+def mkBoolEnvEmpty : SolverM Expr := do
+  let out := mkAppN (mkConst ``MultiWidth.Term.BoolEnv.empty) #[]
   debugCheck out
   return out
+
+/--
+info: MultiWidth.Term.BoolEnv.cons {bcard : ℕ} (env : Term.BoolEnv bcard) (b : Bool) : Term.BoolEnv (bcard + 1)
+-/
+#guard_msgs in #check MultiWidth.Term.BoolEnv.cons
+
+def mkBoolEnvCons (benv : Expr) (b : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.Term.BoolEnv.cons) #[benv, b]
+  debugCheck out
+  return out
+
+def CollectState.mkBenvExpr (reader : CollectState) : SolverM Expr := do
+  CollectState.mkEnvExpr
+    (mkBoolEnvEmpty)
+    (mkBoolEnvCons) (reader.boolToIx.toArrayAsc.reverse)
+
+/-- Visit a raw BV expr, and collect information about it. -/
+def collectBoolAtom (state : CollectState)
+  (e : Expr) : SolverM (MultiWidth.Nondep.Term × CollectState) := do
+  let t ← inferType e
+  let_expr Bool := t
+    | throwError m!"expected type Bool, found: {indentD t} (expression: {indentD e})"
+  let (ix, boolToIx) := state.boolToIx.findOrInsertVal (e)
+  return (.boolVar ix, { state with boolToIx })
+
+def getBoolValue? (e : Expr) : Option Bool :=
+  match_expr e with
+  | Bool.true => some true
+  | Bool.false => some false
+  | _ => none
+
+def collectBoolTerm (state : CollectState)
+  (e : Expr) : SolverM (MultiWidth.Nondep.Term × CollectState) := do
+  let t ← inferType e
+  let_expr Bool := t
+    | throwError m!"expected type 'Bool', found: {indentD t} (expression: {indentD e})"
+  -- | make a boolean atom.
+  if let some b := getBoolValue? e then
+    return (.boolConst b, state)
+  else
+    mkAtom
+  where
+    mkAtom := do
+    let (t, state) ← collectBoolAtom state e
+    return (t, state)
+
 
 /-- Visit a raw BV expr, and collect information about it. -/
 def collectBVAtom (state : CollectState)
@@ -344,9 +446,8 @@ def collectBVAtom (state : CollectState)
   let_expr BitVec w := t
     | throwError m!"expected type 'BitVec w', found: {indentD t} (expression: {indentD e})"
   let (wexpr, state) ← collectWidthAtom state w
-  let (bvix, bvToIx) := state.bvToIx.findOrInsertVal e
-  let bvIxToWidthExpr := state.bvIxToWidthExpr.insert bvix wexpr
-  return (.var bvix wexpr, { state with bvToIx, bvIxToWidthExpr })
+  let (bvix, bvToIx) := state.bvToIx.findOrInsertVal (e, wexpr)
+  return (.var bvix wexpr, { state with bvToIx })
 
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
@@ -411,76 +512,98 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       return (t, state)
 
 /--
-info: MultiWidth.Term.var {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (v : Fin tcard) : Term tctx (tctx v)
+info: MultiWidth.Term.var {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} (v : Fin tcard) :
+  @Term wcard tcard bcard tctx (@TermKind.bv wcard (tctx v))
 -/
-#guard_msgs in #check MultiWidth.Term.var
+#guard_msgs in set_option pp.explicit true in #check MultiWidth.Term.var
+
+/--
+info: MultiWidth.Term.ofNat {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} (w : WidthExpr wcard) (n : Nat) :
+  @Term wcard tcard bcard tctx (@TermKind.bv wcard w)
+-/
+#guard_msgs in set_option pp.explicit true in #check MultiWidth.Term.ofNat
 
 /-- Convert a raw expression into a `Term`.
 This needs to be checked carefully for equivalence. -/
-def mkTermExpr (wcard tcard : Nat) (tctx : Expr)
+def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
     (t : MultiWidth.Nondep.Term) : SolverM Expr := do
   match t with
   | .ofNat w n =>
     let wExpr ← mkWidthExpr wcard w
     let out := mkAppN (mkConst ``MultiWidth.Term.ofNat [])
-      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, mkNatLit n]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, wExpr, mkNatLit n]
     debugCheck out
     return out
   | .var v _wexpr =>
     let out := mkAppN (mkConst ``MultiWidth.Term.var [])
-      #[mkNatLit wcard, mkNatLit tcard, tctx, ← mkFinLit tcard v]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, ← mkFinLit tcard v]
     debugCheck out
     return out
   | .add _w a b =>
      let out ← mkAppM ``MultiWidth.Term.add
-        #[← mkTermExpr wcard tcard tctx a,
-        ← mkTermExpr wcard tcard tctx b]
+        #[← mkTermExpr wcard tcard bcard tctx a,
+        ← mkTermExpr wcard tcard bcard tctx b]
      debugCheck out
      return out
   | .zext a v =>
     let vExpr ← mkWidthExpr wcard v
     let out ← mkAppM ``MultiWidth.Term.zext
-      #[← mkTermExpr wcard tcard tctx a, vExpr]
+      #[← mkTermExpr wcard tcard bcard tctx a, vExpr]
     debugCheck out
     return out
   | .sext a v =>
     let vExpr ← mkWidthExpr wcard v
     let out ← mkAppM ``MultiWidth.Term.sext
-      #[← mkTermExpr wcard tcard tctx a, vExpr]
+      #[← mkTermExpr wcard tcard bcard tctx a, vExpr]
     debugCheck out
     return out
   | .band w a b =>
       let wExpr ← mkWidthExpr wcard w
-      let aExpr ← mkTermExpr wcard tcard tctx a
-      let bExpr ← mkTermExpr wcard tcard tctx b
+      let aExpr ← mkTermExpr wcard tcard bcard tctx a
+      let bExpr ← mkTermExpr wcard tcard bcard tctx b
       let out := mkAppN (mkConst ``MultiWidth.Term.band)
-        #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+        #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+          wExpr, aExpr, bExpr]
       debugCheck out
       return out
   | .bor w a b =>
     let wExpr ← mkWidthExpr wcard w
-    let aExpr ← mkTermExpr wcard tcard tctx a
-    let bExpr ← mkTermExpr wcard tcard tctx b
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
+    let bExpr ← mkTermExpr wcard tcard bcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Term.bor)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        wExpr, aExpr, bExpr]
     debugCheck out
     return out
   | .bxor w a b =>
     let wExpr ← mkWidthExpr wcard w
-    let aExpr ← mkTermExpr wcard tcard tctx a
-    let bExpr ← mkTermExpr wcard tcard tctx b
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
+    let bExpr ← mkTermExpr wcard tcard bcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Term.bxor)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr, bExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        wExpr, aExpr, bExpr]
     debugCheck out
     return out
   | .bnot w a =>
     let wExpr ← mkWidthExpr wcard w
-    let aExpr ← mkTermExpr wcard tcard tctx a
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
     let out := mkAppN (mkConst ``MultiWidth.Term.bnot)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, wExpr, aExpr]
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        wExpr, aExpr]
     debugCheck out
     return out
-
+  | .boolVar v =>
+    let out := mkAppN (mkConst ``MultiWidth.Term.boolVar [])
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        ← mkFinLit bcard v]
+    debugCheck out
+    return out
+  | .boolConst b =>
+    let out := mkAppN (mkConst ``MultiWidth.Term.boolConst [])
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        mkBoolLit b]
+    debugCheck out
+    return out
 
 set_option pp.explicit true in
 /--
@@ -489,44 +612,71 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 #guard_msgs in
 #check ∀ {w : Nat} (a b : BitVec w), a = b ∨ (a ≠ b) ∧ a = b
 
+
+/-- Visit a raw BV expr, and collect information about it. -/
+def collectPredicateAtom (state : CollectState)
+  (e : Expr) : SolverM (MultiWidth.Nondep.Predicate × CollectState) := do
+  let t ← inferType e
+  if !t.isProp then
+    throwError m!"expected type 'Prop', found: {t} (expression: {indentD e})"
+  let (pix, pToIx) := state.pToIx.findOrInsertVal e
+  return (.var pix, { state with pToIx })
+
+/-
+Certain predicates like `ult, slt` etc return booleans, and are thus
+encoded as `a.slt b = true` instead of a prop level `a.slt b`.
+To fix this, we have a special case in the reflection that looks for this pattern,
+and then reflects it into the appropriate prop.
+-/
+def collectBVBooleanEqPredicateAux (state : CollectState) (a b : Expr) :
+  Option (SolverM (MultiWidth.Nondep.Predicate × CollectState)) :=
+  let_expr true := b | none
+  let out? := match_expr a with
+    | BitVec.slt w x y => some (w, MultiWidth.BinaryRelationKind.slt, x, y)
+    | BitVec.sle w x y => some (w, MultiWidth.BinaryRelationKind.sle, x, y)
+    | BitVec.ult w x y => some (w, MultiWidth.BinaryRelationKind.ult, x, y)
+    | BitVec.ule w x y => some (w, MultiWidth.BinaryRelationKind.ule, x, y)
+    | _ => none
+  -- NOTE: Lean bug prevents us from writing this with do-notation,
+  -- so we suffer as haskellers once did.
+  out? >>= fun ((w, kind, x, y)) => some do
+    let (w, state) ← collectWidthAtom state w
+    let (tx, state) ← collectTerm state x
+    let (ty, state) ← collectTerm state y
+    pure (.binRel kind w tx ty, state)
+
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
     SolverM (MultiWidth.Nondep.Predicate × CollectState) := do
   match_expr e with
+  | LE.le α _inst v w =>
+    match_expr α with
+    | Nat =>
+      let (v, state) ← collectWidthAtom state v
+      let (w, state) ← collectWidthAtom state w
+      return (.binWidthRel .le v w, state)
+    | _ =>
+      throwError m!"expected (· ≤ ·) for natural numbers, found:  {indentD e}"
   | Eq α a b =>
     match_expr α with
+    | Nat =>
+      let (a, state) ← collectWidthAtom state a
+      let (b, state) ← collectWidthAtom state b
+      return (.binWidthRel .eq a b, state)
     | BitVec w =>
       let (w, state) ← collectWidthAtom state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .eq w ta tb, state)
     | Bool =>
-      let_expr true := b
-        | throwError m!"Boolean conditional not of the form '<bool> = <true>'. {indentD e}."
-      match_expr a with
-      | BitVec.slt w a b =>
-        let (w, state) ← collectWidthAtom state w
-        let (ta, state) ← collectTerm state a
-        let (tb, state) ← collectTerm state b
-        return (.binRel .slt w ta tb, state)
-      | BitVec.sle w a b =>
-        let (w, state) ← collectWidthAtom state w
-        let (ta, state) ← collectTerm state a
-        let (tb, state) ← collectTerm state b
-        return (.binRel .sle w ta tb, state)
-      | BitVec.ult w a b =>
-        let (w, state) ← collectWidthAtom state w
-        let (ta, state) ← collectTerm state a
-        let (tb, state) ← collectTerm state b
-        return (.binRel .ult w ta tb, state)
-      | BitVec.ule w a b =>
-        let (w, state) ← collectWidthAtom state w
-        let (ta, state) ← collectTerm state a
-        let (tb, state) ← collectTerm state b
-        return (.binRel .ule w ta tb, state)
-      | _ =>
-        throwError m!"unknown boolean equality predicate: {indentD e}"
-    | _ => throwError m!"expected bitvector equality, found equality of type '{α}': {indentD e}"
+      -- | TODO: Refactor to use our spanky new bool sort!
+      if let .some mkBoolPredicate := collectBVBooleanEqPredicateAux state a b then
+        mkBoolPredicate
+      else
+        let (a, state) ← collectBoolTerm state a
+        let (b, state) ← collectBoolTerm state b
+        return (.boolBinRel .eq a b, state)
+    | _ => mkAtom
   | Ne α a b =>
     match_expr α with
     | BitVec w =>
@@ -534,7 +684,7 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .ne w ta tb, state)
-    | _ => throwError m!"expected bitvector disequality, found disequality of type '{α}': {indentD e}"
+    | _ => collectPredicateAtom state e
   | Or p q =>
     let (ta, state) ← collectBVPredicateAux state p
     let (tb, state) ← collectBVPredicateAux state q
@@ -544,76 +694,100 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
     let (tb, state) ← collectBVPredicateAux state q
     return (.and ta tb, state)
   | _ =>
-     throwError m!"expected predicate over bitvectors (no quantification), found:  {indentD e}"
+    mkAtom
+  where
+    mkAtom := do
+      let (t, state) ← collectPredicateAtom state e
+      return (t, state)
 
 /--
-info: MultiWidth.Predicate.binRel {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (k : BinaryRelationKind)
-  (w : WidthExpr wcard) (a b : Term ctx w) : Predicate ctx
+info: MultiWidth.Predicate.binRel {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
+  (k : BinaryRelationKind) (w : WidthExpr wcard) (a b : @Term wcard tcard bcard tctx (@TermKind.bv wcard w)) :
+  @Predicate wcard tcard bcard tctx pcard
 -/
-#guard_msgs in #check MultiWidth.Predicate.binRel
+#guard_msgs in set_option pp.explicit true in #check MultiWidth.Predicate.binRel
 
 /--
-info: MultiWidth.Predicate.or {wcard tcard : ℕ} {ctx : Term.Ctx wcard tcard} (p1 p2 : Predicate ctx) : Predicate ctx
+info: MultiWidth.Predicate.or {wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ}
+  (p1 p2 : Predicate bcard tctx pcard) : Predicate bcard tctx pcard
 -/
 #guard_msgs in #check MultiWidth.Predicate.or
 
-def Expr.mkPredicateExpr (wcard tcard : Nat) (tctx : Expr)
-    (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
-  match p with
-  | .binRel .eq w a b =>
-    let wExpr ← mkWidthExpr wcard w
-    let aExpr ← mkTermExpr wcard tcard tctx a
-    let bExpr ← mkTermExpr wcard tcard tctx b
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
-      #[mkNatLit wcard, mkNatLit tcard, tctx,
-        mkConst ``MultiWidth.BinaryRelationKind.eq,
-        wExpr,
-        aExpr, bExpr]
-    debugCheck out
-    return out
-  | .binRel .ne w a b =>
-    let wExpr ← mkWidthExpr wcard w
-    let aExpr ← mkTermExpr wcard tcard tctx a
-    let bExpr ← mkTermExpr wcard tcard tctx b
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
-      #[mkNatLit wcard, mkNatLit tcard, tctx,
-        mkConst ``MultiWidth.BinaryRelationKind.ne,
-        wExpr,
-        aExpr, bExpr]
-    debugCheck out
-    return out
-  | .or p q =>
-    let pExpr ← mkPredicateExpr wcard tcard tctx p
-    let qExpr ← mkPredicateExpr wcard tcard tctx q
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.or)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, pExpr, qExpr]
-    debugCheck out
-    return out
-  | .and p q =>
-    let pExpr ← mkPredicateExpr wcard tcard tctx p
-    let qExpr ← mkPredicateExpr wcard tcard tctx q
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.and)
-      #[mkNatLit wcard, mkNatLit tcard, tctx, pExpr, qExpr]
-    debugCheck out
-    return out
-  | _ => throwError m!"unhandled mkPredicateExpr {repr p}"
+
+/--
+info: MultiWidth.Predicate.var {wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ} (v : Fin pcard) :
+  Predicate bcard tctx pcard
+-/
+#guard_msgs in #check MultiWidth.Predicate.var
 
 
 /--
-info: MultiWidth.Predicate.toProp {wcard tcard : ℕ} {wenv : WidthExpr.Env wcard} {tctx : Term.Ctx wcard tcard}
-  (tenv : tctx.Env wenv) (p : Predicate tctx) : Prop
+info: MultiWidth.Predicate.binWidthRel {wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ}
+  (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) : Predicate bcard tctx pcard
+-/
+#guard_msgs in #check MultiWidth.Predicate.binWidthRel
+
+def Expr.mkPredicateExpr (wcard tcard bcard pcard : Nat) (tctx : Expr)
+    (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
+  match p with
+  | .binRel k w a b =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
+    let bExpr ← mkTermExpr wcard tcard bcard tctx b
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard,
+        tctx, mkNatLit pcard,
+        toExpr k,
+        wExpr, aExpr, bExpr]
+    debugCheck out
+    return out
+  | .binWidthRel k v w =>
+    let vExpr ← mkWidthExpr wcard v
+    let wExpr ← mkWidthExpr wcard w
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.binWidthRel)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard,
+        tctx, mkNatLit pcard,
+        Lean.toExpr k, vExpr, wExpr]
+    debugCheck out
+    return out
+  | .or p q =>
+    let pExpr ← mkPredicateExpr wcard tcard bcard pcard tctx p
+    let qExpr ← mkPredicateExpr wcard tcard bcard pcard tctx q
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.or)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, pExpr, qExpr]
+    debugCheck out
+    return out
+  | .and p q =>
+    let pExpr ← mkPredicateExpr wcard tcard bcard pcard tctx p
+    let qExpr ← mkPredicateExpr wcard tcard bcard pcard tctx q
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.and)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, pExpr, qExpr]
+    debugCheck out
+    return out
+  | .boolBinRel k a b =>
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
+    let bExpr ← mkTermExpr wcard tcard bcard tctx b
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.boolBinRel)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard,
+        Lean.toExpr k, aExpr, bExpr]
+    debugCheck out
+    return out
+  | .var v =>
+    let out := mkAppN (mkConst ``MultiWidth.Predicate.var)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, ← mkFinLit pcard v]
+    debugCheck out
+    return out
+
+/--
+info: MultiWidth.Predicate.toProp {wcard tcard bcard pcard : ℕ} {wenv : WidthExpr.Env wcard} {tctx : Term.Ctx wcard tcard}
+  (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv) (penv : Predicate.Env pcard) (p : Predicate bcard tctx pcard) :
+  Prop
 -/
 #guard_msgs in #check MultiWidth.Predicate.toProp
 
 def Expr.mkPredicateToPropExpr (pExpr : Expr)
-  (_wcard _tcard : Nat) (_wenv : Expr) (_tctx : Expr) (tenv : Expr) : SolverM Expr := do
-  let out ← mkAppM (``MultiWidth.Predicate.toProp) #[tenv, pExpr]
-    -- #[(mkNatLit wcard),
-    --   (mkNatLit tcard),
-    --   wenv, -- wenv,
-    --   tctx,
-    --   tenv,
-    --   pExpr]
+  (_wcard _tcard _bcard _pcard : Nat) (_wenv : Expr) (_tctx : Expr) (tenv : Expr) (penv : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.Predicate.toProp) #[tenv, penv, pExpr]
   debugCheck out
   return out
 
@@ -685,12 +859,18 @@ def mkDecideTy : SolverM Expr := do
   return ty
 
 def CollectState.logSuspiciousFvars (state : CollectState) : SolverM Unit := do
-  for e in state.bvToIx.toArrayAsc do
+  for (e, _w) in state.bvToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted non-variable bitvector: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
   for e in state.wToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted non-variable width: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+  for e in state.pToIx.toArrayAsc do
+    if !e.isFVar then
+      logWarning m!"abstracted prop: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+  for e in state.boolToIx.toArrayAsc do
+    if !e.isFVar then
+      logWarning m!"abstracted boolean: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
 
 /--
 info: Circuit.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool
@@ -743,21 +923,22 @@ def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : SolverM Expr 
   return out
 
 /--
-info: MultiWidth.mkPredicateFSMDep {wcard tcard : ℕ} {tctx : Term.Ctx wcard tcard} (p : Predicate tctx) :
-  PredicateFSM wcard tcard (Nondep.Predicate.ofDep p)
+info: MultiWidth.mkPredicateFSMDep {wcard tcard bcard pcard : ℕ} {tctx : Term.Ctx wcard tcard}
+  (p : Predicate bcard tctx pcard) : PredicateFSM wcard tcard bcard pcard (Nondep.Predicate.ofDep p)
 -/
 #guard_msgs in #check MultiWidth.mkPredicateFSMDep
-def Expr.mkPredicateFSMDep (_wcard _tcard : Nat) (_tctx : Expr) (p : Expr) : SolverM Expr := do
+def Expr.mkPredicateFSMDep (_wcard _tcard _bcard _pcard : Nat) (_tctx : Expr) (p : Expr) : SolverM Expr := do
   let out ← mkAppM (``MultiWidth.mkPredicateFSMDep) #[p]
   debugCheck out
   return out
 
 /--
-info: MultiWidth.mkPredicateFSMNondep (wcard tcard : ℕ) (p : Nondep.Predicate) : PredicateFSM wcard tcard p
+info: MultiWidth.mkPredicateFSMNondep (wcard tcard bcard pcard : ℕ) (p : Nondep.Predicate) :
+  PredicateFSM wcard tcard bcard pcard p
 -/
 #guard_msgs in #check MultiWidth.mkPredicateFSMNondep
-def Expr.mkPredicateFSMNondep (wcard tcard : Nat) (pNondep : Expr) : SolverM Expr := do
-  let out ← mkAppM (``MultiWidth.mkPredicateFSMNondep) #[toExpr wcard, toExpr tcard, pNondep]
+def Expr.mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (pNondep : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.mkPredicateFSMNondep) #[toExpr wcard, toExpr tcard, toExpr bcard, toExpr pcard, pNondep]
   debugCheck out
   return out
 
@@ -766,35 +947,48 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
   debugCheck out
   return out
 
-/-- info: `MultiWidth.Predicate.toProp_of_KInductionCircuits' : Name -/
-#guard_msgs in #check ``MultiWidth.Predicate.toProp_of_KInductionCircuits'
+/--
+info: MultiWidth.Predicate.toProp_of_KInductionCircuits' {wcard tcard bcard pcard : ℕ} (P : Prop)
+  (tctx : Term.Ctx wcard tcard) (p : Predicate bcard tctx pcard) (pNondep : Nondep.Predicate)
+  (_hpNondep : pNondep = Nondep.Predicate.ofDep p) (fsm : PredicateFSM wcard tcard bcard pcard pNondep)
+  (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep) (n : ℕ)
+  (circs : ReflectVerif.BvDecide.KInductionCircuits fsm.toFsm n) (hCircs : circs.IsLawful)
+  (sCert : BVDecide.Frontend.LratCert) (hs : circs.mkSafetyCircuit.verifyCircuit sCert = true)
+  (indCert : BVDecide.Frontend.LratCert) (hind : circs.mkIndHypCycleBreaking.verifyCircuit indCert = true)
+  (wenv : WidthExpr.Env wcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard)
+  (hp : Predicate.toProp benv tenv penv p = P) : P
+-/
+#guard_msgs in #check MultiWidth.Predicate.toProp_of_KInductionCircuits'
+
+/--
+Revert all prop-valued hyps.
+-/
+def revertPropHyps (g : MVarId) : SolverM MVarId := do
+  let (_, g) ← g.revert (← g.getNondepPropHyps)
+  return g
 
 open Lean Meta Elab Tactic in
-def solve (g : MVarId) : SolverM (List MVarId) := do
+def solve (g : MVarId) : SolverM Unit := do
+  let g ← revertPropHyps g
   let .some g ← g.withContext (Normalize.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."
-        return []
-  debugLog m!"goal after preprocessing: {indentD g}"
+  g.withContext do
+    debugLog m!"goal after preprocessing: {indentD g}"
 
   g.withContext do
     let collect : CollectState := {}
     let pRawExpr ← g.getType
     let (p, collect) ← collectBVPredicateAux collect pRawExpr
-    debugLog m!"collected predicate: {repr p}"
+    debugLog m!"collected predicate: '{repr p}'"
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
-    let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard tctx p
+    let benv ← collect.mkBenvExpr
+    let penv ← collect.mkPenvExpr
+    let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard collect.bcard collect.pcard tctx p
     let pNondepExpr := Lean.ToExpr.toExpr p
-    -- let pToProp ← Expr.mkPredicateToPropExpr (pExpr := pExpr)
-    --   (_wcard := collect.wcard)
-    --   (_tcard := collect.tcard)
-    --   (_tctx := tctx)
-    --   (_wenv := wenv)
-    --   (tenv := tenv)
-    -- let g ← g.replaceTargetDefEq pToProp
-    let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard p
+    let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard p
     debugLog m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
     debugLog m!"fsm circuit size: {fsm.toFsm.circuitSize}"
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter)
@@ -811,7 +1005,7 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
       debugLog m!"proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
         -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
-        let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard pNondepExpr
+        let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
         -- let fsmExpr ← Expr.mkPredicateFSMtoFSM predFsmExpr
         let fsmExpr ← Expr.mkPredicateFSMtoFSM predNondepFsmExpr
         let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
@@ -852,6 +1046,8 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
             indCertProof,
             wenv,
             tenv,
+            benv,
+            penv,
             pEqVal]
         debugCheck prf
         let prf ←
@@ -868,10 +1064,14 @@ def solve (g : MVarId) : SolverM (List MVarId) := do
         for g in gs do
           msg := msg ++ m!"{indentD g}"
         throwError msg
-      return []
 
-def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM (List MVarId) := do
-  (solve g).run { toConfig := cfg }
+def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM Unit :=
+  let ctx := { toConfig := cfg}
+  SolverM.run (ctx := ctx) do
+    forallTelescope (← g.getType) fun xs gTy => do
+      let goalMVar ← mkFreshExprMVar gTy
+      solve goalMVar.mvarId!
+      g.assign (← mkLambdaFVars xs goalMVar)
 
 declare_config_elab elabBvMultiWidthConfig Config
 
@@ -882,11 +1082,7 @@ def evalBvMultiWidth : Tactic := fun
   let cfg ← elabBvMultiWidthConfig cfg
   let g ← getMainGoal
   g.withContext do
-    let gs ← solveEntrypoint g cfg
-    replaceMainGoal gs
-    match gs with
-    | [] => return ()
-    | _gs => throwError m!"expected single goal after reflecting, found multiple goals. quitting"
+    solveEntrypoint g cfg
 | _ => throwUnsupportedSyntax
 
 

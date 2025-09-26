@@ -1,6 +1,6 @@
 import Mathlib.Data.Stream.Defs
 import Batteries.Data.List.Basic
-import SSA.Core.HVector
+import LeanMLIR.HVector
 
 /-!
 

@@ -24,7 +24,7 @@ import Mathlib.Algebra.Polynomial.RingDivision
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.List.ToFinsupp
 import Mathlib.Data.List.Basic
-import SSA.Core.Framework
+import LeanMLIR.Framework
 
 open Polynomial -- for R[X] notation
 

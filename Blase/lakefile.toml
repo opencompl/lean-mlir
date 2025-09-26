@@ -1,6 +1,6 @@
 name = "Blase"
 version = "0.1.0"
-testDriver = "Test"
+testDriver = "BlaseTest"
 defaultTargets = ["Blase"]
 
 [[lean_lib]]
@@ -12,4 +12,4 @@ git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
 rev = "nightly-testing-2025-08-11"
 
 [[lean_lib]]
-name = "Test"
+name = "BlaseTest"

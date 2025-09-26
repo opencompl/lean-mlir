@@ -140,6 +140,18 @@ def nextBit : p.State → (arity → Bool) → p.State × Bool :=
     let outBit : Bool       := (p.outputCirc).eval input
     (newState, outBit)
 
+/-- Produce next bit of the state. -/
+def nextBitState (p : FSM arity)
+    (carryState : p.α → Bool)
+    (carryIn : arity → Bool) : p.α → Bool :=
+  (p.nextBit carryState carryIn).1
+
+/-- Produce next bit of the state. -/
+def nextBitOutput (p : FSM arity)
+    (carryState : p.α → Bool)
+    (carryIn : arity → Bool) :  Bool :=
+  (p.nextBit carryState carryIn).2
+
 /-- `p.carry in i` computes the internal carry state at step `i`, given input *streams* `in` -/
 def carry (x : arity → BitStream) : ℕ → p.State
   | 0 => p.initCarry
@@ -1161,11 +1173,104 @@ theorem eval_eq_zero_of_set {arity : Type _} (p : FSM arity)
   rw [eval]
   exact (evalAux_eq_zero_of_set p R hR hi hr1 x n).1
 
-def repeatBit : FSM Unit where
-  α := Unit
-  initCarry := fun () => false
-  outputCirc :=  (.var true <| .inl ()) ||| (.var true <| .inr ())
-  nextStateCirc := fun () => (.var true <| .inl ()) ||| (.var true <| .inr ())
+
+section EvalInduction
+
+/--
+Custom induction principle for FSM state evolution.
+To show a property holds for an input stream,
+show that it holds at index 0, and that if it holds at index n,
+it continues to hold at index n+1.
+-/
+@[elab_as_elim]
+theorem eval_induction.go_state {fsm : FSM arity} (inputs : arity → BitStream)
+    (StateStepIndexedPredicate : Nat → (fsm.α → Bool) → Prop)
+    (hstate0 : StateStepIndexedPredicate 0 (fsm.initCarry))
+    (hStateSucc : ∀ (n : Nat) (state : fsm.α → Bool),
+      StateStepIndexedPredicate n state →
+      StateStepIndexedPredicate (n + 1) (fsm.nextBitState state (fun a => inputs a n))) :
+    ∀ (k : Nat), StateStepIndexedPredicate k (fsm.carry inputs k) := by
+  intros k
+  induction k
+  case zero =>
+    exact hstate0
+  case succ k ih =>
+    apply hStateSucc
+    apply ih
+
+set_option autoImplicit false in
+/-
+Prove a property of the output stream by proving it
+as a consequence of the state evolution, looking 1 state ahead.
+-/
+@[elab_as_elim]
+def eval_induction_1 {fsm : FSM arity} {inputs : arity → BitStream}
+  {P : Nat → Bool → Prop}
+  (SInv : Nat → (fsm.α → Bool) → Prop)
+  (hstate0 : SInv 0 (fsm.initCarry))
+  (hStateSucc : ∀ (n : Nat) (state : fsm.α → Bool),
+    SInv n state →
+    SInv (n + 1) (fsm.nextBitState state (fun a => inputs a n)))
+  (hEval: ∀ (n : Nat) (state : fsm.α → Bool),
+    SInv n state →
+    P n (fsm.nextBitOutput state (fun a => inputs a n))) :
+    ∀  (i : Nat), P i (fsm.eval inputs i) := by
+  intros  i
+  induction i
+  · case zero =>
+    apply hEval
+    apply hstate0
+  · case succ k ih =>
+      apply hEval
+      apply hStateSucc
+      apply eval_induction.go_state
+      · apply hstate0
+      · apply hStateSucc
+
+end EvalInduction
+
+-- hold the input stream's value at 0 forever.
+def hold0Forever : FSM Unit where
+  α := Fin 2
+  -- bit 0: if we are in state 0.
+  -- bit 1: held value.
+  initCarry := fun _  => true -- currently in the state that receives the input.
+  outputCirc :=
+    let state0? := Circuit.var true <| Sum.inl 0
+    let heldValue := Circuit.var true <| Sum.inl 1
+    let input := Circuit.var true <| Sum.inr ()
+    Circuit.ite state0? input heldValue -- in state0
+  nextStateCirc := fun bit =>
+    match bit with
+    | 0 => Circuit.ofBool false
+    | 1 =>
+      let state0? := Circuit.var true <| Sum.inl 0
+      let heldValue := Circuit.var true <| Sum.inl 1
+      let input := Circuit.var true <| Sum.inr ()
+      Circuit.ite state0? input heldValue
+
+@[simp]
+theorem eval_hold0Forever (xs : Unit → BitStream) :
+    hold0Forever.eval xs = fun _ => xs () 0  := by
+  ext i
+  induction i using eval_induction_1 (fsm := hold0Forever) (inputs := xs)
+    (SInv := fun (i : Nat) (state : Fin 2 → Bool) =>
+       (i = 0 → state 0 = true) ∧
+       ((i ≥ 1) → state 0 = false ∧ state 1 = xs () 0)
+    )
+  · case h.hstate0 =>
+      simp [hold0Forever]
+  · case h.hStateSucc n state ih =>
+      obtain ⟨h0, h1⟩ := ih
+      simp [nextBitState, hold0Forever, nextBit]
+      rcases n with rfl | n
+      · simp [h0 (by omega)]
+      · simp [h1 (by omega)]
+  · case h.hEval n state ih =>
+      simp [hold0Forever, nextBitOutput, nextBit]
+      rcases n with rfl | n
+      · simp [ih]
+      · simp [ih]
 
 /--
 (xval:false, control:true)
@@ -1382,6 +1487,23 @@ instance {α β : Type} [Fintype α] [Fintype β] (b : Bool) :
 
 namespace FSM
 
+/-- repeat the bit 'b' forever. -/
+def repeatForever (b : Bool) : FSM (Fin 0) :=
+  match b with
+  | false => FSM.zero
+  | true => FSM.negOne
+
+
+@[simp]
+theorem eval_repeatForever_eq_self (b : Bool) : (FSM.repeatForever b).eval env = fun _ => b := by
+  simp [FSM.repeatForever]
+  ext i
+  rcases b with rfl | rfl <;> simp
+
+@[simp]
+theorem eval_repeatForever_eq_self' (b : Bool) {i : Nat} : (FSM.repeatForever b).eval env i = b := by
+  simp
+
 /--
 A finite state machine whose outputs are the bits of the natural number `n`,
 in least to most significant bit order.
@@ -1406,6 +1528,7 @@ def ofNat (n : Nat)  : FSM (Fin 0) :=
 @[simp]
 theorem ofNat_zero : ofNat 0 = FSM.zero :=
   by simp [ofNat]
+
 
 /-- Evaluating 'const n' gives us the bits of the value of 'const n'.-/
 @[simp]

@@ -1,11 +1,11 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Core.Util
+import LeanMLIR.Util
 import Batteries
 import Lean.Environment
 import Cli
-import SSA.Core.MLIRSyntax.Transform
+import LeanMLIR.MLIRSyntax.Transform
 import SSA.Projects.InstCombine.Base
 
 open Lean TyDenote InstCombine
@@ -27,9 +27,6 @@ abbrev MContext φ := Ctxt <| (MetaLLVM φ).Ty
 abbrev Context := Ctxt LLVM.Ty
 abbrev MCom φ := Com (MetaLLVM φ)
 abbrev MExpr φ := Expr (MetaLLVM φ)
-
-instance : ToString Context where
-  toString Γ := toString Γ.toList
 
 structure CliTest where
   name : Name
