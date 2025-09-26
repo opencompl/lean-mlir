@@ -26,8 +26,6 @@ ROOT_DIR_PATH = (
 
 TIMEOUT_SEC = 1800
 
-LLVM_BUILD_DIR_PATH = "~/llvm-project/build/bin/"
-
 #here
 LLC_GLOBALISEL_ASM_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_GlobalISel_ASM/"

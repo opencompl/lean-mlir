@@ -1,4 +1,19 @@
-## How to run
+# Benchmarks Generation 
+
+### Dependencies 
+
+This evaluation requires LLVM's static compiler (`llc`), either install it through your favourite
+package manager, or, if you've built LLVM from source, add the `bin` directory
+to your path.
+
+For example, if you've built LLVM at `~/llvm-project/build`, and you run bash as
+your shell, you should run the following before you run the script:
+
+```bash
+export PATH=$PATH:~/llvm-project/build/bin/
+```
+
+### How to run
 
 To generate the benchmarks, run: 
 ```
