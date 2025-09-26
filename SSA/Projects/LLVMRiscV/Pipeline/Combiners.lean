@@ -135,6 +135,40 @@ def select_same_val_self : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1), Ty
 def select_same_val : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
   [⟨_, select_same_val_self⟩]
 
+
+/-- ### select_constant_cmp
+  (true ? x : y) -> x
+  (false ? x : y) -> y
+-/
+
+def select_constant_cmp_true : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+    %0 = llvm.mlir.constant (1) : i1
+    %1 = llvm.select %0, %x, %y : i64
+    llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+    llvm.return %x : i64
+  }]
+
+def select_constant_cmp_false : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+    %0 = llvm.mlir.constant (0) : i1
+    %1 = llvm.select %0, %x, %y : i64
+    llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%x: i64, %y: i64):
+    llvm.return %y : i64
+  }]
+
+def select_constant_cmp : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
+  [⟨_, select_constant_cmp_true⟩,
+  ⟨_, select_constant_cmp_false⟩]
+
 /-- ### right_identity_zero
   (x op 0) → x
 -/
@@ -911,7 +945,7 @@ def RISCV_identity_combines: List (Σ Γ, RISCVPeepholeRewrite Γ) :=
 
 /-- We assemble the `identity_combines` patterns for LLVM as in GlobalISel -/
 def LLVMIR_identity_combines_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  select_same_val ++ binop_left_to_zero ++ binop_right_to_zero
+  select_same_val ++ binop_left_to_zero ++ binop_right_to_zero ++ select_constant_cmp
 
 def LLVMIR_identity_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) := anyext_trunc_fold
 
