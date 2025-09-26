@@ -20,6 +20,11 @@ jobs:
       - nscloud-container-image-cache
       - nscloud-runner-tool-cache-20gb
 
+    strategy:
+      matrix:
+        ibatch: [0, 1, 2]
+        nbatch: [3]
+
     steps:
       - name: Setup Ephemeral NS Cluster
         uses: namespacelabs/nscloud-setup@v0
@@ -71,10 +76,6 @@ jobs:
           unzip -o goals.zip
 
       - name: Run Minibatch
-        strategy:
-          matrix:
-            ibatch: [0, 1, 2]
-            nbatch: [3]
         run: |
           ls
           pwd
