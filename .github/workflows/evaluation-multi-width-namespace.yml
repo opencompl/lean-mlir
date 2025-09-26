@@ -138,16 +138,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential curl git python3 python3-pip unzip git gettext 
 
-      - name: Cache `.elan` folders
-        id: cache-lean
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('leanharness/lean-toolchain') }}
-          restore-keys: |
-            ${{ runner.os }}-elan-${{ hashFiles('leanharness/lean-toolchain') }}
-
       - name: Setup UV
         run: |
           # Install uv (assuming it's Python-based, via pip)
