@@ -89,6 +89,16 @@ jobs:
         run: |
           unzip -o goals.zip
 
+      - name: Cache Venv
+        id: cache-venv
+        uses: actions/cache@v4
+        with:
+          path: |
+            .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('uv.lock', 'pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-venv-${{ hashFiles('uv.lock', 'pyproject.toml') }}
+
       - name: Run Minibatch
         run: |
           ls
@@ -190,10 +200,21 @@ jobs:
         run: |
           unzip -o goals.zip
 
+      - name: Cache Venv
+        id: cache-venv
+        uses: actions/cache@v4
+        with:
+          path: |
+            .venv
+          key: ${{ runner.os }}-venv-${{ hashFiles('uv.lock', 'pyproject.toml') }}
+          restore-keys: |
+            ${{ runner.os }}-venv-${{ hashFiles('uv.lock', 'pyproject.toml') }}
+
+
       - name: Run Plotting Script
         run: |
           cp config.tiny.yaml config.yaml
-          sed -i 's@upload: False@upload: True/g' config.yaml
+          sed -i 's@upload: False@upload: True@g' config.yaml
           # only allow rules to collate 'jsonl' and to plot.
           uv tool run snakemake all --cores all \
             --config nbatch=${{matrix.nbatch}} ibatch=${{matrix.ibatch}} \
