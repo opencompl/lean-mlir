@@ -224,11 +224,6 @@ elab "[llvm(" mvars:term,* ")| " reg:mlir_region "]" : term => do
 
 macro "[llvm| " reg:mlir_region "]" : term => `([llvm()| $reg])
 
-macro "deftest" name:ident " := " test_reg:mlir_region : command => do
-  `(@[reducible, llvmTest $name] def $(name) : ConcreteCliTest :=
-       let code := [llvm()| $test_reg]
-       { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })
-
 section Test
 open InstCombine.LLVM.Ty (bitvec)
 
