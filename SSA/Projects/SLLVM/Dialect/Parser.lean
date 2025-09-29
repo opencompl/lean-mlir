@@ -5,7 +5,7 @@ import Qq
 import LeanMLIR.MLIRSyntax.EDSL2
 import LeanMLIR.MLIRSyntax.Transform.Utils
 
-import SSA.Projects.SLLVM.Dialect.Base
+import SSA.Projects.SLLVM.Dialect.Basic
 
 namespace LeanMLIR.SLLVM
 

@@ -1,5 +1,5 @@
 
-import SSA.Projects.SLLVM.Dialect.Base
+import SSA.Projects.SLLVM.Dialect.Basic
 import SSA.Projects.SLLVM.Dialect.Refinement
 import SSA.Projects.SLLVM.Dialect.Parser
 

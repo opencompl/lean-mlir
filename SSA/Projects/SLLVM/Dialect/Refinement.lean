@@ -1,4 +1,4 @@
-import SSA.Projects.SLLVM.Dialect.Base
+import SSA.Projects.SLLVM.Dialect.Basic
 
 /-!
 # Refinement relation for SLLVM dialect
