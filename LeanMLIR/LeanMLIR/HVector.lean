@@ -373,23 +373,6 @@ def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
                         (fun i => by simpa using h_elem i.succ)
       (h₀ ▸ x) ::ₕ xs
 
-section CastLemmas
-variable {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
-
-@[simp] theorem get_cast (i : Fin bs.length) :
-    (cast h_len h_elem xs).get i
-    = _root_.cast (h_elem _ _) (xs.get (i.cast h_len.symm)) := by
-  induction xs generalizing bs i
-  case nil => apply Fin.elim0 <| i.cast h_len.symm
-  case cons ih =>
-    rcases bs with _|⟨b, bs⟩
-    · contradiction
-    cases i using Fin.succRec
-    case zero => rfl
-    case succ i => simp [cast, ih]
-
-end CastLemmas
-
 /-!
 ## Find
 -/

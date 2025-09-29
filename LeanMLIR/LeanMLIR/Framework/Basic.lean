@@ -1064,27 +1064,15 @@ instance : Functor RegionSignature where
   map := RegionSignature.map
 
 def Signature.map (f : Ty → Ty') : Signature Ty → Signature Ty' :=
-  fun s => { s with
-    sig         := f <$> s.sig
-    regSig      := f <$> s.regSig
-    returnTypes := f <$> s.returnTypes
+  fun sig => {
+    sig         := sig.sig.map f
+    regSig      := sig.regSig.map f
+    returnTypes := sig.returnTypes.map f
   }
 
 instance : Functor Signature where
-  map := Signature.map
-
-/-! ### Lemmas about `Signature.map` -/
-namespace Signature
-variable (f : Ty → Ty') (s : Signature Ty)
-
-@[simp] theorem map_eq : s.map f = f <$> s := rfl
-
-@[simp] theorem sig_map : sig (f <$> s) = f <$> s.sig := rfl
-@[simp] theorem regSig_map : regSig (f <$> s) = f <$> s.regSig := rfl
-@[simp] theorem returnTypes_map : returnTypes (f <$> s) = f <$> s.returnTypes := rfl
-@[simp] theorem effectKind_map  : effectKind (f <$> s) = s.effectKind := rfl
-
-end Signature
+  map := fun f ⟨sig, regSig, returnTypes, effKind⟩ =>
+    ⟨f <$> sig, f <$> regSig, f <$> returnTypes, effKind⟩
 
 /-- A dialect morphism consists of a map between operations and a map between types,
 such that the signature of operations is respected -/
@@ -1109,7 +1097,7 @@ def DialectMorphism.preserves_returnTypes (op : d.Op) :
 
 theorem DialectMorphism.preserves_effectKind (op : d.Op) :
     DialectSignature.effectKind (f.mapOp op) = DialectSignature.effectKind op := by
-  simp [DialectSignature.effectKind, f.preserves_signature]
+  simp only [DialectSignature.effectKind, Function.comp_apply, f.preserves_signature]; rfl
 
 mutual
 
