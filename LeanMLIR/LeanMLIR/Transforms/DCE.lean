@@ -380,9 +380,11 @@ partial def dce_ {Γ : Ctxt d.Ty} {t}
         rw [hcom'']
         rfl⟩
 
-/-- This is the real entrypoint to `dce` which unfolds the type of `dce_`, where
+/--
+This is the real entrypoint to `dce` which unfolds the type of `dce_`, where
 we play the `DCEType` trick to convince Lean that the output type is in fact
-inhabited. -/
+inhabited.
+-/
 def dce {Γ : Ctxt d.Ty} {t} (com : Com d Γ .pure t) :
   Σ (Γ' : Ctxt d.Ty) (hom: Hom Γ' Γ),
     { com' : Com d Γ' .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote (V.comap hom)} :=
@@ -395,5 +397,18 @@ def dce' {Γ : Ctxt d.Ty} {t}
     { com' : Com d Γ .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote V} :=
   let ⟨ Γ', hom, com', hcom'⟩ := dce_ com
   ⟨com'.changeVars hom, by simp [hcom']⟩
+
+instance : Inhabited (Com d Γ eff ts → Σ (Γ' : Ctxt d.Ty) (hom : Hom Γ' Γ), Com d Γ' eff ts) where
+  default := fun com => ⟨_, Hom.id, com⟩
+
+def repeatDce [DecidableEq d.Op] [DecidableEq d.Ty]
+    {Γ} (com : Com d Γ .pure t) :
+    Σ (Γ' : Ctxt d.Ty) (hom : Hom Γ' Γ), Com d Γ' .pure t :=
+  let ⟨Γ', hom, ⟨dceCom, h⟩⟩ := dce com
+  if ∃ (h : Γ = Γ'), com = h ▸ dceCom then
+    ⟨Γ', hom, dceCom⟩
+  else
+    repeatDce dceCom
+  partial_fixpoint
 
 end DCE

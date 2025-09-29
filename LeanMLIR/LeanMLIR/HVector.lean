@@ -135,6 +135,18 @@ abbrev toSingle : HVector A [a₁] → A a₁ := toTuple
 abbrev toPair   : HVector A [a₁, a₂] → A a₁ × A a₂ := toTuple
 abbrev toTriple : HVector A [a₁, a₂, a₃] → A a₁ × A a₂ × A a₃ := toTuple
 
+/-!
+## Predicate Combinators
+-/
+
+/--
+Returns `true` if `p` returns `true` for any element of `xs`.
+
+`O(|xs|)`. Short-circuits upon encountering the first `true`.
+-/
+def any {as} : (xs : HVector A as) → (p : ∀ {a}, A a → Bool) → Bool
+  | .nil, _ => false
+  | .cons x xs, p => p x || any xs p
 
 /-!
 ## Conversion to a List

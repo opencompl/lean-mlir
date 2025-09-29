@@ -318,6 +318,14 @@ def Expr.regArgs {Γ ts} (e : Expr d Γ eff ts) :
     Regions d (DialectSignature.regSig e.op) :=
   Expr.casesOn e (fun _ _ _ _ regArgs => regArgs)
 
+/--
+`e.numReturnVars` returns the number of return variables
+associated with expression `e`.
+-/
+@[simp, grind=]
+def Expr.numReturnVars (_ : Expr d Γ eff ts) : Nat :=
+  ts.length
+
 /-- `e.returnVars` is the vector of variables in `e.outContext` which are bound by `e`. -/
 def Expr.returnVars (e : Expr d Γ eff tys) : HVector e.outContext.Var tys :=
   .ofFn _ _ <| fun i => (Var.ofFin i).appendInl
