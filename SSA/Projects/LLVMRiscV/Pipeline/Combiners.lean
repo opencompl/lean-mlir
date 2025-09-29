@@ -414,7 +414,7 @@ def binop_right_to_zero: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 
 /-
 Test the rewrite:
-  x % pow2 -> x & (pow2 - 1)
+  urem(x, pow2) -> x & (pow2 - 1)
 -/
 
 def urem_pow2_to_mask_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
