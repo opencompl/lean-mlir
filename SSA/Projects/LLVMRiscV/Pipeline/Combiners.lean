@@ -137,7 +137,7 @@ def select_same_val : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
 
 /-! ### select_constant_cmp -/
 
-/- 
+/-
 Test the rewrite:
   (true ? x : y) -> x
   (false ? x : y) -> y
@@ -983,6 +983,7 @@ def commute_int_constant_to_rhs: List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
   ⟨_, commute_int_constant_to_rhs_or⟩,
   ⟨_, commute_int_constant_to_rhs_xor⟩,
   ⟨_, commute_int_constant_to_rhs_mulhu⟩]
+
 
 /- ### not_cmp_fold
   (a op b) ^^^ (-1) → (a op' b) where op' is the inverse of op
