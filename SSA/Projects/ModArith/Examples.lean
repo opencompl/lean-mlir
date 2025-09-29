@@ -4,8 +4,8 @@ by analogy to the FHE/Poly `PaperExamples.lean`.
 
 Authors: Jaeho Choi<zerozerozero0216@gmail.com>
 -/
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.Tactic
+import LeanMLIR.MLIRSyntax.GenericParser
+import LeanMLIR.Tactic
 import SSA.Projects.ModArith.Basic
 import SSA.Projects.ModArith.Statements
 import SSA.Projects.ModArith.Syntax

@@ -2,7 +2,7 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
-import SSA.Projects.InstCombine.LLVM.Semantics
+import LeanMLIR.Dialects.LLVM.Semantics
 import SSA.Projects.SLLVM.Dialect.Semantics.EffectM
 import SSA.Projects.SLLVM.Tactic.SimpSet
 

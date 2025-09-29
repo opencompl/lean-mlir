@@ -7,6 +7,7 @@ import subprocess
 import re
 import argparse
 import concurrent.futures
+from evallib import taskqueue
 
 ROOT_DIR = (
     subprocess.check_output(["git", "rev-parse", "--show-toplevel"])
@@ -14,8 +15,6 @@ ROOT_DIR = (
     .strip()
 )
 TIMEOUT = 1800  # seconds
-
-LLVM_BUILD_DIR = "~/llvm-project/build/bin/"
 
 LLC_ASM_DIR = (
     f"{ROOT_DIR}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM/"
@@ -74,7 +73,7 @@ def mca_analysis(input_file, output_file, log_file):
     cmd_base = (
         "llvm-mca -mtriple=riscv64 -mcpu=sifive-u74 -mattr=+m,+zba,+zbb,+zbs "
     )
-    cmd = LLVM_BUILD_DIR + cmd_base + input_file + " > " + output_file
+    cmd = cmd_base + input_file + " > " + output_file
     print(cmd)
     run_command(cmd, log_file)
     
@@ -116,25 +115,45 @@ def clear_empty_logs():
                 except Exception:
                     print("Failed to delete {filename}")
 
+def get_tasks():
+    tasks = []
+    for filename in os.listdir(XDSL_ASM_DIR):
+        basename, _ = os.path.splitext(filename)
+        tasks.append ({
+            "input_file": os.path.join(XDSL_ASM_DIR, filename),
+            "output_file": os.path.join(MCA_LEANMLIR_DIR, basename + '.out'),
+            "log_file": open(os.path.join(LOGS_DIR, 'xdsl_' + filename),'w'),
+        })
+
+    for filename in os.listdir(LLC_ASM_DIR):
+        basename, _ = os.path.splitext(filename)
+        tasks.append ({
+            "input_file": os.path.join(LLC_ASM_DIR, filename),
+            "output_file": os.path.join(MCA_LLVM_DIR, basename + '.out'),
+            "log_file": open(os.path.join(LOGS_DIR, 'llvm_' + filename),'w'),
+        })
+
+    return tasks
 
 def run_tests():
     # extract mlir blocks and put them all in separate files
     create_missing_folders()
     clear_folders()
 
-    for filename in os.listdir(XDSL_ASM_DIR):
-        input_file = os.path.join(XDSL_ASM_DIR, filename)
-        basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(MCA_LEANMLIR_DIR, basename + '.out')
-        log_file = open(os.path.join(LOGS_DIR, 'xdsl_' + filename),'w')
-        mca_analysis(input_file, output_file, log_file)
+    # Parse CLI arguments
+    parser = argparse.ArgumentParser()
+    taskqueue.add_cli_arguments(parser)
 
-    for filename in os.listdir(LLC_ASM_DIR):
-        input_file = os.path.join(LLC_ASM_DIR, filename)
-        basename, _ = os.path.splitext(filename)
-        output_file = os.path.join(MCA_LLVM_DIR, basename + '.out')
-        log_file = open(os.path.join(LOGS_DIR, 'llvm_' + filename),'w')
-        mca_analysis(input_file, output_file, log_file)
+    args = parser.parse_args()
+    queue = taskqueue.from_parsed_cli_arguments(args)
+
+    # Prepare task queue
+    tasks = get_tasks();
+    def run_task(t):
+        mca_analysis(t.input_file, t.output_file, t.log_file)
+    
+    # Run tasks
+    queue.run_tasks(tasks, run=run_task)
 
     clear_empty_logs()
 

@@ -6,7 +6,7 @@ import Mathlib.Algebra.Order.Group.Unbundled.Int
 
 -- Core
 -- ====
-import SSA.Core
+import LeanMLIR
 
 
 -- Projects
@@ -18,8 +18,6 @@ import SSA.Projects.FullyHomomorphicEncryption
 import SSA.Projects.Tensor1D.Tensor1D
 import SSA.Projects.Tensor2D.Tensor2D
 import SSA.Projects.Holor.Holor
-import SSA.Projects.DCE.DCE
-import SSA.Projects.CSE.CSE
 import SSA.Projects.PaperExamples.PaperExamples
 import SSA.Projects.Scf.ScfFunctor
 import SSA.Projects.LeanMlirCommon.LeanMlirCommon
@@ -28,12 +26,3 @@ import SSA.Projects.SLLVM.SLLVM
 
 -- EXPERIMENTAL
 -- ============
-
--- Bit-fiddling decision procedure
-import SSA.Experimental.Bits.Fast
-import SSA.Experimental.Bits.Generalize
-import SSA.Experimental.Bits.SingleWidth.Tactic
-import SSA.Experimental.Bits.KInduction.KInduction
-import SSA.Experimental.Bits.KInduction.Tests
-import SSA.Experimental.Bits.MultiWidth.Tests
-import SSA.Experimental.Bits.MultiWidth.GoodFSM

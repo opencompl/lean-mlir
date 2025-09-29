@@ -1,5 +1,5 @@
 import SSA.Projects.LLVMRiscV.PeepholeRefine
-import SSA.Projects.LLVMRiscV.simpproc
+import SSA.Projects.LLVMRiscV.Simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 
 import Lean

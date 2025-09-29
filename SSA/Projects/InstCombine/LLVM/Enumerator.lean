@@ -3,11 +3,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 -- Script that exhaustive enumerates the our LLVM semantics.
 import Init.System.IO
-import SSA.Core.Util
-import SSA.Projects.InstCombine.LLVM.Semantics
+import LeanMLIR.Util
+import LeanMLIR.Dialects.LLVM.Semantics
 import SSA.Projects.InstCombine.TestLLVMOps
 import SSA.Projects.InstCombine.LLVM.CLITests
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 
 open System
 open IO FS

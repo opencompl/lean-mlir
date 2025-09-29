@@ -6,7 +6,7 @@ Syntax definitions for FHE, providing a custom [poly|...] with syntax sugar.
 
 Authors: Andrés Goens<andres@goens.org>, Siddharth Bhat<siddu.druid@gmail.com>
 -/
-import SSA.Core.MLIRSyntax.EDSL
+import LeanMLIR.MLIRSyntax.EDSL
 import SSA.Projects.FullyHomomorphicEncryption.Basic
 
 open MLIR AST Ctxt

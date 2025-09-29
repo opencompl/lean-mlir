@@ -1,9 +1,9 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Core.WellTypedFramework
-import SSA.Core.Tactic
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.WellTypedFramework
+import LeanMLIR.Tactic
+import LeanMLIR.Dialects.LLVM.Basic
 import SSA.Projects.InstCombine.Tactic
 
 open SSA InstCombine EDSL Bitvec
@@ -1097,4 +1097,3 @@ theorem alive_Select_1087 : forall (w : Nat) (Y X val : Bitvec 1)
      simp_mlir
      simp_alive
      print_goal_as_error
-

@@ -1,7 +1,7 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 import SSA.Projects.InstCombine.LLVM.SimpSet
 
 /- Wrapper around Com, Expr constructors to easily hand-write IR -/
@@ -10,7 +10,7 @@ open InstCombine (LLVM)
 open LeanMLIR.SingleReturnCompat (Com Expr)
 
 macro_rules
-| `(tactic| get_elem_tactic_trivial) => `(tactic| simp [Ctxt.snoc])
+| `(tactic| get_elem_tactic_trivial) => `(tactic| simp [Ctxt.cons])
 
 @[simp_denote]
 def const {Γ : Ctxt _} (w : ℕ) (n : ℤ) : Expr InstCombine.LLVM Γ .pure (LLVM.Ty.bitvec w) :=
@@ -277,6 +277,6 @@ def test (w : ℕ) :
   .var (urem   w 0 0) <|
   .var (icmp   w .eq 0 0) <|
   .var (select w 0 1 1) <|
-  .ret ⟨0, by simp [Ctxt.snoc]⟩
+  .ret ⟨0, rfl⟩
 
 end ComWrappers

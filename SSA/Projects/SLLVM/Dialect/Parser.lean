@@ -2,8 +2,8 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import Qq
-import SSA.Core.MLIRSyntax.EDSL2
-import SSA.Core.MLIRSyntax.Transform.Utils
+import LeanMLIR.MLIRSyntax.EDSL2
+import LeanMLIR.MLIRSyntax.Transform.Utils
 
 import SSA.Projects.SLLVM.Dialect.Base
 
