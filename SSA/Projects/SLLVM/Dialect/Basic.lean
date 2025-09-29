@@ -187,9 +187,10 @@ open DialectPrint
 instance : DialectPrint SLLVM where
   printOpName
     | .arith llvmOp => printOpName llvmOp
-    | .store _ => "ptr.store"
-    | .load _ => "ptr.load"
-    | .ptradd => "ptr.add"
+    | .store _w   => "ptr.store"
+    | .load _w    => "ptr.load"
+    | .ptradd     => "ptr.add"
+    | .alloca _w  => "ptr.alloca"
   printAttributes
     | .arith llvmOp => printAttributes llvmOp
     | _ => ""
