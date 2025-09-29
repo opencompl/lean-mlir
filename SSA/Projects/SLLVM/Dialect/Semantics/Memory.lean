@@ -53,4 +53,9 @@ instance : Refinement MemoryState where
   IsRefinedBy s t := ∀ (id : BlockId),
     s[id]? = t[id]?
 
+@[simp_sllvm]
+theorem MemoryState.isRefinedBy_rfl (s : MemoryState) :
+    s ⊑ s := by
+  intro id; rfl
+
 end Refinement

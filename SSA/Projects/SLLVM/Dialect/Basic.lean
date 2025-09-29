@@ -118,114 +118,72 @@ end Alias
 
 /-! ### Signature -/
 
-open SLLVM.Ty in
-/-- The signature of each operation is the same as in LLVM. -/
-instance : DialectSignature SLLVM where
-  signature
-  | .arith op => SLLVM.Ty.arith <$> { DialectSignature.signature (d := LLVM) op with
-        effectKind := match op with
-          | .udiv .. | .sdiv .. | .urem .. | .srem .. => .impure
-          | _ => .pure
-      }
-  | .ptradd => { sig := [ptr, bitvec 64], regSig := [], returnTypes := [ptr], effectKind := .pure }
-  | .load w => { sig := [ptr], regSig := [], returnTypes := [bitvec w], effectKind := .impure }
-  | .store w => { sig := [ptr, bitvec w], regSig := [], returnTypes := [], effectKind := .impure }
-  | .free => { sig := [ptr], regSig := [], returnTypes := [], effectKind := .impure }
+open Ty in
+/- The signature of each operation is the same as in LLVM. -/
+def_signature for SLLVM
+  -- New operations
+  | .ptradd          => (ptr, bitvec 64) -> ptr
+  | .load w          => (ptr) -[.impure]-> bitvec w
+  | .store w         => (ptr, bitvec w) -[.impure]-> []
+  | .free            => (ptr) -[.impure]-> []
+  -- LLVM operations with modified effect signature
+  | Op.urem w        => (bitvec w, bitvec w) -[.impure]-> bitvec w
+  | Op.srem w        => (bitvec w, bitvec w) -[.impure]-> bitvec w
+  | Op.sdiv w _flag  => (bitvec w, bitvec w) -[.impure]-> bitvec w
+  | Op.udiv w _flag  => (bitvec w, bitvec w) -[.impure]-> bitvec w
+  -- Other LLVM operations
+  | Op.neg w         => (bitvec w) -> bitvec w
+  | Op.not w         => (bitvec w) -> bitvec w
+  | Op.copy w        => (bitvec w) -> bitvec w
+  | Op.sext w w'     => (bitvec w) -> bitvec w'
+  | Op.zext w w' _flag   => (bitvec w) -> bitvec w'
+  | Op.trunc w w' _flags => (bitvec w) -> bitvec w'
+  | Op.and w         => (bitvec w, bitvec w) -> bitvec w
+  | Op.xor w         => (bitvec w, bitvec w) -> bitvec w
+  | Op.or w _flag    => (bitvec w, bitvec w) -> bitvec w
+  | Op.shl w _flags  => (bitvec w, bitvec w) -> bitvec w
+  | Op.add w _flags  => (bitvec w, bitvec w) -> bitvec w
+  | Op.mul w _flags  => (bitvec w, bitvec w) -> bitvec w
+  | Op.sub w _flags  => (bitvec w, bitvec w) -> bitvec w
+  | Op.lshr w _flag  => (bitvec w, bitvec w) -> bitvec w
+  | Op.ashr w _flag  => (bitvec w, bitvec w) -> bitvec w
+  | Op.icmp _c w     => (bitvec w, bitvec w) -> bitvec 1
+  | Op.select w      => (bitvec 1, bitvec w, bitvec w) -> bitvec w
+  | Op.const w _val  => () -> bitvec w
 
+attribute [local irreducible] EffectM
+-- ^^ This is needed so that `EffectM` doesn't get unfolded in the `def_denote` macro
 
-/-! ### argsToLLVM Helper -/
-section ArgsToLLVM
-
-def argsToLLVM {tys : List LLVM.Ty} :
-    HVector toType (Ty.arith <$> tys) → HVector toType tys :=
-  HVector.cast (by simp) (by simp)
-
-open Qq Lean Meta in
-partial def reduceArgsToLLVMAux : Meta.Simp.DSimproc := fun e => do
-  let_expr argsToLLVM tys xs := e
-    | return .continue
-  withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying application of `argsToLLVM`: {e}") <| do
-    let ⟨_, ys⟩ ← go tys xs
-    return .visit ys
-where go (tys xs : Lean.Expr) : MetaM (Σ (tys : Q(List LLVM.Ty)), Q(HVector toType $tys)) :=
-  match_expr xs with
-  | HVector.nil _ _ =>
-      return ⟨_, q(HVector.nil)⟩
-  | HVector.cons _α _A tys t y ys => do
-      let t' ← mkFreshExprMVarQ q(LLVM.Ty)
-      let expected := mkApp (mkConst ``Ty.arith) t'
-      unless (← isDefEq t expected) do
-        trace[LeanMLIR.Elab] "{crossEmoji} Failed to unify:\n\t{t}\nwith:\n\t{expected}\
-          \n\nIn implicit argument of expression:\n\t{xs}"
-      let ⟨tys', ys⟩ ← go tys ys
-      return ⟨
-        q($t' :: $tys'),
-        mkAppN (.const ``HVector.cons [0, 0]) #[
-          q(LLVM.Ty), q(@toType LLVM.Ty _), tys', t', y, ys
-        ]⟩
-  | _ => do
-      trace[LeanMLIR.Elab] "{crossEmoji} Failed to decompose:\n\t{xs}\
-        \nExpected either `HVector.cons` or `HVector.nil`"
-      return ⟨tys, xs⟩
-
--- simproc [simp, simp_denote] reduceArgsToLLVM (argsToLLVM (tys := no_index _) (
-simproc reduceArgsToLLVM (argsToLLVM (tys := no_index (?t :: ?ts)) (
-    .cons (α := no_index _) (f := no_index _) (a := no_index _) (as := no_index _) _ _)
-  ) :=
-  -- reduceArgsToLLVMAux
-  fun _ => return .continue
-
-
-theorem foo (x : ⟦Ty.arith t⟧) (xs : HVector toType (Ty.arith <$> ts)) :
-    argsToLLVM (tys := no_index (t :: ts)) (
-      .cons (α := no_index _) (f := no_index _) (a := no_index (Ty.arith t)) (as := no_index (Ty.arith <$> ts)) x xs)
-    = zs := by
-  sorry
-#discr_tree_simp_key foo
-
-open Lean Meta Elab Command DiscrTree Simp in
-elab "#discr_tree_simproc_key " k:ident : command => liftTermElabM <| do
-  let state := simprocDeclExt.getState (← getEnv)
-  if let some (some keys) := state.newEntries[k.getId]? then
-    Lean.logInfo (← keysAsPattern keys)
-  else
-    let n ← realizeGlobalConstNoOverloadWithInfo k
-    if let some (some keys) := state.newEntries[n]? then
-      Lean.logInfo (← keysAsPattern keys)
-    else
-      throwErrorAt k "not a simproc: {k}"
-
-#discr_tree_simproc_key reduceArgsToLLVM
-
-/-!
-NOTE: we aggresively unfold `⟦t⟧` when `t` is a concrete type, and in our proof
-goals `t` is always a concrete goal. That is why in `argsToLLVM_cons` we have to
-specify `x : LLVM.IntW w`. Recall that Lean does not perform higher-order
-unification, so if we instead said `x : ⟦t⟧`, Lean would not be able to
-figure out that `t` should be assigned to `bitvec w` to unify `⟦t⟧` with
-`LLVM.IntW w`, and instead would fail to apply the rewrite!
--/
-
-end ArgsToLLVM
-
-open Op in
-instance : DialectDenote SLLVM where
-  denote
-  | Op.udiv _ flag => fun ([x, y]ₕ) _ => ([·]ₕ) <$> SLLVM.udiv x y flag
-  | Op.sdiv _ flag => fun ([x, y]ₕ) _ => ([·]ₕ) <$> SLLVM.sdiv x y flag
-  | Op.urem _      => fun ([x, y]ₕ) _ => ([·]ₕ) <$> SLLVM.urem x y
-  | Op.srem _      => fun ([x, y]ₕ) _ => ([·]ₕ) <$> SLLVM.srem x y
-  | Op.arith op => fun args .nil => do
-    let x ← EffectKind.liftEffect (EffectKind.pure_le _) <|
-      let args := SLLVM.argsToLLVM args
-      DialectDenote.denote (d := LLVM) op args .nil
-      return x.map' SLLVM.Ty.arith (fun _ x => x)
-  -- ^^ For all other arithmetic ops, just refer to the pure LLVM semantics
-
-  | .ptradd   => fun ([p, x]ₕ) _  => ([·]ₕ) <$> SLLVM.ptradd p x
-  | .load w   => fun ([p]ₕ) _     => ([·]ₕ) <$> SLLVM.load p w
-  | .store _  => fun ([p, x]ₕ) _  => (fun _ => []ₕ) <$> SLLVM.store p x
-  | .free     => fun ([p]ₕ) _     => (fun _ => []ₕ) <$> SLLVM.free p
+def_denote for SLLVM
+  -- New operations
+  | .ptradd   => fun p x => [SLLVM.ptradd p x]ₕ
+  | .load w   => fun p   => ([·]ₕ) <$> SLLVM.load p w
+  | .store _  => fun p x => (fun _ => []ₕ) <$> SLLVM.store p x
+  | .free     => fun p   => (fun _ => []ₕ) <$> SLLVM.free p
+  -- LLVM operations with modified effect signature
+  | Op.udiv _w flag => fun x y => ([·]ₕ) <$> SLLVM.udiv x y flag
+  | Op.sdiv _w flag => fun x y => ([·]ₕ) <$> SLLVM.sdiv x y flag
+  | Op.urem _w      => fun x y => ([·]ₕ) <$> SLLVM.urem x y
+  | Op.srem _w      => fun x y => ([·]ₕ) <$> SLLVM.srem x y
+  -- Other LLVM operations
+  | Op.neg _w       => fun x => [LLVM.neg x]ₕ
+  | Op.not _w       => fun x => [LLVM.not x]ₕ
+  | Op.copy _w      => fun x => [x]ₕ
+  | Op.sext _w w'   => fun x => [LLVM.sext w' x]ₕ
+  | Op.zext _w w' flag   => fun x => [LLVM.zext w' x flag]ₕ
+  | Op.trunc _w w' flags => fun x => [LLVM.trunc w' x flags]ₕ
+  | Op.and _w       => fun x y => [LLVM.and x y]ₕ
+  | Op.xor _w       => fun x y => [LLVM.xor x y]ₕ
+  | Op.or _w flag   => fun x y => [LLVM.or x y flag]ₕ
+  | Op.shl _w flags => fun x y => [LLVM.shl x y flags]ₕ
+  | Op.add _w flags => fun x y => [LLVM.add x y flags]ₕ
+  | Op.mul _w flags => fun x y => [LLVM.mul x y flags]ₕ
+  | Op.sub _w flags => fun x y => [LLVM.sub x y flags]ₕ
+  | Op.lshr _w flag => fun x y => [LLVM.lshr x y flag]ₕ
+  | Op.ashr _w flag => fun x y => [LLVM.ashr x y flag]ₕ
+  | Op.icmp c _w    => fun x y => [LLVM.icmp c x y]ₕ
+  | Op.select _w    => fun c x y => [LLVM.select c x y]ₕ
+  | Op.const _w val => [LLVM.const? _ val]ₕ
 
 /-! ### Printing -/
 section Print

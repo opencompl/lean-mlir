@@ -74,49 +74,14 @@ def alive_AddSub_1043_tgt := [sllvm| {
   llvm.return %v7 : i64
 }]
 
-
--- open InstCombine (LLVM) in
--- open Qq Lean in
--- partial def reduceArgsToLLVMAux : Meta.Simp.DSimproc := fun e => do
---   let_expr argsToLLVM tys xs := e
---     | return .continue
---   withTraceNode `LeanMLIR.Elab (fun _ => pure m!"Simplifying application of `argsToLLVM`: {e}") <| do
---     let rec go (tys xs : Lean.Expr) : MetaM Lean.Expr :=
---       match_expr tys with
---       | List.nil => return q((HVector.nil (α := LLVM.Ty) (f := toType)))
---       | List.cons _ t tys => do
---           let_expr HVector.cons _α _A _tys _t x xs := xs
---             | throwError "Expected an application of `HVector.cons`, found:\n\t{xs}\
---                 \n\nThis is either a mall-formed expression, or an expression that \
---                     needs to be unfolded first."
---               return xs
---           let xs ← go tys xs
---           return mkAppN (.const ``HVector.cons [0, 0]) #[
---             q(LLVM.Ty), q(@toType LLVM.Ty _), tys, t, x, xs
---           ]
---       | _ => do
---           trace[LeanMLIR.Elab] "{crossEmoji} Failed to decompose list: {tys}"
---           return xs
---     return .visit (← go tys xs)
--- dsimproc [simp, simp_denote] reduceArgsToLLVM' (argsToLLVM (
---     .cons (α := no_index _) (f := no_index _) (a := no_index _) (as := no_index _) _ _)
---   ) := reduceArgsToLLVMAux
-
 set_option trace.LeanMLIR.Elab true
 theorem alive_AddSub_1043 : alive_AddSub_1043_src  ⊑ alive_AddSub_1043_tgt  := by
   unfold alive_AddSub_1043_src alive_AddSub_1043_tgt
   simp_peephole
-  simp only [reduceArgsToLLVM]
-  intros
-  rw [SLLVM.argsToLLVM_cons]
-
-  stop
   simp_sllvm
   simp_sllvm_case_bash
   simp_sllvm_split
   all_goals bv_decide
-
-#exit
 
 -- Name:AddSub:1152
 -- precondition: true
