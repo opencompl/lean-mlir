@@ -258,31 +258,6 @@ attribute [simp_denote]
   SingleReturnCompat.Com SingleReturnCompat.Expr SingleReturnCompat.Com.var
 
 /-!
-## Signature Unfolding
--/
-
-#check Signature.sig
-#check DialectSignature.signature
-#check Lean.Expr.w
-
-
-/--
-Given an expression `f (DialectSignature.)`
--/
-def reduceDialectSignature (e : Expr) : MetaM (Option Expr) := do
-  let unfoldable := [
-    ``DialectSignature.sig,
-    ``DialectSignature.regSig,
-    ``DialectSignature.returnTypes,
-    ``DialectSignature.returnTypes
-  ]
-  let e ← withCanUnfoldPred (fun _ info => info.name ∈ []) <|
-    whnf e
-
-
-  _
-
-/-!
 ## Simp_peephole
 -/
 
