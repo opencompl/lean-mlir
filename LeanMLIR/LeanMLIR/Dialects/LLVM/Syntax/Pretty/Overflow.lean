@@ -1,5 +1,4 @@
 import LeanMLIR.MLIRSyntax.PrettyEDSL
-import SSA.Projects.InstCombine.Tactic
 open Lean
 
 namespace MLIR.EDSL

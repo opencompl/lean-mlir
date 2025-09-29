@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import LeanMLIR.WellTypedFramework
 import LeanMLIR.Tactic
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 import SSA.Projects.InstCombine.Tactic
 
 open SSA InstCombine EDSL Bitvec

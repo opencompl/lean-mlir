@@ -3,7 +3,7 @@ import SSA.Projects.RISCV64.Base
 import SSA.Projects.RISCV64.Syntax
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 import SSA.Projects.InstCombine.ForLean
 
 /-!

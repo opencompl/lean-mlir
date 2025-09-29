@@ -1,7 +1,7 @@
 import SSA.Projects.InstCombine.tests.proofs.g2008h05h31hBools_proof
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.LLVM.Semantics
+import LeanMLIR.Dialects.LLVM.Semantics
 open LLVM
 open BitVec
 

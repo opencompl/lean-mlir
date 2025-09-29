@@ -1,9 +1,9 @@
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 import SSA.Projects.RISCV64.Base
 import SSA.Projects.RISCV64.Syntax
-import SSA.Projects.InstCombine.LLVM.EDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 import SSA.Projects.RISCV64.PrettyEDSL
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 open InstCombine(LLVM)
 namespace LLVMRiscV
 

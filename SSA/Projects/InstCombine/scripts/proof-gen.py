@@ -33,7 +33,7 @@ def gen_proof(thm):
 def gen_intro(stem):
     return f"""
 import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.LLVM.Semantics
+import LeanMLIR.Dialects.LLVM.Semantics
 open BitVec
 open LLVM
 

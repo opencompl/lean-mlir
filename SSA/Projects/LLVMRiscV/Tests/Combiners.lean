@@ -3,6 +3,15 @@ import LeanMLIR.Framework.Print
 
 /--
 info:
+^bb0(%0 : i64, %1 : i64):
+  %2 = "llvm.const"(){value = 1 : i1} : () -> (i1)
+  "llvm.return"(%0) : (i64) -> ()
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_constant_cmp_true.lhs)).val
+
+/--
+info:
 ^bb0(%0 : i64):
   %1 = "llvm.const"(){value = 2 : i64} : () -> (i64)
   %2 = "llvm.const"(){value = 1 : i64} : () -> (i64)

@@ -3,7 +3,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 -/
 import LeanMLIR.Framework.Trace
 import SSA.Projects.InstCombine.ForLean
-import SSA.Projects.InstCombine.LLVM.EDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 import SSA.Projects.InstCombine.Tactic.ReduceModTwoPow
 
 open Lean
