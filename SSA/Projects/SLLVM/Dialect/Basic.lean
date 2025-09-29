@@ -196,7 +196,7 @@ instance : DialectPrint SLLVM where
     | _ => ""
   printTy
     | .arith llvmTy => printTy llvmTy
-    | .ptr => "ptr"
+    | .ptr => "!ptr"
   dialectName := "sllvm"
   printReturn _ := "llvm.return"
   printFunc _ := "^entry"
