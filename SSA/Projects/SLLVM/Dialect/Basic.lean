@@ -33,7 +33,6 @@ inductive SLLVMOp where
   | ptradd
   | load (w : Nat)
   | store (w : Nat)
-  | free
   deriving DecidableEq, Lean.ToExpr
 
 inductive SLLVMTy where
@@ -125,7 +124,6 @@ def_signature for SLLVM
   | .ptradd          => (ptr, bitvec 64) -> ptr
   | .load w          => (ptr) -[.impure]-> bitvec w
   | .store w         => (ptr, bitvec w) -[.impure]-> []
-  | .free            => (ptr) -[.impure]-> []
   -- LLVM operations with modified effect signature
   | Op.urem w        => (bitvec w, bitvec w) -[.impure]-> bitvec w
   | Op.srem w        => (bitvec w, bitvec w) -[.impure]-> bitvec w
@@ -159,7 +157,6 @@ def_denote for SLLVM
   | .ptradd   => fun p x => [SLLVM.ptradd p x]ₕ
   | .load w   => fun p   => ([·]ₕ) <$> SLLVM.load p w
   | .store _  => fun p x => (fun _ => []ₕ) <$> SLLVM.store p x
-  | .free     => fun p   => (fun _ => []ₕ) <$> SLLVM.free p
   -- LLVM operations with modified effect signature
   | Op.udiv _w flag => fun x y => ([·]ₕ) <$> SLLVM.udiv x y flag
   | Op.sdiv _w flag => fun x y => ([·]ₕ) <$> SLLVM.sdiv x y flag
@@ -199,7 +196,6 @@ instance : ToString SLLVM.Op where
     | .ptradd   => "ptradd"
     | .load _   => "load"
     | .store _  => "store"
-    | .free     => "free"
 
 instance : Repr SLLVM.Ty where
   reprPrec ty _ := toString ty
