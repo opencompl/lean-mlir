@@ -410,6 +410,144 @@ def binop_right_to_zero_mul : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)
 def binop_right_to_zero: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [⟨_, binop_right_to_zero_mul⟩]
 
+/-! ### fold_binop_into_select -/
+
+/-
+Test the rewrite:
+  binop (select cond, K0, K1), K2 ->
+    select cond, (binop K0, K2), (binop K1, K2)
+-/
+
+def fold_add_into_select : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.select %c, %x, %y : i64
+    %1 = llvm.add %0, %z : i64
+    llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.add %x, %z : i64
+    %1 = llvm.add %y, %z : i64
+    %2 = llvm.select %c, %0, %1 : i64
+    llvm.return %2 : i64
+  }]
+
+def fold_sub_into_select : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.select %c, %x, %y : i64
+    %1 = llvm.sub %0, %z : i64
+    llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.sub %x, %z : i64
+    %1 = llvm.sub %y, %z : i64
+    %2 = llvm.select %c, %0, %1 : i64
+    llvm.return %2 : i64
+  }]
+
+def fold_and_into_select : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.select %c, %x, %y : i64
+    %1 = llvm.and %0, %z : i64
+    llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.and %x, %z : i64
+    %1 = llvm.and %y, %z : i64
+    %2 = llvm.select %c, %0, %1 : i64
+    llvm.return %2 : i64
+  }]
+
+def fold_or_into_select : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.select %c, %x, %y : i64
+    %1 = llvm.or %0, %z : i64
+    llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.or %x, %z : i64
+    %1 = llvm.or %y, %z : i64
+    %2 = llvm.select %c, %0, %1 : i64
+    llvm.return %2 : i64
+  }]
+
+def fold_xor_into_select : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.select %c, %x, %y : i64
+    %1 = llvm.xor %0, %z : i64
+    llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.xor %x, %z : i64
+    %1 = llvm.xor %y, %z : i64
+    %2 = llvm.select %c, %0, %1 : i64
+    llvm.return %2 : i64
+  }]
+
+def fold_sdiv_into_select : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.select %c, %x, %y : i64
+    %1 = llvm.sdiv %0, %z : i64
+    llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.sdiv %x, %z : i64
+    %1 = llvm.sdiv %y, %z : i64
+    %2 = llvm.select %c, %0, %1 : i64
+    llvm.return %2 : i64
+  }]
+
+def fold_udiv_into_select : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.select %c, %x, %y : i64
+    %1 = llvm.udiv %0, %z : i64
+    llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.udiv %x, %z : i64
+    %1 = llvm.udiv %y, %z : i64
+    %2 = llvm.select %c, %0, %1 : i64
+    llvm.return %2 : i64
+  }]
+
+def fold_shl_into_select : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.select %c, %x, %y : i64
+    %1 = llvm.shl %0, %z : i64
+    llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+  ^entry (%c: i1, %x: i64, %y: i64, %z: i64):
+    %0 = llvm.shl %x, %z : i64
+    %1 = llvm.shl %y, %z : i64
+    %2 = llvm.select %c, %0, %1 : i64
+    llvm.return %2 : i64
+  }]
+
+def fold_binop_into_select : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, fold_add_into_select⟩,
+  ⟨_, fold_sub_into_select⟩,
+  ⟨_, fold_and_into_select⟩,
+  ⟨_, fold_or_into_select⟩,
+  ⟨_, fold_xor_into_select⟩,
+  ⟨_, fold_sdiv_into_select⟩,
+  ⟨_, fold_udiv_into_select⟩,
+  ⟨_, fold_shl_into_select⟩]
+
 /-- ### anyext_trunc_fold
   (anyext (trunc x)) → x
 -/
@@ -911,7 +1049,7 @@ def RISCV_identity_combines: List (Σ Γ, RISCVPeepholeRewrite Γ) :=
 
 /-- We assemble the `identity_combines` patterns for LLVM as in GlobalISel -/
 def LLVMIR_identity_combines_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  select_same_val ++ binop_left_to_zero ++ binop_right_to_zero
+  select_same_val ++ binop_left_to_zero ++ binop_right_to_zero ++ fold_binop_into_select
 
 def LLVMIR_identity_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) := anyext_trunc_fold
 
