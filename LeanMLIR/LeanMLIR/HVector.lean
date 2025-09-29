@@ -201,6 +201,14 @@ theorem map_map {A B C : α → Type*} {l : List α} (t : HVector A l)
     · rfl
     · simp_all [map]
 
+/-! ## map' -/
+section Map'
+
+@[simp] theorem map'_cons : map' f g (cons x xs) = cons (g _ x) (map' f g xs) := rfl
+@[simp] theorem map'_nil : map' f g nil = nil := rfl
+
+end Map'
+
 /-! ## fold -/
 
 @[simp] theorem foldl_cons :
@@ -404,8 +412,8 @@ structure HVectorLiteral where
 
 /-- Given a Lean expression of type `HVector _ _`, try to decompose it into an
 array of element expressions.
-Returns `none` if the passed expression is not a literal. -/
-def litExpr? : Expr → Option HVectorLiteral
+Returns `none` if the passed expression is not a recognized literal. -/
+def litExpr? : Expr → (Option HVectorLiteral)
   | mkApp6 (.const ``HVector.cons _) _α _A _as a x xs => do
       let ret ← litExpr? xs
       some { ret with elems := ret.elems.push ⟨ a, x ⟩ }
