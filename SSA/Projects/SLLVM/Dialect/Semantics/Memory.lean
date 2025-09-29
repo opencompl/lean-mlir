@@ -1,4 +1,5 @@
-import SSA.Core.Framework.Refinement
+import LeanMLIR.Framework
+
 import SSA.Projects.SLLVM.Tactic.SimpSet
 
 namespace LeanMLIR
