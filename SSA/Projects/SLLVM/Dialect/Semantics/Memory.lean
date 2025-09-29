@@ -23,9 +23,12 @@ inductive Block where
   /-- A live piece of memory (i.e., has been allocated and not yet freed). -/
   | live (b : LiveBlock)
 
+structure AllocState where
+  nextFreeBlock : Nat
+  deriving Inhabited
+
 structure MemoryState where
   mem : Std.HashMap BlockId Block
-  nextFreeBlock : Nat
   deriving Inhabited
 
 structure Pointer where
@@ -48,6 +51,10 @@ def Pointer.offsetInBits (p : Pointer) : Nat :=
 
 /-! ## Refinement -/
 section Refinement
+
+@[simp_sllvm]
+instance : Refinement AllocState where
+  IsRefinedBy s t := s = t
 
 instance : Refinement MemoryState where
   IsRefinedBy s t := ∀ (id : BlockId),
