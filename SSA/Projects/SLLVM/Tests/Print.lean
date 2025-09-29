@@ -48,7 +48,7 @@ info: builtin.module {
 /--
 info: builtin.module {
   ^entry():
-    %0 = "ptr.alloca"() : () -> (!ptr)
+    %0 = "ptr.alloca"(){elem_type = i8} : () -> (!ptr)
     "llvm.return"(%0) : (!ptr) -> ()
 }
 -/
