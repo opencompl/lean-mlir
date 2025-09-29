@@ -193,6 +193,7 @@ instance : DialectPrint SLLVM where
     | .alloca _w  => "ptr.alloca"
   printAttributes
     | .arith llvmOp => printAttributes llvmOp
+    | .alloca w => s!"\{elem_type = i{w}}"
     | _ => ""
   printTy
     | .arith llvmTy => printTy llvmTy
