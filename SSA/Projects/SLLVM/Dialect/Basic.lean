@@ -184,22 +184,22 @@ def_denote for SLLVM
 
 /-! ### Printing -/
 section Print
+open DialectPrint
 
-instance : ToString SLLVM.Ty where
-  toString := fun
-    | .arith ty => toString ty
+instance : DialectPrint SLLVM where
+  printOpName
+    | .arith llvmOp => printOpName llvmOp
+    | .store _ => "ptr.store"
+    | .load _ => "ptr.load"
+    | .ptradd => "ptr.add"
+  printAttributes
+    | .arith llvmOp => printAttributes llvmOp
+    | _ => ""
+  printTy
+    | .arith llvmTy => printTy llvmTy
     | .ptr => "ptr"
-
-instance : ToString SLLVM.Op where
-  toString := fun
-    | .arith op => toString op
-    | .ptradd   => "ptradd"
-    | .load _   => "load"
-    | .store _  => "store"
-
-instance : Repr SLLVM.Ty where
-  reprPrec ty _ := toString ty
-instance : Repr SLLVM.Op where
-  reprPrec op _ := toString op
+  dialectName := "sllvm"
+  printReturn _ := "llvm.return"
+  printFunc _ := "^entry"
 
 end Print
