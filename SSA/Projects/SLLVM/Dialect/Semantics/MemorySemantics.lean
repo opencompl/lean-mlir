@@ -76,3 +76,21 @@ def store (p : SLLVM.Ptr) (x : LLVM.IntW w) : EffectM Unit := do
     mem := m.mem.insert p.id (.live { block with bytes })
   }
   return ()
+
+/--
+Allocate the next available block of `w` bits on the stack.
+
+Note: we currently only ever model a single function body, so there is no
+mechanism yet to de-allocate a block of memory.
+-/
+def alloca (w : Nat) : EffectM SLLVM.Ptr := do
+  let blockId : BlockId ← modifyGetThe AllocState fun s =>
+    (⟨s.nextFreeBlock⟩, { s with nextFreeBlock := s.nextFreeBlock + 1})
+  let ptr := .value { id := blockId, offset := 0 }
+  modifyThe MemoryState fun s => { s with
+      mem := s.mem.insert blockId <| .live {
+        length := (w + 7) / 8
+        bytes := 0#_
+      }
+    }
+  return ptr
