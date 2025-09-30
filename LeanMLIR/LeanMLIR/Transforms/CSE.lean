@@ -382,7 +382,7 @@ namespace Examples
 inductive ExTy
   | nat
   | bool
-  deriving DecidableEq, Repr
+  deriving DecidableEq
 
 @[reducible]
 instance : TyDenote ExTy where
@@ -394,7 +394,7 @@ inductive ExOp :  Type
   | add : ExOp
   | beq : ExOp
   | cst : ℕ → ExOp
-  deriving DecidableEq, Repr
+  deriving DecidableEq
 
 abbrev Ex : Dialect where
   Op := ExOp
@@ -429,6 +429,21 @@ def add {Γ : Ctxt _} (e₁ e₂ : Ctxt.Var Γ .nat) : Expr Ex Γ .pure [.nat] :
     (args := .cons e₁ <| .cons e₂ .nil)
     (regArgs := .nil)
 
+instance : DialectPrint Ex where
+  printOpName
+  | .add    => "add"
+  | .beq    => "beq"
+  | .cst _  => "cst"
+  printAttributes
+  | .cst v => s!"\{value = {v}}"
+  | _ => ""
+  printTy
+  | .nat => "nat"
+  | .bool => "bool"
+  dialectName := "ex"
+  printReturn _ := "return"
+  printFunc _ := "^entry"
+
 attribute [local simp] Ctxt.cons
 
 def ex1_pre_cse : Com Ex ∅ .pure [.nat] :=
@@ -439,10 +454,10 @@ def ex1_pre_cse : Com Ex ∅ .pure [.nat] :=
 /--
 info: {
   ^entry():
-    %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %1 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %2 = CSE.Examples.ExOp.add(%1, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
-    return %2 : (CSE.Examples.ExTy.nat) → ()
+    %0 = "cst"(){value = 1} : () -> (nat)
+    %1 = "cst"(){value = 1} : () -> (nat)
+    %2 = "add"(%1, %0) : (nat, nat) -> (nat)
+    "return"(%2) : (nat) -> ()
 }
 -/
 #guard_msgs in #eval ex1_pre_cse
@@ -453,10 +468,10 @@ def ex1_post_cse :
 /--
 info: {
   ^entry():
-    %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %1 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %2 = CSE.Examples.ExOp.add(%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
-    return %2 : (CSE.Examples.ExTy.nat) → ()
+    %0 = "cst"(){value = 1} : () -> (nat)
+    %1 = "cst"(){value = 1} : () -> (nat)
+    %2 = "add"(%0, %0) : (nat, nat) -> (nat)
+    "return"(%2) : (nat) -> ()
 }
 -/
 #guard_msgs in #eval ex1_post_cse
@@ -467,9 +482,9 @@ def ex1_post_cse_post_dce :
 /--
 info: {
   ^entry():
-    %0 = CSE.Examples.ExOp.cst 1 : () → (CSE.Examples.ExTy.nat)
-    %1 = CSE.Examples.ExOp.add(%0, %0) : (CSE.Examples.ExTy.nat, CSE.Examples.ExTy.nat) → (CSE.Examples.ExTy.nat)
-    return %1 : (CSE.Examples.ExTy.nat) → ()
+    %0 = "cst"(){value = 1} : () -> (nat)
+    %1 = "add"(%0, %0) : (nat, nat) -> (nat)
+    "return"(%1) : (nat) -> ()
 }
 -/
 #guard_msgs in #eval ex1_post_cse_post_dce

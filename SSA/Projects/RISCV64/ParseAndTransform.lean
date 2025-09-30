@@ -22,10 +22,11 @@ def parseAsRiscv (fileName : String ) : IO UInt32 := do
     return 0
 
 /--
-info:
-riscv_func.func @f(%0 : !riscv.reg, %1 : !riscv.reg):
-  %2 = "riscv.add"(%0, %1) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-  "riscv.ret"(%2) : (!riscv.reg) -> ()
+info: {
+  riscv_func.func @f(%0 : !riscv.reg, %1 : !riscv.reg):
+    %2 = "riscv.add"(%0, %1) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    "riscv.ret"(%2) : (!riscv.reg) -> ()
+}
 -/
 #guard_msgs in #eval Com.print [RV64_com| {
   ^bb0(%0 : !i64, %1 : !i64 ):
