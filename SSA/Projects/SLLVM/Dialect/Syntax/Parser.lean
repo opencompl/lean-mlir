@@ -82,8 +82,11 @@ instance : DialectParse SLLVM 0 where
     | "ptr.store" => do
         let args ← args.assumeArity 2
         mkExprOf <| .store (← getIntWidth args[1])
-    | "ptr.alloca" => mkExprOf <| .alloca 8
-    -- ^^ TODO: `llvm.alloca` ought to have an attribute `elem_type` which indicates the type being allocated
+    | "ptr.alloca" =>
+        let t ← opStx.getTypeAttr "elem_type"
+        let .int _ w := t
+          | throw <| .generic s!"Expected value of attribute `elem_type` to be an integer type"
+        mkExprOf <| .alloca w.toConcrete
     -- Ternary Operations
     | "llvm.select" =>
         let args ← args.assumeArity 3

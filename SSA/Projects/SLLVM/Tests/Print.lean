@@ -54,7 +54,20 @@ info: builtin.module {
 -/
 #guard_msgs in #eval Com.printModule [sllvm| {
   ^entry():
-    %p = "ptr.alloca"() : () -> (!ptr)
+    %p = "ptr.alloca"() {elem_type = i8} : () -> (!ptr)
+    "llvm.return"(%p) : (!ptr) -> ()
+}]
+
+/--
+info: builtin.module {
+  ^entry():
+    %0 = "ptr.alloca"(){elem_type = i16} : () -> (!ptr)
+    "llvm.return"(%0) : (!ptr) -> ()
+}
+-/
+#guard_msgs in #eval Com.printModule [sllvm| {
+  ^entry():
+    %p = "ptr.alloca"() {elem_type = i16} : () -> (!ptr)
     "llvm.return"(%p) : (!ptr) -> ()
 }]
 

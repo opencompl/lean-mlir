@@ -52,6 +52,18 @@ def getIntAttr (attr : String) : Except TransformError (Int × MLIRType φ) := d
         \t{attr}"
   return (val, ty)
 
+/--
+`op.getTypeAttr attr` returns the value of a type attribute.
+
+Throws an error if the attribute is not present, or if the value of the attribute
+has the wrong type.
+-/
+def getTypeAttr (attr : String) : Except TransformError (MLIRType φ) := do
+  let .type ty ← op.getAttr attr
+    | .error <| .generic s!"Expected attribute `{attr}` to be a type, but found a:\n\
+        \t{attr}"
+  return (ty)
+
 /-! ## Arguments -/
 
 /--
