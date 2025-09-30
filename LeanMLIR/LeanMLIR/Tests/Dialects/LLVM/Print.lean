@@ -1141,7 +1141,7 @@ info: {
 /--
 info: builtin.module {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.eq"(%0, %1)eq : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.eq"(%0, %1) : (i64, i64) -> (i1)
     "llvm.return"(%2) : (i1) -> ()
 }
 -/
@@ -1172,6 +1172,19 @@ info: {
 #guard_msgs in #eval [llvm| {
   ^bb0(%x: i64, %y: i64):
     %z = "llvm.icmp.eq"(%x, %y) : (i64, i64) -> (i1)
+    "llvm.return"(%z) : (i1) -> ()
+}]
+
+/--
+info: builtin.module {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.icmp.ne"(%0, %1) : (i64, i64) -> (i1)
+    "llvm.return"(%2) : (i1) -> ()
+}
+-/
+#guard_msgs in #eval Com.printModule [llvm| {
+  ^bb0(%x: i64, %y: i64):
+    %z = "llvm.icmp.ne"(%x, %y) : (i64, i64) -> (i1)
     "llvm.return"(%z) : (i1) -> ()
 }]
 
