@@ -164,7 +164,13 @@ partial def Expr.printRhs (e : Expr d Γ eff t) : Format :=
         |> f!", ".joinSep
         |> Format.nest 2
       f!" ({regs})"
-  f!"\"{printOpName e.op}\"{e.printArgs}{printAttributes e.op}{regions} : {e.printType}"
+  let attrs := (printAttributes e.op).trim
+  let atrrs :=
+    if attrs.isEmpty then
+      attrs
+    else
+      " " ++ attrs
+  f!"\"{printOpName e.op}\"{e.printArgs}{attrs}{regions} : {e.printType}"
 
 /--
 Print an `Expr` in generic MLIR syntax.
