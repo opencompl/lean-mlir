@@ -330,13 +330,13 @@ def sameBothSides (bvLogicalExpr : GenFpLogicalExpr) : Bool :=
   | _ => false
 
 /-- warning: declaration uses 'sorry' -/
-#guard_msgs in def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: FpExpr w) : BitVec w :=
+#guard_msgs in noncomputable def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: FpExpr w) : BitVec w :=
   let substitutedBvExpr := substituteBVExpr expr (packedBitVecToSubstitutionValue assignments)
   sorry
   -- FpExpr.eval assignments substitutedBvExpr
 
 /-- warning: declaration uses 'sorry' -/
-#guard_msgs in def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenFpLogicalExpr) : Bool :=
+#guard_msgs in noncomputable def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenFpLogicalExpr) : Bool :=
   let substitutedBvExpr := substitute expr (packedBitVecToSubstitutionValue assignments)
   sorry
   -- GenFpLogicalExpr.eval assignments substitutedBvExpr
