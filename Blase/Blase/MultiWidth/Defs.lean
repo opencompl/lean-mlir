@@ -330,16 +330,27 @@ inductive BoolBinaryRelationKind
 | eq
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
-inductive Predicate (bcard : Nat)
-  (tctx : Term.Ctx wcard tcard)  (pcard : Nat) : Type
-| binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard)
-| binRel (k : BinaryRelationKind) (w : WidthExpr wcard)
-    (a : Term bcard tctx (.bv w)) (b : Term bcard tctx (.bv w))
-| and (p1 p2 : Predicate bcard tctx pcard)
-| or (p1 p2 : Predicate bcard tctx pcard)
-| var (v : Fin pcard)
-| boolBinRel (k : BoolBinaryRelationKind)
-  (a b : Term bcard tctx .bool)
+inductive Predicate :
+  (wcard : Nat) →
+  (tcard : Nat) →
+  (bcard : Nat) →
+  (tctx : Term.Ctx wcard tcard) →
+  (pcard : Nat) → Type
+| binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) :
+    Predicate wcard tcard bcard tctx pcard
+| binRel {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
+    (k : BinaryRelationKind)
+    (w : WidthExpr wcard)
+    (a : Term bcard tctx (.bv w))
+    (b : Term bcard tctx (.bv w)) :
+    Predicate wcard tcard bcard tctx pcard
+| and (p1 p2 : Predicate wcard tcard bcard tctx pcard) : Predicate wcard tcard bcard tctx pcard
+| or (p1 p2 : Predicate wcard tcard bcard tctx pcard) : Predicate wcard tcard bcard tctx pcard
+| var (v : Fin pcard) : Predicate wcard tcard bcard tctx pcard
+| boolBinRel  {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
+  (k : BoolBinaryRelationKind)
+  (a b : Term bcard tctx .bool) :
+  Predicate wcard tcard bcard tctx pcard
 
 -- add predicate NOT, <= for bitvectors, < for bitvectors, <=
 -- for widths, =, not equals for widths.
@@ -349,7 +360,7 @@ def Predicate.toProp {wcard tcard bcard pcard : Nat} {wenv : WidthExpr.Env wcard
     (benv : Term.BoolEnv bcard)
     (tenv : tctx.Env wenv)
     (penv : Predicate.Env pcard)
-    (p : Predicate bcard tctx pcard) : Prop :=
+    (p : Predicate wcard tcard bcard tctx pcard) : Prop :=
   match p with
   | .var v => penv v
   | .binWidthRel rel wa wb =>
@@ -455,18 +466,6 @@ def Term.ofDep {wcard tcard bcard : Nat}
   | .boolVar v => .boolVar v
   | .boolConst b => .boolConst b
 
-
-/-
-def BoolExpr.ofDep
-    {wcard tcard bcard : Nat}
-    {tctx :Term.Ctx wcard tcard}
-    (b : MultiWidth.BoolExpr bcard tctx) : BoolExpr :=
-  match b with
-  | .var v => .var v
-  | .ofBool b => .ofBool b
-  | .msb w t => .msb (.ofDep w) (.ofDep t)
-end
--/
 
 @[simp]
 def Term.ofDep_var {wcard tcard : Nat} (bcard : Nat)
@@ -596,7 +595,7 @@ def Predicate.pcard (p : Predicate) : Nat :=
 
 
 def Predicate.ofDep {wcard tcard pcard : Nat}
-    {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate bctx tctx pcard) : Predicate :=
+    {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate wcard tcard bcard tctx pcard) : Predicate :=
   match p with
   | .var v => .var v
   | .binWidthRel .eq wa wb => .binWidthRel .eq (.ofDep wa) (.ofDep wb)
@@ -752,7 +751,7 @@ structure HTermBoolFSMToBitStream
 
 structure HPredFSMToBitStream {pcard : Nat}
   {tctx : Term.Ctx wcard tcard}
-  {p : Predicate bcard tctx pcard} (fsm : PredicateFSM wcard tcard bcard pcard (.ofDep p)) : Prop where
+  {p : Predicate wcard tcard bcard tctx pcard} (fsm : PredicateFSM wcard tcard bcard pcard (.ofDep p)) : Prop where
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv)
       (penv : Predicate.Env pcard)

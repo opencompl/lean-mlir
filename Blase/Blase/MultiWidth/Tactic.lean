@@ -703,29 +703,37 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
 /--
 info: MultiWidth.Predicate.binRel {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
   (k : BinaryRelationKind) (w : WidthExpr wcard) (a b : @Term wcard tcard bcard tctx (@TermKind.bv wcard w)) :
-  @Predicate wcard tcard bcard tctx pcard
+  Predicate wcard tcard bcard tctx pcard
 -/
 #guard_msgs in set_option pp.explicit true in #check MultiWidth.Predicate.binRel
 
 /--
 info: MultiWidth.Predicate.or {wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ}
-  (p1 p2 : Predicate bcard tctx pcard) : Predicate bcard tctx pcard
+  (p1 p2 : Predicate wcard tcard bcard tctx pcard) : Predicate wcard tcard bcard tctx pcard
 -/
 #guard_msgs in #check MultiWidth.Predicate.or
 
 
 /--
-info: MultiWidth.Predicate.var {wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ} (v : Fin pcard) :
-  Predicate bcard tctx pcard
+info: MultiWidth.Predicate.var {pcard wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} (v : Fin pcard) :
+  Predicate wcard tcard bcard tctx pcard
 -/
 #guard_msgs in #check MultiWidth.Predicate.var
 
 
 /--
 info: MultiWidth.Predicate.binWidthRel {wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ}
-  (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) : Predicate bcard tctx pcard
+  (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) : Predicate wcard tcard bcard tctx pcard
 -/
 #guard_msgs in #check MultiWidth.Predicate.binWidthRel
+
+
+/--
+info: MultiWidth.Predicate.boolBinRel {wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ}
+  (k : BoolBinaryRelationKind) (a b : Term bcard tctx TermKind.bool) : Predicate wcard tcard bcard tctx pcard
+-/
+#guard_msgs in #check MultiWidth.Predicate.boolBinRel
+
 
 def Expr.mkPredicateExpr (wcard tcard bcard pcard : Nat) (tctx : Expr)
     (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
@@ -780,8 +788,8 @@ def Expr.mkPredicateExpr (wcard tcard bcard pcard : Nat) (tctx : Expr)
 
 /--
 info: MultiWidth.Predicate.toProp {wcard tcard bcard pcard : ℕ} {wenv : WidthExpr.Env wcard} {tctx : Term.Ctx wcard tcard}
-  (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv) (penv : Predicate.Env pcard) (p : Predicate bcard tctx pcard) :
-  Prop
+  (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv) (penv : Predicate.Env pcard)
+  (p : Predicate wcard tcard bcard tctx pcard) : Prop
 -/
 #guard_msgs in #check MultiWidth.Predicate.toProp
 
@@ -924,7 +932,7 @@ def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : SolverM Expr 
 
 /--
 info: MultiWidth.mkPredicateFSMDep {wcard tcard bcard pcard : ℕ} {tctx : Term.Ctx wcard tcard}
-  (p : Predicate bcard tctx pcard) : PredicateFSM wcard tcard bcard pcard (Nondep.Predicate.ofDep p)
+  (p : Predicate wcard tcard bcard tctx pcard) : PredicateFSM wcard tcard bcard pcard (Nondep.Predicate.ofDep p)
 -/
 #guard_msgs in #check MultiWidth.mkPredicateFSMDep
 def Expr.mkPredicateFSMDep (_wcard _tcard _bcard _pcard : Nat) (_tctx : Expr) (p : Expr) : SolverM Expr := do
@@ -949,7 +957,7 @@ def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
 
 /--
 info: MultiWidth.Predicate.toProp_of_KInductionCircuits' {wcard tcard bcard pcard : ℕ} (P : Prop)
-  (tctx : Term.Ctx wcard tcard) (p : Predicate bcard tctx pcard) (pNondep : Nondep.Predicate)
+  (tctx : Term.Ctx wcard tcard) (p : Predicate wcard tcard bcard tctx pcard) (pNondep : Nondep.Predicate)
   (_hpNondep : pNondep = Nondep.Predicate.ofDep p) (fsm : PredicateFSM wcard tcard bcard pcard pNondep)
   (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep) (n : ℕ)
   (circs : ReflectVerif.BvDecide.KInductionCircuits fsm.toFsm n) (hCircs : circs.IsLawful)
