@@ -1006,11 +1006,9 @@ theorem ZBB_RTYPE_pure_RISCV_MAXU_eq_ZBB_RTYPE_pure_RISCV_MAXU_bv (rs2_val : Bit
   norm_cast
   split_ifs <;> simp
   case neg h1 h2 =>
-    have h_le : rs2_val.toNat ≤ rs1_val.toNat := Nat.ge_of_not_lt h2
-    rw[toNat_eq]
-    exact Nat.le_antisymm h_le h1
+    bv_omega
   case pos h3 h4 =>
-    grind
+    bv_omega
 
 def ZBB_RTYPE_pure_RISCV_MAX_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.extractLsb' 0 64 (if BitVec.slt rs1_val rs2_val then rs2_val else rs1_val)
