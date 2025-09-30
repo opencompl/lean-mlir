@@ -449,4 +449,11 @@ instance : DialectToExpr DC where
 open Qq MLIR AST Lean Elab Term Meta in
 elab "[DC_com| " reg:mlir_region "]" : term => do SSA.elabIntoCom' reg DC
 
+instance : DialectPrint DC where
+  printOpName := reprStr
+  printTy := reprStr
+  printAttributes _ := ""
+  dialectName := "dc"
+  printReturn _ := "return"
+
 end MLIR2DC
