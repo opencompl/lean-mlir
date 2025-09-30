@@ -1,7 +1,10 @@
 Dockerfile
+
+artifacts/
 *.pdf
-.venv/
-.lake/
+
+**/.venv/
+**/.lake/
 
 .devcontainer
 .dockerignore

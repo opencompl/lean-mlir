@@ -22,9 +22,9 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
           restore-keys: |
-            ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+            ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
       - name: Install Elan & Lean
         if: steps.cache-lean.outputs.cache-hit != 'true'
@@ -76,7 +76,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -116,7 +116,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -156,7 +156,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -229,7 +229,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -296,7 +296,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake
@@ -384,7 +384,7 @@ jobs:
         with:
           path: |
             ~/.elan
-          key: ${{ runner.os }}-elan-${{ hashFiles('lake-toolchain') }}
+          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
 
       - name: Load Lean-MLIR from Cache
         id: cache-lake

@@ -9,7 +9,7 @@ directly in ℤ/qℤ (ZMod q), rather than polynomials over ℤ/qℤ.
 Authors: Jaeho Choi<zerozerozero0216@gmail.com>
 -/
 import Mathlib.Data.ZMod.Basic
-import SSA.Core.Framework
+import LeanMLIR.Framework
 
 open ZMod
 

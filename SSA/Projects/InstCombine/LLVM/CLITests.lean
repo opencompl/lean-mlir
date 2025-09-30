@@ -1,12 +1,13 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Core.Util
 import Batteries
-import Lean.Environment
+import Lean
 import Cli
-import SSA.Core.MLIRSyntax.Transform
-import SSA.Projects.InstCombine.Base
+
+import LeanMLIR.Util
+import LeanMLIR.MLIRSyntax.Transform
+import LeanMLIR.Dialects.LLVM.Syntax
 
 open Lean TyDenote InstCombine
 
@@ -257,3 +258,8 @@ initialize llvmExtension : NameExt ←
 
 elab "llvmTests!" : term <= ty => do
   mkElab llvmExtension ty
+
+macro "deftest" name:ident " := " test_reg:mlir_region : command => do
+  `(@[reducible, llvmTest $name] def $(name) : ConcreteCliTest :=
+       let code := [llvm()| $test_reg]
+       { name := $(quote name.getId), ty := code.ty, context := code.ctxt, code := code, })

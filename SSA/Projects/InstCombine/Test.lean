@@ -1,9 +1,9 @@
 /-
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.Transform
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import LeanMLIR.MLIRSyntax.GenericParser
+import LeanMLIR.MLIRSyntax.Transform
+import LeanMLIR.Dialects.LLVM.Syntax
 import SSA.Projects.InstCombine.ComWrappers
 import SSA.Projects.InstCombine.Tactic
 open MLIR AST

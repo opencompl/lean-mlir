@@ -5,8 +5,6 @@ Lean-MLIR
      class="center"
      width=80 height=80
      style="width: 2.5em; height: 2.5em"/>
-
-<img src="https://github.com/opencompl/lean-mlir/actions/workflows/ci.yml/badge.svg" />
 </h1>
      
 Theory of static single assignment developed in the Lean proof assistant.
@@ -56,16 +54,6 @@ This directory structure is heavily inspired by the [Research Codebase Manifesto
 >     either go through the effort of polishing the code into core, or clone
 >     the code.
 
-##### `SSA/Experimental`:
-
-> Anything goes. Recommend namespacing by time (e.g. a new directory every month).
->     - Rubber-stamp approvals. Code review is optional and comments may be
->       ignored without justification. Do not plug this into continuous
->       integration.
->     - The goal of this directory is to create a safe space for researchers so
->       that they do not need to hide their work. By passively observing research
->       code “in the wild”, engineers can understand research pain points.
-
 ##### - `related-work/`: 
 
 > Top-level folder for research dependencies.
@@ -73,4 +61,3 @@ This directory structure is heavily inspired by the [Research Codebase Manifesto
 ##### `artifact-evaluation/`:
 
 > Docker container build for the current version of the library.
-

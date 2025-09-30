@@ -2,7 +2,7 @@ import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.InstCombine.ForLean
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.LLVM.EDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 import Lean.Meta.Tactic.Simp.SimpTheorems
 import Lean.Meta.Tactic.Simp.RegisterCommand
 import Lean.LabelAttribute

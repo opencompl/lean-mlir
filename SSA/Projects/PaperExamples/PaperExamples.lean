@@ -6,7 +6,7 @@ import Lean
 import Mathlib.Logic.Function.Iterate
 import Mathlib.Tactic.Ring
 
-import SSA.Core
+import LeanMLIR.Basic
 
 open LeanMLIR
 open BitVec
@@ -107,7 +107,7 @@ def lhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
     ^bb0(%x : i32):
       %c0 = "const" () { value = 0 : i32 } : () -> i32
       %out = "add" (%x, %c0) : (i32, i32) -> i32
-      "return" (%out) : (i32) -> (i32)
+      "return" (%out) : (i32) -> ()
   }]
 
 /--
@@ -125,7 +125,7 @@ info: {
 def rhs : Com Simple (Ctxt.ofList [.int]) .pure [.int] :=
   [simple_com| {
     ^bb0(%x : i32):
-      "return" (%x) : (i32) -> (i32)
+      "return" (%x) : (i32) -> ()
   }]
 
 

@@ -2,7 +2,7 @@ import SSA.Projects.LLVMRiscV.PeepholeRefine
 import SSA.Projects.LLVMRiscV.LLVMAndRiscv
 import SSA.Projects.InstCombine.Tactic
 import SSA.Projects.RISCV64.PrettyEDSL
-import SSA.Projects.InstCombine.LLVM.PrettyEDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 import Lean
 
 open LLVMRiscV
