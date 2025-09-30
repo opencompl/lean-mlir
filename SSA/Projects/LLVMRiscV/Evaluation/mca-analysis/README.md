@@ -14,6 +14,12 @@ your shell, you should run the following before you run the script:
 export PATH=$PATH:~/llvm-project/build/bin/
 ```
 
+To make sure that `evallib` is correctly imported, run: 
+
+```bash
+export PYTHONPATH=$PYTHONPATH:~/lean-mlir
+```
+
 ## How to run
 
 To reproduce the mca analysis results, run:
