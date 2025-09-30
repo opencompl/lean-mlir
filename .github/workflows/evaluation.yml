@@ -270,9 +270,9 @@ jobs:
         run: |
           lake -R build ISL
 
-      - name: Compile Alive Scaling
+      - name: Compile Project Tests
         run: |
-          lake -R build SSA.Projects.InstCombine.ScalingTest
+          lake -R build SSA.Tests
 
       - name: Check for changes in AliveStatements
         run: |
@@ -318,7 +318,7 @@ jobs:
 
       - name: Test Core Library
         run: |
-          lake -R build SSA.Tests.Tests
+          lake -R build SSA.Tests
 
       - name: Test InstCombine (unit-tests)
         run: |
