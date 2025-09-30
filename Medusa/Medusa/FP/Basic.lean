@@ -37,12 +37,14 @@ inductive FpExpr : Nat → Type where
   A binary operation.
   -/
   | bin (lhs : FpExpr w) (op : FpBinOp) (rhs : FpExpr w) : FpExpr w
+  | const (val : BitVec w) : FpExpr w
 with
   @[computed_field]
   hashCode : (w : Nat) → FpExpr w → UInt64
     | w, .var idx => mixHash 5 <| mixHash (hash w) (hash idx)
     | w, .bin lhs op rhs =>
       mixHash 13 <| mixHash (hash w) <| mixHash (hashCode _ lhs) <| mixHash (hash op) (hashCode _ rhs)
+    | w, .const val => mixHash 7 <| mixHash (hash w) (hash val)
 deriving Repr, DecidableEq, Inhabited
 
 namespace FpExpr
@@ -50,9 +52,11 @@ namespace FpExpr
 def toString : FpExpr w → String
   | .var idx => s!"var{idx}#{w}"
   | .bin lhs op rhs => s!"({lhs.toString} {op.toString} {rhs.toString})"
+  | .const val => s!"{val}"
 
 def size : FpExpr w → Nat
   | .var _ => 1
+  | .const _ => 1
   | .bin lhs _ rhs => 1 + lhs.size + rhs.size
 
 instance : ToString (FpExpr w) := ⟨toString⟩
@@ -208,6 +212,7 @@ def changeBVExprWidth (bvExpr: FpExpr w) (target: Nat) : FpExpr target := Id.run
   match bvExpr with
   | .var idx => (FpExpr.var idx : FpExpr target)
   | .bin lhs op rhs => FpExpr.bin (changeBVExprWidth lhs target) op (changeBVExprWidth rhs target)
+  | .const val => FpExpr.const (val.setWidth target)
 
 -- TODO: make this part of Medusa proper?
 def changeBVLogicalExprWidth (bvLogicalExpr: GenFpLogicalExpr) (target: Nat) : GenFpLogicalExpr :=
