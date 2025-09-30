@@ -22,9 +22,6 @@ inductive FpBinOp
 | add
 deriving Hashable, DecidableEq, Repr
 
-#check FpBinOp.toCtorIdx
-
-
 def FpBinOp.toString : FpBinOp → String
   | FpBinOp.add => "+"
 
@@ -309,9 +306,9 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: GenFpLogicalExpr) (symVa
                       -- getFpExprConstraints operand
                 | _ =>  []
 
-        getBitwiseConstraints {w} (bvExpr: FpExpr w) (op : FpBinOp) : List GenFpLogicalExpr :=
-            let neqZero := BoolExpr.not (BoolExpr.literal (FpPredicate.bin bvExpr FpBinaryPredKind.eq (FpExpr.const (BitVec.ofNat w 0))))
-            let neqAllOnes := BoolExpr.not (BoolExpr.literal (FpPredicate.bin bvExpr FpBinaryPredKind.eq (FpExpr.const (BitVec.allOnes w))))
+        getBitwiseConstraints {w} (bvExpr: FpExpr w) (_op : FpBinOp) : List GenFpLogicalExpr :=
+            let _neqZero := BoolExpr.not (BoolExpr.literal (FpPredicate.bin bvExpr FpBinaryPredKind.eq (FpExpr.const (BitVec.ofNat w 0))))
+            let _neqAllOnes := BoolExpr.not (BoolExpr.literal (FpPredicate.bin bvExpr FpBinaryPredKind.eq (FpExpr.const (BitVec.allOnes w))))
             []
 
 -- | TODO: write this as a filter / map
@@ -332,12 +329,14 @@ def sameBothSides (bvLogicalExpr : GenFpLogicalExpr) : Bool :=
   | .literal (FpPredicate.bin lhs _ rhs) => lhs == rhs
   | _ => false
 
-def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: FpExpr w) : BitVec w :=
+/-- warning: declaration uses 'sorry' -/
+#guard_msgs in def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: FpExpr w) : BitVec w :=
   let substitutedBvExpr := substituteBVExpr expr (packedBitVecToSubstitutionValue assignments)
   sorry
   -- FpExpr.eval assignments substitutedBvExpr
 
-def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenFpLogicalExpr) : Bool :=
+/-- warning: declaration uses 'sorry' -/
+#guard_msgs in def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenFpLogicalExpr) : Bool :=
   let substitutedBvExpr := substitute expr (packedBitVecToSubstitutionValue assignments)
   sorry
   -- GenFpLogicalExpr.eval assignments substitutedBvExpr
