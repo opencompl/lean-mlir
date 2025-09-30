@@ -33,6 +33,7 @@ inductive SLLVMOp where
   | ptradd
   | load (w : Nat)
   | store (w : Nat)
+  | alloca (w : Nat)
   deriving DecidableEq, Lean.ToExpr
 
 inductive SLLVMTy where
@@ -56,11 +57,6 @@ instance : DecidableEq SLLVM.Op := by unfold SLLVM; infer_instance
 instance : DecidableEq SLLVM.Ty := by unfold SLLVM; infer_instance
 instance : Lean.ToExpr SLLVM.Op := by unfold SLLVM; infer_instance
 instance : Lean.ToExpr SLLVM.Ty := by unfold SLLVM; infer_instance
-
--- instance : ToString SLLVM.Op    := by unfold SLLVM; infer_instance
--- instance : ToString SLLVM.Ty    := by unfold SLLVM; infer_instance
--- instance : Repr SLLVM.Op        := by unfold SLLVM; infer_instance
--- instance : Repr SLLVM.Ty        := by unfold SLLVM; infer_instance
 
 instance : Monad SLLVM.m        := by unfold SLLVM; infer_instance
 instance : LawfulMonad SLLVM.m  := by unfold SLLVM; infer_instance
@@ -124,6 +120,7 @@ def_signature for SLLVM
   | .ptradd          => (ptr, bitvec 64) -> ptr
   | .load w          => (ptr) -[.impure]-> bitvec w
   | .store w         => (ptr, bitvec w) -[.impure]-> []
+  | .alloca _w       => () -[.impure]-> ptr
   -- LLVM operations with modified effect signature
   | Op.urem w        => (bitvec w, bitvec w) -[.impure]-> bitvec w
   | Op.srem w        => (bitvec w, bitvec w) -[.impure]-> bitvec w
@@ -157,6 +154,7 @@ def_denote for SLLVM
   | .ptradd   => fun p x => [SLLVM.ptradd p x]ₕ
   | .load w   => fun p   => ([·]ₕ) <$> SLLVM.load p w
   | .store _  => fun p x => (fun _ => []ₕ) <$> SLLVM.store p x
+  | .alloca w => ([·]ₕ) <$> SLLVM.alloca w
   -- LLVM operations with modified effect signature
   | Op.udiv _w flag => fun x y => ([·]ₕ) <$> SLLVM.udiv x y flag
   | Op.sdiv _w flag => fun x y => ([·]ₕ) <$> SLLVM.sdiv x y flag
@@ -189,15 +187,17 @@ open DialectPrint
 instance : DialectPrint SLLVM where
   printOpName
     | .arith llvmOp => printOpName llvmOp
-    | .store _ => "ptr.store"
-    | .load _ => "ptr.load"
-    | .ptradd => "ptr.add"
+    | .store _w   => "ptr.store"
+    | .load _w    => "ptr.load"
+    | .ptradd     => "ptr.add"
+    | .alloca _w  => "ptr.alloca"
   printAttributes
     | .arith llvmOp => printAttributes llvmOp
+    | .alloca w => s!"\{elem_type = i{w}}"
     | _ => ""
   printTy
     | .arith llvmTy => printTy llvmTy
-    | .ptr => "ptr"
+    | .ptr => "!ptr"
   dialectName := "sllvm"
   printReturn _ := "llvm.return"
   printFunc _ := "^entry"

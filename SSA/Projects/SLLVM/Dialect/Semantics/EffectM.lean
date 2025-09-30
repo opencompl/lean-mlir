@@ -8,7 +8,7 @@ import SSA.Projects.SLLVM.Dialect.Semantics.Memory
 
 namespace LeanMLIR
 
-def EffectM := StateT MemoryState PoisonOr
+def EffectM := StateT GlobalState PoisonOr
 
 namespace EffectM
 
@@ -17,8 +17,21 @@ namespace EffectM
 instance : Monad EffectM        := by unfold EffectM; infer_instance
 instance : LawfulMonad EffectM  := by unfold EffectM; infer_instance
 
-instance : MonadState MemoryState EffectM   := by unfold EffectM; infer_instance
-instance : MonadStateOf MemoryState EffectM := by unfold EffectM; infer_instance
+instance : MonadStateOf GlobalState EffectM := by unfold EffectM; infer_instance
+
+instance : MonadStateOf AllocState EffectM where
+  get := do return (← getThe GlobalState).alloc
+  set alloc := modifyThe GlobalState ({ · with alloc })
+  modifyGet f := modifyGetThe GlobalState fun { mem, alloc } =>
+    let ⟨x, alloc⟩ := f alloc
+    ⟨x, { mem, alloc }⟩
+
+instance : MonadStateOf MemoryState EffectM where
+  get := do return (← getThe GlobalState).mem
+  set mem := modifyThe GlobalState ({ · with mem })
+  modifyGet f := modifyGetThe GlobalState fun { mem, alloc } =>
+    let ⟨x, mem⟩ := f mem
+    ⟨x, { mem, alloc }⟩
 
 /-! ## Constructors -/
 
@@ -55,12 +68,9 @@ lemma run_map (x : EffectM α) :
 section Refinement
 variable {α β} [HRefinement α β]
 
-instance : HRefinement (EffectM α) (EffectM β) :=
-  inferInstanceAs <| HRefinement (StateT _ PoisonOr _) (StateT _ PoisonOr _)
-
 @[simp, simp_denote]
-lemma isRefinedBy_iff (x : EffectM α) (y : EffectM β) :
-  x ⊑ y ↔ ∀ s, StateT.run x s ⊑ StateT.run y s := by rfl
+instance : HRefinement (EffectM α) (EffectM β) where
+  IsRefinedBy x y := ∀ s, StateT.run x s ⊑ StateT.run y s
 
 end Refinement
 

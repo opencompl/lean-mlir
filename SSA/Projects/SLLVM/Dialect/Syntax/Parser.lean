@@ -16,20 +16,21 @@ private abbrev ReaderM := MLIR.AST.ReaderM SLLVM
 
 def mkTy : MLIRType 0 → ExceptM SLLVM SLLVM.Ty
   | .int .Signless w => return Ty.bitvec w.toConcrete
+  | .undefined "ptr" => return Ty.ptr
   | _ => throw .unsupportedType
 
 instance : TransformTy SLLVM 0 where
   mkTy := mkTy
 
 
-def getOutputWidth (opStx : MLIR.AST.Op 0) (op : String) :
+def getOutputWidth (opStx : MLIR.AST.Op 0) :
     Except TransformError Nat := do
   match opStx.res with
   | res::[] =>
     match res.2 with
     | .int _ (.concrete w) => pure w
-    | _ => throw <| .generic s!"The operation {op} must output an integer type"
-  | _ => throw <| .generic s!"The operation {op} must have a single output"
+    | _ => throw <| .generic s!"The operation {opStx.name} must output an integer type"
+  | _ => throw <| .generic s!"The operation {opStx.name} must have a single output"
 
 /-- Given a variable of arbitrary type, return its width.
 
@@ -54,7 +55,9 @@ def parseOverflowFlags (op : AST.Op 0) : ReaderM LLVM.NoWrapFlags :=
     | _ => throw <| .generic s!"Unrecognised overflow flag found: {MLIR.AST.docAttrVal y}. \
         We currently support nsw (no signed wrap) and nuw (no unsigned wrap)"
 
-instance : TransformExpr SLLVM 0 where
+instance : DialectParse SLLVM 0 where
+  isValidReturn Γ opStx := return opStx.name == "llvm.return"
+
   mkExpr (Γ : Ctxt SLLVM.Ty) (opStx : MLIR.AST.Op 0) := do
   let args ← opStx.parseArgs Γ
 
@@ -69,8 +72,21 @@ instance : TransformExpr SLLVM 0 where
     let args ← args.assumeArity 1
     getIntWidth args[0]
 
+  let getOutputWidth := getOutputWidth opStx
+
   let mkExprOf := opStx.mkExprOf (args? := args) Γ
   match opStx.name with
+    -- new SLLVM operations
+    | "ptr.add" => mkExprOf <| .ptradd
+    | "ptr.load" => mkExprOf <| .load (← getOutputWidth)
+    | "ptr.store" => do
+        let args ← args.assumeArity 2
+        mkExprOf <| .store (← getIntWidth args[1])
+    | "ptr.alloca" =>
+        let t ← opStx.getTypeAttr "elem_type"
+        let .int _ w := t
+          | throw <| .generic s!"Expected value of attribute `elem_type` to be an integer type"
+        mkExprOf <| .alloca w.toConcrete
     -- Ternary Operations
     | "llvm.select" =>
         let args ← args.assumeArity 3
@@ -104,9 +120,9 @@ instance : TransformExpr SLLVM 0 where
     | "llvm.not"   => mkExprOf <| Op.not (← unW)
     | "llvm.neg"   => mkExprOf <| Op.neg (← unW)
     | "llvm.copy"  => mkExprOf <| Op.copy (← unW)
-    | "llvm.zext"  => mkExprOf <| Op.zext (← unW) (← getOutputWidth opStx "zext") ⟨ opStx.hasAttr "nonNeg" ⟩
-    | "llvm.sext"  => mkExprOf <| Op.sext (← unW) (← getOutputWidth opStx "sext")
-    | "llvm.trunc" => mkExprOf <| Op.trunc (← unW) (← getOutputWidth opStx "trunc") (← parseOverflowFlags opStx)
+    | "llvm.zext"  => mkExprOf <| Op.zext (← unW) (← getOutputWidth) ⟨ opStx.hasAttr "nonNeg" ⟩
+    | "llvm.sext"  => mkExprOf <| Op.sext (← unW) (← getOutputWidth)
+    | "llvm.trunc" => mkExprOf <| Op.trunc (← unW) (← getOutputWidth) (← parseOverflowFlags opStx)
     -- Constant
     | "llvm.mlir.constant" => do
       let ⟨val, ty⟩ ← opStx.getIntAttr "value"
@@ -116,15 +132,6 @@ instance : TransformExpr SLLVM 0 where
       mkExprOf <| Op.const w val
     -- Fallback
     | opName => throw <| .unsupportedOp opName
-
-instance : TransformReturn SLLVM 0 where
-  mkReturn (Γ : Ctxt SLLVM.Ty) (opStx : MLIR.AST.Op 0) := do
-  if opStx.name ≠ "llvm.return" then
-    throw <| .unsupportedOp s!"Tried to build return out of non-return statement {opStx.name}"
-  else
-    let args ← (← opStx.parseArgs Γ).assumeArity 1
-    let ⟨ty, v⟩ := args[0]
-    return ⟨.pure, [ty], Com.ret v⟩
 
 elab "[sllvm| " reg:mlir_region "]" : term =>
   SSA.elabIntoCom' reg SLLVM
