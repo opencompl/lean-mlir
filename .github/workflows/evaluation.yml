@@ -318,7 +318,7 @@ jobs:
 
       - name: Test Core Library
         run: |
-          lake -R build SSA.Tests.Tests
+          lake -R build SSA.Tests
 
       - name: Test InstCombine (unit-tests)
         run: |
