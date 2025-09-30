@@ -31,6 +31,10 @@ structure MemoryState where
   mem : Std.HashMap BlockId Block
   deriving Inhabited
 
+structure GlobalState where
+  alloc : AllocState
+  mem : MemoryState
+
 structure Pointer where
   id : BlockId
   /-- Offset in bytes -/
@@ -52,7 +56,6 @@ def Pointer.offsetInBits (p : Pointer) : Nat :=
 /-! ## Refinement -/
 section Refinement
 
-@[simp_sllvm]
 instance : Refinement AllocState where
   IsRefinedBy s t := s = t
 
@@ -60,9 +63,28 @@ instance : Refinement MemoryState where
   IsRefinedBy s t := ∀ (id : BlockId),
     s[id]? = t[id]?
 
+instance : Refinement GlobalState where
+  IsRefinedBy s t :=
+    s.alloc ⊑ t.alloc ∧ s.mem ⊑ t.mem
+
+
+
+section Lemmas
+
+@[simp_sllvm]
+theorem GlobalState.isRefinedBy_iff (s t : GlobalState) :
+    s ⊑ t ↔ s.alloc ⊑ t.alloc ∧ s.mem ⊑ t.mem := by
+  rfl
+
+@[simp_sllvm]
+theorem AllocState.isRefinedBy_rfl (s : AllocState) :
+    s ⊑ s := by
+  rfl
+
 @[simp_sllvm]
 theorem MemoryState.isRefinedBy_rfl (s : MemoryState) :
     s ⊑ s := by
   intro id; rfl
 
+end Lemmas
 end Refinement
