@@ -162,13 +162,7 @@ partial def Expr.print (e : Expr d Γ eff t) : Format :=
         |> f!", ".joinSep
         |> Format.nest 2
       f!" ({regs})"
-  let attrs := printAttributes e.op
-  let atrrs :=
-    if attrs.isEmpty then
-      attrs
-    else
-      " " ++ attrs.trim
-  Format.align true ++ f!"{e.printResultList}\"{printOpName e.op}\"{e.printArgs}{attrs}{regions} : {e.printType}"
+  Format.align true ++ f!"{e.printResultList}\"{printOpName e.op}\"{e.printArgs}{printAttributes e.op}{regions} : {e.printType}"
 
 /--
 Recursively print a `Com` in generic MLIR syntax.
