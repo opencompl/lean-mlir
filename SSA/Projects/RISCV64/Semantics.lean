@@ -1004,11 +1004,7 @@ theorem ZBB_RTYPE_pure_RISCV_MAXU_eq_ZBB_RTYPE_pure_RISCV_MAXU_bv (rs2_val : Bit
   unfold ZBB_RTYPE_pure_RISCV_MAXU ZBB_RTYPE_pure_RISCV_MAXU_bv
   simp only [max_def, ult_iff_toNat_lt]
   norm_cast
-  split_ifs <;> simp
-  case neg h1 h2 =>
-    bv_omega
-  case pos h3 h4 =>
-    bv_omega
+  split_ifs <;> simp <;> bv_omega
 
 def ZBB_RTYPE_pure_RISCV_MAX_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.extractLsb' 0 64 (if BitVec.slt rs1_val rs2_val then rs2_val else rs1_val)
