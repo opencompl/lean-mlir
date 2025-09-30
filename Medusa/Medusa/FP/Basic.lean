@@ -13,15 +13,23 @@ open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
 
+
+namespace Generalize
+
+namespace Fp
+
 inductive FpBinOp
 | add
 deriving Hashable, DecidableEq, Repr
+
+#check FpBinOp.toCtorIdx
 
 
 def FpBinOp.toString : FpBinOp → String
   | FpBinOp.add => "+"
 
-instance : ToString FpBinOp := ⟨FpBinOp.toString⟩
+instance : ToString FpBinOp where
+  toString := FpBinOp.toString
 
 namespace Generalize
 /--
@@ -233,12 +241,6 @@ def bvExprToSubstitutionValue (map: Std.HashMap Nat FpExprWrapper) :
       Std.HashMap Nat (SubstitutionValue FpExpr) :=
       Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.genExpr item.snd.bvExpr)) map.toList)
 
--- What does this tod?
--- TODO: this can be done in medusa directly?
-def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) :
-    Std.HashMap Nat (SubstitutionValue FpExpr) :=
-  Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
-
 -- | This does not need to happen here?
 -- TODO: part of this can happen in Medusa dir
 set_option warn.sorry false in
@@ -321,6 +323,9 @@ def addConstraints (expr: GenFpLogicalExpr) (constraints: List GenFpLogicalExpr)
       | BoolExpr.const _ => addConstraints x xs op
       | _ => addConstraints (BoolExpr.gate op expr x) xs op
 
+private def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) :
+    Std.HashMap Nat (SubstitutionValue FpExpr) :=
+  Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
 
 def sameBothSides (bvLogicalExpr : GenFpLogicalExpr) : Bool :=
     match bvLogicalExpr with

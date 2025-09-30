@@ -207,6 +207,8 @@ def parseExprs (lhsExpr rhsExpr : Expr) (width : Nat): ParseExprM (Option Parsed
 
   return none
 
+#check Float.ofNat
+
 def bvExprToExpr (ParsedFpExpr : ParsedFpLogicalExpr)
   (bvExpr : FpExpr w) : MetaM Expr := do
   let ParsedFpExprState := ParsedFpExpr.state
@@ -219,6 +221,8 @@ def bvExprToExpr (ParsedFpExpr : ParsedFpLogicalExpr)
   | .bin lhs op rhs  =>
     match op with
     | .add => return mkApp3 (.const ``BitVec.add []) (mkNatLit w) (← bvExprToExpr ParsedFpExpr lhs) (← bvExprToExpr ParsedFpExpr rhs)
+  -- | TODO: review this.
+  | .const val => return mkApp2 (.const ``Float.ofNat []) (mkNatLit w) (mkNatLit (val.toNat))
 
 
 def beqBitVecInstExpr (width : Expr) : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkApp (mkConst ``BitVec) width) (mkApp (.const ``instDecidableEqBitVec []) width)
@@ -229,10 +233,10 @@ def toExpr (ParsedFpExpr : ParsedFpLogicalExpr) (bvLogicalExpr: GenFpLogicalExpr
   where
   go (input : GenFpLogicalExpr) := do
   match input with
-  | .literal (GenBVPred.bin (w := w) lhs op rhs) =>
-      match op with
-      | .eq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) (mkNatLit w)) (beqBitVecInstExpr (mkNatLit w)) (← bvExprToExpr ParsedFpExpr lhs) (← bvExprToExpr ParsedFpExpr rhs)
-      | .ult => return mkApp3 (.const ``BitVec.ult []) (mkNatLit w) (← bvExprToExpr ParsedFpExpr lhs) (← bvExprToExpr ParsedFpExpr rhs)
+  | .literal x =>
+      match x with
+      | .bin (w := w) lhs .eq rhs =>
+        return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) (mkNatLit w)) (beqBitVecInstExpr (mkNatLit w)) (← bvExprToExpr ParsedFpExpr lhs) (← bvExprToExpr ParsedFpExpr rhs)
   | .const b =>
       match b with
       | true => return (mkConst ``Bool.true)
@@ -244,7 +248,7 @@ def toExpr (ParsedFpExpr : ParsedFpLogicalExpr) (bvLogicalExpr: GenFpLogicalExpr
         | .xor => return mkApp2 (.const ``Bool.xor []) (← go lhs) (← go rhs)
         | .and => return mkApp2 (.const ``Bool.and []) (← go lhs) (← go rhs)
         | .beq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkConst ``Bool) (beqBoolInstExpr) (← go lhs) (← go rhs)
-  | _ => throwError m! "Unsupported operation"
+  | _ => throwError m! "Unsupported operation in toExpr"
 
 /- def toBVExpr' (bvExpr : FpExpr w) : GeneralizerStateM (BVExpr w) := do
   match bvExpr with
