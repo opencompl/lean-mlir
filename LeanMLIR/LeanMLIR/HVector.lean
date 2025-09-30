@@ -135,6 +135,14 @@ abbrev toSingle : HVector A [a₁] → A a₁ := toTuple
 abbrev toPair   : HVector A [a₁, a₂] → A a₁ × A a₂ := toTuple
 abbrev toTriple : HVector A [a₁, a₂, a₃] → A a₁ × A a₂ × A a₃ := toTuple
 
+/-! ## isEmpty-/
+
+@[grind =]
+def length : HVector A as → Nat := fun _ => as.length
+
+def isEmpty : HVector A as → Bool
+  | .nil => true
+  | .cons _ _ => false
 
 /-!
 ## Conversion to a List

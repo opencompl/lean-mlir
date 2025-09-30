@@ -96,10 +96,11 @@ Now come the actual test cases
 
 -- Test an operation without any results
 /--
-info:
-^entry(%0 : !int):
-  "noop"() : () -> ()
-  "return"(%0) : (!int) -> ()
+info: {
+  ^entry(%0 : !int):
+    "noop"() : () -> ()
+    "return"(%0) : (!int) -> ()
+}
 -/
 #guard_msgs in #eval Com.print [test| {
   ^entry(%0 : !int):
@@ -109,11 +110,12 @@ info:
 
 -- Test an operation with multiple results
 /--
-info:
-^entry(%0 : !int, %1 : !int):
-  %2 = "pair"(%0, %1) : (!int, !int) -> (!int2)
-  %3, %4 = "unpair"(%2) : (!int2) -> (!int, !int)
-  "return"(%3) : (!int) -> ()
+info: {
+  ^entry(%0 : !int, %1 : !int):
+    %2 = "pair"(%0, %1) : (!int, !int) -> (!int2)
+    %3, %4 = "unpair"(%2) : (!int2) -> (!int, !int)
+    "return"(%3) : (!int) -> ()
+}
 -/
 #guard_msgs in #eval Com.print [test| {
   ^entry(%0 : !int, %1 : !int):
