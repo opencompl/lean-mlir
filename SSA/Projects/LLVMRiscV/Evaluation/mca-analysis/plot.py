@@ -214,13 +214,14 @@ def scatter_plot(parameter, selector1, selector2) :
     
     plt.xlabel(selector_labels[selector1] + ' - ' + parameters_labels[parameter])
     plt.ylabel(selector_labels[selector2] + ' - ' + parameters_labels[parameter])
-
-    plt.xlim(plot_min, plot_max)
-    plt.ylim(plot_min, plot_max)
     
-    if not (int((plot_max)/5)) == 0: 
+    if not (plot_min == plot_max) and (0 < plot_min) and (0 < plot_max): 
+        plt.xlim(plot_min, plot_max)
+        plt.ylim(plot_min, plot_max)
+    
         plt.xticks(range(0, int(plot_max), int((plot_max)/5)))
         plt.yticks(range(0, int(plot_max), int((plot_max)/5)))
+        
     plt.gca().set_aspect('equal', adjustable='box') 
 
     plt.tight_layout()
@@ -259,19 +260,20 @@ def overhead_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + '.csv')
 
     sorted_df = df.sort_values(by=[selector1 + '_' + parameter, selector2 + '_' + parameter], ascending=[True, True])
-    plt.stackplot(range(0, len(sorted_df)), sorted_df[selector1 + '_' + parameter],labels=[selector_labels[selector1]], color = light_green)
-    plt.stackplot(range(0, len(sorted_df)), sorted_df[selector2 + '_' + parameter],labels=[selector_labels[selector2]], color =white, edgecolor=light_red)
+    if (0 < len(sorted_df)): 
+        plt.stackplot(range(0, len(sorted_df)), sorted_df[selector1 + '_' + parameter],labels=[selector_labels[selector1]], color = light_green)
+        plt.stackplot(range(0, len(sorted_df)), sorted_df[selector2 + '_' + parameter],labels=[selector_labels[selector2]], color =white, edgecolor=light_red)
 
-    plt.xlabel('Program Index')
-    plt.ylabel(parameters_labels[parameter])
-    plt.xticks(range(0, len(sorted_df), int(np.ceil(len(sorted_df)/10))))
-    plt.legend()
-    plt.tight_layout()
+        plt.xlabel('Program Index')
+        plt.ylabel(parameters_labels[parameter])
+        plt.xticks(range(0, len(sorted_df), int(np.ceil(len(sorted_df)/10))))
+        plt.legend()
+        plt.tight_layout()
 
-    pdf_filename = plots_dir + f"{parameter}_overhead_{selector1}_vs_{selector2}.pdf"
-    plt.savefig(pdf_filename)
-    print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
-    plt.close()
+        pdf_filename = plots_dir + f"{parameter}_overhead_{selector1}_vs_{selector2}.pdf"
+        plt.savefig(pdf_filename)
+        print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
+        plt.close()
 
 
 def main():
