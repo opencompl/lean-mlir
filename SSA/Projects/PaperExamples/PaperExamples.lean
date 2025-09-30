@@ -42,7 +42,6 @@ instance : DialectToExpr Simple where
   toExprM := .const ``Id [0]
   toExprDialect := .const ``Simple []
 
-
 def_signature for Simple
   | .add      => (.int, .int) → .int
   | .const _  => () → .int
