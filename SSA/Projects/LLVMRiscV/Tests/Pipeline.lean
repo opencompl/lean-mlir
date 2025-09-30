@@ -4,7 +4,7 @@ import LeanMLIR.Framework.Print
 /--
 info: {
   ^bb0(%0 : i32, %1 : i32):
-    %2 = "llvm.icmp.ugt"(%0, %1)ugt : (i32, i32) -> (i1)
+    %2 = "llvm.icmp.ugt"(%0, %1) : (i32, i32) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.sltu"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -19,7 +19,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i32, %1 : i32):
-    %2 = "llvm.icmp.uge"(%0, %1)uge : (i32, i32) -> (i1)
+    %2 = "llvm.icmp.uge"(%0, %1) : (i32, i32) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.sltu"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -35,7 +35,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i32, %1 : i32):
-    %2 = "llvm.icmp.ult"(%0, %1)ult : (i32, i32) -> (i1)
+    %2 = "llvm.icmp.ult"(%0, %1) : (i32, i32) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.sltu"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -50,7 +50,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i32, %1 : i32):
-    %2 = "llvm.icmp.ule"(%0, %1)ule : (i32, i32) -> (i1)
+    %2 = "llvm.icmp.ule"(%0, %1) : (i32, i32) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.sltu"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -66,7 +66,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i32, %1 : i32):
-    %2 = "llvm.icmp.sgt"(%0, %1)sgt : (i32, i32) -> (i1)
+    %2 = "llvm.icmp.sgt"(%0, %1) : (i32, i32) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.slt"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -80,7 +80,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i32, %1 : i32):
-    %2 = "llvm.icmp.sge"(%0, %1)sge : (i32, i32) -> (i1)
+    %2 = "llvm.icmp.sge"(%0, %1) : (i32, i32) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.slt"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -95,7 +95,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i32, %1 : i32):
-    %2 = "llvm.icmp.slt"(%0, %1)slt : (i32, i32) -> (i1)
+    %2 = "llvm.icmp.slt"(%0, %1) : (i32, i32) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.slt"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -109,7 +109,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i32, %1 : i32):
-    %2 = "llvm.icmp.sle"(%0, %1)sle : (i32, i32) -> (i1)
+    %2 = "llvm.icmp.sle"(%0, %1) : (i32, i32) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.slt"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -124,7 +124,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i32, %1 : i32):
-    %2 = "llvm.icmp.eq"(%0, %1)eq : (i32, i32) -> (i1)
+    %2 = "llvm.icmp.eq"(%0, %1) : (i32, i32) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.xor"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -139,7 +139,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i32, %1 : i32):
-    %2 = "llvm.icmp.ne"(%0, %1)ne : (i32, i32) -> (i1)
+    %2 = "llvm.icmp.ne"(%0, %1) : (i32, i32) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.xor"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -155,7 +155,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.ugt"(%0, %1)ugt : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.ugt"(%0, %1) : (i64, i64) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.sltu"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -169,7 +169,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.uge"(%0, %1)uge : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.uge"(%0, %1) : (i64, i64) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.sltu"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -184,7 +184,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.ult"(%0, %1)ult : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.ult"(%0, %1) : (i64, i64) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.sltu"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -198,7 +198,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.ule"(%0, %1)ule : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.ule"(%0, %1) : (i64, i64) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.sltu"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -213,7 +213,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.sgt"(%0, %1)sgt : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.sgt"(%0, %1) : (i64, i64) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.slt"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -227,7 +227,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.sge"(%0, %1)sge : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.sge"(%0, %1) : (i64, i64) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.slt"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -243,7 +243,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.slt"(%0, %1)slt : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.slt"(%0, %1) : (i64, i64) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.slt"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -257,7 +257,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.sle"(%0, %1)sle : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.sle"(%0, %1) : (i64, i64) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.slt"(%4, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -272,7 +272,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.eq"(%0, %1)eq : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.eq"(%0, %1) : (i64, i64) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.xor"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -287,7 +287,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.icmp.ne"(%0, %1)ne : (i64, i64) -> (i1)
+    %2 = "llvm.icmp.ne"(%0, %1) : (i64, i64) -> (i1)
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.xor"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)

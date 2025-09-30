@@ -420,7 +420,6 @@ def MetaLLVM.printAttributes : (MetaLLVM φ).Op → String
   | .or w ⟨true⟩ => s!"\{disjoint = true : {w}}"
   | .add _ f | .shl _ f | .sub _ f | .mul _ f => printOverflowFlags f
   | .udiv _ ⟨true⟩ | .sdiv _ ⟨true⟩ | .lshr _ ⟨true⟩ => "<{isExact}> "
-  | .icmp ty _ => s!"{ty}"
   | _ => ""
 where
   printOverflowFlags : NoWrapFlags → String
