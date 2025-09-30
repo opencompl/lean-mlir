@@ -1478,6 +1478,17 @@ info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 -/
 #guard_msgs in #print axioms eval_fsmTermSle_eq_decide_sle
 
+def killVariable (fsm : FSM (StateSpace wcard tcard bcard (pcard + 1))) :
+    FSM (StateSpace wcard tcard bcard pcard) where
+  α := fsm.α
+  initCarry := fsm.initCarry
+  outputCirc :=
+  fsm.outputCirc.bind (fun var =>
+    match var with
+    | .inl x => .var true x
+    | .inr p => sorry)
+
+
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
   (PredicateFSM wcard tcard bcard pcard p) :=
@@ -1567,6 +1578,12 @@ def mkPredicateFSMAux (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
       -- TODO: rename this Aux' business, it's ugly.
       let fsmEq := composeBinaryAux' FSM.nxor (fsmA.toFsmZext) (fsmB.toFsmZext)
       { toFsm := composeUnaryAux FSM.scanAnd (fsmEq) }
+  | .bvbinder k w p =>
+    let fsmP := mkPredicateFSMAux wcard tcard bcard (pcard + 1) p
+    let fsm := fsmP.toFsm
+    match k with
+    | .exists =>
+      { toFsm := composeUnaryAux FSM.scanOr /- fsmP.toFsm -/ sorry }
 
 theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
   exact Function.ne_iff.mp h
