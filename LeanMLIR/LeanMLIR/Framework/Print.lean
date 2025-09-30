@@ -140,16 +140,18 @@ def Expr.printResultList (_e : Expr d Γ eff ts) : Format :=
 mutual
 
 /--
-Print an `Expr` in generic MLIR syntax.
+Prints the right-hand-side of an `Expr` in generic MLIR syntax.
 
-Note: this prints the entire let-binding, i.e.:
-- The return variable binders
+That is, print:
 - The operation
 - The arguments
 - The attributes, and
 - The type annotation
+
+Notably, this does *not* print the return variable binders, for that, use
+`Expr.printResultList`.
 -/
-partial def Expr.print (e : Expr d Γ eff t) : Format :=
+partial def Expr.printRhs (e : Expr d Γ eff t) : Format :=
   let regions :=
     match h : e.regArgs.length with
     | 0 => f!""
@@ -162,8 +164,20 @@ partial def Expr.print (e : Expr d Γ eff t) : Format :=
         |> f!", ".joinSep
         |> Format.nest 2
       f!" ({regs})"
-  let rhs := f!"\"{printOpName e.op}\"{e.printArgs}{printAttributes e.op}{regions} : {e.printType}"
-  Format.align true ++ f!"{e.printResultList}{rhs}"
+  f!"\"{printOpName e.op}\"{e.printArgs}{printAttributes e.op}{regions} : {e.printType}"
+
+/--
+Print an `Expr` in generic MLIR syntax.
+
+Note: this prints the entire let-binding, i.e.:
+- The return variable binders
+- The operation
+- The arguments
+- The attributes, and
+- The type annotation
+-/
+partial def Expr.print (e : Expr d Γ eff t) : Format :=
+  Format.align true ++ f!"{e.printResultList}{e.printRhs}"
 
 /--
 Recursively print a `Com` in generic MLIR syntax.
@@ -204,12 +218,12 @@ partial def Com.printModule (com : Com d Γ eff ts) : Format :=
 /-! ### ToString -/
 
 instance : ToString (Com d Γ eff t)  where toString com  := s!"{com.print}"
-instance : ToString (Expr d Γ eff t) where toString expr := s!"{expr.print}"
+instance : ToString (Expr d Γ eff t) where toString expr := s!"{expr.printRhs}"
 
 /-! ### Repr -/
 
 instance : Repr (Com d Γ eff t)  where reprPrec com _  := com.print
-instance : Repr (Expr d Γ eff t) where reprPrec expr _ := expr.print
+instance : Repr (Expr d Γ eff t) where reprPrec expr _ := expr.printRhs
 
 def Lets.repr (prec : Nat) : Lets d eff Γ t → Format
     | .nil => .align false ++ f!";"
