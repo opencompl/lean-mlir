@@ -985,19 +985,7 @@ theorem ZBB_RTYPE_pure_RISCV_MIN_eq_ZBB_RTYPE_pure_RISCV_MIN_bv (rs2_val : BitVe
     ZBB_RTYPE_pure_RISCV_MIN rs2_val rs1_val = ZBB_RTYPE_pure_RISCV_MIN_bv rs2_val rs1_val := by
   unfold ZBB_RTYPE_pure_RISCV_MIN ZBB_RTYPE_pure_RISCV_MIN_bv
   simp only [min_def, sle_iff_toInt_le]
-  split_ifs <;> simp
-  case pos h1 =>
-    have ha : BitVec.ofInt 65 rs1_val.toInt = (rs1_val.signExtend 65) := by
-      rw [BitVec.ofInt_toInt_eq_signExtend]
-    rw[ha]
-    refine setWidth_signExtend_eq_self ?_
-    trivial
-  case neg h2 =>
-    have ha : BitVec.ofInt 65 rs2_val.toInt = (rs2_val.signExtend 65) := by
-      rw [BitVec.ofInt_toInt_eq_signExtend]
-    rw[ha]
-    refine setWidth_signExtend_eq_self ?_
-    trivial
+  split_ifs <;> simp [BitVec.ofInt_toInt_eq_signExtend, setWidth_signExtend_eq_self (w := 64) (w' := 65) (by omega)]
 
 def ZBB_RTYPE_pure_RISCV_MINU_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.extractLsb' 0 64 (if BitVec.ule rs1_val rs2_val then rs1_val else rs2_val)
@@ -1024,18 +1012,6 @@ theorem ZBB_RTYPE_pure_RISCV_MAX_eq_ZBB_RTYPE_pure_RISCV_MAX_bv (rs2_val : BitVe
     ZBB_RTYPE_pure_RISCV_MAX rs2_val rs1_val = ZBB_RTYPE_pure_RISCV_MAX_bv rs2_val rs1_val := by
   unfold ZBB_RTYPE_pure_RISCV_MAX ZBB_RTYPE_pure_RISCV_MAX_bv
   simp only [max_def, sle_iff_toInt_le]
-  split_ifs <;> simp
-  case pos h1 =>
-    have ha : BitVec.ofInt 65 rs2_val.toInt = (rs2_val.signExtend 65) := by
-      rw [BitVec.ofInt_toInt_eq_signExtend]
-    rw[ha]
-    refine setWidth_signExtend_eq_self ?_
-    trivial
-  case neg h2 =>
-    have ha : BitVec.ofInt 65 rs1_val.toInt = (rs1_val.signExtend 65) := by
-      rw [BitVec.ofInt_toInt_eq_signExtend]
-    rw[ha]
-    refine setWidth_signExtend_eq_self ?_
-    trivial
+  split_ifs <;> simp [BitVec.ofInt_toInt_eq_signExtend, setWidth_signExtend_eq_self (w := 64) (w' := 65) (by omega)]
 
 end RV64Semantics
