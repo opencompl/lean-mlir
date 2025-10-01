@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 
 import LeanMLIR.Util.Poison
 import SSA.Projects.SLLVM.Tactic.SimpSet
+import SSA.Projects.SLLVM.Dialect.Semantics.HasUB
 import SSA.Projects.SLLVM.Dialect.Semantics.Memory
 
 namespace LeanMLIR
@@ -35,9 +36,11 @@ instance : MonadStateOf MemoryState EffectM where
 
 /-! ## Constructors -/
 
-abbrev ub : EffectM α := fun _ => PoisonOr.poison
 abbrev poison : EffectM (PoisonOr α) := pure PoisonOr.poison
 abbrev value (a : α) : EffectM (PoisonOr α) := pure (PoisonOr.value a)
+
+instance : HasUB EffectM where
+  throwUB := StateT.lift PoisonOr.poison
 
 /-! ## Lemmas -/
 
@@ -52,7 +55,7 @@ theorem bind_eq (x : EffectM α) (f : α → EffectM β) (s) :
 lemma run_pure : StateT.run (pure x : EffectM α) s = .value (x, s) := rfl
 
 @[simp, simp_denote, simp_sllvm]
-lemma run_ub : StateT.run (ub : EffectM α) s = .poison := rfl
+lemma run_ub : StateT.run (throwUB : EffectM α) s = .poison := rfl
 
 @[simp, simp_denote, simp_sllvm]
 lemma run_bind (x : EffectM α) :

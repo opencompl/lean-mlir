@@ -2,21 +2,10 @@
 Released under Apache 2.0 license as described in the file LICENSE.
 -/
 
+import SSA.Projects.SLLVM.Dialect.Semantics.HasUB
 import SSA.Projects.SLLVM.Dialect.Semantics.EffectM
 import SSA.Projects.SLLVM.Dialect.Semantics.ArithSemantics
 import SSA.Projects.SLLVM.Tactic.SimpSet
-
-
-
-/-- `x.getOrUB` raises UB if `x` is poison. -/
-def PoisonOr.getOrUB  : PoisonOr α → LeanMLIR.EffectM α
-  | .value x => pure x
-  | .poison => .ub
-
-/-- `x.getOrUB` raises UB if `x` is `none` -/
-def Option.getOrUB : Option α → LeanMLIR.EffectM α
-  | .some x => pure x
-  | .none => .ub
 
 namespace LeanMLIR
 
@@ -32,13 +21,8 @@ Return the block pointed to by `p`, or throw UB if this block
 def getLiveBlockOrUB (p : Pointer) : EffectM LiveBlock := do
   let m ← getThe MemoryState
   let some (.live block) := m[p.id]?
-    | .ub
+    | throwUB
   return block
-
-/-- throw UB if `p` is true -/
-def throwUBIf (p : Prop) [Decidable p] : EffectM Unit :=
-  if p then .ub else pure ()
-
 
 /--
 `load p n` will load `n` bits from the location pointed to by `p`.
