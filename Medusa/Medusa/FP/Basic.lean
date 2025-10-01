@@ -49,7 +49,7 @@ with
     | w, .bin lhs op rhs =>
       mixHash 13 <| mixHash (hash w) <| mixHash (hashCode _ lhs) <| mixHash (hash op) (hashCode _ rhs)
     | w, .const val => mixHash 7 <| mixHash (hash w) (hash val)
-deriving Repr, DecidableEq, Inhabited
+  deriving Repr, DecidableEq, Inhabited, Hashable
 
 namespace FpExpr
 
@@ -110,13 +110,14 @@ A binary predicate on `FpExpr`.
 | bin (lhs : FpExpr w) (op : FpBinaryPredKind) (rhs : FpExpr w)
 deriving Hashable, DecidableEq, Repr
 
+
 namespace FpPredicate
 
 def size : FpPredicate → Nat
 | .bin lhs _ rhs => 1 + lhs.size + rhs.size
 
 def toString : FpPredicate → String
-  | bin lhs op rhs => s!"({lhs.toString} {op.toString} {rhs.toString})"
+| bin lhs op rhs => s!"({lhs.toString} {op.toString} {rhs.toString})"
 
 instance : ToString FpPredicate := ⟨toString⟩
 
