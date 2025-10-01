@@ -285,6 +285,7 @@ def right_identity_zero_ror : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
 def right_identity_zero : List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
   [⟨_, right_identity_zero_sub⟩,
   ⟨_, right_identity_zero_add⟩,
+  ⟨_, right_identity_zero_or⟩,
   ⟨_, right_identity_zero_xor⟩,
   ⟨_, right_identity_zero_shl⟩,
   ⟨_, right_identity_zero_ashr⟩,
