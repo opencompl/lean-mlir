@@ -28,7 +28,6 @@ def FpBinOp.toString : FpBinOp → String
 instance : ToString FpBinOp where
   toString := FpBinOp.toString
 
-namespace Generalize
 /--
 Custom floating point expression
 for generalization incorporating all supported expressions

@@ -6,6 +6,8 @@ import Medusa.Fp.Basic
 
 namespace Generalize
 
+namespace Fp 
+
 open Lean
 open Lean.Meta
 open Std.Sat
@@ -207,7 +209,8 @@ def parseExprs (lhsExpr rhsExpr : Expr) (width : Nat): ParseExprM (Option Parsed
 
   return none
 
-#check Float.ofNat
+/-- info: Float.ofNat (n : Nat) : Float -/
+#guard_msgs in #check Float.ofNat
 
 def bvExprToExpr (ParsedFpExpr : ParsedFpLogicalExpr)
   (bvExpr : FpExpr w) : MetaM Expr := do
@@ -272,3 +275,4 @@ def toBVLogicalExpr (bvLogicalExpr: GenFpLogicalExpr) : GeneralizerStateM BVLogi
   | .gate gate lhs rhs => return BoolExpr.gate gate (← toBVLogicalExpr lhs) (← toBVLogicalExpr rhs)
   | _ => throwError m! "Unsupported operation"
  -/
+
