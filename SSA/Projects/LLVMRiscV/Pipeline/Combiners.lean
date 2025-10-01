@@ -137,7 +137,7 @@ def select_same_val : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
 
 /-! ### select_constant_cmp -/
 
-/- 
+/-
 Test the rewrite:
   (true ? x : y) -> x
   (false ? x : y) -> y
@@ -190,6 +190,18 @@ def right_identity_zero_add : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   ^entry (%x: !riscv.reg):
     %c = li (0) : !riscv.reg
     %0 = add %x, %c : !riscv.reg
+  ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+  ^entry (%x: !riscv.reg):
+  ret %x : !riscv.reg
+  }]
+
+def right_identity_zero_or : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+  ^entry (%x: !riscv.reg):
+    %c = li (0) : !riscv.reg
+    %0 = or %x, %c : !riscv.reg
   ret %0 : !riscv.reg
   }]
   rhs := [LV| {
