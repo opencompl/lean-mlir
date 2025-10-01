@@ -997,15 +997,14 @@ theorem ZBB_RTYPE_pure_RISCV_MINU_eq_ZBB_RTYPE_pure_RISCV_MINU_bv (rs2_val : Bit
   split_ifs <;> simp
 
 def ZBB_RTYPE_pure_RISCV_MAXU_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
-  BitVec.extractLsb' 0 64 (if BitVec.ult rs1_val rs2_val then rs2_val else rs1_val)
+  BitVec.extractLsb' 0 64 (if BitVec.ule rs1_val rs2_val then rs2_val else rs1_val)
 
 theorem ZBB_RTYPE_pure_RISCV_MAXU_eq_ZBB_RTYPE_pure_RISCV_MAXU_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) :
     ZBB_RTYPE_pure_RISCV_MAXU rs2_val rs1_val =ZBB_RTYPE_pure_RISCV_MAXU_bv rs2_val rs1_val := by
   unfold ZBB_RTYPE_pure_RISCV_MAXU ZBB_RTYPE_pure_RISCV_MAXU_bv
-  simp only [max_def, ult_iff_toNat_lt]
+  simp only [max_def, ule_iff_toNat_le]
   norm_cast
-  split_ifs <;> simp only [ofInt_natCast, ofNat_toNat, extractLsb'_eq_setWidth, Nat.reduceLeDiff,
-    setWidth_setWidth_of_le] <;> bv_omega
+  split_ifs <;> simp
 
 def ZBB_RTYPE_pure_RISCV_MAX_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.extractLsb' 0 64 (if BitVec.slt rs1_val rs2_val then rs2_val else rs1_val)
