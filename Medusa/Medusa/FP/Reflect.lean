@@ -2,11 +2,11 @@ import Lean.Elab.Term
 import Lean
 
 import Medusa.Generalize
-import Medusa.Fp.Basic
+import Medusa.FP.Basic
 
 namespace Generalize
 
-namespace Fp 
+namespace FP
 
 open Lean
 open Lean.Meta
