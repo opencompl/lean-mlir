@@ -159,6 +159,8 @@ def sorted_line_plot_all(parameter):
 
     plt.xlabel('Program Index')
     plt.ylabel(parameter)
+    plt.figure(figsize=(10, 5))
+    
     
     # plt.title(f'{parameter} Per Program')
     plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
@@ -311,6 +313,8 @@ def sorted_line_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + '.csv')
 
     sorted_df = df.sort_values(by = [selector1 + '_' + parameter, selector2 +'_'+ parameter])
+    plt.figure(figsize=(10, 5))
+    
 
     plt.plot(range(len(sorted_df)), sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
     plt.plot(range(len(sorted_df)), sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
@@ -334,6 +338,8 @@ def overhead_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + '.csv')
 
     sorted_df = df.sort_values(by=[selector1 + '_' + parameter, selector2 + '_' + parameter], ascending=[True, True])
+    plt.figure(figsize=(10, 5))
+    
     if (0 < len(sorted_df)): 
         plt.stackplot(range(0, len(sorted_df)), sorted_df[selector1 + '_' + parameter],labels=[selector_labels[selector1]], color = light_green)
         plt.stackplot(range(0, len(sorted_df)), sorted_df[selector2 + '_' + parameter],labels=[selector_labels[selector2]], color =white, edgecolor=light_red)
@@ -365,7 +371,7 @@ def main():
 
     parser.add_argument(
         "-t",
-        "--plot_type]",
+        "--plot_type",
         nargs="+",
         choices=["scatter", "sorted", "stacked", "overhead", "all"], 
     )
