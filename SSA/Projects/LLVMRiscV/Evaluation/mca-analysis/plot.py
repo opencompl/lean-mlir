@@ -14,7 +14,7 @@ import numpy as np
 
 
 matplotlib.rcParams['pdf.fonttype'] = 42
-plt.rcParams.update({'font.size': 18})
+plt.rcParams.update({'font.size': 20})
 
 
 matplotlib.rcParams['figure.autolayout'] = True
@@ -300,7 +300,7 @@ def bar_plot(parameter, selector1, selector2):
 
     plt.xlabel(selector_labels[selector1] + ' - ' + parameters_labels[parameter])
     plt.ylabel('(%)  - ' + selector_labels[selector1] +' vs. ' + selector_labels[selector2])
-    plt.legend(ncol = 5)
+    plt.legend(ncol = 5, loc = 'upper right')
     plt.tight_layout()
     
     plt.ylim(0, 119)
