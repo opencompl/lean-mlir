@@ -235,6 +235,77 @@ def scatter_plot(parameter, selector1, selector2) :
     plt.close()
 
 
+
+def bar_plot(parameter, selector1, selector2):
+    df = pd.read_csv(data_dir + parameter + '.csv')
+
+    col1 = selector1 + '_' + parameter
+    col2 = selector2 + '_' + parameter
+
+    if col1 not in df.columns:
+        print(f"Error: the column {col1} does not exist in the dataframe.")
+        return
+    if col2 not in df.columns:
+        print(f"Error: the column {col2} does not exist in the dataframe.")
+        return
+
+    # Compute the difference
+    df['diff'] = df[col1] - df[col2]
+
+    # Classify the differences
+    def classify(diff):
+        if diff == 0:
+            return '0'
+        elif diff == 1:
+            return '1'
+        elif diff == 2:
+            return '2'
+        elif diff <0:
+            return '<0'
+        else:
+            return '>2'
+
+    df['diff_class'] = df['diff'].apply(classify)
+
+    # For each unique value of selector1, compute the % of each diff_class
+    group = df.groupby(col1)['diff_class'].value_counts(normalize=True).unstack(fill_value=0) * 100
+
+    # Ensure all classes are present for consistent coloring/order
+    class_order = ['<0', '0', '1', '2', '>2']
+    for c in class_order:
+        if c not in group.columns:
+            group[c] = 0
+    group = group[class_order]
+
+    # Colors for each class
+    class_colors = {
+        '<0': light_blue,
+        '0': dark_green,
+        '1': light_green,
+        '2': light_red,
+        '>2': dark_red
+    }
+
+    # Plot
+    bottom = np.zeros(len(group))
+    x = group.index.astype(str)
+    plt.figure(figsize=(10, 5))
+    for c in class_order:
+        plt.bar(x, group[c], bottom=bottom, label=f'{c}', color=class_colors[c])
+        bottom += group[c].values
+
+    plt.xlabel(selector_labels[selector1] + ' - ' + parameters_labels[parameter])
+    plt.ylabel('Programs (%)  - ' + selector_labels[selector1] +' vs. ' + selector_labels[selector2])
+    plt.legend(ncol = 5)
+    plt.tight_layout()
+    
+    plt.ylim(0, 119)
+
+    pdf_filename = plots_dir + f"{parameter}_stacked_bar_{selector1}_vs_{selector2}.pdf"
+    plt.savefig(pdf_filename)
+    print(f"\nStacked bar plot saved to '{pdf_filename}' in the current working directory.")
+    plt.close()
+
 def sorted_line_plot(parameter, selector1, selector2):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
@@ -308,26 +379,33 @@ def main():
         extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', parameter)
         extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter)
         join_dataframes(['LEANMLIR', 'LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag'], parameter)
-        # bubble plots
-        scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-        scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-        scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-        scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-        scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-        # line plots
-        sorted_line_plot_all(parameter)
-        sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-        sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-        sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-        sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-        # overhead plots 
-        overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-        overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-        overhead_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-        overhead_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+        # # bubble plots
+        # scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+        # scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+        # scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+        # scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+        # scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+        # # line plots
+        # sorted_line_plot_all(parameter)
+        # sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+        # sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+        # sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+        # sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+        # sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+        # # overhead plots 
+        # overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+        # overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+        # overhead_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+        # overhead_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+        # overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+        # bar plots
+        bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+        bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+        bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+        bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+        bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            
+
 
 if __name__ == "__main__":
     main()
-
-
-
