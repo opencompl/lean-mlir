@@ -7,6 +7,7 @@ import Lean
 import Lean.Elab.Term
 import Medusa.Generalize
 import Fp.Basic
+import Fp.Addition
 
 open Lean
 open Elab
@@ -14,7 +15,7 @@ open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
 
-abbrev m : Nat := 3 -- Mantissa bits for f32
+abbrev mfixed : Nat := 3 -- Mantissa bits for f32
 
 -- TODO: put these in a namespace in Fp.lean
 /-- info: PackedFloat (exWidth sigWidth : Nat) : Type -/
@@ -40,66 +41,77 @@ Custom floating point expression
 for generalization incorporating all supported expressions.
 For now, the index is the *exponent* of the FpExpr.
 -/
-inductive FpExpr : Nat → Type where
+inductive FpExpr : (e : Nat) → Type where
   /--
   A `BitVec` variable, referred to through an index.
   -/
-  | var (idx : Nat) : FpExpr w
+  | var (idx : Nat) : FpExpr e
   /--
   A binary operation.
   -/
-  | bin (lhs : FpExpr w) (op : FpBinOp) (rhs : FpExpr w) : FpExpr w
-  | const (val : BitVec w) : FpExpr w
+  | bin (lhs : FpExpr e) (op : FpBinOp) (rhs : FpExpr e) : FpExpr e
+  | const (val : BitVec (1 + e + mfixed)) : FpExpr e
 with
   @[computed_field]
-  hashCode : (w : Nat) → FpExpr w → UInt64
-    | w, .var idx => mixHash 5 <| mixHash (hash w) (hash idx)
-    | w, .bin lhs op rhs =>
-      mixHash 13 <| mixHash (hash w) <| mixHash (hashCode _ lhs) <| mixHash (hash op) (hashCode _ rhs)
-    | w, .const val => mixHash 7 <| mixHash (hash w) (hash val)
+  hashCode :  (e : Nat) → FpExpr e → UInt64
+    | e, .var idx => mixHash 5 <| mixHash (hash e) (hash idx)
+    | e, .bin lhs op rhs =>
+      mixHash 13 <| mixHash (hash e) <| mixHash (hashCode e lhs) <| mixHash (hash op) (hashCode e rhs)
+    | e, .const val => mixHash 7 <| mixHash (hash e) (hash val)
   deriving Repr, DecidableEq, Inhabited, Hashable
 
 namespace FpExpr
 
-def toString : FpExpr w → String
-  | .var idx => s!"var{idx}#{w}"
+def toString : FpExpr e → String
+  | .var idx => s!"var{idx}#{mfixed}"
   | .bin lhs op rhs => s!"({lhs.toString} {op.toString} {rhs.toString})"
   | .const val => s!"{val}"
 
-def size : FpExpr w → Nat
+def size : FpExpr e → Nat
   | .var _ => 1
   | .const _ => 1
   | .bin lhs _ rhs => 1 + lhs.size + rhs.size
 
-instance : ToString (FpExpr w) := ⟨toString⟩
+instance : ToString (FpExpr e) := ⟨toString⟩
 
-instance : Hashable (FpExpr w) where
-  hash expr := expr.hashCode _
+instance : Hashable (FpExpr e) where
+  hash expr := expr.hashCode
 
-instance : BEq (FpExpr w) where
+instance : BEq (FpExpr e) where
   beq := fun a b => toString a == toString b
 
 instance : Inhabited BVExpr.PackedBitVec where
   default := { bv := BitVec.ofNat 0 0 }
 
+def PackedFloat.ofBV (bv : BitVec (1 + e + M)) : PackedFloat e M where
+  sign := bv[e + M]
+  ex := bv.extractLsb' M e
+  sig := bv.extractLsb' 0 M
+
+def PackedFloat.toBV (pf : PackedFloat e M) : BitVec (1 + e + M) :=
+  let bvSign := BitVec.ofBool pf.sign
+  bvSign ++ pf.ex ++ pf.sig
+
 /--
 The semantics for `FpExpr`.
 -/
-def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : FpExpr w → PackedFloat w M
+def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : FpExpr e → PackedFloat e mfixed
   | .var idx =>
     let packedBv := assign[idx]!
     /-
     This formulation improves performance, as in a well formed expression the condition always holds
     so there is no need for the more involved `BitVec.truncate` logic.
     -/
-    if h : packedBv.w = w then
-      h ▸ packedBv.bv
+    if h : packedBv.w = 1 + e + mfixed then
+     PackedFloat.ofBV (packedBv.bv.cast h)
     else
-      packedBv.bv.truncate w
-  | .const val => val
-  | .bin lhs op rhs => 
-      match op with 
-      | .add => (eval assign lhs) + (eval assign rhs)
+      -- | TODO: This is pretty scuffed, but whatever for now.
+      PackedFloat.ofBV (packedBv.bv.setWidth _)
+  | .const val => PackedFloat.ofBV val
+  | .bin lhs op rhs =>
+      match op with
+        -- | we always use RNE, since that is the standard rounding mode.
+      | .add => add (eval assign lhs) (eval assign rhs) .RNE
 end FpExpr
 
 inductive FpBinaryPredKind
@@ -115,7 +127,7 @@ inductive FpPredicate where
 /--
 A binary predicate on `FpExpr`.
 -/
-| bin (lhs : FpExpr w) (op : FpBinaryPredKind) (rhs : FpExpr w)
+| bin (lhs : FpExpr e) (op : FpBinaryPredKind) (rhs : FpExpr e)
 deriving Hashable, DecidableEq, Repr
 
 
@@ -133,9 +145,9 @@ instance : ToString FpPredicate := ⟨toString⟩
 The semantics for `BVPred`.
 -/
 def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : FpPredicate → Bool
-  | bin lhs op rhs => 
-    match op with 
-    | .eq => (lhs.eval assign).equal (rhs.eval assign)
+  | bin lhs op rhs =>
+    match op with
+    | .eq => (lhs.eval assign) = (rhs.eval assign)
 
 end FpPredicate
 
@@ -149,8 +161,11 @@ deriving instance Hashable for BoolExpr
 deriving instance BEq for BoolExpr
 deriving instance DecidableEq for BoolExpr
 
-/-- TODO: think if this should live in Medusa lib -/
-def GenFpLogicalExpr := BoolExpr FpPredicate
+/--
+TODO: think if this should live in Medusa lib
+TODO: why is this not generalized over m and e?
+-/
+def GenFpLogicalExpr := BoolExpr (FpPredicate)
 
 def GenFpLogicalExpr.toBoolExpr (expr: GenFpLogicalExpr) :
     BoolExpr FpPredicate :=
@@ -172,14 +187,13 @@ def GenFpLogicalExpr.size : GenFpLogicalExpr → Nat
 namespace GenFpLogicalExpr
 
 
+-- TODO: move this to Hydra.
 /-
-/--
 The semantics of boolean problems involving BitVec predicates as atoms.
 -/
 def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec)
   (expr : GenFpLogicalExpr) : Bool :=
   BoolExpr.eval (·.eval assign) expr
--/
 
 -- TODO: this instance was defined in terms of toString,
 -- to be fixed.
@@ -198,16 +212,18 @@ structure FpExprWrapper where
 
 -- | Why BEq and not decidableEq? whatever.
 instance : BEq FpExprWrapper where
-  beq := fun a b => if h : a.width = b.width then
-                      a.bvExpr == h ▸ b.bvExpr
-                    else false
+  beq := fun a b =>
+    if h : a.width = b.width then
+      a.bvExpr = h ▸ b.bvExpr
+    else
+      false
 
 instance : Hashable FpExprWrapper where
   hash a := hash a.bvExpr
 
 instance : ToString FpExprWrapper where
   toString w :=
-      s!" FpExprWrapper \{width: {w.width}, bvExpr: {w.bvExpr}}"
+      s!" FpExprWrapper \{width: {w.width}, bvExpr: {w.bvExpr.toString}}"
 
 instance : Inhabited FpExprWrapper where
   default := { bvExpr := FpExpr.var 0, width := 0 }
@@ -219,14 +235,22 @@ def getWidth (expr : Expr) : MetaM (Option Nat) := do
   | _ => pure none
 
 -- | TODO: rename to setWidth
-def changeBVExprWidth (bvExpr: FpExpr w) (target: Nat) : FpExpr target := Id.run do
+def changeBVExprWidth (bvExpr: FpExpr w) (target: Nat) : FpExpr target :=
   if h : w = target then
-    return (h ▸ bvExpr)
-
-  match bvExpr with
-  | .var idx => (FpExpr.var idx : FpExpr target)
-  | .bin lhs op rhs => FpExpr.bin (changeBVExprWidth lhs target) op (changeBVExprWidth rhs target)
-  | .const val => FpExpr.const (val.setWidth target)
+    (h ▸ bvExpr)
+  else
+    match bvExpr with
+    | .var idx => (FpExpr.var idx : FpExpr target)
+    | .bin lhs op rhs =>
+      FpExpr.bin
+        (changeBVExprWidth lhs target)
+        op
+        (changeBVExprWidth rhs target)
+    | .const val =>
+      -- | TODO: this is kinda nonsensical since
+      -- we are *literally* truncating bits, but whatever for now.
+      -- We need a better implementation to perform exponent reduction
+      FpExpr.const (val.setWidth _)
 
 -- TODO: make this part of Medusa proper?
 def changeBVLogicalExprWidth (bvLogicalExpr: GenFpLogicalExpr) (target: Nat) : GenFpLogicalExpr :=
@@ -244,8 +268,8 @@ def changeBVLogicalExprWidth (bvLogicalExpr: GenFpLogicalExpr) (target: Nat) : G
 -- TODO: this can be done in Medusa directly?
 -- IT doesn't need to live here?
 def bvExprToSubstitutionValue (map: Std.HashMap Nat FpExprWrapper) :
-      Std.HashMap Nat (SubstitutionValue FpExpr) :=
-      Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.genExpr item.snd.bvExpr)) map.toList)
+      Std.HashMap Nat (SubstitutionValue (FpExpr)) :=
+        Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.genExpr item.snd.bvExpr)) map.toList)
 
 -- | This does not need to happen here?
 -- TODO: part of this can happen in Medusa dir
@@ -258,10 +282,12 @@ def substituteBVExpr (bvExpr: FpExpr w) (assignment: Std.HashMap Nat (Substituti
           match value with
           | .genExpr (w := wbv) bv =>
             if h : w = wbv then
+              -- TODO: Scuffed
               h ▸ bv
             else
               default
-          | .packedBV packedBitVec =>  FpExpr.const (BitVec.ofNat w packedBitVec.bv.toNat)
+          | .packedBV packedBitVec =>
+            FpExpr.const (packedBitVec.bv.setWidth _)
       else FpExpr.var idx
     | .bin lhs op rhs =>
         FpExpr.bin (substituteBVExpr lhs assignment) op (substituteBVExpr rhs assignment)
@@ -280,6 +306,7 @@ def substitute  (bvLogicalExpr: GenFpLogicalExpr) (assignment: Std.HashMap Nat (
       BoolExpr.ite (substitute conditional assignment) (substitute pos assignment) (substitute neg assignment)
   | _ => bvLogicalExpr
 
+-- TODO: what are identity and absorption constraints for Fp?
 def getIdentityAndAbsorptionConstraints (bvLogicalExpr: GenFpLogicalExpr) (symVars : Std.HashSet Nat) : List GenFpLogicalExpr :=
       match bvLogicalExpr with
       | .literal (FpPredicate.bin lhs _ rhs) => (getFpExprConstraints lhs) ++ (getFpExprConstraints rhs)
@@ -317,9 +344,9 @@ def getIdentityAndAbsorptionConstraints (bvLogicalExpr: GenFpLogicalExpr) (symVa
                       -- getFpExprConstraints operand
                 | _ =>  []
 
-        getBitwiseConstraints {w} (bvExpr: FpExpr w) (_op : FpBinOp) : List GenFpLogicalExpr :=
-            let _neqZero := BoolExpr.not (BoolExpr.literal (FpPredicate.bin bvExpr FpBinaryPredKind.eq (FpExpr.const (BitVec.ofNat w 0))))
-            let _neqAllOnes := BoolExpr.not (BoolExpr.literal (FpPredicate.bin bvExpr FpBinaryPredKind.eq (FpExpr.const (BitVec.allOnes w))))
+        getBitwiseConstraints {w}
+          (_bvExpr: FpExpr w)
+          (_op : FpBinOp) : List GenFpLogicalExpr :=
             []
 
 -- | TODO: write this as a filter / map
@@ -341,7 +368,7 @@ def sameBothSides (bvLogicalExpr : GenFpLogicalExpr) : Bool :=
   | _ => false
 
 /-- warning: declaration uses 'sorry' -/
-def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: FpExpr w) : PackedFloat w M :=
+def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: FpExpr w) : PackedFloat w mfixed :=
   let substitutedBvExpr := substituteBVExpr expr (packedBitVecToSubstitutionValue assignments)
   FpExpr.eval assignments substitutedBvExpr
 
@@ -352,8 +379,8 @@ def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr:
 def add (op1 : FpExpr w) (op2 : FpExpr w) : FpExpr w :=
   FpExpr.bin op1 FpBinOp.add op2
 
--- | This is untrue.
-def zero (w: Nat) := FpExpr.const (BitVec.ofNat w 0)
+def zero (w: Nat) : FpExpr w :=
+  FpExpr.const (PackedFloat.toBits <| PackedFloat.getZero _ _)
 
 def eqToZero (expr: FpExpr w) : GenFpLogicalExpr :=
   BoolExpr.literal (FpPredicate.bin expr FpBinaryPredKind.eq (zero w))

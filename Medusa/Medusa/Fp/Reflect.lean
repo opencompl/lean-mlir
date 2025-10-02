@@ -126,8 +126,7 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (FpExprWrap
   getConstantBVExpr? (nExpr : Expr) (vExpr : Expr) : ParseExprM (Option (FpExprWrapper)) := do
         let some n  ← getNatValue? nExpr | return none
         let some v ← getNatValue? vExpr | return none
-
-        return some {bvExpr := FpExpr.const (BitVec.ofNat n v), width := n}
+        return some {bvExpr := FpExpr.const (BitVec.ofNat _ v), width := n }
 
   -- | TODO: this should be in Medusa/Util?
   getBitVecValue? (e : Expr) : MetaM (Option ((n : Nat) × BitVec n)) := OptionT.run do
@@ -231,15 +230,16 @@ def bvExprToExpr (ParsedFpExpr : ParsedFpLogicalExpr)
 def beqBitVecInstExpr (width : Expr) : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkApp (mkConst ``BitVec) width) (mkApp (.const ``instDecidableEqBitVec []) width)
 def beqBoolInstExpr : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkConst ``Bool) (mkConst ``instDecidableEqBool)
 
-def toExpr (ParsedFpExpr : ParsedFpLogicalExpr) (bvLogicalExpr: GenFpLogicalExpr) : MetaM Expr := do
+def toExpr (_ParsedFpExpr : ParsedFpLogicalExpr) (bvLogicalExpr: GenFpLogicalExpr) : MetaM Expr := do
   go bvLogicalExpr
   where
   go (input : GenFpLogicalExpr) := do
   match input with
   | .literal x =>
       match x with
-      | .bin (w := w) lhs .eq rhs =>
-        return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) (mkNatLit w)) (beqBitVecInstExpr (mkNatLit w)) (← bvExprToExpr ParsedFpExpr lhs) (← bvExprToExpr ParsedFpExpr rhs)
+      | .bin _lhs .eq _rhs =>
+        throwError "unimplemented toExpr go"
+        -- return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) (mkNatLit w)) (beqBitVecInstExpr (mkNatLit w)) (← bvExprToExpr ParsedFpExpr lhs) (← bvExprToExpr ParsedFpExpr rhs)
   | .const b =>
       match b with
       | true => return (mkConst ``Bool.true)
@@ -275,4 +275,3 @@ def toBVLogicalExpr (bvLogicalExpr: GenFpLogicalExpr) : GeneralizerStateM BVLogi
   | .gate gate lhs rhs => return BoolExpr.gate gate (← toBVLogicalExpr lhs) (← toBVLogicalExpr rhs)
   | _ => throwError m! "Unsupported operation"
  -/
-

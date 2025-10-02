@@ -49,6 +49,11 @@ instance [ToString α] [Hashable α] [BEq α] : ToString (Std.HashSet α ) where
 instance : ToString FVarId where
   toString f := s! "{f.name}"
 
+
+-- TODO: Does it need to know explicitly that it's a PackedBitVec?
+-- Surely, this can be part of the API of a SubstitutionValue?
+-- I.e. a type is a substitution value if it
+-- can be constructed from BVs.
 /--
 A value that can be substituted into a `BitVec` formula.
 -/
