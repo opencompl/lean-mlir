@@ -1589,6 +1589,27 @@ def Circuit.assignVars? (c : Circuit α) (assign? : α → Bool ⊕ β) :
     | .inl b => Circuit.ofBool b
     | .inr v => Circuit.var true v
 
+axiom AxOfFunctionGraph {P : Prop} : P
+/-- build a circuit from the graph of a function that is a circuit,
+whose evaluation is tracked by the graph. -/
+def Circuit.ofFunctionGraph {α : Type} [instFin : FinEnum α] (f : α → Circuit β) :
+  Circuit (α ⊕ β) :=
+  instFin.card.fold (init := Circuit.tru) fun i hi out =>
+    let a := instFin.equiv.invFun ⟨i, hi⟩
+    let ca : Circuit (α ⊕ β) := Circuit.var true (.inl a)
+    let cb : Circuit (α ⊕ β) := (f a).map Sum.inr
+    let ci : Circuit (α ⊕ β) :=  ~~~ (ca ^^^ cb) -- add constraint forcing equality.
+    out &&& ci
+
+/-- The construction from 'ofFunctionGraph' returns true
+iff it evaluates to true.
+-/
+theorem Circuit.ofFunctionGraph_eq_iff {α : Type} [instFin : FinEnum α] (f : α → Circuit β)
+    (env : α ⊕ β → Bool) : (Circuit.ofFunctionGraph f).eval env = true ↔
+    (∀ (a : α), env (.inl a) = (f a).eval (fun b => env (Sum.inr b))) := by
+  simp [ofFunctionGraph]
+  exact AxOfFunctionGraph
+
 @[simp]
 theorem Circuit.eval_assignVars? (assign? : α → Bool ⊕ β)
     (c : Circuit α)
@@ -1621,6 +1642,19 @@ theorem Circuit.eval_assignVars? (assign? : α → Bool ⊕ β)
       ext a <;>
       rcases (assign? a) with ⟨rfl | rfl⟩  | x <;> simp
 
+
+def Sum.flip (s : α ⊕ β) : β ⊕ α :=
+  match s with
+  | .inl a => .inr a
+  | .inr b => .inl b
+
+def FSM.toNFSM (f : FSM α) : NFSM α where
+  α := f.α
+  initCarry := f.initCarry
+  nextStateCirc :=
+    Circuit.ofFunctionGraph (fun s => f.nextStateCirc s |>.map Sum.flip)
+  outputCirc := f.outputCirc
+
 /--
 replace predicate variable pcard with a constant b, if possible.
 -/
@@ -1635,19 +1669,46 @@ def elimPredVar.assignPred (b : Bool) {wcard tcard bcard pcard : Nat}
       | .none => .inl b
       | .some s  => .inr <| .inr s
 
+def elimPredVar.elimPred {wcard tcard bcard pcard : Nat}
+    (c : Circuit (α ⊕ StateSpace wcard tcard bcard (pcard + 1))) :
+    Circuit (α ⊕ StateSpace wcard tcard bcard pcard) :=
+  elimPredVar.assignPred true c ||| elimPredVar.assignPred false c
 
 def elimPredVar {wcard tcard bcard pcard : Nat}
     (fsm : FSM (StateSpace wcard tcard bcard (pcard + 1))) :
     FSM (StateSpace wcard tcard bcard pcard) where
-  α :=  (fsm.α) -- is this correct?
-  initCarry := fun s => fsm.initCarry s
+  α :=  (fsm.α → Bool) -- is this correct?
+  initCarry := fun (s : fsm.α → Bool) =>
+    let init := fsm.initCarry
+    decide (s = init) -- horribly slow!
   outputCirc :=
     let fsmOut : Circuit (fsm.α ⊕ StateSpace wcard tcard bcard (pcard + 1))
       := fsm.outputCirc
-    elimPredVar.assignPred true fsmOut ||| elimPredVar.assignPred false fsmOut
-  nextStateCirc := fun s =>
-    let fsmNext := fsm.nextStateCirc s
-    sorry
+    let fsmOut := elimPredVar.elimPred fsmOut
+    let setsOfStates : List (fsm.α → Bool) := FinEnum.toList _
+    let out : List <| Circuit ((fsm.α → Bool) ⊕ StateSpace wcard tcard bcard pcard) :=
+        setsOfStates.map fun indicator =>
+          let x := fsmOut.assignVarsLeft indicator
+          let x := x.map Sum.inr
+          let cind := (Circuit.var true indicator).map Sum.inl
+          -- If we are in this state, then check the value of the state,
+          -- for both possible values of the predicate
+          ~~~ cind ||| x
+    Circuit.bigOr out
+  nextStateCirc := fun curState =>
+    let nextStateCirc :
+        fsm.α → Circuit (fsm.α ⊕ StateSpace wcard tcard bcard (pcard + 1))
+      := fsm.nextStateCirc
+    let nextStateCirc :
+        fsm.α → Circuit (fsm.α ⊕ StateSpace wcard tcard bcard (pcard))
+      := fun s => elimPredVar.elimPred <| fsm.nextStateCirc s
+    let setsOfStates : List (fsm.α → Bool) := FinEnum.toList _
+    let out : List <| Circuit ((fsm.α → Bool) ⊕ StateSpace wcard tcard bcard pcard) :=
+        setsOfStates.map fun (indicator : fsm.α → Bool) =>
+          let x := nextStateCirc
+          let cind := (Circuit.var true indicator).map Sum.inl
+          ~~~ cind
+    Circuit.bigOr out
 
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :

@@ -1570,4 +1570,5 @@ def checkCircuitUnsatAux {α : Type} [DecidableEq α] [Hashable α] [Fintype α]
     | .error _model => return .none
     | .ok cert => return .some cert
 
+
 end Circuit

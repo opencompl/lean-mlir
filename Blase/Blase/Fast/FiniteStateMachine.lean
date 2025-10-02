@@ -43,7 +43,35 @@ structure FSM (arity : Type) : Type 1 where
   outputCirc : Circuit (α ⊕ arity)
   nextStateCirc : α → Circuit (α ⊕ arity)
 
+
 attribute [instance] FSM.i FSM.dec_eq FSM.h
+
+
+inductive NFSM.TransitionStateSpace (α arity : Type)
+| cur (a : α)
+| input (i : arity)
+| next (a : α)
+
+-- Nondeterministic Finite state machine, where the next state circuit is a relation.
+structure NFSM (arity : Type) : Type 1 where
+  /--
+  The arity of the (finite) type `α` determines how many bits the internal carry state of this
+  FSM has -/
+  ( α  : Type )
+  [ i : FinEnum α ]
+  [ h : Hashable α ]
+  [ dec_eq : DecidableEq α ]
+  /--
+  `initCarry` is the value of the initial internal carry state.
+  It maps each `α` to a bit, thus it is morally a bitvector where the width is the arity of `α`
+  -/
+  ( initCarry : α → Bool )
+  -- output at a given state.
+  ( outputCirc : Circuit (α ⊕ arity))
+  -- relation between previous state, input, and next state.
+  ( nextStateCirc : Circuit (NFSM.TransitionStateSpace α arity))
+
+attribute [instance] NFSM.i NFSM.dec_eq NFSM.h
 
 
 set_option warn.sorry false in
