@@ -124,7 +124,10 @@ def extract_data(results_directory, benchmark_name, parameter) :
                     if parameters_match[parameter] in line : 
                         num = int(line.split(" ")[-1])
                         function_names.append(filename.split(".")[0])
-                        parameter_numbers.append(int(num/100))
+                        if parameter == "tot_cycles" :
+                            parameter_numbers.append(int(num))
+                        else:
+                            parameter_numbers.append(int(num/100))
         except FileNotFoundError:
             print(f"Warning: file not found at {file_path}. Skipping.")
         
