@@ -7,6 +7,11 @@ import Blase.Fast.FiniteStateMachine
 import Blase.Vars
 import Blase.MultiWidth.Defs
 import Blase.KInduction.KInduction
+import Mathlib.Data.Fintype.Card
+import Mathlib.Data.Fintype.Sum
+import Mathlib.Data.Fintype.Sigma
+import Mathlib.Data.Fintype.Pi
+import Mathlib.Data.Fintype.BigOperators
 import Lean
 
 namespace MultiWidth
@@ -1478,15 +1483,108 @@ info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 -/
 #guard_msgs in #print axioms eval_fsmTermSle_eq_decide_sle
 
-def killVariable (fsm : FSM (StateSpace wcard tcard bcard (pcard + 1))) :
+abbrev Powerset (α : Type) [DecidableEq α] := α → Bool
+def Powerset.toFun [DecidableEq α] : Powerset α → (α → Bool) := id
+def Powerset.mk [DecidableEq α] : (α → Bool) → Powerset α := id
+def Powerset.singleton [DecidableEq α] (a : α) : Powerset α :=
+  fun b => decide <| a = b
+
+#check mixHash
+instance [instHashα : Hashable α]
+    [DecidableEq α]
+    [instFinα : FinEnum α] : Hashable (Powerset α) where
+  hash :=
+    let card := instFinα.card
+    let ofFin := instFinα.equiv.invFun
+
+    sorry
+
+-- Eliminate the last predicate variable from a state space, if possible.
+def StateSpace.predVarElim {wcard tcard bcard pcard : Nat}
+    (s : StateSpace wcard tcard bcard (pcard + 1)) :
+     Option (StateSpace wcard tcard bcard pcard) :=
+  match s with
+  | .widthVar v => .some <| .widthVar v
+  | .termVar v => .some <| .termVar v
+  | .boolVar v => .some <| .boolVar v
+  | .predVar v =>
+    if hv :v.val < pcard then
+      .some <| .predVar ⟨v.val, by omega⟩
+    else
+      .none
+
+inductive PredState
+-- | unk
+| t
+| f
+| both
+| neither
+deriving DecidableEq, Repr, Hashable
+
+ def PredState.toFin : PredState → Fin 4
+  -- | .unk => 0
+  | .t => 0
+  | .f => 1
+  | .neither => 2
+  | .both => 3
+
+def PredState.ofFin : Fin 4 → PredState
+  | ⟨0, _⟩ => .t
+  | ⟨1, _⟩ => .f
+  | ⟨2, _⟩ => .neither
+  | ⟨3, _⟩ => .both
+  -- | ⟨4, _⟩ => .neither
+
+instance : FinEnum PredState where
+  card := 4
+  equiv := Equiv.mk PredState.toFin PredState.ofFin
+    (by
+      intros i
+      rcases i with rfl | rfl | rfl | rfl | rfl <;>
+        simp [PredState.toFin, PredState.ofFin]
+    )
+    (by
+      intros i
+      have h : i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 := by
+        omega
+      rcases h with rfl | rfl | rfl | rfl <;>
+        simp [PredState.toFin, PredState.ofFin]
+    )
+where
+
+def elimPredVar {wcard tcard bcard pcard : Nat} {p : Nondep.Predicate}
+    (fsm : FSM (StateSpace wcard tcard bcard (pcard + 1))) :
     FSM (StateSpace wcard tcard bcard pcard) where
-  α := fsm.α
-  initCarry := fsm.initCarry
+  α :=  Unit ⊕ (fsm.α) -- is this correct?
+  initCarry := fun s? =>
+    match s? with
+    | .inl () => true -- ??
+    | .inr s => fsm.initCarry s
   outputCirc :=
-  fsm.outputCirc.bind (fun var =>
-    match var with
-    | .inl x => .var true x
-    | .inr p => sorry)
+    let fsmOut : Circuit (fsm.α ⊕ StateSpace wcard tcard bcard (pcard + 1))
+      := fsm.outputCirc
+    let outTru : Circuit ((Unit ⊕ fsm.α) ⊕ StateSpace wcard tcard bcard pcard)
+      := fsmOut.map <| fun s =>
+        match s with
+        | .inl st => .inl (.inr st)
+        | .inr v =>
+          match StateSpace.predVarElim v with
+          | .none => .inl (.inl ())
+          | .some v' => .inr v'
+    outTru
+    -- Circuit.var true (Sum.inr false)
+  nextStateCirc := fun s =>
+    let fsmNext := fsm.nextStateCirc
+    match s with
+    | .inl () => Circuit.var true (Sum.inl (Sum.inl ()))
+    | .inr s => (fsmNext s).map (fun s =>
+        match s with
+        | .inl st => .inl (.inr st)
+        | .inr v =>
+          match StateSpace.predVarElim v with
+          | .none => .inl (.inl ())
+          | .some v' => .inr v'
+      )
 
 
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
