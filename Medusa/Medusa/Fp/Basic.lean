@@ -6,6 +6,7 @@ Authors: Henrik Böving, Timi Adeniran, Léo Stefanesco
 import Lean
 import Lean.Elab.Term
 import Medusa.Generalize
+import Fp.Basic
 
 open Lean
 open Elab
@@ -13,6 +14,11 @@ open Lean.Meta
 open Std.Sat
 open Std.Tactic.BVDecide
 
+abbrev m : Nat := 3 -- Mantissa bits for f32
+
+-- TODO: put these in a namespace in Fp.lean
+/-- info: PackedFloat (exWidth sigWidth : Nat) : Type -/
+#guard_msgs in #check PackedFloat
 
 namespace Generalize
 
@@ -28,9 +34,11 @@ def FpBinOp.toString : FpBinOp → String
 instance : ToString FpBinOp where
   toString := FpBinOp.toString
 
+
 /--
 Custom floating point expression
-for generalization incorporating all supported expressions
+for generalization incorporating all supported expressions.
+For now, the index is the *exponent* of the FpExpr.
 -/
 inductive FpExpr : Nat → Type where
   /--
@@ -74,11 +82,10 @@ instance : BEq (FpExpr w) where
 instance : Inhabited BVExpr.PackedBitVec where
   default := { bv := BitVec.ofNat 0 0 }
 
-/-
 /--
 The semantics for `FpExpr`.
 -/
-def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : FpExpr w → BitVec w
+def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : FpExpr w → PackedFloat w M
   | .var idx =>
     let packedBv := assign[idx]!
     /-
@@ -90,8 +97,9 @@ def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : FpExpr w → BitVec w
     else
       packedBv.bv.truncate w
   | .const val => val
-  | .bin lhs op rhs => op.eval (eval assign lhs) (eval assign rhs)
--/
+  | .bin lhs op rhs => 
+      match op with 
+      | .add => (eval assign lhs) + (eval assign rhs)
 end FpExpr
 
 inductive FpBinaryPredKind
@@ -121,21 +129,22 @@ def toString : FpPredicate → String
 
 instance : ToString FpPredicate := ⟨toString⟩
 
-/-
 /--
 The semantics for `BVPred`.
 -/
 def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : FpPredicate → Bool
-  | bin lhs op rhs => op.eval (lhs.eval assign) (rhs.eval assign)
-  | getLsbD expr idx => (expr.eval assign).getLsbD idx
--/
+  | bin lhs op rhs => 
+    match op with 
+    | .eq => (lhs.eval assign).equal (rhs.eval assign)
 
 end FpPredicate
 
+-- | TOTOD: move this to some generic util
 deriving instance Hashable for Gate
 deriving instance BEq for Gate
 deriving instance DecidableEq for Gate
 
+-- | TOTOD: move this to some generic util
 deriving instance Hashable for BoolExpr
 deriving instance BEq for BoolExpr
 deriving instance DecidableEq for BoolExpr
@@ -240,7 +249,7 @@ def bvExprToSubstitutionValue (map: Std.HashMap Nat FpExprWrapper) :
 
 -- | This does not need to happen here?
 -- TODO: part of this can happen in Medusa dir
-set_option warn.sorry false in
+-- | TODO: this can fail! We are casting with a proof given by `sorry` but this is nonsense.
 def substituteBVExpr (bvExpr: FpExpr w) (assignment: Std.HashMap Nat (SubstitutionValue FpExpr)) : FpExpr w :=
     match bvExpr with
     | .var idx =>
@@ -248,8 +257,10 @@ def substituteBVExpr (bvExpr: FpExpr w) (assignment: Std.HashMap Nat (Substituti
           let value := assignment[idx]!
           match value with
           | .genExpr (w := wbv) bv =>
-            let h : w = wbv := sorry
-            h ▸ bv
+            if h : w = wbv then
+              h ▸ bv
+            else
+              default
           | .packedBV packedBitVec =>  FpExpr.const (BitVec.ofNat w packedBitVec.bv.toNat)
       else FpExpr.var idx
     | .bin lhs op rhs =>
@@ -330,16 +341,13 @@ def sameBothSides (bvLogicalExpr : GenFpLogicalExpr) : Bool :=
   | _ => false
 
 /-- warning: declaration uses 'sorry' -/
-#guard_msgs in noncomputable def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: FpExpr w) : BitVec w :=
+def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: FpExpr w) : PackedFloat w M :=
   let substitutedBvExpr := substituteBVExpr expr (packedBitVecToSubstitutionValue assignments)
-  sorry
-  -- FpExpr.eval assignments substitutedBvExpr
+  FpExpr.eval assignments substitutedBvExpr
 
-/-- warning: declaration uses 'sorry' -/
-#guard_msgs in noncomputable def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenFpLogicalExpr) : Bool :=
+def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenFpLogicalExpr) : Bool :=
   let substitutedBvExpr := substitute expr (packedBitVecToSubstitutionValue assignments)
-  sorry
-  -- GenFpLogicalExpr.eval assignments substitutedBvExpr
+  GenFpLogicalExpr.eval assignments substitutedBvExpr
 
 def add (op1 : FpExpr w) (op2 : FpExpr w) : FpExpr w :=
   FpExpr.bin op1 FpBinOp.add op2
