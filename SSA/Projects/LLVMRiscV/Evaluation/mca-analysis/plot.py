@@ -14,7 +14,7 @@ import numpy as np
 
 
 matplotlib.rcParams['pdf.fonttype'] = 42
-matplotlib.rcParams['ps.fonttype'] = 42
+plt.rcParams.update({'font.size': 16})
 
 
 matplotlib.rcParams['figure.autolayout'] = True
@@ -159,18 +159,21 @@ def sorted_line_plot_all(parameter):
 
     plt.xlabel('Program Index')
     plt.ylabel(parameter)
-    # plt.title(f'{parameter} Per Program')
-    # plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
-    #                             sorted_df['LEANMLIR_opt_' + parameter].min(), 
-    #                             sorted_df['LLVM_globalisel_' + parameter].min(), 
-    #                             sorted_df['LLVM_selectiondag_' + parameter].min()]) - 1)
-    # plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
-    #                             sorted_df['LEANMLIR_opt_' + parameter].min(), 
-    #                             sorted_df['LLVM_globalisel_' + parameter].min(), 
-    #                             sorted_df['LLVM_selectiondag_' + parameter].min()]) + 1
-
     
-    plt.legend()
+    # plt.title(f'{parameter} Per Program')
+    plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
+                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
+                                sorted_df['LLVM_globalisel_' + parameter].min(), 
+                                sorted_df['LLVM_selectiondag_' + parameter].min()]) - 1)
+    plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
+                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
+                                sorted_df['LLVM_globalisel_' + parameter].min(), 
+                                sorted_df['LLVM_selectiondag_' + parameter].min()]) + 1
+    
+    plt.ylim(1, int(plot_max * 1.5) + 1)
+    plt.yticks(range(1, int(plot_max * 1.5) + 1, int((int(plot_max * 1.5) + 5)/5)))
+    
+    plt.legend(ncols = 2)
     plt.tight_layout()
 
     pdf_filename = plots_dir + parameter + "_line.pdf"
@@ -266,7 +269,7 @@ def overhead_plot(parameter, selector1, selector2):
 
         plt.xlabel('Program Index')
         plt.ylabel(parameters_labels[parameter])
-        plt.xticks(range(0, len(sorted_df), int(np.ceil(len(sorted_df)/10))))
+        plt.xticks(range(0, len(sorted_df), int(np.ceil(len(sorted_df)/5))))
         plt.legend()
         plt.tight_layout()
 
@@ -310,6 +313,7 @@ def main():
         scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
         scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
         scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+        scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
         # line plots
         sorted_line_plot_all(parameter)
         sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
