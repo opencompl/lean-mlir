@@ -6,7 +6,7 @@ import Medusa.Fp.Basic
 
 namespace Generalize
 
-namespace Fp 
+namespace Fp
 
 open Lean
 open Lean.Meta
