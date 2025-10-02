@@ -330,6 +330,11 @@ inductive BoolBinaryRelationKind
 | eq
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
+inductive BinderKind
+-- | forall
+| exists
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
 inductive Predicate :
   (wcard : Nat) →
   (tcard : Nat) →
@@ -351,6 +356,11 @@ inductive Predicate :
   (k : BoolBinaryRelationKind)
   (a b : Term bcard tctx .bool) :
   Predicate wcard tcard bcard tctx pcard
+| bvbinder {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
+    (k : BinderKind)
+    (w : WidthExpr wcard)
+    (body : Predicate wcard (tcard + 1) bcard (tctx.cons w) pcard) :
+    Predicate wcard tcard bcard tctx pcard
 
 -- add predicate NOT, <= for bitvectors, < for bitvectors, <=
 -- for widths, =, not equals for widths.
@@ -381,6 +391,14 @@ def Predicate.toProp {wcard tcard bcard pcard : Nat} {wenv : WidthExpr.Env wcard
     match rel with
     -- | TODO: rename 'toBV' to 'toBool'.
     | .eq => (a.toBV benv tenv) = (b.toBV benv tenv)
+  | .bvbinder k w body =>
+    match k with
+    -- | .forall =>
+    --   ∀ (v : BitVec (w.toNat wenv)),
+    --     body.toProp benv (tenv.cons w v rfl) penv
+    | .exists =>
+      ∃ (v : BitVec (w.toNat wenv)),
+        body.toProp benv (tenv.cons w v rfl) penv
 namespace Nondep
 
 inductive WidthExpr where
@@ -555,7 +573,10 @@ inductive Predicate
 | var (v : Nat) : Predicate
 | boolBinRel (k : BoolBinaryRelationKind)
     (a b : Term) : Predicate
+| bvbinder (k : BinderKind) (w : WidthExpr)
+    (body : Predicate) : Predicate
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
+
 
 def Predicate.wcard (p : Predicate) : Nat :=
   match p with
@@ -570,6 +591,8 @@ def Predicate.wcard (p : Predicate) : Nat :=
   | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
   | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
   | .boolBinRel .eq a b => max (a.wcard) (b.wcard)
+  | bvbinder _k w body => max w.wcard (Predicate.wcard body)
+
 def Predicate.tcard (p : Predicate) : Nat :=
   match p with
   | .var _ => 0
@@ -583,6 +606,7 @@ def Predicate.tcard (p : Predicate) : Nat :=
   | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
   | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
   | .boolBinRel .eq a b => max (a.tcard) (b.tcard)
+  | bvbinder _k _w body => Predicate.tcard body - 1
 
 def Predicate.pcard (p : Predicate) : Nat :=
   match p with
@@ -592,7 +616,7 @@ def Predicate.pcard (p : Predicate) : Nat :=
   | .or p1 p2 => max (Predicate.pcard p1) (Predicate.pcard p2)
   | .and p1 p2 => max (Predicate.pcard p1) (Predicate.pcard p2)
   | .boolBinRel .. => 0
-
+  | bvbinder _k _w body => body.pcard
 
 def Predicate.ofDep {wcard tcard pcard : Nat}
     {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate wcard tcard bcard tctx pcard) : Predicate :=
@@ -609,6 +633,7 @@ def Predicate.ofDep {wcard tcard pcard : Nat}
   | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
   | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
   | .boolBinRel .eq a b => .boolBinRel .eq (.ofDep a) (.ofDep b)
+  | .bvbinder k w body => .bvbinder k (.ofDep w) (.ofDep body)
 
 end Nondep
 

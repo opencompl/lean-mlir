@@ -237,5 +237,3 @@ theorem Vars.castLe_castLe_eq_castLe_self {α : Type _} {p q r : Nat}
   · simp [Vars.castLe]
   · simp [Vars.castLe]
   · simp [Vars.castLe]
-
-
