@@ -363,10 +363,22 @@ def main():
         choices=["tot_instructions", "tot_cycles", "tot_uops", "all"], 
     )
 
+    parser.add_argument(
+        "-t",
+        "--plot_type]",
+        nargs="+",
+        choices=["scatter", "sorted", "stacked", "overhead", "all"], 
+    )
+
+
     args = parser.parse_args()
 
     params_to_evaluate = (
         ["tot_instructions", "tot_cycles", "tot_uops"] if "all" in args.parameters else args.parameters
+    )
+
+    plots_to_produce = (
+        ["scatter", "sorted", "stacked", "overhead"] if "all" in args.plot_type else args.plot_type
     )
 
     setup_benchmarking_directories()
@@ -379,32 +391,32 @@ def main():
         extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', parameter)
         extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter)
         join_dataframes(['LEANMLIR', 'LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag'], parameter)
-        # # bubble plots
-        # scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-        # scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-        # scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-        # scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-        # scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-        # # line plots
-        # sorted_line_plot_all(parameter)
-        # sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-        # sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-        # sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-        # sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-        # sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-        # # overhead plots 
-        # overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-        # overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-        # overhead_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-        # overhead_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-        # overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-        # bar plots
-        bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-        bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-        bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-        bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-        bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-            
+        if "scatter" in plots_to_produce or "all" in plots_to_produce :
+            scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+            scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+            scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+            scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+            scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+        if "sorted" in plots_to_produce or "all" in plots_to_produce :
+            sorted_line_plot_all(parameter)
+            sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+            sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+            sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+            sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+            sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+        if "overhead" in plots_to_produce or "all" in plots_to_produce :
+            overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+            overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+            overhead_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+            overhead_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+            overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+        if "stacked" in plots_to_produce or "all" in plots_to_produce :
+            bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+            bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+            bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+            bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+            bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                
 
 
 if __name__ == "__main__":
