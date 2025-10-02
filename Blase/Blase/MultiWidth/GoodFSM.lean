@@ -1552,37 +1552,69 @@ instance : FinEnum PredState where
     )
 where
 
-def elimPredVar {wcard tcard bcard pcard : Nat} {p : Nondep.Predicate}
+instance [instFinEnum : FinEnum α ]: FinEnum (Option α) where
+  card := instFinEnum.card + 1
+  equiv := Equiv.mk
+    (fun o =>
+      match o with
+      | .none => Fin.mk instFinEnum.card (by omega)
+      | .some a => Fin.mk (instFinEnum.equiv.toFun a).val (by omega)
+    )
+    (fun f =>
+      if hf : f.val < instFinEnum.card then
+        .some (instFinEnum.equiv.invFun ⟨f.val, hf⟩)
+      else
+        .none
+    )
+    (by
+      intros o
+      rcases o with rfl | a
+      · simp
+      · simp
+    )
+    (by
+      intros f
+      by_cases hf : f.val < instFinEnum.card
+      · simp [hf]
+      · simp [hf]
+        ext
+        simp
+        omega
+    )
+
+def elimPredVar {wcard tcard bcard pcard : Nat}
     (fsm : FSM (StateSpace wcard tcard bcard (pcard + 1))) :
     FSM (StateSpace wcard tcard bcard pcard) where
-  α :=  Unit ⊕ (fsm.α) -- is this correct?
+  α :=  Option (fsm.α) -- is this correct?
   initCarry := fun s? =>
     match s? with
-    | .inl () => true -- ??
-    | .inr s => fsm.initCarry s
+    | none => true -- ??
+    | some s => fsm.initCarry s
   outputCirc :=
     let fsmOut : Circuit (fsm.α ⊕ StateSpace wcard tcard bcard (pcard + 1))
       := fsm.outputCirc
-    let outTru : Circuit ((Unit ⊕ fsm.α) ⊕ StateSpace wcard tcard bcard pcard)
-      := fsmOut.map <| fun s =>
+    let outTru (b : Bool) : Circuit ((Option fsm.α) ⊕ StateSpace wcard tcard bcard pcard)
+      := fsmOut.bind <| fun s =>
         match s with
-        | .inl st => .inl (.inr st)
-        | .inr v =>
-          match StateSpace.predVarElim v with
-          | .none => .inl (.inl ())
-          | .some v' => .inr v'
-    outTru
+        | .inl s => Circuit.var true <| .inl (some s)
+        | .inr s =>
+          match StateSpace.predVarElim s with
+          | .none =>
+            -- try evaluating with both? Must it be monotone?
+            Circuit.ofBool b
+          | .some s  => Circuit.var true <| .inr s
+    outTru true ||| outTru false
     -- Circuit.var true (Sum.inr false)
   nextStateCirc := fun s =>
     let fsmNext := fsm.nextStateCirc
     match s with
-    | .inl () => Circuit.var true (Sum.inl (Sum.inl ()))
-    | .inr s => (fsmNext s).map (fun s =>
+    | none => Circuit.var true (Sum.inl none)
+    | some s => (fsmNext s).map (fun s =>
         match s with
-        | .inl st => .inl (.inr st)
+        | .inl st => .inl (some st)
         | .inr v =>
           match StateSpace.predVarElim v with
-          | .none => .inl (.inl ())
+          | .none => .inl (none)
           | .some v' => .inr v'
       )
 
