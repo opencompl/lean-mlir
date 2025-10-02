@@ -236,7 +236,9 @@ def scatter_plot(parameter, selector1, selector2) :
     print(f"\nScatter plot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
-
+def clean_name(s):
+    # Remove underscores and capitalize parts
+    return ''.join([w.capitalize() for w in str(s).split('_')])
 
 def bar_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + '.csv')
@@ -302,6 +304,32 @@ def bar_plot(parameter, selector1, selector2):
     plt.tight_layout()
     
     plt.ylim(0, 119)
+    
+    total = len(df)
+    class_counts = df['diff_class'].value_counts()
+    latex_lines = []
+    for idx, row in group.iterrows():
+        idx_str = str(idx)
+        idx_str_clean = idx_str.replace('_', '')  # Remove underscores from index if any
+        # Ensure the last character is a letter by appending 'N' if it ends with a digit
+        if idx_str_clean and idx_str_clean[-1].isdigit():
+            idx_str_clean = idx_str_clean.replace('0', 'zero').replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace('6', 'six').replace('7', 'seven').replace('8', 'eight').replace('9', 'nine')
+            idx_str_clean += 'Instr'
+        for c in class_order:
+            perc = row[c]
+            # Build a safe LaTeX command name: no underscores, does not end with a number
+            cmd = (
+                f"\\newcommand{{\\Perc"
+                f"{clean_name(selector1)}Vs{clean_name(selector2)}"
+                f"{clean_name(parameter)}For{idx_str_clean}On{c.replace('<','lt').replace('>','gt').replace('0','zero').replace('1','one').replace('2','two')}}}{{{perc:.1f}}}"
+            )
+            latex_lines.append(cmd)
+    # Write to file (append mode)
+    latex_file = os.path.join(plots_dir, "bar_plot_percentages.tex")
+    with open(latex_file, "a") as f:
+        for line in latex_lines:
+            f.write(line + "\n")
+    
 
     pdf_filename = plots_dir + f"{parameter}_stacked_bar_{selector1}_vs_{selector2}.pdf"
     plt.savefig(pdf_filename)
