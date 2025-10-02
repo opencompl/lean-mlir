@@ -16,7 +16,7 @@ open Std.Tactic.BVDecide
 
 namespace Generalize
 
-namespace FP
+namespace Fp
 
 inductive FpBinOp
 | add
