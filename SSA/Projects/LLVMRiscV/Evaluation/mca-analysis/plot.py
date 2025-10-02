@@ -54,6 +54,9 @@ ROOT_DIR_PATH = (
     .strip()
 )
 
+LLVMIR_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLVMIR/"
+)
 
 LLVM_globalisel_results_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/mca-analysis/results/LLVM_globalisel/"
@@ -109,6 +112,34 @@ selector_labels = {
 }
 
 
+def extract_instr_count(init_directory): 
+    """
+    Extracts the instruction count for each file in `init_directory`, considering the region enclosed in curly brackets and excluding the return function, and returns a dataframe containing the results.
+    """
+    function_names = []
+    lengths = []
+    for filename in os.listdir(init_directory):
+        file_path = os.path.join(init_directory, filename)
+        try:
+            with open(file_path, "r") as f:
+                file_lines = f.readlines()
+                length = 0
+                inRegion = False
+                for line in file_lines:
+                    if "{" in line : 
+                        inRegion = True
+                    elif "ret" in line: 
+                        inRegion = False
+                    elif inRegion: 
+                        length += 1
+                function_names.append(filename.split(".")[0])
+                lengths.append(length)
+        except FileNotFoundError:
+            print(f"Warning: file not found at {file_path}. Skipping.")
+            
+    df = pd.DataFrame({"function_name": function_names, "instructions_number" : lengths})
+    df.to_csv(data_dir + init_directory.split('/')[-2]+'_lengths.csv')
+
 def extract_data(results_directory, benchmark_name, parameter) :
     """
     Parses the results of mca and saves the result in a DataFrame, then printed to `.csv`
@@ -139,7 +170,10 @@ def join_dataframes(dataframe_names, parameter) :
     Joins multiple DataFrames on a common 'function_name' column.
     """
     for idx, name in enumerate(dataframe_names) : 
-        df = pd.read_csv(data_dir + name +"_"+parameter +".csv", index_col=0, header=0)
+        if 'lengths' in name:
+            df = pd.read_csv(data_dir + name +".csv", index_col=0, header=0)
+        else: 
+            df = pd.read_csv(data_dir + name +"_"+parameter +".csv", index_col=0, header=0)
         if idx == 0 : 
             complete_df = df 
         else: 
@@ -273,9 +307,9 @@ def bar_plot(parameter, selector1, selector2):
             return '>2'
 
     df['diff_class'] = df['diff'].apply(classify)
-
-    # For each unique value of selector1, compute the % of each diff_class
-    group = df.groupby(col1)['diff_class'].value_counts(normalize=True).unstack(fill_value=0) * 100
+    
+    # For each unique value of the initial `instructions_number`, compute the % of each diff_class
+    group = df.groupby('instructions_number')['diff_class'].value_counts(normalize=True).unstack(fill_value=0) * 100
 
     # Ensure all classes are present for consistent coloring/order
     class_order = ['<0', '0', '1', '2', '>2']
@@ -320,14 +354,12 @@ def bar_plot(parameter, selector1, selector2):
             idx_str_clean += 'Instr'
         for c in class_order:
             perc = row[c]
-            # Build a safe LaTeX command name: no underscores, does not end with a number
             cmd = (
                 f"\\newcommand{{\\Perc"
                 f"{clean_name(selector1)}Vs{clean_name(selector2)}"
                 f"{clean_name(parameter)}For{idx_str_clean}On{c.replace('<','lt').replace('>','gt').replace('0','zero').replace('1','one').replace('2','two')}}}{{{perc:.1f}}}"
             )
             latex_lines.append(cmd)
-    # Write to file (append mode)
     latex_file = os.path.join(plots_dir, "bar_plot_percentages.tex")
     with open(latex_file, "a") as f:
         for line in latex_lines:
@@ -442,7 +474,8 @@ def main():
         extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', parameter)
         extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', parameter)
         extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter)
-        join_dataframes(['LEANMLIR', 'LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag'], parameter)
+        extract_instr_count(LLVMIR_DIR_PATH)
+        join_dataframes(['LEANMLIR', 'LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag', 'LLVMIR_lengths'], parameter)
         if "scatter" in plots_to_produce or "all" in plots_to_produce :
             scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
             scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
