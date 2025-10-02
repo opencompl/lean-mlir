@@ -14,7 +14,7 @@ import numpy as np
 
 
 matplotlib.rcParams['pdf.fonttype'] = 42
-plt.rcParams.update({'font.size': 16})
+plt.rcParams.update({'font.size': 18})
 
 
 matplotlib.rcParams['figure.autolayout'] = True
