@@ -297,7 +297,7 @@ def bar_plot(parameter, selector1, selector2):
         bottom += group[c].values
 
     plt.xlabel(selector_labels[selector1] + ' - ' + parameters_labels[parameter])
-    plt.ylabel('Programs (%)  - ' + selector_labels[selector1] +' vs. ' + selector_labels[selector2])
+    plt.ylabel('(%)  - ' + selector_labels[selector1] +' vs. ' + selector_labels[selector2])
     plt.legend(ncol = 5)
     plt.tight_layout()
     
