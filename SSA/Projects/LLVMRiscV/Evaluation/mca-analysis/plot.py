@@ -336,6 +336,9 @@ def bar_plot(parameter, selector1, selector2):
     print(f"\nStacked bar plot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
+def clean_name(s):
+    return ''.join([w.capitalize() for w in str(s).split('_')])
+
 def sorted_line_plot(parameter, selector1, selector2):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
@@ -358,6 +361,18 @@ def sorted_line_plot(parameter, selector1, selector2):
     plt.savefig(pdf_filename)
     print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
+    
+    avg_diff = (sorted_df[selector1 + '_' + parameter] - sorted_df[selector2 + '_' + parameter]).mean()
+    # Clean names for LaTeX command
+
+    cmd_name = (
+        f"\\newcommand{{\\AvgDiff"
+        f"{clean_name(selector1)}Vs{clean_name(selector2)}"
+        f"{clean_name(parameter)}}}{{{avg_diff:.2f}}}"
+    )
+    latex_file = os.path.join(plots_dir, "sorted_line_plot_averages.tex")
+    with open(latex_file, "a") as f:
+        f.write(cmd_name + "\n")
 
 def overhead_plot(parameter, selector1, selector2):
     """
