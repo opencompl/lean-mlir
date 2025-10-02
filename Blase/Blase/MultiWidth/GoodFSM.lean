@@ -1582,42 +1582,72 @@ instance [instFinEnum : FinEnum α ]: FinEnum (Option α) where
         omega
     )
 
+def Circuit.assignVars? (c : Circuit α) (assign? : α → Bool ⊕ β) :
+  Circuit β :=
+  c.bind <| fun v =>
+    match assign? v with
+    | .inl b => Circuit.ofBool b
+    | .inr v => Circuit.var true v
+
+@[simp]
+theorem Circuit.eval_assignVars? (assign? : α → Bool ⊕ β)
+    (c : Circuit α)
+    (env : β → Bool) :
+    (Circuit.assignVars? c assign?).eval env =
+      c.eval (fun v =>
+        match assign? v with
+        | .inl b => b
+        | .inr v => env v) := by
+  induction c generalizing env
+  case tru => simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+  case fals => simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+  case var positive v =>
+    simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+    rcases positive with rfl | rfl <;>
+      rcases (assign? v) with ⟨rfl | rfl⟩ | x <;> simp
+  case and c1 c2 ih1 ih2 =>
+    simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+    congr <;>
+      ext a <;>
+      rcases (assign? a) with ⟨rfl | rfl⟩  | x <;> simp
+  case or c1 c2 ih1 ih2 =>
+    simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+    congr <;>
+      ext a <;>
+      rcases (assign? a) with ⟨rfl | rfl⟩  | x <;> simp
+  case xor c1 c2 ih1 ih2 =>
+    simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+    congr <;>
+      ext a <;>
+      rcases (assign? a) with ⟨rfl | rfl⟩  | x <;> simp
+
+/--
+replace predicate variable pcard with a constant b, if possible.
+-/
+def elimPredVar.assignPred (b : Bool) {wcard tcard bcard pcard : Nat}
+    (c : Circuit (α ⊕ StateSpace wcard tcard bcard (pcard + 1))) :
+    Circuit (α ⊕ StateSpace wcard tcard bcard pcard) :=
+  Circuit.assignVars? c <| fun s =>
+    match s with
+    | .inl s => .inr (.inl s)
+    | .inr s =>
+      match StateSpace.predVarElim s with
+      | .none => .inl b
+      | .some s  => .inr <| .inr s
+
+
 def elimPredVar {wcard tcard bcard pcard : Nat}
     (fsm : FSM (StateSpace wcard tcard bcard (pcard + 1))) :
     FSM (StateSpace wcard tcard bcard pcard) where
-  α :=  Option (fsm.α) -- is this correct?
-  initCarry := fun s? =>
-    match s? with
-    | none => true -- ??
-    | some s => fsm.initCarry s
+  α :=  (fsm.α) -- is this correct?
+  initCarry := fun s => fsm.initCarry s
   outputCirc :=
     let fsmOut : Circuit (fsm.α ⊕ StateSpace wcard tcard bcard (pcard + 1))
       := fsm.outputCirc
-    let outTru (b : Bool) : Circuit ((Option fsm.α) ⊕ StateSpace wcard tcard bcard pcard)
-      := fsmOut.bind <| fun s =>
-        match s with
-        | .inl s => Circuit.var true <| .inl (some s)
-        | .inr s =>
-          match StateSpace.predVarElim s with
-          | .none =>
-            -- try evaluating with both? Must it be monotone?
-            Circuit.ofBool b
-          | .some s  => Circuit.var true <| .inr s
-    outTru true ||| outTru false
-    -- Circuit.var true (Sum.inr false)
+    elimPredVar.assignPred true fsmOut ||| elimPredVar.assignPred false fsmOut
   nextStateCirc := fun s =>
-    let fsmNext := fsm.nextStateCirc
-    match s with
-    | none => Circuit.var true (Sum.inl none)
-    | some s => (fsmNext s).map (fun s =>
-        match s with
-        | .inl st => .inl (some st)
-        | .inr v =>
-          match StateSpace.predVarElim v with
-          | .none => .inl (none)
-          | .some v' => .inr v'
-      )
-
+    let fsmNext := fsm.nextStateCirc s
+    sorry
 
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
