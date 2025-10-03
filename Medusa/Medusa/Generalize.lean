@@ -539,7 +539,6 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genLogicalExpr
 
           let some width ← H.getWidth w  | throwError m! "Could not determine the rewrite width from {w}"
           let startTime ← Core.liftIOCore IO.monoMsNow
-
           -- Parse the input expression
           let widthId : Nat := 9481
           let widthName := (Name.mkSimple "w")
@@ -550,7 +549,7 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genLogicalExpr
                           symVarIdToVariable := initialState.symVarIdToVariable.insert widthId widthVariable
                           , displayNameToVariable := initialState.displayNameToVariable.insert widthName widthVariable
                           , originalWidth := width}
-
+          -- | seems to crash here.
           let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr width).run' initialState
             | throwError "Unsupported expression provided"
 
@@ -565,22 +564,25 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genLogicalExpr
           let mut variableDisplayNames : Std.HashMap Nat Name := Std.HashMap.emptyWithCapacity
           for (id, var) in allVariables.toList do
             variableDisplayNames := variableDisplayNames.insert id var.name
-
+          throwError "F"
           trace[Generalize] m! "All vars: {variableDisplayNames}"
           match generalizeRes with
-            | some res => match context with
-                          | GeneralizeContext.Command => let pretty := H.prettify res variableDisplayNames
-                                                         pure m! "Raw generalization result: {res} \n Input expression: {hExpr} has generalization: {pretty}"
-                          | GeneralizeContext.Tactic name => pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
+            | some res =>
+              throwError "G"
+              match context with
+              | GeneralizeContext.Command =>
+                let pretty := H.prettify res variableDisplayNames
+                pure m! "Raw generalization result: {res} \n Input expression: {hExpr} has generalization: {pretty}"
+              | GeneralizeContext.Tactic name =>
+                pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
             | none => throwError m! "Could not generalize {bvLogicalExpr}"
-
     | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
 
 open Lean Lean.Elab Command Term in
-def generalizeCommand 
+def generalizeCommand
       (H : HydrableParseAndGeneralize parsedExpr genLogicalExpr genExpr)
       (stx : Syntax) : CommandElabM Unit := do
-  withoutModifyingEnv <| runTermElabM fun _ => 
+  withoutModifyingEnv <| runTermElabM fun _ =>
     Term.withDeclName `_reduceWidth do
       let hExpr ← Term.elabTerm stx none
       trace[Generalize] m! "hexpr: {hExpr}"
@@ -592,7 +594,8 @@ def generalizeTactic
       (H : HydrableParseAndGeneralize parsedExpr genLogicalExpr genExpr)
       (expr : Expr) : TacticM Unit := do
   let name ← mkAuxDeclName `generalized
-  let msg ← withoutModifyingEnv <| withoutModifyingState do
+  -- let msg ← withoutModifyingEnv <| withoutModifyingState do
+  let msg ← do
     Lean.Elab.Tactic.withMainContext do
       -- | TODO: should we add a unification check, that allows the user
       -- to prove the more general version?
