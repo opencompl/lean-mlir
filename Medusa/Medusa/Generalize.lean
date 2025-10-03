@@ -575,3 +575,27 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genLogicalExpr
             | none => throwError m! "Could not generalize {bvLogicalExpr}"
 
     | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
+
+open Lean Lean.Elab Command Term in
+def generalizeCommand 
+      (H : HydrableParseAndGeneralize parsedExpr genLogicalExpr genExpr)
+      (stx : Syntax) : CommandElabM Unit := do
+  withoutModifyingEnv <| runTermElabM fun _ => 
+    Term.withDeclName `_reduceWidth do
+      let hExpr ← Term.elabTerm stx none
+      trace[Generalize] m! "hexpr: {hExpr}"
+      let res ← parseAndGeneralize (H := H) hExpr GeneralizeContext.Command
+      logInfo m! "{res}"
+
+open Lean Lean.Elab Command Term in
+def generalizeTactic
+      (H : HydrableParseAndGeneralize parsedExpr genLogicalExpr genExpr)
+      (expr : Expr) : TacticM Unit := do
+  let name ← mkAuxDeclName `generalized
+  let msg ← withoutModifyingEnv <| withoutModifyingState do
+    Lean.Elab.Tactic.withMainContext do
+      -- | TODO: should we add a unification check, that allows the user
+      -- to prove the more general version?
+      let res ← parseAndGeneralize (H := H) expr (GeneralizeContext.Tactic name)
+      pure m! "{res}"
+  logInfo m! "{msg}"
