@@ -779,14 +779,14 @@ instance : HydrableGeneralize ParsedFpExpr GenFpLogicalExpr FpExpr where
 instance bvHydrableParseAndGeneralize : HydrableParseAndGeneralize ParsedFpExpr GenFpLogicalExpr FpExpr where
 
 /-- TODO: Rename this to #generalize_bv, or create a global registry via attributes of names to generalizers. -/
-elab "#generalize" expr:term: command =>
+elab "#fpgeneralize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   generalizeCommand (H := bvHydrableParseAndGeneralize) expr
 
-syntax (name := bvGeneralize) "fp_generalize" : tactic
+syntax (name := fpGeneralize) "fp_generalize" : tactic
 
 open Lean Meta Elab Tactic in
-@[tactic bvGeneralize]
+@[tactic fpGeneralize]
 def evalBvGeneralize : Tactic
   | `(tactic| fp_generalize) => do
       withMainContext do
