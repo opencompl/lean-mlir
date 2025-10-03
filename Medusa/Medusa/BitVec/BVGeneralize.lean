@@ -872,16 +872,15 @@ instance : HydrableInitializeGeneralizerState ParsedBVExpr GenBVLogicalExpr GenB
 instance : HydrableGeneralize ParsedBVExpr GenBVLogicalExpr GenBVExpr where
 instance bvHydrableParseAndGeneralize : HydrableParseAndGeneralize ParsedBVExpr GenBVLogicalExpr GenBVExpr where
 
-/-- TODO: Rename this to #generalize_bv, or create a global registry via attributes of names to generalizers. -/
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
-    let hExpr ← Term.elabTerm expr none
-    trace[Generalize] m! "hexpr: {hExpr}"
-    let res ← parseAndGeneralize (H := bvHydrableParseAndGeneralize)
-      hExpr GeneralizeContext.Command
-    logInfo m! "{res}"
-  -- generalizeCommand (H := bvHydrableParseAndGeneralize) expr
+      let hExpr ← Term.elabTerm expr none
+      trace[Generalize] m! "hexpr: {hExpr}"
+      let res ← parseAndGeneralize (H := bvHydrableParseAndGeneralize)
+        hExpr GeneralizeContext.Command
+
+      logInfo m! "{res}"
 
 syntax (name := bvGeneralize) "bv_generalize" : tactic
 
@@ -889,7 +888,6 @@ open Lean Meta Elab Tactic in
 @[tactic bvGeneralize]
 def evalBvGeneralize : Tactic
   | `(tactic| bv_generalize) => do
-      withMainContext do
       let name ← mkAuxDeclName `generalized
       let msg ← withoutModifyingEnv <| withoutModifyingState do
         Lean.Elab.Tactic.withMainContext do
@@ -900,7 +898,6 @@ def evalBvGeneralize : Tactic
       logInfo m! "{msg}"
   | _ => Lean.Elab.throwUnsupportedSyntax
 
--- TODO: move these into a separate file.
 
 -- variable {x y z : BitVec 1}
 -- #generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm; Need to think about how to use special constants with the same width as the variables during precondition synthesis
