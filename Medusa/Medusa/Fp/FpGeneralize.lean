@@ -789,7 +789,8 @@ open Lean Meta Elab Tactic in
 @[tactic bvGeneralize]
 def evalBvGeneralize : Tactic
   | `(tactic| fp_generalize) => do
-      generalizeTactic (H := bvHydrableParseAndGeneralize) (← getMainTarget)
+      withMainContext do
+        generalizeTactic (H := bvHydrableParseAndGeneralize) (← getMainTarget)
   | _ => Lean.Elab.throwUnsupportedSyntax
 
 -- TODO: move these into a separate file.
