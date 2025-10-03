@@ -85,6 +85,12 @@ open InstcombineTransformDialect
 def Γn (n : Nat) : Ctxt (MetaLLVM φ).Ty :=
   Ctxt.ofList <| .replicate n (.bitvec 32)
 
+def op0 : Op 0 := [mlir_op| %0 = llvm.mlir.constant(8) : i32]
+def op1 : Op 0 := [mlir_op| %1 = llvm.mlir.constant(31) : i32]
+def op2 : Op 0 := [mlir_op| %2 = llvm.ashr %arg0,  %1 : i32]
+def op3 : Op 0 := [mlir_op| %3 = llvm.and %2, %0 : i32]
+def op4 : Op 0 := [mlir_op| %4 = llvm.add %3, %2 : i32]
+def opRet : Op 0 := [mlir_op| llvm.return %4 : i32]
 
 /-
   TODO: these tests were broken.
@@ -92,47 +98,41 @@ def Γn (n : Nat) : Ctxt (MetaLLVM φ).Ty :=
   please check that the tested behaviour is actually the desired behaviour
 -/
 
-def op0 : Op 0 := [mlir_op| %0 = llvm.mlir.constant(8) : i32]
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %1 = "llvm.const"(){value = 8 : i32} : () -> (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
 -/
-#guard_msgs in
-  #eval mkExpr    (Γn 1) op0    ["arg0"]
+#guard_msgs in #eval mkExpr    (Γn 1) op0    ["arg0"]
 
-def op1 : Op 0 := [mlir_op| %1 = llvm.mlir.constant(31) : i32]
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %2 = "llvm.const"(){value = 31 : i32} : () -> (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 2) op1    ["0", "arg0"]
 
-def op2 : Op 0 := [mlir_op| %2 = llvm.ashr %arg0,  %1 : i32]
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %3 = "llvm.ashr"(%0, %2) : (i32, i32) -> (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.ashr)(%0, %2) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 3) op2    ["1", "0", "arg0"]
 
-def op3 : Op 0 := [mlir_op| %3 = llvm.and %2, %0 : i32]
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %4 = "llvm.and"(%3, %1) : (i32, i32) -> (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.and)(%3, %1) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 4) op3    ["2", "1", "0", "arg0"]
 
-def op4 : Op 0 := [mlir_op| %4 = llvm.add %3, %2 : i32]
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %5 = "llvm.add"(%4, %3)<{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.add)(%4, %3) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 5) op4    ["3", "2", "1", "0", "arg0"]
 
-def opRet : Op 0 := [mlir_op| llvm.return %4 : i32]
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨[i32], {
-    ^bb0(%0 : i32, %1 : i32, %2 : i32, %3 : i32, %4 : i32, %5 : i32):
-      "llvm.return"(%5) : (i32) -> ()
+    ^entry(%0 : i32, %1 : i32, %2 : i32, %3 : i32, %4 : i32, %5 : i32):
+      return %5 : (i32) → ()
   }⟩⟩
 -/
 #guard_msgs in #eval mkReturn  (Γn 6) opRet  ["4", "3", "2", "1", "0", "arg0"]
@@ -145,39 +145,41 @@ def ops : List (Op 0) := [mlir_ops|
     %4 = llvm.add %3, %2 : i32
     llvm.return %4 : i32
 ]
+def ops' := [op0, op1, op2, op3, op4]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %1 = "llvm.const"(){value = 8 : i32} : () -> (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 8 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 1)  (ops[0]) ["arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %2 = "llvm.const"(){value = 31 : i32} : () -> (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.const (ConcreteOrMVar.concrete 32) 31 : () → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 2)  (ops[1]) ["0", "arg0"]
 
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %3 = "llvm.ashr"(%0, %2) : (i32, i32) -> (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.ashr)(%0, %2) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 3)  (ops[2]) ["1", "0", "arg0"]
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %4 = "llvm.and"(%3, %1) : (i32, i32) -> (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.and)(%3, %1) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 4)  (ops[3]) ["2", "1", "0", "arg0"]
 /--
-info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %5 = "llvm.add"(%4, %3)<{overflowFlags = #llvm.overflow<none>}> : (i32, i32) -> (i32)⟩⟩
+info: Except.ok ⟨EffectKind.pure, ⟨[i32], InstCombine.MOp.binary
+    (ConcreteOrMVar.concrete 32)
+    (InstCombine.MOp.BinaryOp.add)(%4, %3) : (i32, i32) → (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 5)  (ops[4]) ["3", "2", "1", "0", "arg0"]
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨[i32], {
-    ^bb0(%0 : i32, %1 : i32, %2 : i32, %3 : i32, %4 : i32, %5 : i32):
-      "llvm.return"(%5) : (i32) -> ()
+    ^entry(%0 : i32, %1 : i32, %2 : i32, %3 : i32, %4 : i32, %5 : i32):
+      return %5 : (i32) → ()
   }⟩⟩
 -/
 #guard_msgs in #eval mkReturn  (Γn 6)  (ops[5]) ["4", "3", "2", "1", "0", "arg0"]

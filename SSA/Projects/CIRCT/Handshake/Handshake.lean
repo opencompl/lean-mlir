@@ -438,11 +438,4 @@ instance : DialectToExpr Handshake where
 open Qq MLIR AST Lean Elab Term Meta in
 elab "[handshake_com| " reg:mlir_region "]" : term => do SSA.elabIntoCom' reg Handshake
 
-instance : DialectPrint Handshake where
-  printOpName := reprStr
-  printTy := reprStr
-  printAttributes _ := ""
-  dialectName := "handshake"
-  printReturn _ := "return"
-
 end MLIR2Handshake
