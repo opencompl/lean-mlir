@@ -3,6 +3,8 @@ import SSA.Projects.InstCombine.LLVM.Parser
 import SSA.Projects.RISCV64.Base
 import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
+set_option compiler.extract_closed false
+
 open MLIR AST InstCombine
 open RISCV64
 open LeanMLIR.SingleReturnCompat
