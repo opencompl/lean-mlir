@@ -153,6 +153,9 @@ abbrev toSingle : HVector A [a₁] → A a₁ := toTuple
 abbrev toPair   : HVector A [a₁, a₂] → A a₁ × A a₂ := toTuple
 abbrev toTriple : HVector A [a₁, a₂, a₃] → A a₁ × A a₂ × A a₃ := toTuple
 
+def ofPair : (A a₁ × A a₂) → HVector A [a₁, a₂] :=
+  fun ⟨x, y⟩ => [x, y]ₕ
+
 /-! ## isEmpty-/
 
 @[grind =]
