@@ -875,7 +875,13 @@ instance bvHydrableParseAndGeneralize : HydrableParseAndGeneralize ParsedBVExpr 
 /-- TODO: Rename this to #generalize_bv, or create a global registry via attributes of names to generalizers. -/
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
-  generalizeCommand (H := bvHydrableParseAndGeneralize) expr
+  withoutModifyingEnv <| runTermElabM fun _ => Term.withDeclName `_reduceWidth do
+    let hExpr ← Term.elabTerm expr none
+    trace[Generalize] m! "hexpr: {hExpr}"
+    let res ← parseAndGeneralize (H := bvHydrableParseAndGeneralize)
+      hExpr GeneralizeContext.Command
+    logInfo m! "{res}"
+  -- generalizeCommand (H := bvHydrableParseAndGeneralize) expr
 
 syntax (name := bvGeneralize) "bv_generalize" : tactic
 
@@ -884,7 +890,14 @@ open Lean Meta Elab Tactic in
 def evalBvGeneralize : Tactic
   | `(tactic| bv_generalize) => do
       withMainContext do
-        generalizeTactic (H := bvHydrableParseAndGeneralize) (← getMainTarget)
+      let name ← mkAuxDeclName `generalized
+      let msg ← withoutModifyingEnv <| withoutModifyingState do
+        Lean.Elab.Tactic.withMainContext do
+          let expr ← Lean.Elab.Tactic.getMainTarget
+          let res ← parseAndGeneralize (H := bvHydrableParseAndGeneralize)
+            expr (GeneralizeContext.Tactic name)
+          pure m! "{res}"
+      logInfo m! "{msg}"
   | _ => Lean.Elab.throwUnsupportedSyntax
 
 -- TODO: move these into a separate file.
