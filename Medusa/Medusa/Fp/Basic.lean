@@ -236,7 +236,10 @@ instance : Inhabited FpExprWrapper where
 
 def getWidth (expr : Expr) : MetaM (Option Nat) := do
   match_expr expr with
-  | BitVec n => getNatValue? n
+  | BitVec n =>
+    let x ← getNatValue? n
+    logInfo "na na na FP getting width: {x}"
+    return x
   | _ => pure none
 
 -- | TODO: rename to setWidth
