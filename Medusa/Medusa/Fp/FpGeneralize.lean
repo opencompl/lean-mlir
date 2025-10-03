@@ -15,6 +15,8 @@ open Std.Tactic.BVDecide
 namespace Generalize
 set_option maxHeartbeats 1000000000000
 set_option maxRecDepth 1000000
+set_option linter.unusedVariables false
+
 
 namespace Fp
 
