@@ -9,7 +9,16 @@ import SSA.Projects.SLLVM.Dialect.Semantics.Memory
 
 namespace LeanMLIR
 
+/--
+`EffectM` is the monad of side-effects for the SLLVM dialect
+-/
 def EffectM := StateT GlobalState PoisonOr
+
+/--
+`MemorySSAM` is the monad of just the subset of side-effects of SLLVM
+which can be purified by expressing them in the SSA def-use chain.
+-/
+def MemorySSAM := StateT MemoryState PoisonOr
 
 namespace EffectM
 
@@ -77,5 +86,21 @@ instance : HRefinement (EffectM α) (EffectM β) where
 
 end Refinement
 
-/-! ## Memory Semantics -/
-section LoadStore
+end EffectM
+
+/-! ## MemorySSAM -/
+namespace MemorySSAM
+
+instance : Monad MemorySSAM        := by unfold MemorySSAM; infer_instance
+instance : LawfulMonad MemorySSAM  := by unfold MemorySSAM; infer_instance
+instance : MonadStateOf MemoryState MemorySSAM := by
+  unfold MemorySSAM; infer_instance
+
+instance : MonadLift MemorySSAM EffectM where
+  monadLift x := fun { mem, alloc } =>
+    match x mem with
+    | .poison => .poison
+    | .value ⟨y, mem⟩ => .value ⟨y, { mem, alloc }⟩
+
+instance : HasUB MemorySSAM where
+  throwUB := StateT.lift PoisonOr.poison

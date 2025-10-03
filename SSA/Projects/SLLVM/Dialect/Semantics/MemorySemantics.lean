@@ -13,12 +13,18 @@ namespace LeanMLIR
 namespace SLLVM
 open BitVec
 
+/-- A memorySSA'd state, which tracks:
+* the content of memory blocks
+* whether UB has occurred (within the def-use chain of the state)
+-/
+def MemorySSAState := PoisonOr MemoryState
+
 /--
 Return the block pointed to by `p`, or throw UB if this block
 - doesn't exists (i.e., hasn't been allocated yet), or
 - has been freed already
 -/
-def getLiveBlockOrUB (p : Pointer) : EffectM LiveBlock := do
+def getLiveBlockOrUB (p : Pointer) : MemorySSAM LiveBlock := do
   let m ← getThe MemoryState
   let some (.live block) := m[p.id]?
     | throwUB
@@ -34,11 +40,23 @@ Raises UB if:
 
 **SIMPLIFICATION**: we don't model alignment constraints at all
 -/
-def load (p : SLLVM.Ptr) (w : Nat) : EffectM (LLVM.IntW w) := do
+def load (p : SLLVM.Ptr) (w : Nat) : MemorySSAM (LLVM.IntW w) := do
   let p ← p.getOrUB
   let block ← getLiveBlockOrUB p
   throwUBIf <| p.offsetInBits + w > block.lengthInBits
-  .value <| block.bytes.extractLsb' p.offsetInBits w
+  return .value <| block.bytes.extractLsb' p.offsetInBits w
+
+/--
+A wrapper around `load` which makes the operation pure, operating against the
+state in a (memory)SSA variable.
+-/
+def loadPure (m : MemorySSAState) (p : SLLVM.Ptr) (w : Nat) : MemorySSAState × LLVM.IntW w :=
+  match m with
+  | .poison => (.poison, .poison)
+  | .value m =>
+    match (load p w).run m with
+    | .poison => (.poison, .poison)
+    | .value ⟨x, m⟩ => ⟨.value m, x⟩
 
 /--
 `store p x` will store the value `x` at the location pointed to by `p`.
@@ -50,7 +68,7 @@ Raises UB if:
 
 **SIMPLIFICATION**: we don't model alignment constraints at all
 -/
-def store (p : SLLVM.Ptr) (x : LLVM.IntW w) : EffectM Unit := do
+def store (p : SLLVM.Ptr) (x : LLVM.IntW w) : MemorySSAM Unit := do
   let p ← p.getOrUB
   let x ← x.getOrUB
   let block ← getLiveBlockOrUB p
@@ -60,6 +78,14 @@ def store (p : SLLVM.Ptr) (x : LLVM.IntW w) : EffectM Unit := do
     mem := m.mem.insert p.id (.live { block with bytes })
   }
   return ()
+
+/--
+A wrapper around `store` which makes the operation pure, operating against the
+state in a (memory)SSA variable.
+-/
+def storePure (m : MemorySSAState) (p : SLLVM.Ptr) (x : LLVM.IntW w) : MemorySSAState := do
+  let m ← m
+  Prod.snd <$> (store p x).run m
 
 /--
 Allocate the next available block of `w` bits on the stack.

@@ -34,11 +34,14 @@ inductive SLLVMOp where
   | load (w : Nat)
   | store (w : Nat)
   | alloca (w : Nat)
+  | loadPure (w : Nat)
+  | storePure (w : Nat)
   deriving DecidableEq, Lean.ToExpr
 
 inductive SLLVMTy where
   | arith (t : LLVM.Ty)
   | ptr
+  | mem
   deriving DecidableEq, Lean.ToExpr
 
 def SLLVM : Dialect where
@@ -52,6 +55,7 @@ instance : TyDenote SLLVM.Ty where
   toType
   | .arith t => ⟦t⟧
   | .ptr => SLLVM.Ptr
+  | .mem => MemorySSAState
 
 instance : DecidableEq SLLVM.Op := by unfold SLLVM; infer_instance
 instance : DecidableEq SLLVM.Ty := by unfold SLLVM; infer_instance
@@ -76,6 +80,7 @@ open InstCombine.LLVM SLLVMOp
 
 @[match_pattern] abbrev Ty.bitvec (w : Nat) : SLLVM.Ty := .arith (.bitvec w)
 @[match_pattern] abbrev Ty.ptr : SLLVM.Ty := .ptr
+@[match_pattern] abbrev Ty.mem : SLLVM.Ty := .mem
 
 @[match_pattern] nonrec abbrev Op.arith : LLVM.Op → SLLVM.Op := .arith
 
@@ -119,7 +124,9 @@ def_signature for SLLVM
   -- New operations
   | .ptradd          => (ptr, bitvec 64) -> ptr
   | .load w          => (ptr) -[.impure]-> bitvec w
+  | .loadPure w      => (mem, ptr) -> [mem, bitvec w]
   | .store w         => (ptr, bitvec w) -[.impure]-> []
+  | .storePure w     => (mem, ptr, bitvec w) -> [mem]
   | .alloca _w       => () -[.impure]-> ptr
   -- LLVM operations with modified effect signature
   | Op.urem w        => (bitvec w, bitvec w) -[.impure]-> bitvec w
@@ -153,7 +160,9 @@ def_denote for SLLVM
   -- New operations
   | .ptradd   => fun p x => [SLLVM.ptradd p x]ₕ
   | .load w   => fun p   => ([·]ₕ) <$> SLLVM.load p w
+  | .loadPure w => fun m p => HVector.ofPair <| SLLVM.loadPure m p w
   | .store _  => fun p x => (fun _ => []ₕ) <$> SLLVM.store p x
+  | .storePure _ => fun m p x => [SLLVM.storePure m p x]ₕ
   | .alloca w => ([·]ₕ) <$> SLLVM.alloca w
   -- LLVM operations with modified effect signature
   | Op.udiv _w flag => fun x y => ([·]ₕ) <$> SLLVM.udiv x y flag
@@ -187,7 +196,9 @@ open DialectPrint
 instance : DialectPrint SLLVM where
   printOpName
     | .arith llvmOp => printOpName llvmOp
+    | .storePure _
     | .store _w   => "ptr.store"
+    | .loadPure _
     | .load _w    => "ptr.load"
     | .ptradd     => "ptr.add"
     | .alloca _w  => "ptr.alloca"
@@ -198,6 +209,7 @@ instance : DialectPrint SLLVM where
   printTy
     | .arith llvmTy => printTy llvmTy
     | .ptr => "!ptr"
+    | .mem => "!mem"
   dialectName := "sllvm"
   printReturn _ := "llvm.return"
   printFunc _ := "^entry"
