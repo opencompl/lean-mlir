@@ -141,6 +141,9 @@ def toString : FpPredicate → String
 
 instance : ToString FpPredicate := ⟨toString⟩
 
+instance : ToMessageData FpPredicate where
+  toMessageData p := toString p
+
 /--
 The semantics for `BVPred`.
 -/
@@ -164,8 +167,9 @@ deriving instance DecidableEq for BoolExpr
 /--
 TODO: think if this should live in Medusa lib
 TODO: why is this not generalized over m and e?
+TODO: I made this a `def`, while in BV it's an `abbrev`, probably to get TC synthesis going.
 -/
-def GenFpLogicalExpr := BoolExpr (FpPredicate)
+abbrev GenFpLogicalExpr := BoolExpr (FpPredicate)
 
 def GenFpLogicalExpr.toBoolExpr (expr: GenFpLogicalExpr) :
     BoolExpr FpPredicate :=
@@ -183,6 +187,7 @@ def GenFpLogicalExpr.size : GenFpLogicalExpr → Nat
 | .gate _ e₁ e₂ =>
   1 + (GenFpLogicalExpr.ofBoolExpr e₁).size + (GenFpLogicalExpr.ofBoolExpr e₂).size
 | .ite e₁ e₂ e₃ => 1 + (GenFpLogicalExpr.ofBoolExpr e₁).size + (GenFpLogicalExpr.ofBoolExpr e₂).size + (GenFpLogicalExpr.ofBoolExpr e₃).size
+
 
 namespace GenFpLogicalExpr
 
@@ -235,7 +240,7 @@ def getWidth (expr : Expr) : MetaM (Option Nat) := do
   | _ => pure none
 
 -- | TODO: rename to setWidth
-def changeBVExprWidth (bvExpr: FpExpr w) (target: Nat) : FpExpr target :=
+def changeFpExprWidth (bvExpr: FpExpr w) (target: Nat) : FpExpr target :=
   if h : w = target then
     (h ▸ bvExpr)
   else
@@ -243,9 +248,9 @@ def changeBVExprWidth (bvExpr: FpExpr w) (target: Nat) : FpExpr target :=
     | .var idx => (FpExpr.var idx : FpExpr target)
     | .bin lhs op rhs =>
       FpExpr.bin
-        (changeBVExprWidth lhs target)
+        (changeFpExprWidth lhs target)
         op
-        (changeBVExprWidth rhs target)
+        (changeFpExprWidth rhs target)
     | .const val =>
       -- | TODO: this is kinda nonsensical since
       -- we are *literally* truncating bits, but whatever for now.
@@ -253,21 +258,22 @@ def changeBVExprWidth (bvExpr: FpExpr w) (target: Nat) : FpExpr target :=
       FpExpr.const (val.setWidth _)
 
 -- TODO: make this part of Medusa proper?
-def changeBVLogicalExprWidth (bvLogicalExpr: GenFpLogicalExpr) (target: Nat) : GenFpLogicalExpr :=
+def changeFpLogicalExprWidth (bvLogicalExpr: GenFpLogicalExpr) (target: Nat) : GenFpLogicalExpr :=
   match bvLogicalExpr with
-  | .literal (FpPredicate.bin lhs op rhs) => BoolExpr.literal (FpPredicate.bin (changeBVExprWidth lhs target) op (changeBVExprWidth rhs target))
+  | .literal (FpPredicate.bin lhs op rhs) => BoolExpr.literal (FpPredicate.bin (changeFpExprWidth lhs target) op (changeFpExprWidth rhs target))
   | .not boolExpr =>
-      BoolExpr.not (changeBVLogicalExprWidth boolExpr target)
+      BoolExpr.not (changeFpLogicalExprWidth boolExpr target)
   | .gate op lhs rhs =>
-      BoolExpr.gate op (changeBVLogicalExprWidth lhs target) (changeBVLogicalExprWidth rhs target)
+      BoolExpr.gate op (changeFpLogicalExprWidth lhs target) (changeFpLogicalExprWidth rhs target)
   | .ite constVar auxVar op3 =>
-      BoolExpr.ite (changeBVLogicalExprWidth constVar target) (changeBVLogicalExprWidth auxVar target) (changeBVLogicalExprWidth op3 target)
+      BoolExpr.ite (changeFpLogicalExprWidth constVar target) (changeFpLogicalExprWidth auxVar target) (changeFpLogicalExprWidth op3 target)
   | _ => bvLogicalExpr
+
 
 -- | What does this do?
 -- TODO: this can be done in Medusa directly?
 -- IT doesn't need to live here?
-def bvExprToSubstitutionValue (map: Std.HashMap Nat FpExprWrapper) :
+def fpExprWrapperToSubstitutionValue (map: Std.HashMap Nat FpExprWrapper) :
       Std.HashMap Nat (SubstitutionValue (FpExpr)) :=
         Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.genExpr item.snd.bvExpr)) map.toList)
 
@@ -358,7 +364,7 @@ def addConstraints (expr: GenFpLogicalExpr) (constraints: List GenFpLogicalExpr)
       | BoolExpr.const _ => addConstraints x xs op
       | _ => addConstraints (BoolExpr.gate op expr x) xs op
 
-private def packedBitVecToSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) :
+def packedBitVecToFpSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) :
     Std.HashMap Nat (SubstitutionValue FpExpr) :=
   Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
 
@@ -367,13 +373,14 @@ def sameBothSides (bvLogicalExpr : GenFpLogicalExpr) : Bool :=
   | .literal (FpPredicate.bin lhs _ rhs) => lhs == rhs
   | _ => false
 
-/-- warning: declaration uses 'sorry' -/
+-- TODO: can this be moved to generalize?
 def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: FpExpr w) : PackedFloat w mfixed :=
-  let substitutedBvExpr := substituteBVExpr expr (packedBitVecToSubstitutionValue assignments)
+  let substitutedBvExpr := substituteBVExpr expr (packedBitVecToFpSubstitutionValue assignments)
   FpExpr.eval assignments substitutedBvExpr
 
+-- TODO: can this be moved to generalize?
 def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenFpLogicalExpr) : Bool :=
-  let substitutedBvExpr := substitute expr (packedBitVecToSubstitutionValue assignments)
+  let substitutedBvExpr := substitute expr (packedBitVecToFpSubstitutionValue assignments)
   GenFpLogicalExpr.eval assignments substitutedBvExpr
 
 def add (op1 : FpExpr w) (op2 : FpExpr w) : FpExpr w :=
