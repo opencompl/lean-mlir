@@ -23,10 +23,16 @@ inductive Block where
   /-- A live piece of memory (i.e., has been allocated and not yet freed). -/
   | live (b : LiveBlock)
 
+/--
+`AllocState` keeps a counter of available blockIds
+-/
 structure AllocState where
   nextFreeBlock : Nat
   deriving Inhabited
 
+/--
+`MemoryState` tracks the *content* of memory blocks
+-/
 structure MemoryState where
   mem : Std.HashMap BlockId Block
   deriving Inhabited
