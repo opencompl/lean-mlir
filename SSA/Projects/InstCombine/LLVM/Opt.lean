@@ -2,6 +2,8 @@ import Cli
 import SSA.Projects.LLVMRiscV.ParseAndTransform
 import SSA.Projects.RISCV64.ParseAndTransform
 
+set_option compiler.extract_closed false
+
 /-- `verbose_flag` takes in a filename and assuming the file is wellformed,
  prints verbose output to the command line. Additionally it prints
  a string indicating that the verbose flag was set. If the parsing fails,
