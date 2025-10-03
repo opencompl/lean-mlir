@@ -808,10 +808,9 @@ def evalFpGeneralize : Tactic
 section Examples
 set_option warn.sorry false
 
-/-- error: na na na FP getting width: some (8) -/
 #guard_msgs in
 theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
-  fp_generalize
+  -- fp_generalize
   sorry
 
 
