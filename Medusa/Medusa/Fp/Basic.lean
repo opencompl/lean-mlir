@@ -128,7 +128,7 @@ inductive FpPredicate where
 A binary predicate on `FpExpr`.
 -/
 | bin (lhs : FpExpr e) (op : FpBinaryPredKind) (rhs : FpExpr e)
-deriving Hashable, DecidableEq, Repr
+deriving Hashable, DecidableEq, Repr, BEq
 
 
 namespace FpPredicate
