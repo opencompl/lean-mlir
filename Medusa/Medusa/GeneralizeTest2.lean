@@ -1,4 +1,5 @@
 
+-- TODO: move these tests to a separate file.
 ---- Failing Tests
 import Medusa.BitVec.BVGeneralize
 
