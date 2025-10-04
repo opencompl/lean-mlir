@@ -14,7 +14,6 @@ import numpy as np
 
 
 matplotlib.rcParams['pdf.fonttype'] = 42
-plt.rcParams.update({'font.size': 20})
 
 
 matplotlib.rcParams['figure.autolayout'] = True
@@ -106,7 +105,7 @@ parameters_labels = {
 
 selector_labels = {
     "LEANMLIR" : "Cert.",
-    "LEANMLIR_opt" : "Cert. + Opt",
+    "LEANMLIR_opt" : "CertOpt",
     "LLVM_globalisel" : "GlobalISel",
     "LLVM_selectiondag" : "SelectionDAG"
 }
@@ -278,6 +277,8 @@ def clean_name(s):
     return ''.join([w.capitalize() for w in str(s).split('_')])
 
 def bar_plot(parameter, selector1, selector2):
+    plt.rcParams.update({'font.size': 18})
+    
     df = pd.read_csv(data_dir + parameter + '.csv')
 
     col1 = selector1 + '_' + parameter
@@ -294,7 +295,7 @@ def bar_plot(parameter, selector1, selector2):
     df['diff'] = df[col1] - df[col2]
 
     # Classify the differences
-    def classify(diff):
+    def classify_instructions_count(diff):
         if diff == 0:
             return '0'
         elif diff == 1:
@@ -305,28 +306,57 @@ def bar_plot(parameter, selector1, selector2):
             return '<0'
         else:
             return '>2'
-
+    def classify_cycles_count(diff):
+        if diff == 0:
+            return '0'
+        elif 0 <= diff and diff < 500:
+            return '<500'
+        elif 500 <= diff and diff < 1000:
+            return '<1000'
+        elif diff < 0 :
+            return '<0'
+        else:
+            return '>1000'
+    if parameter == 'tot_instructions':
+        classify = classify_instructions_count
+    else :
+        classify = classify_cycles_count
+        
     df['diff_class'] = df['diff'].apply(classify)
     
+    df.to_csv(data_dir + parameter + f'_{selector1}_vs_{selector2}_classified.csv')
+
     # For each unique value of the initial `instructions_number`, compute the % of each diff_class
     group = df.groupby('instructions_number')['diff_class'].value_counts(normalize=True).unstack(fill_value=0) * 100
 
     # Ensure all classes are present for consistent coloring/order
-    class_order = ['<0', '0', '1', '2', '>2']
+    if parameter == 'tot_instructions':
+        class_order = ['<0', '0', '1', '2', '>2']
+    else:
+        class_order = ['<0', '0', '<500', '<1000', '>1000']
+        
     for c in class_order:
         if c not in group.columns:
             group[c] = 0
     group = group[class_order]
 
     # Colors for each class
-    class_colors = {
-        '<0': light_blue,
-        '0': dark_green,
-        '1': light_green,
-        '2': light_red,
-        '>2': dark_red
-    }
-
+    if parameter == 'tot_instructions':
+        class_colors = {
+            '<0': light_blue,
+            '0': dark_green,
+            '1': light_green,
+            '2': light_red,
+            '>2': dark_red
+        }
+    else:
+        class_colors = {
+            '<0': light_blue,
+            '0': dark_green,
+            '<500': light_green,
+            '<1000': light_red,
+            '>1000': dark_red
+        }
     # Plot
     bottom = np.zeros(len(group))
     x = group.index.astype(str)
@@ -334,13 +364,16 @@ def bar_plot(parameter, selector1, selector2):
     for c in class_order:
         plt.bar(x, group[c], bottom=bottom, label=f'{c}', color=class_colors[c])
         bottom += group[c].values
-
-    plt.xlabel(selector_labels[selector1] + ' - ' + parameters_labels[parameter])
-    plt.ylabel('(%)  - ' + selector_labels[selector1] +' vs. ' + selector_labels[selector2])
-    plt.legend(ncol = 5, loc = 'upper right')
-    plt.tight_layout()
     
-    plt.ylim(0, 119)
+    
+
+    plt.xlabel('#instructions - LLVM IR')
+    plt.ylabel('%Programs', rotation="horizontal", horizontalalignment="left", y=1.05)
+    plt.legend(title = 'Diff. in '+parameters_labels[parameter]+', '+selector_labels[selector1]+' vs. ' + selector_labels[selector2], ncols = 5, bbox_to_anchor=(0.5, 1.05), 
+           loc='lower center')
+    plt.tight_layout()
+        
+    
     
     total = len(df)
     class_counts = df['diff_class'].value_counts()
@@ -357,7 +390,7 @@ def bar_plot(parameter, selector1, selector2):
             cmd = (
                 f"\\newcommand{{\\Perc"
                 f"{clean_name(selector1)}Vs{clean_name(selector2)}"
-                f"{clean_name(parameter)}For{idx_str_clean}On{c.replace('<','lt').replace('>','gt').replace('0','zero').replace('1','one').replace('2','two')}}}{{{perc:.1f}}}"
+                f"{clean_name(parameter)}For{idx_str_clean}On{c.replace('<','lt').replace('>','gt').replace('0','zero').replace('1','one').replace('2','two').replace('3', 'three').replace('4', 'four').replace('5', 'five')}}}{{{perc:.1f}}}"
             )
             latex_lines.append(cmd)
     latex_file = os.path.join(plots_dir, "bar_plot_percentages.tex")
@@ -379,14 +412,14 @@ def sorted_line_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + '.csv')
 
     sorted_df = df.sort_values(by = [selector1 + '_' + parameter, selector2 +'_'+ parameter])
-    plt.figure(figsize=(10, 5))
+    plt.figure(figsize=(12, 5))
     
 
     plt.plot(range(len(sorted_df)), sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
     plt.plot(range(len(sorted_df)), sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
 
     plt.xlabel('Program Index')
-    plt.ylabel(parameters_labels[parameter])
+    plt.ylabel(parameters_labels[parameter], rotation="horizontal", horizontalalignment="left", y=1)
     # plt.title(f'{parameters_labels[parameter]} Per Program, {selector1} vs. {selector2}')
     # plt.yticks(range(int(plot_min), int(plot_max + 1), 1))
     plt.legend()
@@ -423,7 +456,7 @@ def overhead_plot(parameter, selector1, selector2):
         plt.stackplot(range(0, len(sorted_df)), sorted_df[selector2 + '_' + parameter],labels=[selector_labels[selector2]], color =white, edgecolor=light_red)
 
         plt.xlabel('Program Index')
-        plt.ylabel(parameters_labels[parameter])
+        plt.ylabel(parameters_labels[parameter], rotation="horizontal", horizontalalignment="left", y=1)
         plt.xticks(range(0, len(sorted_df), int(np.ceil(len(sorted_df)/5))))
         plt.legend()
         plt.tight_layout()
@@ -479,27 +512,19 @@ def main():
         if "scatter" in plots_to_produce or "all" in plots_to_produce :
             scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
             scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-            scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-            scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
             scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
         if "sorted" in plots_to_produce or "all" in plots_to_produce :
             sorted_line_plot_all(parameter)
             sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
             sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-            sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-            sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
             sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
         if "overhead" in plots_to_produce or "all" in plots_to_produce :
             overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
             overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-            overhead_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-            overhead_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
             overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
         if "stacked" in plots_to_produce or "all" in plots_to_produce :
             bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
             bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-            bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-            bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
             bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
                 
 
