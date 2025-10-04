@@ -197,6 +197,18 @@ def right_identity_zero_add : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
       ret %x : !riscv.reg
   }]
 
+def right_identity_zero_or : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (0) : !riscv.reg
+      %0 = or %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      ret %x : !riscv.reg
+  }]
+
 def right_identity_zero_xor : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
     ^entry (%x: !riscv.reg):
@@ -273,6 +285,7 @@ def right_identity_zero_ror : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
 def right_identity_zero : List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
   [⟨_, right_identity_zero_sub⟩,
   ⟨_, right_identity_zero_add⟩,
+  ⟨_, right_identity_zero_or⟩,
   ⟨_, right_identity_zero_xor⟩,
   ⟨_, right_identity_zero_shl⟩,
   ⟨_, right_identity_zero_ashr⟩,
