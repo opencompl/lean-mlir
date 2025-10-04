@@ -277,7 +277,7 @@ def clean_name(s):
     return ''.join([w.capitalize() for w in str(s).split('_')])
 
 def bar_plot(parameter, selector1, selector2):
-    plt.rcParams.update({'font.size': 18})
+    plt.rcParams.update({'font.size': 23})
     
     df = pd.read_csv(data_dir + parameter + '.csv')
 
@@ -312,11 +312,11 @@ def bar_plot(parameter, selector1, selector2):
         elif 0 <= diff and diff < 500:
             return '<500'
         elif 500 <= diff and diff < 1000:
-            return '<1000'
+            return '<1k'
         elif diff < 0 :
             return '<0'
         else:
-            return '>1000'
+            return '>1k'
     if parameter == 'tot_instructions':
         classify = classify_instructions_count
     else :
@@ -333,7 +333,7 @@ def bar_plot(parameter, selector1, selector2):
     if parameter == 'tot_instructions':
         class_order = ['<0', '0', '1', '2', '>2']
     else:
-        class_order = ['<0', '0', '<500', '<1000', '>1000']
+        class_order = ['<0', '0', '<500', '<1k', '>1k']
         
     for c in class_order:
         if c not in group.columns:
@@ -354,8 +354,8 @@ def bar_plot(parameter, selector1, selector2):
             '<0': light_blue,
             '0': dark_green,
             '<500': light_green,
-            '<1000': light_red,
-            '>1000': dark_red
+            '<1k': light_red,
+            '>1k': dark_red
         }
     # Plot
     bottom = np.zeros(len(group))
@@ -369,8 +369,9 @@ def bar_plot(parameter, selector1, selector2):
 
     plt.xlabel('#instructions - LLVM IR')
     plt.ylabel('%Programs', rotation="horizontal", horizontalalignment="left", y=1.05)
-    plt.legend(title = 'Diff. in '+parameters_labels[parameter]+', '+selector_labels[selector1]+' vs. ' + selector_labels[selector2], ncols = 5, bbox_to_anchor=(0.5, 1.05), 
+    plt.legend(ncols = 5, bbox_to_anchor=(0.5, -0.5), 
            loc='lower center')
+    plt.subplots_adjust(bottom=0.4)
     plt.tight_layout()
         
     
