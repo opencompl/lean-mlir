@@ -552,7 +552,7 @@ def bAnd : ∀ (_s : List α) (_f : α → Circuit β), Circuit β
     rw [bAnd, eval_foldl_and]; simp
 
 /-- In a sum type, assign variables to the right of the circuit signature. -/
-def assignVarsRight [DecidableEq α] (c : Circuit (α ⊕ β))
+def assignVarsRight (c : Circuit (α ⊕ β))
   (f : β → Bool) : Circuit α
   := match c with
   | tru => tru
@@ -567,7 +567,7 @@ def assignVarsRight [DecidableEq α] (c : Circuit (α ⊕ β))
 
 /-- Says how to evaluate asssignVars' in terms of an updated environment. -/
 @[simp]
-lemma eval_assignVarsRight [DecidableEq α] {c : Circuit (α ⊕ β)}
+lemma eval_assignVarsRight {c : Circuit (α ⊕ β)}
     {f : β → Bool} :
     eval (assignVarsRight c f) env = c.eval (Sum.elim env f) := by
   induction c
@@ -587,6 +587,34 @@ lemma eval_assignVarsRight [DecidableEq α] {c : Circuit (α ⊕ β)}
     simp [eval, hp, hq, assignVarsRight]
 
 
+private def Sum.flip (x : α ⊕ β) : β ⊕ α :=
+  match x with
+  | .inl a => .inr a
+  | .inr b => .inl b
+
+@[simp]
+theorem Sum.flip_inl (a : α) :
+    (Sum.flip (Sum.inl a) : Sum β α) = Sum.inr a := rfl
+
+@[simp]
+theorem Sum.flip_inr (b : β) :
+    (Sum.flip (Sum.inr b) : Sum β α) = Sum.inl b := rfl
+
+
+/-- In a sum type, assign variables to the right of the circuit signature. -/
+def assignVarsLeft (c : Circuit (α ⊕ β))
+  (f : α → Bool) : Circuit β
+  := (c.map Sum.flip).assignVarsRight f
+
+/-- Says how to evaluate asssignVars' in terms of an updated environment. -/
+@[simp]
+lemma eval_assignVarsLeft {c : Circuit (α ⊕ β)}
+    {f : α → Bool} :
+    eval (assignVarsLeft c f) env = c.eval (Sum.elim f env) := by
+  simp [assignVarsLeft, eval_map]
+  congr
+  ext ab
+  rcases ab with a | b <;> simp
 
 /-- perform the same task as assignVars, but don't change the signature of the circuit. -/
 def assignAllVars [DecidableEq α] (c : Circuit α)
@@ -1541,5 +1569,6 @@ def checkCircuitUnsatAux {α : Type} [DecidableEq α] [Hashable α] [Fintype α]
     match out with
     | .error _model => return .none
     | .ok cert => return .some cert
+
 
 end Circuit

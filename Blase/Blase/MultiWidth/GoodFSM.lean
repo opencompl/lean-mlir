@@ -7,6 +7,11 @@ import Blase.Fast.FiniteStateMachine
 import Blase.Vars
 import Blase.MultiWidth.Defs
 import Blase.KInduction.KInduction
+import Mathlib.Data.Fintype.Card
+import Mathlib.Data.Fintype.Sum
+import Mathlib.Data.Fintype.Sigma
+import Mathlib.Data.Fintype.Pi
+import Mathlib.Data.Fintype.BigOperators
 import Lean
 
 namespace MultiWidth
@@ -1478,6 +1483,233 @@ info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 -/
 #guard_msgs in #print axioms eval_fsmTermSle_eq_decide_sle
 
+abbrev Powerset (α : Type) [DecidableEq α] := α → Bool
+def Powerset.toFun [DecidableEq α] : Powerset α → (α → Bool) := id
+def Powerset.mk [DecidableEq α] : (α → Bool) → Powerset α := id
+def Powerset.singleton [DecidableEq α] (a : α) : Powerset α :=
+  fun b => decide <| a = b
+
+#check mixHash
+instance [instHashα : Hashable α]
+    [DecidableEq α]
+    [instFinα : FinEnum α] : Hashable (Powerset α) where
+  hash :=
+    let card := instFinα.card
+    let ofFin := instFinα.equiv.invFun
+
+    sorry
+
+-- Eliminate the last predicate variable from a state space, if possible.
+def StateSpace.predVarElim {wcard tcard bcard pcard : Nat}
+    (s : StateSpace wcard tcard bcard (pcard + 1)) :
+     Option (StateSpace wcard tcard bcard pcard) :=
+  match s with
+  | .widthVar v => .some <| .widthVar v
+  | .termVar v => .some <| .termVar v
+  | .boolVar v => .some <| .boolVar v
+  | .predVar v =>
+    if hv :v.val < pcard then
+      .some <| .predVar ⟨v.val, by omega⟩
+    else
+      .none
+
+inductive PredState
+-- | unk
+| t
+| f
+| both
+| neither
+deriving DecidableEq, Repr, Hashable
+
+ def PredState.toFin : PredState → Fin 4
+  -- | .unk => 0
+  | .t => 0
+  | .f => 1
+  | .neither => 2
+  | .both => 3
+
+def PredState.ofFin : Fin 4 → PredState
+  | ⟨0, _⟩ => .t
+  | ⟨1, _⟩ => .f
+  | ⟨2, _⟩ => .neither
+  | ⟨3, _⟩ => .both
+  -- | ⟨4, _⟩ => .neither
+
+instance : FinEnum PredState where
+  card := 4
+  equiv := Equiv.mk PredState.toFin PredState.ofFin
+    (by
+      intros i
+      rcases i with rfl | rfl | rfl | rfl | rfl <;>
+        simp [PredState.toFin, PredState.ofFin]
+    )
+    (by
+      intros i
+      have h : i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 := by
+        omega
+      rcases h with rfl | rfl | rfl | rfl <;>
+        simp [PredState.toFin, PredState.ofFin]
+    )
+where
+
+instance [instFinEnum : FinEnum α ]: FinEnum (Option α) where
+  card := instFinEnum.card + 1
+  equiv := Equiv.mk
+    (fun o =>
+      match o with
+      | .none => Fin.mk instFinEnum.card (by omega)
+      | .some a => Fin.mk (instFinEnum.equiv.toFun a).val (by omega)
+    )
+    (fun f =>
+      if hf : f.val < instFinEnum.card then
+        .some (instFinEnum.equiv.invFun ⟨f.val, hf⟩)
+      else
+        .none
+    )
+    (by
+      intros o
+      rcases o with rfl | a
+      · simp
+      · simp
+    )
+    (by
+      intros f
+      by_cases hf : f.val < instFinEnum.card
+      · simp [hf]
+      · simp [hf]
+        ext
+        simp
+        omega
+    )
+
+def Circuit.assignVars? (c : Circuit α) (assign? : α → Bool ⊕ β) :
+  Circuit β :=
+  c.bind <| fun v =>
+    match assign? v with
+    | .inl b => Circuit.ofBool b
+    | .inr v => Circuit.var true v
+
+axiom AxOfFunctionGraph {P : Prop} : P
+/-- build a circuit from the graph of a function that is a circuit,
+whose evaluation is tracked by the graph. -/
+def Circuit.ofFunctionGraph {α : Type} [instFin : FinEnum α] (f : α → Circuit β) :
+  Circuit (α ⊕ β) :=
+  instFin.card.fold (init := Circuit.tru) fun i hi out =>
+    let a := instFin.equiv.invFun ⟨i, hi⟩
+    let ca : Circuit (α ⊕ β) := Circuit.var true (.inl a)
+    let cb : Circuit (α ⊕ β) := (f a).map Sum.inr
+    let ci : Circuit (α ⊕ β) :=  ~~~ (ca ^^^ cb) -- add constraint forcing equality.
+    out &&& ci
+
+/-- The construction from 'ofFunctionGraph' returns true
+iff it evaluates to true.
+-/
+theorem Circuit.ofFunctionGraph_eq_iff {α : Type} [instFin : FinEnum α] (f : α → Circuit β)
+    (env : α ⊕ β → Bool) : (Circuit.ofFunctionGraph f).eval env = true ↔
+    (∀ (a : α), env (.inl a) = (f a).eval (fun b => env (Sum.inr b))) := by
+  simp [ofFunctionGraph]
+  exact AxOfFunctionGraph
+
+@[simp]
+theorem Circuit.eval_assignVars? (assign? : α → Bool ⊕ β)
+    (c : Circuit α)
+    (env : β → Bool) :
+    (Circuit.assignVars? c assign?).eval env =
+      c.eval (fun v =>
+        match assign? v with
+        | .inl b => b
+        | .inr v => env v) := by
+  induction c generalizing env
+  case tru => simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+  case fals => simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+  case var positive v =>
+    simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+    rcases positive with rfl | rfl <;>
+      rcases (assign? v) with ⟨rfl | rfl⟩ | x <;> simp
+  case and c1 c2 ih1 ih2 =>
+    simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+    congr <;>
+      ext a <;>
+      rcases (assign? a) with ⟨rfl | rfl⟩  | x <;> simp
+  case or c1 c2 ih1 ih2 =>
+    simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+    congr <;>
+      ext a <;>
+      rcases (assign? a) with ⟨rfl | rfl⟩  | x <;> simp
+  case xor c1 c2 ih1 ih2 =>
+    simp [Circuit.assignVars?, Circuit.eval, Circuit.eval_bind]
+    congr <;>
+      ext a <;>
+      rcases (assign? a) with ⟨rfl | rfl⟩  | x <;> simp
+
+
+def Sum.flip (s : α ⊕ β) : β ⊕ α :=
+  match s with
+  | .inl a => .inr a
+  | .inr b => .inl b
+
+def FSM.toNFSM (f : FSM α) : NFSM α where
+  α := f.α
+  initCarry := f.initCarry
+  nextStateCirc :=
+    Circuit.ofFunctionGraph (fun s => f.nextStateCirc s |>.map Sum.flip)
+  outputCirc := f.outputCirc
+
+/--
+replace predicate variable pcard with a constant b, if possible.
+-/
+def elimPredVar.assignPred (b : Bool) {wcard tcard bcard pcard : Nat}
+    (c : Circuit (α ⊕ StateSpace wcard tcard bcard (pcard + 1))) :
+    Circuit (α ⊕ StateSpace wcard tcard bcard pcard) :=
+  Circuit.assignVars? c <| fun s =>
+    match s with
+    | .inl s => .inr (.inl s)
+    | .inr s =>
+      match StateSpace.predVarElim s with
+      | .none => .inl b
+      | .some s  => .inr <| .inr s
+
+def elimPredVar.elimPred {wcard tcard bcard pcard : Nat}
+    (c : Circuit (α ⊕ StateSpace wcard tcard bcard (pcard + 1))) :
+    Circuit (α ⊕ StateSpace wcard tcard bcard pcard) :=
+  elimPredVar.assignPred true c ||| elimPredVar.assignPred false c
+
+def elimPredVar {wcard tcard bcard pcard : Nat}
+    (fsm : FSM (StateSpace wcard tcard bcard (pcard + 1))) :
+    FSM (StateSpace wcard tcard bcard pcard) where
+  α :=  (fsm.α → Bool) -- is this correct?
+  initCarry := fun (s : fsm.α → Bool) =>
+    let init := fsm.initCarry
+    decide (s = init) -- horribly slow!
+  outputCirc :=
+    let fsmOut : Circuit (fsm.α ⊕ StateSpace wcard tcard bcard (pcard + 1))
+      := fsm.outputCirc
+    let fsmOut := elimPredVar.elimPred fsmOut
+    let setsOfStates : List (fsm.α → Bool) := FinEnum.toList _
+    let out : List <| Circuit ((fsm.α → Bool) ⊕ StateSpace wcard tcard bcard pcard) :=
+        setsOfStates.map fun indicator =>
+          let x := fsmOut.assignVarsLeft indicator
+          let x := x.map Sum.inr
+          let cind := (Circuit.var true indicator).map Sum.inl
+          -- If we are in this state, then check the value of the state,
+          -- for both possible values of the predicate
+          ~~~ cind ||| x
+    Circuit.bigOr out
+  nextStateCirc := fun curState =>
+    let nextStateCirc :
+        fsm.α → Circuit (fsm.α ⊕ StateSpace wcard tcard bcard (pcard + 1))
+      := fsm.nextStateCirc
+    let nextStateCirc :
+        fsm.α → Circuit (fsm.α ⊕ StateSpace wcard tcard bcard (pcard))
+      := fun s => elimPredVar.elimPred <| fsm.nextStateCirc s
+    let setsOfStates : List (fsm.α → Bool) := FinEnum.toList _
+    let out : List <| Circuit ((fsm.α → Bool) ⊕ StateSpace wcard tcard bcard pcard) :=
+        setsOfStates.map fun (indicator : fsm.α → Bool) =>
+          let x := nextStateCirc
+          let cind := (Circuit.var true indicator).map Sum.inl
+          ~~~ cind
+    Circuit.bigOr out
+
 -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
 def mkPredicateFSMAux (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
   (PredicateFSM wcard tcard bcard pcard p) :=
@@ -1567,6 +1799,12 @@ def mkPredicateFSMAux (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
       -- TODO: rename this Aux' business, it's ugly.
       let fsmEq := composeBinaryAux' FSM.nxor (fsmA.toFsmZext) (fsmB.toFsmZext)
       { toFsm := composeUnaryAux FSM.scanAnd (fsmEq) }
+  | .bvbinder k w p =>
+    let fsmP := mkPredicateFSMAux wcard tcard bcard (pcard + 1) p
+    let fsm := fsmP.toFsm
+    match k with
+    | .exists =>
+      { toFsm := composeUnaryAux FSM.scanOr /- fsmP.toFsm -/ sorry }
 
 theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
   exact Function.ne_iff.mp h
