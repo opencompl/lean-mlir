@@ -111,33 +111,7 @@ selector_labels = {
 }
 
 
-def extract_instr_count(init_directory): 
-    """
-    Extracts the instruction count for each file in `init_directory`, considering the region enclosed in curly brackets and excluding the return function, and returns a dataframe containing the results.
-    """
-    function_names = []
-    lengths = []
-    for filename in os.listdir(init_directory):
-        file_path = os.path.join(init_directory, filename)
-        try:
-            with open(file_path, "r") as f:
-                file_lines = f.readlines()
-                length = 0
-                inRegion = False
-                for line in file_lines:
-                    if "{" in line : 
-                        inRegion = True
-                    elif "ret" in line: 
-                        inRegion = False
-                    elif inRegion: 
-                        length += 1
-                function_names.append(filename.split(".")[0])
-                lengths.append(length)
-        except FileNotFoundError:
-            print(f"Warning: file not found at {file_path}. Skipping.")
-            
-    df = pd.DataFrame({"function_name": function_names, "instructions_number" : lengths})
-    df.to_csv(data_dir + init_directory.split('/')[-2]+'_lengths.csv')
+
 
 def extract_data(results_directory, benchmark_name, parameter) :
     """
@@ -177,7 +151,7 @@ def join_dataframes(dataframe_names, parameter) :
             complete_df = df 
         else: 
             complete_df = pd.merge(complete_df, df, on='function_name', how='inner')
-    
+    complete_df['instructions_number']= complete_df['function_name'].apply(lambda x: int(x.split('_')[0]))
     complete_df.to_csv(data_dir + parameter+".csv")
 
 def sorted_line_plot_all(parameter):
@@ -256,7 +230,7 @@ def scatter_plot(parameter, selector1, selector2) :
     plt.xlabel(selector_labels[selector1] + ' - ' + parameters_labels[parameter])
     plt.ylabel(selector_labels[selector2] + ' - ' + parameters_labels[parameter])
     
-    if not (plot_min == plot_max) and (0 < plot_min) and (0 < plot_max): 
+    if not (plot_min == plot_max) and (0 < int(plot_min/5)) and (0 < int(plot_max/5)): 
         plt.xlim(plot_min, plot_max)
         plt.ylim(plot_min, plot_max)
     
@@ -508,8 +482,9 @@ def main():
         extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', parameter)
         extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', parameter)
         extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter)
-        extract_instr_count(LLVMIR_DIR_PATH)
-        join_dataframes(['LEANMLIR', 'LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag', 'LLVMIR_lengths'], parameter)
+
+        join_dataframes(['LEANMLIR', 'LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag'], parameter)
+        
         if "scatter" in plots_to_produce or "all" in plots_to_produce :
             scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
             scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
