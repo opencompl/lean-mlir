@@ -1,5 +1,4 @@
 benchmarks/MLIR_single
-benchmarks/MLIR_multi
 benchmarks/MLIR_bb0
 benchmarks/LEANMLIR_ASM
 benchmarks/LEANMLIR_ASM_opt
