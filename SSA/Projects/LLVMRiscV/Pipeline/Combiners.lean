@@ -998,13 +998,13 @@ def commute_int_constant_to_rhs: List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
   ⟨_, commute_int_constant_to_rhs_mulhu⟩]
 
 
-/-! ### matchRedundantBinOpInEquality -/
+/-! ### redundant_binop_in_equality -/
 
 /-
 Test the rewrite:
  fold ((X + Y) == X) -> (Y == 0)
 -/
-def matchRedundantBinOpInEquality_XPlusYEqX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def redundant_binop_in_equality_XPlusYEqX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.add %x, %y : i64
@@ -1022,7 +1022,7 @@ def matchRedundantBinOpInEquality_XPlusYEqX : LLVMPeepholeRewriteRefine 1 [Ty.ll
 Test the rewrite:
  fold ((X + Y) != X) -> (Y != 0)
 -/
-def matchRedundantBinOpInEquality_XPlusYNeX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def redundant_binop_in_equality_XPlusYNeX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.add %x, %y : i64
@@ -1040,7 +1040,7 @@ def matchRedundantBinOpInEquality_XPlusYNeX : LLVMPeepholeRewriteRefine 1 [Ty.ll
 Test the rewrite:
  fold ((X - Y) == X) -> (Y == 0)
 -/
-def matchRedundantBinOpInEquality_XMinusYEqX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def redundant_binop_in_equality_XMinusYEqX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.sub %x, %y : i64
@@ -1058,7 +1058,7 @@ def matchRedundantBinOpInEquality_XMinusYEqX : LLVMPeepholeRewriteRefine 1 [Ty.l
 Test the rewrite:
  fold ((X - Y) != X) -> (Y != 0)
 -/
-def matchRedundantBinOpInEquality_XMinusYNeX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def redundant_binop_in_equality_XMinusYNeX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.sub %x, %y : i64
@@ -1076,7 +1076,7 @@ def matchRedundantBinOpInEquality_XMinusYNeX : LLVMPeepholeRewriteRefine 1 [Ty.l
 Test the rewrite:
  fold ((X ^ Y) == X) -> (Y == 0)
 -/
-def matchRedundantBinOpInEquality_XXorYEqX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def redundant_binop_in_equality_XXorYEqX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.xor %x, %y : i64
@@ -1094,7 +1094,7 @@ def matchRedundantBinOpInEquality_XXorYEqX : LLVMPeepholeRewriteRefine 1 [Ty.llv
 Test the rewrite:
  fold ((X ^ Y) != X) -> (Y != 0)
 -/
-def matchRedundantBinOpInEquality_XXorYNeX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def redundant_binop_in_equality_XXorYNeX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.xor %x, %y : i64
@@ -1108,13 +1108,13 @@ def matchRedundantBinOpInEquality_XXorYNeX : LLVMPeepholeRewriteRefine 1 [Ty.llv
       llvm.return %1 : i1
   }]
 
-def matchRedundantBinOpInEquality : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
-  [⟨_, matchRedundantBinOpInEquality_XPlusYEqX⟩,
-  ⟨_, matchRedundantBinOpInEquality_XPlusYNeX⟩,
-  ⟨_, matchRedundantBinOpInEquality_XMinusYEqX⟩,
-  ⟨_, matchRedundantBinOpInEquality_XMinusYNeX⟩,
-  ⟨_, matchRedundantBinOpInEquality_XXorYEqX⟩,
-  ⟨_, matchRedundantBinOpInEquality_XXorYNeX⟩]
+def redundant_binop_in_equality : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
+  [⟨_, redundant_binop_in_equality_XPlusYEqX⟩,
+  ⟨_, redundant_binop_in_equality_XPlusYNeX⟩,
+  ⟨_, redundant_binop_in_equality_XMinusYEqX⟩,
+  ⟨_, redundant_binop_in_equality_XMinusYNeX⟩,
+  ⟨_, redundant_binop_in_equality_XXorYEqX⟩,
+  ⟨_, redundant_binop_in_equality_XXorYNeX⟩]
 
 /- ### not_cmp_fold
   (a op b) ^^^ (-1) → (a op' b) where op' is the inverse of op
@@ -1277,7 +1277,7 @@ def GLobalISelO0PreLegalizerCombiner :
 def GLobalISelPostLegalizerCombiner :
     List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-  matchRedundantBinOpInEquality)
+  redundant_binop_in_equality)
   ++
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   PostLegalizerCombiner_LLVMIR_64)
