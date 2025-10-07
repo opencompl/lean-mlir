@@ -398,6 +398,7 @@ def generate_benchmarks(num, jobs):
             log_file = open(
                 os.path.join(LOGS_DIR_PATH, basename + "_xdsl_remove_casts.log"), "w"
             )
+            print(input_file)
             XDSL_remove_casts(
                 input_file, output_file, log_file, XDSL_remove_casts_file2ret
             )
