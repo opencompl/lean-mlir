@@ -1,0 +1,56 @@
+name: Medusa Build & Test
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - 'Medusa/**'
+  pull_request:
+    paths:
+      - 'Medusa/**'
+
+  merge_group:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build:
+    name: medusa
+    permissions:
+      pull-requests: write
+    # Exclude expensive self-hosted runner. Reserved for performance benchmarking.
+    # https://docs.github.com/en/enterprise-cloud@latest/actions/writing-workflows/choosing-where-your-workflow-runs/choosing-the-runner-for-a-job#choosing-github-hosted-runners
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v3
+
+      - name: Install elan 🕑
+        run: |
+          set -o pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- --default-toolchain none -y
+          ~/.elan/bin/lean --version
+          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+
+      - name: Cache `.lake` folder
+        id: cache-lake
+        uses: actions/cache@v4
+        with:
+          path: Medusa/.lake
+          key: ${{ runner.os }}-lake-${{ hashFiles('Medusa/lake-manifest.json') }}-4
+
+      - name: Get mathlib cache (only if no cache available)
+        if: steps.cache-lake.outputs.cache-hit != 'true'
+        continue-on-error: true
+        run: |
+          (pushd Medusa; lake -R exe cache get; true; popd) # download cache of mathlib docs.
+
+      - name: Compile Medusa
+        run: |
+          pushd Medusa; lake -R build Medusa --iofail
+
+      - name: Test Medusa
+        run: |
+          pushd Medusa; lake test; popd
