@@ -57,7 +57,7 @@ def generate_benchmarks(num_programs, min_size, max_size):
         command = (f"{MLIR_fuzz_DIR_PATH}/build/bin/mlir-enumerate {MLIR_fuzz_DIR_PATH}/dialects/llvm.mlir " +
                 f"--exact-size=1 --max-num-ops={size} --min-constant-value=-50 --max-constant-value=50 --strategy=random --max-programs={num_programs} " +
                 f"> {output_file}")
-                
+        
         print(f"Generating benchmarks of size {size} into {output_file}")
         os.system(command)
     
