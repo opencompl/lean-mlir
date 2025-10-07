@@ -245,7 +245,7 @@ def extract_bb0(input_file, output_file, log_file):
         with open(input_file, "r") as f:
             for line in f:
                 line = line.strip()
-                if line.startswith("^bb0("):
+                if "^bb0(" in line:
                     in_block = True
                     o_f.write("{\n")
                     o_f.write(line + "\n")
