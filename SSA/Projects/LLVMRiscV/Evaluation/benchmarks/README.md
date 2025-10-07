@@ -15,7 +15,6 @@ export PATH=$PATH:~/llvm-project/build/bin/
 
 Our evaluation also depends on [mlir-fuzz](https://github.com/opencompl/mlir-fuzz) to produce the initial synthetic programs, and it needs to be installed to run `generate_multi.py`
 
-./build/bin/mlir-enumerate dialects/llvm.mlir --exact-size=1 --max-num-ops=3 --min-constant-value=-50 --max-constant-value=50 --max-programs=10 > generated/output.mlir
 
 ### How to run
 
