@@ -114,52 +114,37 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
     Extracts individual MLIR module blocks (functions) from a large input file
     and saves each into a separate file.
     """
-    try:
-        with open(input_file, "r") as f:
-            content = f.read()
-    except FileNotFoundError:
-        print(f"Error: Input file '{input_file}' not found. ")
-        return
-    except Exception as e:
-        print(f"Error reading input file: {e}")
-        return
-
-    delimiter_pattern = r"\n// -{5,}.*?\n"
-    blocks = re.split(delimiter_pattern, content, flags=re.DOTALL)
-
+    f = open(input_file, "r")
+    all_lines = f.readlines()
+    size = input_file.split("_")[-1].split(".")[0]  
     function_count = 0
-    not_clean = 0
-    short = 0
-    for i, block_content in enumerate(blocks):
+    curr_program = []
+    brackets_count = 0 
+    for line in all_lines: 
+        if "{" in line:
+            brackets_count += 1
+        if brackets_count == 2: 
+            curr_program.append(line)
+        if "}" in line:
+            brackets_count -= 1
+        if brackets_count == 1 and len(curr_program) > 0: 
+            # write file 
+            print('file: '+output_base + f"{size}_function_{function_count}.mlir")
+            out_f = open(output_base + f"{size}_function_{function_count}.mlir", 'w')
+            
+            out_f.writelines(curr_program)
+            print(curr_program)
+            out_f.write("\n")
+            out_f.close()
+            curr_program = []
+            print(
+                f"Extracted function {function_count} to '{out_f.name}'"
+            )
+            function_count += 1
+            curr_program = []
         if function_count >= max_functions:
             print(f"Reached maximum of {max_functions} functions. Stopping extraction.")
-            break
-
-        clean_block = block_content.strip()
-
-        block_lines = len(clean_block.splitlines())
-
-        if clean_block and "module {" in clean_block and 5 < block_lines:
-            original_mlir_filename = os.path.join(
-                output_base, f"function_{function_count}.mlir"
-            )
-            try:
-                with open(original_mlir_filename, "w") as out_f:
-                    out_f.write(clean_block)
-                    out_f.write("\n")
-                print(
-                    f"Extracted function {function_count} to '{original_mlir_filename}'"
-                )
-                function_count += 1
-            except Exception as e:
-                print(f"Error writing to file or during transformation: {e}")
-                # Continue trying to extract other functions even if one fails
-                continue
-        elif not clean_block:
-            not_clean += 1
-        else:
-            short += 1
-
+            break   
 
 def MLIR_opt_arith_llvm(input_file, output_file, log_file, pass_dict):
     """
@@ -322,17 +307,16 @@ def XDSL_compile_riscv(input_file, output_file, log_file, pass_dict):
     pass_dict[output_file] = ret_code
 
 
-def generate_benchmarks(file_name, num, jobs):
+def generate_benchmarks(num, jobs):
     setup_benchmarking_directories()
-    input_file = MLIR_multi_DIR_PATH + file_name
-
-    # build Lean-MLIR
-    cmd = f"cd {ROOT_DIR_PATH}; lake exe cache get && lake build && lake build opt"
-    log_file = open((os.path.join(LOGS_DIR_PATH, "build.log")), "w")
-    run_command(cmd, log_file)
-
+    
     # extract mlir blocks and put them all in separate files
-    extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, num)
+    # for each file with programs of a certain size 
+    for file in os.listdir(MLIR_multi_DIR_PATH):
+        input_file = os.path.join(MLIR_multi_DIR_PATH, file)
+        print(f"Extracting functions from {input_file} ...")
+        
+        extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, num)
 
     MLIR_opt_file2ret = dict()
     # Run mlir-opt and convert into LLVM dialect
@@ -488,15 +472,7 @@ def main():
         prog="generate",
         description="Generate a new set of benchmarks in all the representations, from MLIR to RISCV assembly.",
     )
-
-    parser.add_argument(
-        "-i",
-        "--input",
-        type=str,
-        default="out_1000.mlir",
-        help="Name of the file containing the functions to lower. ",
-    )
-
+    
     parser.add_argument(
         "-n", "--num", type=int, default=100, help="Number of benchmarks to generate. "
     )
@@ -506,7 +482,7 @@ def main():
     )
 
     args = parser.parse_args()
-    generate_benchmarks(args.input, args.num, args.jobs)
+    generate_benchmarks(args.num, args.jobs)
 
 
 if __name__ == "__main__":
