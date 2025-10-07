@@ -13,15 +13,28 @@ your shell, you should run the following before you run the script:
 export PATH=$PATH:~/llvm-project/build/bin/
 ```
 
+Our evaluation also depends on [mlir-fuzz](https://github.com/opencompl/mlir-fuzz) to produce the initial synthetic programs, and it needs to be installed to run `generate_multi.py`
+
+./build/bin/mlir-enumerate dialects/llvm.mlir --exact-size=1 --max-num-ops=3 --min-constant-value=-50 --max-constant-value=50 --max-programs=10 > generated/output.mlir
+
 ### How to run
 
-To generate the benchmarks, run: 
+To generate the initial fuzzed programs, run: 
 ```
-python3 generate.py --input --num --jobs
+python3 generate_multi.py --num --max_size --min_size
+```
+
+For each `size` in the interval `[min_size, max_size]`, the script saves to `benchmarks/MLIR_multi` 
+a single file `out_size.mlir` containing `num` programs. 
+This will be the starting point of the conversion.
+
+To generate the remaining benchmarks, run: 
+```
+python3 generate.py --num --jobs
 ```
 
 The script `generate.py` populates the folders in `benchmarks` by running the following: 
-- Starting from the `input` file with multiple functions, extract `num` single MLIR modules and save them in `benchmarks/MLIR_single/`. Each file containing a single module will have a number, that remains consistent throughout the lowering. `input` is by default `benchmarks/MLIR_multi/out_1000.mlir`, which contains 1000 modules. `num` specifies how may modules will be extracted. 
+- For each file in `MLIR_multi`, extract `num` single MLIR modules and save them in `benchmarks/MLIR_single/`. Each file containing a single module will have two numbers that remain consistent throughout the lowering (e.g. `size_function_num`, where `size` is the initial program size specified in `generate_multi.py`). 
 - using `mlir-opt`, convert each of these files containing a single module to the LLVM dialect, save the result in `benchmarks/LLVM/*.ll`
 
 Then, the scripts lowers all the files using both LLVM and Lean-MLIR, to enable the comparison of the lowered RISCV assembly output. 
