@@ -4,6 +4,73 @@ import LeanMLIR.Framework.Print
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.icmp.eq"(%1, %2) : (i64, i64) -> (i1)
+    "llvm.return"(%3) : (i1) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner redundant_binop_in_equality_XPlusYEqX.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.icmp.ne"(%1, %2) : (i64, i64) -> (i1)
+    "llvm.return"(%3) : (i1) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner redundant_binop_in_equality_XPlusYNeX.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.icmp.eq"(%1, %2) : (i64, i64) -> (i1)
+    "llvm.return"(%3) : (i1) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner redundant_binop_in_equality_XMinusYEqX.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.icmp.ne"(%1, %2) : (i64, i64) -> (i1)
+    "llvm.return"(%3) : (i1) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner redundant_binop_in_equality_XMinusYNeX.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.icmp.eq"(%1, %2) : (i64, i64) -> (i1)
+    "llvm.return"(%3) : (i1) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner redundant_binop_in_equality_XXorYEqX.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.icmp.ne"(%1, %2) : (i64, i64) -> (i1)
+    "llvm.return"(%3) : (i1) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner redundant_binop_in_equality_XXorYNeX.lhs)).val).val
+
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
     %2 = "llvm.const"(){value = 1 : i1} : () -> (i1)
     "llvm.return"(%0) : (i64) -> ()
 }
