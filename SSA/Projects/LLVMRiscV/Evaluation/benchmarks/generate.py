@@ -168,7 +168,8 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
         if "{" in line:
             brackets_count += 1
         if brackets_count == 2: 
-            curr_program.append(line) 
+            # remove indentation
+            curr_program.append(line[2:]) 
         if "}" in line:
             brackets_count -= 1
         if brackets_count == 1 and len(curr_program) > 0: 

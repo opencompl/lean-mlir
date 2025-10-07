@@ -59,6 +59,7 @@ def generate_benchmarks(num_programs, min_size, max_size):
                 f"> {output_file}")
         
         print(f"Generating benchmarks of size {size} into {output_file}")
+        print(command)
         os.system(command)
     
 def main():
