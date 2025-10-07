@@ -1,12 +1,12 @@
 # This can be improved by building a docker image of the deps:
 # https://github.com/opencompl/lean-mlir/blob/0048c677755a4544b8e35904549f20d8b48939de/.github/workflows/docker.yml
 # and then running once with that image.
-name: +++ Cluster-Scale Multi-Width (NS) +++
+name: Cluster-Scale Multi-Width (NS) 
+
+
 on:
-  push:
-    branches:
-      - "main"
-  pull_request:
+  issue_comment:
+    types: [created]
 
 permissions:
   contents: write
@@ -14,6 +14,10 @@ permissions:
 
 jobs:
   run-batch:
+    if: >
+      github.event.issue.pull_request != null &&
+      startsWith(github.event.comment.body, '!blase')
+
     name: Batch Run
     runs-on:
       - nscloud-ubuntu-24.04-amd64-16x32-with-cache
