@@ -902,6 +902,30 @@ def mul_by_neg_one : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [⟨_, mul_by_neg_one_const⟩]
 
 
+/-! ### xor_of_and_with_same_reg -/
+
+/-
+Test the rewrite:
+  Fold (xor (and x, y), y) -> (and (not x), y)
+-/
+def xor_of_and_with_same_reg : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.and %x, %y : i64
+      %1 = llvm.xor %0, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.not %x : i64
+      %1 = llvm.and %0, %y : i64
+      llvm.return %1 : i64
+  }]
+
+def xor_of_and_with_same_reg_list : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, xor_of_and_with_same_reg⟩]
+
+
 /-- ### commute_constant_to_rhs
   (C op x) → (x op C)
 -/
@@ -1134,6 +1158,7 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
   sub_to_add ++
   redundant_and ++
   select_same_val ++
+  xor_of_and_with_same_reg_list ++
   LLVMIR_identity_combines_64
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
