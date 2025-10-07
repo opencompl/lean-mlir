@@ -22,8 +22,7 @@ MLIR_multi_DIR_PATH = (
 
 def create_version_log():
     """
-    Checks the git hash of a repository and saves it to a file
-    in a specified folder.
+    Checks the git hash of `mlir-fuzz` and saves it to `MLIR_multi/version_log.txt`.
     """
     
     git_command = ["git", "rev-parse", "--short", "HEAD"]
