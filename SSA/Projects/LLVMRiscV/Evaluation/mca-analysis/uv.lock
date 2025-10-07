@@ -1,5 +1,5 @@
 version = 1
-revision = 2
+revision = 3
 requires-python = ">=3.13"
 
 [[package]]
@@ -14,7 +14,7 @@ wheels = [
 [[package]]
 name = "evallib"
 version = "0.1.0"
-source = { virtual = "../../../../../evallib" }
+source = { directory = "../../../../../evallib" }
 dependencies = [
     { name = "tqdm" },
 ]
@@ -31,7 +31,7 @@ dependencies = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "evallib", virtual = "../../../../../evallib" }]
+requires-dist = [{ name = "evallib", directory = "../../../../../evallib" }]
 
 [[package]]
 name = "tqdm"

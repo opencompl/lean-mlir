@@ -34,7 +34,7 @@ PREAMBLE = f"""
 /-
 -- auto-generated from '{SCRIPT_PATH}'
 import SSA.Projects.InstCombine.TacticAuto
-import SSA.Projects.InstCombine.LLVM.Semantics
+import LeanMLIR.Dialects.LLVM.Semantics
 open BitVec
 open LLVM
 

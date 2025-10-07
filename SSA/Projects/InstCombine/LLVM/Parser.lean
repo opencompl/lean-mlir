@@ -1,15 +1,8 @@
 import LeanMLIR.MLIRSyntax.Parser
-import SSA.Projects.InstCombine.LLVM.EDSL
+import LeanMLIR.Dialects.LLVM.Syntax
 import Init.Data.Repr
 
-open MLIR AST InstCombine
-def regionTransform (region : Region 0) : Except ParseError
-  (Σ (Γ' : Context) (eff : EffectKind) (ty : List LLVM.Ty), Com LLVM Γ' eff ty) :=
-    let res := mkCom (d:= LLVM) region
-    match res with
-      | Except.error e => Except.error s!"Error:\n{reprStr e}"
-      | Except.ok res => Except.ok res
-
+open InstCombine
 def parseComFromFile (fileName : String) :
- IO (Option (Σ (Γ' : Context) (eff : EffectKind) (ty : List LLVM.Ty), Com LLVM Γ' eff ty)) := do
- parseRegionFromFile fileName regionTransform
+    IO (Option (Σ (Γ' : Ctxt LLVM.Ty) (eff : EffectKind) (ty : List LLVM.Ty), Com LLVM Γ' eff ty)) :=
+  Com.parseFromFile LLVM fileName

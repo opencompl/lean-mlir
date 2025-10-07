@@ -143,3 +143,14 @@ def parseRegionFromFile (fileName : String)
   | .some (.ok res) => return res
   | .some (.error msg) => throw <| IO.userError s!"Error parsing {fileName}:\n{msg}"; return none
   | .none => return none
+
+open MLIR.AST in
+def Com.parseFromFile (d : Dialect)
+    [DialectSignature d] [TransformTy d 0] [TransformExpr d 0] [TransformReturn d 0]
+    (fileName : String) :
+    IO (Option (Σ (Γ' : Ctxt d.Ty) (eff : EffectKind) (ty : List d.Ty), Com d Γ' eff ty)) := do
+  parseRegionFromFile fileName fun region =>
+    let res := mkCom (d:= d) region
+    match res with
+    | Except.error e => Except.error s!"Error:\n{reprStr e}"
+    | Except.ok res => Except.ok res

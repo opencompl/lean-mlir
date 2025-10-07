@@ -1,5 +1,5 @@
 import LeanMLIR.Framework.Refinement
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 import SSA.Projects.InstCombine.Refinement
 import SSA.Projects.InstCombine.Tactic
 

@@ -116,6 +116,24 @@ abbrev getN (x : HVector A as) (i : Nat) (hi : i < as.length := by hvector_get_e
     A (as.get ⟨i, hi⟩) :=
   x.get ⟨i, hi⟩
 
+/-! ## Notation -/
+
+syntax "[" withoutPosition(term,*) "]ₕ"  : term
+-- Copied from core for List
+macro_rules
+  | `([ $elems,* ]ₕ) => do
+    let rec expandListLit (i : Nat) (skip : Bool) (result : Lean.TSyntax `term) : Lean.MacroM Lean.Syntax := do
+      match i, skip with
+      | 0,   _     => pure result
+      | i+1, true  => expandListLit i false result
+      | i+1, false => expandListLit i true  (← ``(HVector.cons $(⟨elems.elemsAndSeps[i]!⟩) $result))
+    if elems.elemsAndSeps.size < 64 then
+      expandListLit elems.elemsAndSeps.size false (← ``(HVector.nil))
+    else
+      `(%[ $elems,* | List.nil ])
+
+infixr:50 "::ₕ" => HVector.cons
+
 /-! ## ToTuple -/
 
 def ToTupleType (A : α → Type*) : List α → Type _
@@ -135,6 +153,17 @@ abbrev toSingle : HVector A [a₁] → A a₁ := toTuple
 abbrev toPair   : HVector A [a₁, a₂] → A a₁ × A a₂ := toTuple
 abbrev toTriple : HVector A [a₁, a₂, a₃] → A a₁ × A a₂ × A a₃ := toTuple
 
+def ofPair : (A a₁ × A a₂) → HVector A [a₁, a₂] :=
+  fun ⟨x, y⟩ => [x, y]ₕ
+
+/-! ## isEmpty-/
+
+@[grind =]
+def length : HVector A as → Nat := fun _ => as.length
+
+def isEmpty : HVector A as → Bool
+  | .nil => true
+  | .cons _ _ => false
 
 /-!
 ## Conversion to a List
@@ -201,6 +230,14 @@ theorem map_map {A B C : α → Type*} {l : List α} (t : HVector A l)
     · rfl
     · simp_all [map]
 
+/-! ## map' -/
+section Map'
+
+@[simp] theorem map'_cons : map' f g (cons x xs) = cons (g _ x) (map' f g xs) := rfl
+@[simp] theorem map'_nil : map' f g nil = nil := rfl
+
+end Map'
+
 /-! ## fold -/
 
 @[simp] theorem foldl_cons :
@@ -218,8 +255,6 @@ theorem map_map {A B C : α → Type*} {l : List α} (t : HVector A l)
 theorem eq_of_type_eq_nil {A : α → Type*} {l : List α}
     {t₁ t₂ : HVector A l} (h : l = []) : t₁ = t₂ := by
   cases h; cases t₁; cases t₂; rfl
-syntax "[" withoutPosition(term,*) "]ₕ"  : term
-
 
 @[ext] theorem ext {xs ys : HVector A as}
     (h : ∀ i, xs.get i = ys.get i) : xs = ys := by
@@ -229,21 +264,6 @@ syntax "[" withoutPosition(term,*) "]ₕ"  : term
     specialize ih (fun i => by simpa using h i.succ)
     specialize h (0 : Fin <| _ + 1)
     simp_all
-
--- Copied from core for List
-macro_rules
-  | `([ $elems,* ]ₕ) => do
-    let rec expandListLit (i : Nat) (skip : Bool) (result : Lean.TSyntax `term) : Lean.MacroM Lean.Syntax := do
-      match i, skip with
-      | 0,   _     => pure result
-      | i+1, true  => expandListLit i false result
-      | i+1, false => expandListLit i true  (← ``(HVector.cons $(⟨elems.elemsAndSeps[i]!⟩) $result))
-    if elems.elemsAndSeps.size < 64 then
-      expandListLit elems.elemsAndSeps.size false (← ``(HVector.nil))
-    else
-      `(%[ $elems,* | List.nil ])
-
-infixr:50 "::ₕ" => HVector.cons
 
 
 /-!
@@ -404,8 +424,8 @@ structure HVectorLiteral where
 
 /-- Given a Lean expression of type `HVector _ _`, try to decompose it into an
 array of element expressions.
-Returns `none` if the passed expression is not a literal. -/
-def litExpr? : Expr → Option HVectorLiteral
+Returns `none` if the passed expression is not a recognized literal. -/
+def litExpr? : Expr → (Option HVectorLiteral)
   | mkApp6 (.const ``HVector.cons _) _α _A _as a x xs => do
       let ret ← litExpr? xs
       some { ret with elems := ret.elems.push ⟨ a, x ⟩ }

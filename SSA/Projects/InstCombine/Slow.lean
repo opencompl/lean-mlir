@@ -5,7 +5,7 @@ import LeanMLIR.WellTypedFramework
 import LeanMLIR.Tactic
 import LeanMLIR.Util
 import SSA.Projects.InstCombine.Tactic
-import SSA.Projects.InstCombine.Base
+import LeanMLIR.Dialects.LLVM.Basic
 
 open SSA InstCombine EDSL
 
