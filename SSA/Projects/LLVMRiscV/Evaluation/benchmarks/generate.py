@@ -94,7 +94,51 @@ def setup_benchmarking_directories():
         else:
             shutil.rmtree(directory)
             os.makedirs(directory)
+            
+            
+            
+            
+            
+            
+            
+def replace_hyphens_in_variables(file_path):
+    """
+    Reads a file, replaces hyphens (-) with underscores (_) within
+    MLIR variable names (starting with %), and overwrites the file.
+    """
+    
+    if not os.path.exists(file_path):
+        print(f"Error: File not found at {file_path}")
+        return
 
+    pattern = r'(%[a-zA-Z0-9_-]+)'
+    
+    def variable_replacer(match):
+        """Replace all hyphens with underscores in the matched variable name."""
+        variable_name = match.group(0)
+        if '-' in variable_name:
+            return variable_name.replace('-', '_')
+        return variable_name
+    
+    try:
+        with open(file_path, 'r') as f:
+            original_content = f.read()
+            
+        modified_content = re.sub(pattern, variable_replacer, original_content)
+        with open(file_path, 'w') as f:
+            f.write(modified_content)
+            
+    except IOError as e:
+        print(f"Error processing file {file_path}: {e}")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        
+        
+        
+        
+        
+        
+        
 
 def run_command(cmd, log_file, timeout=TIMEOUT_SEC):
     try:
@@ -124,16 +168,14 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
         if "{" in line:
             brackets_count += 1
         if brackets_count == 2: 
-            curr_program.append(line)
+            curr_program.append(line) 
         if "}" in line:
             brackets_count -= 1
         if brackets_count == 1 and len(curr_program) > 0: 
             # write file 
             print('file: '+output_base + f"{size}_function_{function_count}.mlir")
             out_f = open(output_base + f"{size}_function_{function_count}.mlir", 'w')
-            
             out_f.writelines(curr_program)
-            print(curr_program)
             out_f.write("\n")
             out_f.close()
             curr_program = []
@@ -315,7 +357,7 @@ def generate_benchmarks(num, jobs):
     for file in os.listdir(MLIR_multi_DIR_PATH):
         input_file = os.path.join(MLIR_multi_DIR_PATH, file)
         print(f"Extracting functions from {input_file} ...")
-        
+        replace_hyphens_in_variables(input_file)
         extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, num)
 
     MLIR_opt_file2ret = dict()
