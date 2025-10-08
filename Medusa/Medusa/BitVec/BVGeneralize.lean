@@ -13,6 +13,8 @@ open Std.Tactic.BVDecide
 open Tactic
 
 namespace Generalize
+namespace BV
+
 set_option maxHeartbeats 1000000000000
 set_option maxRecDepth 1000000
 
@@ -22,10 +24,10 @@ instance : HydrableGetInputWidth where
   getWidth := getWidth
 
 instance : HydrableGetGenPredSize GenBVPred where
-  getLogicalExprSize e := e.size
+  getGenPredSize e := e.size
 
-instance : HydrableGenPredToExpr ParsedBVExpr GenBVPred GenBVExpr where
-  genLogicalExprToExpr := toExpr
+instance : HydrableGenPredToExpr ParsedBVExpr GenBVPred where
+  genPredToExpr := toExpr
 
 instance : HydrableSolve ParsedBVExpr GenBVPred GenBVExpr where
 
@@ -41,19 +43,11 @@ instance : HydrableSubstitute GenBVPred GenBVExpr where
 instance : HydrablePackedBitvecToSubstitutionValue GenBVPred GenBVExpr where
   packedBitVecToSubstitutionValue := packedBitVecToSubstitutionValue
 
-instance : HydrableRefinement GenBVPred GenBVExpr where
-  not e := BoolExpr.not e
-  and e1 e2 := BoolExpr.gate Gate.and e1 e2
-  True := BoolExpr.const True
-  False := BoolExpr.const False
+instance : HydrableBooleanAlgebra GenBVPred GenBVExpr where
   eq e1 e2 := BoolExpr.literal (GenBVPred.bin e1 BVBinPred.eq e2)
-  beq e1 e2 := BoolExpr.gate Gate.beq e1 e2
 
-instance : HydrableGetIdentityAndAbsorptionConstraints GenBVPred GenBVExpr where
+instance : HydrableGetIdentityAndAbsorptionConstraints GenBVPred where
   getIdentityAndAbsorptionConstraints := getIdentityAndAbsorptionConstraints
-
-instance : HydrableAddConstraints GenBVPred GenBVExpr where
-  addConstraints := addConstraints
 
 instance : HydrableGenExpr GenBVExpr where
   genExprVar id := GenBVExpr.var id
@@ -192,7 +186,7 @@ def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM
         continue
 
       let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.literal (GenBVPred.bin f BVBinPred.eq expr)))
-      let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints Gate.and
+      let subsumeCheckExpr := bigAnd newConstraints
 
       if let some _ ← solve subsumeCheckExpr then
         pruned := expr :: pruned
@@ -204,13 +198,13 @@ def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM
 def pruneEquivalentBVLogicalExprs(expressions : List GenBVPred): GeneralizerStateM ParsedBVExpr GenBVPred (List GenBVPred) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvLogicalExprs") do
     let mut pruned: List GenBVPred:= []
+    -- | TODO: isn't this just a 'break' in the loop?
     for expr in expressions do
       if pruned.isEmpty then
         pruned := expr :: pruned
         continue
-
-      let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f expr))
-      let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints Gate.and
+      let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq (.literal f) (.literal expr)))
+      let subsumeCheckExpr :=  bigAnd newConstraints
 
       if let some _ ← solve subsumeCheckExpr then
         pruned := expr :: pruned
@@ -223,8 +217,8 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
 
 def wrap (bvExpr : GenBVExpr w) : BVExprWrapper := { bvExpr := bvExpr, width := w}
 
-def filterCandidatePredicates  (bvLogicalExpr: GenBVPred) (preconditionCandidates visited: Std.HashSet GenBVPred)
-                                                    : GeneralizerStateM ParsedBVExpr GenBVPred (List GenBVPred) :=
+def filterCandidatePredicates  (bvLogicalExpr: GenBVPred) (preconditionCandidates visited: Std.HashSet (BoolExpr GenBVPred))
+                                                    : GeneralizerStateM ParsedBVExpr GenBVPred (List (BoolExpr GenBVPred)) :=
   withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
     let state ← get
     let widthId := state.widthId
@@ -235,7 +229,8 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVPred) (preconditionCandidate
     -- if numConjunctions >= 1 then
     --   let combinations := generateCombinations numConjunctions currentCandidates.toList
     --   currentCandidates := Std.HashSet.ofList (combinations.map (λ comb => addConstraints (BoolExpr.const True) comb))
-    let widthConstraint : GenBVPred := BoolExpr.literal (GenBVPred.bin (GenBVExpr.var widthId) BVBinPred.eq (GenBVExpr.const (BitVec.ofNat bitwidth bitwidth)))
+    let widthConstraint : BoolExpr GenBVPred :=
+      BoolExpr.literal (GenBVPred.bin (GenBVExpr.var widthId) BVBinPred.eq (GenBVExpr.const (BitVec.ofNat bitwidth bitwidth)))
 
     let mut numInvocations := 0
     let mut currentCandidates := preconditionCandidates.filter (λ cand => !visited.contains cand)
@@ -243,8 +238,9 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVPred) (preconditionCandidate
 
     -- Progressive filtering implementation
     while !currentCandidates.isEmpty do
-      let expressionsConstraints : GenBVPred := addConstraints (BoolExpr.const False) currentCandidates.toList Gate.or
-      let expr := BoolExpr.gate Gate.and (addConstraints expressionsConstraints [widthConstraint] Gate.and) (BoolExpr.not bvLogicalExpr)
+      let expressionsConstraints : BoolExpr GenBVPred := bigOr (currentCandidates.toList)
+      let bvLogicalExpr := BoolExpr.literal bvLogicalExpr
+      let expr := BoolExpr.gate Gate.and (BoolExpr.gate .and expressionsConstraints widthConstraint) (BoolExpr.not bvLogicalExpr)
 
       let mut newCandidates : Std.HashSet GenBVPred := Std.HashSet.emptyWithCapacity
       numInvocations := numInvocations + 1
@@ -254,7 +250,7 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVPred) (preconditionCandidate
           newCandidates ← withTraceNode `Generalize (fun _ => return "Evaluated expressions for filtering") do
             let mut res : Std.HashSet GenBVPred := Std.HashSet.emptyWithCapacity
             for candidate in currentCandidates do
-              let widthSubstitutedCandidate := substitute candidate (bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, wrap (GenBVExpr.const (BitVec.ofNat bitwidth bitwidth)))]))
+              let widthSubstitutedCandidate := subsituteGenLogicalExpr candidate (bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, wrap (GenBVExpr.const (BitVec.ofNat bitwidth bitwidth)))]))
               if !(evalBVLogicalExpr assignment widthSubstitutedCandidate) then
                 res := res.insert candidate
             pure res
@@ -357,7 +353,7 @@ def generatePreconditions (bvLogicalExpr: GenBVPred) (positiveExamples negativeE
         (GenBVExpr.var widthId, {bv := BitVec.ofNat bitwidth bitwidth})]
 
     let validCandidates ← withTraceNode `Generalize (fun _ => return "Attempted to generate valid preconditions") do
-      let mut preconditionCandidates : Std.HashSet GenBVPred := Std.HashSet.emptyWithCapacity
+      let mut preconditionCandidates : Std.HashSet (BoolExpr GenBVPred) := Std.HashSet.emptyWithCapacity
       let synthesisComponents : Std.HashMap (GenBVExpr bitwidth)  PreconditionSynthesisCacheValue := getPreconditionSynthesisComponents positiveExamples negativeExamples specialConstants
 
       -- Check for power of 2: const & (const - 1) == 0
@@ -825,14 +821,8 @@ def prettify (generalization: GenBVPred) (displayNames: Std.HashMap Nat Name) : 
   | some s => s
   | none =>
       match generalization with
-      | .literal (GenBVPred.bin lhs op rhs) =>
+      | GenBVPred.bin lhs op rhs =>
           s! "{prettifyBVExpr lhs displayNames} {prettifyBVBinPred op} {prettifyBVExpr rhs displayNames}"
-      | .not boolExpr =>
-          s! "!({prettify boolExpr displayNames})"
-      | .gate op lhs rhs =>
-          s! "({prettify lhs displayNames}) {op.toString} ({prettify rhs displayNames})"
-      | .ite cond positive _ =>
-          s! "if {prettify cond displayNames} then {prettify positive displayNames} "
       | _ => generalization.toString
 
 
@@ -841,14 +831,9 @@ instance : HydrablePrettify GenBVPred where
 
 def prettifyAsTheorem (name: Name) (generalization: GenBVPred) (displayNames: Std.HashMap Nat Name) : String := Id.run do
   let params := displayNames.values.filter (λ n => n.toString != "w")
-
-  let mut res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " (params.map (λ p => p.toString))} : BitVec w)"
-
-  match generalization with
-  | .ite cond positive _ => res := res ++ s! " (h: {prettify cond displayNames}) : {prettify positive displayNames}"
-  | _ => res := res ++ s! " : {prettify generalization displayNames}"
-
-  res := res ++ s! " := by sorry"
+  let res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " (params.map (λ p => p.toString))} : BitVec w)"
+  let res := res ++ s! " : {prettify generalization displayNames}"
+  let res := res ++ s! " := by sorry"
   pure res
 
 instance : HydrablePrettifyAsTheorem GenBVPred where
