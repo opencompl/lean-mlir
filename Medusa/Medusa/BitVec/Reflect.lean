@@ -326,7 +326,7 @@ def bvExprToExpr (parsedBVExpr : ParsedBVLogicalExpr)
 def beqBitVecInstExpr (width : Expr) : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkApp (mkConst ``BitVec) width) (mkApp (.const ``instDecidableEqBitVec []) width)
 def beqBoolInstExpr : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkConst ``Bool) (mkConst ``instDecidableEqBool)
 
-def toExpr (parsedBVExpr : ParsedBVLogicalExpr) (bvLogicalExpr: GenBVLogicalExpr) : MetaM Expr := do
+def toExpr (parsedB VExpr : ParsedBVLogicalExpr) (bvLogicalExpr: GenBVLogicalExpr) : MetaM Expr := do
   go bvLogicalExpr
   where
   go (input : GenBVLogicalExpr) := do

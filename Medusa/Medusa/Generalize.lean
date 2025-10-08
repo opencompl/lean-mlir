@@ -160,15 +160,23 @@ Replace the variables in a BitVec formula with `SubstitutionValue` objects.
 class HydrableSubstitute (genPred : Type) (genExpr : Nat → Type) where
   substitute : genPred → (assignment: Std.HashMap Nat (SubstitutionValue genExpr)) → genPred
 
-def subsituteGenLogicalExpr [H : HydrableSubstitute genPred genExpr]
-  (expr : BoolExpr genPred) (assignment: Std.HashMap Nat (SubstitutionValue genExpr)) : BoolExpr genPred :=
+def subsituteGenLogicalExpr
+    [H : HydrableSubstitute genPred genExpr]
+    (expr : BoolExpr genPred)
+    (assignment: Std.HashMap Nat (SubstitutionValue genExpr)) :
+    BoolExpr genPred :=
   match expr with
-  | .literal a => .literal a
-  | .const b => .const b
-  | .not x => sorry
-  | .gate g x y => sorry
-  | .ite d l r => sorry
-
+  | .literal l => BoolExpr.literal (H.substitute l assignment)
+  | .not boolExpr =>
+      BoolExpr.not (subsituteGenLogicalExpr boolExpr assignment)
+  | .gate op lhs rhs =>
+      BoolExpr.gate op (subsituteGenLogicalExpr lhs assignment) (subsituteGenLogicalExpr rhs assignment)
+  | .ite conditional pos neg =>
+      BoolExpr.ite
+        (subsituteGenLogicalExpr conditional assignment)
+        (subsituteGenLogicalExpr pos assignment)
+        (subsituteGenLogicalExpr neg assignment)
+  | _ => expr
 structure GeneralizerState (parsedExpr : Type) (genPred : Type)
   [HydrableInstances genPred]
   where
@@ -232,7 +240,15 @@ class HydrableGetIdentityAndAbsorptionConstraints (genPred : Type) where
 
 
 def getIdentityAndAbsorptionConstraints [H : HydrableGetIdentityAndAbsorptionConstraints genPred]
-  (expr: BoolExpr genPred) (symVars: Std.HashSet Nat) : List (BoolExpr genPred) := sorry
+  (expr: BoolExpr genPred) (symVars: Std.HashSet Nat) : List (BoolExpr genPred) :=
+    match expr with
+    | .literal l => H.getIdentityAndAbsorptionConstraints l symVars
+    | .not boolExpr => getIdentityAndAbsorptionConstraints boolExpr symVars
+    | .gate _ lhs rhs => (getIdentityAndAbsorptionConstraints lhs symVars) ++ (getIdentityAndAbsorptionConstraints rhs symVars)
+    | .ite constVar auxVar op3 =>
+        (getIdentityAndAbsorptionConstraints constVar symVars) ++ (getIdentityAndAbsorptionConstraints auxVar symVars) ++ (getIdentityAndAbsorptionConstraints op3 symVars)
+    | _ => []
+
 /--
 Create a literal `genExpr` object given a variable ID or `BitVec` constant.
 -/
@@ -264,9 +280,28 @@ def getGenLogicalExprSize [H : HydrableGetGenPredSize genPred] (logicalExpr : Bo
   | .ite d l r => 1 + getGenLogicalExprSize d + getGenLogicalExprSize l + getGenLogicalExprSize r
 
 -- TODO: implement by floating code from BvGeneralize up into the common directory.
-def genLogicalExprToExpr [H : HydrableGenPredToExpr parsedExpr genPred]
+def genLogicalExprToExpr
+  [HydrableInstances genPred]
+  [H : HydrableGenPredToExpr parsedExpr genPred]
   (parsedExpr : ParsedLogicalExpr parsedExpr genPred) (logicalExpr : BoolExpr genPred) : MetaM Expr :=
-  sorry
+  match logicalExpr with
+  | .literal pred => H.genPredToExpr parsedExpr pred
+  | .const b =>
+      match b with
+      | true => return (mkConst ``Bool.true)
+      | _ => return (mkConst ``Bool.false)
+  | .not boolExpr =>
+    return mkApp (.const ``Bool.not []) (← genLogicalExprToExpr parsedExpr boolExpr)
+  | .gate gate lhs rhs => do
+      let lhs ← genLogicalExprToExpr parsedExpr lhs
+      let rhs ← genLogicalExprToExpr parsedExpr rhs
+      match gate with
+      | .or => return mkApp2 (.const ``Bool.or []) lhs rhs
+      | .xor => return mkApp2 (.const ``Bool.xor []) lhs rhs
+      | .and => return mkApp2 (.const ``Bool.and []) lhs rhs
+      | .beq =>
+          mkAppM ``BEq.beq #[lhs, rhs]
+  | _ => throwError m! "Unsupported operation {logicalExpr}"
 
 /--
 Invoke BVDecide for a given `genLogicalExpr` representing a BitVec formula.
@@ -367,7 +402,6 @@ partial def existsForAll
                       let newConstraints := assignment.toList.map (fun c => H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv))
                       let constrainedBVExpr := BoolExpr.not (bigAnd newConstraints)
                       return res ++ (← existsForAll (BoolExpr.gate .and origExpr constrainedBVExpr) existsVars forAllVars n)
-
 
 /--
 Naive model counter implementation for generating the most compact form of a precondition. Not currently in use by the Generalization procedure.
