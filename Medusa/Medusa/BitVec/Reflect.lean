@@ -5,6 +5,7 @@ import Medusa.Generalize
 import Medusa.BitVec.Basic
 
 namespace Generalize
+namespace BV
 
 open Lean
 open Lean.Meta
