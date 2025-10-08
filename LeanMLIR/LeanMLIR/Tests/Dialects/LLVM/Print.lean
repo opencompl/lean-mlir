@@ -1207,3 +1207,29 @@ info: {
     %z = "llvm.mlir.constant"() {value = 42 : i64} : () -> (i64)
     "llvm.return"(%z) : (i64) -> ()
 }]
+
+/--
+info: {
+  ^bb0():
+    %0 = "llvm.mlir.constant"(){value = 1 : i1} : () -> (i1)
+    "llvm.return"(%0) : (i1) -> ()
+}
+-/
+#guard_msgs in #eval [llvm| {
+  ^bb0():
+    %z = "llvm.mlir.constant"() {value = true} : () -> (i1)
+    "llvm.return"(%z) : (i1) -> ()
+}]
+
+/--
+info: {
+  ^bb0():
+    %0 = "llvm.mlir.constant"(){value = 0 : i1} : () -> (i1)
+    "llvm.return"(%0) : (i1) -> ()
+}
+-/
+#guard_msgs in #eval [llvm| {
+  ^bb0():
+    %z = "llvm.mlir.constant"() {value = false} : () -> (i1)
+    "llvm.return"(%z) : (i1) -> ()
+}]
