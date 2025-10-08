@@ -49,9 +49,26 @@ structure ParsedFpExpr where
 abbrev ParsedFpLogicalExpr :=
   ParsedLogicalExpr ParsedFpExpr GenFpLogicalExpr
 
+#check PackedFloat 10 20
+
+structure PackedFloatTyExpr where
+  m : Expr
+  e : Expr
+
+def getPackedFloatTy? (e : Expr) : MetaM (Option (PackedFloatTyExpr)) := do
+  let eType ← inferType e
+  match_expr eType with
+  | PackedFloat m e => return some {m, e}
+  | _ => return none
+
 -- | TODO: Allow ParseExprM to throw errors, instead of returning an Option in many cases.
 partial def toFpExpr (expr : Expr) (width: Nat) : ParseExprM (Option (FpExprWrapper)) := do
-  logInfo m!"failed to convert {expr} into an FpExpr."
+  let t ← inferType expr
+  let some packedFloatTy ← getPackedFloatTy? expr | throwError m!"Could not determine the packed float type of {expr} : {t}"
+  match_expr expr with
+  | add a b => throwError "found 'add' node"
+  | _ =>
+      -- logInfo m!"failed to convert {expr} into an FpExpr."
   return none
 /-
   go expr
