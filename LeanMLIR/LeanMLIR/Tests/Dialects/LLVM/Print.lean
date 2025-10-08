@@ -1174,7 +1174,7 @@ info: builtin.module {
 /--
 info: builtin.module {
   ^bb0():
-    %0 = "llvm.const"(){value = 42 : i64} : () -> (i64)
+    %0 = "llvm.mlir.constant"(){value = 42 : i64} : () -> (i64)
     "llvm.return"(%0) : (i64) -> ()
 }
 -/
@@ -1186,7 +1186,7 @@ info: builtin.module {
 /--
 info: {
   ^bb0():
-    %0 = "llvm.const"(){value = 42 : i64} : () -> (i64)
+    %0 = "llvm.mlir.constant"(){value = 42 : i64} : () -> (i64)
     "llvm.return"(%0) : (i64) -> ()
 }
 -/
@@ -1198,7 +1198,7 @@ info: {
 /--
 info: {
   ^bb0():
-    %0 = "llvm.const"(){value = 42 : i64} : () -> (i64)
+    %0 = "llvm.mlir.constant"(){value = 42 : i64} : () -> (i64)
     "llvm.return"(%0) : (i64) -> ()
 }
 -/
