@@ -20,34 +20,34 @@ set_option linter.unusedVariables false
 
 namespace Fp
 
-instance : HydrableInstances GenFpLogicalExpr where
+instance : HydrableInstances FpPredicate where
 
 instance : HydrableGetInputWidth where
   getWidth := Fp.getWidth
 
-instance : HydrableGetLogicalExprSize GenFpLogicalExpr where
-  getLogicalExprSize e := e.size
+instance : HydrableGetGenPredSize FpPredicate where
+  getGenPredSize e := e.size
 
-instance : HydrableGenPredToExpr ParsedFpExpr GenFpLogicalExpr FpExpr where
-  genLogicalExprToExpr := toExpr
+instance : HydrableGenPredToExpr ParsedFpExpr FpPredicate where
+  genPredToExpr := toExpr
 
 instance :
-      HydrableSolve ParsedFpExpr GenFpLogicalExpr FpExpr where
+      HydrableSolve ParsedFpExpr FpPredicate FpExpr where
 
-instance : HydrableChangeLogicalExprWidth GenFpLogicalExpr where
-  changeLogicalExprWidth := changeFpLogicalExprWidth
+instance : HydrableChangePredWidth FpPredicate where
+  changePredWidth := changeFpPredWidth
 
-instance : HydrableParseExprs ParsedFpExpr GenFpLogicalExpr where
+instance : HydrableParseExprs ParsedFpExpr FpPredicate where
   parseExprs := parseExprs
 
-instance : HydrableSubstitute GenFpLogicalExpr FpExpr where
+instance : HydrableSubstitute FpPredicate FpExpr where
   substitute := substitute
 
-instance : HydrablePackedBitvecToSubstitutionValue GenFpLogicalExpr FpExpr where
+instance : HydrablePackedBitvecToSubstitutionValue FpPredicate FpExpr where
   packedBitVecToSubstitutionValue := packedBitVecToFpSubstitutionValue
 
 -- TODO: Can this just be reused for everyone? Seems like we use the BoolExpr?
-instance : HydrableBooleanAlgebra GenFpLogicalExpr FpExpr where
+instance : HydrableBooleanAlgebra FpPredicate FpExpr where
   not e := BoolExpr.not e
   and e1 e2 := BoolExpr.gate Gate.and e1 e2
   True := BoolExpr.const True
@@ -55,10 +55,10 @@ instance : HydrableBooleanAlgebra GenFpLogicalExpr FpExpr where
   eq e1 e2 := BoolExpr.literal (FpPredicate.bin e1 .eq e2)
   beq e1 e2 := BoolExpr.gate Gate.beq e1 e2
 
-instance : HydrableGetIdentityAndAbsorptionConstraints GenFpLogicalExpr FpExpr where
+instance : HydrableGetIdentityAndAbsorptionConstraints FpPredicate FpExpr where
   getIdentityAndAbsorptionConstraints := getIdentityAndAbsorptionConstraints
 
-instance : HydrableAddConstraints GenFpLogicalExpr FpExpr where
+instance : HydrableAddConstraints FpPredicate FpExpr where
   addConstraints := addConstraints
 
 instance : HydrableGenExpr FpExpr where
@@ -66,12 +66,12 @@ instance : HydrableGenExpr FpExpr where
   -- TODO: this is kinda scuffed, because my width does not align with 'w'.
   genExprConst bv := FpExpr.const <| bv.setWidth _
 
-instance : HydrableExistsForall ParsedFpExpr GenFpLogicalExpr FpExpr where
+instance : HydrableExistsForall ParsedFpExpr FpPredicate FpExpr where
 
 instance : HydrableInitialParserState where
   initialParserState := defaultParsedExprState
 
-instance :  HydrableCheckTimeout GenFpLogicalExpr where
+instance :  HydrableCheckTimeout FpPredicate where
 
 def shrinkParsedFpExpr (expr : ParsedFpExpr) (targetWidth : Nat) : MetaM ParsedFpExpr := do
   let bvExpr ← shrinkFpExpr expr.bvExpr targetWidth
@@ -117,12 +117,12 @@ def shrink (origExpr : ParsedFpLogicalExpr) (targetWidth : Nat) : MetaM ParsedFp
     return {origExpr with lhs := lhs, rhs := rhs, logicalExpr := bvLogicalExpr, state := shrinkedState}
   throwError m! "Expected lhsWidth:{lhs.width} and rhsWidth:{rhs.width} to equal targetWidth:{targetWidth}"
 
-instance : HydrableReduceWidth ParsedFpExpr GenFpLogicalExpr FpExpr where
+instance : HydrableReduceWidth ParsedFpExpr FpPredicate FpExpr where
   shrink := shrink
 
 
 -- | TODO: this can be done in general for any Hydrable?
-def pruneEquivalentFpExprs (expressions: List (FpExpr w)) : GeneralizerStateM ParsedFpExpr GenFpLogicalExpr  (List (FpExpr w)) := do
+def pruneEquivalentFpExprs (expressions: List (FpExpr w)) : GeneralizerStateM ParsedFpExpr FpPredicate  (List (FpExpr w)) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvExprs") do
     let mut pruned : List (FpExpr w) := []
 
@@ -142,9 +142,9 @@ def pruneEquivalentFpExprs (expressions: List (FpExpr w)) : GeneralizerStateM Pa
     pure pruned
 
 -- TODO: Can this be done in general for any Hydrable?
-def pruneEquivalentFpLogicalExprs(expressions : List GenFpLogicalExpr): GeneralizerStateM ParsedFpExpr GenFpLogicalExpr (List GenFpLogicalExpr) := do
+def pruneEquivalentFpLogicalExprs(expressions : List FpPredicate): GeneralizerStateM ParsedFpExpr FpPredicate (List FpPredicate) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvLogicalExprs") do
-    let mut pruned: List GenFpLogicalExpr:= []
+    let mut pruned: List FpPredicate:= []
     for expr in expressions do
       if pruned.isEmpty then
         pruned := expr :: pruned
@@ -167,8 +167,8 @@ def updateConstantValues (bvExpr: ParsedFpExpr) (assignments: Std.HashMap Nat Fp
 -- TODO: can this be done in general?
 def wrap (bvExpr : FpExpr w) : FpExprWrapper := { bvExpr := bvExpr, width := w}
 
-def filterCandidatePredicates  (bvLogicalExpr: GenFpLogicalExpr) (preconditionCandidates visited: Std.HashSet GenFpLogicalExpr)
-                                                    : GeneralizerStateM ParsedFpExpr GenFpLogicalExpr (List GenFpLogicalExpr) :=
+def filterCandidatePredicates  (bvLogicalExpr: FpPredicate) (preconditionCandidates visited: Std.HashSet FpPredicate)
+                                                    : GeneralizerStateM ParsedFpExpr FpPredicate (List FpPredicate) :=
   return []
 /-
   withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
@@ -176,13 +176,13 @@ def filterCandidatePredicates  (bvLogicalExpr: GenFpLogicalExpr) (preconditionCa
     let widthId := state.widthId
     let bitwidth := state.processingWidth
 
-    let mut res : List GenFpLogicalExpr := []
+    let mut res : List FpPredicate := []
     -- let mut currentCandidates := preconditionCandidates
     -- if numConjunctions >= 1 then
     --   let combinations := generateCombinations numConjunctions currentCandidates.toList
     --   currentCandidates := Std.HashSet.ofList (combinations.map (λ comb => addConstraints (BoolExpr.const True) comb))
     -- | What is this constraint doing?
-    let widthConstraint : GenFpLogicalExpr := BoolExpr.literal (FpPredicate.bin (FpExpr.var widthId) .eq (FpExpr.const (BitVec.ofNat bitwidth bitwidth)))
+    let widthConstraint : FpPredicate := BoolExpr.literal (FpPredicate.bin (FpExpr.var widthId) .eq (FpExpr.const (BitVec.ofNat bitwidth bitwidth)))
 
     let mut numInvocations := 0
     let mut currentCandidates := preconditionCandidates.filter (λ cand => !visited.contains cand)
@@ -190,16 +190,16 @@ def filterCandidatePredicates  (bvLogicalExpr: GenFpLogicalExpr) (preconditionCa
 
     -- Progressive filtering implementation
     while !currentCandidates.isEmpty do
-      let expressionsConstraints : GenFpLogicalExpr := addConstraints (BoolExpr.const False) currentCandidates.toList Gate.or
+      let expressionsConstraints : FpPredicate := addConstraints (BoolExpr.const False) currentCandidates.toList Gate.or
       let expr := BoolExpr.gate Gate.and (addConstraints expressionsConstraints [widthConstraint] Gate.and) (BoolExpr.not bvLogicalExpr)
 
-      let mut newCandidates : Std.HashSet GenFpLogicalExpr := Std.HashSet.emptyWithCapacity
+      let mut newCandidates : Std.HashSet FpPredicate := Std.HashSet.emptyWithCapacity
       numInvocations := numInvocations + 1
       match (← solve expr) with
       | none => break
       | some assignment =>
           newCandidates ← withTraceNode `Generalize (fun _ => return "Evaluated expressions for filtering") do
-            let mut res : Std.HashSet GenFpLogicalExpr := Std.HashSet.emptyWithCapacity
+            let mut res : Std.HashSet FpPredicate := Std.HashSet.emptyWithCapacity
             for candidate in currentCandidates do
               let widthSubstitutedCandidate := substitute candidate (bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, wrap (FpExpr.const (BitVec.ofNat bitwidth bitwidth)))]))
               if !(evalFpLogicalExpr assignment widthSubstitutedCandidate) then
@@ -247,7 +247,7 @@ def getPreconditionSynthesisComponents (positiveExamples negativeExamples: List 
 set_option warn.sorry false in
 def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.HashMap (FpExpr w)  PreconditionSynthesisCacheValue)
       (positiveExamples negativeExamples: List (Std.HashMap Nat FpExprWrapper)) (specialConstants : Std.HashMap (FpExpr w) FpExprWrapper)
-      (ops : List (FpExpr w → FpExpr w → FpExpr w)) : GeneralizerStateM ParsedFpExpr GenFpLogicalExpr (Std.HashMap (FpExpr w) PreconditionSynthesisCacheValue) := do
+      (ops : List (FpExpr w → FpExpr w → FpExpr w)) : GeneralizerStateM ParsedFpExpr FpPredicate (Std.HashMap (FpExpr w) PreconditionSynthesisCacheValue) := do
   return {}
 
 /-
@@ -255,7 +255,7 @@ def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.Has
     let mut observationalEquivFilter : Std.HashSet String := Std.HashSet.emptyWithCapacity
 
     let evaluateCombinations (combos :  List (FpExprWrapper × FpExprWrapper)) (examples: List (Std.HashMap Nat FpExprWrapper))
-            (op : FpExpr w → FpExpr w → FpExpr w) : GeneralizerStateM ParsedFpExpr GenFpLogicalExpr  (List (BitVec w)) := do
+            (op : FpExpr w → FpExpr w → FpExpr w) : GeneralizerStateM ParsedFpExpr FpPredicate  (List (BitVec w)) := do
           let mut res : List (BitVec w) := []
           let mut index := 0
           for (lhs, rhs) in combos do
@@ -297,8 +297,8 @@ def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.Has
 -/
 
 def generatePreconditions
-    (bvLogicalExpr: GenFpLogicalExpr) (positiveExamples negativeExamples: List (Std.HashMap Nat FpExprWrapper))
-    (_numConjunctions: Nat) : GeneralizerStateM ParsedFpExpr GenFpLogicalExpr (Option GenFpLogicalExpr) := do
+    (bvLogicalExpr: FpPredicate) (positiveExamples negativeExamples: List (Std.HashMap Nat FpExprWrapper))
+    (_numConjunctions: Nat) : GeneralizerStateM ParsedFpExpr FpPredicate (Option FpPredicate) := do
     return none
 /-
     let state ← get
@@ -311,7 +311,7 @@ def generatePreconditions
         (FpExpr.var widthId, {bv := BitVec.ofNat bitwidth bitwidth})]
 
     let validCandidates ← withTraceNode `Generalize (fun _ => return "Attempted to generate valid preconditions") do
-      let mut preconditionCandidates : Std.HashSet GenFpLogicalExpr := Std.HashSet.emptyWithCapacity
+      let mut preconditionCandidates : Std.HashSet FpPredicate := Std.HashSet.emptyWithCapacity
       let synthesisComponents : Std.HashMap (FpExpr bitwidth)  PreconditionSynthesisCacheValue := getPreconditionSynthesisComponents positiveExamples negativeExamples specialConstants
 
       -- Check for power of 2: const & (const - 1) == 0
@@ -330,8 +330,8 @@ def generatePreconditions
       let ops : List (FpExpr bitwidth -> FpExpr bitwidth -> FpExpr bitwidth):= [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
 
       let mut currentLevel := 0
-      let mut validCandidates : List GenFpLogicalExpr := []
-      let mut visited : Std.HashSet GenFpLogicalExpr := Std.HashSet.emptyWithCapacity
+      let mut validCandidates : List FpPredicate := []
+      let mut visited : Std.HashSet FpPredicate := Std.HashSet.emptyWithCapacity
 
       while currentLevel < numVariables do
           logInfo m! "Precondition Synthesis: Processing level {currentLevel}"
@@ -446,7 +446,7 @@ def lhsSketchEnumeration  (lhsSketch: FpExpr w) (inputVars: List Nat) (lhsSymVar
 
 set_option warn.sorry false in
 def pruneConstantExprsSynthesisResults(exprSynthesisResults : ExpressionSynthesisResult)
-                            : GeneralizerStateM ParsedFpExpr GenFpLogicalExpr ExpressionSynthesisResult := do
+                            : GeneralizerStateM ParsedFpExpr FpPredicate ExpressionSynthesisResult := do
       withTraceNode `Generalize (fun _ => return "Pruned expressions synthesis results") do
           let state ← get
           let mut tempResults : Std.HashMap Nat (List (FpExprWrapper)) := Std.HashMap.emptyWithCapacity
@@ -464,10 +464,10 @@ def pruneConstantExprsSynthesisResults(exprSynthesisResults : ExpressionSynthesi
 
           pure tempResults
 
-instance :  HydrableGetNegativeExamples ParsedFpExpr GenFpLogicalExpr FpExpr where
+instance :  HydrableGetNegativeExamples ParsedFpExpr FpPredicate FpExpr where
 
 def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (List (FpExprWrapper)))
-                                            : GeneralizerStateM ParsedFpExpr GenFpLogicalExpr (Option GenFpLogicalExpr) := do
+                                            : GeneralizerStateM ParsedFpExpr FpPredicate (Option FpPredicate) := do
   return none
 /-
   withTraceNode `Generalize (fun _ => return "Checked if expressions require preconditions") do
@@ -506,7 +506,7 @@ private def constantExprsEnumerationFromCache
     (previousLevelCache allLhsVars : EnumerativeSearchCache)
     (lhsSymVars rhsSymVars : Std.HashMap Nat FpExprWrapper)
     (ops: List (FpExpr w → FpExpr w → FpExpr w))
-    : GeneralizerStateM ParsedFpExpr GenFpLogicalExpr (ExpressionSynthesisResult × EnumerativeSearchCache) := do
+    : GeneralizerStateM ParsedFpExpr FpPredicate (ExpressionSynthesisResult × EnumerativeSearchCache) := do
   return ({}, {})
 /-
     let zero := BitVec.ofNat w 0
@@ -621,7 +621,7 @@ partial def deductiveSearch (expr: FpExpr w) (constants: Std.HashMap Nat FpExprW
 
 set_option warn.sorry false in
 def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec))
-              : GeneralizerStateM ParsedFpExpr GenFpLogicalExpr (Option GenFpLogicalExpr) :=  do
+              : GeneralizerStateM ParsedFpExpr FpPredicate (Option FpPredicate) :=  do
   return none
 /-
     let state ← get
@@ -704,12 +704,12 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
     return none
 -/
 -- | TODO: this should not take a BVExpr.PackedBitVec, but rather a FpExprWrapper or something similar.
-instance :  HydrableSynthesizeWithNoPrecondition ParsedFpExpr GenFpLogicalExpr FpExpr where
+instance :  HydrableSynthesizeWithNoPrecondition ParsedFpExpr FpPredicate FpExpr where
  synthesizeWithNoPrecondition := synthesizeWithNoPrecondition
 
 -- | TODO: this should not take a BVExpr.PackedBitVec, but rather a FpExprWrapper or something similar.
 def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) (maxConjunctions: Nat)
-                                                : GeneralizerStateM ParsedFpExpr GenFpLogicalExpr (Option GenFpLogicalExpr) := do
+                                                : GeneralizerStateM ParsedFpExpr FpPredicate (Option FpPredicate) := do
   return none
 /-
   let state ← get
@@ -735,17 +735,17 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
   return none
 -/
 
-instance :  HydrableCheckForPreconditions ParsedFpExpr GenFpLogicalExpr FpExpr where
+instance :  HydrableCheckForPreconditions ParsedFpExpr FpPredicate FpExpr where
  checkForPreconditions := checkForPreconditions
 
 
 
-instance : HydrablePrettify GenFpLogicalExpr where
+instance : HydrablePrettify FpPredicate where
   prettify expr _ := toString expr
 
 -- | TODO: can this be generated by adding a constant to the environment and then printing the constant, instead of manually string-printing?
 -- How does 'extract_goals' do it?
-private def prettifyAsTheorem (name: Name) (generalization: GenFpLogicalExpr) (displayNames: Std.HashMap Nat Name) : String := Id.run do
+private def prettifyAsTheorem (name: Name) (generalization: FpPredicate) (displayNames: Std.HashMap Nat Name) : String := Id.run do
   let params := displayNames.values.filter (λ n => n.toString != "w")
 
   let mut res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " (params.map (λ p => p.toString))} : BitVec w)"
@@ -757,10 +757,10 @@ private def prettifyAsTheorem (name: Name) (generalization: GenFpLogicalExpr) (d
   res := res ++ s! " := by sorry"
   pure res
 
-instance : HydrablePrettifyAsTheorem GenFpLogicalExpr where
+instance : HydrablePrettifyAsTheorem FpPredicate where
   prettifyAsTheorem := prettifyAsTheorem
 
-abbrev FpGeneralizerState := GeneralizerState ParsedFpExpr GenFpLogicalExpr
+abbrev FpGeneralizerState := GeneralizerState ParsedFpExpr FpPredicate
 private def initialGeneralizerState (startTime timeout widthId targetWidth: Nat) (parsedLogicalExpr : ParsedFpLogicalExpr)
             : FpGeneralizerState := { startTime := startTime
                                     , widthId := widthId
@@ -772,11 +772,11 @@ private def initialGeneralizerState (startTime timeout widthId targetWidth: Nat)
                                     , visitedSubstitutions      := Std.HashSet.emptyWithCapacity
                                     }
 
-instance : HydrableInitializeGeneralizerState ParsedFpExpr GenFpLogicalExpr FpExpr where
+instance : HydrableInitializeGeneralizerState ParsedFpExpr FpPredicate FpExpr where
   initializeGeneralizerState := initialGeneralizerState
 
-instance : HydrableGeneralize ParsedFpExpr GenFpLogicalExpr FpExpr where
-instance fpHydrableParseAndGeneralize : HydrableParseAndGeneralize ParsedFpExpr GenFpLogicalExpr FpExpr where
+instance : HydrableGeneralize ParsedFpExpr FpPredicate FpExpr where
+instance fpHydrableParseAndGeneralize : HydrableParseAndGeneralize ParsedFpExpr FpPredicate FpExpr where
 
 /-- TODO: Rename this to #generalize_bv, or create a global registry via attributes of names to generalizers. -/
 elab "#fpgeneralize" expr:term: command =>

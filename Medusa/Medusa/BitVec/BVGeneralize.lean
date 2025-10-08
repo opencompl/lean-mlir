@@ -29,8 +29,8 @@ instance : HydrableGenPredToExpr ParsedBVExpr GenBVPred GenBVExpr where
 
 instance : HydrableSolve ParsedBVExpr GenBVPred GenBVExpr where
 
-instance : HydrableChangeLogicalExprWidth GenBVPred where
-  changeLogicalExprWidth := changeBVLogicalExprWidth
+instance : HydrableChangePredWidth GenBVPred where
+  changePredWidth := changeBVLogicalExprWidth
 
 instance : HydrableParseExprs ParsedBVExpr GenBVPred where
   parseExprs := parseExprs
