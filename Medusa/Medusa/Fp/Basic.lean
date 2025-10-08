@@ -169,46 +169,8 @@ TODO: think if this should live in Medusa lib
 TODO: why is this not generalized over m and e?
 TODO: I made this a `def`, while in BV it's an `abbrev`, probably to get TC synthesis going.
 -/
-abbrev GenFpLogicalExpr := BoolExpr (FpPredicate)
-
-def GenFpLogicalExpr.toBoolExpr (expr: GenFpLogicalExpr) :
-    BoolExpr FpPredicate :=
-  expr
-
-def GenFpLogicalExpr.ofBoolExpr (expr: BoolExpr FpPredicate) :
-    GenFpLogicalExpr :=
-  expr
 
 
-def GenFpLogicalExpr.size : GenFpLogicalExpr → Nat
-| .literal x => x.size
-| .const _ => 1
-| .not e => 1 + (GenFpLogicalExpr.ofBoolExpr e).size
-| .gate _ e₁ e₂ =>
-  1 + (GenFpLogicalExpr.ofBoolExpr e₁).size + (GenFpLogicalExpr.ofBoolExpr e₂).size
-| .ite e₁ e₂ e₃ => 1 + (GenFpLogicalExpr.ofBoolExpr e₁).size + (GenFpLogicalExpr.ofBoolExpr e₂).size + (GenFpLogicalExpr.ofBoolExpr e₃).size
-
-
-namespace GenFpLogicalExpr
-
-
--- TODO: move this to Hydra.
-/-
-The semantics of boolean problems involving BitVec predicates as atoms.
--/
-def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec)
-  (expr : GenFpLogicalExpr) : Bool :=
-  BoolExpr.eval (·.eval assign) expr
-
--- TODO: this instance was defined in terms of toString,
--- to be fixed.
-instance : BEq GenFpLogicalExpr where
-  beq := fun a b => a.toBoolExpr == b.toBoolExpr
-
-instance : Hashable GenFpLogicalExpr where
-  hash a := hash a.toBoolExpr
-
-end GenFpLogicalExpr
 
 -- | What is this for?
 structure FpExprWrapper where
@@ -261,16 +223,9 @@ def changeFpExprWidth (bvExpr: FpExpr w) (target: Nat) : FpExpr target :=
       FpExpr.const (val.setWidth _)
 
 -- TODO: make this part of Medusa proper?
-def changeFpLogicalExprWidth (bvLogicalExpr: GenFpLogicalExpr) (target: Nat) : GenFpLogicalExpr :=
-  match bvLogicalExpr with
-  | .literal (FpPredicate.bin lhs op rhs) => BoolExpr.literal (FpPredicate.bin (changeFpExprWidth lhs target) op (changeFpExprWidth rhs target))
-  | .not boolExpr =>
-      BoolExpr.not (changeFpLogicalExprWidth boolExpr target)
-  | .gate op lhs rhs =>
-      BoolExpr.gate op (changeFpLogicalExprWidth lhs target) (changeFpLogicalExprWidth rhs target)
-  | .ite constVar auxVar op3 =>
-      BoolExpr.ite (changeFpLogicalExprWidth constVar target) (changeFpLogicalExprWidth auxVar target) (changeFpLogicalExprWidth op3 target)
-  | _ => bvLogicalExpr
+def changeFpPredWidth (pred: FpPredicate) (target: Nat) : FpPredicate :=
+  match pred with
+  | .bin lhs op rhs => .bin (changeFpExprWidth lhs target) op (changeFpExprWidth rhs target)
 
 
 -- | What does this do?
@@ -303,88 +258,26 @@ def substituteBVExpr (bvExpr: FpExpr w) (assignment: Std.HashMap Nat (Substituti
     | .const x => .const x
 
 -- | TODO: this can be in Medusa?
-def substitute  (bvLogicalExpr: GenFpLogicalExpr) (assignment: Std.HashMap Nat (SubstitutionValue FpExpr)) :
-          GenFpLogicalExpr :=
-  match bvLogicalExpr with
-  | .literal (FpPredicate.bin lhs op rhs) => BoolExpr.literal (FpPredicate.bin (substituteBVExpr lhs assignment) op (substituteBVExpr rhs assignment))
-  | .not boolExpr =>
-      BoolExpr.not (substitute boolExpr assignment)
-  | .gate op lhs rhs =>
-      BoolExpr.gate op (substitute lhs assignment) (substitute rhs assignment)
-  | .ite conditional pos neg =>
-      BoolExpr.ite (substitute conditional assignment) (substitute pos assignment) (substitute neg assignment)
-  | _ => bvLogicalExpr
+def substitute  (pred : FpPredicate) (assignment: Std.HashMap Nat (SubstitutionValue FpExpr)) :
+          FpPredicate :=
+  match pred with
+  | (FpPredicate.bin lhs op rhs) =>
+    (FpPredicate.bin (substituteBVExpr lhs assignment) op (substituteBVExpr rhs assignment))
 
 -- TODO: what are identity and absorption constraints for Fp?
-def getIdentityAndAbsorptionConstraints (bvLogicalExpr: GenFpLogicalExpr) (symVars : Std.HashSet Nat) : List GenFpLogicalExpr :=
-      match bvLogicalExpr with
-      | .literal (FpPredicate.bin lhs _ rhs) => (getFpExprConstraints lhs) ++ (getFpExprConstraints rhs)
-      | .not boolExpr => getIdentityAndAbsorptionConstraints boolExpr symVars
-      | .gate _ lhs rhs => (getIdentityAndAbsorptionConstraints lhs symVars) ++ (getIdentityAndAbsorptionConstraints rhs symVars)
-      | .ite constVar auxVar op3 =>
-          (getIdentityAndAbsorptionConstraints constVar symVars) ++ (getIdentityAndAbsorptionConstraints auxVar symVars) ++ (getIdentityAndAbsorptionConstraints op3 symVars)
-      | _ => []
+def getIdentityAndAbsorptionConstraints
+    (_pred : FpPredicate)
+    (_symVars : Std.HashSet Nat) : List GenFpLogicalExpr :=
+ []
 
-      where
-        getFpExprConstraints {w} (bvExpr : FpExpr w) : List GenFpLogicalExpr := Id.run do
-                match bvExpr with
-                | .bin lhs op rhs  =>
-                      match (lhs, rhs) with
-                      | (FpExpr.var lhsId, FpExpr.var rhsId) =>
-                          let mut constraints := []
-
-                          if symVars.contains lhsId then
-                            constraints := getBitwiseConstraints lhs op ++ constraints
-
-                          if symVars.contains rhsId then
-                            constraints := getBitwiseConstraints rhs op ++ constraints
-                          pure constraints
-                      | (FpExpr.var lhsId, _) =>
-                          if !symVars.contains lhsId then
-                            getFpExprConstraints rhs
-                          else
-                            (getBitwiseConstraints lhs op) ++ (getFpExprConstraints rhs)
-                      | (_, FpExpr.var rhsId) =>
-                          if !symVars.contains rhsId then
-                            getFpExprConstraints lhs
-                          else
-                         (getFpExprConstraints lhs)  ++ (getBitwiseConstraints rhs op)
-                      | _ => ((getFpExprConstraints lhs) ++ (getFpExprConstraints rhs))
-                      -- getFpExprConstraints operand
-                | _ =>  []
-
-        getBitwiseConstraints {w}
-          (_bvExpr: FpExpr w)
-          (_op : FpBinOp) : List GenFpLogicalExpr :=
-            []
-
--- | TODO: write this as a filter / map
-def addConstraints (expr: GenFpLogicalExpr) (constraints: List GenFpLogicalExpr) (op: Gate) : GenFpLogicalExpr :=
-  match constraints with
-  | [] => expr
-  | x::xs =>
-      match expr with
-      | BoolExpr.const _ => addConstraints x xs op
-      | _ => addConstraints (BoolExpr.gate op expr x) xs op
 
 def packedBitVecToFpSubstitutionValue (map: Std.HashMap Nat BVExpr.PackedBitVec) :
     Std.HashMap Nat (SubstitutionValue FpExpr) :=
   Std.HashMap.ofList (List.map (fun item => (item.fst, SubstitutionValue.packedBV item.snd)) map.toList)
 
-def sameBothSides (bvLogicalExpr : GenFpLogicalExpr) : Bool :=
-    match bvLogicalExpr with
-  | .literal (FpPredicate.bin lhs _ rhs) => lhs == rhs
-  | _ => false
-
--- TODO: can this be moved to generalize?
-def evalBVExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: FpExpr w) : PackedFloat w mfixed :=
-  let substitutedBvExpr := substituteBVExpr expr (packedBitVecToFpSubstitutionValue assignments)
-  FpExpr.eval assignments substitutedBvExpr
-
--- TODO: can this be moved to generalize?
-def evalBVLogicalExpr (assignments : Std.HashMap Nat BVExpr.PackedBitVec) (expr: GenFpLogicalExpr) : Bool :=
-  let substitutedBvExpr := substitute expr (packedBitVecToFpSubstitutionValue assignments)
-  GenFpLogicalExpr.eval assignments substitutedBvExpr
+def sameBothSides (pred : FpPredicate) : Bool :=
+  match pred with
+  | FpPredicate.bin lhs _ rhs => lhs == rhs
 
 def add (op1 : FpExpr w) (op2 : FpExpr w) : FpExpr w :=
   FpExpr.bin op1 FpBinOp.add op2
@@ -392,5 +285,5 @@ def add (op1 : FpExpr w) (op2 : FpExpr w) : FpExpr w :=
 def zero (w: Nat) : FpExpr w :=
   FpExpr.const (PackedFloat.toBits <| PackedFloat.getZero _ _)
 
-def eqToZero (expr: FpExpr w) : GenFpLogicalExpr :=
-  BoolExpr.literal (FpPredicate.bin expr FpBinaryPredKind.eq (zero w))
+def eqToZero (expr: FpExpr w) : FpPredicate :=
+  FpPredicate.bin expr FpBinaryPredKind.eq (zero w)
