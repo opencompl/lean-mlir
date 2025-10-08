@@ -4,6 +4,48 @@ import LeanMLIR.Framework.Print
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.add"(%0, %1)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%0) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner sub_add_reg_x_add_y_sub_y.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.add"(%0, %1)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner sub_add_reg_x_add_y_sub_x.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.sub"(%2, %1)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner sub_add_reg_x_sub_y_add_x.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.sub"(%2, %1)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner sub_add_reg_x_sub_x_add_y.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
     %2 = "llvm.const"(){value = 1 : i1} : () -> (i1)
     "llvm.return"(%0) : (i64) -> ()
 }
