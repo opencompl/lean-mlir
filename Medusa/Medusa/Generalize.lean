@@ -82,6 +82,17 @@ attribute [instance] HydrableInstances.beqLogical
 attribute [instance] HydrableInstances.messageDataLogical
 attribute [instance] HydrableInstances.hashableLogical
 
+deriving instance Hashable for Gate
+deriving instance BEq for Gate
+deriving instance DecidableEq for Gate
+
+deriving instance Hashable for BoolExpr
+deriving instance BEq for BoolExpr
+deriving instance DecidableEq for BoolExpr
+
+deriving instance Hashable for BVBinPred
+deriving instance BEq for BVBinPred
+deriving instance DecidableEq for BVBinPred
 
 /--
 The state of an input or symbolic variable
@@ -577,10 +588,10 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genLogicalExpr
     | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
 
 open Lean Lean.Elab Command Term in
-def generalizeCommand 
+def generalizeCommand
       (H : HydrableParseAndGeneralize parsedExpr genLogicalExpr genExpr)
       (stx : Syntax) : CommandElabM Unit := do
-  withoutModifyingEnv <| runTermElabM fun _ => 
+  withoutModifyingEnv <| runTermElabM fun _ =>
     Term.withDeclName `_reduceWidth do
       let hExpr ← Term.elabTerm stx none
       trace[Generalize] m! "hexpr: {hExpr}"

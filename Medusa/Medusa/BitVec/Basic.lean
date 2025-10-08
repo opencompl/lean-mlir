@@ -88,6 +88,8 @@ with
       mixHash 43 <| mixHash (hash w) (hashCode _ expr)
     | w, .truncate _ expr =>
       mixHash 47 <| mixHash (hash w) (hashCode _ expr)
+deriving BEq, DecidableEq
+
 namespace GenBVExpr
 
 def toString : GenBVExpr w → String
@@ -159,6 +161,8 @@ def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : GenBVExpr w → BitVec
   | .truncate n expr => BitVec.truncate n (eval assign expr)
 end GenBVExpr
 
+
+
 inductive GenBVPred where
   /--
   A binary predicate on `GenBVExpr`.
@@ -168,6 +172,7 @@ inductive GenBVPred where
   Getting a constant LSB from a `BitVec`.
   -/
   | getLsbD (expr : GenBVExpr w) (idx : Nat)
+deriving Hashable, BEq, DecidableEq
 
 namespace GenBVPred
 

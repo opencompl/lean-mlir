@@ -154,15 +154,15 @@ def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : FpPredicate → Bool
 
 end FpPredicate
 
--- | TOTOD: move this to some generic util
-deriving instance Hashable for Gate
-deriving instance BEq for Gate
-deriving instance DecidableEq for Gate
+-- -- | TODO: move this to some generic util
+-- deriving instance Hashable for Gate
+-- deriving instance BEq for Gate
+-- deriving instance DecidableEq for Gate
 
--- | TOTOD: move this to some generic util
-deriving instance Hashable for BoolExpr
-deriving instance BEq for BoolExpr
-deriving instance DecidableEq for BoolExpr
+-- -- | TODO: move this to some generic util
+-- deriving instance Hashable for BoolExpr
+-- deriving instance BEq for BoolExpr
+-- deriving instance DecidableEq for BoolExpr
 
 /--
 TODO: think if this should live in Medusa lib
