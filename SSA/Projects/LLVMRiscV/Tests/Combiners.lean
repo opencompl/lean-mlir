@@ -4,6 +4,18 @@ import LeanMLIR.Framework.Print
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.not"(%0) : (i64) -> (i64)
+    %3 = "llvm.and"(%2, %1) : (i64, i64) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner xor_of_and_with_same_reg.lhs)).val).val
+
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
     %2 = "llvm.const"(){value = 1 : i1} : () -> (i1)
     "llvm.return"(%0) : (i64) -> ()
 }
