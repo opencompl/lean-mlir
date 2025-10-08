@@ -41,7 +41,7 @@ instance : HydrableSubstitute GenBVPred GenBVExpr where
 instance : HydrablePackedBitvecToSubstitutionValue GenBVPred GenBVExpr where
   packedBitVecToSubstitutionValue := packedBitVecToSubstitutionValue
 
-instance : HydrableBooleanAlgebra GenBVPred GenBVExpr where
+instance : HydrableRefinement GenBVPred GenBVExpr where
   not e := BoolExpr.not e
   and e1 e2 := BoolExpr.gate Gate.and e1 e2
   True := BoolExpr.const True

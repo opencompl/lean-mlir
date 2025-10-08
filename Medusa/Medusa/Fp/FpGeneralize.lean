@@ -48,18 +48,10 @@ instance : HydrablePackedBitvecToSubstitutionValue FpPredicate FpExpr where
 
 -- TODO: Can this just be reused for everyone? Seems like we use the BoolExpr?
 instance : HydrableBooleanAlgebra FpPredicate FpExpr where
-  not e := BoolExpr.not e
-  and e1 e2 := BoolExpr.gate Gate.and e1 e2
-  True := BoolExpr.const True
-  False := BoolExpr.const False
   eq e1 e2 := BoolExpr.literal (FpPredicate.bin e1 .eq e2)
-  beq e1 e2 := BoolExpr.gate Gate.beq e1 e2
 
-instance : HydrableGetIdentityAndAbsorptionConstraints FpPredicate FpExpr where
+instance : HydrableGetIdentityAndAbsorptionConstraints FpPredicate where
   getIdentityAndAbsorptionConstraints := getIdentityAndAbsorptionConstraints
-
-instance : HydrableAddConstraints FpPredicate FpExpr where
-  addConstraints := addConstraints
 
 instance : HydrableGenExpr FpExpr where
   genExprVar id := FpExpr.var id
@@ -132,7 +124,7 @@ def pruneEquivalentFpExprs (expressions: List (FpExpr w)) : GeneralizerStateM Pa
         continue
 
       let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.literal (FpPredicate.bin f .eq expr)))
-      let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints Gate.and
+      let subsumeCheckExpr :=  bigAnd newConstraints
 
       if let some _ ← solve subsumeCheckExpr then
         pruned := expr :: pruned
@@ -145,13 +137,16 @@ def pruneEquivalentFpExprs (expressions: List (FpExpr w)) : GeneralizerStateM Pa
 def pruneEquivalentFpLogicalExprs(expressions : List FpPredicate): GeneralizerStateM ParsedFpExpr FpPredicate (List FpPredicate) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvLogicalExprs") do
     let mut pruned: List FpPredicate:= []
+    -- TODO: isn't this just 'break'?
     for expr in expressions do
       if pruned.isEmpty then
         pruned := expr :: pruned
         continue
-
-      let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f expr))
-      let subsumeCheckExpr :=  addConstraints (BoolExpr.const True) newConstraints Gate.and
+      let newConstraints := pruned.map (fun f =>
+          -- | TODO: is this what I want? Don't I want instead to add
+          -- that they are LOGICALLY equivalent?
+          BoolExpr.not (BoolExpr.gate Gate.beq (BoolExpr.literal f) (BoolExpr.literal expr)))
+      let subsumeCheckExpr :=  bigAnd newConstraints
 
       if let some _ ← solve subsumeCheckExpr then
         pruned := expr :: pruned
@@ -748,13 +743,9 @@ instance : HydrablePrettify FpPredicate where
 private def prettifyAsTheorem (name: Name) (generalization: FpPredicate) (displayNames: Std.HashMap Nat Name) : String := Id.run do
   let params := displayNames.values.filter (λ n => n.toString != "w")
 
-  let mut res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " (params.map (λ p => p.toString))} : BitVec w)"
-
-  match generalization with
-  | .ite cond positive _ => res := res ++ s! " (h: {HydrablePrettify.prettify cond displayNames}) : {HydrablePrettify.prettify positive displayNames}"
-  | _ => res := res ++ s! " : {HydrablePrettify.prettify generalization displayNames}"
-
-  res := res ++ s! " := by sorry"
+  let res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " (params.map (λ p => p.toString))} : BitVec w)"
+  let res := res ++ s! " : {HydrablePrettify.prettify generalization displayNames}"
+  let res := res ++ s! " := by sorry"
   pure res
 
 instance : HydrablePrettifyAsTheorem FpPredicate where
