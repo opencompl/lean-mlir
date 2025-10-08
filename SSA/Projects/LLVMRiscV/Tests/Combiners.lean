@@ -24,7 +24,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
     %3 = "llvm.sub"(%2, %1)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -35,7 +35,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
     %3 = "llvm.sub"(%2, %1)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -46,7 +46,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.const"(){value = 1 : i1} : () -> (i1)
+    %2 = "llvm.mlir.constant"(){value = 1 : i1} : () -> (i1)
     "llvm.return"(%0) : (i64) -> ()
 }
 -/
@@ -56,8 +56,8 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64):
-    %1 = "llvm.const"(){value = 2 : i64} : () -> (i64)
-    %2 = "llvm.const"(){value = 1 : i64} : () -> (i64)
+    %1 = "llvm.mlir.constant"(){value = 2 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 1 : i64} : () -> (i64)
     %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -68,8 +68,8 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64):
-    %1 = "llvm.const"(){value = 4 : i64} : () -> (i64)
-    %2 = "llvm.const"(){value = 3 : i64} : () -> (i64)
+    %1 = "llvm.mlir.constant"(){value = 4 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 3 : i64} : () -> (i64)
     %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -80,8 +80,8 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64):
-    %1 = "llvm.const"(){value = 8 : i64} : () -> (i64)
-    %2 = "llvm.const"(){value = 7 : i64} : () -> (i64)
+    %1 = "llvm.mlir.constant"(){value = 8 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 7 : i64} : () -> (i64)
     %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -92,8 +92,8 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64):
-    %1 = "llvm.const"(){value = 16 : i64} : () -> (i64)
-    %2 = "llvm.const"(){value = 15 : i64} : () -> (i64)
+    %1 = "llvm.mlir.constant"(){value = 16 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 15 : i64} : () -> (i64)
     %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -104,8 +104,8 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64):
-    %1 = "llvm.const"(){value = 32 : i64} : () -> (i64)
-    %2 = "llvm.const"(){value = 31 : i64} : () -> (i64)
+    %1 = "llvm.mlir.constant"(){value = 32 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 31 : i64} : () -> (i64)
     %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -116,8 +116,8 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64):
-    %1 = "llvm.const"(){value = 64 : i64} : () -> (i64)
-    %2 = "llvm.const"(){value = 63 : i64} : () -> (i64)
+    %1 = "llvm.mlir.constant"(){value = 64 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 63 : i64} : () -> (i64)
     %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -128,8 +128,8 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64):
-    %1 = "llvm.const"(){value = 128 : i64} : () -> (i64)
-    %2 = "llvm.const"(){value = 127 : i64} : () -> (i64)
+    %1 = "llvm.mlir.constant"(){value = 128 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 127 : i64} : () -> (i64)
     %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -140,8 +140,8 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64):
-    %1 = "llvm.const"(){value = 256 : i64} : () -> (i64)
-    %2 = "llvm.const"(){value = 255 : i64} : () -> (i64)
+    %1 = "llvm.mlir.constant"(){value = 256 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 255 : i64} : () -> (i64)
     %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -152,8 +152,8 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64):
-    %1 = "llvm.const"(){value = 512 : i64} : () -> (i64)
-    %2 = "llvm.const"(){value = 511 : i64} : () -> (i64)
+    %1 = "llvm.mlir.constant"(){value = 512 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 511 : i64} : () -> (i64)
     %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
@@ -164,8 +164,8 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64):
-    %1 = "llvm.const"(){value = 1024 : i64} : () -> (i64)
-    %2 = "llvm.const"(){value = 1023 : i64} : () -> (i64)
+    %1 = "llvm.mlir.constant"(){value = 1024 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 1023 : i64} : () -> (i64)
     %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
     "llvm.return"(%3) : (i64) -> ()
 }
