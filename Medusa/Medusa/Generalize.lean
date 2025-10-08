@@ -67,16 +67,16 @@ instance : Inhabited (SubstitutionValue genExpr) where
 /--
 Convert a (VariableId -→ PackedBitVec) map to a (VariableId → SubstitutionValue) one
 -/
-class HydrablePackedBitvecToSubstitutionValue (genLogicalExpr : Type) (genExpr : Nat → Type) where
+class HydrablePackedBitvecToSubstitutionValue (genPred : Type) (genExpr : Nat → Type) where
   packedBitVecToSubstitutionValue : (Std.HashMap Nat BVExpr.PackedBitVec) → Std.HashMap Nat (SubstitutionValue genExpr)
 
 /--
 `Hashable`, `BEq`, and `ToMessageData` instances for generalization types.
 -/
-class HydrableInstances (genLogicalExpr : Type) where
-  beqLogical : BEq genLogicalExpr := by infer_instance
-  messageDataLogical : ToMessageData genLogicalExpr := by infer_instance
-  hashableLogical : Hashable genLogicalExpr := by infer_instance
+class HydrableInstances (genPred : Type) where
+  beqLogical : BEq genPred := by infer_instance
+  messageDataLogical : ToMessageData genPred := by infer_instance
+  hashableLogical : Hashable genPred := by infer_instance
 
 attribute [instance] HydrableInstances.beqLogical
 attribute [instance] HydrableInstances.messageDataLogical
@@ -85,10 +85,24 @@ attribute [instance] HydrableInstances.hashableLogical
 deriving instance Hashable for Gate
 deriving instance BEq for Gate
 deriving instance DecidableEq for Gate
+instance : ToMessageData Gate where
+  toMessageData g := m!"{g.toString}"
 
 deriving instance Hashable for BoolExpr
 deriving instance BEq for BoolExpr
 deriving instance DecidableEq for BoolExpr
+
+
+instance [ToMessageData α] : ToMessageData (BoolExpr α) where
+  toMessageData := go
+  where
+    go : BoolExpr α → MessageData
+    | .literal a => toMessageData a
+    | .const b => toMessageData b
+    | .not x => "!" ++ go x
+    | .gate g x y => "(" ++ go x ++ " " ++ g.toString ++ " " ++ go y ++ ")"
+    | .ite d l r => "(if " ++ go d ++ " " ++ go l ++ " " ++ go r ++ ")"
+
 
 deriving instance Hashable for BVBinPred
 deriving instance BEq for BVBinPred
@@ -125,9 +139,9 @@ where
 /--
 Structure for maintaining the state of a parsed input `Expr`.
 -/
-structure ParsedLogicalExpr (parsedExpr : Type) (genLogicalExpr : Type)
+structure ParsedLogicalExpr (parsedExpr : Type) (genPred : Type)
 where
-  logicalExpr : genLogicalExpr
+  logicalExpr : BoolExpr genPred
   state : ParsedInputState
   lhs : parsedExpr
   rhs : parsedExpr
@@ -137,71 +151,88 @@ abbrev ParseExprM := StateRefT ParsedInputState MetaM
 /--
 Parse the LHS and RHS of an input `Expr`, returning a `ParsedLogicalExpr` in the given target width.
 -/
-class HydrableParseExprs (parsedExpr : Type) (genLogicalExpr : Type) where
-  parseExprs : (lhsExpr rhsExpr : Expr) → (width : Nat) → ParseExprM (Option (ParsedLogicalExpr parsedExpr genLogicalExpr ))
+class HydrableParseExprs (parsedExpr : Type) (genPred : Type) where
+  parseExprs : (lhsExpr rhsExpr : Expr) → (width : Nat) → ParseExprM (Option (ParsedLogicalExpr parsedExpr genPred ))
 
 /--
 Replace the variables in a BitVec formula with `SubstitutionValue` objects.
 -/
-class HydrableSubstitute (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  substitute : genLogicalExpr → (assignment: Std.HashMap Nat (SubstitutionValue genExpr)) → genLogicalExpr
+class HydrableSubstitute (genPred : Type) (genExpr : Nat → Type) where
+  substitute : genPred → (assignment: Std.HashMap Nat (SubstitutionValue genExpr)) → genPred
 
-structure GeneralizerState (parsedExpr : Type) (genLogicalExpr : Type)
-  [HydrableInstances genLogicalExpr]
+def subsituteGenLogicalExpr [H : HydrableSubstitute genPred genExpr]
+  (expr : BoolExpr genPred) (assignment: Std.HashMap Nat (SubstitutionValue genExpr)) : BoolExpr genPred :=
+  match expr with
+  | .literal a => .literal a
+  | .const b => .const b
+  | .not x => sorry
+  | .gate g x y => sorry
+  | .ite d l r => sorry
+
+structure GeneralizerState (parsedExpr : Type) (genPred : Type)
+  [HydrableInstances genPred]
   where
   startTime: Nat
   timeout : Nat
   processingWidth : Nat
   targetWidth : Nat
   widthId: Nat
-  parsedLogicalExpr : ParsedLogicalExpr parsedExpr genLogicalExpr
-  needsPreconditionsExprs : List genLogicalExpr
-  visitedSubstitutions : Std.HashSet genLogicalExpr
+  parsedLogicalExpr : ParsedLogicalExpr parsedExpr genPred
+  needsPreconditionsExprs : List (BoolExpr genPred)
+  visitedSubstitutions : Std.HashSet (BoolExpr genPred)
 
-abbrev GeneralizerStateM (parsedExpr : Type) (genLogicalExpr : Type)
-  [HydrableInstances genLogicalExpr] :=
-  StateRefT (GeneralizerState parsedExpr genLogicalExpr) TermElabM
+abbrev GeneralizerStateM (parsedExpr : Type) (genPred : Type)
+  [HydrableInstances genPred] :=
+  StateRefT (GeneralizerState parsedExpr genPred) TermElabM
 
 def GeneralizerStateM.liftTermElabM
-  {parsedExpr : Type}  {genLogicalExpr : Type}
-  [HydrableInstances genLogicalExpr]
-  (m : TermElabM α) : GeneralizerStateM parsedExpr genLogicalExpr α := do
+  {parsedExpr : Type}  {genPred : Type}
+  [HydrableInstances genPred]
+  (m : TermElabM α) : GeneralizerStateM parsedExpr genPred α := do
   let v ← m
   return v
 
 /--
 Initialize a `GeneralizerState` object with a `parsedLogicalExpr` and the timeout and width configurations
 -/
-class HydrableInitializeGeneralizerState (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) extends HydrableInstances genLogicalExpr where
-  initializeGeneralizerState : (startTime timeout widthId targetWidth: Nat) → (parsedLogicalExpr : ParsedLogicalExpr parsedExpr genLogicalExpr)
-                          → GeneralizerState parsedExpr genLogicalExpr
+class HydrableInitializeGeneralizerState (parsedExpr : Type) (genPred : Type) (genExpr : Nat → Type) extends HydrableInstances genPred where
+  initializeGeneralizerState : (startTime timeout widthId targetWidth: Nat) → (parsedLogicalExpr : ParsedLogicalExpr parsedExpr genPred)
+                          → GeneralizerState parsedExpr genPred
 
 /--
 Perform simple Boolean operations on `genLogicalExpr` objects
 -/
-class HydrableBooleanAlgebra (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  not : genLogicalExpr → genLogicalExpr
-  and : genLogicalExpr → genLogicalExpr → genLogicalExpr
-  eq : genExpr n → genExpr n → genLogicalExpr
-  beq : genLogicalExpr → genLogicalExpr → genLogicalExpr
-  True : genLogicalExpr
-  False : genLogicalExpr
+class HydrableBooleanAlgebra (genPred : Type) (genExpr : Nat → Type) where
+  -- not : genLogicalExpr → genLogicalExpr
+  -- and : genLogicalExpr → genLogicalExpr → genLogicalExpr
+  eq : genExpr n → genExpr n → BoolExpr genPred
+  -- beq : genLogicalExpr → genLogicalExpr → genLogicalExpr
+  -- True : genLogicalExpr
+  -- False : genLogicalExpr
 
+def foldConstraints (expr: BoolExpr α) (constraints: List (BoolExpr α)) (op: Gate) : BoolExpr α :=
+    match constraints with
+    | [] => expr
+    | x :: xs =>
+      foldConstraints (BoolExpr.gate op expr x) xs op
 
-/--
-Add Boolean constraints to a `genLogicalExpr` object
--/
-class HydrableAddConstraints (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  addConstraints : (expr: genLogicalExpr) → (constraints: List genLogicalExpr) → (gate: Gate) → genLogicalExpr
+/-- collect constraints with a "big and" symbol between them: ⋀_i constraint_i -/
+def bigAnd (constraints : List (BoolExpr α)) : BoolExpr α :=
+  foldConstraints (BoolExpr.const true) constraints Gate.and
+
+def bigOr (constraints : List (BoolExpr α)) : BoolExpr α :=
+  foldConstraints (BoolExpr.const false) constraints Gate.or
 
 /--
 Return constraints to prevent synthesizing values that might hamper generalization.
 For example, we should not synthesize C = 0 for a symbolic constant C that is an operand of a bitwise AND or OR.
 -/
-class HydrableGetIdentityAndAbsorptionConstraints (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  getIdentityAndAbsorptionConstraints : (expr: genLogicalExpr) →  (symVars: Std.HashSet Nat) → List genLogicalExpr
+class HydrableGetIdentityAndAbsorptionConstraints (genPred : Type) where
+  getIdentityAndAbsorptionConstraints : (expr: genPred) →  (symVars: Std.HashSet Nat) → List (BoolExpr genPred)
 
 
+def getIdentityAndAbsorptionConstraints [H : HydrableGetIdentityAndAbsorptionConstraints genPred]
+  (expr: BoolExpr genPred) (symVars: Std.HashSet Nat) : List (BoolExpr genPred) := sorry
 /--
 Create a literal `genExpr` object given a variable ID or `BitVec` constant.
 -/
@@ -212,26 +243,42 @@ class HydrableGenExpr (genExpr : Nat → Type) where
 /--
 Convert a `genLogicalExpr` to a Lean Expr. We invoke `BVDecide` on the Lean Expr in the `solve` function.
 -/
-class HydrableGenLogicalExprToExpr (parsedExpr : Type) (genLogicalExpr : Type) (genExpr : Nat → Type) where
-  genLogicalExprToExpr : ParsedLogicalExpr parsedExpr genLogicalExpr → genLogicalExpr  → MetaM Expr
+class HydrableGenPredToExpr (parsedExpr : Type) (genPred : Type) where
+  -- TODO: why does this need the full ParsedLogicalExpr? That's a bit weird.
+  -- Doesn't it only need the state?
+  genPredToExpr : ParsedLogicalExpr parsedExpr genPred → genPred  → MetaM Expr
 
 /--
-Get the number of nodes of a `genLogicalexpr` for debugging.
+Get the number of nodes of a `genPred` for debugging.
 -/
-class HydrableGetLogicalExprSize (genLogicalExpr : Type) where
-  getLogicalExprSize : genLogicalExpr → Nat
+class HydrableGetGenPredSize (genPred : Type) where
+  getGenPredSize : genPred → Nat
+
+/-- Get the number of nodes in a genLogicalExpr -/
+def getGenLogicalExprSize [H : HydrableGetGenPredSize genPred] (logicalExpr : BoolExpr genPred) : Nat :=
+  match logicalExpr with
+  | .literal _ => 1
+  | .const _ => 1
+  | .not x => 1 + getGenLogicalExprSize x
+  | .gate _ x y => 1 + getGenLogicalExprSize x + getGenLogicalExprSize y
+  | .ite d l r => 1 + getGenLogicalExprSize d + getGenLogicalExprSize l + getGenLogicalExprSize r
+
+-- TODO: implement by floating code from BvGeneralize up into the common directory.
+def genLogicalExprToExpr [H : HydrableGenPredToExpr parsedExpr genPred]
+  (parsedExpr : ParsedLogicalExpr parsedExpr genPred) (logicalExpr : BoolExpr genPred) : MetaM Expr :=
+  sorry
 
 /--
 Invoke BVDecide for a given `genLogicalExpr` representing a BitVec formula.
 -/
-class HydrableSolve (parsedExpr : Type) (genLogicalExpr : outParam Type) (genExpr : outParam (Nat → Type)) extends
-  HydrableInstances genLogicalExpr,
-  HydrableGetLogicalExprSize genLogicalExpr,
-  HydrableGenLogicalExprToExpr parsedExpr genLogicalExpr genExpr where
+class HydrableSolve (parsedExpr : Type) (genPred : outParam Type) (genExpr : outParam (Nat → Type)) extends
+  HydrableInstances genPred,
+  HydrableGetGenPredSize genPred,
+  HydrableGenPredToExpr parsedExpr genPred where
 
 def solve
-[H : HydrableSolve parsedExpr genLogicalExpr genExpr]
-  (bvExpr : genLogicalExpr) : GeneralizerStateM parsedExpr genLogicalExpr (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+[H : HydrableSolve parsedExpr genPred genExpr]
+  (bvExpr : BoolExpr genPred) : GeneralizerStateM parsedExpr genPred (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
     let state ← get
     let allVars := Std.HashMap.union state.parsedLogicalExpr.state.inputVarIdToVariable state.parsedLogicalExpr.state.symVarIdToVariable
 
@@ -241,8 +288,9 @@ def solve
 
     let res ←
       withLocalDeclsDND nameTypeCombo.toArray fun _ => do
-        let mVar ← withTraceNode `Generalize (fun _ => return m!"Converted bvExpr to expr (size : {H.getLogicalExprSize bvExpr})") do
-          let mut expr ← H.genLogicalExprToExpr state.parsedLogicalExpr bvExpr
+        let mVar ← withTraceNode `Generalize (fun _ => return m!"Converted bvExpr to expr (size : {getGenLogicalExprSize bvExpr})") do
+          let mut expr : Expr ←
+            genLogicalExprToExpr (state.parsedLogicalExpr : ParsedLogicalExpr parsedExpr genPred) (bvExpr : BoolExpr genPred)
           Lean.Meta.check expr
 
           expr ← mkEq expr (mkConst ``Bool.false) -- We do this because bv_decide negates the original expression, and we counter that here
@@ -270,24 +318,24 @@ def solve
 /--
 Exists-forall Implementation, as described in the Yices paper: https://yices.csl.sri.com/papers/smt2015.pdf.
 -/
-class HydrableExistsForall (parsedExpr : Type)  (genLogicalExpr : outParam Type) (genExpr : outParam (Nat → Type)) extends
-  HydrableInstances genLogicalExpr,
-  HydrableSolve parsedExpr genLogicalExpr genExpr,
-  HydrableSubstitute genLogicalExpr genExpr,
-  HydrablePackedBitvecToSubstitutionValue genLogicalExpr genExpr,
-  HydrableBooleanAlgebra genLogicalExpr genExpr,
-  HydrableGetIdentityAndAbsorptionConstraints genLogicalExpr genExpr,
-  HydrableAddConstraints genLogicalExpr genExpr,
+class HydrableExistsForall (parsedExpr : Type)  (genPred : outParam Type) (genExpr : outParam (Nat → Type)) extends
+  HydrableInstances genPred,
+  HydrableSolve parsedExpr genPred genExpr,
+  HydrableSubstitute genPred genExpr,
+  HydrablePackedBitvecToSubstitutionValue genPred genExpr,
+  HydrableBooleanAlgebra genPred genExpr,
+  HydrableGetIdentityAndAbsorptionConstraints genPred,
+  -- HydrableAddConstraints genPred genExpr,
   HydrableGenExpr genExpr
   where
 
 partial def existsForAll
-    [H : HydrableExistsForall parsedExpr genLogicalExpr genExpr]
-    (origExpr: genLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)  (numExamples: Nat := 1) :
-    GeneralizerStateM parsedExpr genLogicalExpr (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+    [H : HydrableExistsForall parsedExpr genPred genExpr]
+    (origExpr : BoolExpr genPred) (existsVars: List Nat) (forAllVars: List Nat)  (numExamples: Nat := 1) :
+    GeneralizerStateM parsedExpr genPred (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
 
-    let rec constantsSynthesis (bvExpr: genLogicalExpr) (existsVars: List Nat) (forAllVars: List Nat)
-            : GeneralizerStateM parsedExpr genLogicalExpr (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+    let rec constantsSynthesis (bvExpr: BoolExpr genPred) (existsVars: List Nat) (forAllVars: List Nat)
+            : GeneralizerStateM parsedExpr genPred (Option (Std.HashMap Nat BVExpr.PackedBitVec)) := do
       let existsRes ← solve bvExpr
 
       match existsRes with
@@ -295,19 +343,19 @@ partial def existsForAll
                   return none
         | some assignment =>
           let existsVals := assignment.filter fun c _ => existsVars.contains c
-          let substExpr := H.substitute bvExpr (H.packedBitVecToSubstitutionValue existsVals)
-          let forAllRes ← solve (H.not substExpr)
+          let substExpr := subsituteGenLogicalExpr bvExpr (H.packedBitVecToSubstitutionValue existsVals)
+          let forAllRes ← solve (BoolExpr.not substExpr)
 
           match forAllRes with
             | none =>
               return some existsVals
             | some counterEx =>
-                let newExpr := H.substitute bvExpr (H.packedBitVecToSubstitutionValue counterEx)
-                constantsSynthesis (H.and bvExpr newExpr) existsVars forAllVars
+                let newExpr := subsituteGenLogicalExpr bvExpr (H.packedBitVecToSubstitutionValue counterEx)
+                constantsSynthesis (BoolExpr.gate .and bvExpr newExpr) existsVars forAllVars
 
     let mut res : List (Std.HashMap Nat BVExpr.PackedBitVec) := []
-    let identityAndAbsorptionConstraints := H.getIdentityAndAbsorptionConstraints origExpr (Std.HashSet.ofList existsVars)
-    let targetExpr := (H.and origExpr (H.addConstraints H.True (identityAndAbsorptionConstraints) Gate.and))
+    let identityAndAbsorptionConstraints := getIdentityAndAbsorptionConstraints origExpr (Std.HashSet.ofList existsVars)
+    let targetExpr := (BoolExpr.gate .and origExpr (bigAnd (identityAndAbsorptionConstraints)))
 
     match numExamples with
     | 0 => return res
@@ -317,26 +365,26 @@ partial def existsForAll
                 | some assignment =>
                       res := assignment :: res
                       let newConstraints := assignment.toList.map (fun c => H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv))
-                      let constrainedBVExpr := H.not (H.addConstraints H.True newConstraints Gate.and)
-                      return res ++ (← existsForAll (H.and origExpr constrainedBVExpr) existsVars forAllVars n)
+                      let constrainedBVExpr := BoolExpr.not (bigAnd newConstraints)
+                      return res ++ (← existsForAll (BoolExpr.gate .and origExpr constrainedBVExpr) existsVars forAllVars n)
 
 
 /--
 Naive model counter implementation for generating the most compact form of a precondition. Not currently in use by the Generalization procedure.
 -/
-class HydrableCountModel (parsedExpr : Type) (genLogicalExpr : outParam Type) (genExpr : outParam (Nat → Type)) extends
-  HydrableInstances genLogicalExpr,
-  HydrableSolve parsedExpr genLogicalExpr genExpr,
-  HydrableBooleanAlgebra genLogicalExpr genExpr,
-  HydrableGenExpr genExpr,
-  HydrableAddConstraints genLogicalExpr genExpr
+class HydrableCountModel (parsedExpr : Type) (genPred : outParam Type) (genExpr : outParam (Nat → Type)) extends
+  HydrableInstances genPred,
+  HydrableSolve parsedExpr genPred genExpr,
+  HydrableBooleanAlgebra genPred genExpr,
+  HydrableGenExpr genExpr
+  -- HydrableAddConstraints genLogicalExpr genExpr
   where
 
 partial def countModel
-  [H : HydrableCountModel parsedExpr genLogicalExpr genExpr] (expr : genLogicalExpr) (constants: Std.HashSet Nat): GeneralizerStateM parsedExpr genLogicalExpr Nat := do
+  [H : HydrableCountModel parsedExpr genPred genExpr] (expr : BoolExpr genPred) (constants: Std.HashSet Nat): GeneralizerStateM parsedExpr genPred Nat := do
     go 0 expr
     where
-        go (count: Nat) (expr : genLogicalExpr) : GeneralizerStateM parsedExpr genLogicalExpr Nat := do
+        go (count: Nat) (expr : BoolExpr genPred) : GeneralizerStateM parsedExpr genPred Nat := do
           let res ← solve expr
           match res with
           | none => return count
@@ -344,11 +392,11 @@ partial def countModel
                 let filteredAssignments := assignment.filter (λ c _ => constants.contains c)
                 let newConstraints := filteredAssignments.toList.map (fun c => H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv))
 
-                let constrainedBVExpr := H.not (H.addConstraints (H.True) newConstraints Gate.and)
+                let constrainedBVExpr := BoolExpr.not (bigAnd newConstraints)
 
                 if count + 1 > 1000 then
                   return count
-                pure (← go (count + 1) (H.and expr constrainedBVExpr))
+                pure (← go (count + 1) (BoolExpr.gate .and expr constrainedBVExpr))
 
 def generateCombinations (num: Nat) (values: List α) : List (List α) :=
     match num, values with
@@ -365,16 +413,16 @@ Get negative examples for precondition synthesis.
 class HydrableGetNegativeExamples (parsedExpr : Type) (genLogicalExpr : outParam Type) (genExpr : outParam (Nat → Type)) extends
   HydrableSolve parsedExpr genLogicalExpr genExpr,
   HydrableBooleanAlgebra genLogicalExpr genExpr,
-  HydrableGenExpr genExpr,
-  HydrableAddConstraints genLogicalExpr genExpr
+  HydrableGenExpr genExpr
+  -- HydrableAddConstraints genLogicalExpr genExpr
 
-def getNegativeExamples [H : HydrableGetNegativeExamples parsedExpr genLogicalExpr genExpr] (bvExpr: genLogicalExpr) (consts: List Nat) (numEx: Nat) :
-              GeneralizerStateM parsedExpr genLogicalExpr (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
-  let targetExpr := H.not bvExpr
+def getNegativeExamples [H : HydrableGetNegativeExamples parsedExpr genPred genExpr] (bvExpr: BoolExpr genPred) (consts: List Nat) (numEx: Nat) :
+              GeneralizerStateM parsedExpr genPred (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+  let targetExpr := BoolExpr.not bvExpr
   return (← helper targetExpr numEx)
   where
-        helper (expr: genLogicalExpr) (depth : Nat)
-          : GeneralizerStateM parsedExpr  genLogicalExpr (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
+        helper (expr: BoolExpr genPred) (depth : Nat)
+          : GeneralizerStateM parsedExpr  genPred (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
         match depth with
           | 0 => return []
           | n + 1 =>
@@ -385,9 +433,8 @@ def getNegativeExamples [H : HydrableGetNegativeExamples parsedExpr genLogicalEx
               | some assignment =>
                    let constVals := assignment.filter fun c _ => consts.contains c
                    if constVals.isEmpty then return [{}]
-
-                   let newConstraints := constVals.toList.map (fun c => H.not (H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv)))
-                   let res ← helper (H.addConstraints expr newConstraints Gate.and) n
+                   let newConstraints := constVals.toList.map (fun c => BoolExpr.not (H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv)))
+                   let res ← helper (bigAnd <| expr::newConstraints) n
                    return [constVals] ++ res
 
 

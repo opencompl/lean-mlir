@@ -28,7 +28,7 @@ instance : HydrableGetInputWidth where
 instance : HydrableGetLogicalExprSize GenFpLogicalExpr where
   getLogicalExprSize e := e.size
 
-instance : HydrableGenLogicalExprToExpr ParsedFpExpr GenFpLogicalExpr FpExpr where
+instance : HydrableGenPredToExpr ParsedFpExpr GenFpLogicalExpr FpExpr where
   genLogicalExprToExpr := toExpr
 
 instance :

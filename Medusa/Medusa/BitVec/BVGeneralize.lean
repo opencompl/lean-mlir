@@ -21,10 +21,10 @@ instance : HydrableInstances GenBVPred where
 instance : HydrableGetInputWidth where
   getWidth := getWidth
 
-instance : HydrableGetLogicalExprSize GenBVPred where
+instance : HydrableGetGenPredSize GenBVPred where
   getLogicalExprSize e := e.size
 
-instance : HydrableGenLogicalExprToExpr ParsedBVExpr GenBVPred GenBVExpr where
+instance : HydrableGenPredToExpr ParsedBVExpr GenBVPred GenBVExpr where
   genLogicalExprToExpr := toExpr
 
 instance : HydrableSolve ParsedBVExpr GenBVPred GenBVExpr where
