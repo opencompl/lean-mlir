@@ -1001,7 +1001,7 @@ def commute_int_constant_to_rhs: List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
 
 /-
 Test the rewrite:
-  fold ((0-A) + B) -> B-A
+  fold ((0-A)+B) -> B-A
 -/
 def ZeroMinusAPlusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
@@ -1019,7 +1019,7 @@ def ZeroMinusAPlusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llv
 
 /-
 Test the rewrite:
-  fold (A + (0-B)) -> A-B
+  fold (A+(0-B)) -> A-B
 -/
 def APlusZeroMinusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
