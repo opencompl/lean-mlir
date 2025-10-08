@@ -621,11 +621,6 @@ macro_rules
     `(AttrValue.int $x [mlir_type| $t])
 
 macro_rules
-| `([mlir_attr_val| true ]) => `(AttrValue.bool True)
-| `([mlir_attr_val| false ]) => `(AttrValue.bool False)
-
-
-macro_rules
 | `([mlir_attr_val| # $dialect:ident <$xs ,* > ]) => do
   let initList : TSyntax `term  <- `([])
   let vals : TSyntax `term <- xs.getElems.foldlM (init := initList) fun (xs : TSyntax `term) (x : TSyntax `mlir_attr_val) =>
@@ -652,6 +647,8 @@ macro_rules
         let vals <- xs.getElems.foldlM (init := initList) fun xs x =>
             `($xs ++ [[mlir_attr_val| $x]])
         `(AttrValue.list $vals)
+  | `([mlir_attr_val| true ]) => `(AttrValue.bool True)
+  | `([mlir_attr_val| false ]) => `(AttrValue.bool False)
   | `([mlir_attr_val| $i:ident]) => `(AttrValue.type [mlir_type| $i:ident])
   | `([mlir_attr_val| $ty:mlir_type]) => `(AttrValue.type [mlir_type| $ty])
 
