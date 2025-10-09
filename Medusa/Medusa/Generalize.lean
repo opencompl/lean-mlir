@@ -504,7 +504,7 @@ Instances of this class may implement enumerative/deductive search methods to ex
 class HydrableSynthesizeWithNoPrecondition (parsedExpr : Type) (genPred : Type) (genExpr : Nat → Type) extends
     HydrableInstances genPred
     where
-  synthesizeWithNoPrecondition : (constantAssignments: List (Std.HashMap Nat BVExpr.PackedBitVec)) → GeneralizerStateM parsedExpr genPred (Option genPred)
+  synthesizeWithNoPrecondition : (constantAssignments: List (Std.HashMap Nat BVExpr.PackedBitVec)) → GeneralizerStateM parsedExpr genPred (Option (BoolExpr genPred))
 
 /--
 The procedure invokes this method if it cannot find a generalization that does not require a precondition.
@@ -514,7 +514,7 @@ class HydrableCheckForPreconditions (parsedExpr : Type) (genPred : Type) (genExp
     HydrableInstances genPred
     where
   checkForPreconditions : (positiveExamples : List (Std.HashMap Nat BVExpr.PackedBitVec)) → (maxConjunctions : Nat)
-                          → GeneralizerStateM parsedExpr genPred (Option genPred)
+                          → GeneralizerStateM parsedExpr genPred (Option (BoolExpr genPred))
 
 /--
 Update the width of the underlying `genExpr` objects in a `genLogicalExpr` object.
@@ -569,7 +569,7 @@ class HydrableGeneralize (parsedExpr : Type) (genPred : outParam Type) (genExpr 
   where
 
 def generalize [H : HydrableGeneralize parsedExpr genPred genExpr]
-                  : GeneralizerStateM parsedExpr genPred (Option genPred) := do
+                  : GeneralizerStateM parsedExpr genPred (Option (BoolExpr genPred)) := do
     let state ← get
     let mut parsedLogicalExpr := state.parsedLogicalExpr
     let parsedLogicalExprState := parsedLogicalExpr.state
@@ -608,17 +608,22 @@ inductive GeneralizeContext where
   | Command : GeneralizeContext
   | Tactic (name : Name) : GeneralizeContext
 
+
+-- | TODO: There's no way this is the god-given API for this.
+-- I think we should instead produce an `Expr` from the `genLogicalExpr`,
+-- and then print that `Expr` using the normal Lean pretty-printer.
 /--
 Convert a generalization to a printable string, with variable IDs replaced with proper display names.
 -/
 class HydrablePrettify (genLogicalExpr : Type) where
-  prettify : (generalization : genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
+  prettify : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
+
 
 /--
 Convert a generalization to a theorem, with variable IDs replaced with proper display names. For use in a Tactic context.
 -/
 class HydrablePrettifyAsTheorem (genLogicalExpr : Type) where
-  prettifyAsTheorem : (name : Name) → (generalization : genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
+  prettifyAsTheorem : (name : Name) → (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
 
 class HydrableGetInputWidth where
   getWidth : Expr → MetaM (Option Nat)
@@ -674,7 +679,7 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genPred genExp
           trace[Generalize] m! "All vars: {variableDisplayNames}"
           match generalizeRes with
             | some res => match context with
-                          | GeneralizeContext.Command => let pretty := H.prettify res variableDisplayNames
+                          | GeneralizeContext.Command => let pretty := HydrablePrettify.prettify res variableDisplayNames
                                                          pure m! "Raw generalization result: {res} \n Input expression: {hExpr} has generalization: {pretty}"
                           | GeneralizeContext.Tactic name => pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
             | none => throwError m! "Could not generalize {bvLogicalExpr}"

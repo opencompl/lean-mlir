@@ -218,7 +218,7 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
 
 def wrap (bvExpr : GenBVExpr w) : BVExprWrapper := { bvExpr := bvExpr, width := w}
 
-def filterCandidatePredicates  (bvLogicalExpr: GenBVPred) (preconditionCandidates visited: Std.HashSet (BoolExpr GenBVPred))
+def filterCandidatePredicates  (bvLogicalExpr: BoolExpr GenBVPred) (preconditionCandidates visited: Std.HashSet (BoolExpr GenBVPred))
                                                     : GeneralizerStateM ParsedBVExpr GenBVPred (List (BoolExpr GenBVPred)) :=
   withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
     let state ← get
@@ -341,7 +341,7 @@ def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.Has
 
     return currentCache
 
-def generatePreconditions (bvLogicalExpr: GenBVPred) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec))
+def generatePreconditions (bvLogicalExpr: BoolExpr GenBVPred) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec))
               (_numConjunctions: Nat) : GeneralizerStateM ParsedBVExpr GenBVPred (Option (BoolExpr GenBVPred)) := do
 
     let state ← get
@@ -644,7 +644,7 @@ partial def deductiveSearch (expr: GenBVExpr w) (constants: Std.HashMap Nat BVEx
 
 set_option warn.sorry false in
 def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec))
-              : GeneralizerStateM ParsedBVExpr GenBVPred (Option GenBVPred) :=  do
+              : GeneralizerStateM ParsedBVExpr GenBVPred (Option (BoolExpr GenBVPred)) :=  do
     let state ← get
     let parsedBVLogicalExpr := state.parsedLogicalExpr
     let processingWidth := state.processingWidth
@@ -728,7 +728,7 @@ instance :  HydrableSynthesizeWithNoPrecondition ParsedBVExpr GenBVPred GenBVExp
  synthesizeWithNoPrecondition := synthesizeWithNoPrecondition
 
 def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) (maxConjunctions: Nat)
-                                                : GeneralizerStateM ParsedBVExpr GenBVPred (Option GenBVPred) := do
+                                                : GeneralizerStateM ParsedBVExpr GenBVPred (Option (BoolExpr GenBVPred)) := do
   let state ← get
   let parsedBVLogicalExpr := state.parsedLogicalExpr
 
@@ -792,13 +792,13 @@ def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat Name) :
     | .truncate v expr =>   s! "BitVec.truncate {v} {prettifyBVExpr expr displayNames}"
     | _ => bvExpr.toString
 
-def isGteZeroCheck (expr : GenBVPred) : Bool :=
+def isGteZeroCheck (expr : BoolExpr GenBVPred) : Bool :=
   match expr with
   | .literal (GenBVPred.bin _ BVBinPred.ult (GenBVExpr.shiftLeft (GenBVExpr.const bv) (GenBVExpr.bin (GenBVExpr.var _) BVBinOp.add (GenBVExpr.bin (GenBVExpr.const bv') BVBinOp.add (GenBVExpr.un BVUnOp.not (GenBVExpr.const bv'')))))) =>
           bv.toInt == 1 && bv'.toInt == 1 && bv''.toInt == 1
   | _ => false
 
-def prettifyComparison (bvLogicalExpr : GenBVPred) (displayNames: Std.HashMap Nat Name)  : Option String := Id.run do
+def prettifyComparison (bvLogicalExpr : BoolExpr GenBVPred) (displayNames: Std.HashMap Nat Name)  : Option String := Id.run do
   let mut res : Option String := none
   match bvLogicalExpr with
   | .literal (GenBVPred.bin lhs BVBinPred.ult _) =>
@@ -817,12 +817,12 @@ def prettifyComparison (bvLogicalExpr : GenBVPred) (displayNames: Std.HashMap Na
   res
 
 
-def prettify (generalization: GenBVPred) (displayNames: Std.HashMap Nat Name) : String :=
+def prettify (generalization: BoolExpr  GenBVPred) (displayNames: Std.HashMap Nat Name) : String :=
   match (prettifyComparison generalization displayNames) with
   | some s => s
   | none =>
       match generalization with
-      | GenBVPred.bin lhs op rhs =>
+      | .literal (GenBVPred.bin lhs op rhs) =>
           s! "{prettifyBVExpr lhs displayNames} {prettifyBVBinPred op} {prettifyBVExpr rhs displayNames}"
       | _ => generalization.toString
 
@@ -830,10 +830,10 @@ def prettify (generalization: GenBVPred) (displayNames: Std.HashMap Nat Name) : 
 instance : HydrablePrettify GenBVPred where
   prettify := prettify
 
-def prettifyAsTheorem (name: Name) (generalization: GenBVPred) (displayNames: Std.HashMap Nat Name) : String := Id.run do
+def prettifyAsTheorem (name: Name) (generalization: BoolExpr GenBVPred) (displayNames: Std.HashMap Nat Name) : String := Id.run do
   let params := displayNames.values.filter (λ n => n.toString != "w")
   let res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " (params.map (λ p => p.toString))} : BitVec w)"
-  let res := res ++ s! " : {prettify generalization displayNames}"
+  let res := res ++ s! " : {HydrablePrettify.prettify generalization displayNames}"
   let res := res ++ s! " := by sorry"
   pure res
 
