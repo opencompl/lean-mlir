@@ -198,13 +198,13 @@ def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM
 def pruneEquivalentBVLogicalExprs(expressions : List (BoolExpr GenBVPred)) :
     GeneralizerStateM ParsedBVExpr GenBVPred (List (BoolExpr GenBVPred)) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvLogicalExprs") do
-    let mut pruned: List GenBVPred:= []
+    let mut pruned: List (BoolExpr GenBVPred) := []
     -- | TODO: isn't this just a 'break' in the loop?
     for expr in expressions do
       if pruned.isEmpty then
         pruned := expr :: pruned
         continue
-      let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq (.literal f) (.literal expr)))
+      let newConstraints := pruned.map (fun f =>  BoolExpr.not (BoolExpr.gate Gate.beq f expr))
       let subsumeCheckExpr :=  bigAnd newConstraints
 
       if let some _ ← solve subsumeCheckExpr then
@@ -426,7 +426,7 @@ def generatePreconditions (bvLogicalExpr: GenBVPred) (positiveExamples negativeE
     let prunedResults ← pruneEquivalentBVLogicalExprs validCandidates
     match prunedResults with
     | [] => return none
-    | _ =>  return some (addConstraints (BoolExpr.const false) prunedResults Gate.or)
+    | _ =>  return some (bigOr prunedResults)
 
 /-- productsList [xs, ys] = [(x, y) for x in xs for y in ys],
 extended to arbitary number of arrays. -/
