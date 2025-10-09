@@ -997,6 +997,199 @@ def commute_int_constant_to_rhs: List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
   ⟨_, commute_int_constant_to_rhs_xor⟩,
   ⟨_, commute_int_constant_to_rhs_mulhu⟩]
 
+/-! ### sub_add_reg -/
+
+/-
+Test the rewrite:
+  (x + y) - y -> x
+-/
+def sub_add_reg_x_add_y_sub_y : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %1 = llvm.add %x, %y : i64
+      %2 = llvm.sub %1, %y : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      llvm.return %x : i64
+  }]
+
+/-
+Test the rewrite:
+  (x + y) - y -> x
+-/
+def sub_add_reg_x_add_y_sub_x : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %1 = llvm.add %x, %y : i64
+      %2 = llvm.sub %1, %x : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      llvm.return %y : i64
+  }]
+
+/-
+Test the rewrite:
+  x - (y + x) -> 0 - y
+-/
+def sub_add_reg_x_sub_y_add_x : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %1 = llvm.add %y, %x : i64
+      %2 = llvm.sub %x, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %c = llvm.mlir.constant (0) : i64
+      %0 = llvm.sub %c, %y : i64
+      llvm.return %0 : i64
+  }]
+
+/-
+Test the rewrite:
+  x - (x + y) -> 0 - y
+-/
+def sub_add_reg_x_sub_x_add_y : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %1 = llvm.add %x, %y : i64
+      %2 = llvm.sub %x, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %c = llvm.mlir.constant (0) : i64
+      %0 = llvm.sub %c, %y : i64
+      llvm.return %0 : i64
+  }]
+
+def sub_add_reg : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, sub_add_reg_x_add_y_sub_y⟩,
+  ⟨_, sub_add_reg_x_add_y_sub_x⟩,
+  ⟨_, sub_add_reg_x_sub_y_add_x⟩,
+  ⟨_, sub_add_reg_x_sub_x_add_y⟩]
+
+/-! ### redundant_binop_in_equality -/
+
+/-
+Test the rewrite:
+ fold ((X + Y) == X) -> (Y == 0)
+-/
+def redundant_binop_in_equality_XPlusYEqX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.add %x, %y : i64
+      %1 = llvm.icmp.eq %0, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.mlir.constant (0) : i64
+      %1 = llvm.icmp.eq %y, %0 : i64
+      llvm.return %1 : i1
+  }]
+
+/-
+Test the rewrite:
+ fold ((X + Y) != X) -> (Y != 0)
+-/
+def redundant_binop_in_equality_XPlusYNeX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.add %x, %y : i64
+      %1 = llvm.icmp.ne %0, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.mlir.constant (0) : i64
+      %1 = llvm.icmp.ne %y, %0 : i64
+      llvm.return %1 : i1
+  }]
+
+/-
+Test the rewrite:
+ fold ((X - Y) == X) -> (Y == 0)
+-/
+def redundant_binop_in_equality_XMinusYEqX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.sub %x, %y : i64
+      %1 = llvm.icmp.eq %0, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.mlir.constant (0) : i64
+      %1 = llvm.icmp.eq %y, %0 : i64
+      llvm.return %1 : i1
+  }]
+
+/-
+Test the rewrite:
+ fold ((X - Y) != X) -> (Y != 0)
+-/
+def redundant_binop_in_equality_XMinusYNeX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.sub %x, %y : i64
+      %1 = llvm.icmp.ne %0, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.mlir.constant (0) : i64
+      %1 = llvm.icmp.ne %y, %0 : i64
+      llvm.return %1 : i1
+  }]
+
+/-
+Test the rewrite:
+ fold ((X ^ Y) == X) -> (Y == 0)
+-/
+def redundant_binop_in_equality_XXorYEqX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.xor %x, %y : i64
+      %1 = llvm.icmp.eq %0, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.mlir.constant (0) : i64
+      %1 = llvm.icmp.eq %y, %0 : i64
+      llvm.return %1 : i1
+  }]
+
+/-
+Test the rewrite:
+ fold ((X ^ Y) != X) -> (Y != 0)
+-/
+def redundant_binop_in_equality_XXorYNeX : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.xor %x, %y : i64
+      %1 = llvm.icmp.ne %0, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.mlir.constant (0) : i64
+      %1 = llvm.icmp.ne %y, %0 : i64
+      llvm.return %1 : i1
+  }]
+
+def redundant_binop_in_equality : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
+  [⟨_, redundant_binop_in_equality_XPlusYEqX⟩,
+  ⟨_, redundant_binop_in_equality_XPlusYNeX⟩,
+  ⟨_, redundant_binop_in_equality_XMinusYEqX⟩,
+  ⟨_, redundant_binop_in_equality_XMinusYNeX⟩,
+  ⟨_, redundant_binop_in_equality_XXorYEqX⟩,
+  ⟨_, redundant_binop_in_equality_XXorYNeX⟩]
 
 /- ### not_cmp_fold
   (a op b) ^^^ (-1) → (a op' b) where op' is the inverse of op
@@ -1131,6 +1324,7 @@ def PostLegalizerCombiner_RISCV: List (Σ Γ,RISCVPeepholeRewrite  Γ) :=
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
+  sub_add_reg ++
   sub_to_add ++
   redundant_and ++
   select_same_val ++
@@ -1158,6 +1352,9 @@ def GLobalISelO0PreLegalizerCombiner :
 /-- We group all the rewrites that form the post-legalization optimizations in GlobalISel-/
 def GLobalISelPostLegalizerCombiner :
     List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  redundant_binop_in_equality)
+  ++
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   PostLegalizerCombiner_LLVMIR_64)
   ++
