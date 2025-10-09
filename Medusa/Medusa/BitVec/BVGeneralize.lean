@@ -501,7 +501,7 @@ def pruneConstantExprsSynthesisResults(exprSynthesisResults : ExpressionSynthesi
 instance :  HydrableGetNegativeExamples ParsedBVExpr GenBVPred GenBVExpr where
 
 def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (List (BVExprWrapper)))
-                                            : GeneralizerStateM ParsedBVExpr GenBVPred (Option GenBVPred) := do
+                                            : GeneralizerStateM ParsedBVExpr GenBVPred (Option (BoolExpr GenBVPred)) := do
   withTraceNode `Generalize (fun _ => return "Checked if expressions require preconditions") do
     -- logInfo m! "Expression synthesis results : {exprSynthesisResults}"
     let combinations := productsList exprSynthesisResults.values
@@ -514,7 +514,7 @@ def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (L
     for combo in combinations do
       -- Substitute the generated expressions into the main one, so the constants on the RHS are expressed in terms of the left.
       let zippedCombo := Std.HashMap.ofList (List.zip parsedBVLogicalExpr.rhs.symVars.keys combo)
-      let substitution := substitute parsedBVLogicalExpr.logicalExpr (bvExprToSubstitutionValue zippedCombo)
+      let substitution := subsituteGenLogicalExpr parsedBVLogicalExpr.logicalExpr (bvExprToSubstitutionValue zippedCombo)
       if !visited.contains substitution && !(sameBothSides substitution) then
         substitutions := substitution :: substitutions
         visited := visited.insert substitution
