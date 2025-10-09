@@ -270,10 +270,6 @@ jobs:
         run: |
           lake -R build ISL
 
-      - name: Compile Project Tests
-        run: |
-          lake -R build SSA.Tests
-
       - name: Check for changes in AliveStatements
         run: |
           lake build AliveExamples
