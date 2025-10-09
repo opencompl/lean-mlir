@@ -195,7 +195,8 @@ def pruneEquivalentBVExprs (expressions: List (GenBVExpr w)) : GeneralizerStateM
 
     pure pruned
 
-def pruneEquivalentBVLogicalExprs(expressions : List GenBVPred): GeneralizerStateM ParsedBVExpr GenBVPred (List GenBVPred) := do
+def pruneEquivalentBVLogicalExprs(expressions : List (BoolExpr GenBVPred)) :
+    GeneralizerStateM ParsedBVExpr GenBVPred (List (BoolExpr GenBVPred)) := do
   withTraceNode `Generalize (fun _ => return "Pruned equivalent bvLogicalExprs") do
     let mut pruned: List GenBVPred:= []
     -- | TODO: isn't this just a 'break' in the loop?
@@ -224,7 +225,7 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVPred) (preconditionCandidate
     let widthId := state.widthId
     let bitwidth := state.processingWidth
 
-    let mut res : List GenBVPred := []
+    let mut res : List (BoolExpr GenBVPred) := []
     -- let mut currentCandidates := preconditionCandidates
     -- if numConjunctions >= 1 then
     --   let combinations := generateCombinations numConjunctions currentCandidates.toList
@@ -242,16 +243,16 @@ def filterCandidatePredicates  (bvLogicalExpr: GenBVPred) (preconditionCandidate
       let bvLogicalExpr := BoolExpr.literal bvLogicalExpr
       let expr := BoolExpr.gate Gate.and (BoolExpr.gate .and expressionsConstraints widthConstraint) (BoolExpr.not bvLogicalExpr)
 
-      let mut newCandidates : Std.HashSet GenBVPred := Std.HashSet.emptyWithCapacity
+      let mut newCandidates : Std.HashSet (BoolExpr GenBVPred) := Std.HashSet.emptyWithCapacity
       numInvocations := numInvocations + 1
       match (← solve expr) with
       | none => break
       | some assignment =>
           newCandidates ← withTraceNode `Generalize (fun _ => return "Evaluated expressions for filtering") do
-            let mut res : Std.HashSet GenBVPred := Std.HashSet.emptyWithCapacity
+            let mut res : Std.HashSet (BoolExpr GenBVPred) := Std.HashSet.emptyWithCapacity
             for candidate in currentCandidates do
               let widthSubstitutedCandidate := subsituteGenLogicalExpr candidate (bvExprToSubstitutionValue (Std.HashMap.ofList [(widthId, wrap (GenBVExpr.const (BitVec.ofNat bitwidth bitwidth)))]))
-              if !(evalBVLogicalExpr assignment widthSubstitutedCandidate) then
+              if !(evalBoolExpr widthSubstitutedCandidate (fun v => v.eval assignment)) then
                 res := res.insert candidate
             pure res
 
@@ -341,7 +342,7 @@ def precondSynthesisUpdateCache (previousLevelCache synthesisComponents: Std.Has
     return currentCache
 
 def generatePreconditions (bvLogicalExpr: GenBVPred) (positiveExamples negativeExamples: List (Std.HashMap Nat BVExpr.PackedBitVec))
-              (_numConjunctions: Nat) : GeneralizerStateM ParsedBVExpr GenBVPred (Option GenBVPred) := do
+              (_numConjunctions: Nat) : GeneralizerStateM ParsedBVExpr GenBVPred (Option (BoolExpr GenBVPred)) := do
 
     let state ← get
     let widthId := state.widthId
@@ -372,8 +373,8 @@ def generatePreconditions (bvLogicalExpr: GenBVPred) (positiveExamples negativeE
       let ops : List (GenBVExpr bitwidth -> GenBVExpr bitwidth -> GenBVExpr bitwidth):= [add, subtract, multiply, and, or, xor, shiftLeft, shiftRight, arithShiftRight]
 
       let mut currentLevel := 0
-      let mut validCandidates : List GenBVPred := []
-      let mut visited : Std.HashSet GenBVPred := Std.HashSet.emptyWithCapacity
+      let mut validCandidates : List (BoolExpr GenBVPred) := []
+      let mut visited : Std.HashSet (BoolExpr GenBVPred) := Std.HashSet.emptyWithCapacity
 
       while currentLevel < numVariables do
           logInfo m! "Precondition Synthesis: Processing level {currentLevel}"

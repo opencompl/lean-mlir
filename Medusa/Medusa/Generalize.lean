@@ -49,6 +49,19 @@ instance [ToString α] [Hashable α] [BEq α] : ToString (Std.HashSet α ) where
 instance : ToString FVarId where
   toString f := s! "{f.name}"
 
+def evalBoolExpr (b : BoolExpr α) (f : α → Bool) : Bool :=
+  match b with
+  | .literal a => f a
+  | .const b => b
+  | .not x => !(evalBoolExpr x f)
+  | .gate g x y =>
+      match g with
+      | .and => (evalBoolExpr x f) && (evalBoolExpr y f)
+      | .or => (evalBoolExpr x f) || (evalBoolExpr y f)
+      | .xor => (evalBoolExpr x f) != (evalBoolExpr y f)
+      | .beq => (evalBoolExpr x f) == (evalBoolExpr y f)
+  | .ite d l r =>
+      if evalBoolExpr d f then evalBoolExpr l f else evalBoolExpr r f
 
 -- TODO: Does it need to know explicitly that it's a PackedBitVec?
 -- Surely, this can be part of the API of a SubstitutionValue?
