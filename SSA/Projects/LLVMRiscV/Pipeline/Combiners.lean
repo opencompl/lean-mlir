@@ -997,6 +997,21 @@ def commute_int_constant_to_rhs: List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
   ⟨_, commute_int_constant_to_rhs_xor⟩,
   ⟨_, commute_int_constant_to_rhs_mulhu⟩]
 
+
+def matchMulOBy2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (2) : i64
+      %0 = llvm.mul %x, %c overflow<nsw, nuw> : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.add %x, %x overflow<nsw, nuw> : i64
+      llvm.return %0 : i64
+  }]
+
+
 /-! ### sub_add_reg -/
 
 /-
