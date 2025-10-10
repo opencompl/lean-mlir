@@ -5,6 +5,7 @@ import Medusa.Generalize
 import Medusa.BitVec.Basic
 
 namespace Generalize
+namespace BV
 
 open Lean
 open Lean.Meta
@@ -41,7 +42,7 @@ structure ParsedBVExpr where
   symVars: Std.HashMap Nat BVExpr.PackedBitVec
   inputVars : Std.HashMap Nat HydraVariable
 
-abbrev ParsedBVLogicalExpr := ParsedLogicalExpr ParsedBVExpr GenBVLogicalExpr
+abbrev ParsedBVLogicalExpr := ParsedLogicalExpr ParsedBVExpr GenBVPred
 
 partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (BVExprWrapper)) := do
   go expr
@@ -326,47 +327,10 @@ def bvExprToExpr (parsedBVExpr : ParsedBVLogicalExpr)
 def beqBitVecInstExpr (width : Expr) : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkApp (mkConst ``BitVec) width) (mkApp (.const ``instDecidableEqBitVec []) width)
 def beqBoolInstExpr : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkConst ``Bool) (mkConst ``instDecidableEqBool)
 
-def toExpr (parsedBVExpr : ParsedBVLogicalExpr) (bvLogicalExpr: GenBVLogicalExpr) : MetaM Expr := do
-  go bvLogicalExpr
-  where
-  go (input : GenBVLogicalExpr) := do
-  match input with
-  | .literal (GenBVPred.bin (w := w) lhs op rhs) =>
+def toExpr (parsedBVExpr : ParsedBVLogicalExpr) (pred: GenBVPred) : MetaM Expr := do
+  match pred with
+  | (GenBVPred.bin (w := w) lhs op rhs) =>
       match op with
       | .eq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) (mkNatLit w)) (beqBitVecInstExpr (mkNatLit w)) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
       | .ult => return mkApp3 (.const ``BitVec.ult []) (mkNatLit w) (← bvExprToExpr parsedBVExpr lhs) (← bvExprToExpr parsedBVExpr rhs)
-  | .const b =>
-      match b with
-      | true => return (mkConst ``Bool.true)
-      | _ => return (mkConst ``Bool.false)
-  | .not boolExpr => return mkApp (.const ``Bool.not []) (← go boolExpr)
-  | .gate gate lhs rhs =>
-        match gate with
-        | .or => return mkApp2 (.const ``Bool.or []) (← go lhs) (← go rhs)
-        | .xor => return mkApp2 (.const ``Bool.xor []) (← go lhs) (← go rhs)
-        | .and => return mkApp2 (.const ``Bool.and []) (← go lhs) (← go rhs)
-        | .beq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkConst ``Bool) (beqBoolInstExpr) (← go lhs) (← go rhs)
   | _ => throwError m! "Unsupported operation"
-
-/- def toBVExpr' (bvExpr : GenBVExpr w) : GeneralizerStateM (BVExpr w) := do
-  match bvExpr with
-  | .var idx => return BVExpr.var idx
-  | .const val => return BVExpr.const val
-  | .bin lhs op rhs  => return BVExpr.bin (← toBVExpr' lhs) op (← toBVExpr' rhs)
-  | .un op expr =>  return BVExpr.un op (← toBVExpr' expr)
-  | .append lhs rhs h => return BVExpr.append (← toBVExpr' lhs) (← toBVExpr' rhs) h
-  | .replicate n expr h => return BVExpr.replicate n (← toBVExpr' expr) h
-  | .shiftLeft lhs rhs =>  return BVExpr.shiftLeft (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | .shiftRight lhs rhs => return BVExpr.shiftRight (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | .arithShiftRight lhs rhs =>return BVExpr.arithShiftRight (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | _ => throwError m! "Unsupported operation provided: {bvExpr}"
-
-
-def toBVLogicalExpr (bvLogicalExpr: GenBVLogicalExpr) : GeneralizerStateM BVLogicalExpr := do
-  match bvLogicalExpr with
-  | .literal (GenBVPred.bin lhs op rhs) => return BoolExpr.literal (BVPred.bin (← toBVExpr' lhs) op (← toBVExpr' rhs))
-  | .const b => return BoolExpr.const b
-  | .not boolExpr => return BoolExpr.not (← toBVLogicalExpr boolExpr)
-  | .gate gate lhs rhs => return BoolExpr.gate gate (← toBVLogicalExpr lhs) (← toBVLogicalExpr rhs)
-  | _ => throwError m! "Unsupported operation"
- -/
