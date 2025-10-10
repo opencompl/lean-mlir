@@ -114,6 +114,9 @@ def eval (assign : Std.HashMap Nat BVExpr.PackedBitVec) : FpExpr e → PackedFlo
       | .add => add (eval assign lhs) (eval assign rhs) .RNE
 end FpExpr
 
+-- TODO: put this stuff in a namespace.
+#check add
+
 inductive FpBinaryPredKind
 | eq
 deriving Hashable, DecidableEq, Repr

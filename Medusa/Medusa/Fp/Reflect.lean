@@ -49,8 +49,28 @@ structure ParsedFpExpr where
 abbrev ParsedFpLogicalExpr :=
   ParsedLogicalExpr ParsedFpExpr GenFpLogicalExpr
 
+#check PackedFloat 10 20
+
+structure PackedFloatTyExpr where
+  m : Expr
+  e : Expr
+
+def getPackedFloatTy? (e : Expr) : MetaM (Option (PackedFloatTyExpr)) := do
+  let eType ← inferType e
+  match_expr eType with
+  | PackedFloat m e => return some {m, e}
+  | _ => return none
+
 -- | TODO: Allow ParseExprM to throw errors, instead of returning an Option in many cases.
-partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (FpExprWrapper)) := do
+partial def toFpExpr (expr : Expr) (width: Nat) : ParseExprM (Option (FpExprWrapper)) := do
+  let t ← inferType expr
+  let some packedFloatTy ← getPackedFloatTy? expr | throwError m!"Could not determine the packed float type of {expr} : {t}"
+  match_expr expr with
+  | add a b => throwError "found 'add' node"
+  | _ =>
+      -- logInfo m!"failed to convert {expr} into an FpExpr."
+  return none
+/-
   go expr
   where
   go (x : Expr) : ParseExprM (Option (FpExprWrapper)) := do
@@ -181,30 +201,39 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (FpExprWrap
       return some {bvExpr := newExpr, width := pbv.w}
     | some var => let newExpr : FpExpr pbv.w := FpExpr.var var
                   return some {bvExpr := newExpr, width := pbv.w}
+-/
 
 
 def parseExprs (lhsExpr rhsExpr : Expr) (width : Nat): ParseExprM (Option ParsedFpLogicalExpr)  := do
-  let some lhsRes ← toBVExpr lhsExpr width | throwError "Could not extract lhs: {lhsExpr}"
-
+  logInfo "C1.A"
+  let some lhsRes ← toFpExpr lhsExpr width | throwError "Could not extract lhs: {lhsExpr}"
   let state ← get
   let lhs: ParsedFpExpr := {bvExpr := lhsRes.bvExpr, width := lhsRes.width, symVars := state.symVarToVal, inputVars := state.inputVarIdToVariable}
+  throwError "C1.B"
 
-  let some rhsRes ← toBVExpr rhsExpr width | throwError "Could not extract rhs: {rhsExpr}"
+  let some rhsRes ← toFpExpr rhsExpr width | throwError "Could not extract rhs: {rhsExpr}"
   let state ← get
+
+  logInfo "C1.C"
 
   let rhsInputVars := state.inputVarIdToVariable.filter fun k _ => !lhs.inputVars.contains k
   let rhsSymVars := state.symVarToVal.filter fun k _ => !lhs.symVars.contains k
 
+  throwError "C1.D"
+
   let rhs: ParsedFpExpr := {bvExpr := rhsRes.bvExpr, width := rhsRes.width, symVars := rhsSymVars, inputVars := rhsInputVars}
+  logInfo "C1.E"
 
   trace[Generalize] m! "lhs width: {lhsRes.width}; rhs width: {rhsRes.width}"
   if h : lhsRes.width = rhsRes.width then
+    throwError "C1.F"
     let rhsExpr := h ▸ rhsRes.bvExpr
     -- | TODO: why do we need it to be a 'BoolExpr'? We should have an interface
     -- that asks for it to be converted to a 'BoolExpr'.
     let bvLogicalExpr := BoolExpr.literal (FpPredicate.bin lhsRes.bvExpr FpBinaryPredKind.eq rhsExpr)
     trace[Generalize] m! "BVLogicalExpr: {bvLogicalExpr}"
     return some {lhs := lhs, rhs := rhs, state := state, logicalExpr := bvLogicalExpr}
+  throwError "C1.G"
 
   return none
 
@@ -253,23 +282,23 @@ def toExpr (_ParsedFpExpr : ParsedFpLogicalExpr) (bvLogicalExpr: GenFpLogicalExp
         | .beq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkConst ``Bool) (beqBoolInstExpr) (← go lhs) (← go rhs)
   | _ => throwError m! "Unsupported operation in toExpr"
 
-/- def toBVExpr' (bvExpr : FpExpr w) : GeneralizerStateM (BVExpr w) := do
+/- def toFpExpr' (bvExpr : FpExpr w) : GeneralizerStateM (BVExpr w) := do
   match bvExpr with
   | .var idx => return BVExpr.var idx
   | .const val => return BVExpr.const val
-  | .bin lhs op rhs  => return BVExpr.bin (← toBVExpr' lhs) op (← toBVExpr' rhs)
-  | .un op expr =>  return BVExpr.un op (← toBVExpr' expr)
-  | .append lhs rhs h => return BVExpr.append (← toBVExpr' lhs) (← toBVExpr' rhs) h
-  | .replicate n expr h => return BVExpr.replicate n (← toBVExpr' expr) h
-  | .shiftLeft lhs rhs =>  return BVExpr.shiftLeft (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | .shiftRight lhs rhs => return BVExpr.shiftRight (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | .arithShiftRight lhs rhs =>return BVExpr.arithShiftRight (← toBVExpr' lhs) (← toBVExpr' rhs)
+  | .bin lhs op rhs  => return BVExpr.bin (← toFpExpr' lhs) op (← toFpExpr' rhs)
+  | .un op expr =>  return BVExpr.un op (← toFpExpr' expr)
+  | .append lhs rhs h => return BVExpr.append (← toFpExpr' lhs) (← toFpExpr' rhs) h
+  | .replicate n expr h => return BVExpr.replicate n (← toFpExpr' expr) h
+  | .shiftLeft lhs rhs =>  return BVExpr.shiftLeft (← toFpExpr' lhs) (← toFpExpr' rhs)
+  | .shiftRight lhs rhs => return BVExpr.shiftRight (← toFpExpr' lhs) (← toFpExpr' rhs)
+  | .arithShiftRight lhs rhs =>return BVExpr.arithShiftRight (← toFpExpr' lhs) (← toFpExpr' rhs)
   | _ => throwError m! "Unsupported operation provided: {bvExpr}"
 
 
 def toBVLogicalExpr (bvLogicalExpr: GenFpLogicalExpr) : GeneralizerStateM BVLogicalExpr := do
   match bvLogicalExpr with
-  | .literal (GenBVPred.bin lhs op rhs) => return BoolExpr.literal (BVPred.bin (← toBVExpr' lhs) op (← toBVExpr' rhs))
+  | .literal (GenBVPred.bin lhs op rhs) => return BoolExpr.literal (BVPred.bin (← toFpExpr' lhs) op (← toFpExpr' rhs))
   | .const b => return BoolExpr.const b
   | .not boolExpr => return BoolExpr.not (← toBVLogicalExpr boolExpr)
   | .gate gate lhs rhs => return BoolExpr.gate gate (← toBVLogicalExpr lhs) (← toBVLogicalExpr rhs)
