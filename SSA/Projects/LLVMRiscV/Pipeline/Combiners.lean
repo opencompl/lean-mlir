@@ -997,6 +997,29 @@ def commute_int_constant_to_rhs: List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
   ⟨_, commute_int_constant_to_rhs_xor⟩,
   ⟨_, commute_int_constant_to_rhs_mulhu⟩]
 
+/-! ### matchMulOBy2 -/
+
+/-
+Test the rewrite:
+  (G_UMULO x, 2) -> (G_UADDO x, x)
+  (G_SMULO x, 2) -> (G_SADDO x, x)
+-/
+def mulo_by_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (2) : i64
+      %0 = llvm.mul %x, %c overflow<nsw, nuw> : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.add %x, %x overflow<nsw, nuw> : i64
+      llvm.return %0 : i64
+  }]
+
+def matchMulO: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, mulo_by_2⟩]
+
 /-! ### sub_add_reg -/
 
 /-
@@ -1328,6 +1351,7 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
   sub_to_add ++
   redundant_and ++
   select_same_val ++
+  matchMulO ++
   LLVMIR_identity_combines_64
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
