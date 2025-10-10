@@ -95,7 +95,7 @@ def Γn (n : Nat) : Ctxt (MetaLLVM φ).Ty :=
 def op0 : Op 0 := [mlir_op| %0 = llvm.mlir.constant(8) : i32]
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %1 = "llvm.const"(){value = 8 : i32} : () -> (i32)⟩⟩
+  %1 = "llvm.mlir.constant"(){value = 8 : i32} : () -> (i32)⟩⟩
 -/
 #guard_msgs in
   #eval mkExpr    (Γn 1) op0    ["arg0"]
@@ -103,7 +103,7 @@ info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
 def op1 : Op 0 := [mlir_op| %1 = llvm.mlir.constant(31) : i32]
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %2 = "llvm.const"(){value = 31 : i32} : () -> (i32)⟩⟩
+  %2 = "llvm.mlir.constant"(){value = 31 : i32} : () -> (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 2) op1    ["0", "arg0"]
 
@@ -148,13 +148,13 @@ def ops : List (Op 0) := [mlir_ops|
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %1 = "llvm.const"(){value = 8 : i32} : () -> (i32)⟩⟩
+  %1 = "llvm.mlir.constant"(){value = 8 : i32} : () -> (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 1)  (ops[0]) ["arg0"]
 
 /--
 info: Except.ok ⟨EffectKind.pure, ⟨[i32], ⏎
-  %2 = "llvm.const"(){value = 31 : i32} : () -> (i32)⟩⟩
+  %2 = "llvm.mlir.constant"(){value = 31 : i32} : () -> (i32)⟩⟩
 -/
 #guard_msgs in #eval mkExpr    (Γn 2)  (ops[1]) ["0", "arg0"]
 
