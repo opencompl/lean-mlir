@@ -240,7 +240,7 @@ def filterCandidatePredicates  (bvLogicalExpr: BoolExpr GenBVPred) (precondition
     -- Progressive filtering implementation
     while !currentCandidates.isEmpty do
       let expressionsConstraints : BoolExpr GenBVPred := bigOr (currentCandidates.toList)
-      let bvLogicalExpr := BoolExpr.literal bvLogicalExpr
+      let bvLogicalExpr := bvLogicalExpr
       let expr := BoolExpr.gate Gate.and (BoolExpr.gate .and expressionsConstraints widthConstraint) (BoolExpr.not bvLogicalExpr)
 
       let mut newCandidates : Std.HashSet (BoolExpr GenBVPred) := Std.HashSet.emptyWithCapacity
@@ -886,7 +886,7 @@ def evalBvGeneralize : Tactic
 section Examples
 set_option warn.sorry false
 /--
-info: theorem Generalize.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
+info: theorem Generalize.BV.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
 -/
 #guard_msgs in
 theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
@@ -895,7 +895,7 @@ theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
 
 
 /--
-info: theorem Generalize.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
+info: theorem Generalize.BV.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
 -/
 #guard_msgs in
 theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
