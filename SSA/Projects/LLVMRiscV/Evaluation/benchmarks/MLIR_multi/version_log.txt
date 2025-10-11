@@ -1,0 +1,1 @@
+MLIR-fuzz commit hash: c03e396
