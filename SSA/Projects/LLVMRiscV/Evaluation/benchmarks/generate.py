@@ -306,6 +306,7 @@ def LAKE_compile_riscv64_opt(jobs, pass_dict):
             cmd = cmd_base + input_file + " > " + output_file
             future = executor.submit(run_command, cmd, log_file)
             futures[future] = output_file
+            
 
         total = len(futures)
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
@@ -362,6 +363,7 @@ def generate_benchmarks(num, jobs):
         extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, num)
 
     MLIR_opt_file2ret = dict()
+    idx = 0
     # Run mlir-opt and convert into LLVM dialect
     for filename in os.listdir(MLIR_single_DIR_PATH):
         input_file = os.path.join(MLIR_single_DIR_PATH, filename)
@@ -369,8 +371,12 @@ def generate_benchmarks(num, jobs):
         output_file = os.path.join(LLVM_DIR_PATH, basename + ".ll")
         log_file = open(os.path.join(LOGS_DIR_PATH, basename + "_mlir_opt.log"), "w")
         MLIR_opt_arith_llvm(input_file, output_file, log_file, MLIR_opt_file2ret)
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(os.listdir(MLIR_single_DIR_PATH)))) * 100
+        print(f"{percentage:.2f}%")
 
     MLIR_translate_file2ret = dict()
+    idx = 0
     # Run mlir-translate and convert LLVM into LLVMIR
     for filename in os.listdir(LLVM_DIR_PATH):
         input_file = os.path.join(LLVM_DIR_PATH, filename)
@@ -384,8 +390,12 @@ def generate_benchmarks(num, jobs):
             MLIR_translate_llvmir(
                 input_file, output_file, log_file, MLIR_translate_file2ret
             )
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(MLIR_opt_file2ret))) * 100
+        print(f"{percentage:.2f}%")
 
     LLC_file2ret = dict()
+    idx = 0
     # Use llc with `selectionDAG` to compile LLVMIR into RISCV
     for filename in os.listdir(LLVMIR_DIR_PATH):
         input_file = os.path.join(LLVMIR_DIR_PATH, filename)
@@ -399,8 +409,12 @@ def generate_benchmarks(num, jobs):
             LLC_compile_riscv_selectiondag(
                 input_file, output_file, log_file, LLC_file2ret
             )
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(MLIR_translate_file2ret))) * 100
+        print(f"{percentage:.2f}%") 
 
     LLC_GLOBALISEL_file2ret = dict()
+    idx = 0
     # Use llc with `GlobalISel` to compile LLVMIR into RISCV
     for filename in os.listdir(LLVMIR_DIR_PATH):
         input_file = os.path.join(LLVMIR_DIR_PATH, filename)
@@ -414,14 +428,21 @@ def generate_benchmarks(num, jobs):
             LLC_compile_riscv_globalisel(
                 input_file, output_file, log_file, LLC_GLOBALISEL_file2ret
             )
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(MLIR_translate_file2ret))) * 100
+        print(f"{percentage:.2f}%")
 
     # Extract bb0
+    idx = 0
     for filename in os.listdir(LLVM_DIR_PATH):
         input_file = os.path.join(LLVM_DIR_PATH, filename)
         basename, _ = os.path.splitext(filename)
         output_file = os.path.join(MLIR_bb0_DIR_PATH, basename + ".mlir")
         log_file = open(os.path.join(LOGS_DIR_PATH, basename + "_bb0_extract.log"), "w")
         extract_bb0(input_file, output_file, log_file)
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(os.listdir(LLVM_DIR_PATH)))) * 100
+        print(f"{percentage:.2f}%") 
 
     LAKE_file2ret = dict()
     # Run the lean pass in parallel
@@ -432,6 +453,7 @@ def generate_benchmarks(num, jobs):
     LAKE_compile_riscv64_opt(jobs, LAKE_file2ret_opt)
 
     XDSL_remove_casts_file2ret = dict()
+    idx = 0
     # Remove unrealized casts
     for filename in os.listdir(LEANMLIR_ASM_DIR_PATH):
         input_file = os.path.join(LEANMLIR_ASM_DIR_PATH, filename)
@@ -445,8 +467,12 @@ def generate_benchmarks(num, jobs):
             XDSL_remove_casts(
                 input_file, output_file, log_file, XDSL_remove_casts_file2ret
             )
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(LAKE_file2ret))) * 100
+        print(f"{percentage:.2f}%")
 
     XDSL_remove_casts_file2ret_opt = dict()
+    idx = 0
     # Remove unrealized casts
     for filename in os.listdir(LEANMLIR_ASM_opt_DIR_PATH):
         input_file = os.path.join(LEANMLIR_ASM_opt_DIR_PATH, filename)
@@ -459,8 +485,13 @@ def generate_benchmarks(num, jobs):
             XDSL_remove_casts(
                 input_file, output_file, log_file, XDSL_remove_casts_file2ret_opt
             )
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(LAKE_file2ret_opt))) * 100
+        print(f"{percentage:.2f}%") 
 
     XDSL_reg_alloc_file2ret = dict()
+    idx = 0
+    # Register allocation with XDSL
     for filename in os.listdir(XDSL_no_casts_DIR_PATH):
         input_file = os.path.join(XDSL_no_casts_DIR_PATH, filename)
         if XDSL_remove_casts_file2ret[input_file] == 0:
@@ -470,8 +501,13 @@ def generate_benchmarks(num, jobs):
                 os.path.join(LOGS_DIR_PATH, basename + "_xdsl_reg_alloc.log"), "w"
             )
             XDSL_reg_alloc(input_file, output_file, log_file, XDSL_reg_alloc_file2ret)
-
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(XDSL_remove_casts_file2ret))) * 100
+        print(f"{percentage:.2f}%")
+        
     XDSL_reg_alloc_file2ret_opt = dict()
+    idx = 0
+    # Register allocation with XDSL
     for filename in os.listdir(XDSL_no_casts_opt_DIR_PATH):
         input_file = os.path.join(XDSL_no_casts_opt_DIR_PATH, filename)
         if XDSL_remove_casts_file2ret_opt[input_file] == 0:
@@ -483,8 +519,12 @@ def generate_benchmarks(num, jobs):
             XDSL_reg_alloc(
                 input_file, output_file, log_file, XDSL_reg_alloc_file2ret_opt
             )
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(XDSL_remove_casts_file2ret_opt))) * 100
+        print(f"{percentage:.2f}%") 
 
     XDSL_riscv_file2ret = dict()
+    idx = 0
     # Compile to RISCV asm with XDSL
     for filename in os.listdir(XDSL_reg_alloc_DIR_PATH):
         input_file = os.path.join(XDSL_reg_alloc_DIR_PATH, filename)
@@ -495,8 +535,12 @@ def generate_benchmarks(num, jobs):
                 os.path.join(LOGS_DIR_PATH, basename + "_xdsl_riscv.log"), "w"
             )
             XDSL_compile_riscv(input_file, output_file, log_file, XDSL_riscv_file2ret)
-
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(XDSL_reg_alloc_file2ret))) * 100
+        print(f"{percentage:.2f}%")
+        
     XDSL_riscv_file2ret_opt = dict()
+    idx = 0
     # Compile to RISCV asm with XDSL
     for filename in os.listdir(XDSL_reg_alloc_opt_DIR_PATH):
         input_file = os.path.join(XDSL_reg_alloc_opt_DIR_PATH, filename)
@@ -509,6 +553,9 @@ def generate_benchmarks(num, jobs):
             XDSL_compile_riscv(
                 input_file, output_file, log_file, XDSL_riscv_file2ret_opt
             )
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(XDSL_reg_alloc_file2ret_opt))) * 100
+        print(f"{percentage:.2f}%")
 
 
 def main():

@@ -94,34 +94,49 @@ def run_tests():
     parser = argparse.ArgumentParser()
     taskqueue.add_cli_arguments(parser)
 
-
+    idx = 0
     for filename in os.listdir(XDSL_ASM_DIR):
         input_file = os.path.join(XDSL_ASM_DIR, filename)
         basename, _ = os.path.splitext(filename)
         output_file = os.path.join(MCA_LEANMLIR_DIR, basename + '.out')
         log_file = open(os.path.join(LOGS_DIR, 'xdsl_' + filename),'w')
         mca_analysis(input_file, output_file, log_file)
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(os.listdir(XDSL_ASM_DIR)))) * 100
+        print(f"{percentage:.2f}%")
     
+    idx = 0
     for filename in os.listdir(XDSL_opt_ASM_DIR):
         input_file = os.path.join(XDSL_opt_ASM_DIR, filename)
         basename, _ = os.path.splitext(filename)
         output_file = os.path.join(MCA_LEANMLIR_opt_DIR, basename + '.out')
         log_file = open(os.path.join(LOGS_DIR, 'xdsl_opt_' + filename),'w')
         mca_analysis(input_file, output_file, log_file)
-
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(os.listdir(XDSL_opt_ASM_DIR)))) * 100
+        print(f"{percentage:.2f}%") 
+        
+    idx = 0
     for filename in os.listdir(LLC_ASM_globalisel_DIR):
         input_file = os.path.join(LLC_ASM_globalisel_DIR, filename)
         basename, _ = os.path.splitext(filename)
         output_file = os.path.join(MCA_LLVM_globalisel_DIR, basename + '.out')
         log_file = open(os.path.join(LOGS_DIR, 'llvm_globalisel_' + filename),'w')
         mca_analysis(input_file, output_file, log_file)
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(os.listdir(LLC_ASM_globalisel_DIR)))) * 100
+        print(f"{percentage:.2f}%")
     
+    idx = 0
     for filename in os.listdir(LLC_ASM_selectiondag_DIR):
         input_file = os.path.join(LLC_ASM_selectiondag_DIR, filename)
         basename, _ = os.path.splitext(filename)
         output_file = os.path.join(MCA_LLVM_selectiondag_DIR, basename + '.out')
         log_file = open(os.path.join(LOGS_DIR, 'llvm_selectiondag_' + filename),'w')
         mca_analysis(input_file, output_file, log_file)
+        idx += 1
+        percentage = ((float(idx) + float(1)) / float(len(os.listdir(LLC_ASM_selectiondag_DIR)))) * 100
+        print(f"{percentage:.2f}%")
 
 def main():
     run_tests()
