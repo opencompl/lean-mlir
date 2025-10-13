@@ -47,7 +47,7 @@ structure ParsedFpExpr where
 
 -- | TODO: Can this live in Hydra?
 abbrev ParsedFpLogicalExpr :=
-  ParsedLogicalExpr ParsedFpExpr GenFpLogicalExpr
+  ParsedLogicalExpr ParsedFpExpr FpPredicate
 
 -- | TODO: Allow ParseExprM to throw errors, instead of returning an Option in many cases.
 partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (FpExprWrapper)) := do
@@ -211,7 +211,7 @@ def parseExprs (lhsExpr rhsExpr : Expr) (width : Nat): ParseExprM (Option Parsed
 /-- info: Float.ofNat (n : Nat) : Float -/
 #guard_msgs in #check Float.ofNat
 
-def bvExprToExpr (ParsedFpExpr : ParsedFpLogicalExpr)
+def fpExprToExpr (ParsedFpExpr : ParsedFpLogicalExpr)
   (bvExpr : FpExpr w) : MetaM Expr := do
   let ParsedFpExprState := ParsedFpExpr.state
   let allVars := Std.HashMap.union ParsedFpExprState.inputVarIdToVariable ParsedFpExprState.symVarIdToVariable
@@ -222,7 +222,7 @@ def bvExprToExpr (ParsedFpExpr : ParsedFpLogicalExpr)
                 pure (mkFVar localDecl.fvarId)
   | .bin lhs op rhs  =>
     match op with
-    | .add => return mkApp3 (.const ``BitVec.add []) (mkNatLit w) (← bvExprToExpr ParsedFpExpr lhs) (← bvExprToExpr ParsedFpExpr rhs)
+    | .add => return mkApp3 (.const ``BitVec.add []) (mkNatLit w) (← fpExprToExpr ParsedFpExpr lhs) (← fpExprToExpr ParsedFpExpr rhs)
   -- | TODO: review this.
   | .const val => return mkApp2 (.const ``Float.ofNat []) (mkNatLit w) (mkNatLit (val.toNat))
 
@@ -230,48 +230,7 @@ def bvExprToExpr (ParsedFpExpr : ParsedFpLogicalExpr)
 def beqBitVecInstExpr (width : Expr) : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkApp (mkConst ``BitVec) width) (mkApp (.const ``instDecidableEqBitVec []) width)
 def beqBoolInstExpr : Expr := mkApp2 (.const ``instBEqOfDecidableEq [levelZero]) (mkConst ``Bool) (mkConst ``instDecidableEqBool)
 
-def toExpr (_ParsedFpExpr : ParsedFpLogicalExpr) (bvLogicalExpr: GenFpLogicalExpr) : MetaM Expr := do
-  go bvLogicalExpr
-  where
-  go (input : GenFpLogicalExpr) := do
-  match input with
-  | .literal x =>
-      match x with
-      | .bin _lhs .eq _rhs =>
-        throwError "unimplemented toExpr go"
-        -- return mkApp4 (.const ``BEq.beq [levelZero]) (mkApp (mkConst ``BitVec) (mkNatLit w)) (beqBitVecInstExpr (mkNatLit w)) (← bvExprToExpr ParsedFpExpr lhs) (← bvExprToExpr ParsedFpExpr rhs)
-  | .const b =>
-      match b with
-      | true => return (mkConst ``Bool.true)
-      | _ => return (mkConst ``Bool.false)
-  | .not boolExpr => return mkApp (.const ``Bool.not []) (← go boolExpr)
-  | .gate gate lhs rhs =>
-        match gate with
-        | .or => return mkApp2 (.const ``Bool.or []) (← go lhs) (← go rhs)
-        | .xor => return mkApp2 (.const ``Bool.xor []) (← go lhs) (← go rhs)
-        | .and => return mkApp2 (.const ``Bool.and []) (← go lhs) (← go rhs)
-        | .beq => return mkApp4 (.const ``BEq.beq [levelZero]) (mkConst ``Bool) (beqBoolInstExpr) (← go lhs) (← go rhs)
-  | _ => throwError m! "Unsupported operation in toExpr"
-
-/- def toBVExpr' (bvExpr : FpExpr w) : GeneralizerStateM (BVExpr w) := do
-  match bvExpr with
-  | .var idx => return BVExpr.var idx
-  | .const val => return BVExpr.const val
-  | .bin lhs op rhs  => return BVExpr.bin (← toBVExpr' lhs) op (← toBVExpr' rhs)
-  | .un op expr =>  return BVExpr.un op (← toBVExpr' expr)
-  | .append lhs rhs h => return BVExpr.append (← toBVExpr' lhs) (← toBVExpr' rhs) h
-  | .replicate n expr h => return BVExpr.replicate n (← toBVExpr' expr) h
-  | .shiftLeft lhs rhs =>  return BVExpr.shiftLeft (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | .shiftRight lhs rhs => return BVExpr.shiftRight (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | .arithShiftRight lhs rhs =>return BVExpr.arithShiftRight (← toBVExpr' lhs) (← toBVExpr' rhs)
-  | _ => throwError m! "Unsupported operation provided: {bvExpr}"
-
-
-def toBVLogicalExpr (bvLogicalExpr: GenFpLogicalExpr) : GeneralizerStateM BVLogicalExpr := do
-  match bvLogicalExpr with
-  | .literal (GenBVPred.bin lhs op rhs) => return BoolExpr.literal (BVPred.bin (← toBVExpr' lhs) op (← toBVExpr' rhs))
-  | .const b => return BoolExpr.const b
-  | .not boolExpr => return BoolExpr.not (← toBVLogicalExpr boolExpr)
-  | .gate gate lhs rhs => return BoolExpr.gate gate (← toBVLogicalExpr lhs) (← toBVLogicalExpr rhs)
-  | _ => throwError m! "Unsupported operation"
- -/
+def toExpr (_ParsedFpExpr : ParsedFpLogicalExpr) (fpPred: FpPredicate) : MetaM Expr := do
+  match fpPred with
+  | .bin lhs .eq rhs =>
+    return ← mkAppM ``BEq.beq #[← fpExprToExpr _ParsedFpExpr lhs, ← fpExprToExpr _ParsedFpExpr rhs]
