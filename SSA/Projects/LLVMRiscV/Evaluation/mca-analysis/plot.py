@@ -106,66 +106,126 @@ parameters_labels = {
 selector_labels = {
     "LEANMLIR" : "Cert.",
     "LEANMLIR_opt" : "CertOpt",
-    "LLVM_globalisel" : "GlobalISel",
-    "LLVM_selectiondag" : "SelectionDAG"
+    "LLVM_globalisel_O1" : "GlobalISel (O1)",
+    "LLVM_globalisel_O2" : "GlobalISel (O2)",
+    "LLVM_globalisel_O3" : "GlobalISel (O3)",
+    "LLVM_globalisel" : "GlobalISel (def.)",
+    "LLVM_selectiondag_O1" : "SelectionDAG (O1)",
+    "LLVM_selectiondag_O2" : "SelectionDAG (O2)",
+    "LLVM_selectiondag_O3" : "SelectionDAG (O3)",
+    "LLVM_selectiondag" : "SelectionDAG (def.)",
 }
 
 
 
 
-def extract_data(results_directory, benchmark_name, parameter) :
+def extract_data(results_directory, benchmark_name, parameter, opt) :
     """
     Parses the results of mca and saves the result in a DataFrame, then printed to `.csv`
     """
     function_names = []
     parameter_numbers = []
-    for filename in os.listdir(results_directory):
-        file_path = os.path.join(results_directory, filename)
-        try:
-            with open(file_path, "r") as f:
-                file_lines = f.readlines()
-                for line in file_lines:
-                    if parameters_match[parameter] in line : 
-                        num = int(line.split(" ")[-1])
-                        function_names.append(filename.split(".")[0])
-                        if parameter == "tot_cycles" :
-                            parameter_numbers.append(int(num))
-                        else:
-                            parameter_numbers.append(int(num/100))
-        except FileNotFoundError:
-            print(f"Warning: file not found at {file_path}. Skipping.")
-        
-    df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+parameter : parameter_numbers})
-    df.to_csv(data_dir + benchmark_name+'_'+ parameter + '.csv')
+    if opt != '' :
+        for filename in os.listdir(results_directory):
+            if opt in filename : 
+                file_path = os.path.join(results_directory, filename)
+                try:
+                    with open(file_path, "r") as f:
+                        file_lines = f.readlines()
+                        for line in file_lines:
+                            if parameters_match[parameter] in line : 
+                                num = int(line.split(" ")[-1])
+                                function_names.append(filename.split(".")[0].split('_'+opt)[0])
+                                if parameter == "tot_cycles" :
+                                    parameter_numbers.append(int(num))
+                                else:
+                                    parameter_numbers.append(int(num/100))
+                except FileNotFoundError:
+                    print(f"Warning: file not found at {file_path}. Skipping.")
+    else :
+        for filename in os.listdir(results_directory):
+            file_path = os.path.join(results_directory, filename)
+            try:
+                with open(file_path, "r") as f:
+                    file_lines = f.readlines()
+                    for line in file_lines:
+                        if parameters_match[parameter] in line : 
+                            num = int(line.split(" ")[-1])
+                            function_names.append(filename.split(".")[0])
+                            if parameter == "tot_cycles" :
+                                parameter_numbers.append(int(num))
+                            else:
+                                parameter_numbers.append(int(num/100))
+            except FileNotFoundError:
+                print(f"Warning: file not found at {file_path}. Skipping.")
+    if opt != '':
+        df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+opt+"_"+parameter : parameter_numbers})
+        df.to_csv(data_dir + benchmark_name+"_"+opt+'_'+ parameter  + '.csv')
+    else:
+        df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+parameter : parameter_numbers})
+        df.to_csv(data_dir + benchmark_name + "_" + parameter + '.csv')
 
 def join_dataframes(dataframe_names, parameter) :
     """
     Joins multiple DataFrames on a common 'function_name' column.
     """
     for idx, name in enumerate(dataframe_names) : 
-        if 'lengths' in name:
-            df = pd.read_csv(data_dir + name +".csv", index_col=0, header=0)
-        else: 
-            df = pd.read_csv(data_dir + name +"_"+parameter +".csv", index_col=0, header=0)
+        df = pd.read_csv(data_dir + name +"_"+parameter +".csv", index_col=0, header=0)
         if idx == 0 : 
             complete_df = df 
         else: 
             complete_df = pd.merge(complete_df, df, on='function_name', how='inner')
+            print(complete_df)
+            
+    
     complete_df['instructions_number']= complete_df['function_name'].apply(lambda x: int(x.split('_')[0]))
     complete_df.to_csv(data_dir + parameter+".csv")
 
-def sorted_line_plot_all(parameter):
+def sorted_line_plot_all(parameter, opt):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
+    
+    if opt != '':
+        sorted_df = df.sort_values(by = ['LEANMLIR_' + parameter, 'LEANMLIR_opt_' + parameter, 
+                                        'LLVM_globalisel_' + opt + '_'+ parameter, 'LLVM_selectiondag_' + opt + '_'+ parameter])
+        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
+            color= light_green)
+        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
+        plt.plot(range(len(sorted_df)), sorted_df['LLVM_globalisel_'+ opt + '_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
+        plt.plot(range(len(sorted_df)), sorted_df['LLVM_selectiondag_'+ opt + '_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
+        
+        plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
+                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
+                                sorted_df['LLVM_globalisel_' + opt + '_'+ parameter].min(), 
+                                sorted_df['LLVM_selectiondag_' + opt + '_'+ parameter].min()]) - 1)
+        plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
+                                    sorted_df['LEANMLIR_opt_' + parameter].min(), 
+                                    sorted_df['LLVM_globalisel_' + opt + '_'+ parameter].min(), 
+                                    sorted_df['LLVM_selectiondag_' + opt + '_'+ parameter].min()]) + 1
+        
+        plt.ylim(1, int(plot_max * 1.5) + 1)
+        plt.yticks(range(1, int(plot_max * 1.5) + 1, int((int(plot_max * 1.5) + 5)/5)))
 
-    sorted_df = df.sort_values(by = ['LEANMLIR_' + parameter, 'LEANMLIR_opt_' + parameter, 
+    else:
+        sorted_df = df.sort_values(by = ['LEANMLIR_' + parameter, 'LEANMLIR_opt_' + parameter, 
                                         'LLVM_globalisel_' + parameter, 'LLVM_selectiondag_' + parameter])
 
-    plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
-        color= light_green)
-    plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
-    plt.plot(range(len(sorted_df)), sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
-    plt.plot(range(len(sorted_df)), sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
+        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
+            color= light_green)
+        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
+        plt.plot(range(len(sorted_df)), sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
+        plt.plot(range(len(sorted_df)), sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
+        plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
+                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
+                                sorted_df['LLVM_globalisel_' + parameter].min(), 
+                                sorted_df['LLVM_selectiondag_' + parameter].min()]) - 1)
+        plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
+                                    sorted_df['LEANMLIR_opt_' + parameter].min(), 
+                                    sorted_df['LLVM_globalisel_' + parameter].min(), 
+                                    sorted_df['LLVM_selectiondag_' + parameter].min()]) + 1
+        
+        plt.ylim(1, int(plot_max * 1.5) + 1)
+        plt.yticks(range(1, int(plot_max * 1.5) + 1, int((int(plot_max * 1.5) + 5)/5)))
 
     plt.xlabel('Program Index')
     plt.ylabel(parameter)
@@ -173,17 +233,7 @@ def sorted_line_plot_all(parameter):
     
     
     # plt.title(f'{parameter} Per Program')
-    plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
-                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
-                                sorted_df['LLVM_globalisel_' + parameter].min(), 
-                                sorted_df['LLVM_selectiondag_' + parameter].min()]) - 1)
-    plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
-                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
-                                sorted_df['LLVM_globalisel_' + parameter].min(), 
-                                sorted_df['LLVM_selectiondag_' + parameter].min()]) + 1
-    
-    plt.ylim(1, int(plot_max * 1.5) + 1)
-    plt.yticks(range(1, int(plot_max * 1.5) + 1, int((int(plot_max * 1.5) + 5)/5)))
+
     
     plt.legend(ncols = 2)
     plt.tight_layout()
@@ -382,16 +432,24 @@ def bar_plot(parameter, selector1, selector2):
 def clean_name(s):
     return ''.join([w.capitalize() for w in str(s).split('_')])
 
-def sorted_line_plot(parameter, selector1, selector2):
+def sorted_line_plot(parameter, selector1, selector2, opt):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
 
-    sorted_df = df.sort_values(by = [selector1 + '_' + parameter, selector2 +'_'+ parameter])
-    plt.figure(figsize=(12, 5))
-    
+    if opt != '':
+        sorted_df = df.sort_values(by = [selector1 + '_' + parameter , selector2 + '_'  + parameter])
+        plt.figure(figsize=(12, 5))
+        
 
-    plt.plot(range(len(sorted_df)), sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
-    plt.plot(range(len(sorted_df)), sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
+        plt.plot(range(len(sorted_df)), sorted_df[selector1 + '_' + parameter], label = selector_labels[selector1], color = light_green)
+        plt.plot(range(len(sorted_df)), sorted_df[selector2 + '_' + parameter], label = selector_labels[selector2], color = dark_green)
+    else: 
+        sorted_df = df.sort_values(by = [selector1 + '_' + parameter, selector2 +'_'+ parameter])
+        plt.figure(figsize=(12, 5))
+        
+
+        plt.plot(range(len(sorted_df)), sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
+        plt.plot(range(len(sorted_df)), sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
 
     plt.xlabel('Program Index')
     plt.ylabel(parameters_labels[parameter], rotation="horizontal", horizontalalignment="left", y=1)
@@ -452,18 +510,28 @@ def main():
         "-p",
         "--parameters",
         nargs="+",
-        choices=["tot_instructions", "tot_cycles", "tot_uops", "all"], 
+        choices=["tot_instructions", "tot_cycles", "tot_uops", "all"]
     )
 
     parser.add_argument(
         "-t",
         "--plot_type",
         nargs="+",
-        choices=["scatter", "sorted", "stacked", "overhead", "all"], 
+        choices=["scatter", "sorted", "stacked", "overhead", "all"]
     )
 
-
+    parser.add_argument(
+        "-llvm", "--llvm_opt", 
+        help="Optimization level for LLVM.",
+        nargs="+",
+        choices=["O3", "O2", "O1", "O0" "default"]
+    )
+    
     args = parser.parse_args()
+    
+    opts_to_evaluate = (
+        ["O3", "Os", "default"] if "all" in args.llvm_opt else args.llvm_opt
+    )
 
     params_to_evaluate = (
         ["tot_instructions", "tot_cycles", "tot_uops"] if "all" in args.parameters else args.parameters
@@ -478,31 +546,63 @@ def main():
     print(args)
 
     for parameter in params_to_evaluate : 
-        extract_data(LLVM_selectiondag_results_DIR_PATH, 'LLVM_selectiondag', parameter)
-        extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', parameter)
-        extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', parameter)
-        extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter)
-
-        join_dataframes(['LEANMLIR', 'LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag'], parameter)
+        for opt in opts_to_evaluate:
+            extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', parameter, opt)    
+            extract_data(LLVM_selectiondag_results_DIR_PATH, 'LLVM_selectiondag', parameter, opt)
+            
+        extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', parameter,'')
+        extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter,'')
         
-        if "scatter" in plots_to_produce or "all" in plots_to_produce :
-            scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-            scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-            scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-        if "sorted" in plots_to_produce or "all" in plots_to_produce :
-            sorted_line_plot_all(parameter)
-            sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-            sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-            sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-        if "overhead" in plots_to_produce or "all" in plots_to_produce :
-            overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-            overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-            overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-        if "stacked" in plots_to_produce or "all" in plots_to_produce :
-            bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
-            bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-            bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-                
+        to_join = ['LEANMLIR', 'LEANMLIR_opt']
+        for opt in opts_to_evaluate:
+            if opt != 'default':
+                to_join.append('LLVM_globalisel_'+opt)
+                to_join.append('LLVM_selectiondag_'+opt)
+            else:
+                to_join.append('LLVM_globalisel')
+                to_join.append('LLVM_selectiondag') 
+            
+        join_dataframes(to_join, parameter)
+        print(to_join)
+        
+        for opt in opts_to_evaluate:
+            if opt != 'default':
+                if "scatter" in plots_to_produce or "all" in plots_to_produce :
+                    scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
+                    scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
+                    scatter_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
+                if "sorted" in plots_to_produce or "all" in plots_to_produce :
+                    sorted_line_plot_all(parameter, opt)
+                    sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt, opt)
+                    sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt, opt)
+                    sorted_line_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt, opt)
+                if "overhead" in plots_to_produce or "all" in plots_to_produce :
+                    overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
+                    overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
+                    overhead_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
+                if "stacked" in plots_to_produce or "all" in plots_to_produce :
+                    bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
+                    bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
+                    bar_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
+            else:
+                if "scatter" in plots_to_produce or "all" in plots_to_produce :
+                    scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+                    scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+                    scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                if "sorted" in plots_to_produce or "all" in plots_to_produce :
+                    sorted_line_plot_all(parameter, '')
+                    sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+                    sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+                    sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                if "overhead" in plots_to_produce or "all" in plots_to_produce :
+                    overhead_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+                    overhead_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+                    overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                if "stacked" in plots_to_produce or "all" in plots_to_produce :
+                    bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+                    bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+                    bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                    
 
 
 if __name__ == "__main__":

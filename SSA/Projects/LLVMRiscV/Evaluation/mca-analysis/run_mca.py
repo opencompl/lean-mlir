@@ -78,12 +78,10 @@ def mca_analysis(input_file, output_file, log_file):
     """
     Run MCA performance analysis on the RISCV asm `input_file`.
     """
-    print(f"Removing unrealize casts from '{input_file}'.")
     cmd_base = (
         "llvm-mca -mtriple=riscv64 -mcpu=sifive-u74 -mattr=+m,+zba,+zbb,+zbs "
     )
     cmd = cmd_base + input_file + " > " + output_file
-    print(cmd)
     run_command(cmd, log_file)
     
 def run_tests():
@@ -103,7 +101,7 @@ def run_tests():
         mca_analysis(input_file, output_file, log_file)
         idx += 1
         percentage = ((float(idx) + float(1)) / float(len(os.listdir(XDSL_ASM_DIR)))) * 100
-        print(f"{percentage:.2f}%")
+        print(f"running mca analysis on lean-mlir asm: {percentage:.2f}%")
     
     idx = 0
     for filename in os.listdir(XDSL_opt_ASM_DIR):
@@ -114,7 +112,7 @@ def run_tests():
         mca_analysis(input_file, output_file, log_file)
         idx += 1
         percentage = ((float(idx) + float(1)) / float(len(os.listdir(XDSL_opt_ASM_DIR)))) * 100
-        print(f"{percentage:.2f}%") 
+        print(f"running mca analysis on lean-mlir asm (opt): {percentage:.2f}%") 
         
     idx = 0
     for filename in os.listdir(LLC_ASM_globalisel_DIR):
@@ -125,7 +123,7 @@ def run_tests():
         mca_analysis(input_file, output_file, log_file)
         idx += 1
         percentage = ((float(idx) + float(1)) / float(len(os.listdir(LLC_ASM_globalisel_DIR)))) * 100
-        print(f"{percentage:.2f}%")
+        print(f"running mca analysis on llc asm (globalISel): {percentage:.2f}%")
     
     idx = 0
     for filename in os.listdir(LLC_ASM_selectiondag_DIR):
@@ -136,7 +134,7 @@ def run_tests():
         mca_analysis(input_file, output_file, log_file)
         idx += 1
         percentage = ((float(idx) + float(1)) / float(len(os.listdir(LLC_ASM_selectiondag_DIR)))) * 100
-        print(f"{percentage:.2f}%")
+        print(f"running mca analysis on llc asm (selectionDAG): {percentage:.2f}%")
 
 def main():
     run_tests()
