@@ -4,7 +4,7 @@ import LeanMLIR.Framework.Print
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
     %3 = "llvm.icmp.eq"(%1, %2) : (i64, i64) -> (i1)
     "llvm.return"(%3) : (i1) -> ()
 }
@@ -15,7 +15,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
     %3 = "llvm.icmp.ne"(%1, %2) : (i64, i64) -> (i1)
     "llvm.return"(%3) : (i1) -> ()
 }
@@ -26,7 +26,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
     %3 = "llvm.icmp.eq"(%1, %2) : (i64, i64) -> (i1)
     "llvm.return"(%3) : (i1) -> ()
 }
@@ -37,7 +37,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
     %3 = "llvm.icmp.ne"(%1, %2) : (i64, i64) -> (i1)
     "llvm.return"(%3) : (i1) -> ()
 }
@@ -48,7 +48,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
     %3 = "llvm.icmp.eq"(%1, %2) : (i64, i64) -> (i1)
     "llvm.return"(%3) : (i1) -> ()
 }
@@ -59,7 +59,7 @@ info: {
 /--
 info: {
   ^bb0(%0 : i64, %1 : i64):
-    %2 = "llvm.const"(){value = 0 : i64} : () -> (i64)
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
     %3 = "llvm.icmp.ne"(%1, %2) : (i64, i64) -> (i1)
     "llvm.return"(%3) : (i1) -> ()
 }
