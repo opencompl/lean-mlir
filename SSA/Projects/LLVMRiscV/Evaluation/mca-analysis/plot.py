@@ -414,7 +414,7 @@ def bar_plot(parameter, selector1, selector2):
             perc = row[c]
             cmd = (
                 f"\\newcommand{{\\Perc"
-                f"{clean_name(selector1)}Vs{clean_name(selector2)}"
+                f"{clean_name(selector1.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}Vs{clean_name(selector2.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}"
                 f"{clean_name(parameter)}For{idx_str_clean}On{c.replace('<','lt').replace('>','gt').replace('0','zero').replace('1','one').replace('2','two').replace('3', 'three').replace('4', 'four').replace('5', 'five')}}}{{{perc:.1f}}}"
             )
             latex_lines.append(cmd)
@@ -468,7 +468,8 @@ def sorted_line_plot(parameter, selector1, selector2, opt):
 
     cmd_name = (
         f"\\newcommand{{\\AvgDiff"
-        f"{clean_name(selector1)}Vs{clean_name(selector2)}"
+        f"{clean_name(selector1.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five')
+        )}Vs{clean_name(selector2.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}"
         f"{clean_name(parameter)}}}{{{avg_diff:.2f}}}"
     )
     latex_file = os.path.join(plots_dir, "sorted_line_plot_averages.tex")
