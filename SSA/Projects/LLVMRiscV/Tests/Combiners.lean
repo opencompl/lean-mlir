@@ -16,6 +16,88 @@ info: {
 info: {
   ^bb0(%0 : i64, %1 : i64):
     %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.sub"(%1, %0)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner ZeroMinusAPlusB.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.sub"(%0, %1)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusZeroMinusB.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusA.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner BMinusAPlusA.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.sub"(%2, %1)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner AMinusBPlusCMinusA.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.sub"(%0, %2)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner AMinusBPlusBMinusC.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.add"(%0, %2)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    %4 = "llvm.sub"(%1, %2)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusAPlusC.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.add"(%2, %0)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    %4 = "llvm.sub"(%1, %2)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusCPlusA.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
     %3 = "llvm.icmp.eq"(%1, %2) : (i64, i64) -> (i1)
     "llvm.return"(%3) : (i1) -> ()
 }
