@@ -1190,6 +1190,7 @@ def redundant_binop_in_equality : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :
   ⟨_, redundant_binop_in_equality_XMinusYNeX⟩,
   ⟨_, redundant_binop_in_equality_XXorYEqX⟩,
   ⟨_, redundant_binop_in_equality_XXorYNeX⟩]
+
 /-! ### integer_reassoc_combines -/
 
 /-
