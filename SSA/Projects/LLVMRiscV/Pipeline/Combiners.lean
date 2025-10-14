@@ -1210,7 +1210,7 @@ def double_icmp_zero_and_combine : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec
 
 /-
 Test the rewrite:
-  Transform: (X == 0 & Y == 0) -> (X | Y) == 0
+  Transform: (X != 0 & Y != 0) -> (X | Y) != 0
 -/
 def double_icmp_zero_or_combine : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {

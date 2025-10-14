@@ -172,3 +172,29 @@ info: {
 -/
 #guard_msgs in
 #eval! Com.print (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner urem_pow2_to_mask_1024.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
+    %4 = "llvm.or"(%0, %1) : (i64, i64) -> (i64)
+    %5 = "llvm.icmp.eq"(%4, %3) : (i64, i64) -> (i1)
+    "llvm.return"(%5) : (i1) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelO0PreLegalizerCombiner double_icmp_zero_and_combine.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
+    %3 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
+    %4 = "llvm.or"(%0, %1) : (i64, i64) -> (i64)
+    %5 = "llvm.icmp.ne"(%4, %3) : (i64, i64) -> (i1)
+    "llvm.return"(%5) : (i1) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelO0PreLegalizerCombiner double_icmp_zero_or_combine.lhs)).val).val
