@@ -45,9 +45,16 @@ def getBoolAttr (attr : String) : Except TransformError Bool := do
 
 Throws an error if the attribute is not present, or if the value of the attribute
 has the wrong type.
+
+If `coeBool` is true, then an attribute of Boolean type is automatically coerced
+to a 1-bit (signless) integer, where `true` maps to `1` and `false` to `0`.
 -/
-def getIntAttr (attr : String) : Except TransformError (Int × MLIRType φ) := do
-  let .int val ty ← op.getAttr attr
+def getIntAttr (attr : String) (coeBool : Bool := true) : Except TransformError (Int × MLIRType φ) := do
+  let attrVal ← op.getAttr attr
+  if coeBool then if let .bool b := attrVal then
+    return (if b then 1 else 0, .int .Signless (.concrete 1))
+
+  let .int val ty := attrVal
     | .error <| .generic s!"Expected attribute `{attr}` to be of type Int, but found:\n\
         \t{attr}"
   return (val, ty)
