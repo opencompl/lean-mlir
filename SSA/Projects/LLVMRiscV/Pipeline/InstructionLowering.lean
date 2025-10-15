@@ -20,6 +20,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.zext
 import SSA.Projects.LLVMRiscV.Pipeline.const
 import SSA.Projects.LLVMRiscV.Pipeline.select
 import SSA.Projects.LLVMRiscV.Pipeline.pseudo
+import SSA.Projects.LLVMRiscV.Pipeline.freeze
 import SSA.Projects.LLVMRiscV.Pipeline.Combiners
 
 import LeanMLIR.Transforms.DCE
@@ -56,7 +57,8 @@ def rewritingPatterns0 :
   or_match,
   rem_match,
   sdiv_match, -- TODO: fix the casts
-  sub_match
+  sub_match,
+  freeze_match
   ]
 
 def rewritingPatterns1 :
