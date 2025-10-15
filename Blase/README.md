@@ -16,6 +16,8 @@ For stable releases, please change the `rev` to the desired version tag.
 
 #### Algorithms Improvements TODO
 
+- [ ] Write a tactic that takes a goal state with BVs and generalizes them to an arbitrary width. 
+      Call this `bv_abstract`.
 - [ ] Add evaluation from Sam Coward.
 - [ ] Add evaluation from Lean's bitvector suite.
 - [ ] Add right shift and division support by eliminating into left-shift and multiplication.

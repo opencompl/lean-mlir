@@ -413,7 +413,7 @@ def MetaLLVM.opName : (MetaLLVM φ).Op → String
   | .sdiv _ _   => "llvm.sdiv"
   | .udiv _ _   => "llvm.udiv"
   | .icmp ty _  => s!"llvm.icmp.{ty}"
-  | .const _ _  => "llvm.const"
+  | .const _ _  => "llvm.mlir.constant"
 
 def MetaLLVM.printAttributes : (MetaLLVM φ).Op → String
   | .const w v => s!"\{value = {v} : {w}}"
