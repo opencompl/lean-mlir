@@ -87,6 +87,7 @@ open InstCombine.LLVM SLLVMOp
 @[match_pattern] nonrec abbrev Op.neg (w : Nat) : SLLVM.Op := arith <| Op.neg w
 @[match_pattern] nonrec abbrev Op.not (w : Nat) : SLLVM.Op := arith <| Op.not w
 @[match_pattern] nonrec abbrev Op.copy (w : Nat) : SLLVM.Op := arith <| Op.copy w
+@[match_pattern] nonrec abbrev Op.freeze (w : Nat) : SLLVM.Op := arith <| Op.freeze w
 @[match_pattern] nonrec abbrev Op.sext (w w' : Nat) : SLLVM.Op := arith <| Op.sext w w'
 @[match_pattern] nonrec abbrev Op.zext (w w' : Nat) (flag : LLVM.NonNegFlag := { }) : SLLVM.Op := arith <| Op.zext w w' flag
 @[match_pattern] nonrec abbrev Op.trunc (w w' : Nat) (flags : LLVM.NoWrapFlags := { }) : SLLVM.Op := arith <| Op.trunc w w' flags
@@ -137,6 +138,7 @@ def_signature for SLLVM
   | Op.neg w         => (bitvec w) -> bitvec w
   | Op.not w         => (bitvec w) -> bitvec w
   | Op.copy w        => (bitvec w) -> bitvec w
+  | Op.freeze w      => (bitvec w) -> bitvec w
   | Op.sext w w'     => (bitvec w) -> bitvec w'
   | Op.zext w w' _flag   => (bitvec w) -> bitvec w'
   | Op.trunc w w' _flags => (bitvec w) -> bitvec w'
@@ -173,6 +175,7 @@ def_denote for SLLVM
   | Op.neg _w       => fun x => [LLVM.neg x]ₕ
   | Op.not _w       => fun x => [LLVM.not x]ₕ
   | Op.copy _w      => fun x => [x]ₕ
+  | Op.freeze _w    => fun x => [LLVM.freeze x]ₕ
   | Op.sext _w w'   => fun x => [LLVM.sext w' x]ₕ
   | Op.zext _w w' flag   => fun x => [LLVM.zext w' x flag]ₕ
   | Op.trunc _w w' flags => fun x => [LLVM.trunc w' x flags]ₕ

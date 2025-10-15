@@ -12,6 +12,7 @@ open Pretty
 
 syntax "llvm.return"  : MLIR.Pretty.uniform_op
 syntax "llvm.copy"    : MLIR.Pretty.uniform_op
+syntax "llvm.freeze"  : MLIR.Pretty.uniform_op
 syntax "llvm.neg"     : MLIR.Pretty.uniform_op
 syntax "llvm.not"     : MLIR.Pretty.uniform_op
 syntax "llvm.or"      : MLIR.Pretty.uniform_op
