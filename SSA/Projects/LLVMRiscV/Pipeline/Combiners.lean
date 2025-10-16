@@ -1004,7 +1004,7 @@ Test the rewrite:
   (G_UMULO x, 2) -> (G_UADDO x, x)
   (G_SMULO x, 2) -> (G_SADDO x, x)
 -/
-def mulo_by_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def mulo_by_2_unsigned_signed : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64):
       %c = llvm.mlir.constant (2) : i64
@@ -1017,8 +1017,37 @@ def mulo_by_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
       llvm.return %0 : i64
   }]
 
+def mulo_by_2_unsigned : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (2) : i64
+      %0 = llvm.mul %x, %c overflow<nuw> : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.add %x, %x overflow<nuw> : i64
+      llvm.return %0 : i64
+  }]
+
+def mulo_by_2_signed : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (2) : i64
+      %0 = llvm.mul %x, %c overflow<nsw> : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.add %x, %x overflow<nsw> : i64
+      llvm.return %0 : i64
+  }]
+
+
 def matchMulO: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  [⟨_, mulo_by_2⟩]
+  [⟨_, mulo_by_2_unsigned_signed⟩,
+  ⟨_, mulo_by_2_unsigned⟩,
+  ⟨_, mulo_by_2_signed⟩]
 
 /-! ### sub_add_reg -/
 
