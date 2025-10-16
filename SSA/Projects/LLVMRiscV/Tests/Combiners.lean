@@ -172,3 +172,33 @@ info: {
 -/
 #guard_msgs in
 #eval! Com.print (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner urem_pow2_to_mask_1024.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64):
+    %1 = "llvm.add"(%0, %0)<{overflowFlags = #llvm.overflow<nsw,nuw>}> : (i64, i64) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner mulo_by_2_unsigned_signed.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64):
+    %1 = "llvm.add"(%0, %0)<{overflowFlags = #llvm.overflow<nuw>}> : (i64, i64) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner mulo_by_2_unsigned.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64):
+    %1 = "llvm.add"(%0, %0)<{overflowFlags = #llvm.overflow<nsw>}> : (i64, i64) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner mulo_by_2_signed.lhs)).val).val
