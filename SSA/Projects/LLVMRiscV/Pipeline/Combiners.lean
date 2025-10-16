@@ -293,6 +293,432 @@ def right_identity_zero : List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
   ⟨_, right_identity_zero_rol⟩,
   ⟨_, right_identity_zero_ror ⟩]
 
+/-! ### hoist_logic_op_with_same_opcode_hands -/
+
+/-
+Test the rewrite:
+ fold (sext(X) & sext(Y)) -> sext(X & Y)
+-/
+def AndSextSext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.sext %x : i32 to i64
+      %1 = llvm.sext %y : i32 to i64
+      %2 = llvm.and %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.and %x, %y : i32
+      %1 = llvm.sext %0 : i32 to i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold (sext(X) | sext(Y)) -> sext(X | Y)
+-/
+def OrSextSext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.sext %x : i32 to i64
+      %1 = llvm.sext %y : i32 to i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.or %x, %y : i32
+      %1 = llvm.sext %0 : i32 to i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold (sext(X) ^ sext(Y)) -> sext(X ^ Y)
+-/
+def XorSextSext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.sext %x : i32 to i64
+      %1 = llvm.sext %y : i32 to i64
+      %2 = llvm.xor %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.xor %x, %y : i32
+      %1 = llvm.sext %0 : i32 to i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold (zext(X) & zext(Y)) -> zext(X & Y)
+-/
+def AndZextZext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.zext %x : i32 to i64
+      %1 = llvm.zext %y : i32 to i64
+      %2 = llvm.and %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.and %x, %y : i32
+      %1 = llvm.zext %0 : i32 to i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold (zext(X) | zext(Y)) -> zext(X | Y)
+-/
+def OrZextZext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.zext %x : i32 to i64
+      %1 = llvm.zext %y : i32 to i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.or %x, %y : i32
+      %1 = llvm.zext %0 : i32 to i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold (zext(X) ^ zext(Y)) -> zext(X ^ Y)
+-/
+def XorZextZext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.zext %x : i32 to i64
+      %1 = llvm.zext %y : i32 to i64
+      %2 = llvm.xor %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32, %y: i32):
+      %0 = llvm.xor %x, %y : i32
+      %1 = llvm.zext %0 : i32 to i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold (trunc(X) & trunc(Y)) -> trunc(X & Y)
+-/
+def AndTruncTrunc : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %y : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.and %x, %y : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+
+/-
+Test the rewrite:
+ fold (trunc(X) | trunc(Y)) -> trunc(X | Y)
+-/
+def OrTruncTrunc : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %y : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.or %x, %y : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+
+/-
+Test the rewrite:
+ fold (trunc(X) ^ trunc(Y)) -> trunc(X ^ Y)
+-/
+def XorTruncTrunc : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %y : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.xor %x, %y : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+
+/-
+Test the rewrite:
+ fold ((X << Z) & (Y << Z)) -> (X & Y) << Z
+-/
+def AndShlShl : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.shl %x, %z : i64
+      %1 = llvm.shl %y, %z : i64
+      %2 = llvm.and %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.and %x, %y : i64
+      %1 = llvm.shl %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X << Z) | (Y << Z)) -> (X | Y) << Z
+-/
+def OrShlShl : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.shl %x, %z : i64
+      %1 = llvm.shl %y, %z : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.or %x, %y : i64
+      %1 = llvm.shl %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X << Z) ^ (Y << Z)) -> (X ^ Y) << Z
+-/
+def XorShlShl : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.shl %x, %z : i64
+      %1 = llvm.shl %y, %z : i64
+      %2 = llvm.xor %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.xor %x, %y : i64
+      %1 = llvm.shl %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X >> Z) & (Y >> Z)) -> (X & Y) >> Z (logical shift)
+-/
+def AndLshrLshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.lshr %x, %z : i64
+      %1 = llvm.lshr %y, %z : i64
+      %2 = llvm.and %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.and %x, %y : i64
+      %1 = llvm.lshr %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X >> Z) | (Y >> Z)) -> (X | Y) >> Z (logical shift)
+-/
+def OrLshrLshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.lshr %x, %z : i64
+      %1 = llvm.lshr %y, %z : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.or %x, %y : i64
+      %1 = llvm.lshr %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X >> Z) ^ (Y >> Z)) -> (X ^ Y) >> Z (logical shift)
+-/
+def XorLshrLshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.lshr %x, %z : i64
+      %1 = llvm.lshr %y, %z : i64
+      %2 = llvm.xor %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.xor %x, %y : i64
+      %1 = llvm.lshr %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X >> Z) & (Y >> Z)) -> (X & Y) >> Z (arithmetic shift)
+-/
+def AndAshrAshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.ashr %x, %z : i64
+      %1 = llvm.ashr %y, %z : i64
+      %2 = llvm.and %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.and %x, %y : i64
+      %1 = llvm.ashr %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X >> Z) | (Y >> Z)) -> (X | Y) >> Z (arithmetic shift)
+-/
+def OrAshrAshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.ashr %x, %z : i64
+      %1 = llvm.ashr %y, %z : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.or %x, %y : i64
+      %1 = llvm.ashr %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X >> Z) ^ (Y >> Z)) -> (X ^ Y) >> Z (arithmetic shift)
+-/
+def XorAshrAshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.ashr %x, %z : i64
+      %1 = llvm.ashr %y, %z : i64
+      %2 = llvm.xor %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.xor %x, %y : i64
+      %1 = llvm.ashr %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X & Z) & (Y & Z)) -> (X & Y) & Z
+-/
+def AndAndAnd : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.and %x, %z : i64
+      %1 = llvm.and %y, %z : i64
+      %2 = llvm.and %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.and %x, %y : i64
+      %1 = llvm.and %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X & Z) | (Y & Z)) -> (X | Y) & Z
+-/
+def OrAndAnd : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.and %x, %z : i64
+      %1 = llvm.and %y, %z : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.or %x, %y : i64
+      %1 = llvm.and %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+ fold ((X & Z) ^ (Y & Z)) -> (X ^ Y) & Z
+-/
+def XorAndAnd : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.and %x, %z : i64
+      %1 = llvm.and %y, %z : i64
+      %2 = llvm.xor %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64, %z: i64):
+      %0 = llvm.xor %x, %y : i64
+      %1 = llvm.and %0, %z : i64
+      llvm.return %1 : i64
+  }]
+
+def hoist_logic_op_with_same_opcode_hands_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) :=
+  [⟨_, AndTruncTrunc⟩,
+  ⟨_, OrTruncTrunc⟩,
+  ⟨_, XorTruncTrunc⟩]
+
+def hoist_logic_op_with_same_opcode_hands_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, AndSextSext⟩,
+  ⟨_, OrSextSext⟩,
+  ⟨_, XorSextSext⟩,
+  ⟨_, AndZextZext⟩,
+  ⟨_, OrZextZext⟩,
+  ⟨_, XorZextZext⟩,
+  ⟨_, AndShlShl⟩,
+  ⟨_, OrShlShl⟩,
+  ⟨_, XorShlShl⟩,
+  ⟨_, AndLshrLshr⟩,
+  ⟨_, OrLshrLshr⟩,
+  ⟨_, XorLshrLshr⟩,
+  ⟨_, AndAshrAshr⟩,
+  ⟨_, OrAshrAshr⟩,
+  ⟨_, XorAshrAshr⟩,
+  ⟨_, AndAndAnd⟩,
+  ⟨_, OrAndAnd⟩,
+  ⟨_, XorAndAnd⟩]
+
 /-- ### binop_same_val
   (x op x) → x
 -/
@@ -1576,6 +2002,7 @@ def PostLegalizerCombiner_RISCV: List (Σ Γ,RISCVPeepholeRewrite  Γ) :=
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
+  hoist_logic_op_with_same_opcode_hands_64 ++
   sub_add_reg ++
   integer_reassoc_combines ++
   sub_to_add ++
@@ -1588,6 +2015,8 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32  Γ) :=
   LLVMIR_identity_combines_32 ++ LLVMIR_cast_combines_32
+  hoist_logic_op_with_same_opcode_hands_32 ++
+  LLVMIR_identity_combines_32
 
 /-- We group all the rewrites that form the pre-legalization optimizations in GlobalISel-/
 def GLobalISelO0PreLegalizerCombiner :

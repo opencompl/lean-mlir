@@ -369,3 +369,234 @@ info: {
 -/
 #guard_msgs in
 #eval! Com.print (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner urem_pow2_to_mask_1024.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i32, %1 : i32):
+    %2 = "llvm.and"(%0, %1) : (i32, i32) -> (i32)
+    %3 = "llvm.sext"(%2) : (i32) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner AndSextSext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32, %1 : i32):
+    %2 = "llvm.or"(%0, %1) : (i32, i32) -> (i32)
+    %3 = "llvm.sext"(%2) : (i32) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner OrSextSext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32, %1 : i32):
+    %2 = "llvm.xor"(%0, %1) : (i32, i32) -> (i32)
+    %3 = "llvm.sext"(%2) : (i32) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner XorSextSext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32, %1 : i32):
+    %2 = "llvm.and"(%0, %1) : (i32, i32) -> (i32)
+    %3 = "llvm.zext"(%2) : (i32) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner AndZextZext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32, %1 : i32):
+    %2 = "llvm.or"(%0, %1) : (i32, i32) -> (i32)
+    %3 = "llvm.zext"(%2) : (i32) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner OrZextZext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32, %1 : i32):
+    %2 = "llvm.xor"(%0, %1) : (i32, i32) -> (i32)
+    %3 = "llvm.zext"(%2) : (i32) -> (i64)
+    "llvm.return"(%3) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner XorZextZext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.and"(%0, %1) : (i64, i64) -> (i64)
+    %3 = "llvm.trunc"(%2) : (i64) -> (i32)
+    "llvm.return"(%3) : (i32) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner AndTruncTrunc.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.or"(%0, %1) : (i64, i64) -> (i64)
+    %3 = "llvm.trunc"(%2) : (i64) -> (i32)
+    "llvm.return"(%3) : (i32) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner OrTruncTrunc.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "llvm.xor"(%0, %1) : (i64, i64) -> (i64)
+    %3 = "llvm.trunc"(%2) : (i64) -> (i32)
+    "llvm.return"(%3) : (i32) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner XorTruncTrunc.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.and"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.shl"(%3, %2)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner AndShlShl.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.or"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.shl"(%3, %2)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner OrShlShl.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.xor"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.shl"(%3, %2)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner XorShlShl.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.and"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.lshr"(%3, %2) : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner AndLshrLshr.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.or"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.lshr"(%3, %2) : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner OrLshrLshr.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.xor"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.lshr"(%3, %2) : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner XorLshrLshr.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.and"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.ashr"(%3, %2) : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner AndAshrAshr.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.or"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.ashr"(%3, %2) : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner OrAshrAshr.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.xor"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.ashr"(%3, %2) : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner XorAshrAshr.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.and"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.and"(%3, %2) : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner AndAndAnd.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.or"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.and"(%3, %2) : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner OrAndAnd.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.xor"(%0, %1) : (i64, i64) -> (i64)
+    %4 = "llvm.and"(%3, %2) : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner XorAndAnd.lhs)).val).val
