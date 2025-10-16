@@ -734,6 +734,18 @@ def mkTermFSM (wcard tcard bcard pcard : Nat) (t : Nondep.Term) :
             (composeUnaryAux FSM.not aFsm.toFsmZext),
       width := wFsm
     }
+  | .boolUlt w a b =>  
+    let fsmA := mkTermFSM wcard tcard bcard pcard a
+    let fsmB := mkTermFSM wcard tcard bcard pcard b
+    let fsmW := mkWidthFSM wcard tcard bcard pcard w
+    { toFsmZext :=
+      -- upto 'w', don't make a decision, then
+      -- spit out what fsmTermUlt believes.
+      -- TODO: try to replace with a 'latchImmediate',
+      -- since that should be a much more long-term solution.
+      fsmW.toFsm ||| (fsmTermUlt fsmA fsmB),
+      width := fsmW
+    }
   | .boolVar v =>
     -- we cannot make a variable that allows all possible
     -- bitstreams, we should only allow '00000000' or '11111111'.
@@ -1567,6 +1579,10 @@ def mkPredicateFSMAux (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
       -- TODO: rename this Aux' business, it's ugly.
       let fsmEq := composeBinaryAux' FSM.nxor (fsmA.toFsmZext) (fsmB.toFsmZext)
       { toFsm := composeUnaryAux FSM.scanAnd (fsmEq) }
+    | .ne =>
+      -- TODO: rename this Aux' business, it's ugly.
+      let fsmEq := composeBinaryAux' FSM.xor (fsmA.toFsmZext) (fsmB.toFsmZext)
+      { toFsm := composeUnaryAux FSM.scanAnd (fsmEq) }
 
 theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
   exact Function.ne_iff.mp h
@@ -2000,23 +2016,24 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
         simp at this
         simp [this]
 
-  case boolBinRel wcard' tcard' bcard' tctx' pcard'  k a b =>
+  case boolBinRel wcard' tcard' bcard' tctx' pcard' k a b =>
     constructor
     intros wenv benv tenv penv fsmEnv htenv hpenv
     have ha := IsGoodTermBoolFSM_mkTermFSM wcard' tcard' bcard' pcard' a
     have hb := IsGoodTermBoolFSM_mkTermFSM wcard' tcard' bcard' pcard' b
-    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-    rw [ha.heq (benv := benv) (tenv := tenv) (henv := htenv)]
-    rw [hb.heq (benv := benv) (tenv := tenv) (henv := htenv)]
-    simp [Predicate.toProp]
-    rw [BitStream.ext_iff]
-    simp [BitStream.scanAnd_eq_decide] -- TODO: mark this a simp lemma.
-    constructor
-    · intros hp
-      simp [hp]
-    · intros hp
-      specialize hp 0 0 (by decide)
-      exact hp
+    rcases k <;>
+    · simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      rw [ha.heq (benv := benv) (tenv := tenv) (henv := htenv)]
+      rw [hb.heq (benv := benv) (tenv := tenv) (henv := htenv)]
+      simp [Predicate.toProp]
+      rw [BitStream.ext_iff]
+      simp [BitStream.scanAnd_eq_decide] -- TODO: mark this a simp lemma.
+      constructor
+      · intros hp
+        simp [hp]
+      · intros hp
+        specialize hp 0 0 (by decide)
+        exact hp
 
 /-- Negate the FSM so we can decide if zeroes. -/
 def mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
