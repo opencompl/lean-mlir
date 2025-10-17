@@ -978,6 +978,7 @@ def ZBA_RTYPE_pure64_RISCV_SH3ADD (rs2_val : BitVec 64) (rs1_val : BitVec 64) : 
 def ZBA_pure64_RISCV_SLLIUW (shamt : BitVec 6) (rs1_val : BitVec 64) : BitVec 64 :=
   (BitVec.setWidth 64 (BitVec.extractLsb 31 0 rs1_val)) <<< shamt
 
+@[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_MIN_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.extractLsb' 0 64 (if BitVec.sle rs1_val rs2_val then rs1_val else rs2_val)
 
@@ -987,6 +988,7 @@ theorem ZBB_RTYPE_pure_RISCV_MIN_eq_ZBB_RTYPE_pure_RISCV_MIN_bv (rs2_val : BitVe
   simp only [min_def, sle_iff_toInt_le]
   split_ifs <;> simp [BitVec.ofInt_toInt_eq_signExtend, setWidth_signExtend_eq_self (w := 64) (w' := 65) (by omega)]
 
+@[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_MINU_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.extractLsb' 0 64 (if BitVec.ule rs1_val rs2_val then rs1_val else rs2_val)
 
@@ -997,6 +999,7 @@ theorem ZBB_RTYPE_pure_RISCV_MINU_eq_ZBB_RTYPE_pure_RISCV_MINU_bv (rs2_val : Bit
   norm_cast
   split_ifs <;> simp
 
+@[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_MAXU_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.extractLsb' 0 64 (if BitVec.ule rs1_val rs2_val then rs2_val else rs1_val)
 
@@ -1007,6 +1010,7 @@ theorem ZBB_RTYPE_pure_RISCV_MAXU_eq_ZBB_RTYPE_pure_RISCV_MAXU_bv (rs2_val : Bit
   norm_cast
   split_ifs <;> simp
 
+@[simp_riscv]
 def ZBB_RTYPE_pure_RISCV_MAX_bv (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.extractLsb' 0 64 (if BitVec.sle rs1_val rs2_val then rs2_val else rs1_val)
 

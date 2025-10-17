@@ -1143,7 +1143,6 @@ def simplify_neg_minmax : RISCVPeepholeRewrite [Ty.riscv (.bv) ] where
       %1 = max %x, %0 : !riscv.reg
       ret %1 : !riscv.reg
   }]
-  correct := by sorry
 
 def simplify_neg_maxmin : RISCVPeepholeRewrite [Ty.riscv (.bv) ] where
   lhs := [LV| {
@@ -1159,7 +1158,6 @@ def simplify_neg_maxmin : RISCVPeepholeRewrite [Ty.riscv (.bv) ] where
       %1 = min %x, %0 : !riscv.reg
       ret %1 : !riscv.reg
   }]
-  correct := by sorry
 
 def simplify_neg : List (Σ Γ, RISCVPeepholeRewrite Γ) :=
   [⟨_, simplify_neg_minmax⟩,
