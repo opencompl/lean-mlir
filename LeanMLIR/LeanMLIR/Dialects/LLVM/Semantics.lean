@@ -635,7 +635,7 @@ def sext {w: Nat} (w': Nat) (x: IntW w) : IntW w' := do
 @[simp_llvm_option]
 def freeze (x: IntW w) : IntW w := do
   match x with
-  | poison => value (default)
+  | poison => value (0)
   | value a => value (a)
 
 end LLVM
