@@ -2014,7 +2014,8 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32  Γ) :=
-  LLVMIR_identity_combines_32 ++ LLVMIR_cast_combines_32
+  LLVMIR_identity_combines_32 ++
+  LLVMIR_cast_combines_32 ++
   hoist_logic_op_with_same_opcode_hands_32 ++
   LLVMIR_identity_combines_32
 
