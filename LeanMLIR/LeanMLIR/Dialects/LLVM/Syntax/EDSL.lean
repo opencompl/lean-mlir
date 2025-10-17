@@ -129,12 +129,13 @@ def mkExpr (Γ : Ctxt (MetaLLVM φ).Ty) (opStx : MLIR.AST.Op φ) :
       let ⟨n, ty⟩ ← opStx.getIntAttr "predicate"
       mkExprOf <| icmp (← parseIcmpPredicate n) (← binW)
     -- Unary Operations
-    | "llvm.not"   => mkExprOf <| .not (← unW)
-    | "llvm.neg"   => mkExprOf <| neg (← unW)
-    | "llvm.copy"  => mkExprOf <| copy (← unW)
-    | "llvm.zext"  => mkExprOf <| zext (← unW) (← getOutputWidth opStx "zext") ⟨ opStx.hasAttr "nonNeg" ⟩
-    | "llvm.sext"  => mkExprOf <| sext (← unW) (← getOutputWidth opStx "sext")
-    | "llvm.trunc" => mkExprOf <| trunc (← unW) (← getOutputWidth opStx "trunc") (← parseOverflowFlags opStx)
+    | "llvm.not"    => mkExprOf <| .not (← unW)
+    | "llvm.neg"    => mkExprOf <| neg (← unW)
+    | "llvm.copy"   => mkExprOf <| copy (← unW)
+    | "llvm.freeze" => mkExprOf <| freeze (← unW)
+    | "llvm.zext"   => mkExprOf <| zext (← unW) (← getOutputWidth opStx "zext") ⟨ opStx.hasAttr "nonNeg" ⟩
+    | "llvm.sext"   => mkExprOf <| sext (← unW) (← getOutputWidth opStx "sext")
+    | "llvm.trunc"  => mkExprOf <| trunc (← unW) (← getOutputWidth opStx "trunc") (← parseOverflowFlags opStx)
     -- Constant
     | "llvm.mlir.constant" =>
       let ⟨val, ty⟩ ← opStx.getIntAttr "value"
@@ -188,6 +189,7 @@ def MetaLLVM.instantiate (vals : Vector Expr φ) : DialectMetaMorphism (MetaLLVM
         | .neg => q(.neg)
         | .not => q(.not)
         | .copy => q(.copy)
+        | .freeze => q(.freeze)
         | .trunc w' flags => q(.trunc $(mapWidth w') $flags)
         | .zext w' nneg => q(.zext $(mapWidth w') $nneg)
         | .sext w' => q(.sext $(mapWidth w'))

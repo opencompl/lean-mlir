@@ -44,6 +44,7 @@ inductive MOp.UnaryOp (φ : Nat) : Type
   | neg
   | not
   | copy
+  | freeze
   | trunc (w' : Width φ) (noWrapFlags : NoWrapFlags := {nsw := false, nuw := false} )
   | zext  (w' : Width φ) (nneg : NonNegFlag := {nneg := false} )
   | sext  (w' : Width φ)
@@ -181,6 +182,7 @@ namespace MOp
 @[match_pattern] def neg    (w : Width φ) : MOp φ := .unary w .neg
 @[match_pattern] def not    (w : Width φ) : MOp φ := .unary w .not
 @[match_pattern] def copy   (w : Width φ) : MOp φ := .unary w .copy
+@[match_pattern] def freeze     (w : Width φ) : MOp φ := .unary w .freeze
 @[match_pattern] def sext   (w w' : Width φ) : MOp φ := .unary w (.sext w')
 
 /- This definition uses a nneg flag -/
@@ -238,6 +240,7 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
     (zext   : ∀ {φ NonNegFlag} {w w' : Width φ}, motive (zext  w w' NonNegFlag))
     (sext   : ∀ {φ} {w w' : Width φ},            motive (sext  w w'))
     (copy   : ∀ {φ} {w : Width φ},               motive (copy w))
+    (freeze : ∀ {φ} {w : Width φ},               motive (freeze w))
     (and    : ∀ {φ} {w : Width φ},               motive (and  w))
     (or     : ∀ {φ DisjointFlag} {w : Width φ},  motive (or w DisjointFlag))
     (xor    : ∀ {φ} {w : Width φ},               motive (xor  w))
@@ -261,6 +264,7 @@ def deepCasesOn {motive : ∀ {φ}, MOp φ → Sort*}
   | _, .zext _ _ _ => zext
   | _, .sext _ _   => sext
   | _, .copy _     => copy
+  | _, .freeze _   => freeze
   | _, .and _      => and
   | _, .or _ _     => or
   | _, .xor _      => xor
@@ -297,6 +301,7 @@ namespace LLVM.Op
 @[match_pattern] abbrev select : Nat → LLVM.Op := MOp.select ∘ .concrete
 @[match_pattern] abbrev neg    : Nat → LLVM.Op := MOp.neg    ∘ .concrete
 @[match_pattern] abbrev copy   : Nat → LLVM.Op := MOp.copy   ∘ .concrete
+@[match_pattern] abbrev freeze : Nat → LLVM.Op := MOp.freeze  ∘ .concrete
 
 @[match_pattern] abbrev icmp (c : IntPred)   : Nat → LLVM.Op  := MOp.icmp c ∘ .concrete
 @[match_pattern] abbrev const (w : Nat) (val : ℤ) : LLVM.Op        := MOp.const (.concrete w) val
@@ -362,6 +367,7 @@ instance : ToString (MOp φ) where
   | .sub _ _    => "sub"
   | .neg _      => "neg"
   | .copy _     => "copy"
+  | .freeze _   => "freeze"
   | .trunc _ _ _  => "trunc"
   | .zext _ _ _ => "zext"
   | .sext _ _   => "sext"
@@ -407,6 +413,7 @@ def MetaLLVM.opName : (MetaLLVM φ).Op → String
   | .sub _ _    => "llvm.sub"
   | .neg _      => "llvm.neg"
   | .copy _     => "llvm.copy"
+  | .freeze _   => "llvm.freeze"
   | .trunc ..   => "llvm.trunc"
   | .zext ..    => "llvm.zext"
   | .sext _ _   => "llvm.sext"
@@ -517,6 +524,7 @@ def Op.denote (o : LLVM.Op) (op : HVector TyDenote.toType (DialectSignature.sig 
   match o with
   | LLVM.Op.const _ val    => const? _ val
   | LLVM.Op.copy _         =>               (op.getN 0 (by simp [DialectSignature.sig, signature]))
+  | LLVM.Op.freeze _       => LLVM.freeze   (op.getN 0 (by simp [DialectSignature.sig, signature]))
   | LLVM.Op.not _          => LLVM.not      (op.getN 0 (by simp [DialectSignature.sig, signature]))
   | LLVM.Op.neg _          => LLVM.neg      (op.getN 0 (by simp [DialectSignature.sig, signature]))
   | LLVM.Op.trunc w w'    flags => LLVM.trunc w' (op.getN 0 (by simp [DialectSignature.sig, signature])) flags

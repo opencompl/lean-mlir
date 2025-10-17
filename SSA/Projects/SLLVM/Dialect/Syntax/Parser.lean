@@ -117,12 +117,13 @@ instance : DialectParse SLLVM 0 where
     | "llvm.icmp.slt" => mkExprOf <| Op.icmp .slt (← binW)
     | "llvm.icmp.sle" => mkExprOf <| Op.icmp .sle (← binW)
     -- Unary Operations
-    | "llvm.not"   => mkExprOf <| Op.not (← unW)
-    | "llvm.neg"   => mkExprOf <| Op.neg (← unW)
-    | "llvm.copy"  => mkExprOf <| Op.copy (← unW)
-    | "llvm.zext"  => mkExprOf <| Op.zext (← unW) (← getOutputWidth) ⟨ opStx.hasAttr "nonNeg" ⟩
-    | "llvm.sext"  => mkExprOf <| Op.sext (← unW) (← getOutputWidth)
-    | "llvm.trunc" => mkExprOf <| Op.trunc (← unW) (← getOutputWidth) (← parseOverflowFlags opStx)
+    | "llvm.not"    => mkExprOf <| Op.not (← unW)
+    | "llvm.neg"    => mkExprOf <| Op.neg (← unW)
+    | "llvm.copy"   => mkExprOf <| Op.copy (← unW)
+    | "llvm.freeze" => mkExprOf <| Op.freeze (← unW)
+    | "llvm.zext"   => mkExprOf <| Op.zext (← unW) (← getOutputWidth) ⟨ opStx.hasAttr "nonNeg" ⟩
+    | "llvm.sext"   => mkExprOf <| Op.sext (← unW) (← getOutputWidth)
+    | "llvm.trunc"  => mkExprOf <| Op.trunc (← unW) (← getOutputWidth) (← parseOverflowFlags opStx)
     -- Constant
     | "llvm.mlir.constant" => do
       let ⟨val, ty⟩ ← opStx.getIntAttr "value"
