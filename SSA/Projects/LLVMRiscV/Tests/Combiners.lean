@@ -566,7 +566,7 @@ info: {
 
 /--
 info: {
-^bb0(%0 : i64):
+  ^bb0(%0 : i64):
     %1 = "llvm.add"(%0, %0)<{overflowFlags = #llvm.overflow<nsw,nuw>}> : (i64, i64) -> (i64)
     "llvm.return"(%1) : (i64) -> ()
 }
