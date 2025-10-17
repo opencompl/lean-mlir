@@ -42,7 +42,7 @@ instance [instFinEnumI : FinEnum ι] : FinEnum (InputVar ι npast) where
 
       ⟨finInput.val * instFinEnumFinNpast.card + finPast.val, by
         apply Nat.mul_lt_mul_add
-        · sorry
+        · grind
         · simp only [FinEnum.card_fin]
           have := finPast.isLt
           simpa using this
