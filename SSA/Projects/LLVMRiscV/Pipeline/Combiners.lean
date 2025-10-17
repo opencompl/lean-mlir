@@ -87,37 +87,6 @@ def sub_to_add : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
   ⟨_, sub_to_add_intMin⟩,
   ⟨_, sub_to_add_intMax⟩]
 
-/-- ### redundant_and
-  (x & y) → x
--/
-def redundant_and_single : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %0 = llvm.and %x, %x : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      llvm.return %x : i64
-  }]
-
-def redundant_and_double : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %0 = llvm.mlir.constant 0 : i64
-      %y = llvm.add %x, %0 : i64
-      %1 = llvm.and %x, %y : i64
-      llvm.return %1 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      llvm.return %x : i64
-  }]
-
-def redundant_and : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
-  [⟨_, redundant_and_single⟩,
-  ⟨_, redundant_and_double⟩]
-
 /-- ### select_same_val
   (cond ? x : x) → x
 -/
@@ -1930,7 +1899,6 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
   sub_add_reg ++
   integer_reassoc_combines ++
   sub_to_add ++
-  redundant_and ++
   select_same_val ++
   xor_of_and_with_same_reg_list ++
   LLVMIR_identity_combines_64
