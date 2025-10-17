@@ -1327,6 +1327,77 @@ def mul_by_neg_one_const : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] w
 def mul_by_neg_one : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [⟨_, mul_by_neg_one_const⟩]
 
+/-! ### select_of_zext -/
+
+/-
+Test the rewrite:
+ fold zext(select(cond, true_val, false_val)) -> select(cond, zext(true_val), zext(false_val))
+-/
+def select_of_zext_rw : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%cond: i1, %true_val: i32, %false_val: i32):
+      %0 = llvm.select %cond, %true_val, %false_val : i32
+      %1 = llvm.zext %0 : i32 to i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%cond: i1, %true_val: i32, %false_val: i32):
+      %0 = llvm.zext %true_val : i32 to i64
+      %1 = llvm.zext %false_val : i32 to i64
+      %2 = llvm.select %cond, %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def select_of_zext : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, select_of_zext_rw⟩]
+
+/-! ### select_of_anyext -/
+
+/-
+Test the rewrite:
+ fold sext(select(cond, true_val, false_val)) -> select(cond, sext(true_val), sext(false_val))
+-/
+def select_of_anyext_rw : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%cond: i1, %true_val: i32, %false_val: i32):
+      %0 = llvm.select %cond, %true_val, %false_val : i32
+      %1 = llvm.sext %0 : i32 to i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%cond: i1, %true_val: i32, %false_val: i32):
+      %0 = llvm.sext %true_val : i32 to i64
+      %1 = llvm.sext %false_val : i32 to i64
+      %2 = llvm.select %cond, %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def select_of_anyext : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, select_of_anyext_rw⟩]
+
+/-! ### select_of_truncate -/
+
+/-
+Test the rewrite:
+ fold trunc(select(cond, true_val, false_val)) -> select(cond, trunc(true_val), trunc(false_val))
+-/
+def select_of_truncate_rw : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%cond: i1, %true_val: i64, %false_val: i64):
+      %0 = llvm.select %cond, %true_val, %false_val : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%cond: i1, %true_val: i64, %false_val: i64):
+      %0 = llvm.trunc %true_val : i64 to i32
+      %1 = llvm.trunc %false_val : i64 to i32
+      %2 = llvm.select %cond, %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def select_of_truncate : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) :=
+  [⟨_, select_of_truncate_rw⟩]
 
 /-! ### xor_of_and_with_same_reg -/
 
@@ -1918,6 +1989,11 @@ def LLVMIR_identity_combines_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) 
 
 def LLVMIR_identity_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) := anyext_trunc_fold
 
+def LLVMIR_cast_combines_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  select_of_zext ++ select_of_anyext
+
+def LLVMIR_cast_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) := select_of_truncate
+
 /-- Post-legalization combine pass for RISCV -/
 def PostLegalizerCombiner_RISCV: List (Σ Γ,RISCVPeepholeRewrite  Γ) :=
     RISCV_identity_combines ++
@@ -1932,11 +2008,14 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
   sub_to_add ++
   redundant_and ++
   select_same_val ++
+  LLVMIR_cast_combines_64 ++
   xor_of_and_with_same_reg_list ++
   LLVMIR_identity_combines_64
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32  Γ) :=
+  LLVMIR_identity_combines_32 ++
+  LLVMIR_cast_combines_32 ++
   hoist_logic_op_with_same_opcode_hands_32 ++
   LLVMIR_identity_combines_32
 

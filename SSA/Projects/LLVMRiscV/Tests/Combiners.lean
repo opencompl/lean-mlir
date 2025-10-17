@@ -3,6 +3,43 @@ import LeanMLIR.Framework.Print
 
 /--
 info: {
+  ^bb0(%0 : i1, %1 : i32, %2 : i32):
+    %3 = "llvm.sext"(%1) : (i32) -> (i64)
+    %4 = "llvm.sext"(%2) : (i32) -> (i64)
+    %5 = "llvm.select"(%0, %3, %4) : (i1, i64, i64) -> (i64)
+    "llvm.return"(%5) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_of_anyext_rw.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i1, %1 : i32, %2 : i32):
+    %3 = "llvm.zext"(%1) : (i32) -> (i64)
+    %4 = "llvm.zext"(%2) : (i32) -> (i64)
+    %5 = "llvm.select"(%0, %3, %4) : (i1, i64, i64) -> (i64)
+    "llvm.return"(%5) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_of_zext_rw.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i1, %1 : i64, %2 : i64):
+    %3 = "llvm.trunc"(%1) : (i64) -> (i32)
+    %4 = "llvm.trunc"(%2) : (i64) -> (i32)
+    %5 = "llvm.select"(%0, %3, %4) : (i1, i32, i32) -> (i32)
+    "llvm.return"(%5) : (i32) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_of_truncate_rw.lhs)).val).val
+
+
+/--
+info: {
   ^bb0(%0 : i64, %1 : i64):
     %2 = "llvm.not"(%0) : (i64) -> (i64)
     %3 = "llvm.and"(%2, %1) : (i64, i64) -> (i64)
