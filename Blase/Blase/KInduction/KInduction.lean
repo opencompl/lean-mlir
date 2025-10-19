@@ -771,25 +771,29 @@ theorem IsLawful_mkSucc_of_IsLawful {arity : Type _}
     simp [Circuit.eval_map]
     intros env
     constructor
-    · intros h i j hij
+    · intros h i j hij hjn
       simp [mkStateUniqueCircuitN_eq_false_iff] at h
       simp [hPrev.hCStatesUniqueCirc] at h
       obtain ⟨h₁, h₂⟩ := h
       by_cases hj : j ≤ n
-      · apply h₂ i j (by omega)
-      · have : j = n + 1 := by omega
+      · grind
+      · have : j = n + 1 := by
+          omega
         subst this
-        apply h₁ i (by omega)
+        grind
     · intros h
       constructor
       · rw [mkStateUniqueCircuitN_eq_false_iff]
         intros i hi
-        apply h (j := n + 1) (hij := by omega)
+        apply h (j := n + 1)
+        omega
+        omega
       · simp [hPrev.hCStatesUniqueCirc]
-        intros i j hij
+        intros i j hij jn
         simp at h ⊢
-        apply h i j (by omega)
-
+        apply h i j
+        omega
+        omega
 
 /--
 Construct the induction circuits for a given FSM and depth.

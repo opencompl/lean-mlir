@@ -37,6 +37,7 @@ theorem Array.mem_take_iff_getElem? {a : Array α} {n} :
   · rintro ⟨i, hm, heq⟩
     exists i, (by omega)
     rw [getElem?_eq_getElem, heq]
+    grind
   · rintro ⟨i, hm, heq⟩
     obtain ⟨hm', heq⟩ := Array.getElem?_eq_some_iff.mp heq
     exists i, (by omega)
@@ -139,11 +140,6 @@ theorem Std.HashSet.mem_union [BEq α] [Hashable α] [LawfulBEq α] {m₁ m₂ :
 theorem Std.HashSet.isEmpty_union_iff_isEmpty [BEq α] [Hashable α] [LawfulBEq α] {m₁ m₂ : HashSet α} :
     (m₁.union m₂).isEmpty ↔ m₁.isEmpty ∧ m₂.isEmpty := by
   simp only [isEmpty_iff_forall_not_mem, mem_union, not_or, forall_and]
-
-@[simp]
-theorem Std.HashMap.mem_keysArray [BEq α] [Hashable α] [LawfulBEq α] [LawfulHashable α] {m : HashMap α β} {k : α} :
-    k ∈ m.keysArray ↔ k ∈ m := by
-  apply hashMap_missing
 
 -- TODO: upstream
 @[simp]
