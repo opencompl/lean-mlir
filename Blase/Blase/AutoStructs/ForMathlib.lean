@@ -325,7 +325,9 @@ theorem stepSet_mono (M : NFA α σ) (S₁ S₂ : Set σ) (a : α) (h : S₁ ⊆
 @[simp, aesop 50% unsafe]
 theorem evalFrom_mono (M : NFA α σ) (S₁ S₂ : Set σ) (x : List α) (h : S₁ ⊆ S₂) :
     M.evalFrom S₁ x ⊆ M.evalFrom S₂ x := by
-  simp only [evalFrom]; induction' x with a x ih generalizing S₁ S₂ <;> simp_all [List.foldl_cons]
+  simp only [evalFrom]
+  induction x generalizing S₁ S₂
+  <;> simp_all [List.foldl_cons]
 
 def Reachable (M : NFA α σ) : Set σ := λ q ↦ ∃ w, q ∈ M.eval w
 

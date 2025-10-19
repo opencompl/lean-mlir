@@ -887,9 +887,11 @@ def Valuation.recOn {motive : ∀ {Γ : Ctxt Ty}, Γ.Valuation → Sort*}
     (cons : ∀ {Γ t} (V : Valuation Γ) (v : ⟦t⟧), motive V → motive (v ::ᵥ V)) :
     ∀ {Γ} (V : Valuation Γ), motive V := by
   intro Γ V
-  induction' Γ with Γ t ih
-  · exact (eq_nil V).symm ▸ nil
-  · exact cons_toCons_last V ▸ (cons (fun _ v' => V v'.toCons) (V <|.last ..) (ih _))
+  induction Γ
+  case nil =>
+    exact (eq_nil V).symm ▸ nil
+  case cons t Γ ih =>
+    exact cons_toCons_last V ▸ (cons (fun _ v' => V v'.toCons) (V <|.last ..) (ih _))
 
 /-! ### Cast -/
 

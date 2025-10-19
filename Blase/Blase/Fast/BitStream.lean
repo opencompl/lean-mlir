@@ -162,11 +162,13 @@ theorem corec_eq_corec {a : α} {b : β} {f g}
     corec f a = corec g b := by
   ext i
   have lem : R ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) ∧ corec f a i = corec g b i := by
-    induction' i with i ih
+    induction i
     <;> simp only [Function.iterate_succ, Function.comp_apply, corec]
-    · apply h
+    case zero =>
+      apply h
       exact thing
-    · have m := h ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) (ih.1)
+    case succ i ih =>
+      have m := h ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) (ih.1)
       cases' m with l r
       rw [r, ← compose_first, ← @compose_first β]
       simp [l]
@@ -984,9 +986,11 @@ theorem neg_neg : a = - - a := by
   ext i
   have neg_lemma :
     a.neg.negAux i = ⟨a i, (a.negAux i).2⟩ := by
-    induction' i with i ih
-    · simp [neg, negAux]
-    · simp only [negAux, neg, Bool.not_bne, Bool.not_not, Bool.bne_assoc, Prod.mk.injEq]
+    induction i
+    case zero =>
+      simp [neg, negAux]
+    case succ i ih =>
+      simp only [negAux, neg, Bool.not_bne, Bool.not_not, Bool.bne_assoc, Prod.mk.injEq]
       rw [ih]
       bv_decide
   simp [Neg.neg, neg, neg_lemma]
@@ -1006,35 +1010,40 @@ def subCarries? (a b : BitStream) (i : Nat) : Bool :=
 -/
 theorem neg_or_add (i : Nat) :
     (b.negAux i).2 = false ∨ (a.addAux b.neg i).2 = false := by
-  induction' i with i ih
+  induction i
   <;> simp only [negAux, addAux, BitVec.adcb, neg]
-  · cases b 0
+  case zero =>
+    cases b 0
     <;> simp
-  · cases' ih with l l
-    <;> cases b (i + 1)
+  case succ i ih =>
+    cases b (i + 1)
     <;> cases a (i + 1)
-    <;> simp [l]
+    <;> grind
 
 /--
   Whether a - b will overflow is equivalent to -b overflows = (a + - b) overflows.
 -/
 theorem subCarries?_correct (i : Nat) :
     a.subCarries? b i = ((b.negAux i).2 == (a.addAux b.neg i).2) := by
-  induction' i with i ih
-  · simp only [subCarries?, Bool.and_false, Bool.or_false, negAux, addAux, BitVec.adcb, neg,
-    Bool.atLeastTwo_false_right, Bool.bne_false, Prod.swap_prod_mk]
+  induction i
+  case zero =>
+    simp only [subCarries?, Bool.and_false, Bool.or_false, negAux, addAux, BitVec.adcb, neg,
+      Bool.atLeastTwo_false_right, Bool.bne_false, Prod.swap_prod_mk]
     bv_decide
-  · by_cases a1 : a (i + 1)
+  case succ i ih =>
+    by_cases a1 : a (i + 1)
     <;> by_cases b1 : b (i + 1)
     <;> cases' @neg_or_add a b i with h h
     <;> simp [h, subCarries?, ih, negAux, addAux, BitVec.adcb, neg, a1, b1]
 
 theorem subAux_inductive_lemma (i : Nat) :
     a.subAux b i = ⟨(a.addAux b.neg i).1, subCarries? a b i⟩ := by
-  induction' i with i ih
-  · simp [subAux, addAux, negAux, BitVec.adcb, subCarries?, neg]
-  · simp only [subAux, ih, subCarries?_correct i, addAux, BitVec.adcb, neg, negAux, Bool.not_bne,
-    Bool.bne_assoc, Bool.bne_not, Prod.swap_prod_mk, subCarries?, Prod.mk.injEq, and_true]
+  induction i
+  case zero =>
+    simp [subAux, addAux, negAux, BitVec.adcb, subCarries?, neg]
+  case succ i ih =>
+    simp only [subAux, ih, subCarries?_correct i, addAux, BitVec.adcb, neg, negAux, Bool.not_bne,
+      Bool.bne_assoc, Bool.bne_not, Prod.swap_prod_mk, subCarries?, Prod.mk.injEq, and_true]
     bv_decide
 
 theorem sub_eq_add_neg : a - b = a + (-b) := by
@@ -1058,11 +1067,13 @@ private theorem add_odd_iff_neq (n m : Nat) :
 theorem ofBitVec_add : ofBitVecSext (x + y) ≈ʷ (ofBitVecSext x) + (ofBitVecSext y) := by
   intros n a
   have add_lemma : ⟨(x + y).getLsbD n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVecSext x).addAux (ofBitVecSext y) n := by
-    induction' n with n ih
-    · simp [addAux, BitVec.adcb, BitVec.carry, BitVec.getLsbD, a,
+    induction n
+    case zero =>
+      simp [addAux, BitVec.adcb, BitVec.carry, BitVec.getLsbD, a,
         two_le_add_iff_odd_and_odd, add_odd_iff_neq]
       bv_decide
-    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add];
+    case succ i ih =>
+      simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add];
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
 
 theorem ofBitVecSext_add_eq_ofBitVecSext_add_ofBitVecSext
@@ -1076,15 +1087,17 @@ theorem ofBitVecZext_add_EqualUpTo :
     ofBitVecZext (x + y) ≈ʷ (ofBitVecZext x) + (ofBitVecZext y) := by
   intros n a
   have add_lemma : ⟨(x + y).getLsbD n, BitVec.carry (n + 1) x y false ⟩ = (ofBitVecZext x).addAux (ofBitVecZext y) n := by
-    induction' n with n ih
-    · simp only [zero_add, addAux_zero, ofBitVecZext_eq_getLsbD, Prod.mk.injEq]
+    induction n
+    case zero =>
+      simp only [zero_add, addAux_zero, ofBitVecZext_eq_getLsbD, Prod.mk.injEq]
       simp only [BitVec.getLsbD, BitVec.toNat_add, Nat.testBit_zero, Nat.mod_two_pos_mod_two_eq_one,
         a, true_and]
       simp only [add_odd_iff_neq, ne_eq, eq_iff_iff, decide_not, Bool.decide_iff_dist,
         Bool.not_eq_eq_eq_not, BitVec.carry, pow_one, Bool.toNat_false, add_zero, ge_iff_le,
         two_le_add_iff_odd_and_odd, Bool.decide_and, and_true]
       bv_decide
-    · simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add];
+    case succ i ih =>
+      simp [addAux, ← ih (by omega), BitVec.adcb, a, BitVec.carry_succ, BitVec.getElem_add];
   simp [HAdd.hAdd, Add.add, BitStream.add, ← add_lemma, a, -BitVec.add_eq, -Nat.add_eq]
 
 @[simp]
@@ -1140,9 +1153,11 @@ theorem eq_iff_EqualUpTo (x y : BitStream) :
 theorem add_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a + c) ≈ʷ (b + d) := by
   intros n h
   have add_congr_lemma : a.addAux c n = b.addAux d n := by
-    induction' n with _ ih
-    · simp only [addAux, e1 _ h, e2 _ h]
-    · simp only [addAux, e1 _ h, e2 _ h, ih (by omega)]
+    induction n
+    case zero =>
+      simp only [addAux, e1 _ h, e2 _ h]
+    case succ i ih =>
+    simp only [addAux, e1 _ h, e2 _ h, ih (by omega)]
   simp [HAdd.hAdd, Add.add, BitStream.add, add_congr_lemma]
 
 theorem and_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a &&& c) ≈ʷ (b &&& d) := by
@@ -1167,10 +1182,11 @@ theorem ofBitVec_not_eqTo : ofBitVecSext (~~~ x) ≈ʷ ~~~ ofBitVecSext x := by
 
 theorem negAux_eq_not_addAux : a.negAux = (~~~a).addAux 1 := by
   funext i
-  induction' i with _ ih
-  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
-  · simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, ih,
-      Nat.testBit_add_one]
+  induction i
+  case zero =>
+    simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat]
+  case succ i ih =>
+    simp [negAux, addAux, BitVec.adcb, OfNat.ofNat, ofNat, ih, Nat.testBit_add_one]
 
 theorem neg_eq_not_add : - a = ~~~ a + 1 := by
   ext _
@@ -1209,9 +1225,11 @@ theorem ofBitVec_sub' {w : Nat} {i : Nat} {hi : i < w} (x y : BitVec w) :
 
 theorem incr_add : a + (@ofBitVecSext w 1) ≈ʷ a.incr := by
   have incr_add_aux {i : Nat} (le : i < w) : a.addAux (@ofBitVecSext w 1) i = a.incrAux i := by
-    induction' i with _ ih
-    · simp [incrAux, addAux, BitVec.adcb, ofBitVecSext, le]
-    · simp only [addAux, incrAux, ih (by omega)]
+    induction i
+    case zero =>
+      simp [incrAux, addAux, BitVec.adcb, ofBitVecSext, le]
+    case succ i ih =>
+      simp only [addAux, incrAux, ih (by omega)]
       simp [BitVec.adcb, Bool.atLeastTwo, ofBitVecSext, le]
   intros i le
   simp only [incr, HAdd.hAdd, Add.add, add, incr_add_aux le]
@@ -1225,25 +1243,28 @@ theorem ofBitVec_incr {n : Nat} : ofBitVecSext (BitVec.ofNat w n.succ) ≈ʷ (of
 theorem incr_congr (h : a ≈ʷ b) : a.incr ≈ʷ b.incr := by
   intros i le
   have incr_congr_lemma : a.incrAux i = b.incrAux i := by
-    induction' i with n ih
+    induction i
     <;> simp only [incrAux, h _ le]
-    simp [ih (by omega)]
+    case succ i ih =>
+      simp [ih (by omega)]
   simp [incr, incr_congr_lemma]
 
 theorem sub_congr (e1 : a ≈ʷ b) (e2 : c ≈ʷ d) : (a - c) ≈ʷ (b - d) := by
   intros n h
   have sub_congr_lemma : a.subAux c n = b.subAux d n := by
-    induction' n with _ ih
+    induction n
     <;> simp only [subAux, Prod.mk.injEq, e1 _ h, e2 _ h]
-    simp only [ih (by omega), and_self]
+    case succ i ih =>
+      simp only [ih (by omega), and_self]
   simp only [HSub.hSub, Sub.sub, BitStream.sub, sub_congr_lemma]
 
 theorem neg_congr (e1 : a ≈ʷ b) : (-a) ≈ʷ -b := by
   intros n h
   have neg_congr_lemma : a.negAux n = b.negAux n := by
-    induction' n with _ ih
+    induction n
     <;> simp only [negAux, Prod.mk.injEq, (e1 _ h)]
-    simp only [ih (by omega), and_self]
+    case succ i ih =>
+      simp only [ih (by omega), and_self]
   simp only [Neg.neg, BitStream.neg, neg_congr_lemma]
 
 theorem ofBitVec_add_congr (h1 : ofBitVecSext x ≈ʷ a) (h2 : ofBitVecSext y ≈ʷ b) : ofBitVecSext (x + y) ≈ʷ a + b := by
