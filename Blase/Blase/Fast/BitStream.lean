@@ -1015,12 +1015,10 @@ theorem neg_or_add (i : Nat) :
   case zero =>
     cases b 0
     <;> simp
-  case succ i ih
-    <;> cases b (i + 1)
+  case succ i ih =>
+    cases b (i + 1)
     <;> cases a (i + 1)
-    <;> simp
-  grind
-  grind
+    <;> grind
 
 /--
   Whether a - b will overflow is equivalent to -b overflows = (a + - b) overflows.
