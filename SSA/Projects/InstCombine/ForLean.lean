@@ -79,8 +79,8 @@ theorem two_le_add_iff_odd_and_odd (n m : Nat) :
 
 theorem add_odd_iff_neq (n m : Nat) :
     (n + m) % 2 = 1 ↔ (n % 2 = 1) ≠ (m % 2 = 1) := by
-  cases' Nat.mod_two_eq_zero_or_one n with nparity nparity
-  <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
+  rcases Nat.mod_two_eq_zero_or_one n with nparity | nparity
+  <;> rcases Nat.mod_two_eq_zero_or_one m with mparity | mparity
   <;> simp [mparity, nparity, Nat.add_mod]
 
 end Nat
@@ -559,7 +559,7 @@ namespace Bool
 
 theorem xor_decide (p q : Prop) [dp : Decidable p] [Decidable q] :
     (decide p).xor (decide q) = decide (p ≠ q) := by
-  cases' dp with pt pt
+  rcases dp with pt | pt
   <;> simp [pt]
 
 @[simp]
