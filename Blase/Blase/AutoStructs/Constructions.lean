@@ -3,7 +3,7 @@ import Blase.AutoStructs.Worklist
 
 import Mathlib.Tactic.ApplyFun
 
-open Rel
+open SetRel
 
 section sink
 
@@ -317,7 +317,7 @@ lemma product.sim {m1 m2 : CNFA n}:
     m1.Sim M1 → m2.Sim M2 →
     (nfa (product.inits m1 m2) (final final? m1 m2) (f m1 m2)).Bisim (M1.M.product (to_prop final?) M2.M) := by
   rintro ⟨R₁, hsim₁⟩ ⟨R₂, hsim₂⟩
-  let R : Rel (m1.m.states × m2.m.states) (M1.σ × M2.σ) :=
+  let R : SetRel (m1.m.states × m2.m.states) (M1.σ × M2.σ) :=
     {((s₁, s₂), (q₁, q₂)) | s₁.val ~[R₁] q₁ ∧ s₂.val ~[R₂] q₂ }
   use R; constructor
   · rintro ⟨s₁, s₂⟩ ⟨q₁, q₂⟩ ⟨hR₁, hR₂⟩
@@ -606,7 +606,7 @@ def CNFA.determinize_spec (m : CNFA n)
   rcases hsim with ⟨Ri, hsim⟩
   apply bisim_comp
   · apply worklistRun_spec
-  let R : Rel (BitVec m.m.stateMax) (Set M.σ) :=
+  let R : SetRel (BitVec m.m.stateMax) (Set M.σ) :=
     {(ss, qs) | Ri.set_eq (bv_to_set ss) qs }
   use R; constructor
   · simp [nfa', nfa, NFA'.determinize, NFA.toDFA, BitVec.any_iff_exists]
@@ -631,7 +631,7 @@ def CNFA.determinize_spec (m : CNFA n)
         have hlt : s ∈ m.m.states := by apply m.wf.initials_lt hinit
         simp [RawCNFA.states] at hlt
         use s, (by apply BitVec.ofFn_getLsbD_true.mpr; use hlt; simp [hinit])
-    simp only [determinize.inits, nfa', nfa, NFA'.determinize, NFA.toDFA, Array.mem_toArray,
+    simp only [determinize.inits, nfa', nfa, NFA'.determinize, NFA.toDFA, List.mem_toArray,
       List.mem_singleton, Set.setOf_eq_eq_singleton, beq_true, DFA.toNFA_start]
     constructor
     · rintro bv hin
@@ -1071,6 +1071,9 @@ lemma RawCNFA.proj_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₂ → Fin n₁} (h
   constructor <;> (try rw [WF.trans_tgt_lt_equiv_internal]) <;> simp_all [proj]
   · let motive (_ : Nat) (X : Std.HashMap (State × BitVec n₂) (Std.HashSet State)) := ∀ s a, (s, a) ∈ X → s ∈ m.states
     suffices h : motive (m.trans.keysArray.size) (m.proj f).trans by
+      unfold motive at h
+      unfold proj at h
+      simp only [Std.HashMap.size_keysArray] at h
       exact h
     simp only [proj]; apply Array.foldl_induction
     · simp [motive]
@@ -1084,6 +1087,10 @@ lemma RawCNFA.proj_wf (m : RawCNFA (BitVec n₁)) {f : Fin n₂ → Fin n₁} (h
       ∀ (s : State) (a : BitVec n₂) (ss' : Std.HashSet State) s',
         X[(s, a)]? = some ss' → s' ∈ ss' → s' ∈ m.states
     suffices h : motive (m.trans.keysArray.size) (m.proj f).trans by
+      unfold motive at h
+      unfold trans at h
+      unfold proj at h
+      simp only [Std.HashMap.size_keysArray] at h
       exact h
     simp only [proj]; apply Array.foldl_induction
     · simp [motive]
@@ -1128,13 +1135,15 @@ def CNFA.proj_tr (m : CNFA n₂) (f : Fin n₁ → Fin n₂) :
   rintro s' a
   rw [Std.HashMap.getD_insert]
   split_ifs with hcond
-  · simp at hcond; rcases hcond with ⟨rfl, rfl⟩; simp [ih]
+  · simp at hcond; rcases hcond with ⟨rfl, rfl⟩
+    simp only [Union.union]
+    simp only [Std.HashSet.mem_union, ih]
     constructor
     · rintro (hin | ⟨a', hin, heq, hin'⟩)
       · use t.2
         simp +zetaDelta only [Prod.mk.eta, Array.mem_iff_getElem, Array.getElem_extract, zero_add,
           Array.size_extract, tsub_zero, lt_inf_iff, hin, and_self, and_true]
-        use i.val, by simp +zetaDelta
+        use i.val, by grind
       · use a'; simp [heq, hin']
         simp only [Array.mem_iff_getElem, Array.getElem_extract, zero_add, Array.size_extract,
           Fin.is_le', inf_of_le_left, tsub_zero, lt_inf_iff] at hin ⊢
