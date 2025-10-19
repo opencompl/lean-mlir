@@ -169,9 +169,11 @@ theorem corec_eq_corec {a : α} {b : β} {f g}
       exact thing
     case succ i ih =>
       have m := h ((Prod.fst ∘ f)^[i] (f a).1) ((Prod.fst ∘ g)^[i] (g b).1) (ih.1)
-      cases' m with l r
-      rw [r, ← compose_first, ← @compose_first β]
-      simp [l]
+      simp at m
+      cases m
+      case intro l r =>
+        rw [r, ← compose_first, ← @compose_first β]
+        simp [l]
   cases lem
   assumption
 
@@ -1033,8 +1035,8 @@ theorem subCarries?_correct (i : Nat) :
   case succ i ih =>
     by_cases a1 : a (i + 1)
     <;> by_cases b1 : b (i + 1)
-    <;> cases' @neg_or_add a b i with h h
-    <;> simp [h, subCarries?, ih, negAux, addAux, BitVec.adcb, neg, a1, b1]
+    <;> cases @neg_or_add a b i
+    <;> grind [subCarries?, negAux, addAux, BitVec.adcb, neg]
 
 theorem subAux_inductive_lemma (i : Nat) :
     a.subAux b i = ⟨(a.addAux b.neg i).1, subCarries? a b i⟩ := by
@@ -1060,8 +1062,8 @@ private theorem two_le_add_iff_odd_and_odd (n m : Nat) :
 
 private theorem add_odd_iff_neq (n m : Nat) :
     (n + m) % 2 = 1 ↔ (n % 2 = 1) ≠ (m % 2 = 1) := by
-  cases' Nat.mod_two_eq_zero_or_one n with nparity nparity
-  <;> cases' Nat.mod_two_eq_zero_or_one m with mparity mparity
+  rcases Nat.mod_two_eq_zero_or_one n with nparity | nparity
+  <;> rcases Nat.mod_two_eq_zero_or_one m with mparity | mparity
   <;> simp [mparity, nparity, Nat.add_mod]
 
 theorem ofBitVec_add : ofBitVecSext (x + y) ≈ʷ (ofBitVecSext x) + (ofBitVecSext y) := by

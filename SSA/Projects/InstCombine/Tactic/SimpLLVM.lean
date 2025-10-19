@@ -69,7 +69,7 @@ macro_rules
       -- but does nothing. This is similar to `try`, except `first ...` does not swallow any errors
       -- that occur in the later tactics
     | intro (v : PoisonOr (_))  -- Introduce the variable,
-      cases' v with x           -- Do the case distinction
+      rcases v with x           -- Do the case distinction
       <;> simp (config:={failIfUnchanged := false}) -implicitDefEqProofs only [simp_llvm_case_bash]
       --  ^^^^^^^^^^^^^^^^^^^^^^^^ Simplify, in the hopes that the `poison` case is trivially closed
       <;> simp_alive_case_bash' -- Recurse, to case bash the next variable (if it exists)
