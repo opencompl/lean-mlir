@@ -5,7 +5,6 @@ import SSA.Projects.InstCombine.Tactic
 
 open InstCombine
 
-set_option pp.explicit true
 set_option pp.instances false
 
 variable {w : Nat} (x y : LLVM.m ⟦LLVM.Ty.bitvec w⟧)
