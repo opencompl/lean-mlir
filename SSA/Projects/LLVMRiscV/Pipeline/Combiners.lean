@@ -1976,6 +1976,54 @@ def not_cmp_fold : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
   ⟨_, not_cmp_fold_sge⟩,
   ⟨_, not_cmp_fold_sge⟩]
 
+/-! ### double_icmp_zero_combine -/
+
+/-
+Test the rewrite:
+  Transform: (X == 0 & Y == 0) -> (X | Y) == 0
+-/
+def double_icmp_zero_and_combine : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %c = llvm.mlir.constant (0) : i64
+      %0 = llvm.icmp.eq %x, %c : i64
+      %1 = llvm.icmp.eq %y, %c : i64
+      %2 = llvm.and %0, %1 : i1
+      llvm.return %2 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %c = llvm.mlir.constant (0) : i64
+      %0 = llvm.or %x, %y : i64
+      %1 = llvm.icmp.eq %0, %c : i64
+      llvm.return %1 : i1
+  }]
+
+/-
+Test the rewrite:
+  Transform: (X != 0 & Y != 0) -> (X | Y) != 0
+-/
+def double_icmp_zero_or_combine : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %c = llvm.mlir.constant (0) : i64
+      %0 = llvm.icmp.ne %x, %c : i64
+      %1 = llvm.icmp.ne %y, %c : i64
+      %2 = llvm.or %0, %1 : i1
+      llvm.return %2 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %c = llvm.mlir.constant (0) : i64
+      %0 = llvm.or %x, %y : i64
+      %1 = llvm.icmp.ne %0, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def double_icmp_zero_combine : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
+  [⟨_, double_icmp_zero_and_combine⟩,
+  ⟨_, double_icmp_zero_or_combine⟩]
+
  /-! ### Grouped patterns -/
 
 /-- We assemble the `identity_combines` patterns for RISCV as in GlobalISel -/
@@ -2024,6 +2072,9 @@ def GLobalISelO0PreLegalizerCombiner :
     List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   not_cmp_fold)
+  ++
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  double_icmp_zero_combine)
   ++
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
    mul_by_neg_one)
