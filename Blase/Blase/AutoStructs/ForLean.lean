@@ -137,6 +137,11 @@ theorem Std.HashSet.mem_union [BEq α] [Hashable α] [LawfulBEq α] {m₁ m₂ :
   apply hashMap_missing
 
 @[simp]
+theorem Std.HashSet.mem_union' [BEq α] [Hashable α] [LawfulBEq α] {m₁ m₂ : HashSet α} :
+    x ∈ m₁ ∪ m₂ ↔ x ∈ m₁ ∨ x ∈ m₂ := by
+  apply hashMap_missing
+
+@[simp]
 theorem Std.HashSet.isEmpty_union_iff_isEmpty [BEq α] [Hashable α] [LawfulBEq α] {m₁ m₂ : HashSet α} :
     (m₁.union m₂).isEmpty ↔ m₁.isEmpty ∧ m₂.isEmpty := by
   simp only [isEmpty_iff_forall_not_mem, mem_union, not_or, forall_and]

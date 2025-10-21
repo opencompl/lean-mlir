@@ -91,7 +91,7 @@ def Ctxt.delete (Γ : Ctxt Ty) (vs : DeleteRange Γ) : Ctxt Ty :=
       List.getElem_append_right (by grind : us.length ≤ i + r.num),
       length_ofList
     ]
-    split <;> grind
+    split <;> constructor <;> grind
 
 section Lemmas
 variable {Γ : Ctxt Ty}

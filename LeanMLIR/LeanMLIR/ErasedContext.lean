@@ -49,12 +49,11 @@ instance : Inhabited (Ctxt Ty) := ⟨Ctxt.empty⟩
 theorem empty_eq : (∅ : Ctxt Ty) = .empty := rfl
 
 @[match_pattern]
-def cons : Ty → Ctxt Ty → Ctxt Ty
-  | hd, ⟨tl⟩ => ⟨hd :: tl⟩
+def cons (hd : Ty) : Ctxt Ty → Ctxt Ty
+| ⟨tl⟩ => ⟨hd :: tl⟩
 
 @[deprecated cons (since := "2025-09-14")]
 abbrev snoc := fun Γ t => @cons Ty t Γ
-
 
 @[grind=]
 def length (Γ : Ctxt Ty) : Nat := Γ.toList.length

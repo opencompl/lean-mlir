@@ -106,7 +106,7 @@ theorem abs_eq_add_xor {x : BitVec w} :
   · simp [h, ← allOnes_sub_eq_not]
   · simp [h]
 
-@[simp, bv_toNat]
+@[simp, bitvec_to_nat]
 lemma toNat_shiftLeft' (A B : BitVec w) :
     BitVec.toNat (A <<< B) = (BitVec.toNat A) * 2 ^ BitVec.toNat B % 2 ^w := by
   simp only [HShiftLeft.hShiftLeft]
@@ -138,30 +138,12 @@ theorem udiv_one_eq_self (w : Nat) (x : BitVec w) : x.udiv 1#w = x := by
   by_cases h : w = 0
   · subst h
     simp [eq_nil x]
-  · simp_all [bv_toNat]
+  · simp_all [bitvec_to_nat]
 
 
 theorem udiv_eq_zero_iff {x y : BitVec w} (hy : 0#w < y) : udiv x y = 0#w ↔ x < y := by
-  simp_all [bv_toNat]
-  constructor
-  · rw [BitVec.lt_def, BitVec.udiv_def]
-    intros h
-    have : BitVec.toNat (BitVec.ofNat w (x.toNat / y.toNat)) = (0#w).toNat := by
-      rw [h]
-    simp at this
-    simp [BitVec.lt_def] at hy
-    rw [Nat.mod_eq_of_lt] at this
-    · apply Nat.lt_of_div_eq_zero (by omega) this
-    · apply Nat.lt_of_le_of_lt
-      · apply Nat.div_le_self
-      · omega
-  · intros h
-    apply BitVec.eq_of_toNat_eq
-    simp [BitVec.lt_def] at h
-    simp
-    omega
-
-
+  simp_all [bitvec_to_nat]
+  exact Nat.ne_zero_of_lt hy
 
 @[simp]
 theorem udiv_eq_zero {x y : BitVec w} (h : x < y) : udiv x y = 0#w := by
@@ -247,7 +229,7 @@ def sdiv_one_one : BitVec.sdiv 1#w 1#w = 1#w := by
     omega
   simp [hone]
 
--- @[simp bv_toNat]
+-- @[simp bitvec_to_nat]
 lemma toNat_neq_zero_of_neq_zero {x : BitVec w} (hx : x ≠ 0) : x.toNat ≠ 0 := by
   intro h
   apply hx

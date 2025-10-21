@@ -24,6 +24,7 @@ import Mathlib.Algebra.Polynomial.RingDivision
 import Mathlib.Data.Finset.Sort
 import Mathlib.Data.List.ToFinsupp
 import Mathlib.Data.List.Basic
+import Mathlib.Tactic.Cases
 import LeanMLIR.Framework
 
 open Polynomial -- for R[X] notation
@@ -412,14 +413,13 @@ theorem R.repLength_lt_n_plus_1 [Fact (q > 1)]: forall a : R q n, a.repLength < 
     rw [← f_deg_eq q n]
     apply (Polynomial.degree_modByMonic_lt)
     apply f_monic
-  simp only [LT.lt] at this
-  let ⟨val, VAL, VAL_EQN⟩ := this
+  /- simp only [LT.lt] at this -/
+  /- let ⟨val, VAL, VAL_EQN⟩ := this -/
   rcases H : degree (R.representative' q n a %ₘ f q n) <;> simp
   case some val' =>
-    specialize (VAL_EQN _ H)
-    norm_cast at VAL
-    cases VAL
-    norm_cast at VAL_EQN
+    rw [H] at this
+    simp only [LT.lt] at this
+    simp_all
 
 section Coeff
 /--
@@ -529,7 +529,7 @@ theorem Polynomial.degree_toFinsupp [Semiring M] [DecidableEq M]
     case nil => simp [degree]
     case cons x xs =>
       simp only [degree, support_ofFinsupp, List.length_cons, Nat.cast_add, Nat.cast_one,
-        List.toFinsupp, Finset.range_succ]
+        List.toFinsupp, Finset.range_add_one]
       apply Finset.max_le
       intros a ha
       obtain ⟨ha₁, ha₂⟩ := Finset.mem_filter.mp ha
@@ -637,7 +637,7 @@ theorem R.coeff_fromTensor (tensor : List Int)
     generalize htensor_degree : degree (fromTensorFinsupp q tensor) = tensor_degree
     rw [f_deg_eq]
     cases tensor_degree
-    case bot => norm_cast; apply WithBot.bot_lt_coe
+    case bot => norm_cast
     case coe tensor_degree =>
       /- I hate this coercion stuff -/
       norm_cast
