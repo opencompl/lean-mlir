@@ -824,6 +824,12 @@ def prettify (generalization: BoolExpr  GenBVPred) (displayNames: Std.HashMap Na
       match generalization with
       | .literal (GenBVPred.bin lhs op rhs) =>
           s! "{prettifyBVExpr lhs displayNames} {prettifyBVBinPred op} {prettifyBVExpr rhs displayNames}"
+      | .not boolExpr =>
+          s! "!({prettify boolExpr displayNames})"
+      | .gate op lhs rhs =>
+          s! "({prettify lhs displayNames}) {op.toString} ({prettify rhs displayNames})"
+      | .ite cond positive _ =>
+          s! "if {prettify cond displayNames} then {prettify positive displayNames} "
       | _ => generalization.toString
 
 
@@ -899,6 +905,15 @@ info: theorem Generalize.BV.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec
 -/
 #guard_msgs in
 theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
+  bv_generalize
+  sorry
+
+
+/--
+info: theorem Generalize.BV.demo3.generalized_1_1 {w} (x y C1 C2 : BitVec w) : if (false) || (((C1 + C2) ^^^ -1) = 0) then (((x ^^^ y) &&& C1) ||| (y &&& C2)) = ((x &&& C1) ^^^ y)  := by sorry
+-/
+#guard_msgs in
+theorem demo3 (x y : BitVec 32) : (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y := by
   bv_generalize
   sorry
 
