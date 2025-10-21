@@ -1040,7 +1040,7 @@ def add : Diff Γ₁ Γ₂ → Diff Γ₂ Γ₃ → Diff Γ₁ Γ₃
 
 instance : HAdd (Diff Γ₁ Γ₂) (Diff Γ₂ Γ₃) (Diff Γ₁ Γ₃) := ⟨add⟩
 
-@[simp, grind] theorem val_add (f : Γ.Diff Δ) (g : Δ.Diff Ξ) : (f + g).val = f.val + g.val := rfl
+@[simp, grind =] theorem val_add (f : Γ.Diff Δ) (g : Δ.Diff Ξ) : (f + g).val = f.val + g.val := rfl
 
 /-!
 ### `toHom`
@@ -1052,7 +1052,7 @@ def toHom (d : Diff Γ₁ Γ₂) : Hom Γ₁ Γ₂ :=
 
 section Lemmas
 
-@[simp, grind] theorem val_toHom_apply (d : Diff Γ Δ) (v : Γ.Var t) :
+@[simp, grind =] theorem val_toHom_apply (d : Diff Γ Δ) (v : Γ.Var t) :
     (d.toHom v).val = v.val + d.val := rfl
 
 theorem Valid.of_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h_valid : Valid Γ₁ (Γ₂.cons t) (d+1)) :
