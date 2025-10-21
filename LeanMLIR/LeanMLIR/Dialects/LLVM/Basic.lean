@@ -182,7 +182,7 @@ namespace MOp
 @[match_pattern] def neg    (w : Width φ) : MOp φ := .unary w .neg
 @[match_pattern] def not    (w : Width φ) : MOp φ := .unary w .not
 @[match_pattern] def copy   (w : Width φ) : MOp φ := .unary w .copy
-@[match_pattern] def freeze     (w : Width φ) : MOp φ := .unary w .freeze
+@[match_pattern] def freeze (w : Width φ) : MOp φ := .unary w .freeze
 @[match_pattern] def sext   (w w' : Width φ) : MOp φ := .unary w (.sext w')
 
 /- This definition uses a nneg flag -/
