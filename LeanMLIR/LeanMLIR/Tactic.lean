@@ -125,17 +125,25 @@ simproc [simp_denote] elimValuation (∀ (_ : Ctxt.Valuation _), _) := fun e => 
     let newType ← mkForallFVars xs (body.instantiate1 V)
     let proof :=
       let mp  :=
-        ←withLocalDeclD .anonymous e <| fun eProof => do
+        ←withLocalDeclD `h e <| fun eProof => do
           mkLambdaFVars (#[eProof] ++  xs) <| mkApp eProof V
       let mpr :=
-        ←withLocalDeclD .anonymous newType <| fun newProof =>
-          withLocalDeclD .anonymous VTy <| fun V => do
+        ←withLocalDeclD `h newType <| fun newProof =>
+          withLocalDeclD `V VTy <| fun V => do
             let xs ← Γelems.reverse.mapIdxM fun i ty =>
               let v := Ctxt.mkVar Ty Γ ty (toExpr i) none
               pure <| mkApp2 V ty v
             mkLambdaFVars #[newProof, V] <| mkAppN newProof xs.reverse
       mkApp3 (mkConst ``propext) e newType <|
         mkApp4 (mkConst ``Iff.intro) e newType mp mpr
+    withTraceNode `LeanMLIR.Elab (pure m!"{Lean.exceptEmoji ·} Checking Statement…") <| do
+      trace[LeanMLIR.Elab] "Old statement: {e}"
+      trace[LeanMLIR.Elab] "New statement: {newType}"
+      Meta.check newType
+
+    withTraceNode `LeanMLIR.Elab (pure m!"{Lean.exceptEmoji ·} Checking Proof…") <| do
+      trace[LeanMLIR.Elab] "Proof: {proof}"
+      Meta.check proof
     return .visit {
       expr := newType,
       proof? := some proof
