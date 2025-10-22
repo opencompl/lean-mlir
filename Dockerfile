@@ -47,12 +47,15 @@ COPY . ./
 RUN --mount=type=cache,target="$CACHE_MOUNT",sharing=private \
   ./.dockerscripts/cache.sh setup && \
   # Build
+  lake exe cache get ProofWidgets
+  # ^ ProofWidgets needs to be fetched from cache, to retrieve
+  #   pre-built JS files that can't be built from source by `lake`
   lake build && \
   #
   ./.dockerscripts/cache.sh teardown
 
-# NOTE: we deliberately don't use `lake exe cache get`, as that would download
-# all of Mathlib, which is much more than we need, and the extra codesize 
+# NOTE: we deliberately limit `lake exe cache` to not get Mathlib, as that would 
+# download all of Mathlib, which is much more than we need, and the extra build artifacts
 # significantly increases the image size, slowing down downloads.
 # By building Mathlib from scratch, we ensure we only build the files we actually
 # use, making the image smaller.
