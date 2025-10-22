@@ -73,9 +73,8 @@ mutual
 -- 'a -> symbol
 -- `a -> antiquotation `(... ,(...))
 partial def consumeCloseBracket(c: Bracket)
-  (startPos: String.Pos)
-  (i: String.Pos)
-  (input: String)
+  (startPos: String.Pos.Raw)
+  (i: String.Pos.Raw)
   (brackets: List Bracket)
   (ctx: ParserContext)
   (s: ParserState): ParserState := Id.run do
@@ -86,42 +85,40 @@ partial def consumeCloseBracket(c: Bracket)
         if bs == []
         then
           let parser_fn := Lean.Parser.mkNodeToken `balanced_brackets startPos
-          parser_fn ctx (s.setPos (input.next i)) -- consume the input here.
-        else balancedBracketsFnAux startPos (input.next i) input bs ctx s
+          parser_fn ctx (s.setPos (ctx.next i)) -- consume the input here.
+        else balancedBracketsFnAux startPos (ctx.next i) bs ctx s
       else s.mkError $ "| found Opened `" ++ toString b ++ "` expected to close at `" ++
       toString c ++ "`"
     | _ => s.mkError $ "| found Closed `" ++ toString c ++ "`, but have no opened brackets on stack"
 
 
-partial def balancedBracketsFnAux (startPos: String.Pos)
-  (i: String.Pos)
-  (input: String)
+partial def balancedBracketsFnAux (startPos: String.Pos.Raw)
+  (i: String.Pos.Raw)
   (bs: List Bracket) (ctx: ParserContext) (s: ParserState): ParserState :=
-  if input.atEnd i
+  if ctx.atEnd i
   then s.mkError "found EOF"
   else
-  match input.get i with
+  match ctx.get i with
   -- opening parens
-  | '(' => balancedBracketsFnAux startPos (input.next i) input (Bracket.Round::bs) ctx s
-  | '[' => balancedBracketsFnAux startPos (input.next i) input (Bracket.Square::bs) ctx s
-  | '<' => balancedBracketsFnAux startPos (input.next i) input (Bracket.Angle::bs) ctx s
-  | '{' => balancedBracketsFnAux startPos (input.next i) input (Bracket.Curly::bs) ctx s
+  | '(' => balancedBracketsFnAux startPos (ctx.next i) (Bracket.Round::bs) ctx s
+  | '[' => balancedBracketsFnAux startPos (ctx.next i) (Bracket.Square::bs) ctx s
+  | '<' => balancedBracketsFnAux startPos (ctx.next i) (Bracket.Angle::bs) ctx s
+  | '{' => balancedBracketsFnAux startPos (ctx.next i) (Bracket.Curly::bs) ctx s
   -- closing parens
-  | ')' => consumeCloseBracket Bracket.Round startPos i input bs ctx s
-  | ']' => consumeCloseBracket Bracket.Square startPos i input bs ctx s
-  | '>' => consumeCloseBracket Bracket.Angle startPos i input bs ctx s
-  | '}' => consumeCloseBracket Bracket.Curly startPos i input bs ctx s
-  | _c => balancedBracketsFnAux startPos (input.next i) input bs ctx s
+  | ')' => consumeCloseBracket Bracket.Round startPos i bs ctx s
+  | ']' => consumeCloseBracket Bracket.Square startPos i bs ctx s
+  | '>' => consumeCloseBracket Bracket.Angle startPos i bs ctx s
+  | '}' => consumeCloseBracket Bracket.Curly startPos i bs ctx s
+  | _c => balancedBracketsFnAux startPos (ctx.next i) bs ctx s
 
 end
 
 -- | TODO: filter tab complete by type?
 def balancedBracketsFnEntry (ctx: ParserContext) (s: ParserState): ParserState :=
-  if ctx.input.get s.pos == '<'
+  if ctx.get s.pos == '<'
   then balancedBracketsFnAux
    (startPos := s.pos)
    (i := s.pos)
-   (input := ctx.input)
    (bs := [])
    ctx s
   else s.mkError "Expected '<'"

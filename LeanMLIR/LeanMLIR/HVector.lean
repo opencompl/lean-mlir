@@ -248,7 +248,7 @@ end Map'
     foldl f b (map g xs) = foldl (fun a x b => f a x (g _ b)) b xs := by
   induction xs generalizing f b with
   | nil => rfl
-  | cons _ _ ih => simp [foldl, map, ih]
+  | cons _ _ ih => simp [map, ih]
 
 /-! ## misc -/
 

@@ -2,7 +2,7 @@ import Blase.AutoStructs.Basic
 
 set_option grind.warning false
 
-open Rel
+open SetRel
 
 section nfa
 
@@ -485,7 +485,7 @@ lemma processOneElem_visited (st : worklist.St A S) :
   rw [←addOrCreateElem_visited (final sa') st sa']
   simp [st', processOneElem, worklist.St.visited]
 
-def worklist.St.rel (st : worklist.St A S) : Rel State S := {(s, sa) | st.map[sa]? = some s }
+def worklist.St.rel (st : worklist.St A S) : SetRel State S := {(s, sa) | st.map[sa]? = some s }
 
 def worklist.St.D (st : worklist.St A S) : Set S := st.visited
 
@@ -580,7 +580,7 @@ lemma processOneElem_tr (st : worklist.St A S) (final : S → Bool) (a b : A) (s
       split_ifs with hcond <;> simp
   next heq =>
     split
-    · grind [addTrans_tr]
+    · grind
     · split_ifs <;> simp [addTrans_tr] <;> grind
 
 omit [Fintype S] [DecidableEq S] in

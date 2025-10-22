@@ -638,7 +638,7 @@ def assignVars [DecidableEq α] :
 theorem _root_.List.length_le_of_subset_of_nodup {l₁ l₂ : List α}
     (hs : l₁ ⊆ l₂) (hnd : l₁.Nodup) : l₁.length ≤ l₂.length := by
   classical
-  refine le_trans ?_ (List.Sublist.length_le (List.dedup_sublist l₂))
+  refine Std.le_trans ?_ (List.Sublist.length_le (List.dedup_sublist l₂))
   rw [← List.dedup_eq_self.2 hnd]
   rw [← List.card_toFinset, ← List.card_toFinset]
   refine Finset.card_le_card ?_A
@@ -1260,7 +1260,7 @@ def toAIGAux {α : Type}
         intro idx h1 h2
         simp [notOut, out]
         rw [notDeclEq, AtomEq]
-        omega
+        grind
       {
       out := notOut.aig,
       ref := notOut.ref,
@@ -1302,8 +1302,8 @@ def toAIGAux {α : Type}
       rw [this]
       · rw [raig.decl_eq]
         · rw [laig.decl_eq]
-          omega
         · omega
+      · omega
     {
       out := ret.aig,
       ref := ret.ref,
@@ -1350,8 +1350,8 @@ def toAIGAux {α : Type}
       rw [this]
       · rw [raig.decl_eq]
         · rw [laig.decl_eq]
-          omega
         · omega
+      · omega
     {
       out := ret.aig,
       ref := ret.ref,
@@ -1398,8 +1398,8 @@ def toAIGAux {α : Type}
       rw [this]
       · rw [raig.decl_eq]
         · rw [laig.decl_eq]
-          omega
         · omega
+      · omega
     {
       out := ret.aig,
       ref := ret.ref,

@@ -6,7 +6,7 @@ import Mathlib.Algebra.Group.Nat.Range
 import Blase.AutoStructs.BundledNfa
 import Blase.FinEnum
 
-open Rel
+open SetRel
 
 abbrev State := Nat
 
@@ -33,11 +33,11 @@ def RawCNFA.states (m : RawCNFA A) : Finset State := Finset.range m.stateMax
 
 instance RawCNFA.statesFinset (m : RawCNFA A) : Fintype m.states := (Finset.range m.stateMax).fintypeCoeSort
 
-@[grind, simp]
+@[grind ., simp]
 lemma RawCNFA.stateMax_nin_states (m : RawCNFA A) : ¬(m.stateMax ∈ m.states) := by
   simp [states]
 
-@[grind, simp]
+@[grind ., simp]
 lemma RawCNFA.states_lt (m : RawCNFA A) s : s ∈ m.states → s < m.stateMax := by
   simp [RawCNFA.states]
 
@@ -46,7 +46,7 @@ A simulation between a concrete NFA and an abstract NFA consists in a relation
 between concrete and abstract states which satisfies some properties, as defined
 in Kozen 1997.
 -/
-structure RawCNFA.Simul (m : RawCNFA A) (M : NFA A Q) (R : Rel State Q) (D : Set Q) (T : Set (Q × A × Q)) where
+structure RawCNFA.Simul (m : RawCNFA A) (M : NFA A Q) (R : SetRel State Q) (D : Set Q) (T : Set (Q × A × Q)) where
   accept {s q} : s ~[R] q → (s ∈ m.finals ↔ q ∈ M.accept)
   initial₁ {s} : s ∈ m.initials → ∃ q ∈ M.start, s ~[R] q
   initial₂ {q} : q ∈ M.start → ∃ s ∈ m.initials, s ~[R] q
@@ -152,9 +152,9 @@ def RawCNFA.empty : RawCNFA A := {
   trans := ∅
 }
 
-@[grind, simp] lemma RawCNFA.empty_mem_initials {s : State} : s ∉ empty (A := A).initials := by simp [empty]
-@[grind, simp] lemma RawCNFA.empty_mem_finals {s : State} : s ∉ empty (A := A).finals := by simp [empty]
-@[grind, simp] lemma RawCNFA.empty_mem_tr {s s' : State} : s' ∉ empty (A := A).tr s a := by simp [empty, tr]
+@[grind ., simp] lemma RawCNFA.empty_mem_initials {s : State} : s ∉ empty (A := A).initials := by simp [empty]
+@[grind ., simp] lemma RawCNFA.empty_mem_finals {s : State} : s ∉ empty (A := A).finals := by simp [empty]
+@[grind ., simp] lemma RawCNFA.empty_mem_tr {s s' : State} : s' ∉ empty (A := A).tr s a := by simp [empty, tr]
 @[grind =, simp] lemma RawCNFA.empty_trans : empty (A := A).trans = ∅ := by rfl
 @[grind =, simp] lemma RawCNFA.empty_states : empty (A := A).states = ∅ := by rfl
 @[grind =, simp] lemma RawCNFA.empty_tr {s : State} : empty (A := A).tr s a = ∅ := by simp [empty, tr]
@@ -173,7 +173,7 @@ def RawCNFA.addTrans (m : RawCNFA A) (a : A) (s s' : State) : RawCNFA A :=
 def RawCNFA.addManyTrans (m : RawCNFA A) (a : List A) (s s' : State) : RawCNFA A :=
   a.foldl (init := m) fun m a => m.addTrans a s s'
 
-@[grind, simp]
+@[grind =, simp]
 lemma RawCNFA.addManyTrans_nil (m : RawCNFA A) {s s' : State} :
     m.addManyTrans [] s s' = m :=
   rfl
@@ -280,14 +280,14 @@ lemma addTrans_tr_eq (m : RawCNFA A) [LawfulBEq A] (a : A) (s₁ s₂ : State) :
 @[grind =, simp]
 lemma addTrans_tr_neq (m : RawCNFA A) [LawfulBEq A] {a : A} {s₁ s₁' s₂ : State} (hneq : s₁ ≠ s₁') :
     (m.addTrans a s₁ s₂).tr s₁' a = m.tr s₁' a := by
-  grind [RawCNFA.addTrans, RawCNFA.tr, Std.HashMap.getD_insert]
+  grind [RawCNFA.addTrans, RawCNFA.tr]
 
 @[grind =] -- TODO: should I?
 lemma addTrans_tr (m : RawCNFA A) [LawfulBEq A] {a b : A} {s₁ s₁' s₂ : State} :
     (m.addTrans a s₁ s₂).tr s₁' b = if s₁ = s₁' ∧ a = b then (m.tr s₁ a).insert s₂ else m.tr s₁' b := by
-  grind [RawCNFA.addTrans, RawCNFA.tr, Std.HashMap.getD_insert]
+  grind [RawCNFA.addTrans, RawCNFA.tr]
 
-@[grind, simp]
+@[grind =, simp]
 lemma mem_addTrans_tr (m : RawCNFA A) [LawfulBEq A] (a : A) (s1 s2 : State) :
     s' ∈ (m.addTrans a s1 s2).tr s b ↔
       (s = s1 ∧ s' = s2 ∧ b = a) ∨ s' ∈ m.tr s b := by
@@ -297,7 +297,7 @@ lemma mem_addTrans_tr (m : RawCNFA A) [LawfulBEq A] (a : A) (s1 s2 : State) :
     simp_all only [Std.HashSet.mem_insert, beq_iff_eq, and_true, true_and]; grind
   · grind
 
-@[grind, simp, aesop 50% unsafe]
+@[grind ., simp, aesop 50% unsafe]
 lemma mem_states_newState (m : RawCNFA A) (s : State) (hin : s ∈ m.states) :
     s ∈ m.newState.2.states := by
   simp_all [RawCNFA.newState, RawCNFA.states]; omega
@@ -330,7 +330,7 @@ lemma newState_eq (m : RawCNFA A) :
     m.newState.1 = m.stateMax := by
   simp_all [RawCNFA.newState]
 
-@[grind, simp, aesop 50% unsafe]
+@[grind ., simp, aesop 50% unsafe]
 lemma mem_states_newState_self (m : RawCNFA A) :
     m.newState.1 ∈ m.newState.2.states := by
   simp_all [RawCNFA.newState, RawCNFA.states]
@@ -360,10 +360,10 @@ attribute [simp] CNFA.wf
 def CNFA.Sim (m : CNFA n) (M : NFA' n) :=
   m.m.Sim M.M
 
-attribute [grind, simp] RawCNFA.WF.initials_lt RawCNFA.WF.trans_src_lt RawCNFA.WF.trans_tgt_lt RawCNFA.WF.finals_lt
-attribute [grind, aesop 50% unsafe] RawCNFA.WF.initials_lt RawCNFA.WF.trans_src_lt RawCNFA.WF.trans_tgt_lt RawCNFA.WF.finals_lt
+attribute [grind ., simp] RawCNFA.WF.initials_lt RawCNFA.WF.trans_src_lt RawCNFA.WF.trans_tgt_lt RawCNFA.WF.finals_lt
+attribute [grind ., aesop 50% unsafe] RawCNFA.WF.initials_lt RawCNFA.WF.trans_src_lt RawCNFA.WF.trans_tgt_lt RawCNFA.WF.finals_lt
 
-@[grind, simp, aesop 50% unsafe]
+@[grind ., simp, aesop 50% unsafe]
 lemma RawCNFA.WF.trans_src_lt' {m : RawCNFA A} (hwf : m.WF) :
     ∀ {s a}, (s, a) ∈ m.trans → s ∈ m.states := by
   intros s a hin; simp [hwf.trans_src_lt _ hin]
@@ -394,7 +394,7 @@ lemma RawCNFA.WF.trans_tgt_lt_internal {m : RawCNFA A} (hwf : m.WF) [LawfulBEq A
   exact fun s a s' a_1 => hwf.trans_tgt_lt a_1
 
 
-@[grind, simp, aesop 50% unsafe]
+@[grind ., simp, aesop 50% unsafe]
 lemma RawCNFA.WF.trans_src_lt'' [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
     ∀ {s a s'}, s' ∈ m.tr s a → s ∈ m.states := by
   rintro s a s' hin
@@ -406,12 +406,12 @@ lemma RawCNFA.WF.trans_src_lt'' [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
   · simp [heq] at hin
   · exact Std.HashMap.mem_of_getElem? heq
 
-@[grind, simp, aesop 50% unsafe]
+@[grind ., simp, aesop 50% unsafe]
 lemma wf_empty :
     RawCNFA.empty (A := A).WF := by
   constructor <;> simp
 
-@[grind, simp, aesop 50% unsafe]
+@[grind ., simp, aesop 50% unsafe]
 lemma wf_newState (m : RawCNFA A) (hwf : m.WF) :
     m.newState.2.WF := by
   constructor <;> intros <;> simp [RawCNFA.states] <;>
@@ -428,19 +428,19 @@ lemma RawCNFA.same_stateMax (m : RawCNFA A) x y (z : Std.HashMap (State × A) (S
 @[grind =, simp]
 lemma RawCNFA.empty_stateMax : empty (A := A).stateMax = 0 := rfl
 
-@[grind, simp, aesop 50% unsafe]
+@[grind ., simp, aesop 50% unsafe]
 lemma wf_addInitial (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addInitial s).WF := by
   constructor <;> intros <;> simp_all [RawCNFA.addInitial]
   { casesm* _ ∨ _ <;> subst_eqs <;> simp_all }
   { apply hwf.trans_tgt_lt <;> assumption }
 
-@[grind, simp, aesop 50% unsafe]
+@[grind ., simp, aesop 50% unsafe]
 lemma wf_addFinal (m : RawCNFA A) (hwf : m.WF) (hin : s ∈ m.states) :
     (m.addFinal s).WF := by
   constructor <;> intros <;> simp_all [RawCNFA.addFinal] <;> aesop
 
-@[grind, simp, aesop 50% unsafe]
+@[grind ., simp, aesop 50% unsafe]
 lemma wf_addTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s a s' (hin : s ∈ m.states) (hin' : s' ∈ m.states) :
     (m.addTrans a s s').WF := by
   constructor
@@ -450,13 +450,13 @@ lemma wf_addTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s a s' (hin : s ∈
     Prod.mk.injEq, RawCNFA.same_stateMax]; grind
   · grind
 
-@[grind, simp, aesop 50% unsafe]
+@[grind ., simp, aesop 50% unsafe]
 lemma wf_addManyTrans [LawfulBEq A] (m : RawCNFA A) (hwf : m.WF) s as s'
   (hin : s ∈ m.states) (hin' : s' ∈ m.states) :
     (m.addManyTrans as s s').WF := by
   induction as generalizing m <;> simp_all
 
-@[grind, simp]
+@[grind ., simp]
 lemma wf_createSink [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) : m.createSink.2.WF := by
   let motive (m' : RawCNFA A) := m'.WF ∧ m.stateMax ∈ m'.states
   suffices _ : motive m.createSink.2 by simp_all [motive]
@@ -484,7 +484,7 @@ lemma createSink_finals [LawfulBEq A] {m : RawCNFA A} : m.createSink.2.finals = 
   simp only [RawCNFA.createSink, newState_eq]
   apply List.foldlRecOn <;> simp_all [motive]
 
-@[grind, simp]
+@[grind =, simp]
 lemma createSink_trans [LawfulBEq A] {m : RawCNFA A} (hwf : m.WF) :
     s₂ ∈ m.createSink.2.tr s₁ a ↔
       (s₁ = m.stateMax ∧ s₂ = m.stateMax) ∨
@@ -615,7 +615,7 @@ lemma CNFA.recognizes_functional {m : CNFA n} :
   rintro ⟨M₁, hs₁, rfl⟩ ⟨M₂, hs₂, rfl⟩
   exact language_stable_sim hs₁ hs₂
 
-@[grind, simp]
+@[grind ., simp]
 lemma sim_toNFA_eq_accepts {m : CNFA n} {M : NFA' n} (hsim : m.Sim M) :
     m.toNFA.accepts = M.M.accepts := by
   have : m.toNFA = m.toNFA'.M := by rfl

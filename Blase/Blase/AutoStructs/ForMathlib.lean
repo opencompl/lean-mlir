@@ -8,7 +8,7 @@ set_option grind.warning false
 
 open Set
 open Mathlib
-open Rel
+open SetRel
 
 @[simp]
 lemma List.Vector.append_get_lt {x : List.Vector α n} {y : List.Vector α m} {i : Fin (n+m)} (hlt: i < n) :
@@ -658,14 +658,14 @@ lemma proj_accepts (M : NFA (BitVec m) σ) (f : Fin n → Fin m) :
 
 /- Simulations -/
 
-structure _root_.Rel.set_eq (R : Rel α β) (A : Set α) (B : Set β) where
+structure _root_.SetRel.set_eq (R : SetRel α β) (A : Set α) (B : Set β) where
   fwd : a ∈ A → ∃ b ∈ B, a ~[R] b
   bwd : b ∈ B → ∃ a ∈ A, a ~[R] b
 
-theorem _root_.Rel.set_eq_symm {R : Rel α β} (h : R.set_eq A B) : R.inv.set_eq B A := by
-  rcases h with ⟨h1, h2⟩; constructor <;> simp_all [Rel.inv]
+theorem _root_.SetRel.set_eq_symm {R : SetRel α β} (h : R.set_eq A B) : R.inv.set_eq B A := by
+  rcases h with ⟨h1, h2⟩; constructor <;> simp_all [SetRel.inv]
 
-structure Bisimul (R : Rel σ ς) (M₁ : NFA α σ) (M₂ : NFA α ς) where
+structure Bisimul (R : SetRel σ ς) (M₁ : NFA α σ) (M₂ : NFA α ς) where
   accept : q₁ ~[R] q₂ → (q₁ ∈ M₁.accept ↔ q₂ ∈ M₂.accept)
   start : R.set_eq M₁.start M₂.start
   trans_match₁ : q₁ ~[R] q₂ → q₁' ∈ M₁.step q₁ a → ∃ q₂', q₂' ∈ M₂.step q₂ a ∧ q₁' ~[R] q₂'
@@ -674,9 +674,11 @@ structure Bisimul (R : Rel σ ς) (M₁ : NFA α σ) (M₂ : NFA α ς) where
 def Bisim (M₁ : NFA α σ) (M₂ : NFA α ς) := ∃ R, M₁.Bisimul R M₂
 
 theorem Bisimul.symm (hsim : Bisimul R M₁ M₂) : Bisimul R.inv M₂ M₁ := by
-  rcases hsim with ⟨h1, h2, h3, h4⟩; constructor <;> simp_all [Rel.inv]
+  rcases hsim with ⟨h1, h2, h3, h4⟩; constructor <;> simp_all [SetRel.inv]
   · intros; symm; apply h1; assumption
-  · apply R.set_eq_symm; assumption
+  ·
+    apply R.set_eq_symm
+    assumption
   · intros; apply h4 <;> assumption
   · intros; apply h3 <;> assumption
 
@@ -760,7 +762,7 @@ lemma Std.HashSet.mem_toSet [BEq α] [Hashable α] (m : HashSet α) : x ∈ m.to
 @[simp]
 theorem Array.not_elem_back_pop (a : Array X) (x : X) : a.toList.Nodup → a.back? = some x → x ∉ a.pop := by
   rcases a with ⟨l⟩
-  simp only [List.back?_toArray, List.pop_toArray, mem_toArray]
+  simp only [List.back?_toArray, List.pop_toArray, List.mem_toArray]
   rintro hnd hlast hdl
   apply List.dropLast_append_getLast? at hlast
   rw [←hlast] at hnd
@@ -774,11 +776,11 @@ theorem Array.nodup_iff_getElem?_ne_getElem? {α : Type u} {a : Array α} :
 
 theorem Array.mem_of_mem_pop (a : Array α) (x : α) : x ∈ a.pop → x ∈ a := by
   rcases a with ⟨l⟩
-  simp only [List.pop_toArray, mem_toArray]
+  simp only [List.pop_toArray, List.mem_toArray]
   exact List.mem_of_mem_dropLast
 
 theorem Array.mem_pop_iff (a : Array α) (x : α) : x ∈ a ↔ x ∈ a.pop ∨ a.back? = some x := by
-  rcases a with ⟨l⟩; simp only [mem_toArray, List.pop_toArray, List.back?_toArray]
+  rcases a with ⟨l⟩; simp only [List.mem_toArray, List.pop_toArray, List.back?_toArray]
   induction l using List.reverseRecOn
   case nil => simp
   case append_singleton l y ih => simp only [List.mem_append, List.mem_singleton, List.dropLast_concat,
