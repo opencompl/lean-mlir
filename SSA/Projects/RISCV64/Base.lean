@@ -622,10 +622,10 @@ abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
   -- | ctzw
   -- | cpop
   -- | cpopw
-  | .max, regs => ZBB_RTYPE_pure_RISCV_MAX (regs.getN 1) (regs.getN 0)
-  | .maxu, regs => ZBB_RTYPE_pure_RISCV_MAXU (regs.getN 1) (regs.getN 0)
-  | .min, regs => ZBB_RTYPE_pure_RISCV_MIN (regs.getN 1) (regs.getN 0)
-  | .minu, regs => ZBB_RTYPE_pure_RISCV_MINU (regs.getN 1) (regs.getN 0)
+  | .max, regs => ZBB_RTYPE_pure_RISCV_MAX_bv (regs.getN 1) (regs.getN 0)
+  | .maxu, regs => ZBB_RTYPE_pure_RISCV_MAXU_bv (regs.getN 1) (regs.getN 0)
+  | .min, regs => ZBB_RTYPE_pure_RISCV_MIN_bv (regs.getN 1) (regs.getN 0)
+  | .minu, regs => ZBB_RTYPE_pure_RISCV_MINU_bv (regs.getN 1) (regs.getN 0)
   | RISCV64.Op.sext.b, reg => ZBB_EXTOP_pure64_RISCV_SEXTB (reg.getN 0)
   | RISCV64.Op.sext.h, reg => ZBB_EXTOP_pure64_RISCV_SEXTH (reg.getN 0)
   | RISCV64.Op.zext.h, reg => ZBB_EXTOP_pure64_RISCV_ZEXTH (reg.getN 0)

@@ -401,7 +401,9 @@ theorem R.repLength_leq_representative_degree_plus_1 (a : R q n) :
   a.repLength ≤ (R.representative q n a).natDegree + 1 := by
   simp only [repLength]
   generalize hdegree : degree (representative q n a) = d
-  cases' d with d <;> simp [natDegree, hdegree, WithBot.unbotD, WithBot.recBotCoe]
+  rcases d with d
+  simp [natDegree, hdegree, WithBot.unbotD, WithBot.recBotCoe]
+  grind
 
 theorem R.repLength_lt_n_plus_1 [Fact (q > 1)]: forall a : R q n, a.repLength < 2^n + 1 := by
   intro a
