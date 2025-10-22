@@ -51,7 +51,7 @@ unsafe def elabIntoEIO {α : Type} (env : Lean.Environment) (typeName : Lean.Exp
   fun s =>
     let resE : EIO Exception α :=
         elabIntoCore (α := α) typeName stx |>.run'
-        {fileName := "parserHack", fileMap := default} {env := env}
+        {fileName := "parserHack", fileMap := default, maxHeartbeats := 0} {env := env}
     match resE s with
     | .ok a s => .ok a s
     | .error exception s =>
