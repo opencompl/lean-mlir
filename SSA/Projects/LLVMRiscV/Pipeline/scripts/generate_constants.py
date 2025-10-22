@@ -177,8 +177,8 @@ Test the rewrite:
 
 REWRITE_GENERATORS = [
     lambda: generate_sub_to_add_rewrites(max_val=50),
-    lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 65))),
-    lambda: generate_urem_pow2_rewrites(powers=list(range(0, 65))),
+    lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 64))),
+    lambda: generate_urem_pow2_rewrites(powers=list(range(0, 64))),
 ]
 
 

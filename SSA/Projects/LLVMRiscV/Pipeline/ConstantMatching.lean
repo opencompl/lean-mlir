@@ -2438,20 +2438,6 @@ def mul_to_shl_9223372036854775808 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bit
       llvm.return %0 : i64
   }]
 
-def mul_to_shl_18446744073709551616 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (18446744073709551616) : i64
-      %0 = llvm.mul %x, %c : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (64) : i64
-      %0 = llvm.shl %x, %c : i64
-      llvm.return %0 : i64
-  }]
-
 def mul_to_shl : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [
     ⟨_, mul_to_shl_1⟩,
@@ -2517,8 +2503,7 @@ def mul_to_shl : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
     ⟨_, mul_to_shl_1152921504606846976⟩,
     ⟨_, mul_to_shl_2305843009213693952⟩,
     ⟨_, mul_to_shl_4611686018427387904⟩,
-    ⟨_, mul_to_shl_9223372036854775808⟩,
-    ⟨_, mul_to_shl_18446744073709551616⟩
+    ⟨_, mul_to_shl_9223372036854775808⟩
   ]
 
 
@@ -3426,20 +3411,6 @@ def urem_pow2_to_mask_9223372036854775808 : LLVMPeepholeRewriteRefine 64 [Ty.llv
       llvm.return %0 : i64
   }]
 
-def urem_pow2_to_mask_18446744073709551616 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (18446744073709551616) : i64
-      %0 = llvm.urem %x, %c : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (18446744073709551615) : i64
-      %0 = llvm.and %x, %c : i64
-      llvm.return %0 : i64
-  }]
-
 def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [
     ⟨_, urem_pow2_to_mask_1⟩,
@@ -3505,6 +3476,5 @@ def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
     ⟨_, urem_pow2_to_mask_1152921504606846976⟩,
     ⟨_, urem_pow2_to_mask_2305843009213693952⟩,
     ⟨_, urem_pow2_to_mask_4611686018427387904⟩,
-    ⟨_, urem_pow2_to_mask_9223372036854775808⟩,
-    ⟨_, urem_pow2_to_mask_18446744073709551616⟩
+    ⟨_, urem_pow2_to_mask_9223372036854775808⟩
   ]
