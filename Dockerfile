@@ -47,9 +47,9 @@ COPY . ./
 RUN --mount=type=cache,target="$CACHE_MOUNT",sharing=private \
   ./.dockerscripts/cache.sh setup && \
   # Build
-  lake exe cache get ProofWidgets
-  # ^ ProofWidgets needs to be fetched from cache, to retrieve
-  #   pre-built JS files that can't be built from source by `lake`
+  lake exe cache get ProofWidgets && \
+  # ProofWidgets needs to be fetched from cache, to retrieve
+  # pre-built JS files that can't be built from source by `lake`
   lake build && \
   #
   ./.dockerscripts/cache.sh teardown
