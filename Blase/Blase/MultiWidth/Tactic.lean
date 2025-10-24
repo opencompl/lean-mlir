@@ -1092,6 +1092,31 @@ def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM Unit :=
 
 declare_config_elab elabBvMultiWidthConfig Config
 
+def printSmtLib (g : MVarId) : SolverM Unit := do
+  let g ← revertPropHyps g
+  let .some g ← g.withContext (Normalize.runPreprocessing g)
+    | do
+        debugLog m!"Preprocessing automatically closed goal."
+  g.withContext do
+    debugLog m!"goal after preprocessing: {indentD g}"
+
+  g.withContext do
+    let collect : CollectState := {}
+    let pRawExpr ← g.getType
+    let (p, collect) ← collectBVPredicateAux collect pRawExpr
+    debugLog m!"collected predicate: '{repr p}'"
+    throwError (toSmtLib p)
+
+syntax (name := bvPrintSmtLib) "bv_multi_width_print_smt_lib" Lean.Parser.Tactic.optConfig : tactic
+@[tactic bvPrintSmtLib]
+def evalBvPrintSmtLib : Tactic := fun
+| `(tactic| bv_print_smt_lib $cfg) => do
+  let g ← getMainGoal
+  g.withContext do
+    printSmtLib g
+| _ => throwUnsupportedSyntax
+
+
 syntax (name := bvMultiWidth) "bv_multi_width" Lean.Parser.Tactic.optConfig : tactic
 @[tactic bvMultiWidth]
 def evalBvMultiWidth : Tactic := fun
@@ -1101,127 +1126,6 @@ def evalBvMultiWidth : Tactic := fun
   g.withContext do
     solveEntrypoint g cfg
 | _ => throwUnsupportedSyntax
-
-/-
-A tactic to generalize the width of BitVectors
--/
-
-structure State where
-  /-- Maps fixed width to a new MVar for the generic width. -/
-  mapping : DiscrTree Expr
-  invMapping : Std.HashMap Expr Expr
-  deriving Inhabited
-
-abbrev GenM := StateT State TermElabM 
-
-def State.get? (e : Expr) : GenM (Option Expr) := do
-  let s ← get
-  match ← s.mapping.getMatch e with
-  | #[x] => return x
-  | #[] => return none
-  | _ => unreachable!
-
-def State.setMapping (e x : Expr) : GenM Unit := do
-  let s ← get
-  let m ← s.mapping.insert e x
-  set {s with mapping := m}
-
-/-- Get the generic width BV MVar corresponding to an existing BV width. -/
-def State.add? (e : Expr) : GenM Expr := do
-  match ← get? e with
-  | some x => pure x
-  | none =>
-    if e.isFVar || e.isBVar then pure e else
-    let x ← mkFreshExprMVar (some (.const ``Nat [])) (userName := `w)
-    setMapping e x
-    modify fun s => { s with invMapping := s.invMapping.insert x e }
-    pure x
-
-/--
-This table determines which arguments of important functions are bitwidths and
-should be generalized and which ones are normal parameters which should be
-recursively visited.
--/
-def genTable : Std.HashMap Name (Array Bool) := Id.run do
-  let mut table := .emptyWithCapacity 16
-  table := table.insert ``BitVec #[true]
-  table := table.insert ``BitVec.zeroExtend #[true, true, false]
-  table := table.insert ``BitVec.signExtend #[true, true, false]
-  table := table.insert ``BitVec.instAdd #[true]
-  table := table.insert ``BitVec.instSub #[true]
-  table := table.insert ``BitVec.instMul #[true]
-  table := table.insert ``BitVec.instDiv #[true]
-  table
-
-partial def visit (t : Expr) : GenM Expr := do
-  let t ← instantiateMVars t
-  match t with
-  | .app _ _ =>
-    let f := t.getAppFn
-    let args := t.getAppArgs
-    let table := 
-      if let some (f, _) := f.const? then
-        genTable[f]?
-      else
-        none
-    let bv? (n : Nat) :=
-      match table with
-      | .some xs => xs.getD n false
-      | .none => false
-    args.zipIdx.foldlM (init := f) fun res (arg, i) => do
-      let arg ← if bv? i then State.add? arg else visit arg
-      pure <| .app res arg
-  | .forallE n e₁ e₂ info =>
-    pure <| .forallE n (← visit e₁) (← visit e₂) info
-  | e => 
-    pure e
-
-def doBvGeneralize (g : MVarId) : GenM (Expr × MVarId) := do
-  let lctx ← getLCtx
-  let mut allFVars := #[]
-  for h in lctx do
-    if not h.isImplementationDetail then
-      allFVars := allFVars.push h.fvarId
-  let (_, g) ← g.revert allFVars
-  let e ← visit (← g.getType)
-  let mut newVars := #[]
-  for x in (←get).mapping.elements do
-    newVars := newVars.push x
-
-  let e ← mkForallFVars newVars e (binderInfoForMVars := .default)
-  let e ← instantiateMVars e
-  pure (e, g)
-
-/--
-This tactic tries to generalize the bitvector widths, and only the bitvector
-widths. See `genTable` if the tactic fails to generalize the right parameters
-of a function over bitvectors.
--/
-syntax (name := bvGeneralizeWidth) "bv_generalize_width" Lean.Parser.Tactic.optConfig : tactic
-@[tactic bvGeneralizeWidth]
-def evalBvGeneralizeWidth : Tactic := fun
-| `(tactic| bv_generalize_width) => do
-  let g₀ ← getMainGoal
-  g₀.withContext do
-    let ((e, g), s) ← (doBvGeneralize g₀).run default
-    g.withContext do
-      let g' ← mkFreshExprMVar (some e)
-      let mut newVals := #[]
-      for x in s.mapping.elements do
-        newVals := newVals.push (s.invMapping[x]!)
-      g.assign <| mkAppN g' newVals 
-      replaceMainGoal [g'.mvarId!]
-| _ => throwUnsupportedSyntax
-
-theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) : 
-    x = x := by
-  bv_generalize_width
-  bv_multi_width
-
-theorem test_bv_generalize (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
-    x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
-  bv_generalize_width
-  bv_multi_width
 
 end Tactic
 end MultiWidth

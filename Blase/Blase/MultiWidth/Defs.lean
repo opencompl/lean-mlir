@@ -3,6 +3,7 @@ import Mathlib.Order.Notation
 import Blase.Fast.FiniteStateMachine
 import Blase.Vars
 import Lean
+import Blase.Blase.Sexpr
 
 import Std.Tactic.BVDecide
 
