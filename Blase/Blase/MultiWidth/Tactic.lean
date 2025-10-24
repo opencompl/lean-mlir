@@ -866,19 +866,24 @@ def mkDecideTy : SolverM Expr := do
   debugCheck ty
   return ty
 
-def CollectState.logSuspiciousFvars (state : CollectState) : SolverM Unit := do
+def CollectState.logSuspiciousFvars (state : CollectState) : SolverM (Array Expr) := do
+  let mut exprs := #[]
   for (e, _w) in state.bvToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted non-variable bitvector: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+      exprs := exprs.push e
   for e in state.wToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted non-variable width: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+      exprs := exprs.push e
   for e in state.pToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted prop: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+      exprs := exprs.push e
   for e in state.boolToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted boolean: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+      exprs := exprs.push e
 
 /--
 info: Circuit.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool
@@ -1002,15 +1007,19 @@ def solve (g : MVarId) : SolverM Unit := do
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter)
     match stats with
     | .safetyFailure i =>
-      collect.logSuspiciousFvars
-      throwError m!"safety failure at iteration {i} for predicate {repr p}"
+      let suspiciousVars ← collect.logSuspiciousFvars
+      -- | Found precise counter-example to claimed predicate.
+      if suspiciousVars.empty then
+          throwError m!"CEXPRECISE: Found exact counter-example at iteration {i} for predicate {repr p}"
+        else
+          throwError m!"CEXIMPRECISE: Found possible counter-example at iteration {i} for predicate {repr p}"
     | .exhaustedIterations _ =>
-      collect.logSuspiciousFvars
-      throwError m!"exhausted iterations for predicate {repr p}"
+      let _ ← collect.logSuspiciousFvars
+      throwError m!"PROOFNOTFOUND: exhausted iterations for predicate {repr p}"
     | .provenByKIndCycleBreaking niters safetyCert indCert =>
       if (← read).verbose? then
-        collect.logSuspiciousFvars
-      debugLog m!"proven by KInduction with {niters} iterations"
+        let _ ← collect.logSuspiciousFvars
+      debugLog m!"PROVE: proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
         -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
         let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
@@ -1188,10 +1197,10 @@ This tactic tries to generalize the bitvector widths, and only the bitvector
 widths. See `genTable` if the tactic fails to generalize the right parameters
 of a function over bitvectors.
 -/
-syntax (name := bvGeneralize) "bv_generalize" Lean.Parser.Tactic.optConfig : tactic
-@[tactic bvGeneralize]
-def evalBvGeneralize : Tactic := fun
-| `(tactic| bv_generalize) => do
+syntax (name := bvGeneralizeWidth) "bv_generalize_width" Lean.Parser.Tactic.optConfig : tactic
+@[tactic bvGeneralizeWidth]
+def evalBvGeneralizeWidth : Tactic := fun
+| `(tactic| bv_generalize_width) => do
   let g₀ ← getMainGoal
   g₀.withContext do
     let ((e, g), s) ← (doBvGeneralize g₀).run default
@@ -1206,12 +1215,12 @@ def evalBvGeneralize : Tactic := fun
 
 theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) : 
     x = x := by
-  bv_generalize
+  bv_generalize_width
   bv_multi_width
 
 theorem test_bv_generalize (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
     x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
-  bv_generalize
+  bv_generalize_width
   bv_multi_width
 
 end Tactic
