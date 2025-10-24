@@ -1900,6 +1900,28 @@ def double_icmp_zero_combine : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
   [⟨_, double_icmp_zero_and_combine⟩,
   ⟨_, double_icmp_zero_or_combine⟩]
 
+/-! ### idempotent_prop -/
+
+/-
+Test the rewrite:
+  Fold (freeze (freeze x)) -> (freeze x)
+-/
+def idempotent_prop_freeze : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.freeze %x : i64
+      %1 = llvm.freeze %0 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.freeze %x : i64
+      llvm.return %0 : i64
+  }]
+
+def idempotent_prop : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, idempotent_prop_freeze⟩]
+
  /-! ### Grouped patterns -/
 
 /-- We assemble the `identity_combines` patterns for RISCV as in GlobalISel -/
@@ -1935,7 +1957,8 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
   LLVMIR_cast_combines_64 ++
   xor_of_and_with_same_reg_list ++
   LLVMIR_identity_combines_64 ++
-  match_selects
+  match_selects ++
+  idempotent_prop
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32  Γ) :=

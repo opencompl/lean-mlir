@@ -772,3 +772,13 @@ info: {
 -/
 #guard_msgs in
 #eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_0_f.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i64):
+    %1 = "llvm.freeze"(%0) : (i64) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner idempotent_prop_freeze.lhs)).val).val
