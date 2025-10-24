@@ -10,7 +10,7 @@ open LLVMRiscV
 
 /-! ### sub_to_add -/
 
-/-- 
+/--
 Test the rewrite:
   (sub x, C) → (add x, -C)
 -/
@@ -3477,4 +3477,10924 @@ def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
     ⟨_, urem_pow2_to_mask_2305843009213693952⟩,
     ⟨_, urem_pow2_to_mask_4611686018427387904⟩,
     ⟨_, urem_pow2_to_mask_9223372036854775808⟩
+  ]
+
+
+
+/-! ### cast_combines_narrow_binops -/
+
+/--
+Test the rewrite:
+    trunc (binop X, C) --> binop (trunc X, trunc C)
+-/
+def narrow_binop_add_neg50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_neg1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_neg1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_neg1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_neg1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_neg1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_neg1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_0 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_0 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_0 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_0 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_0 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_0 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_1 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_2 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_3 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_4 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_5 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_6 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 6 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_7 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 7 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_8 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 8 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_9 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 9 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_10 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 10 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_11 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 11 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_12 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 12 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_13 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 13 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_14 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 14 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_15 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 15 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_16 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 16 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_17 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 17 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_18 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 18 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_19 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 19 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_20 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 20 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_21 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 21 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_22 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 22 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_23 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 23 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_24 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 24 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_25 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 25 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_26 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 26 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_27 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 27 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_28 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 28 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_29 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 29 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_30 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 30 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_31 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 31 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 32 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_33 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 33 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_34 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 34 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_35 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 35 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_36 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 36 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_37 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 37 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_38 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 38 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_39 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 39 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_40 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 40 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_41 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 41 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_42 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 42 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_43 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 43 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_44 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 44 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_45 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 45 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_46 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 46 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_47 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 47 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_48 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 48 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_49 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 49 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_add_50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_sub_50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_mul_50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_and_50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_or_50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def narrow_binop_xor_50 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 50 : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }]
+
+def cast_combines_narrow_binops : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [
+    ⟨_, narrow_binop_add_neg50⟩,
+    ⟨_, narrow_binop_sub_neg50⟩,
+    ⟨_, narrow_binop_mul_neg50⟩,
+    ⟨_, narrow_binop_and_neg50⟩,
+    ⟨_, narrow_binop_or_neg50⟩,
+    ⟨_, narrow_binop_xor_neg50⟩,
+    ⟨_, narrow_binop_add_neg49⟩,
+    ⟨_, narrow_binop_sub_neg49⟩,
+    ⟨_, narrow_binop_mul_neg49⟩,
+    ⟨_, narrow_binop_and_neg49⟩,
+    ⟨_, narrow_binop_or_neg49⟩,
+    ⟨_, narrow_binop_xor_neg49⟩,
+    ⟨_, narrow_binop_add_neg48⟩,
+    ⟨_, narrow_binop_sub_neg48⟩,
+    ⟨_, narrow_binop_mul_neg48⟩,
+    ⟨_, narrow_binop_and_neg48⟩,
+    ⟨_, narrow_binop_or_neg48⟩,
+    ⟨_, narrow_binop_xor_neg48⟩,
+    ⟨_, narrow_binop_add_neg47⟩,
+    ⟨_, narrow_binop_sub_neg47⟩,
+    ⟨_, narrow_binop_mul_neg47⟩,
+    ⟨_, narrow_binop_and_neg47⟩,
+    ⟨_, narrow_binop_or_neg47⟩,
+    ⟨_, narrow_binop_xor_neg47⟩,
+    ⟨_, narrow_binop_add_neg46⟩,
+    ⟨_, narrow_binop_sub_neg46⟩,
+    ⟨_, narrow_binop_mul_neg46⟩,
+    ⟨_, narrow_binop_and_neg46⟩,
+    ⟨_, narrow_binop_or_neg46⟩,
+    ⟨_, narrow_binop_xor_neg46⟩,
+    ⟨_, narrow_binop_add_neg45⟩,
+    ⟨_, narrow_binop_sub_neg45⟩,
+    ⟨_, narrow_binop_mul_neg45⟩,
+    ⟨_, narrow_binop_and_neg45⟩,
+    ⟨_, narrow_binop_or_neg45⟩,
+    ⟨_, narrow_binop_xor_neg45⟩,
+    ⟨_, narrow_binop_add_neg44⟩,
+    ⟨_, narrow_binop_sub_neg44⟩,
+    ⟨_, narrow_binop_mul_neg44⟩,
+    ⟨_, narrow_binop_and_neg44⟩,
+    ⟨_, narrow_binop_or_neg44⟩,
+    ⟨_, narrow_binop_xor_neg44⟩,
+    ⟨_, narrow_binop_add_neg43⟩,
+    ⟨_, narrow_binop_sub_neg43⟩,
+    ⟨_, narrow_binop_mul_neg43⟩,
+    ⟨_, narrow_binop_and_neg43⟩,
+    ⟨_, narrow_binop_or_neg43⟩,
+    ⟨_, narrow_binop_xor_neg43⟩,
+    ⟨_, narrow_binop_add_neg42⟩,
+    ⟨_, narrow_binop_sub_neg42⟩,
+    ⟨_, narrow_binop_mul_neg42⟩,
+    ⟨_, narrow_binop_and_neg42⟩,
+    ⟨_, narrow_binop_or_neg42⟩,
+    ⟨_, narrow_binop_xor_neg42⟩,
+    ⟨_, narrow_binop_add_neg41⟩,
+    ⟨_, narrow_binop_sub_neg41⟩,
+    ⟨_, narrow_binop_mul_neg41⟩,
+    ⟨_, narrow_binop_and_neg41⟩,
+    ⟨_, narrow_binop_or_neg41⟩,
+    ⟨_, narrow_binop_xor_neg41⟩,
+    ⟨_, narrow_binop_add_neg40⟩,
+    ⟨_, narrow_binop_sub_neg40⟩,
+    ⟨_, narrow_binop_mul_neg40⟩,
+    ⟨_, narrow_binop_and_neg40⟩,
+    ⟨_, narrow_binop_or_neg40⟩,
+    ⟨_, narrow_binop_xor_neg40⟩,
+    ⟨_, narrow_binop_add_neg39⟩,
+    ⟨_, narrow_binop_sub_neg39⟩,
+    ⟨_, narrow_binop_mul_neg39⟩,
+    ⟨_, narrow_binop_and_neg39⟩,
+    ⟨_, narrow_binop_or_neg39⟩,
+    ⟨_, narrow_binop_xor_neg39⟩,
+    ⟨_, narrow_binop_add_neg38⟩,
+    ⟨_, narrow_binop_sub_neg38⟩,
+    ⟨_, narrow_binop_mul_neg38⟩,
+    ⟨_, narrow_binop_and_neg38⟩,
+    ⟨_, narrow_binop_or_neg38⟩,
+    ⟨_, narrow_binop_xor_neg38⟩,
+    ⟨_, narrow_binop_add_neg37⟩,
+    ⟨_, narrow_binop_sub_neg37⟩,
+    ⟨_, narrow_binop_mul_neg37⟩,
+    ⟨_, narrow_binop_and_neg37⟩,
+    ⟨_, narrow_binop_or_neg37⟩,
+    ⟨_, narrow_binop_xor_neg37⟩,
+    ⟨_, narrow_binop_add_neg36⟩,
+    ⟨_, narrow_binop_sub_neg36⟩,
+    ⟨_, narrow_binop_mul_neg36⟩,
+    ⟨_, narrow_binop_and_neg36⟩,
+    ⟨_, narrow_binop_or_neg36⟩,
+    ⟨_, narrow_binop_xor_neg36⟩,
+    ⟨_, narrow_binop_add_neg35⟩,
+    ⟨_, narrow_binop_sub_neg35⟩,
+    ⟨_, narrow_binop_mul_neg35⟩,
+    ⟨_, narrow_binop_and_neg35⟩,
+    ⟨_, narrow_binop_or_neg35⟩,
+    ⟨_, narrow_binop_xor_neg35⟩,
+    ⟨_, narrow_binop_add_neg34⟩,
+    ⟨_, narrow_binop_sub_neg34⟩,
+    ⟨_, narrow_binop_mul_neg34⟩,
+    ⟨_, narrow_binop_and_neg34⟩,
+    ⟨_, narrow_binop_or_neg34⟩,
+    ⟨_, narrow_binop_xor_neg34⟩,
+    ⟨_, narrow_binop_add_neg33⟩,
+    ⟨_, narrow_binop_sub_neg33⟩,
+    ⟨_, narrow_binop_mul_neg33⟩,
+    ⟨_, narrow_binop_and_neg33⟩,
+    ⟨_, narrow_binop_or_neg33⟩,
+    ⟨_, narrow_binop_xor_neg33⟩,
+    ⟨_, narrow_binop_add_neg32⟩,
+    ⟨_, narrow_binop_sub_neg32⟩,
+    ⟨_, narrow_binop_mul_neg32⟩,
+    ⟨_, narrow_binop_and_neg32⟩,
+    ⟨_, narrow_binop_or_neg32⟩,
+    ⟨_, narrow_binop_xor_neg32⟩,
+    ⟨_, narrow_binop_add_neg31⟩,
+    ⟨_, narrow_binop_sub_neg31⟩,
+    ⟨_, narrow_binop_mul_neg31⟩,
+    ⟨_, narrow_binop_and_neg31⟩,
+    ⟨_, narrow_binop_or_neg31⟩,
+    ⟨_, narrow_binop_xor_neg31⟩,
+    ⟨_, narrow_binop_add_neg30⟩,
+    ⟨_, narrow_binop_sub_neg30⟩,
+    ⟨_, narrow_binop_mul_neg30⟩,
+    ⟨_, narrow_binop_and_neg30⟩,
+    ⟨_, narrow_binop_or_neg30⟩,
+    ⟨_, narrow_binop_xor_neg30⟩,
+    ⟨_, narrow_binop_add_neg29⟩,
+    ⟨_, narrow_binop_sub_neg29⟩,
+    ⟨_, narrow_binop_mul_neg29⟩,
+    ⟨_, narrow_binop_and_neg29⟩,
+    ⟨_, narrow_binop_or_neg29⟩,
+    ⟨_, narrow_binop_xor_neg29⟩,
+    ⟨_, narrow_binop_add_neg28⟩,
+    ⟨_, narrow_binop_sub_neg28⟩,
+    ⟨_, narrow_binop_mul_neg28⟩,
+    ⟨_, narrow_binop_and_neg28⟩,
+    ⟨_, narrow_binop_or_neg28⟩,
+    ⟨_, narrow_binop_xor_neg28⟩,
+    ⟨_, narrow_binop_add_neg27⟩,
+    ⟨_, narrow_binop_sub_neg27⟩,
+    ⟨_, narrow_binop_mul_neg27⟩,
+    ⟨_, narrow_binop_and_neg27⟩,
+    ⟨_, narrow_binop_or_neg27⟩,
+    ⟨_, narrow_binop_xor_neg27⟩,
+    ⟨_, narrow_binop_add_neg26⟩,
+    ⟨_, narrow_binop_sub_neg26⟩,
+    ⟨_, narrow_binop_mul_neg26⟩,
+    ⟨_, narrow_binop_and_neg26⟩,
+    ⟨_, narrow_binop_or_neg26⟩,
+    ⟨_, narrow_binop_xor_neg26⟩,
+    ⟨_, narrow_binop_add_neg25⟩,
+    ⟨_, narrow_binop_sub_neg25⟩,
+    ⟨_, narrow_binop_mul_neg25⟩,
+    ⟨_, narrow_binop_and_neg25⟩,
+    ⟨_, narrow_binop_or_neg25⟩,
+    ⟨_, narrow_binop_xor_neg25⟩,
+    ⟨_, narrow_binop_add_neg24⟩,
+    ⟨_, narrow_binop_sub_neg24⟩,
+    ⟨_, narrow_binop_mul_neg24⟩,
+    ⟨_, narrow_binop_and_neg24⟩,
+    ⟨_, narrow_binop_or_neg24⟩,
+    ⟨_, narrow_binop_xor_neg24⟩,
+    ⟨_, narrow_binop_add_neg23⟩,
+    ⟨_, narrow_binop_sub_neg23⟩,
+    ⟨_, narrow_binop_mul_neg23⟩,
+    ⟨_, narrow_binop_and_neg23⟩,
+    ⟨_, narrow_binop_or_neg23⟩,
+    ⟨_, narrow_binop_xor_neg23⟩,
+    ⟨_, narrow_binop_add_neg22⟩,
+    ⟨_, narrow_binop_sub_neg22⟩,
+    ⟨_, narrow_binop_mul_neg22⟩,
+    ⟨_, narrow_binop_and_neg22⟩,
+    ⟨_, narrow_binop_or_neg22⟩,
+    ⟨_, narrow_binop_xor_neg22⟩,
+    ⟨_, narrow_binop_add_neg21⟩,
+    ⟨_, narrow_binop_sub_neg21⟩,
+    ⟨_, narrow_binop_mul_neg21⟩,
+    ⟨_, narrow_binop_and_neg21⟩,
+    ⟨_, narrow_binop_or_neg21⟩,
+    ⟨_, narrow_binop_xor_neg21⟩,
+    ⟨_, narrow_binop_add_neg20⟩,
+    ⟨_, narrow_binop_sub_neg20⟩,
+    ⟨_, narrow_binop_mul_neg20⟩,
+    ⟨_, narrow_binop_and_neg20⟩,
+    ⟨_, narrow_binop_or_neg20⟩,
+    ⟨_, narrow_binop_xor_neg20⟩,
+    ⟨_, narrow_binop_add_neg19⟩,
+    ⟨_, narrow_binop_sub_neg19⟩,
+    ⟨_, narrow_binop_mul_neg19⟩,
+    ⟨_, narrow_binop_and_neg19⟩,
+    ⟨_, narrow_binop_or_neg19⟩,
+    ⟨_, narrow_binop_xor_neg19⟩,
+    ⟨_, narrow_binop_add_neg18⟩,
+    ⟨_, narrow_binop_sub_neg18⟩,
+    ⟨_, narrow_binop_mul_neg18⟩,
+    ⟨_, narrow_binop_and_neg18⟩,
+    ⟨_, narrow_binop_or_neg18⟩,
+    ⟨_, narrow_binop_xor_neg18⟩,
+    ⟨_, narrow_binop_add_neg17⟩,
+    ⟨_, narrow_binop_sub_neg17⟩,
+    ⟨_, narrow_binop_mul_neg17⟩,
+    ⟨_, narrow_binop_and_neg17⟩,
+    ⟨_, narrow_binop_or_neg17⟩,
+    ⟨_, narrow_binop_xor_neg17⟩,
+    ⟨_, narrow_binop_add_neg16⟩,
+    ⟨_, narrow_binop_sub_neg16⟩,
+    ⟨_, narrow_binop_mul_neg16⟩,
+    ⟨_, narrow_binop_and_neg16⟩,
+    ⟨_, narrow_binop_or_neg16⟩,
+    ⟨_, narrow_binop_xor_neg16⟩,
+    ⟨_, narrow_binop_add_neg15⟩,
+    ⟨_, narrow_binop_sub_neg15⟩,
+    ⟨_, narrow_binop_mul_neg15⟩,
+    ⟨_, narrow_binop_and_neg15⟩,
+    ⟨_, narrow_binop_or_neg15⟩,
+    ⟨_, narrow_binop_xor_neg15⟩,
+    ⟨_, narrow_binop_add_neg14⟩,
+    ⟨_, narrow_binop_sub_neg14⟩,
+    ⟨_, narrow_binop_mul_neg14⟩,
+    ⟨_, narrow_binop_and_neg14⟩,
+    ⟨_, narrow_binop_or_neg14⟩,
+    ⟨_, narrow_binop_xor_neg14⟩,
+    ⟨_, narrow_binop_add_neg13⟩,
+    ⟨_, narrow_binop_sub_neg13⟩,
+    ⟨_, narrow_binop_mul_neg13⟩,
+    ⟨_, narrow_binop_and_neg13⟩,
+    ⟨_, narrow_binop_or_neg13⟩,
+    ⟨_, narrow_binop_xor_neg13⟩,
+    ⟨_, narrow_binop_add_neg12⟩,
+    ⟨_, narrow_binop_sub_neg12⟩,
+    ⟨_, narrow_binop_mul_neg12⟩,
+    ⟨_, narrow_binop_and_neg12⟩,
+    ⟨_, narrow_binop_or_neg12⟩,
+    ⟨_, narrow_binop_xor_neg12⟩,
+    ⟨_, narrow_binop_add_neg11⟩,
+    ⟨_, narrow_binop_sub_neg11⟩,
+    ⟨_, narrow_binop_mul_neg11⟩,
+    ⟨_, narrow_binop_and_neg11⟩,
+    ⟨_, narrow_binop_or_neg11⟩,
+    ⟨_, narrow_binop_xor_neg11⟩,
+    ⟨_, narrow_binop_add_neg10⟩,
+    ⟨_, narrow_binop_sub_neg10⟩,
+    ⟨_, narrow_binop_mul_neg10⟩,
+    ⟨_, narrow_binop_and_neg10⟩,
+    ⟨_, narrow_binop_or_neg10⟩,
+    ⟨_, narrow_binop_xor_neg10⟩,
+    ⟨_, narrow_binop_add_neg9⟩,
+    ⟨_, narrow_binop_sub_neg9⟩,
+    ⟨_, narrow_binop_mul_neg9⟩,
+    ⟨_, narrow_binop_and_neg9⟩,
+    ⟨_, narrow_binop_or_neg9⟩,
+    ⟨_, narrow_binop_xor_neg9⟩,
+    ⟨_, narrow_binop_add_neg8⟩,
+    ⟨_, narrow_binop_sub_neg8⟩,
+    ⟨_, narrow_binop_mul_neg8⟩,
+    ⟨_, narrow_binop_and_neg8⟩,
+    ⟨_, narrow_binop_or_neg8⟩,
+    ⟨_, narrow_binop_xor_neg8⟩,
+    ⟨_, narrow_binop_add_neg7⟩,
+    ⟨_, narrow_binop_sub_neg7⟩,
+    ⟨_, narrow_binop_mul_neg7⟩,
+    ⟨_, narrow_binop_and_neg7⟩,
+    ⟨_, narrow_binop_or_neg7⟩,
+    ⟨_, narrow_binop_xor_neg7⟩,
+    ⟨_, narrow_binop_add_neg6⟩,
+    ⟨_, narrow_binop_sub_neg6⟩,
+    ⟨_, narrow_binop_mul_neg6⟩,
+    ⟨_, narrow_binop_and_neg6⟩,
+    ⟨_, narrow_binop_or_neg6⟩,
+    ⟨_, narrow_binop_xor_neg6⟩,
+    ⟨_, narrow_binop_add_neg5⟩,
+    ⟨_, narrow_binop_sub_neg5⟩,
+    ⟨_, narrow_binop_mul_neg5⟩,
+    ⟨_, narrow_binop_and_neg5⟩,
+    ⟨_, narrow_binop_or_neg5⟩,
+    ⟨_, narrow_binop_xor_neg5⟩,
+    ⟨_, narrow_binop_add_neg4⟩,
+    ⟨_, narrow_binop_sub_neg4⟩,
+    ⟨_, narrow_binop_mul_neg4⟩,
+    ⟨_, narrow_binop_and_neg4⟩,
+    ⟨_, narrow_binop_or_neg4⟩,
+    ⟨_, narrow_binop_xor_neg4⟩,
+    ⟨_, narrow_binop_add_neg3⟩,
+    ⟨_, narrow_binop_sub_neg3⟩,
+    ⟨_, narrow_binop_mul_neg3⟩,
+    ⟨_, narrow_binop_and_neg3⟩,
+    ⟨_, narrow_binop_or_neg3⟩,
+    ⟨_, narrow_binop_xor_neg3⟩,
+    ⟨_, narrow_binop_add_neg2⟩,
+    ⟨_, narrow_binop_sub_neg2⟩,
+    ⟨_, narrow_binop_mul_neg2⟩,
+    ⟨_, narrow_binop_and_neg2⟩,
+    ⟨_, narrow_binop_or_neg2⟩,
+    ⟨_, narrow_binop_xor_neg2⟩,
+    ⟨_, narrow_binop_add_neg1⟩,
+    ⟨_, narrow_binop_sub_neg1⟩,
+    ⟨_, narrow_binop_mul_neg1⟩,
+    ⟨_, narrow_binop_and_neg1⟩,
+    ⟨_, narrow_binop_or_neg1⟩,
+    ⟨_, narrow_binop_xor_neg1⟩,
+    ⟨_, narrow_binop_add_0⟩,
+    ⟨_, narrow_binop_sub_0⟩,
+    ⟨_, narrow_binop_mul_0⟩,
+    ⟨_, narrow_binop_and_0⟩,
+    ⟨_, narrow_binop_or_0⟩,
+    ⟨_, narrow_binop_xor_0⟩,
+    ⟨_, narrow_binop_add_1⟩,
+    ⟨_, narrow_binop_sub_1⟩,
+    ⟨_, narrow_binop_mul_1⟩,
+    ⟨_, narrow_binop_and_1⟩,
+    ⟨_, narrow_binop_or_1⟩,
+    ⟨_, narrow_binop_xor_1⟩,
+    ⟨_, narrow_binop_add_2⟩,
+    ⟨_, narrow_binop_sub_2⟩,
+    ⟨_, narrow_binop_mul_2⟩,
+    ⟨_, narrow_binop_and_2⟩,
+    ⟨_, narrow_binop_or_2⟩,
+    ⟨_, narrow_binop_xor_2⟩,
+    ⟨_, narrow_binop_add_3⟩,
+    ⟨_, narrow_binop_sub_3⟩,
+    ⟨_, narrow_binop_mul_3⟩,
+    ⟨_, narrow_binop_and_3⟩,
+    ⟨_, narrow_binop_or_3⟩,
+    ⟨_, narrow_binop_xor_3⟩,
+    ⟨_, narrow_binop_add_4⟩,
+    ⟨_, narrow_binop_sub_4⟩,
+    ⟨_, narrow_binop_mul_4⟩,
+    ⟨_, narrow_binop_and_4⟩,
+    ⟨_, narrow_binop_or_4⟩,
+    ⟨_, narrow_binop_xor_4⟩,
+    ⟨_, narrow_binop_add_5⟩,
+    ⟨_, narrow_binop_sub_5⟩,
+    ⟨_, narrow_binop_mul_5⟩,
+    ⟨_, narrow_binop_and_5⟩,
+    ⟨_, narrow_binop_or_5⟩,
+    ⟨_, narrow_binop_xor_5⟩,
+    ⟨_, narrow_binop_add_6⟩,
+    ⟨_, narrow_binop_sub_6⟩,
+    ⟨_, narrow_binop_mul_6⟩,
+    ⟨_, narrow_binop_and_6⟩,
+    ⟨_, narrow_binop_or_6⟩,
+    ⟨_, narrow_binop_xor_6⟩,
+    ⟨_, narrow_binop_add_7⟩,
+    ⟨_, narrow_binop_sub_7⟩,
+    ⟨_, narrow_binop_mul_7⟩,
+    ⟨_, narrow_binop_and_7⟩,
+    ⟨_, narrow_binop_or_7⟩,
+    ⟨_, narrow_binop_xor_7⟩,
+    ⟨_, narrow_binop_add_8⟩,
+    ⟨_, narrow_binop_sub_8⟩,
+    ⟨_, narrow_binop_mul_8⟩,
+    ⟨_, narrow_binop_and_8⟩,
+    ⟨_, narrow_binop_or_8⟩,
+    ⟨_, narrow_binop_xor_8⟩,
+    ⟨_, narrow_binop_add_9⟩,
+    ⟨_, narrow_binop_sub_9⟩,
+    ⟨_, narrow_binop_mul_9⟩,
+    ⟨_, narrow_binop_and_9⟩,
+    ⟨_, narrow_binop_or_9⟩,
+    ⟨_, narrow_binop_xor_9⟩,
+    ⟨_, narrow_binop_add_10⟩,
+    ⟨_, narrow_binop_sub_10⟩,
+    ⟨_, narrow_binop_mul_10⟩,
+    ⟨_, narrow_binop_and_10⟩,
+    ⟨_, narrow_binop_or_10⟩,
+    ⟨_, narrow_binop_xor_10⟩,
+    ⟨_, narrow_binop_add_11⟩,
+    ⟨_, narrow_binop_sub_11⟩,
+    ⟨_, narrow_binop_mul_11⟩,
+    ⟨_, narrow_binop_and_11⟩,
+    ⟨_, narrow_binop_or_11⟩,
+    ⟨_, narrow_binop_xor_11⟩,
+    ⟨_, narrow_binop_add_12⟩,
+    ⟨_, narrow_binop_sub_12⟩,
+    ⟨_, narrow_binop_mul_12⟩,
+    ⟨_, narrow_binop_and_12⟩,
+    ⟨_, narrow_binop_or_12⟩,
+    ⟨_, narrow_binop_xor_12⟩,
+    ⟨_, narrow_binop_add_13⟩,
+    ⟨_, narrow_binop_sub_13⟩,
+    ⟨_, narrow_binop_mul_13⟩,
+    ⟨_, narrow_binop_and_13⟩,
+    ⟨_, narrow_binop_or_13⟩,
+    ⟨_, narrow_binop_xor_13⟩,
+    ⟨_, narrow_binop_add_14⟩,
+    ⟨_, narrow_binop_sub_14⟩,
+    ⟨_, narrow_binop_mul_14⟩,
+    ⟨_, narrow_binop_and_14⟩,
+    ⟨_, narrow_binop_or_14⟩,
+    ⟨_, narrow_binop_xor_14⟩,
+    ⟨_, narrow_binop_add_15⟩,
+    ⟨_, narrow_binop_sub_15⟩,
+    ⟨_, narrow_binop_mul_15⟩,
+    ⟨_, narrow_binop_and_15⟩,
+    ⟨_, narrow_binop_or_15⟩,
+    ⟨_, narrow_binop_xor_15⟩,
+    ⟨_, narrow_binop_add_16⟩,
+    ⟨_, narrow_binop_sub_16⟩,
+    ⟨_, narrow_binop_mul_16⟩,
+    ⟨_, narrow_binop_and_16⟩,
+    ⟨_, narrow_binop_or_16⟩,
+    ⟨_, narrow_binop_xor_16⟩,
+    ⟨_, narrow_binop_add_17⟩,
+    ⟨_, narrow_binop_sub_17⟩,
+    ⟨_, narrow_binop_mul_17⟩,
+    ⟨_, narrow_binop_and_17⟩,
+    ⟨_, narrow_binop_or_17⟩,
+    ⟨_, narrow_binop_xor_17⟩,
+    ⟨_, narrow_binop_add_18⟩,
+    ⟨_, narrow_binop_sub_18⟩,
+    ⟨_, narrow_binop_mul_18⟩,
+    ⟨_, narrow_binop_and_18⟩,
+    ⟨_, narrow_binop_or_18⟩,
+    ⟨_, narrow_binop_xor_18⟩,
+    ⟨_, narrow_binop_add_19⟩,
+    ⟨_, narrow_binop_sub_19⟩,
+    ⟨_, narrow_binop_mul_19⟩,
+    ⟨_, narrow_binop_and_19⟩,
+    ⟨_, narrow_binop_or_19⟩,
+    ⟨_, narrow_binop_xor_19⟩,
+    ⟨_, narrow_binop_add_20⟩,
+    ⟨_, narrow_binop_sub_20⟩,
+    ⟨_, narrow_binop_mul_20⟩,
+    ⟨_, narrow_binop_and_20⟩,
+    ⟨_, narrow_binop_or_20⟩,
+    ⟨_, narrow_binop_xor_20⟩,
+    ⟨_, narrow_binop_add_21⟩,
+    ⟨_, narrow_binop_sub_21⟩,
+    ⟨_, narrow_binop_mul_21⟩,
+    ⟨_, narrow_binop_and_21⟩,
+    ⟨_, narrow_binop_or_21⟩,
+    ⟨_, narrow_binop_xor_21⟩,
+    ⟨_, narrow_binop_add_22⟩,
+    ⟨_, narrow_binop_sub_22⟩,
+    ⟨_, narrow_binop_mul_22⟩,
+    ⟨_, narrow_binop_and_22⟩,
+    ⟨_, narrow_binop_or_22⟩,
+    ⟨_, narrow_binop_xor_22⟩,
+    ⟨_, narrow_binop_add_23⟩,
+    ⟨_, narrow_binop_sub_23⟩,
+    ⟨_, narrow_binop_mul_23⟩,
+    ⟨_, narrow_binop_and_23⟩,
+    ⟨_, narrow_binop_or_23⟩,
+    ⟨_, narrow_binop_xor_23⟩,
+    ⟨_, narrow_binop_add_24⟩,
+    ⟨_, narrow_binop_sub_24⟩,
+    ⟨_, narrow_binop_mul_24⟩,
+    ⟨_, narrow_binop_and_24⟩,
+    ⟨_, narrow_binop_or_24⟩,
+    ⟨_, narrow_binop_xor_24⟩,
+    ⟨_, narrow_binop_add_25⟩,
+    ⟨_, narrow_binop_sub_25⟩,
+    ⟨_, narrow_binop_mul_25⟩,
+    ⟨_, narrow_binop_and_25⟩,
+    ⟨_, narrow_binop_or_25⟩,
+    ⟨_, narrow_binop_xor_25⟩,
+    ⟨_, narrow_binop_add_26⟩,
+    ⟨_, narrow_binop_sub_26⟩,
+    ⟨_, narrow_binop_mul_26⟩,
+    ⟨_, narrow_binop_and_26⟩,
+    ⟨_, narrow_binop_or_26⟩,
+    ⟨_, narrow_binop_xor_26⟩,
+    ⟨_, narrow_binop_add_27⟩,
+    ⟨_, narrow_binop_sub_27⟩,
+    ⟨_, narrow_binop_mul_27⟩,
+    ⟨_, narrow_binop_and_27⟩,
+    ⟨_, narrow_binop_or_27⟩,
+    ⟨_, narrow_binop_xor_27⟩,
+    ⟨_, narrow_binop_add_28⟩,
+    ⟨_, narrow_binop_sub_28⟩,
+    ⟨_, narrow_binop_mul_28⟩,
+    ⟨_, narrow_binop_and_28⟩,
+    ⟨_, narrow_binop_or_28⟩,
+    ⟨_, narrow_binop_xor_28⟩,
+    ⟨_, narrow_binop_add_29⟩,
+    ⟨_, narrow_binop_sub_29⟩,
+    ⟨_, narrow_binop_mul_29⟩,
+    ⟨_, narrow_binop_and_29⟩,
+    ⟨_, narrow_binop_or_29⟩,
+    ⟨_, narrow_binop_xor_29⟩,
+    ⟨_, narrow_binop_add_30⟩,
+    ⟨_, narrow_binop_sub_30⟩,
+    ⟨_, narrow_binop_mul_30⟩,
+    ⟨_, narrow_binop_and_30⟩,
+    ⟨_, narrow_binop_or_30⟩,
+    ⟨_, narrow_binop_xor_30⟩,
+    ⟨_, narrow_binop_add_31⟩,
+    ⟨_, narrow_binop_sub_31⟩,
+    ⟨_, narrow_binop_mul_31⟩,
+    ⟨_, narrow_binop_and_31⟩,
+    ⟨_, narrow_binop_or_31⟩,
+    ⟨_, narrow_binop_xor_31⟩,
+    ⟨_, narrow_binop_add_32⟩,
+    ⟨_, narrow_binop_sub_32⟩,
+    ⟨_, narrow_binop_mul_32⟩,
+    ⟨_, narrow_binop_and_32⟩,
+    ⟨_, narrow_binop_or_32⟩,
+    ⟨_, narrow_binop_xor_32⟩,
+    ⟨_, narrow_binop_add_33⟩,
+    ⟨_, narrow_binop_sub_33⟩,
+    ⟨_, narrow_binop_mul_33⟩,
+    ⟨_, narrow_binop_and_33⟩,
+    ⟨_, narrow_binop_or_33⟩,
+    ⟨_, narrow_binop_xor_33⟩,
+    ⟨_, narrow_binop_add_34⟩,
+    ⟨_, narrow_binop_sub_34⟩,
+    ⟨_, narrow_binop_mul_34⟩,
+    ⟨_, narrow_binop_and_34⟩,
+    ⟨_, narrow_binop_or_34⟩,
+    ⟨_, narrow_binop_xor_34⟩,
+    ⟨_, narrow_binop_add_35⟩,
+    ⟨_, narrow_binop_sub_35⟩,
+    ⟨_, narrow_binop_mul_35⟩,
+    ⟨_, narrow_binop_and_35⟩,
+    ⟨_, narrow_binop_or_35⟩,
+    ⟨_, narrow_binop_xor_35⟩,
+    ⟨_, narrow_binop_add_36⟩,
+    ⟨_, narrow_binop_sub_36⟩,
+    ⟨_, narrow_binop_mul_36⟩,
+    ⟨_, narrow_binop_and_36⟩,
+    ⟨_, narrow_binop_or_36⟩,
+    ⟨_, narrow_binop_xor_36⟩,
+    ⟨_, narrow_binop_add_37⟩,
+    ⟨_, narrow_binop_sub_37⟩,
+    ⟨_, narrow_binop_mul_37⟩,
+    ⟨_, narrow_binop_and_37⟩,
+    ⟨_, narrow_binop_or_37⟩,
+    ⟨_, narrow_binop_xor_37⟩,
+    ⟨_, narrow_binop_add_38⟩,
+    ⟨_, narrow_binop_sub_38⟩,
+    ⟨_, narrow_binop_mul_38⟩,
+    ⟨_, narrow_binop_and_38⟩,
+    ⟨_, narrow_binop_or_38⟩,
+    ⟨_, narrow_binop_xor_38⟩,
+    ⟨_, narrow_binop_add_39⟩,
+    ⟨_, narrow_binop_sub_39⟩,
+    ⟨_, narrow_binop_mul_39⟩,
+    ⟨_, narrow_binop_and_39⟩,
+    ⟨_, narrow_binop_or_39⟩,
+    ⟨_, narrow_binop_xor_39⟩,
+    ⟨_, narrow_binop_add_40⟩,
+    ⟨_, narrow_binop_sub_40⟩,
+    ⟨_, narrow_binop_mul_40⟩,
+    ⟨_, narrow_binop_and_40⟩,
+    ⟨_, narrow_binop_or_40⟩,
+    ⟨_, narrow_binop_xor_40⟩,
+    ⟨_, narrow_binop_add_41⟩,
+    ⟨_, narrow_binop_sub_41⟩,
+    ⟨_, narrow_binop_mul_41⟩,
+    ⟨_, narrow_binop_and_41⟩,
+    ⟨_, narrow_binop_or_41⟩,
+    ⟨_, narrow_binop_xor_41⟩,
+    ⟨_, narrow_binop_add_42⟩,
+    ⟨_, narrow_binop_sub_42⟩,
+    ⟨_, narrow_binop_mul_42⟩,
+    ⟨_, narrow_binop_and_42⟩,
+    ⟨_, narrow_binop_or_42⟩,
+    ⟨_, narrow_binop_xor_42⟩,
+    ⟨_, narrow_binop_add_43⟩,
+    ⟨_, narrow_binop_sub_43⟩,
+    ⟨_, narrow_binop_mul_43⟩,
+    ⟨_, narrow_binop_and_43⟩,
+    ⟨_, narrow_binop_or_43⟩,
+    ⟨_, narrow_binop_xor_43⟩,
+    ⟨_, narrow_binop_add_44⟩,
+    ⟨_, narrow_binop_sub_44⟩,
+    ⟨_, narrow_binop_mul_44⟩,
+    ⟨_, narrow_binop_and_44⟩,
+    ⟨_, narrow_binop_or_44⟩,
+    ⟨_, narrow_binop_xor_44⟩,
+    ⟨_, narrow_binop_add_45⟩,
+    ⟨_, narrow_binop_sub_45⟩,
+    ⟨_, narrow_binop_mul_45⟩,
+    ⟨_, narrow_binop_and_45⟩,
+    ⟨_, narrow_binop_or_45⟩,
+    ⟨_, narrow_binop_xor_45⟩,
+    ⟨_, narrow_binop_add_46⟩,
+    ⟨_, narrow_binop_sub_46⟩,
+    ⟨_, narrow_binop_mul_46⟩,
+    ⟨_, narrow_binop_and_46⟩,
+    ⟨_, narrow_binop_or_46⟩,
+    ⟨_, narrow_binop_xor_46⟩,
+    ⟨_, narrow_binop_add_47⟩,
+    ⟨_, narrow_binop_sub_47⟩,
+    ⟨_, narrow_binop_mul_47⟩,
+    ⟨_, narrow_binop_and_47⟩,
+    ⟨_, narrow_binop_or_47⟩,
+    ⟨_, narrow_binop_xor_47⟩,
+    ⟨_, narrow_binop_add_48⟩,
+    ⟨_, narrow_binop_sub_48⟩,
+    ⟨_, narrow_binop_mul_48⟩,
+    ⟨_, narrow_binop_and_48⟩,
+    ⟨_, narrow_binop_or_48⟩,
+    ⟨_, narrow_binop_xor_48⟩,
+    ⟨_, narrow_binop_add_49⟩,
+    ⟨_, narrow_binop_sub_49⟩,
+    ⟨_, narrow_binop_mul_49⟩,
+    ⟨_, narrow_binop_and_49⟩,
+    ⟨_, narrow_binop_or_49⟩,
+    ⟨_, narrow_binop_xor_49⟩,
+    ⟨_, narrow_binop_add_50⟩,
+    ⟨_, narrow_binop_sub_50⟩,
+    ⟨_, narrow_binop_mul_50⟩,
+    ⟨_, narrow_binop_and_50⟩,
+    ⟨_, narrow_binop_or_50⟩,
+    ⟨_, narrow_binop_xor_50⟩
   ]

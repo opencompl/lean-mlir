@@ -174,11 +174,171 @@ Test the rewrite:
         comment=comment
     )
     
+def generate_narrow_binop_rewrites(max_val: int) -> RewriteGroup:
+    patterns = []
+    group_name = "cast_combines_narrow_binops"
+    comment = """
+/-! ### cast_combines_narrow_binops -/
 
+/-- 
+Test the rewrite:
+    trunc (binop X, C) --> binop (trunc X, trunc C)
+-/
+"""
+
+    for i in range(-max_val, max_val + 1):
+        name_suffix = f"neg{abs(i)}" if i < 0 else str(i)
+        
+        definition = f"""def narrow_binop_add_{name_suffix} : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.add %0, %1 : i32
+      llvm.return %2 : i32
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"narrow_binop_add_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def narrow_binop_sub_{name_suffix} : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.sub %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.sub %0, %1 : i32
+      llvm.return %2 : i32
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"narrow_binop_sub_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def narrow_binop_mul_{name_suffix} : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.mul %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.mul %0, %1 : i32
+      llvm.return %2 : i32
+  }}]
+"""
+ 
+        patterns.append(RewritePattern(
+            name=f"narrow_binop_mul_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def narrow_binop_and_{name_suffix} : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.and %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.and %0, %1 : i32
+      llvm.return %2 : i32
+  }}]
+"""
+ 
+        patterns.append(RewritePattern(
+            name=f"narrow_binop_and_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def narrow_binop_or_{name_suffix} : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.or %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.or %0, %1 : i32
+      llvm.return %2 : i32
+  }}]
+"""
+ 
+        patterns.append(RewritePattern(
+            name=f"narrow_binop_or_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def narrow_binop_xor_{name_suffix} : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.xor %x, %c : i64
+      %1 = llvm.trunc %0 : i64 to i32
+      llvm.return %1 : i32
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %0 = llvm.trunc %x : i64 to i32
+      %1 = llvm.trunc %c : i64 to i32
+      %2 = llvm.xor %0, %1 : i32
+      llvm.return %2 : i32
+  }}]
+"""
+ 
+        patterns.append(RewritePattern(
+            name=f"narrow_binop_xor_{name_suffix}",
+            definition=definition
+        ))
+    
+    return RewriteGroup(
+        group_name=group_name,
+        patterns=patterns,
+        type_signature="LLVMPeepholeRewriteRefine 64 Γ",
+        comment=comment
+    )
+    
 REWRITE_GENERATORS = [
     lambda: generate_sub_to_add_rewrites(max_val=50),
     lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 64))),
     lambda: generate_urem_pow2_rewrites(powers=list(range(0, 64))),
+    lambda: generate_narrow_binop_rewrites(max_val=50),
 ]
 
 
