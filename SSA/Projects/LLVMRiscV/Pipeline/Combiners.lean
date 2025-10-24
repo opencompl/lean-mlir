@@ -1382,6 +1382,212 @@ def redundant_binop_in_equality : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :
   ⟨_, redundant_binop_in_equality_XXorYEqX⟩,
   ⟨_, redundant_binop_in_equality_XXorYNeX⟩]
 
+/-! ### match_selects -/
+
+/-
+Test the rewrite:
+  select Cond, 1, 0 --> zext (Cond)
+-/
+def select_1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%c: i1):
+      %t = llvm.mlir.constant (1) : i64
+      %f = llvm.mlir.constant (0) : i64
+      %0 = llvm.select %c, %t, %f : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%c: i1):
+      %0 = llvm.zext %c: i1 to i64
+      llvm.return %0 : i64
+  }]
+
+/-
+Test the rewrite:
+  select Cond, -1, 0 --> sext (Cond)
+-/
+def select_neg1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%c: i1):
+      %t = llvm.mlir.constant (-1) : i64
+      %f = llvm.mlir.constant (0) : i64
+      %0 = llvm.select %c, %t, %f : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%c: i1):
+      %0 = llvm.sext %c: i1 to i64
+      llvm.return %0 : i64
+  }]
+
+/-
+Test the rewrite:
+  select Cond, 0, 1 --> zext (!Cond)
+-/
+def select_0_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%c: i1):
+      %t = llvm.mlir.constant (0) : i64
+      %f = llvm.mlir.constant (1) : i64
+      %0 = llvm.select %c, %t, %f : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%c: i1):
+      %0 = llvm.not %c : i1
+      %1 = llvm.zext %0: i1 to i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+  select Cond, 0, -1 --> sext (!Cond)
+-/
+def select_0_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%c: i1):
+      %t = llvm.mlir.constant (0) : i64
+      %f = llvm.mlir.constant (-1) : i64
+      %0 = llvm.select %c, %t, %f : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%c: i1):
+      %0 = llvm.not %c : i1
+      %1 = llvm.sext %0: i1 to i64
+      llvm.return %1 : i64
+  }]
+
+/-
+Test the rewrite:
+  select Cond, Cond, F --> or Cond, F
+-/
+def select_cond_f : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%c: i1, %f : i64):
+      %0 = llvm.sext %c: i1 to i64
+      %1 = llvm.select %c, %0, %f : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%c: i1, %f: i64):
+      %0 = llvm.sext %c: i1 to i64
+      %1 = llvm.freeze %f : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+/-
+Test the rewrite:
+  select Cond, 1, F --> or Cond, F
+-/
+def select_1_f : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%c: i1, %f: i64):
+      %c1 = llvm.mlir.constant (1) : i1
+      %0 = llvm.sext %c1: i1 to i64
+      %1 = llvm.select %c, %0, %f : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%c: i1, %f: i64):
+      %0 = llvm.sext %c: i1 to i64
+      %1 = llvm.freeze %f : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+/-
+Test the rewrite:
+  select Cond, T, Cond --> and Cond, T
+-/
+def select_t_cond : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%c: i1, %t: i64):
+      %0 = llvm.sext %c: i1 to i64
+      %1 = llvm.select %c, %t, %0 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%c: i1, %t: i64):
+      %0 = llvm.sext %c: i1 to i64
+      %1 = llvm.freeze %t : i64
+      %2 = llvm.and %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+/-
+Test the rewrite:
+  select Cond, T, 0 --> and Cond, T
+-/
+def select_t_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%c: i1, %t: i64):
+      %c0 = llvm.mlir.constant (0) : i64
+      %0 = llvm.select %c, %t, %c0 : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%c: i1, %t: i64):
+      %cext = llvm.sext %c: i1 to i64
+      %tfreeze = llvm.freeze %t : i64
+      %0 = llvm.and %cext, %tfreeze : i64
+      llvm.return %0 : i64
+  }]
+
+/-
+Test the rewrite:
+  select Cond, T, 1 --> or (not Cond), T
+-/
+def select_t_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%c: i1, %t: i64):
+      %c1 = llvm.mlir.constant (1) : i1
+      %0 = llvm.sext %c1: i1 to i64
+      %1 = llvm.select %c, %t, %0 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%c: i1, %t: i64):
+      %0 = llvm.not %c : i1
+      %1 = llvm.sext %0: i1 to i64
+      %2 = llvm.freeze %t : i64
+      %3 = llvm.or %1, %2 : i64
+      llvm.return %3 : i64
+  }]
+
+/-
+Test the rewrite:
+  select Cond, 0, F --> and (not Cond), F
+-/
+def select_0_f : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+  lhs := [LV| {
+    ^entry (%c: i1, %f: i64):
+      %zero = llvm.mlir.constant (0) : i64
+      %0 = llvm.select %c, %zero, %f : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%c: i1, %f: i64):
+      %0 = llvm.not %c : i1
+      %1 = llvm.sext %0: i1 to i64
+      %2 = llvm.freeze %f : i64
+      %3 = llvm.and %1, %2 : i64
+      llvm.return %3 : i64
+  }]
+
+def match_selects : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
+  [⟨_, select_1_0⟩,
+  ⟨_, select_neg1_0⟩,
+  ⟨_, select_0_1⟩,
+  ⟨_, select_0_neg1⟩,
+  ⟨_, select_cond_f⟩,
+  ⟨_, select_1_f⟩,
+  ⟨_, select_t_cond⟩,
+  ⟨_, select_t_0⟩,
+  ⟨_, select_t_1⟩,
+  ⟨_, select_0_f⟩]
+
 /-! ### integer_reassoc_combines -/
 
 /-
@@ -1728,7 +1934,8 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
   matchMulO ++
   LLVMIR_cast_combines_64 ++
   xor_of_and_with_same_reg_list ++
-  LLVMIR_identity_combines_64
+  LLVMIR_identity_combines_64 ++
+  match_selects
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32  Γ) :=
