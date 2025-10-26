@@ -58,6 +58,8 @@ jobs:
            (cd Blase; lake update --no-cache; rm -rf Blase/.lake)
            (cd LeanMLIR; lake update --no-cache; rm -rf LeanMLIR/.lake)
            lake update --no-cache
+        env:
+          LAKE_NO_CACHE: true
 
       - name: Merge pre-existing pull request
         continue-on-error: true
