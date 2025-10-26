@@ -55,9 +55,9 @@ jobs:
            cat LeanMLIR/lakefile.toml
            echo "## lean-toolchain"
            cat lean-toolchain
-           (cd Blase; lake update --no-cache; rm -rf Blase/.lake)
-           (cd LeanMLIR; lake update --no-cache; rm -rf LeanMLIR/.lake)
-           lake update --no-cache
+           (cd Blase; MATHLIB_NO_CACHE_ON_UPDATE=1 lake update --no-cache; rm -rf Blase/.lake)
+           (cd LeanMLIR; MATHLIB_NO_CACHE_ON_UPDATE=1 lake update --no-cache; rm -rf LeanMLIR/.lake)
+           MATHLIB_NO_CACHE_ON_UPDATE=1 lake update --no-cache
         env:
           LAKE_NO_CACHE: true
           MATHLIB_NO_CACHE_ON_UPDATE: true
