@@ -60,6 +60,7 @@ jobs:
            lake update --no-cache
         env:
           LAKE_NO_CACHE: true
+          MATHLIB_NO_CACHE_ON_UPDATE: true
 
       - name: Merge pre-existing pull request
         continue-on-error: true
