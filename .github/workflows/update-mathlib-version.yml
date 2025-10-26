@@ -47,13 +47,17 @@ jobs:
 
       - name: Set Mathlib Date
         run: |
-           sed -e "s/\"nightly-testing.*\"/\"nightly-testing-${{steps.mldate.outputs.date}}\"/" -i lakefile.toml
-           sed -e "s/nightly.*/nightly-${{steps.mldate.outputs.date}}/" -i lean-toolchain
-           echo "## lakefile.toml"
-           cat lakefile.toml
+           sed -e "s/\"nightly-testing.*\"/\"nightly-testing-${{steps.mldate.outputs.date}}\"/" -i Blase/lakefile.toml
+           sed -e "s/\"nightly-testing.*\"/\"nightly-testing-${{steps.mldate.outputs.date}}\"/" -i LeanMLIR/lakefile.toml
+           echo "## Blase/lakefile.toml"
+           cat Blase/lakefile.toml
+           echo "## LeanMLIR/lakefile.toml"
+           cat LeanMLIR/lakefile.toml
            echo "## lean-toolchain"
            cat lean-toolchain
-           lake update mathlib
+           (cd Blase; lake update mathlib)
+           (cd LeanMLIR; lake update mathlib)
+           lake update
 
       - name: Merge pre-existing pull request
         continue-on-error: true
