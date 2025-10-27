@@ -10,7 +10,7 @@ open LLVMRiscV
 
 /-! ### sub_to_add -/
 
-/-- 
+/--
 Test the rewrite:
   (sub x, C) → (add x, -C)
 -/
@@ -3477,7 +3477,7 @@ def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 
 /-! ### canonicalize_icmp -/
 
-/-- 
+/--
 Test the rewrite:
   (cmp C, x) → (cmp x, C)
 -/
@@ -5146,7 +5146,7 @@ Test the rewrite:
  fold ((A-C1)+C2) -> (A+(C2-C1))
 -/
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_neg2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5164,7 +5164,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_neg2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5182,7 +5182,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_neg2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5200,7 +5200,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_neg2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5218,7 +5218,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_neg2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5236,7 +5236,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_neg2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5254,7 +5254,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_neg2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5272,7 +5272,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_neg2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5290,7 +5290,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_neg2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5308,7 +5308,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_neg2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5326,7 +5326,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_neg2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5344,7 +5344,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_neg2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5362,7 +5362,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_neg2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5380,7 +5380,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_neg2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5398,7 +5398,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_neg2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5416,7 +5416,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_neg2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5434,7 +5434,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_neg2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5452,7 +5452,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_neg2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5470,7 +5470,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_neg2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5488,7 +5488,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_neg2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5506,7 +5506,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_neg2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5524,7 +5524,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_neg2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5542,7 +5542,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_neg2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5560,7 +5560,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_neg2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5578,7 +5578,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_neg2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-2) : i64
@@ -5596,7 +5596,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_neg1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5614,7 +5614,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_neg1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5632,7 +5632,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_neg1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5650,7 +5650,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_neg1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5668,7 +5668,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_neg1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5686,7 +5686,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_neg1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5704,7 +5704,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_neg1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5722,7 +5722,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_neg1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5740,7 +5740,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_neg1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5758,7 +5758,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_neg1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5776,7 +5776,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_neg1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5794,7 +5794,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_neg1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5812,7 +5812,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_neg1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5830,7 +5830,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_neg1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5848,7 +5848,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_neg1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5866,7 +5866,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_neg1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5884,7 +5884,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_neg1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5902,7 +5902,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_neg1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5920,7 +5920,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_neg1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5938,7 +5938,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_neg1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5956,7 +5956,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_neg1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5974,7 +5974,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_neg1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -5992,7 +5992,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_neg1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -6010,7 +6010,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_neg1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -6028,7 +6028,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_neg1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (-1) : i64
@@ -6046,7 +6046,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_0_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6064,7 +6064,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_0_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6082,7 +6082,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_0_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6100,7 +6100,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_0_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6118,7 +6118,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_0_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6136,7 +6136,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_0_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6154,7 +6154,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_0_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6172,7 +6172,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_0_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6190,7 +6190,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_0_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6208,7 +6208,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_0_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6226,7 +6226,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_0_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6244,7 +6244,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_0_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6262,7 +6262,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_0_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6280,7 +6280,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_0_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6298,7 +6298,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_0_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6316,7 +6316,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_0_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6334,7 +6334,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_0_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6352,7 +6352,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_0_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6370,7 +6370,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_0_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6388,7 +6388,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_0_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6406,7 +6406,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_0_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6424,7 +6424,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_0_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6442,7 +6442,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_0_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6460,7 +6460,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_0_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6478,7 +6478,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_0_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (0) : i64
@@ -6496,7 +6496,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6514,7 +6514,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6532,7 +6532,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6550,7 +6550,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6568,7 +6568,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6586,7 +6586,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6604,7 +6604,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6622,7 +6622,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6640,7 +6640,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6658,7 +6658,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6676,7 +6676,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6694,7 +6694,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6712,7 +6712,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6730,7 +6730,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6748,7 +6748,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6766,7 +6766,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6784,7 +6784,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6802,7 +6802,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6820,7 +6820,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6838,7 +6838,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6856,7 +6856,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6874,7 +6874,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6892,7 +6892,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6910,7 +6910,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6928,7 +6928,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (1) : i64
@@ -6946,7 +6946,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -6964,7 +6964,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -6982,7 +6982,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7000,7 +7000,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7018,7 +7018,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7036,7 +7036,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7054,7 +7054,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7072,7 +7072,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7090,7 +7090,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7108,7 +7108,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7126,7 +7126,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7144,7 +7144,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7162,7 +7162,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7180,7 +7180,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7198,7 +7198,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7216,7 +7216,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7234,7 +7234,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7252,7 +7252,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7270,7 +7270,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7288,7 +7288,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7306,7 +7306,7 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_APlusC1MinusC2_2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7324,7 +7324,7 @@ def irc_constants_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C2MinusAPlusC1_2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7342,7 +7342,7 @@ def irc_constants_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1MinusC2_2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7360,7 +7360,7 @@ def irc_constants_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_C1Minus2MinusC2_2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7378,7 +7378,7 @@ def irc_constants_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
       llvm.return %1 : i64
   }]
 
-def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def irc_constants_AMinusC1PlusC2_2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant (2) : i64
@@ -7397,131 +7397,131 @@ def irc_constants_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
   }]
 def irc_constants : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩,
-    ⟨_, irc_constants_APlusC1MinusC2⟩,
-    ⟨_, irc_constants_C2MinusAPlusC1⟩,
-    ⟨_, irc_constants_AMinusC1MinusC2⟩,
-    ⟨_, irc_constants_C1Minus2MinusC2⟩,
-    ⟨_, irc_constants_AMinusC1PlusC2⟩
+    ⟨_, irc_constants_APlusC1MinusC2_neg2_neg2⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_neg2_neg2⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_neg2_neg2⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_neg2_neg2⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_neg2_neg2⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_neg2_neg1⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_neg2_neg1⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_neg2_neg1⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_neg2_neg1⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_neg2_neg1⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_neg2_0⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_neg2_0⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_neg2_0⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_neg2_0⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_neg2_0⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_neg2_1⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_neg2_1⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_neg2_1⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_neg2_1⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_neg2_1⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_neg2_2⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_neg2_2⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_neg2_2⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_neg2_2⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_neg2_2⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_neg1_neg2⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_neg1_neg2⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_neg1_neg2⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_neg1_neg2⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_neg1_neg2⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_neg1_neg1⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_neg1_neg1⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_neg1_neg1⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_neg1_neg1⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_neg1_neg1⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_neg1_0⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_neg1_0⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_neg1_0⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_neg1_0⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_neg1_0⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_neg1_1⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_neg1_1⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_neg1_1⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_neg1_1⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_neg1_1⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_neg1_2⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_neg1_2⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_neg1_2⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_neg1_2⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_neg1_2⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_0_neg2⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_0_neg2⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_0_neg2⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_0_neg2⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_0_neg2⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_0_neg1⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_0_neg1⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_0_neg1⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_0_neg1⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_0_neg1⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_0_0⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_0_0⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_0_0⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_0_0⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_0_0⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_0_1⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_0_1⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_0_1⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_0_1⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_0_1⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_0_2⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_0_2⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_0_2⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_0_2⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_0_2⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_1_neg2⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_1_neg2⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_1_neg2⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_1_neg2⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_1_neg2⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_1_neg1⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_1_neg1⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_1_neg1⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_1_neg1⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_1_neg1⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_1_0⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_1_0⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_1_0⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_1_0⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_1_0⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_1_1⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_1_1⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_1_1⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_1_1⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_1_1⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_1_2⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_1_2⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_1_2⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_1_2⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_1_2⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_2_neg2⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_2_neg2⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_2_neg2⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_2_neg2⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_2_neg2⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_2_neg1⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_2_neg1⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_2_neg1⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_2_neg1⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_2_neg1⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_2_0⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_2_0⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_2_0⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_2_0⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_2_0⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_2_1⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_2_1⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_2_1⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_2_1⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_2_1⟩,
+    ⟨_, irc_constants_APlusC1MinusC2_2_2⟩,
+    ⟨_, irc_constants_C2MinusAPlusC1_2_2⟩,
+    ⟨_, irc_constants_AMinusC1MinusC2_2_2⟩,
+    ⟨_, irc_constants_C1Minus2MinusC2_2_2⟩,
+    ⟨_, irc_constants_AMinusC1PlusC2_2_2⟩
   ]
 
 /-- We group all the rewrites that depend constant folding to optimize the program. Without constant folding, these rewrites would either increase the instruction count, or do not result in any optimization. -/
@@ -7529,4 +7529,3 @@ def GlobalISelPostLegalizerCombinerConstantFolding :
   List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
     (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
     irc_constants)
-    

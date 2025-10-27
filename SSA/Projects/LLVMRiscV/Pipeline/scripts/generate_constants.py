@@ -411,9 +411,12 @@ Test the rewrite:
 -/
 """
     for i in range(-max_val, max_val + 1):
+        name_suffix_i = f"neg{abs(i)}" if i < 0 else str(i)
         for j in range(-max_val, max_val + 1):
+            name_suffix_j = f"neg{abs(j)}" if j < 0 else str(j)
+            name = f"{name_suffix_i}_{name_suffix_j}"
             definition = f"""
-def {group_name}_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def {group_name}_APlusC1MinusC2_{name} : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {{
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant ({i}) : i64
@@ -431,12 +434,12 @@ def {group_name}_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
       llvm.return %1 : i64
   }}]"""
             patterns.append(RewritePattern(
-                name=f"{group_name}_APlusC1MinusC2",
+                name=f"{group_name}_APlusC1MinusC2_{name}",
                 definition=definition
             ))
 
             definition = f"""
-def {group_name}_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def {group_name}_C2MinusAPlusC1_{name} : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {{
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant ({i}) : i64
@@ -454,12 +457,12 @@ def {group_name}_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
       llvm.return %1 : i64
   }}]"""
             patterns.append(RewritePattern(
-                name=f"{group_name}_C2MinusAPlusC1",
+                name=f"{group_name}_C2MinusAPlusC1_{name}",
                 definition=definition
             ))
 
             definition = f"""
-def {group_name}_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def {group_name}_AMinusC1MinusC2_{name} : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {{
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant ({i}) : i64
@@ -477,12 +480,12 @@ def {group_name}_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }}]"""
             patterns.append(RewritePattern(
-                name=f"{group_name}_AMinusC1MinusC2",
+                name=f"{group_name}_AMinusC1MinusC2_{name}",
                 definition=definition
             ))
 
             definition = f"""
-def {group_name}_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def {group_name}_C1Minus2MinusC2_{name} : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {{
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant ({i}) : i64
@@ -500,12 +503,12 @@ def {group_name}_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
       llvm.return %1 : i64
   }}]"""
             patterns.append(RewritePattern(
-                name=f"{group_name}_C1Minus2MinusC2",
+                name=f"{group_name}_C1Minus2MinusC2_{name}",
                 definition=definition
             ))
 
             definition = f"""
-def {group_name}_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def {group_name}_AMinusC1PlusC2_{name} : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {{
     ^entry (%a: i64):
       %c1 = llvm.mlir.constant ({i}) : i64
@@ -523,7 +526,7 @@ def {group_name}_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec
       llvm.return %1 : i64
   }}]"""
             patterns.append(RewritePattern(
-                name=f"{group_name}_AMinusC1PlusC2",
+                name=f"{group_name}_AMinusC1PlusC2_{name}",
                 definition=definition
             ))
 
