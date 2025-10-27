@@ -10,7 +10,7 @@ open LLVMRiscV
 
 /-! ### sub_to_add -/
 
-/--
+/-- 
 Test the rewrite:
   (sub x, C) → (add x, -C)
 -/
@@ -3477,7 +3477,7 @@ def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 
 /-! ### canonicalize_icmp -/
 
-/--
+/-- 
 Test the rewrite:
   (cmp C, x) → (cmp x, C)
 -/
@@ -7524,8 +7524,1023 @@ def irc_constants : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
     ⟨_, irc_constants_AMinusC1PlusC2_2_2⟩
   ]
 
+/-! ### commute_shift -/
+
+/-
+Test the rewrite:
+  Combine (shl (add x, c1), c2) -> (add (shl x, c2), c1 << c2)
+  Combine (shl (or x, c1), c2) -> (or (shl x, c2), c1 << c2)
+-/
+
+def commute_shift_add_neg2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_neg2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_neg2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_neg2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_neg2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_neg2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_neg2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_neg2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_neg2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_neg2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-2) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_neg1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_neg1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_neg1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_neg1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_neg1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_neg1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_neg1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_neg1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_neg1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_neg1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (-1) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_0_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_0_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_0_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_0_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_0_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_0_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_0_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_0_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_0_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_0_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (0) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_1_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_1_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_1_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_1_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_1_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (1) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_2_neg2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (-2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_2_neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (-1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_2_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (0) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_add_2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+
+def commute_shift_commute_shift_or_2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant (2) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }]
+def commute_shift : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [
+    ⟨_, commute_shift_commute_shift_add_neg2_neg2⟩,
+    ⟨_, commute_shift_commute_shift_or_neg2_neg2⟩,
+    ⟨_, commute_shift_commute_shift_add_neg2_neg1⟩,
+    ⟨_, commute_shift_commute_shift_or_neg2_neg1⟩,
+    ⟨_, commute_shift_commute_shift_add_neg2_0⟩,
+    ⟨_, commute_shift_commute_shift_or_neg2_0⟩,
+    ⟨_, commute_shift_commute_shift_add_neg2_1⟩,
+    ⟨_, commute_shift_commute_shift_or_neg2_1⟩,
+    ⟨_, commute_shift_commute_shift_add_neg2_2⟩,
+    ⟨_, commute_shift_commute_shift_or_neg2_2⟩,
+    ⟨_, commute_shift_commute_shift_add_neg1_neg2⟩,
+    ⟨_, commute_shift_commute_shift_or_neg1_neg2⟩,
+    ⟨_, commute_shift_commute_shift_add_neg1_neg1⟩,
+    ⟨_, commute_shift_commute_shift_or_neg1_neg1⟩,
+    ⟨_, commute_shift_commute_shift_add_neg1_0⟩,
+    ⟨_, commute_shift_commute_shift_or_neg1_0⟩,
+    ⟨_, commute_shift_commute_shift_add_neg1_1⟩,
+    ⟨_, commute_shift_commute_shift_or_neg1_1⟩,
+    ⟨_, commute_shift_commute_shift_add_neg1_2⟩,
+    ⟨_, commute_shift_commute_shift_or_neg1_2⟩,
+    ⟨_, commute_shift_commute_shift_add_0_neg2⟩,
+    ⟨_, commute_shift_commute_shift_or_0_neg2⟩,
+    ⟨_, commute_shift_commute_shift_add_0_neg1⟩,
+    ⟨_, commute_shift_commute_shift_or_0_neg1⟩,
+    ⟨_, commute_shift_commute_shift_add_0_0⟩,
+    ⟨_, commute_shift_commute_shift_or_0_0⟩,
+    ⟨_, commute_shift_commute_shift_add_0_1⟩,
+    ⟨_, commute_shift_commute_shift_or_0_1⟩,
+    ⟨_, commute_shift_commute_shift_add_0_2⟩,
+    ⟨_, commute_shift_commute_shift_or_0_2⟩,
+    ⟨_, commute_shift_commute_shift_add_1_neg2⟩,
+    ⟨_, commute_shift_commute_shift_or_1_neg2⟩,
+    ⟨_, commute_shift_commute_shift_add_1_neg1⟩,
+    ⟨_, commute_shift_commute_shift_or_1_neg1⟩,
+    ⟨_, commute_shift_commute_shift_add_1_0⟩,
+    ⟨_, commute_shift_commute_shift_or_1_0⟩,
+    ⟨_, commute_shift_commute_shift_add_1_1⟩,
+    ⟨_, commute_shift_commute_shift_or_1_1⟩,
+    ⟨_, commute_shift_commute_shift_add_1_2⟩,
+    ⟨_, commute_shift_commute_shift_or_1_2⟩,
+    ⟨_, commute_shift_commute_shift_add_2_neg2⟩,
+    ⟨_, commute_shift_commute_shift_or_2_neg2⟩,
+    ⟨_, commute_shift_commute_shift_add_2_neg1⟩,
+    ⟨_, commute_shift_commute_shift_or_2_neg1⟩,
+    ⟨_, commute_shift_commute_shift_add_2_0⟩,
+    ⟨_, commute_shift_commute_shift_or_2_0⟩,
+    ⟨_, commute_shift_commute_shift_add_2_1⟩,
+    ⟨_, commute_shift_commute_shift_or_2_1⟩,
+    ⟨_, commute_shift_commute_shift_add_2_2⟩,
+    ⟨_, commute_shift_commute_shift_or_2_2⟩
+  ]
+
 /-- We group all the rewrites that depend constant folding to optimize the program. Without constant folding, these rewrites would either increase the instruction count, or do not result in any optimization. -/
 def GlobalISelPostLegalizerCombinerConstantFolding :
   List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
     (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
     irc_constants)
+    ++
+    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+    commute_shift)
+    

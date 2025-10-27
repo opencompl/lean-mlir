@@ -538,12 +538,86 @@ def {group_name}_AMinusC1PlusC2_{name} : LLVMPeepholeRewriteRefine 64 [Ty.llvm (
         comment=comment
     )
     
+def generate_commute_shift(max_val: int) -> RewriteGroup:
+    patterns = []
+    group_name = "commute_shift"
+    comment = """
+/-! ### commute_shift -/
+
+/-
+Test the rewrite:
+  Combine (shl (add x, c1), c2) -> (add (shl x, c2), c1 << c2)
+  Combine (shl (or x, c1), c2) -> (or (shl x, c2), c1 << c2)
+-/
+"""
+    for i in range(-max_val, max_val + 1):
+        name_suffix_i = f"neg{abs(i)}" if i < 0 else str(i)
+        for j in range(-max_val, max_val + 1):
+            name_suffix_j = f"neg{abs(j)}" if j < 0 else str(j)
+            name = f"{name_suffix_i}_{name_suffix_j}"
+            
+            definition = f"""
+def {group_name}_add_{name} : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.add %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
+  }}]"""
+            patterns.append(RewritePattern(
+                name=f"{group_name}_commute_shift_add_{name}",
+                definition=definition
+            ))
+
+            definition = f"""
+def {group_name}_commute_shift_or_{name} : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.or %x, %c1 : i64
+      %1 = llvm.shl %0, %c2 : i64
+      llvm.return %1 : i64
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.shl %x, %c2 : i64
+      %1 = llvm.shl %c1, %c2 : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
+  }}]"""
+            patterns.append(RewritePattern(
+                name=f"{group_name}_commute_shift_or_{name}",
+                definition=definition
+            ))
+
+    return RewriteGroup(
+        group_name=group_name,
+        patterns=patterns,
+        type_signature="LLVMPeepholeRewriteRefine 64 Γ",
+        comment=comment
+    )
+    
 REWRITE_GENERATORS = [
     lambda: generate_sub_to_add_rewrites(max_val=50),
     lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 64))),
     lambda: generate_urem_pow2_rewrites(powers=list(range(0, 64))),
     lambda: generate_canonicalize_icmp(max_val=5),
     lambda: generate_integer_reassoc_combines(max_val=2),
+    lambda: generate_commute_shift(max_val=2),
 ]
 
 def generate_all_rewrites() -> str:
@@ -560,6 +634,9 @@ def GlobalISelPostLegalizerCombinerConstantFolding :
   List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
     (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
     irc_constants)
+    ++
+    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+    commute_shift)
     """
     return body
 
