@@ -10,7 +10,7 @@ open LLVMRiscV
 
 /-! ### sub_to_add -/
 
-/-- 
+/--
 Test the rewrite:
   (sub x, C) → (add x, -C)
 -/
@@ -1533,8 +1533,6 @@ def sub_to_add : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
     ⟨_, sub_to_add_50⟩
   ]
 
-
-
 /-! ### mul_to_shl -/
 
 /--
@@ -2506,8 +2504,6 @@ def mul_to_shl : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
     ⟨_, mul_to_shl_9223372036854775808⟩
   ]
 
-
-
 /-! ### urem_pow2_to_mask -/
 
 /--
@@ -3477,4 +3473,1664 @@ def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
     ⟨_, urem_pow2_to_mask_2305843009213693952⟩,
     ⟨_, urem_pow2_to_mask_4611686018427387904⟩,
     ⟨_, urem_pow2_to_mask_9223372036854775808⟩
+  ]
+
+/-! ### canonicalize_icmp -/
+
+/--
+Test the rewrite:
+  (cmp C, x) → (cmp x, C)
+-/
+def canonicalize_icmp_eq_neg5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_neg5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_neg5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_neg5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_neg5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_neg5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_neg5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_neg5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_neg5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_neg5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -5 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_eq_neg4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_neg4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_neg4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_neg4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_neg4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_neg4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_neg4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_neg4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_neg4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_neg4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -4 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_eq_neg3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_neg3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_neg3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_neg3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_neg3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_neg3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_neg3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_neg3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_neg3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_neg3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -3 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_eq_neg2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_neg2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_neg2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_neg2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_neg2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_neg2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_neg2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_neg2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_neg2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_neg2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -2 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_eq_neg1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_neg1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_neg1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_neg1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_neg1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_neg1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_neg1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_neg1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_neg1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_neg1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant -1 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_eq_0 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_0 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_0 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_0 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_0 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_0 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_0 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_0 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_0 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_0 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 0 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_eq_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_1 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 1 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_eq_2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_2 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 2 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_eq_3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_3 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 3 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_eq_4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_4 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 4 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_eq_5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ne_5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_uge_5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ugt_5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ult_5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_ule_5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sgt_5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sge_5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_slt_5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp_sle_5 : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant 5 : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }]
+
+def canonicalize_icmp : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
+  [
+    ⟨_, canonicalize_icmp_eq_neg5⟩,
+    ⟨_, canonicalize_icmp_ne_neg5⟩,
+    ⟨_, canonicalize_icmp_uge_neg5⟩,
+    ⟨_, canonicalize_icmp_ugt_neg5⟩,
+    ⟨_, canonicalize_icmp_ult_neg5⟩,
+    ⟨_, canonicalize_icmp_ule_neg5⟩,
+    ⟨_, canonicalize_icmp_sgt_neg5⟩,
+    ⟨_, canonicalize_icmp_sge_neg5⟩,
+    ⟨_, canonicalize_icmp_slt_neg5⟩,
+    ⟨_, canonicalize_icmp_sle_neg5⟩,
+    ⟨_, canonicalize_icmp_eq_neg4⟩,
+    ⟨_, canonicalize_icmp_ne_neg4⟩,
+    ⟨_, canonicalize_icmp_uge_neg4⟩,
+    ⟨_, canonicalize_icmp_ugt_neg4⟩,
+    ⟨_, canonicalize_icmp_ult_neg4⟩,
+    ⟨_, canonicalize_icmp_ule_neg4⟩,
+    ⟨_, canonicalize_icmp_sgt_neg4⟩,
+    ⟨_, canonicalize_icmp_sge_neg4⟩,
+    ⟨_, canonicalize_icmp_slt_neg4⟩,
+    ⟨_, canonicalize_icmp_sle_neg4⟩,
+    ⟨_, canonicalize_icmp_eq_neg3⟩,
+    ⟨_, canonicalize_icmp_ne_neg3⟩,
+    ⟨_, canonicalize_icmp_uge_neg3⟩,
+    ⟨_, canonicalize_icmp_ugt_neg3⟩,
+    ⟨_, canonicalize_icmp_ult_neg3⟩,
+    ⟨_, canonicalize_icmp_ule_neg3⟩,
+    ⟨_, canonicalize_icmp_sgt_neg3⟩,
+    ⟨_, canonicalize_icmp_sge_neg3⟩,
+    ⟨_, canonicalize_icmp_slt_neg3⟩,
+    ⟨_, canonicalize_icmp_sle_neg3⟩,
+    ⟨_, canonicalize_icmp_eq_neg2⟩,
+    ⟨_, canonicalize_icmp_ne_neg2⟩,
+    ⟨_, canonicalize_icmp_uge_neg2⟩,
+    ⟨_, canonicalize_icmp_ugt_neg2⟩,
+    ⟨_, canonicalize_icmp_ult_neg2⟩,
+    ⟨_, canonicalize_icmp_ule_neg2⟩,
+    ⟨_, canonicalize_icmp_sgt_neg2⟩,
+    ⟨_, canonicalize_icmp_sge_neg2⟩,
+    ⟨_, canonicalize_icmp_slt_neg2⟩,
+    ⟨_, canonicalize_icmp_sle_neg2⟩,
+    ⟨_, canonicalize_icmp_eq_neg1⟩,
+    ⟨_, canonicalize_icmp_ne_neg1⟩,
+    ⟨_, canonicalize_icmp_uge_neg1⟩,
+    ⟨_, canonicalize_icmp_ugt_neg1⟩,
+    ⟨_, canonicalize_icmp_ult_neg1⟩,
+    ⟨_, canonicalize_icmp_ule_neg1⟩,
+    ⟨_, canonicalize_icmp_sgt_neg1⟩,
+    ⟨_, canonicalize_icmp_sge_neg1⟩,
+    ⟨_, canonicalize_icmp_slt_neg1⟩,
+    ⟨_, canonicalize_icmp_sle_neg1⟩,
+    ⟨_, canonicalize_icmp_eq_0⟩,
+    ⟨_, canonicalize_icmp_ne_0⟩,
+    ⟨_, canonicalize_icmp_uge_0⟩,
+    ⟨_, canonicalize_icmp_ugt_0⟩,
+    ⟨_, canonicalize_icmp_ult_0⟩,
+    ⟨_, canonicalize_icmp_ule_0⟩,
+    ⟨_, canonicalize_icmp_sgt_0⟩,
+    ⟨_, canonicalize_icmp_sge_0⟩,
+    ⟨_, canonicalize_icmp_slt_0⟩,
+    ⟨_, canonicalize_icmp_sle_0⟩,
+    ⟨_, canonicalize_icmp_eq_1⟩,
+    ⟨_, canonicalize_icmp_ne_1⟩,
+    ⟨_, canonicalize_icmp_uge_1⟩,
+    ⟨_, canonicalize_icmp_ugt_1⟩,
+    ⟨_, canonicalize_icmp_ult_1⟩,
+    ⟨_, canonicalize_icmp_ule_1⟩,
+    ⟨_, canonicalize_icmp_sgt_1⟩,
+    ⟨_, canonicalize_icmp_sge_1⟩,
+    ⟨_, canonicalize_icmp_slt_1⟩,
+    ⟨_, canonicalize_icmp_sle_1⟩,
+    ⟨_, canonicalize_icmp_eq_2⟩,
+    ⟨_, canonicalize_icmp_ne_2⟩,
+    ⟨_, canonicalize_icmp_uge_2⟩,
+    ⟨_, canonicalize_icmp_ugt_2⟩,
+    ⟨_, canonicalize_icmp_ult_2⟩,
+    ⟨_, canonicalize_icmp_ule_2⟩,
+    ⟨_, canonicalize_icmp_sgt_2⟩,
+    ⟨_, canonicalize_icmp_sge_2⟩,
+    ⟨_, canonicalize_icmp_slt_2⟩,
+    ⟨_, canonicalize_icmp_sle_2⟩,
+    ⟨_, canonicalize_icmp_eq_3⟩,
+    ⟨_, canonicalize_icmp_ne_3⟩,
+    ⟨_, canonicalize_icmp_uge_3⟩,
+    ⟨_, canonicalize_icmp_ugt_3⟩,
+    ⟨_, canonicalize_icmp_ult_3⟩,
+    ⟨_, canonicalize_icmp_ule_3⟩,
+    ⟨_, canonicalize_icmp_sgt_3⟩,
+    ⟨_, canonicalize_icmp_sge_3⟩,
+    ⟨_, canonicalize_icmp_slt_3⟩,
+    ⟨_, canonicalize_icmp_sle_3⟩,
+    ⟨_, canonicalize_icmp_eq_4⟩,
+    ⟨_, canonicalize_icmp_ne_4⟩,
+    ⟨_, canonicalize_icmp_uge_4⟩,
+    ⟨_, canonicalize_icmp_ugt_4⟩,
+    ⟨_, canonicalize_icmp_ult_4⟩,
+    ⟨_, canonicalize_icmp_ule_4⟩,
+    ⟨_, canonicalize_icmp_sgt_4⟩,
+    ⟨_, canonicalize_icmp_sge_4⟩,
+    ⟨_, canonicalize_icmp_slt_4⟩,
+    ⟨_, canonicalize_icmp_sle_4⟩,
+    ⟨_, canonicalize_icmp_eq_5⟩,
+    ⟨_, canonicalize_icmp_ne_5⟩,
+    ⟨_, canonicalize_icmp_uge_5⟩,
+    ⟨_, canonicalize_icmp_ugt_5⟩,
+    ⟨_, canonicalize_icmp_ult_5⟩,
+    ⟨_, canonicalize_icmp_ule_5⟩,
+    ⟨_, canonicalize_icmp_sgt_5⟩,
+    ⟨_, canonicalize_icmp_sge_5⟩,
+    ⟨_, canonicalize_icmp_slt_5⟩,
+    ⟨_, canonicalize_icmp_sle_5⟩
   ]
