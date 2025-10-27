@@ -410,6 +410,8 @@ def generate_all_rewrites() -> str:
         sections.append(group.generate())
     
     return "\n\n".join(sections)
+       
+       
         
 def main():
     script_dir = Path(__file__).parent
