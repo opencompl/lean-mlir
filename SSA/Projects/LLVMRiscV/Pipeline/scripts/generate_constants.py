@@ -395,21 +395,171 @@ Test the rewrite:
         comment=comment
     )
     
+def generate_integer_reassoc_combines(max_val: int) -> RewriteGroup:
+    patterns = []
+    group_name = "irc_constants"
+    comment = """
+/-! ### integer_reassoc_combines_constants -/
+
+/-
+Test the rewrite:
+ fold (A+C1)-C2 -> A+(C1-C2)
+ fold C2-(A+C1) -> (C2-C1)-A
+ fold (A-C1)-C2 -> A-(C1+C2)
+ fold (C1-A)-C2 -> (C1-C2)-A
+ fold ((A-C1)+C2) -> (A+(C2-C1))
+-/
+"""
+    for i in range(-max_val, max_val + 1):
+        for j in range(-max_val, max_val + 1):
+            definition = f"""
+def {group_name}_APlusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%a: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.add %a, %c1 : i64
+      %1 = llvm.sub %0, %c2 : i64
+      llvm.return %1 : i64
+  }}]
+  rhs := [LV| {{
+    ^entry (%a: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.sub %c1, %c2 : i64
+      %1 = llvm.add %a, %0 : i64
+      llvm.return %1 : i64
+  }}]"""
+            patterns.append(RewritePattern(
+                name=f"{group_name}_APlusC1MinusC2",
+                definition=definition
+            ))
+
+            definition = f"""
+def {group_name}_C2MinusAPlusC1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%a: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.add %a, %c1 : i64
+      %1 = llvm.sub %c2, %0 : i64
+      llvm.return %1 : i64
+  }}]
+  rhs := [LV| {{
+    ^entry (%a: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.sub %c2, %c1 : i64
+      %1 = llvm.sub %0, %a : i64
+      llvm.return %1 : i64
+  }}]"""
+            patterns.append(RewritePattern(
+                name=f"{group_name}_C2MinusAPlusC1",
+                definition=definition
+            ))
+
+            definition = f"""
+def {group_name}_AMinusC1MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%a: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.sub %a, %c1 : i64
+      %1 = llvm.sub %0, %c2 : i64
+      llvm.return %1 : i64
+  }}]
+  rhs := [LV| {{
+    ^entry (%a: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.add %c1, %c2 : i64
+      %1 = llvm.sub %a, %0 : i64
+      llvm.return %1 : i64
+  }}]"""
+            patterns.append(RewritePattern(
+                name=f"{group_name}_AMinusC1MinusC2",
+                definition=definition
+            ))
+
+            definition = f"""
+def {group_name}_C1Minus2MinusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%a: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.sub %c1, %a : i64
+      %1 = llvm.sub %0, %c2 : i64
+      llvm.return %1 : i64
+  }}]
+  rhs := [LV| {{
+    ^entry (%a: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.sub %c1, %c2 : i64
+      %1 = llvm.sub %0, %a : i64
+      llvm.return %1 : i64
+  }}]"""
+            patterns.append(RewritePattern(
+                name=f"{group_name}_C1Minus2MinusC2",
+                definition=definition
+            ))
+
+            definition = f"""
+def {group_name}_AMinusC1PlusC2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%a: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.sub %a, %c1 : i64
+      %1 = llvm.add %0, %c2 : i64
+      llvm.return %1 : i64
+  }}]
+  rhs := [LV| {{
+    ^entry (%a: i64):
+      %c1 = llvm.mlir.constant ({i}) : i64
+      %c2 = llvm.mlir.constant ({j}) : i64
+      %0 = llvm.sub %c2, %c1 : i64
+      %1 = llvm.add %a, %0 : i64
+      llvm.return %1 : i64
+  }}]"""
+            patterns.append(RewritePattern(
+                name=f"{group_name}_AMinusC1PlusC2",
+                definition=definition
+            ))
+
+
+    return RewriteGroup(
+        group_name=group_name,
+        patterns=patterns,
+        type_signature="LLVMPeepholeRewriteRefine 64 Γ",
+        comment=comment
+    )
+    
 REWRITE_GENERATORS = [
     lambda: generate_sub_to_add_rewrites(max_val=50),
     lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 64))),
     lambda: generate_urem_pow2_rewrites(powers=list(range(0, 64))),
     lambda: generate_canonicalize_icmp(max_val=5),
+    lambda: generate_integer_reassoc_combines(max_val=2),
 ]
 
 def generate_all_rewrites() -> str:
     sections = []
 
     for generator in REWRITE_GENERATORS:
-        group = generator()
-        sections.append(group.generate())
-    
-    return "".join(sections)
+      group = generator()
+      sections.append(group.generate())
+
+    body = "".join(sections)
+    body += """
+/-- We group all the rewrites that depend constant folding to optimize the program. Without constant folding, these rewrites would either increase the instruction count, or do not result in any optimization. -/
+def GLobalISelPostLegalizerCombinerConstantFolding :
+  List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+    canonicalize_icmp)
+    """
+    return body
+
        
 def main():
     script_dir = Path(__file__).parent
