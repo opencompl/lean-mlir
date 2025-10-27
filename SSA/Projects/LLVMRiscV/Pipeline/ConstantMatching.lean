@@ -7525,7 +7525,7 @@ def irc_constants : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   ]
 
 /-- We group all the rewrites that depend constant folding to optimize the program. Without constant folding, these rewrites would either increase the instruction count, or do not result in any optimization. -/
-def GLobalISelPostLegalizerCombinerConstantFolding :
+def GlobalISelPostLegalizerCombinerConstantFolding :
   List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
     (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
     irc_constants)
