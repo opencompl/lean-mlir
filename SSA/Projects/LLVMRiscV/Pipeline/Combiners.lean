@@ -785,6 +785,103 @@ def binop_left_to_zero: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   ⟨_, binop_left_to_zero_urem⟩,
   ⟨_, binop_left_to_zero_mul⟩]
 
+/-! ### cast_of_cast_combines -/
+
+/-
+Test the rewrite:
+  Transform trunc ([asz]ext x) to x or ([asz]ext x) or (trunc x)
+-/
+def trunc_of_zext: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.zext %x: i32 to i64
+      %1 = llvm.trunc %0: i64 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32):
+      llvm.return %x : i32
+  }]
+
+def trunc_of_zext_ext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.zext %x: i32 to i64
+      %1 = llvm.trunc %0: i64 to i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.zext %x: i32 to i64
+      llvm.return %0 : i64
+  }]
+
+/-
+Test the rewrite:
+  Fold ([asz]ext ([asz]ext x)) -> ([asz]ext x)
+-/
+def zext_of_zext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.zext %x: i32 to i64
+      %1 = llvm.zext %0: i64 to i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.zext %x: i32 to i64
+      llvm.return %0 : i64
+  }]
+
+def sext_of_zext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.zext %x: i32 to i64
+      %1 = llvm.sext %0: i64 to i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.zext %x: i32 to i64
+      llvm.return %0 : i64
+  }]
+
+def sext_of_sext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.sext %x: i32 to i64
+      %1 = llvm.sext %0: i64 to i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.sext %x: i32 to i64
+      llvm.return %0 : i64
+  }]
+
+def zext_of_sext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
+  lhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.sext %x: i32 to i64
+      %1 = llvm.zext %0: i64 to i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i32):
+      %0 = llvm.sext %x: i32 to i64
+      llvm.return %0 : i64
+  }]
+
+def cast_of_cast_combines_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, trunc_of_zext_ext⟩,
+  ⟨_, zext_of_zext⟩,
+  ⟨_, sext_of_zext⟩,
+  ⟨_, sext_of_sext⟩,
+  ⟨_, zext_of_sext⟩]
+
+def cast_of_cast_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) :=
+  [⟨_, trunc_of_zext⟩]
+
 /-- ### binop_right_to_zero
   (x op 0) → 0
 -/
@@ -1958,6 +2055,7 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
   xor_of_and_with_same_reg_list ++
   LLVMIR_identity_combines_64 ++
   match_selects ++
+  cast_of_cast_combines_64 ++
   idempotent_prop
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
@@ -1965,6 +2063,7 @@ def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 
   LLVMIR_identity_combines_32 ++
   LLVMIR_cast_combines_32 ++
   hoist_logic_op_with_same_opcode_hands_32 ++
+  cast_of_cast_combines_32 ++
   LLVMIR_identity_combines_32
 
 /-- We group all the rewrites that form the pre-legalization optimizations in GlobalISel-/
