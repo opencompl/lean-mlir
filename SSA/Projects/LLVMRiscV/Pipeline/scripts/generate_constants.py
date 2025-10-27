@@ -42,14 +42,6 @@ class RewriteGroup:
         
         return self.comment + definitions + list_def
 
-def generate_optimization_groups(group_names: List[str]) -> str:
-    type_signatures = [f"    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))\n    {frewrite_name})" for frewrite_name in group_names]
-    list_def = "\ndef GLobalISelPostLegalizerCombinerConstants :\n"
-    list_def += "  List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=\n"
-    list_def += "\n    ++ \n".join(type_signatures)
-    list_def += "\n"
-    return list_def
-
 def generate_sub_to_add_rewrites(max_val: int) -> RewriteGroup:
     #(sub x, C) → (add x, -C)
     patterns = []
@@ -419,8 +411,13 @@ def generate_all_rewrites() -> str:
         group_names.append(group.group_name)
     
     body = "\n\n".join(sections)
-    body += generate_optimization_groups(group_names)
-    
+    body += """
+    /-- We group all the rewrites that depend constant folding to optimize the program. Without constant folding, these rewrites would increase the instruction count. -/
+def GLobalISelPostLegalizerCombinerConstantFolding :
+    List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  canonicalize_icmp)
+"""
     return body
         
 

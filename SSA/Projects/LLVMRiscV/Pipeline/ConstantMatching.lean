@@ -10,7 +10,7 @@ open LLVMRiscV
 
 /-! ### sub_to_add -/
 
-/--
+/-- 
 Test the rewrite:
   (sub x, C) → (add x, -C)
 -/
@@ -3483,7 +3483,7 @@ def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 
 /-! ### canonicalize_icmp -/
 
-/--
+/-- 
 Test the rewrite:
   (cmp C, x) → (cmp x, C)
 -/
@@ -5141,16 +5141,8 @@ def canonicalize_icmp : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
     ⟨_, canonicalize_icmp_sle_5⟩
   ]
 
-def GLobalISelPostLegalizerCombinerConstants :
-  List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-    sub_to_add)
-    ++
-    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-    mul_to_shl)
-    ++
-    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-    urem_pow2_to_mask)
-    ++
-    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-    canonicalize_icmp)
+    /-- We group all the rewrites that depend constant folding to optimize the program. Without constant folding, these rewrites would increase the instruction count. -/
+def GLobalISelPostLegalizerCombinerConstantFolding :
+    List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  canonicalize_icmp)
