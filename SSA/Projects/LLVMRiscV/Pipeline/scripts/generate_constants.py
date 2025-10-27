@@ -42,6 +42,7 @@ class RewriteGroup:
         
         return self.comment + definitions + list_def
 
+
 def generate_sub_to_add_rewrites(max_val: int) -> RewriteGroup:
     #(sub x, C) → (add x, -C)
     patterns = []
@@ -408,7 +409,7 @@ def generate_all_rewrites() -> str:
         group = generator()
         sections.append(group.generate())
     
-    return "".join(sections)
+    return "\n\n".join(sections)
         
 def main():
     script_dir = Path(__file__).parent
