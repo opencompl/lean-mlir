@@ -42,6 +42,13 @@ class RewriteGroup:
         
         return self.comment + definitions + list_def
 
+def generate_optimization_groups(group_names: List[str]) -> str:
+    type_signatures = [f"    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))\n    {frewrite_name})" for frewrite_name in group_names]
+    list_def = "\ndef GLobalISelPostLegalizerCombinerConstants :\n"
+    list_def += "  List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=\n"
+    list_def += "\n    ++ \n".join(type_signatures)
+    list_def += "\n"
+    return list_def
 
 def generate_sub_to_add_rewrites(max_val: int) -> RewriteGroup:
     #(sub x, C) → (add x, -C)
@@ -174,22 +181,248 @@ Test the rewrite:
         comment=comment
     )
     
+def generate_canonicalize_icmp(max_val: int) -> RewriteGroup:
+    patterns = []
+    group_name = "canonicalize_icmp"
+    comment = """
+/-! ### canonicalize_icmp -/
 
+/-- 
+Test the rewrite:
+  (cmp C, x) → (cmp x, C)
+-/
+"""
+    
+    for i in range(-max_val, max_val + 1):
+        name_suffix = f"neg{abs(i)}" if i < 0 else str(i)
+        
+        definition = f"""def {group_name}_eq_{name_suffix} : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.eq %c, %x : i64
+      llvm.return %1 : i1
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.eq %x, %c : i64
+      llvm.return %1 : i1
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_eq_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def {group_name}_ne_{name_suffix} : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.ne %c, %x : i64
+      llvm.return %1 : i1
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.ne %x, %c : i64
+      llvm.return %1 : i1
+  }}]
+"""
+        patterns.append(RewritePattern(
+            name=f"{group_name}_ne_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def {group_name}_uge_{name_suffix} : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.uge %c, %x : i64
+      llvm.return %1 : i1
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.ule %x, %c : i64
+      llvm.return %1 : i1
+  }}]
+"""
+
+        patterns.append(RewritePattern(
+            name=f"{group_name}_uge_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def {group_name}_ugt_{name_suffix} : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.ugt %c, %x : i64
+      llvm.return %1 : i1
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.ult %x, %c : i64
+      llvm.return %1 : i1
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_ugt_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def {group_name}_ult_{name_suffix} : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.ult %c, %x : i64
+      llvm.return %1 : i1
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.ugt %x, %c : i64
+      llvm.return %1 : i1
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_ult_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def {group_name}_ule_{name_suffix} : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.ule %c, %x : i64
+      llvm.return %1 : i1
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.uge %x, %c : i64
+      llvm.return %1 : i1
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_ule_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def {group_name}_sgt_{name_suffix} : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.sgt %c, %x : i64
+      llvm.return %1 : i1
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.slt %x, %c : i64
+      llvm.return %1 : i1
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_sgt_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def {group_name}_sge_{name_suffix} : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.sge %c, %x : i64
+      llvm.return %1 : i1
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.sle %x, %c : i64
+      llvm.return %1 : i1
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_sge_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def {group_name}_slt_{name_suffix} : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.slt %c, %x : i64
+      llvm.return %1 : i1
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.sgt %x, %c : i64
+      llvm.return %1 : i1
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_slt_{name_suffix}",
+            definition=definition
+        ))
+        
+        definition = f"""def {group_name}_sle_{name_suffix} : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.sle %c, %x : i64
+      llvm.return %1 : i1
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant {i} : i64
+      %1 = llvm.icmp.sge %x, %c : i64
+      llvm.return %1 : i1
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_sle_{name_suffix}",
+            definition=definition
+        ))
+    
+    return RewriteGroup(
+        group_name=group_name,
+        patterns=patterns,
+        type_signature="LLVMPeepholeRewriteRefine 1 Γ",
+        comment=comment
+    )
+    
 REWRITE_GENERATORS = [
     lambda: generate_sub_to_add_rewrites(max_val=50),
     lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 64))),
     lambda: generate_urem_pow2_rewrites(powers=list(range(0, 64))),
+    lambda: generate_canonicalize_icmp(max_val=5),
 ]
-
 
 def generate_all_rewrites() -> str:
     sections = []
-    
+    group_names = []
+
     for generator in REWRITE_GENERATORS:
         group = generator()
         sections.append(group.generate())
+        group_names.append(group.group_name)
     
-    return "\n\n".join(sections)
+    body = "\n\n".join(sections)
+    body += generate_optimization_groups(group_names)
+    
+    return body
+        
 
 
 def main():
