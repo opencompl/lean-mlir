@@ -7528,5 +7528,5 @@ def irc_constants : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 def GLobalISelPostLegalizerCombinerConstantFolding :
   List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
     (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-    canonicalize_icmp)
+    irc_constants)
     
