@@ -408,17 +408,8 @@ def generate_all_rewrites() -> str:
     for generator in REWRITE_GENERATORS:
         group = generator()
         sections.append(group.generate())
-        group_names.append(group.group_name)
     
-    body = "\n\n".join(sections)
-    body += """
-    /-- We group all the rewrites that depend constant folding to optimize the program. Without constant folding, these rewrites would increase the instruction count. -/
-def GLobalISelPostLegalizerCombinerConstantFolding :
-    List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-  canonicalize_icmp)
-"""
-    return body
+    return "\n\n".join(sections)
         
 
 

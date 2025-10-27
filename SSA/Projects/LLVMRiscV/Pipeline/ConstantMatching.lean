@@ -5140,9 +5140,3 @@ def canonicalize_icmp : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
     ⟨_, canonicalize_icmp_slt_5⟩,
     ⟨_, canonicalize_icmp_sle_5⟩
   ]
-
-    /-- We group all the rewrites that depend constant folding to optimize the program. Without constant folding, these rewrites would increase the instruction count. -/
-def GLobalISelPostLegalizerCombinerConstantFolding :
-    List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
-  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-  canonicalize_icmp)
