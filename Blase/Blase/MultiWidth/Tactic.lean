@@ -884,6 +884,7 @@ def CollectState.logSuspiciousFvars (state : CollectState) : SolverM (Array Expr
     if !e.isFVar then
       logWarning m!"abstracted boolean: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
       exprs := exprs.push e
+  return exprs
 
 /--
 info: Circuit.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool
@@ -1009,10 +1010,10 @@ def solve (g : MVarId) : SolverM Unit := do
     | .safetyFailure i =>
       let suspiciousVars ← collect.logSuspiciousFvars
       -- | Found precise counter-example to claimed predicate.
-      if suspiciousVars.empty then
-          throwError m!"CEXPRECISE: Found exact counter-example at iteration {i} for predicate {repr p}"
+      if suspiciousVars.isEmpty then
+          throwError m!"CEX: Found exact counter-example at iteration {i} for predicate {repr p}"
         else
-          throwError m!"CEXIMPRECISE: Found possible counter-example at iteration {i} for predicate {repr p}"
+          throwError m!"MAYCEX: Found possible counter-example at iteration {i} for predicate {repr p}"
     | .exhaustedIterations _ =>
       let _ ← collect.logSuspiciousFvars
       throwError m!"PROOFNOTFOUND: exhausted iterations for predicate {repr p}"
@@ -1103,17 +1104,18 @@ def printSmtLib (g : MVarId) : SolverM Unit := do
   g.withContext do
     let collect : CollectState := {}
     let pRawExpr ← g.getType
-    let (p, collect) ← collectBVPredicateAux collect pRawExpr
+    let (p, _collect) ← collectBVPredicateAux collect pRawExpr
     debugLog m!"collected predicate: '{repr p}'"
-    throwError (toSmtLib p)
+    throwError (p.toSexpr |> format)
 
-syntax (name := bvPrintSmtLib) "bv_multi_width_print_smt_lib" Lean.Parser.Tactic.optConfig : tactic
+syntax (name := bvPrintSmtLib) "bv_multi_width_print_smt_lib" : tactic
 @[tactic bvPrintSmtLib]
 def evalBvPrintSmtLib : Tactic := fun
-| `(tactic| bv_print_smt_lib $cfg) => do
+| `(tactic| bv_multi_width_print_smt_lib) => do
   let g ← getMainGoal
   g.withContext do
-    printSmtLib g
+    let ctx : Context := {}
+    SolverM.run (ctx := ctx) <| printSmtLib g
 | _ => throwUnsupportedSyntax
 
 
