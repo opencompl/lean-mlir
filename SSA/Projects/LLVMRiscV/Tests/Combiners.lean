@@ -782,3 +782,62 @@ info: {
 -/
 #guard_msgs in
 #eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner idempotent_prop_freeze.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    "llvm.return"(%0) : (i32) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner trunc_of_zext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    %1 = "llvm.zext"(%0) : (i32) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner trunc_of_zext_ext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    %1 = "llvm.zext"(%0) : (i32) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner zext_of_zext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    %1 = "llvm.zext"(%0) : (i32) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner sext_of_zext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    %1 = "llvm.sext"(%0) : (i32) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner sext_of_sext.lhs)).val).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    %1 = "llvm.sext"(%0) : (i32) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.dce' (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner zext_of_sext.lhs)).val).val
