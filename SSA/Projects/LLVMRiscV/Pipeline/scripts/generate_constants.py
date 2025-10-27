@@ -395,8 +395,8 @@ Test the rewrite:
     
 REWRITE_GENERATORS = [
     lambda: generate_sub_to_add_rewrites(max_val=5),
-    lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 5))),
-    lambda: generate_urem_pow2_rewrites(powers=list(range(0, 5))),
+    lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 10))),
+    lambda: generate_urem_pow2_rewrites(powers=list(range(0, 10))),
     lambda: generate_canonicalize_icmp(max_val=5),
 ]
 

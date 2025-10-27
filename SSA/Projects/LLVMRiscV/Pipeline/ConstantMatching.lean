@@ -10,7 +10,7 @@ open LLVMRiscV
 
 /-! ### sub_to_add -/
 
-/--
+/-- 
 Test the rewrite:
   (sub x, C) → (add x, -C)
 -/
@@ -259,13 +259,88 @@ def mul_to_shl_16 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
       llvm.return %0 : i64
   }]
 
+def mul_to_shl_32 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (32) : i64
+      %0 = llvm.mul %x, %c : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (5) : i64
+      %0 = llvm.shl %x, %c : i64
+      llvm.return %0 : i64
+  }]
+
+def mul_to_shl_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (64) : i64
+      %0 = llvm.mul %x, %c : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (6) : i64
+      %0 = llvm.shl %x, %c : i64
+      llvm.return %0 : i64
+  }]
+
+def mul_to_shl_128 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (128) : i64
+      %0 = llvm.mul %x, %c : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (7) : i64
+      %0 = llvm.shl %x, %c : i64
+      llvm.return %0 : i64
+  }]
+
+def mul_to_shl_256 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (256) : i64
+      %0 = llvm.mul %x, %c : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (8) : i64
+      %0 = llvm.shl %x, %c : i64
+      llvm.return %0 : i64
+  }]
+
+def mul_to_shl_512 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (512) : i64
+      %0 = llvm.mul %x, %c : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (9) : i64
+      %0 = llvm.shl %x, %c : i64
+      llvm.return %0 : i64
+  }]
+
 def mul_to_shl : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [
     ⟨_, mul_to_shl_1⟩,
     ⟨_, mul_to_shl_2⟩,
     ⟨_, mul_to_shl_4⟩,
     ⟨_, mul_to_shl_8⟩,
-    ⟨_, mul_to_shl_16⟩
+    ⟨_, mul_to_shl_16⟩,
+    ⟨_, mul_to_shl_32⟩,
+    ⟨_, mul_to_shl_64⟩,
+    ⟨_, mul_to_shl_128⟩,
+    ⟨_, mul_to_shl_256⟩,
+    ⟨_, mul_to_shl_512⟩
   ]
 
 /-! ### urem_pow2_to_mask -/
@@ -344,18 +419,93 @@ def urem_pow2_to_mask_16 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] w
       llvm.return %0 : i64
   }]
 
+def urem_pow2_to_mask_32 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (32) : i64
+      %0 = llvm.urem %x, %c : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (31) : i64
+      %0 = llvm.and %x, %c : i64
+      llvm.return %0 : i64
+  }]
+
+def urem_pow2_to_mask_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (64) : i64
+      %0 = llvm.urem %x, %c : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (63) : i64
+      %0 = llvm.and %x, %c : i64
+      llvm.return %0 : i64
+  }]
+
+def urem_pow2_to_mask_128 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (128) : i64
+      %0 = llvm.urem %x, %c : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (127) : i64
+      %0 = llvm.and %x, %c : i64
+      llvm.return %0 : i64
+  }]
+
+def urem_pow2_to_mask_256 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (256) : i64
+      %0 = llvm.urem %x, %c : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (255) : i64
+      %0 = llvm.and %x, %c : i64
+      llvm.return %0 : i64
+  }]
+
+def urem_pow2_to_mask_512 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (512) : i64
+      %0 = llvm.urem %x, %c : i64
+      llvm.return %0 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (511) : i64
+      %0 = llvm.and %x, %c : i64
+      llvm.return %0 : i64
+  }]
+
 def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [
     ⟨_, urem_pow2_to_mask_1⟩,
     ⟨_, urem_pow2_to_mask_2⟩,
     ⟨_, urem_pow2_to_mask_4⟩,
     ⟨_, urem_pow2_to_mask_8⟩,
-    ⟨_, urem_pow2_to_mask_16⟩
+    ⟨_, urem_pow2_to_mask_16⟩,
+    ⟨_, urem_pow2_to_mask_32⟩,
+    ⟨_, urem_pow2_to_mask_64⟩,
+    ⟨_, urem_pow2_to_mask_128⟩,
+    ⟨_, urem_pow2_to_mask_256⟩,
+    ⟨_, urem_pow2_to_mask_512⟩
   ]
 
 /-! ### canonicalize_icmp -/
 
-/--
+/-- 
 Test the rewrite:
   (cmp C, x) → (cmp x, C)
 -/
