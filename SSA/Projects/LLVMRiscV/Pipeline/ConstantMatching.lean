@@ -10,7 +10,7 @@ open LLVMRiscV
 
 /-! ### sub_to_add -/
 
-/-- 
+/--
 Test the rewrite:
   (sub x, C) → (add x, -C)
 -/
@@ -1533,8 +1533,6 @@ def sub_to_add : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
     ⟨_, sub_to_add_50⟩
   ]
 
-
-
 /-! ### mul_to_shl -/
 
 /--
@@ -2505,8 +2503,6 @@ def mul_to_shl : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
     ⟨_, mul_to_shl_4611686018427387904⟩,
     ⟨_, mul_to_shl_9223372036854775808⟩
   ]
-
-
 
 /-! ### urem_pow2_to_mask -/
 
@@ -3479,11 +3475,9 @@ def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
     ⟨_, urem_pow2_to_mask_9223372036854775808⟩
   ]
 
-
-
 /-! ### canonicalize_icmp -/
 
-/-- 
+/--
 Test the rewrite:
   (cmp C, x) → (cmp x, C)
 -/

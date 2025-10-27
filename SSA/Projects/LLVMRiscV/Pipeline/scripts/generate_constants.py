@@ -403,16 +403,13 @@ REWRITE_GENERATORS = [
 
 def generate_all_rewrites() -> str:
     sections = []
-    group_names = []
 
     for generator in REWRITE_GENERATORS:
         group = generator()
         sections.append(group.generate())
     
-    return "\n\n".join(sections)
+    return "".join(sections)
         
-
-
 def main():
     script_dir = Path(__file__).parent
     parent_dir = script_dir.parent
