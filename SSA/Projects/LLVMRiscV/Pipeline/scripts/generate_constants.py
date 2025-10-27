@@ -98,9 +98,8 @@ def generate_mul_to_shl_rewrites(powers: List[int]) -> RewriteGroup:
 Test the rewrite:
     (x * 2^n) → (x << n)
 -/
-
 """
-    
+
     for n in powers:
         power_of_2 = 2 ** n
         
@@ -142,7 +141,6 @@ def generate_urem_pow2_rewrites(powers: List[int]) -> RewriteGroup:
 Test the rewrite:
     urem(x, 2^n) -> x & (2^n - 1)
 -/
-
 """ 
     for n in powers:
         power_of_2 = 2 ** n
@@ -382,7 +380,7 @@ Test the rewrite:
       llvm.return %1 : i1
   }}]
 """
-        
+
         patterns.append(RewritePattern(
             name=f"{group_name}_sle_{name_suffix}",
             definition=definition
@@ -396,9 +394,9 @@ Test the rewrite:
     )
     
 REWRITE_GENERATORS = [
-    lambda: generate_sub_to_add_rewrites(max_val=50),
-    lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 64))),
-    lambda: generate_urem_pow2_rewrites(powers=list(range(0, 64))),
+    lambda: generate_sub_to_add_rewrites(max_val=5),
+    lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 5))),
+    lambda: generate_urem_pow2_rewrites(powers=list(range(0, 5))),
     lambda: generate_canonicalize_icmp(max_val=5),
 ]
 
