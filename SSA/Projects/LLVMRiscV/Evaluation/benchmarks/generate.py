@@ -577,7 +577,7 @@ def main():
         "-llvm", "--llvm_opt", 
         help="Optimization level for LLVM.",
         nargs="+",
-        choices=["O3", "O2", "O1", "O0" "default"]
+        choices=["O3", "O2", "O1", "O0", "default"]
     )
     
     args = parser.parse_args()

@@ -7,6 +7,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.InstructionLowering
 
 open MLIR AST InstCombine
 open LLVMRiscV
+
 /-!
   This file extends the `opt` tool, to specifically support the `LLVMPlusRiscV` dialect.
 -/
