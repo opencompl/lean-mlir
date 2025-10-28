@@ -55,6 +55,7 @@ def genTable : Std.HashMap Name (Array Bool) := Id.run do
   table := table.insert ``BitVec #[true]
   table := table.insert ``BitVec.zeroExtend #[true, true, false]
   table := table.insert ``BitVec.signExtend #[true, true, false]
+  table := table.insert ``BitVec.instOfNat #[true, false, false]
   table := table.insert ``BitVec.instAdd #[true]
   table := table.insert ``BitVec.instSub #[true]
   table := table.insert ``BitVec.instMul #[true]
@@ -100,15 +101,39 @@ def doBvGeneralize (g : MVarId) : GenM (Expr × MVarId) := do
   let e ← instantiateMVars e
   pure (e, g)
 
+axiom specializeAxiom : ∀ P, P
+
+def specializeGoal (g : MVarId) (lengthCount : Nat) : TacticM Unit := do
+  let t ← g.getType
+  let newT ← forallTelescope t fun xs t => do
+    let mut t := t
+    let mut substs := FVarSubst.empty
+    for i in [0:lengthCount] do
+      let n := 2 * i + 1
+      substs := substs.insert xs[i]!.fvarId! (mkNatLit n)
+    let ys := xs.drop lengthCount
+    let newT ← mkForallFVars ys t (binderInfoForMVars := .default)
+    pure <| substs.apply newT
+  let newGoal ← mkFreshExprMVar (some newT)
+  let sorryExpr ← mkAppM ``specializeAxiom #[t]
+  g.assign sorryExpr
+  replaceMainGoal [newGoal.mvarId!]
+
+structure GenConfig where
+  specialize : Bool := false
+
+declare_config_elab elabGenConfig GenConfig
+
 /--
 This tactic tries to generalize the bitvector widths, and only the bitvector
 widths. See `genTable` if the tactic fails to generalize the right parameters
 of a function over bitvectors.
 -/
-syntax (name := bvGeneralizeWidth) "bv_generalize_width" Lean.Parser.Tactic.optConfig : tactic
-@[tactic bvGeneralizeWidth]
-def evalBvGeneralizeWidth : Tactic := fun
-| `(tactic| bv_generalize_width) => do
+syntax (name := bvGeneralize) "bv_generalize" Lean.Parser.Tactic.optConfig : tactic
+@[tactic bvGeneralize]
+def evalBvGeneralize : Tactic := fun
+| `(tactic| bv_generalize $cfg) => do
+  let cfg ← elabGenConfig cfg
   let g₀ ← getMainGoal
   g₀.withContext do
     let ((e, g), s) ← (doBvGeneralize g₀).run default
@@ -119,20 +144,31 @@ def evalBvGeneralizeWidth : Tactic := fun
         newVals := newVals.push (s.invMapping[x]!)
       g.assign <| mkAppN g' newVals 
       replaceMainGoal [g'.mvarId!]
+      if cfg.specialize then
+        specializeGoal g'.mvarId! s.invMapping.size
 | _ => throwUnsupportedSyntax
 
-#guard_msgs in theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) : 
-    x = x := by
-  bv_generalize_width
-  bv_multi_width
-  print_goal
+-- TODO: the `bv_generalize` tactic fails when a bit vector is already width generic
 
-#guard_msgs in theorem test_bv_generalize
-      (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
-    x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
-  bv_generalize_width
+theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) : 
+    x = x := by
+  bv_generalize
   bv_multi_width
-  print_goal
+
+theorem test_bv_generalize_simple_spec (x y : BitVec 32) (zs : List (BitVec 44)) : 
+    x = x := by
+  bv_generalize +specialize
+  bv_decide
+
+theorem test_bv_generalize (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
+    x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
+  bv_generalize
+  bv_multi_width
+
+theorem test_bv_generalize_spec (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
+    x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
+  bv_generalize +specialize
+  bv_decide
 
 end WidthGeneralize
 end Tactic

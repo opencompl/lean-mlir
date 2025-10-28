@@ -335,6 +335,9 @@ theorem bool_eq_iff (b₁ b₂ : Bool) : (b₁ = b₂) = (b₁ ↔ b₂) := by g
 @[bv_multi_width_normalize]
 theorem Nat.ule_of_le (v w : Nat) : v < w ↔ v + 1 ≤ w := by omega
 
+@[bv_multi_width_normalize]
+theorem prop_eq (p q : Prop) : (p = q) = (p ↔ q) := by grind
+
 /-- Check that v ≠ w is canonicalized it v < w ∨ w < v -/
 @[bv_multi_width_normalize]
 theorem Nat.ne_of_lt_or_lt (v w : Nat) : v ≠ w ↔ (v < w ∨ w < v) := by omega
