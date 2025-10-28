@@ -654,3 +654,11 @@ instance : DialectDenote RV64 where
   denote o args _ := [o.denote args]ₕ
 
 end RISCV64
+
+
+variable {d} [DialectSignature d] [DialectPrint d] in
+/--
+Print a `Com` in generic MLIR syntax, wrapped in a `func.func`.
+-/
+def Com.printFunc (com : Com d Γ eff ts) : Std.Format :=
+  f!"func.func {com.print}"
