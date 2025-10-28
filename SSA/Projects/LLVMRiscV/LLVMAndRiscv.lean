@@ -324,4 +324,10 @@ instance : DialectToExpr LLVMPlusRiscV where
 elab "[LV|" reg:mlir_region "]" : term => do
   SSA.elabIntoCom' reg LLVMPlusRiscV
 
+/--
+Print a `Com` in generic MLIR syntax, wrapped in a `func.func`.
+-/
+partial def Com.printFunc (com : Com LLVMPlusRiscV Γ eff ts) : Std.Format :=
+  f!"func.func {com.print}"
+
 end LLVMRiscV
