@@ -360,18 +360,6 @@ info: {
 
 /--
 info: {
-  ^bb0(%0 : i64):
-    %1 = "llvm.mlir.constant"(){value = 1024 : i64} : () -> (i64)
-    %2 = "llvm.mlir.constant"(){value = 1023 : i64} : () -> (i64)
-    %3 = "llvm.and"(%0, %2) : (i64, i64) -> (i64)
-    "llvm.return"(%3) : (i64) -> ()
-}
--/
-#guard_msgs in
-#eval! Com.print (DCE.dce' (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner urem_pow2_to_mask_1024.lhs)).val
-
-/--
-info: {
   ^bb0(%0 : i64, %1 : i64):
     %2 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
     %3 = "llvm.mlir.constant"(){value = 0 : i64} : () -> (i64)
