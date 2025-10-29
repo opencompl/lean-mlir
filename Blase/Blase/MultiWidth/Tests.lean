@@ -26,12 +26,26 @@ theorem abstract_prop {w : Nat} (p : Prop) (x : BitVec w) : p ∨ (x = x) := by
 warning: abstracted non-variable width: ⏎
   → 'x + 1'
 ---
-error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.binWidthRel
+error: MAYCEX: Found possible counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.binWidthRel
   (MultiWidth.WidthBinaryRelationKind.eq)
   (MultiWidth.Nondep.WidthExpr.var 0)
   (MultiWidth.Nondep.WidthExpr.var 1)
 -/
 #guard_msgs in theorem abstract_prop_check_warn : ∀ (x : Nat), x = x + 1  := by
+  -- | check that prop is abstracted.
+  bv_multi_width
+
+/--
+error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.binRel
+  (MultiWidth.BinaryRelationKind.eq)
+  (MultiWidth.Nondep.WidthExpr.var 0)
+  (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
+  (MultiWidth.Nondep.Term.add
+    (MultiWidth.Nondep.WidthExpr.var 0)
+    (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
+    (MultiWidth.Nondep.Term.ofNat (MultiWidth.Nondep.WidthExpr.var 0) 1))
+-/
+#guard_msgs in theorem fail_prop_check_warn : ∀ (x : BitVec w), x = x + 1  := by
   -- | check that prop is abstracted.
   bv_multi_width
 
