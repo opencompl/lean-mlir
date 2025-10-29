@@ -412,6 +412,11 @@ def generate_mulh_to_lshr(powers: List[int]) -> RewriteGroup:
     group_name = "mulh_to_lshr"
     comment = """
 /-! ### mulh_to_lshr -/
+
+/-- 
+Test the rewrite:
+  (mulh x, n^2) → (sra x, (64-n))
+-/
 """ 
     for n in powers:
         power_of_2 = 2 ** n
