@@ -51,10 +51,10 @@ XDSL_opt_ASM_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_opt_ASM/"
 )
 XDSL_FUNC_ASM_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_FUNC_ASM/"
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_FUNC/"
 )
 XDSL_FUNC_opt_ASM_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_FUNC_opt_ASM/"
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_FUNC_opt/"
 )
 LOGS_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/logs/"
 
