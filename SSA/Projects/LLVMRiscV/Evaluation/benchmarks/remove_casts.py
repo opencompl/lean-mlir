@@ -17,7 +17,7 @@ class MyOptMain(xDSLOptMain):
         reg_type = IntRegisterType(NoneAttr(), StringAttr(""))
         module_args = module.body.block.args
         return_op = module.body.block.ops.last
-        assert isinstance(return_op, llvm.ReturnOp)
+        assert isinstance(return_op, riscv_func.ReturnOp)
 
         new_region = Rewriter().move_region_contents_to_new_regions(module.body)
         new_func = riscv_func.FuncOp(
