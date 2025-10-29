@@ -5,9 +5,8 @@ from xdsl.xdsl_opt_main import xDSLOptMain
 from xdsl.rewriter import InsertPoint
 from xdsl.ir import Block
 
-from xdsl.dialects.builtin import ModuleOp, NoneAttr, StringAttr, FunctionType
+from xdsl.dialects.builtin import ModuleOp, FunctionType
 from xdsl.dialects import llvm
-from xdsl.dialects.riscv import IntRegisterType
 from xdsl.dialects import func
 
 
@@ -24,7 +23,6 @@ class MyOptMain(xDSLOptMain):
         module.body.add_block(Block())
         Rewriter().insert_op(new_func, InsertPoint.at_end(module.body.block))
         new_func.regions = [new_region]
-
 
         Rewriter().replace_op(return_op, func.ReturnOp(*return_op.operands))
 
