@@ -803,7 +803,7 @@ def trunc_of_zext: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32)] where
       llvm.return %x : i32
   }]
 
-def trunc_of_zext_ext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
+def trunc_of_zext_zext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
   lhs := [LV| {
     ^entry (%x: i32):
       %0 = llvm.zext %x: i32 to i64
@@ -873,7 +873,7 @@ def zext_of_sext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] where
   }]
 
 def cast_of_cast_combines_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  [⟨_, trunc_of_zext_ext⟩,
+  [⟨_, trunc_of_zext_zext⟩,
   ⟨_, zext_of_zext⟩,
   ⟨_, sext_of_zext⟩,
   ⟨_, sext_of_sext⟩,
@@ -881,6 +881,44 @@ def cast_of_cast_combines_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 
 def cast_of_cast_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) :=
   [⟨_, trunc_of_zext⟩]
+
+
+/-! ### sext_trunc -/
+
+/-
+Test the rewrite:
+  Transform sext (trunc x) to x or (sext x), (trunc x) or x
+-/
+
+def sext_trunc : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.trunc %x: i64 to i32
+      %1 = llvm.sext %0: i32 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.trunc %x: i64 to i32
+      llvm.return %0 : i32
+  }]
+
+def zext_trunc : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.trunc %x: i64 to i32
+      %1 = llvm.zext %0: i32 to i32
+      llvm.return %1 : i32
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.trunc %x: i64 to i32
+      llvm.return %0 : i32
+  }]
+
+def sext_trunc_fold : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) :=
+  [⟨_, sext_trunc⟩,
+  ⟨_, zext_trunc⟩]
 
 /-- ### binop_right_to_zero
   (x op 0) → 0
@@ -2064,6 +2102,7 @@ def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 
   LLVMIR_cast_combines_32 ++
   hoist_logic_op_with_same_opcode_hands_32 ++
   cast_of_cast_combines_32 ++
+  sext_trunc_fold ++
   LLVMIR_identity_combines_32
 
 /-- We group all the rewrites that form the pre-legalization optimizations in GlobalISel-/
