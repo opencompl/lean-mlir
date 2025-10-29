@@ -399,6 +399,27 @@ def dce' {Γ : Ctxt d.Ty} {t}
 /-- info: 'DCE.dce' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms dce
 
+#check Subtype
+
+abbrev RepeatDCEType {Γ : Ctxt d.Ty} {t} (com : Com d Γ .pure t) : Type :=
+  { com' : Com d Γ .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote V}
+
+instance {com : Com d Γ .pure t} : Inhabited (RepeatDCEType com) where
+  default := ⟨com, fun _ => rfl⟩
+
+variable [DecidableEq d.Op] [DecidableEq d.Ty] in
+partial def repeatDce {Γ : Ctxt d.Ty} {t}
+    (com : Com d Γ .pure t) :
+    { com' : Com d Γ .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote V} :=
+  (go com)
+where go (com : Com d Γ .pure t) : RepeatDCEType com :=
+  let ⟨dceCom, h⟩ := dce' com
+  if dceCom = com then
+    ⟨dceCom, h⟩
+  else
+    let ⟨res, h_res⟩ := go dceCom
+    ⟨res, by simp_all⟩
+
 namespace Examples
 
 /-- A very simple type universe. -/
