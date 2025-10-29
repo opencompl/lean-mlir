@@ -144,7 +144,6 @@ def extract_data(results_directory, benchmark_name, parameter, opt) :
     """
     function_names = []
     parameter_numbers = []
-    print(parameter)
     if opt != '' :
         for filename in os.listdir(results_directory):
             if opt in filename : 
@@ -190,8 +189,8 @@ def extract_data(results_directory, benchmark_name, parameter, opt) :
             except FileNotFoundError:
                 print(f"Warning: file not found at {file_path}. Skipping.")
     if opt != '':
-            df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+opt+"_"+parameter : parameter_numbers})
-            df.to_csv(data_dir + benchmark_name+"_"+opt+'_'+ parameter  + '.csv')
+        df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+opt+"_"+parameter : parameter_numbers})
+        df.to_csv(data_dir + benchmark_name+"_"+opt+'_'+ parameter  + '.csv')
     else:
         df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+parameter : parameter_numbers})
         df.to_csv(data_dir + benchmark_name + "_" + parameter + '.csv')
