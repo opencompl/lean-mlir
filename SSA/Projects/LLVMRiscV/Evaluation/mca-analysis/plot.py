@@ -11,6 +11,7 @@ import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
+import math
 
 
 matplotlib.rcParams['pdf.fonttype'] = 42
@@ -94,18 +95,20 @@ def setup_benchmarking_directories():
 parameters_match = {
     "tot_instructions" : "Instructions:      ",
     "tot_cycles" : "Total Cycles:      ",
-    "tot_uops" : "Total uOps:        "
+    "tot_uops" : "Total uOps:        ",
+    "instructions": "Instructions List:      "
 }
 
 parameters_labels = {
     "tot_instructions" : "#instructions",
     "tot_cycles" : "#cycles",
-    "tot_uops" : "#uOps"
+    "tot_uops" : "#uOps",
+    "instructions": "Instructions List:"
 }
 
 selector_labels = {
-    "LEANMLIR" : "Cert.",
-    "LEANMLIR_opt" : "CertOpt",
+    "LEANMLIR" : "CertISel",
+    "LEANMLIR_opt" : "CertOptISel",
     "LLVM_globalisel_O1" : "GlobalISel (O1)",
     "LLVM_globalisel_O2" : "GlobalISel (O2)",
     "LLVM_globalisel_O3" : "GlobalISel (O3)",
@@ -117,6 +120,22 @@ selector_labels = {
 }
 
 
+def parse_instructions(filename):
+    instructions = []
+    in_instruction_section = False
+    
+    with open(filename, 'r') as f:
+        for line in f:
+            if '[0]    [1]    [2]    [3]    [4]    [5]    [6]    [7]    Instructions:' in line:
+                in_instruction_section = True
+                continue
+            
+            if in_instruction_section and line.strip():
+                parts = line.split()
+                instruction = parts[8] #inst name is in 9th column
+                instructions.append(instruction)
+    
+    return instructions
 
 
 def extract_data(results_directory, benchmark_name, parameter, opt) :
@@ -125,6 +144,7 @@ def extract_data(results_directory, benchmark_name, parameter, opt) :
     """
     function_names = []
     parameter_numbers = []
+    print(parameter)
     if opt != '' :
         for filename in os.listdir(results_directory):
             if opt in filename : 
@@ -132,10 +152,14 @@ def extract_data(results_directory, benchmark_name, parameter, opt) :
                 try:
                     with open(file_path, "r") as f:
                         file_lines = f.readlines()
+                        function_names.append(filename.split(".")[0].split('_'+opt)[0])
+                        if parameter == "instructions":
+                            instructions = parse_instructions(file_path)
+                            parameter_numbers.append(",".join(instructions))
+                            continue
                         for line in file_lines:
                             if parameters_match[parameter] in line : 
                                 num = int(line.split(" ")[-1])
-                                function_names.append(filename.split(".")[0].split('_'+opt)[0])
                                 if parameter == "tot_cycles" :
                                     parameter_numbers.append(int(num))
                                 else:
@@ -148,19 +172,26 @@ def extract_data(results_directory, benchmark_name, parameter, opt) :
             try:
                 with open(file_path, "r") as f:
                     file_lines = f.readlines()
+                    function_names.append(filename.split(".")[0])
+                    if parameter == "instructions":
+                        instructions = parse_instructions(file_path)
+                        parameter_numbers.append(",".join(instructions))
+                        continue
                     for line in file_lines:
                         if parameters_match[parameter] in line : 
                             num = int(line.split(" ")[-1])
-                            function_names.append(filename.split(".")[0])
                             if parameter == "tot_cycles" :
                                 parameter_numbers.append(int(num))
+                            elif parameter == "instructions":
+                                    instructions = parse_instructions(file_path)
+                                    parameter_numbers.append(",".join(instructions))
                             else:
                                 parameter_numbers.append(int(num/100))
             except FileNotFoundError:
                 print(f"Warning: file not found at {file_path}. Skipping.")
     if opt != '':
-        df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+opt+"_"+parameter : parameter_numbers})
-        df.to_csv(data_dir + benchmark_name+"_"+opt+'_'+ parameter  + '.csv')
+            df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+opt+"_"+parameter : parameter_numbers})
+            df.to_csv(data_dir + benchmark_name+"_"+opt+'_'+ parameter  + '.csv')
     else:
         df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+parameter : parameter_numbers})
         df.to_csv(data_dir + benchmark_name + "_" + parameter + '.csv')
@@ -500,6 +531,99 @@ def overhead_plot(parameter, selector1, selector2):
         print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
         plt.close()
 
+def calculate_similarity(selector1, selector2):
+    df = pd.read_csv(data_dir + "instructions" + '.csv')
+
+    col1 = selector1 + '_' + "instructions"
+    col2 = selector2 + '_' + "instructions"
+    instruction_count = "instructions_number"
+
+    if col1 not in df.columns or col2 not in df.columns:
+        print(f"Error: One or both columns ({col1}, {col2}) do not exist in the dataframe.")
+        return
+
+    col1_values = df[col1].dropna().apply(lambda x: x.split(','))
+    col2_values = df[col2].dropna().apply(lambda x: x.split(','))
+
+    similarities = col1_values == col2_values
+    grouped = df.groupby(instruction_count)
+    similarity_percentages = {}
+
+    for count, group in grouped:
+        col1_values = group[col1].dropna().apply(lambda x: x.split(','))
+        col2_values = group[col2].dropna().apply(lambda x: x.split(','))
+        similarities = col1_values == col2_values
+        similarity_percentage = similarities.mean() * 100
+        similarity_percentages[count] = similarity_percentage
+        print(f"Similarity for instruction count {count} between {selector1} and {selector2}: {similarity_percentage:.2f}%")
+
+        cmd_name = (
+            f"\\newcommand{{\\Similarity"
+            f"{clean_name(selector1)}Vs{clean_name(selector2)}"
+            f"{clean_name('instructions')}For{count}Instructions}}{{{similarity_percentage:.2f}}}"
+        )
+        latex_file = os.path.join(plots_dir, "similarity_percentages.tex")
+        with open(latex_file, "a") as f:
+            f.write(cmd_name + "\n")
+    
+def proportional_bar_plot(parameter, selector1, selector2):
+        df = pd.read_csv(data_dir + parameter + '.csv')
+
+        col1 = selector1 + '_' + parameter
+        col2 = selector2 + '_' + parameter
+
+        if col1 not in df.columns or col2 not in df.columns:
+            print(f"Error: One or both columns ({col1}, {col2}) do not exist in the dataframe.")
+            return
+
+        grouped = df.groupby('instructions_number')[[col1, col2]].mean()
+        instruction_counts = grouped.index.tolist()
+        grouped['proportion'] = grouped[col1] / grouped[col2]
+
+        plt.figure(figsize=(20, 10))
+        bars = plt.bar(grouped.index.astype(str), grouped['proportion'], color=dark_green, label=selector_labels[selector1])
+        plt.axhline(1, color=dark_gray, linestyle='--', linewidth=5, label=selector_labels[selector2])
+
+        plt.xlabel('#instructions - LLVM IR')
+        plt.ylabel(f'{parameters_labels[parameter]} overhead {selector_labels[selector1]}')
+        plt.yticks(np.arange(0, math.ceil(max(grouped['proportion'])), 0.5))
+        plt.legend()
+        plt.tight_layout()
+        
+        # uncomment to have numbers on top of the bars
+        # for bar in bars:
+        #     height = bar.get_height()
+        #     plt.text(bar.get_x() + bar.get_width()/2., height,
+        #             f'{height:.2f}',
+        #             ha='center', va='bottom')
+
+        pdf_filename = plots_dir + f"{parameter}_proportional_bar_{selector1}_vs_{selector2}.pdf"
+        plt.savefig(pdf_filename)
+        print(f"\nProportional bar plot saved to '{pdf_filename}' in the current working directory.")
+        plt.close()
+        
+        geomean_ratio = np.exp(np.mean(np.log(grouped['proportion'])))
+        
+        latex_lines = []
+        for idx, ratio in enumerate(grouped['proportion']):
+            cmd = (
+                f"\\newcommand{{\\Ratio"
+                f"{clean_name(selector1)}Vs{clean_name(selector2)}"
+                f"{clean_name(parameter)}ForInstCount{instruction_counts[idx]}}}{{{ratio:.2f}}}"
+            )
+            latex_lines.append(cmd)
+            
+        geomean_cmd = (
+            f"\\newcommand{{\\GeoMean"
+            f"{clean_name(selector1)}Vs{clean_name(selector2)}"
+            f"{clean_name(parameter)}}}{{{geomean_ratio:.2f}}}"
+        )
+        latex_lines.append(geomean_cmd)
+        
+        latex_file = os.path.join(plots_dir, "proportions.tex")
+        with open(latex_file, "a") as f:
+            for line in latex_lines:
+                f.write(line + "\n")
 
 def main():
     parser = argparse.ArgumentParser(
@@ -511,7 +635,7 @@ def main():
         "-p",
         "--parameters",
         nargs="+",
-        choices=["tot_instructions", "tot_cycles", "tot_uops", "all"]
+        choices=["tot_instructions", "tot_cycles", "tot_uops", "instructions", "all"]
     )
 
     parser.add_argument(
@@ -535,11 +659,11 @@ def main():
     )
 
     params_to_evaluate = (
-        ["tot_instructions", "tot_cycles", "tot_uops"] if "all" in args.parameters else args.parameters
+        ["tot_instructions", "tot_cycles", "tot_uops", "instructions"] if "all" in args.parameters else args.parameters
     )
 
     plots_to_produce = (
-        ["scatter", "sorted", "stacked", "overhead"] if "all" in args.plot_type else args.plot_type
+        ["scatter", "sorted", "stacked", "overhead", "proportional"] if "all" in args.plot_type else args.plot_type
     )
 
     setup_benchmarking_directories()
@@ -566,8 +690,14 @@ def main():
         join_dataframes(to_join, parameter)
         print(to_join)
         
+        
         for opt in opts_to_evaluate:
             if opt != 'default':
+                if parameter == "instructions":
+                    calculate_similarity('LEANMLIR_opt', 'LLVM_globalisel_'+opt)
+                    calculate_similarity('LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
+                    calculate_similarity('LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
+                    continue
                 if "scatter" in plots_to_produce or "all" in plots_to_produce :
                     scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
                     scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
@@ -585,7 +715,16 @@ def main():
                     bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
                     bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
                     bar_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
+                if "proportional" in plots_to_produce or "all" in plots_to_produce :
+                    proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
+                    proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
+                    proportional_bar_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
             else:
+                if parameter == "instructions":
+                    calculate_similarity('LEANMLIR', 'LLVM_globalisel')
+                    calculate_similarity('LEANMLIR', 'LLVM_selectiondag')
+                    calculate_similarity('LLVM_globalisel', 'LLVM_selectiondag')
+                    continue
                 if "scatter" in plots_to_produce or "all" in plots_to_produce :
                     scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
                     scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
@@ -603,6 +742,10 @@ def main():
                     bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
                     bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
                     bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                if "proportional" in plots_to_produce or "all" in plots_to_produce :
+                    proportional_bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
+                    proportional_bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
+                    proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
                     
 
 
