@@ -770,7 +770,7 @@ info: {
 }
 -/
 #guard_msgs in
-#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner trunc_of_zext_ext.lhs)).val
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner trunc_of_zext_zext.lhs)).val
 
 /--
 info: {
