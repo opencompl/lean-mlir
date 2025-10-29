@@ -480,7 +480,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
             )
         idx += 1
         percentage = ((float(idx) + float(1)) / float(len(LAKE_file2ret))) * 100
-        print(f"removing unrealized casts: {percentage:.2f}%")
+        print(f"creating func.func module: {percentage:.2f}%")
 
     XDSL_create_func_file2ret_opt = dict()
     idx = 0
@@ -498,7 +498,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
             )
         idx += 1
         percentage = ((float(idx) + float(1)) / float(len(LAKE_file2ret_opt))) * 100
-        print(f"removing unrealized casts (opt): {percentage:.2f}%")
+        print(f"creating func.func module (opt): {percentage:.2f}%")
 
     XDSL_reg_alloc_file2ret = dict()
     idx = 0
@@ -514,7 +514,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
             XDSL_reg_alloc(input_file, output_file, log_file, XDSL_reg_alloc_file2ret)
         idx += 1
         percentage = ((float(idx) + float(1)) / float(len(XDSL_create_func_file2ret))) * 100
-        print(f"allocating registers: {percentage:.2f}%")
+        print(f"allocating registers and outputting assembly: {percentage:.2f}%")
         
     XDSL_reg_alloc_file2ret_opt = dict()
     idx = 0
@@ -532,7 +532,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
             )
         idx += 1
         percentage = ((float(idx) + float(1)) / float(len(XDSL_create_func_file2ret_opt))) * 100
-        print(f"allocating registers (opt): {percentage:.2f}%") 
+        print(f"allocating registers and outputting assembly (opt): {percentage:.2f}%") 
 
 
 def main():
