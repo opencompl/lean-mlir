@@ -7,10 +7,9 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
-
 /-! ### sub_to_add -/
 
-/-- 
+/--
 Test the rewrite:
   (sub x, C) → (add x, -C)
 -/
@@ -505,7 +504,7 @@ def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 
 /-! ### canonicalize_icmp -/
 
-/-- 
+/--
 Test the rewrite:
   (cmp C, x) → (cmp x, C)
 -/
@@ -2161,4 +2160,144 @@ def canonicalize_icmp : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
     ⟨_, canonicalize_icmp_sge_5⟩,
     ⟨_, canonicalize_icmp_slt_5⟩,
     ⟨_, canonicalize_icmp_sle_5⟩
+  ]
+
+/-! ### mulh_to_lshr -/
+def mulh_to_lshr_2 : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (2) : !riscv.reg
+      %0 = mulh %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (63) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+
+def mulh_to_lshr_4 : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (4) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (62) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+
+def mulh_to_lshr_8 : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (8) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (61) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+
+def mulh_to_lshr_16 : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (16) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (60) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+
+def mulh_to_lshr_32 : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (32) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (59) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+
+def mulh_to_lshr_64 : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (64) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (58) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+
+def mulh_to_lshr_128 : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (128) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (57) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+
+def mulh_to_lshr_256 : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (256) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (56) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+
+def mulh_to_lshr_512 : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (512) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+  rhs := [LV| {
+    ^entry (%x: !riscv.reg):
+      %c = li (55) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }]
+
+def mulh_to_lshr : List (Σ Γ, RISCVPeepholeRewrite Γ) :=
+  [
+    ⟨_, mulh_to_lshr_2⟩,
+    ⟨_, mulh_to_lshr_4⟩,
+    ⟨_, mulh_to_lshr_8⟩,
+    ⟨_, mulh_to_lshr_16⟩,
+    ⟨_, mulh_to_lshr_32⟩,
+    ⟨_, mulh_to_lshr_64⟩,
+    ⟨_, mulh_to_lshr_128⟩,
+    ⟨_, mulh_to_lshr_256⟩,
+    ⟨_, mulh_to_lshr_512⟩
   ]

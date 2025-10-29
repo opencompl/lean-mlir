@@ -16,6 +16,20 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
+@[simp_riscv] lemma toType_bv : TyDenote.toType (Ty.riscv (.bv)) = BitVec 64 := rfl
+@[simp_riscv] lemma id_eq1 {α : Type} (x y : α) :  @Eq (Id α) x y = (x = y):= by simp only
+
+structure RISCVPeepholeRewrite (Γ : List Ty) where
+  lhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
+  rhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
+  correct : lhs.denote = rhs.denote := by simp_lowering <;> bv_decide
+
+def RISCVPeepholeRewriteToRiscvPeephole (self : RISCVPeepholeRewrite Γ) :
+    PeepholeRewrite LLVMPlusRiscV Γ [Ty.riscv .bv] where
+  lhs := self.lhs
+  rhs := self.rhs
+  correct := self.correct
+
 """
 
 @dataclass
@@ -393,11 +407,48 @@ Test the rewrite:
         comment=comment
     )
     
+def generate_mulh_to_lshr(powers: List[int]) -> RewriteGroup:
+    patterns = []
+    group_name = "mulh_to_lshr"
+    comment = """
+/-! ### mulh_to_lshr -/
+""" 
+    for n in powers:
+        power_of_2 = 2 ** n
+        
+        definition = f"""def {group_name}_{power_of_2} : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {{
+    ^entry (%x: !riscv.reg):
+      %c = li ({power_of_2}) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: !riscv.reg):
+      %c = li ({64 - n}) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_{power_of_2}",
+            definition=definition
+        ))
+    
+    return RewriteGroup(
+        group_name=group_name,
+        patterns=patterns,
+        type_signature="RISCVPeepholeRewrite Γ",
+        comment=comment
+    )
+    
 REWRITE_GENERATORS = [
     lambda: generate_sub_to_add_rewrites(max_val=5),
     lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 10))),
     lambda: generate_urem_pow2_rewrites(powers=list(range(0, 10))),
     lambda: generate_canonicalize_icmp(max_val=5),
+    lambda: generate_mulh_to_lshr(powers=list(range(1, 10))),
 ]
 
 def generate_all_rewrites() -> str:
