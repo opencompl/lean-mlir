@@ -7,24 +7,10 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 open LLVMRiscV
 
-@[simp_riscv] lemma toType_bv : TyDenote.toType (Ty.riscv (.bv)) = BitVec 64 := rfl
-@[simp_riscv] lemma id_eq1 {α : Type} (x y : α) :  @Eq (Id α) x y = (x = y):= by simp only
-
-structure RISCVPeepholeRewrite (Γ : List Ty) where
-  lhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
-  rhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
-  correct : lhs.denote = rhs.denote := by simp_lowering <;> bv_decide
-
-def RISCVPeepholeRewriteToRiscvPeephole (self : RISCVPeepholeRewrite Γ) :
-    PeepholeRewrite LLVMPlusRiscV Γ [Ty.riscv .bv] where
-  lhs := self.lhs
-  rhs := self.rhs
-  correct := self.correct
-
 
 /-! ### sub_to_add -/
 
-/-- 
+/--
 Test the rewrite:
   (sub x, C) → (add x, -C)
 -/
@@ -519,7 +505,7 @@ def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 
 /-! ### canonicalize_icmp -/
 
-/-- 
+/--
 Test the rewrite:
   (cmp C, x) → (cmp x, C)
 -/
@@ -2179,7 +2165,7 @@ def canonicalize_icmp : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
 
 /-! ### mulh_to_lshr -/
 
-/-- 
+/--
 Test the rewrite:
   (mulh x, n^2) → (sra x, (64-n))
 -/
