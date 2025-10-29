@@ -263,7 +263,7 @@ def LAKE_compile_riscv64(jobs, pass_dict):
             file_path = futures[future]
             ret_code = future.result()
             pass_dict[file_path] = ret_code
-            percentage = ((float(idx) + float(1)) / float(total)) * 100
+            percentage = ((float(idx) / float(total)) * 100
             print(f"compiling with lean-mlir {percentage:.2f}%")
 
 
@@ -289,7 +289,7 @@ def LAKE_compile_riscv64_opt(jobs, pass_dict):
             file_path = futures[future]
             ret_code = future.result()
             pass_dict[file_path] = ret_code
-            percentage = ((float(idx) + float(1)) / float(total)) * 100
+            percentage = ((float(idx) / float(total)) * 100
             print(f"compiling with lean-mlir (optimized pass): {percentage:.2f}%")
 
 
@@ -334,7 +334,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
         MLIR_opt_arith_llvm(input_file, output_file, log_file, MLIR_opt_file2ret)
         idx += 1
         percentage = (
-            (float(idx) + float(1)) / float(len(os.listdir(MLIR_single_DIR_PATH)))
+            (float(idx) / float(len(os.listdir(MLIR_single_DIR_PATH)))
         ) * 100
         print(f"translating to LLVM with mlir-opt: {percentage:.2f}%")
 
@@ -354,7 +354,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
                 input_file, output_file, log_file, MLIR_translate_file2ret
             )
         idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(MLIR_opt_file2ret))) * 100
+        percentage = ((float(idx) / float(len(MLIR_opt_file2ret))) * 100
         print(f"translating to LLVMIR with mlir-translate: {percentage:.2f}%")
 
     for llvm_opt in llvm_opts:
@@ -394,7 +394,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
                     )
             idx += 1
             percentage = (
-                (float(idx) + float(1)) / float(len(MLIR_translate_file2ret))
+                (float(idx) / float(len(MLIR_translate_file2ret))
             ) * 100
             print(f"compiling with llc (selectionDAG {llvm_opt}): {percentage:.2f}%")
 
@@ -438,7 +438,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
                     )
             idx += 1
             percentage = (
-                (float(idx) + float(1)) / float(len(MLIR_translate_file2ret))
+                (float(idx) / float(len(MLIR_translate_file2ret))
             ) * 100
             print(f"compiling with llc (globalISel {llvm_opt}): {percentage:.2f}%")
 
@@ -452,7 +452,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
         extract_bb0(input_file, output_file, log_file)
         idx += 1
         percentage = (
-            (float(idx) + float(1)) / float(len(os.listdir(LLVM_DIR_PATH)))
+            (float(idx) / float(len(os.listdir(LLVM_DIR_PATH)))
         ) * 100
         print(f"extracting the first basic block: {percentage:.2f}%")
 
@@ -479,7 +479,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
                 input_file, output_file, log_file, XDSL_create_func_file2ret
             )
         idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(LAKE_file2ret))) * 100
+        percentage = ((float(idx) / float(len(LAKE_file2ret))) * 100
         print(f"creating func.func module: {percentage:.2f}%")
 
     XDSL_create_func_file2ret_opt = dict()
@@ -497,7 +497,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
                 input_file, output_file, log_file, XDSL_create_func_file2ret_opt
             )
         idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(LAKE_file2ret_opt))) * 100
+        percentage = ((float(idx) / float(len(LAKE_file2ret_opt))) * 100
         print(f"creating func.func module (opt): {percentage:.2f}%")
 
     XDSL_reg_alloc_file2ret = dict()
@@ -513,7 +513,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
             )
             XDSL_reg_alloc(input_file, output_file, log_file, XDSL_reg_alloc_file2ret)
         idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(XDSL_create_func_file2ret))) * 100
+        percentage = ((float(idx) / float(len(XDSL_create_func_file2ret))) * 100
         print(f"allocating registers and outputting assembly: {percentage:.2f}%")
         
     XDSL_reg_alloc_file2ret_opt = dict()
@@ -531,7 +531,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
                 input_file, output_file, log_file, XDSL_reg_alloc_file2ret_opt
             )
         idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(XDSL_create_func_file2ret_opt))) * 100
+        percentage = ((float(idx) / float(len(XDSL_create_func_file2ret_opt))) * 100
         print(f"allocating registers and outputting assembly (opt): {percentage:.2f}%") 
 
 
