@@ -330,6 +330,56 @@ def clean_name(s):
     # Remove underscores and capitalize parts
     return ''.join([w.capitalize() for w in str(s).split('_')])
 
+def calculate_similarity(selector1, selector2, print_latex=True):
+    df = pd.read_csv(data_dir + "instructions" + '.csv')
+
+    col1 = selector1 + '_' + "instructions"
+    col2 = selector2 + '_' + "instructions"
+    instruction_count = "instructions_number"
+
+    if col1 not in df.columns or col2 not in df.columns:
+        print(f"Error: One or both columns ({col1}, {col2}) do not exist in the dataframe.")
+        return
+
+    col1_values = df[col1].dropna().apply(lambda x: x.split(','))
+    col2_values = df[col2].dropna().apply(lambda x: x.split(','))
+
+    grouped = df.groupby(instruction_count)
+    similarity_percentages = {}
+
+    for count, group in grouped:
+        col1_values = group[col1].dropna().apply(lambda x: x.split(','))
+        col2_values = group[col2].dropna().apply(lambda x: x.split(','))
+        similarities = col1_values == col2_values
+        similarity_percentage = similarities.mean() * 100
+        similarity_percentages[count] = similarity_percentage
+        print(f"Similarity for instruction count {count} between {selector1} and {selector2}: {similarity_percentage:.2f}%")
+
+        if print_latex:
+            cmd_name = (
+                f"\\newcommand{{\\Similarity"
+                f"{clean_name(selector1.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}Vs{clean_name(selector2.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}"
+                f"{clean_name('instructions')}For{str(count).replace('3', 'three').replace('4', 'four').replace('5', 'five').replace('6', 'six').replace('7', 'seven').replace('8', 'eight')}Instructions}}{{{similarity_percentage:.2f}}}"
+            )
+            latex_file = os.path.join(plots_dir, "similarity_percentages.tex")
+            with open(latex_file, "a") as f:
+                f.write(cmd_name + "\n")
+                
+    mean_similarity = np.mean(list(similarity_percentages.values()))
+    print(f"Mean similarity {count} between {selector1} and {selector2}: {similarity_percentage:.2f}%")
+
+    if print_latex:
+        cmd_name = (
+            f"\\newcommand{{\\MeanSimilarity"
+            f"{clean_name(selector1.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}Vs{clean_name(selector2.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}"
+            f"}}{{{mean_similarity:.2f}}}"
+        )
+        latex_file = os.path.join(plots_dir, "similarity_percentages.tex")
+        with open(latex_file, "a") as f:
+            f.write(cmd_name + "\n")
+                
+    return similarity_percentages
+
 def bar_plot(parameter, selector1, selector2):
     plt.rcParams.update({'font.size': 23})
     
@@ -412,23 +462,39 @@ def bar_plot(parameter, selector1, selector2):
             '>1k': dark_red
         }
     # Plot
-    bottom = np.zeros(len(group))
-    x = group.index.astype(str)
-    plt.figure(figsize=(10, 5))
-    for c in class_order:
-        plt.bar(x, group[c], bottom=bottom, label=f'{c}', color=class_colors[c])
-        bottom += group[c].values
-    
-    
+    def plot_bar(with_similarity=False):
+        bottom = np.zeros(len(group))
+        x = group.index.astype(str)
+        plt.figure(figsize=(10, 5))
+        for c in class_order:
+            if c == '0' and with_similarity:
+                similarity_percentages = calculate_similarity(selector1, selector2, False)
+                similarity_list = list(similarity_percentages.values())
+                remaining = [a-b for a,b in zip(group[c], similarity_list)]
+                plt.bar(x, similarity_list, bottom=bottom, color=class_colors[c], hatch="//")
+                bottom += similarity_list
+                plt.bar(x, remaining, bottom=bottom, label=f'{c}', color=class_colors[c])
+                bottom += remaining
+            else:
+                plt.bar(x, group[c], bottom=bottom, label=f'{c}', color=class_colors[c])
+                bottom += group[c].values
 
-    plt.xlabel('#instructions - LLVM IR')
-    plt.ylabel('%Programs', rotation="horizontal", horizontalalignment="left", y=1.05)
-    plt.legend(ncols = 5, bbox_to_anchor=(0.5, -0.5), 
-           loc='lower center')
-    plt.subplots_adjust(bottom=0.4)
-    plt.tight_layout()
-        
+        plt.xlabel('#instructions - LLVM IR')
+        plt.ylabel('%Programs', rotation="horizontal", horizontalalignment="left", y=1.05)
+        plt.legend(ncols = 5, bbox_to_anchor=(0.5, -0.5), 
+            loc='lower center')
+        plt.subplots_adjust(bottom=0.4)
+        plt.tight_layout()
+            
+        name_extension = "_similarity_" if with_similarity else "_"
+        pdf_filename = plots_dir + f"{parameter}_stacked_bar{name_extension}{selector1}_vs_{selector2}.pdf"
+        plt.savefig(pdf_filename)
+        print(f"\nStacked bar plot saved to '{pdf_filename}' in the current working directory.")
+        plt.close()
     
+    plot_bar()
+    if parameter == 'tot_instructions':
+        plot_bar(with_similarity=True)
     
     total = len(df)
     class_counts = df['diff_class'].value_counts()
@@ -453,12 +519,6 @@ def bar_plot(parameter, selector1, selector2):
         for line in latex_lines:
             f.write(line + "\n")
     
-
-    pdf_filename = plots_dir + f"{parameter}_stacked_bar_{selector1}_vs_{selector2}.pdf"
-    plt.savefig(pdf_filename)
-    print(f"\nStacked bar plot saved to '{pdf_filename}' in the current working directory.")
-    plt.close()
-
 def clean_name(s):
     return ''.join([w.capitalize() for w in str(s).split('_')])
 
@@ -530,41 +590,7 @@ def overhead_plot(parameter, selector1, selector2):
         print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
         plt.close()
 
-def calculate_similarity(selector1, selector2):
-    df = pd.read_csv(data_dir + "instructions" + '.csv')
 
-    col1 = selector1 + '_' + "instructions"
-    col2 = selector2 + '_' + "instructions"
-    instruction_count = "instructions_number"
-
-    if col1 not in df.columns or col2 not in df.columns:
-        print(f"Error: One or both columns ({col1}, {col2}) do not exist in the dataframe.")
-        return
-
-    col1_values = df[col1].dropna().apply(lambda x: x.split(','))
-    col2_values = df[col2].dropna().apply(lambda x: x.split(','))
-
-    similarities = col1_values == col2_values
-    grouped = df.groupby(instruction_count)
-    similarity_percentages = {}
-
-    for count, group in grouped:
-        col1_values = group[col1].dropna().apply(lambda x: x.split(','))
-        col2_values = group[col2].dropna().apply(lambda x: x.split(','))
-        similarities = col1_values == col2_values
-        similarity_percentage = similarities.mean() * 100
-        similarity_percentages[count] = similarity_percentage
-        print(f"Similarity for instruction count {count} between {selector1} and {selector2}: {similarity_percentage:.2f}%")
-
-        cmd_name = (
-            f"\\newcommand{{\\Similarity"
-            f"{clean_name(selector1)}Vs{clean_name(selector2)}"
-            f"{clean_name('instructions')}For{count}Instructions}}{{{similarity_percentage:.2f}}}"
-        )
-        latex_file = os.path.join(plots_dir, "similarity_percentages.tex")
-        with open(latex_file, "a") as f:
-            f.write(cmd_name + "\n")
-    
 def proportional_bar_plot(parameter, selector1, selector2):
         df = pd.read_csv(data_dir + parameter + '.csv')
 
@@ -579,12 +605,14 @@ def proportional_bar_plot(parameter, selector1, selector2):
         instruction_counts = grouped.index.tolist()
         grouped['proportion'] = grouped[col1] / grouped[col2]
 
-        plt.figure(figsize=(20, 10))
-        bars = plt.bar(grouped.index.astype(str), grouped['proportion'], color=dark_green, label=selector_labels[selector1])
-        plt.axhline(1, color=dark_gray, linestyle='--', linewidth=5, label=selector_labels[selector2])
+        legend_name1 = selector_labels[selector1].replace(' (O3)', '').replace(' (O2)', '').replace(' (O1)', '').replace(' (def.)', '')
+        legend_name2 = selector_labels[selector2].replace(' (O3)', '').replace(' (O2)', '').replace(' (O1)', '').replace(' (def.)', '')
+        plt.figure(figsize=(16, 8))
+        bars = plt.bar(grouped.index.astype(str), grouped['proportion'], color=dark_green, label=legend_name1)
+        plt.axhline(1, color=dark_gray, linestyle='--', linewidth=5, label=legend_name2)
 
-        plt.xlabel('#instructions - LLVM IR')
-        plt.ylabel(f'{parameters_labels[parameter]} overhead {selector_labels[selector1]}')
+        plt.xlabel('#Instructions - LLVM IR')
+        plt.ylabel(f'Relative {parameters_labels[parameter].replace("#instructions", "Program")} Size')
         plt.yticks(np.arange(0, math.ceil(max(grouped['proportion'])), 0.5))
         plt.legend()
         plt.tight_layout()
@@ -605,16 +633,22 @@ def proportional_bar_plot(parameter, selector1, selector2):
         
         latex_lines = []
         for idx, ratio in enumerate(grouped['proportion']):
+            idx_str = str(idx)
+            idx_str_clean = idx_str.replace('_', '')  # Remove underscores from index if any
+            # Ensure the last character is a letter by appending 'N' if it ends with a digit
+            if idx_str_clean and idx_str_clean[-1].isdigit():
+                idx_str_clean = idx_str_clean.replace('0', 'zero').replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace('6', 'six').replace('7', 'seven').replace('8', 'eight').replace('9', 'nine')
+                idx_str_clean += 'Instr'
             cmd = (
                 f"\\newcommand{{\\Ratio"
-                f"{clean_name(selector1)}Vs{clean_name(selector2)}"
-                f"{clean_name(parameter)}ForInstCount{instruction_counts[idx]}}}{{{ratio:.2f}}}"
+                f"{clean_name(selector1.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}Vs{clean_name(selector2.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}"
+                f"{clean_name(parameter)}For{idx_str_clean}}}{{{ratio:.2f}}}"
             )
             latex_lines.append(cmd)
             
         geomean_cmd = (
             f"\\newcommand{{\\GeoMean"
-            f"{clean_name(selector1)}Vs{clean_name(selector2)}"
+            f"{clean_name(selector1.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}Vs{clean_name(selector2.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}"
             f"{clean_name(parameter)}}}{{{geomean_ratio:.2f}}}"
         )
         latex_lines.append(geomean_cmd)
@@ -658,7 +692,7 @@ def main():
     )
 
     params_to_evaluate = (
-        ["tot_instructions", "tot_cycles", "tot_uops", "instructions"] if "all" in args.parameters else args.parameters
+        ["instructions", "tot_instructions", "tot_cycles", "tot_uops"] if "all" in args.parameters else args.parameters
     )
 
     plots_to_produce = (
@@ -692,7 +726,7 @@ def main():
         
         for opt in opts_to_evaluate:
             if opt != 'default':
-                if parameter == "instructions":
+                if parameter == "instructions" :
                     calculate_similarity('LEANMLIR_opt', 'LLVM_globalisel_'+opt)
                     calculate_similarity('LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
                     calculate_similarity('LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
