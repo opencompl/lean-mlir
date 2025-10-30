@@ -44,9 +44,6 @@ LEANMLIR_ASM_DIR_PATH = (
 LEANMLIR_ASM_opt_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM_opt/"
 )
-LEANMLIR_ASM_opt_const_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM_opt_const/"
-)
 XDSL_ASM_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_ASM/"
 )
@@ -75,7 +72,6 @@ AUTOGEN_DIR_PATHS = [
     XDSL_ASM_DIR_PATH,
     LOGS_DIR_PATH,
     LEANMLIR_ASM_opt_DIR_PATH,
-    LEANMLIR_ASM_opt_const_DIR_PATH,
     XDSL_opt_ASM_DIR_PATH,
 ]
 
@@ -295,34 +291,8 @@ def LAKE_compile_riscv64_opt(jobs, pass_dict):
             pass_dict[file_path] = ret_code
             percentage = (float(idx) / float(total)) * 100
             print(f"compiling with lean-mlir (optimized pass): {percentage:.2f}%")
-            
 
-def LAKE_compile_riscv64_opt_const(jobs, pass_dict):
-    """
-    Lower the input file to RISCV with Lean-MLIR, using multiple threads.
-    """
-    with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as executor:
-        futures = {}
 
-        for filename in os.listdir(MLIR_bb0_DIR_PATH):
-            input_file = os.path.join(MLIR_bb0_DIR_PATH, filename)
-            basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(LEANMLIR_ASM_opt_const_DIR_PATH, basename + ".mlir")
-            log_file = open(LOGS_DIR_PATH + basename + "_lake.mlir", "w")
-            cmd_base = f"cd {ROOT_DIR_PATH}; lake exe opt --passriscv64_optimized_const "
-            cmd = cmd_base + input_file + " > " + output_file
-            future = executor.submit(run_command, cmd, log_file)
-            futures[future] = output_file
-            
-
-        total = len(futures)
-        for idx, future in enumerate(concurrent.futures.as_completed(futures)):
-            file_path = futures[future]
-            ret_code = future.result()
-            pass_dict[file_path] = ret_code
-            percentage = ((float(idx) + float(1)) / float(total)) * 100
-            print(f"compiling with lean-mlir (optimized pass with constant matching): {percentage:.2f}%")
-            
 def XDSL_create_func(input_file, output_file, log_file, pass_dict):
     """
     Remove unrealized casts from the RISCV64 dialect MLIR files with xdsl.
@@ -486,10 +456,6 @@ def generate_benchmarks(num, jobs, llvm_opts):
     # Run the optimized lean pass in parallel
     LAKE_compile_riscv64_opt(jobs, LAKE_file2ret_opt)
 
-    LAKE_file2ret_opt_const = dict()
-    # Run the optimized (with constants) lean pass in parallel
-    LAKE_compile_riscv64_opt_const(jobs, LAKE_file2ret_opt_const)
-    
     XDSL_create_func_file2ret = dict()
     idx = 0
     # Create `func.func`
