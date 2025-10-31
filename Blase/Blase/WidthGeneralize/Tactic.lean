@@ -56,6 +56,7 @@ def genTable : Std.HashMap Name (Array Bool) := Id.run do
   let mut table := .emptyWithCapacity 16
   table := table.insert ``BitVec #[true]
   table := table.insert ``BitVec.zeroExtend #[true, true, false]
+  table := table.insert ``BitVec.truncate #[true, true, false]
   table := table.insert ``BitVec.signExtend #[true, true, false]
   table := table.insert ``BitVec.instOfNat #[true, false, false]
   table := table.insert ``BitVec.instAdd #[true]
@@ -117,6 +118,7 @@ def specializeGoal (g : MVarId) (lengthCount : Nat) : TacticM Unit := do
     let newT ← mkForallFVars ys t (binderInfoForMVars := .default)
     pure <| substs.apply newT
   let newGoal ← mkFreshExprMVar (some newT)
+  check newGoal
   let sorryExpr ← mkAppM ``specializeAxiom #[t]
   g.assign sorryExpr
   replaceMainGoal [newGoal.mvarId!]
@@ -141,10 +143,13 @@ def evalBvGeneralize : Tactic := fun
     let ((e, g), s) ← (doBvGeneralize g₀).run default
     g.withContext do
       let g' ← mkFreshExprMVar (some e)
+      check g'
       let mut newVals := #[]
       for x in s.mapping.elements do
         newVals := newVals.push (s.invMapping[x]!)
-      g.assign <| mkAppN g' newVals 
+      let val := mkAppN g' newVals 
+      check val
+      g.assign <| val
       replaceMainGoal [g'.mvarId!]
       if cfg.specialize then
         specializeGoal g'.mvarId! s.invMapping.size
