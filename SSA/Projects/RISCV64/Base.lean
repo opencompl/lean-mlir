@@ -90,10 +90,10 @@ inductive Op
   | andn
   | orn
   | xnor
-  -- | clz
-  -- | clzw
-  -- | ctz
-  -- | ctzw
+  | clz
+  | clzw
+  | ctz
+  | ctzw
   -- | cpop
   -- | cpopw
   | max
@@ -248,10 +248,10 @@ def Op.sig : Op → List Ty
   | andn => [Ty.bv, Ty.bv]
   | orn => [Ty.bv, Ty.bv]
   | xnor => [Ty.bv, Ty.bv]
-  -- | clz
-  -- | clzw
-  -- | ctz
-  -- | ctzw
+  | clz
+  | clzw
+  | ctz
+  | ctzw
   -- | cpop
   -- | cpopw
   | max => [Ty.bv, Ty.bv]
@@ -292,7 +292,6 @@ def Op.outTy : Op  → Ty
   | .mulhu => Ty.bv
   | .mulhsu => Ty.bv
   | .divu => Ty.bv
-
   | .remuw => Ty.bv
   | .remu =>  Ty.bv
   | .addiw (_imm : BitVec 12) => Ty.bv
@@ -353,10 +352,10 @@ def Op.outTy : Op  → Ty
   | .andn =>  Ty.bv
   | .orn =>  Ty.bv
   | .xnor =>  Ty.bv
-  -- | clz
-  -- | clzw
-  -- | ctz
-  -- | ctzw
+  | clz => Ty.bv
+  | clzw => Ty.bv
+  | ctz => Ty.bv
+  | ctzw => Ty.bv
   -- | cpop
   -- | cpopw
   | .max =>  Ty.bv
@@ -473,6 +472,10 @@ def opName (op : RISCV64.Op) : String :=
   | .andn => "andn"
   | .orn => "orn"
   | .xnor => "xnor"
+  | clz => "clz"
+  | clzw => "clzw"
+  | ctz => "ctz"
+  | ctzw => "ctzw"
   | .max => "max"
   | .maxu => "maxu"
   | .min  => "min"
@@ -616,10 +619,10 @@ abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
   | .andn, regs => ZBB_RTYPE_pure_RISCV_ANDN (regs.getN 1) (regs.getN 0)
   | .orn, regs => ZBB_RTYPE_pure_RISCV_ORN (regs.getN 1) (regs.getN 0)
   | .xnor, regs => ZBB_RTYPE_pure_RISCV_XNOR (regs.getN 1) (regs.getN 0)
-  -- | clz
-  -- | clzw
-  -- | ctz
-  -- | ctzw
+  | clz, regs => ZBB_EXTOP_pure64_RISCV_CLZ (regs.getN 1)
+  | clzw, regs => ZBB_EXTOP_pure64_RISCV_CLZW (regs.getN 1)
+  | ctz, regs => ZBB_EXTOP_pure64_RISCV_CTZ (regs.getN 1)
+  | ctzw, regs => ZBB_EXTOP_pure64_RISCV_CTZW (regs.getN 1)
   -- | cpop
   -- | cpopw
   | .max, regs => ZBB_RTYPE_pure_RISCV_MAX_bv (regs.getN 1) (regs.getN 0)
