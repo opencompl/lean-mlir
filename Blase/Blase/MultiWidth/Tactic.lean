@@ -656,7 +656,8 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (w, state) ← collectWidthAtom state w
       return (.binWidthRel .le v w, state)
     | _ =>
-      throwError m!"expected (· ≤ ·) for natural numbers, found:  {indentD e}"
+      debugLog m!"expected (· ≤ ·) for natural numbers, found:  {indentD e}, so abstracting over expression."
+      mkAtom
   | Eq α a b =>
     match_expr α with
     | Nat =>
