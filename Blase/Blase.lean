@@ -3,5 +3,6 @@
 import Blase.Fast
 import Blase.SingleWidth.Tactic
 import Blase.MultiWidth.Tactic
+import Blase.MultiWidth.PrintSmtLibTactic
 import Blase.WidthGeneralize.Tactic
 -- Jiggle.
