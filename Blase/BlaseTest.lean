@@ -5,3 +5,5 @@ import BlaseTest.Preprocessing1
 import BlaseTest.Preprocessing2
 import BlaseTest.Preprocessing3
 import BlaseTest.Preprocessing4
+import BlaseTest.WidthGeneralize
+import BlaseTest.PrintSmtLib

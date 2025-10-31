@@ -5,11 +5,13 @@ import Blase.MultiWidth.Preprocessing
 import Blase.KInduction.KInduction
 import Blase.AutoStructs.FormulaToAuto
 import Blase.ReflectMap
+import Lean
 
 initialize Lean.registerTraceClass `Blase.WidthGeneralize
 
 namespace WidthGeneralize
 namespace Tactic
+open Lean Meta Elab Tactic
 /-
 A tactic to generalize the width of BitVectors
 -/
@@ -150,26 +152,47 @@ def evalBvGeneralize : Tactic := fun
 
 -- TODO: the `bv_generalize` tactic fails when a bit vector is already width generic
 
-theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) : 
+/--
+error: unsolved goals
+⊢ ∀ (w w_1 : ℕ) (x y : BitVec w) (zs : List (BitVec w_1)), x = x
+---
+trace: ⊢ ∀ (w w_1 : ℕ) (x y : BitVec w) (zs : List (BitVec w_1)), x = x
+-/
+#guard_msgs in theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) : 
     x = x := by
   bv_generalize
-  bv_multi_width
+  trace_state
 
-theorem test_bv_generalize_simple_spec (x y : BitVec 32) (zs : List (BitVec 44)) : 
+/-- trace: ⊢ ∀ (x y : BitVec 1) (zs : List (BitVec 3)), x = x -/
+#guard_msgs in theorem test_bv_generalize_simple_spec (x y : BitVec 32) (zs : List (BitVec 44)) : 
     x = x := by
   bv_generalize +specialize
+  trace_state
   bv_decide
 
-theorem test_bv_generalize (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
+/--
+error: unsolved goals
+⊢ ∀ (w w_1 w_2 : ℕ) (x y : BitVec w_1) (zs : List (BitVec w_2)) (z : BitVec w),
+    52 + 10 = 42 → x = y → BitVec.zeroExtend w x = BitVec.zeroExtend w y + 0
+---
+trace: ⊢ ∀ (w w_1 w_2 : ℕ) (x y : BitVec w_1) (zs : List (BitVec w_2)) (z : BitVec w),
+    52 + 10 = 42 → x = y → BitVec.zeroExtend w x = BitVec.zeroExtend w y + 0
+-/
+#guard_msgs in theorem test_bv_generalize (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
     x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
   bv_generalize
-  bv_multi_width
+  trace_state
 
-theorem test_bv_generalize_spec (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
+/--
+trace: ⊢ ∀ (x y : BitVec 3) (zs : List (BitVec 5)) (z : BitVec 1),
+    52 + 10 = 42 → x = y → BitVec.zeroExtend 1 x = BitVec.zeroExtend 1 y + 0
+-/
+#guard_msgs in theorem test_bv_generalize_spec (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
     x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
   bv_generalize +specialize
+  trace_state
   bv_decide
 
-end WidthGeneralize
 end Tactic
+end WidthGeneralize
 
