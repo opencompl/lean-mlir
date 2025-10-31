@@ -5,6 +5,7 @@ import Blase.MultiWidth.Preprocessing
 import Blase.KInduction.KInduction
 import Blase.AutoStructs.FormulaToAuto
 import Blase.ReflectMap
+import Lean.Meta.Tactic.Subst
 import Lean
 
 initialize Lean.registerTraceClass `Blase.WidthGeneralize
@@ -63,125 +64,208 @@ def genTable : Std.HashMap Name (Array Bool) := Id.run do
   table := table.insert ``BitVec.instSub #[true]
   table := table.insert ``BitVec.instMul #[true]
   table := table.insert ``BitVec.instDiv #[true]
+  table := table.insert ``AndOp #[true]
+  table := table.insert ``BitVec.ofNat #[true, false]
   table
 
-partial def visit (t : Expr) : GenM Expr := do
-  let t ← instantiateMVars t
-  match t with
-  | .app _ _ =>
-    let f := t.getAppFn
-    let args := t.getAppArgs
-    let table := 
-      if let some (f, _) := f.const? then
-        genTable[f]?
-      else
-        none
-    let bv? (n : Nat) :=
-      match table with
-      | .some xs => xs.getD n false
-      | .none => false
-    args.zipIdx.foldlM (init := f) fun res (arg, i) => do
-      let arg ← if bv? i then State.add? arg else visit arg
-      pure <| .app res arg
-  | .forallE n e₁ e₂ info =>
-    pure <| .forallE n (← visit e₁) (← visit e₂) info
-  | e => 
-    pure e
+/--
+Get arguments to generalize for a given function name.
+TODO: don't use a hardcoded table, but infer from definitions.
+-/
+def getArgsToGeneralize (name : Name) : Option (Array Bool) :=
+  genTable[name]?
 
-def doBvGeneralize (g : MVarId) : GenM (Expr × MVarId) := do
+
+def getBitVecType? (t : Expr) : MetaM (Option Expr) := do
+  let t ← instantiateMVars t
+  let t ← whnf t
+  match_expr t with 
+  | BitVec w => return some w
+  | _ => return none
+
+def isNatType? (t : Expr) : MetaM (Option Expr) := do
+  let t ← instantiateMVars t
+  let t ← whnf t
+  match_expr t with 
+  | Nat => return some t
+  | _ => return none
+
+#check MVarId.revert
+#check MVarId.generalize
+#check MVarId.intros
+#check MVarId.substEqs
+
+def doBvGeneralize (g : MVarId) : MetaM MVarId := do
   let lctx ← getLCtx
   let mut allFVars := #[]
   for h in lctx do
     if not h.isImplementationDetail then
       allFVars := allFVars.push h.fvarId
-  let (_, g) ← g.revert allFVars
-  let e ← visit (← g.getType)
-  let mut newVars := #[]
-  for x in (←get).mapping.elements do
-    newVars := newVars.push x
+  let (_revertedFvars, g) ← g.revert allFVars
+  let (_introsdFvars, g) ← g.intros
+  return g
 
-  let e ← mkForallFVars newVars e (binderInfoForMVars := .default)
-  let e ← instantiateMVars e
-  pure (e, g)
-
+axiom generalizeAxiom : ∀ P, P
 axiom specializeAxiom : ∀ P, P
 
-def specializeGoal (g : MVarId) (lengthCount : Nat) : TacticM Unit := do
-  let t ← g.getType
-  let newT ← forallTelescope t fun xs t => do
-    let mut t := t
-    let mut substs := FVarSubst.empty
-    for i in [0:lengthCount] do
-      let n := 2 * i + 1
-      substs := substs.insert xs[i]!.fvarId! (mkNatLit n)
-    let ys := xs.drop lengthCount
-    let newT ← mkForallFVars ys t (binderInfoForMVars := .default)
-    pure <| substs.apply newT
-  let newGoal ← mkFreshExprMVar (some newT)
-  check newGoal
-  let sorryExpr ← mkAppM ``specializeAxiom #[t]
-  g.assign sorryExpr
-  replaceMainGoal [newGoal.mvarId!]
 
-structure GenConfig where
-  specialize : Bool := false
 
-declare_config_elab elabGenConfig GenConfig
+def substWidthsToDecls (ix : Nat) (fvars : Array FVarId) (g : MVarId) : MetaM MVarId := do
+    if hix : ix < fvars.size then 
+      let fvar := fvars[ix]
+      let val : Nat := 3 + ix * 2
+      let valExpr := mkNatLit val
+      let eqExpr ← mkEq (.fvar fvar) valExpr
+      let eqValue ← mkAppM ``specializeAxiom #[eqExpr]
+      Meta.withLetDecl (Name.mkSimple s!"wEq_{ix}") eqExpr eqValue fun newEq => do
+          logInfo m!"Adding equation {newEq} to goal {g}" 
+          if !newEq.isFVar then
+              throwError "Expected newEq to be an FVar, got {newEq}"
+          substWidthsToDecls (ix + 1) fvars g
+    else
+        let gType ← g.getType
+        let gNew ← mkFreshExprMVar gType
+        g.assign (← mkAppM ``specializeAxiom #[gType])
+        let gNew := gNew.mvarId!
+        gNew.withContext do
+          logInfo m!"Added equations all widths in goal {gNew}. Now substituting equations."
+          let some gNew ← gNew.substEqs
+            | throwError "Failed to substitute equations in goal {gNew}"
+          return gNew
 
 /--
 This tactic tries to generalize the bitvector widths, and only the bitvector
 widths. See `genTable` if the tactic fails to generalize the right parameters
 of a function over bitvectors.
 -/
-syntax (name := bvGeneralize) "bv_generalize" Lean.Parser.Tactic.optConfig : tactic
+syntax (name := bvGeneralize) "bv_generalize"  : tactic
 @[tactic bvGeneralize]
 def evalBvGeneralize : Tactic := fun
-| `(tactic| bv_generalize $cfg) => do
-  let cfg ← elabGenConfig cfg
+| `(tactic| bv_generalize) => do
   let g₀ ← getMainGoal
   g₀.withContext do
-    let ((e, g), s) ← (doBvGeneralize g₀).run default
-    g.withContext do
-      let g' ← mkFreshExprMVar (some e)
-      check g'
-      let mut newVals := #[]
-      for x in s.mapping.elements do
-        newVals := newVals.push (s.invMapping[x]!)
-      let val := mkAppN g' newVals 
-      check val
-      g.assign <| val
-      replaceMainGoal [g'.mvarId!]
-      if cfg.specialize then
-        specializeGoal g'.mvarId! s.invMapping.size
+    let g ← doBvGeneralize g₀
+    let generalizeAx ← mkAppM ``generalizeAxiom #[← g₀.getType]
+    if ! (← isDefEq (.mvar g₀) generalizeAx) then
+        throwError "ERROR: unable to prove goal {g₀} with generalize axiom."
+    replaceMainGoal [g]
+| _ => throwUnsupportedSyntax
+
+
+/-- 
+Returns a new goal where all bitvector widths in the context have been specialized
+to concrete values.
+-/
+def specializeGoal (g : MVarId) : MetaM MVarId := do
+    let lctx ← getLCtx
+    let mut widthVars : Std.HashSet FVarId := {}
+    for ldecl in lctx do
+      let declTy := ldecl.type
+      logInfo m!"inspecting local decl {ldecl.userName} : {declTy}"
+      let some w ← getBitVecType? declTy
+        | continue
+      logInfo m!"..has width expr: {w}"
+      if w.isFVar then
+         logInfo m!"..has width fvar: {w}"
+         widthVars := widthVars.insert w.fvarId!
+    logInfo m!"specializing widths: '{widthVars.toList.map Expr.fvar}'"
+    substWidthsToDecls 0 widthVars.toArray g
+
+syntax (name := bvSpecialize) "bv_specialize" : tactic
+
+
+def doSpecialize : TacticM Unit := do
+  let g ← getMainGoal
+  g.withContext do
+    let newG ← specializeGoal g
+    replaceMainGoal [newG]
+
+@[tactic bvSpecialize]
+def evalBvSpecialize : Tactic := fun
+| `(tactic| bv_specialize) => do
+    doSpecialize
 | _ => throwUnsupportedSyntax
 
 -- TODO: the `bv_generalize` tactic fails when a bit vector is already width generic
 
 /--
-error: unsolved goals
-⊢ ∀ (w w_1 : ℕ) (x y : BitVec w) (zs : List (BitVec w_1)), x = x
+trace: x✝ y✝ : BitVec 32
+zs✝ : List (BitVec 44)
+⊢ x✝ = x✝
 ---
-trace: ⊢ ∀ (w w_1 : ℕ) (x y : BitVec w) (zs : List (BitVec w_1)), x = x
+warning: declaration uses 'sorry'
+---
+warning: 'intros' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
 -/
 #guard_msgs in theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) : 
     x = x := by
+  intros
   bv_generalize
   trace_state
+  sorry
 
-/-- trace: ⊢ ∀ (x y : BitVec 1) (zs : List (BitVec 3)), x = x -/
-#guard_msgs in theorem test_bv_generalize_simple_spec (x y : BitVec 32) (zs : List (BitVec 44)) : 
+/--
+info: inspecting local decl test_bv_specialize : ∀ {w v : ℕ} (x y : BitVec w) (zs : List (BitVec v)), x = x
+---
+info: inspecting local decl w : ℕ
+---
+info: inspecting local decl v : ℕ
+---
+info: inspecting local decl x : BitVec w
+---
+info: ..has width expr: w
+---
+info: ..has width fvar: w
+---
+info: inspecting local decl y : BitVec w
+---
+info: ..has width expr: w
+---
+info: ..has width fvar: w
+---
+info: inspecting local decl zs : List (BitVec v)
+---
+info: specializing widths: '[w]'
+---
+info: Adding equation wEq_0 to goal w v : ℕ
+x y : BitVec w
+zs : List (BitVec v)
+⊢ x = x
+---
+info: Added equations all widths in goal w v : ℕ
+x y : BitVec w
+zs : List (BitVec v)
+wEq_0 : w = 3 := ⋯
+⊢ x = x. Now substituting equations.
+---
+trace: v : ℕ
+zs : List (BitVec v)
+x y : BitVec 3
+⊢ x = x
+-/
+#guard_msgs in theorem test_bv_specialize (x y : BitVec w) (zs : List (BitVec v)) : 
     x = x := by
-  bv_generalize +specialize
+  bv_specialize
   trace_state
-  bv_decide
+  sorry
 
 /--
 error: unsolved goals
-⊢ ∀ (w w_1 w_2 : ℕ) (x y : BitVec w_1) (zs : List (BitVec w_2)) (z : BitVec w),
-    52 + 10 = 42 → x = y → BitVec.zeroExtend w x = BitVec.zeroExtend w y + 0
+x✝ y✝ : BitVec 32
+zs✝ : List (BitVec 44)
+z✝ : BitVec 10
+h✝ : 52 + 10 = 42
+heq✝ : x✝ = y✝
+⊢ BitVec.zeroExtend 10 x✝ = BitVec.zeroExtend 10 y✝ + 0
 ---
-trace: ⊢ ∀ (w w_1 w_2 : ℕ) (x y : BitVec w_1) (zs : List (BitVec w_2)) (z : BitVec w),
-    52 + 10 = 42 → x = y → BitVec.zeroExtend w x = BitVec.zeroExtend w y + 0
+trace: x✝ y✝ : BitVec 32
+zs✝ : List (BitVec 44)
+z✝ : BitVec 10
+h✝ : 52 + 10 = 42
+heq✝ : x✝ = y✝
+⊢ BitVec.zeroExtend 10 x✝ = BitVec.zeroExtend 10 y✝ + 0
 -/
 #guard_msgs in theorem test_bv_generalize (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
     x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
@@ -189,12 +273,17 @@ trace: ⊢ ∀ (w w_1 w_2 : ℕ) (x y : BitVec w_1) (zs : List (BitVec w_2)) (z 
   trace_state
 
 /--
-trace: ⊢ ∀ (x y : BitVec 3) (zs : List (BitVec 5)) (z : BitVec 1),
-    52 + 10 = 42 → x = y → BitVec.zeroExtend 1 x = BitVec.zeroExtend 1 y + 0
+error: unsolved goals
+x✝ y✝ : BitVec 32
+zs✝ : List (BitVec 44)
+z✝ : BitVec 10
+h✝ : 52 + 10 = 42
+heq✝ : x✝ = y✝
+⊢ BitVec.zeroExtend 10 x✝ = BitVec.zeroExtend 10 y✝ + 0
 -/
 #guard_msgs in theorem test_bv_generalize_spec (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
     x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
-  bv_generalize +specialize
+  bv_generalize 
   trace_state
   bv_decide
 
