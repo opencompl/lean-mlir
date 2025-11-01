@@ -880,8 +880,9 @@ def evalBvGeneralize : Tactic
   | _ => Lean.Elab.throwUnsupportedSyntax
 
 
-variable {x y z : BitVec 1}
-#generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm;
+-- variable {x y z : BitVec 1}
+-- #generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm;
+
 -- -- variable {x y z : BitVec 8}
 -- -- #generalize x + 0 = 0 --  TODO: This crashes because bv_normalize removes the symbolic variable from the expression when attempting to find counterexamples, and we only get counterexamples for the input variable, which is not ideal since we expect counterexamples for the symbolic constants if they exist.
 -- -- #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
