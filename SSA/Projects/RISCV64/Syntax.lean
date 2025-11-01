@@ -87,6 +87,14 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                    .cons v₁ <| .nil,
                   .nil
                 ⟩⟩
+      | .bv, "zext.w" => do
+        return ⟨.pure, [.bv], ⟨
+                  RISCV64.Op.zext.w,
+                  rfl,
+                  by constructor,
+                   .cons v₁ <| .nil,
+                  .nil
+                ⟩⟩
       | .bv, "seqz" => do
         return ⟨.pure, [.bv], ⟨
                   .seqz,

@@ -42,6 +42,10 @@ def ZEXTB_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
   RV64Semantics.ITYPE_pure64_RISCV_ANDI 255 rs1_val
 
 @[simp_riscv]
+def ZEXTW_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64Semantics.ZBA_RTYPEUW_pure64_RISCV_ADDUW 0 rs1_val
+
+@[simp_riscv]
 def SEQZ_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
   RV64Semantics.ITYPE_pure64_RISCV_SLTIU 1 rs1_val
 
