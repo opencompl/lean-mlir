@@ -91,11 +91,21 @@ partial def getBitVecTypeWidths (t : Expr) (out : Std.HashSet Expr) :
       out ← getBitVecTypeWidths arg out
     return out
 
-def genTable.getGenTable (n : Name) : GenM (Option (Array Bool)) := do
+-- | This is mega-scuffed. We only use the args to check if we have a 'BitVec 1'
+-- call. 
+-- TODO: fold in the arg checking into getBitVecTypeWidths.
+def genTable.getGenTable (n : Name) (args : Array Expr) : GenM (Option (Array Bool)) := do
   -- | Only special case, as it is a type constructor.
   -- All other constants are theorems, defs, etc.
   if n == ``BitVec then
-    return some #[true]
+    if hx : args.size ≠ 1 then 
+      throwError "BitVec expected 1 argument, got {args.size}"
+    else
+      -- BitVec 1 is isomorphic to Bool, so we don't generalize it.
+      if let some 1 ← Meta.getNatValue? args[0] then
+        return some #[false]
+      -- Otherwise, generalize the width.
+      return some #[true]
 
   let constInfo ← getConstInfo n
   let ty := constInfo.type
@@ -144,7 +154,7 @@ partial def visit (t : Expr) : GenM Expr := do
     let args := t.getAppArgs
     let table ←
       if let some (f, _) := f.const? then do
-        let out ← genTable.getGenTable f
+        let out ← genTable.getGenTable f args
         pure out
       else
         pure none
@@ -280,6 +290,21 @@ open BitVec
     bv_generalize +specialize
     trace_state
     sorry
+
+/--
+trace: ⊢ ∀ (w : ℕ) (x : BitVec 1) (y : BitVec w), x = x
+---
+warning: declaration uses 'sorry'
+---
+warning: 'intros' tactic does nothing
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+-/
+#guard_msgs in theorem test_no_generalize_1 (x : BitVec 1) (y : BitVec 2) : x = x := by
+   intros 
+   bv_generalize
+   trace_state
+   sorry
 
 end Tactic
 end WidthGeneralize
