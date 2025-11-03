@@ -20,7 +20,7 @@ def parseAsRiscv (fileName : String ) : IO UInt32 := do
   match icom? with
   | none => return 1
   | some (Sigma.mk _Γ ⟨_eff, ⟨_retTy, c⟩⟩) => do
-    IO.println c.printModule
+    IO.println c.printFunc
     return 0
 
 /--
