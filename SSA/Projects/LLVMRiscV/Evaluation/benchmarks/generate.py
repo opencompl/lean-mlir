@@ -34,6 +34,9 @@ MLIR_single_DIR_PATH = (
 MLIR_multi_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_multi/"
 )
+isolated_instructions_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/compare-lowering-patterns/isolated_instructions/"
+)
 LLC_ASM_selectiondag_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM_selectiondag/"
 LLC_ASM_globalisel_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM_globalisel/"
@@ -132,15 +135,9 @@ def run_command(cmd, log_file, timeout=TIMEOUT_SEC):
         log_file.write(f"timeout of {timeout} seconds reached\n")
         print(f"{log_file} - timeout of {timeout} seconds reached")
 
-
-def extract_mlir_blocks(input_file, output_base, max_functions):
-    """
-    Extracts individual MLIR module blocks (functions) from a large input file
-    and saves each into a separate file.
-    """
+def extract_helper(input_file, output_base, max_functions, base_name):
     f = open(input_file, "r")
     all_lines = f.readlines()
-    size = input_file.split("_")[-1].split(".")[0]
     function_count = 0
     curr_program = []
     brackets_count = 0
@@ -154,7 +151,7 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
             brackets_count -= 1
         if brackets_count == 1 and len(curr_program) > 0:
             # write file
-            out_f = open(output_base + f"{size}_function_{function_count}.mlir", "w")
+            out_f = open(output_base + f"{base_name}{function_count}.mlir", "w")
             out_f.writelines(curr_program)
             out_f.write("\n")
             out_f.close()
@@ -164,7 +161,18 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
         if function_count >= max_functions:
             print(f"Reached maximum of {max_functions} functions. Stopping extraction.")
             break
-
+    
+def extract(input_dir, output_base, max_functions, type):
+    if type:
+        for filename in os.listdir(input_dir):
+            input_file = os.path.join(input_dir, filename)
+            instruction_name = ''.join(filename.split('.')[0])
+            extract_helper(input_file, output_base, max_functions, f"{instruction_name}_")
+    else:
+        size = input_dir.split("_")[-1].split(".")[0]
+        base_name = f"{size}_function_"
+        extract_helper(input_dir, output_base, max_functions, base_name)
+            
 
 def MLIR_opt_arith_llvm(input_file, output_file, log_file, pass_dict):
     """
@@ -313,15 +321,19 @@ def XDSL_reg_alloc(input_file, output_file, log_file, pass_dict):
     pass_dict[output_file] = ret_code
 
 
-def generate_benchmarks(num, jobs, llvm_opts):
+def generate_benchmarks(num, jobs, llvm_opts, compare_lowering_patterns=False):
     setup_benchmarking_directories()
-
-    # extract mlir blocks and put them all in separate files
-    # for each file with programs of a certain size
-    for file in os.listdir(MLIR_multi_DIR_PATH):
-        input_file = os.path.join(MLIR_multi_DIR_PATH, file)
-        replace_hyphens_in_variables(input_file)
-        extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, num)
+    
+    if compare_lowering_patterns:
+        print(f"Using instruction-specific files from: {isolated_instructions_DIR_PATH}")
+        extract(isolated_instructions_DIR_PATH, MLIR_single_DIR_PATH, num, compare_lowering_patterns)
+    else:
+        # extract mlir blocks and put them all in separate files
+        # for each file with programs of a certain size
+        for file in os.listdir(MLIR_multi_DIR_PATH):
+            input_file = os.path.join(MLIR_multi_DIR_PATH, file)
+            replace_hyphens_in_variables(input_file)
+            extract(input_file, MLIR_single_DIR_PATH, num, compare_lowering_patterns)
 
     MLIR_opt_file2ret = dict()
     idx = 0
@@ -546,17 +558,25 @@ def main():
         "--llvm_opt",
         help="Optimization level for LLVM.",
         nargs="+",
-        choices=["O3", "O2", "O1", "O0", "default"],
+        choices=["O3", "O2", "O1", "O0", "default", "all"],
         default="default",
     )
 
+    parser.add_argument(
+        "-l",
+        "--instruction_lowering",
+        help="Create files for instruction lowering patterns comparison.",
+        action="store_true",
+        default=False,
+    )
+    
     args = parser.parse_args()
 
     opts_to_evaluate = (
         ["O3", "O2", "O1", "O0", "default"] if "all" in args.llvm_opt else args.llvm_opt
     )
 
-    generate_benchmarks(args.num, args.jobs, opts_to_evaluate)
+    generate_benchmarks(args.num, args.jobs, opts_to_evaluate, args.instruction_lowering)
 
 
 if __name__ == "__main__":
