@@ -211,7 +211,7 @@ def selectionPipeFuelWithCSEWithOpt {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (
 -/
 def selectionPipeFuelWithCSEWithOptConst {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : Com LLVMPlusRiscV
     (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) (pseudo : Bool):=
-  let rmInitialDeadCode :=  (DCE.dce' prog).val;
+  let rmInitialDeadCode :=  (DCE.repeatDce  prog).val;
   let rmInitialDeadCode :=
     if pseudo then
       multiRewritePeephole fuel pseudo_match rmInitialDeadCode
@@ -229,13 +229,13 @@ def selectionPipeFuelWithCSEWithOptConst {Γl : List LLVMPlusRiscV.Ty} (fuel : N
     rewritingPatterns1  loweredConst;
   let lowerPart2 := multiRewritePeephole fuel
     rewritingPatterns0 lowerPart1;
-  let postLoweringDCE := (DCE.dce' lowerPart2).val;
+  let postLoweringDCE := (DCE.repeatDce  lowerPart2).val;
   let postReconcileCast := multiRewritePeephole fuel (reconcile_cast_pass) postLoweringDCE;
-  let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
-  let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val;
+  let remove_dead_Cast1 := (DCE.repeatDce  postReconcileCast).val;
+  let remove_dead_Cast2 := (DCE.repeatDce  remove_dead_Cast1).val;
   let optimize_eq_cast := (CSE.cse' remove_dead_Cast2).val;
-  let out := (DCE.dce' optimize_eq_cast).val;
-  let out2 := (DCE.dce' out).val;
+  let out := (DCE.repeatDce  optimize_eq_cast).val;
+  let out2 := (DCE.repeatDce  out).val;
   let optimize_final_1 := multiRewritePeephole 100
     GLobalISelO0PreLegalizerCombiner out2;
   let optimize_final_2 := multiRewritePeephole 100
