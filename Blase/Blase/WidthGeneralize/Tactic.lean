@@ -79,7 +79,10 @@ def getBitVecTypeWidth? (t : Expr) : MetaM (Option Expr) := do
 
 partial def getBitVecTypeWidths (t : Expr) (out : Std.HashSet Expr) :
     MetaM (Std.HashSet Expr) := do
-  if let some w ← getBitVecTypeWidth? t then
+  if let some w ← getBitVecTypeWidth? t then do
+    -- ↓ BV 1 is special, since BV 1 is isomorphic to Bool.
+    if let some 1 ← getNatValue? w then
+      return out
     return out.insert w
   else
     let (_f, args) := t.getAppFnArgs
@@ -97,7 +100,7 @@ def genTable.getGenTable (n : Name) : GenM (Option (Array Bool)) := do
   let constInfo ← getConstInfo n
   let ty := constInfo.type
   withTraceNode `WidthGeneralize
-    (fun k => return m!"genTable.getGenTable for {n}") do
+    (fun _ => return m!"genTable.getGenTable for {n}") do
       forallTelescope ty fun xs ret => do
         trace[WidthGeneralize] m!"getGenTable for {n} : {xs} → {ret}"
         let mut widths : Std.HashSet Expr := {}
