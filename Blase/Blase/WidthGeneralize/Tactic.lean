@@ -52,25 +52,86 @@ This table determines which arguments of important functions are bitwidths and
 should be generalized and which ones are normal parameters which should be
 recursively visited.
 -/
-def genTable : Std.HashMap Name (Array Bool) := Id.run do
+def genTableHardcoded : Std.HashMap Name (Array Bool) := Id.run do
   let mut table := .emptyWithCapacity 16
   table := table.insert ``BitVec #[true]
-  table := table.insert ``BitVec.zeroExtend #[true, true, false]
-  table := table.insert ``BitVec.signExtend #[true, true, false]
-  table := table.insert ``BitVec.truncate #[true, true, false]
-  table := table.insert ``BitVec.instOfNat #[true, false, false]
-  -- table := table.insert ``instHAndOfAndOp #[true, false, false]
-  table := table.insert ``BitVec.instAndOp #[true]
-  table := table.insert ``BitVec.instAdd #[true]
-  table := table.insert ``BitVec.instSub #[true]
-  table := table.insert ``BitVec.instMul #[true]
-  table := table.insert ``BitVec.instDiv #[true]
-  table := table.insert ``BitVec.instOfNat #[true, false]
-  table := table.insert ``BitVec.ofNat #[true, false]
+  -- table := table.insert ``BitVec.zeroExtend #[true, true, false]
+  -- table := table.insert ``BitVec.signExtend #[true, true, false]
+  -- table := table.insert ``BitVec.truncate #[true, true, false]
+  -- table := table.insert ``BitVec.instOfNat #[true, false, false]
+  -- -- table := table.insert ``instHAndOfAndOp #[true, false, false]
+  -- table := table.insert ``BitVec.instAndOp #[true]
+  -- table := table.insert ``BitVec.instAdd #[true]
+  -- table := table.insert ``BitVec.instSub #[true]
+  -- table := table.insert ``BitVec.instMul #[true]
+  -- table := table.insert ``BitVec.instDiv #[true]
+  -- table := table.insert ``BitVec.instOfNat #[true, false]
+  -- table := table.insert ``BitVec.ofNat #[true, false]
   table
 
-def genTable.getGenTable (n : Name) : Option (Array Bool) :=
-  genTable[n]?
+-- Invariant: returns values in WHNF.
+def getBitVecTypeWidth? (t : Expr) : MetaM (Option Expr) := do
+  let t ← instantiateMVars t
+  let t ← whnf t
+  match_expr t with
+  | BitVec w => return some (← whnf w)
+  | _ => return none
+
+partial def getBitVecTypeWidths (t : Expr) (out : Std.HashSet Expr) :
+    MetaM (Std.HashSet Expr) := do
+  if let some w ← getBitVecTypeWidth? t then
+    return out.insert w
+  else
+    let (_f, args) := t.getAppFnArgs
+    let mut out := out
+    for arg in args do
+      out ← getBitVecTypeWidths arg out
+    return out
+
+def genTable.getGenTable (n : Name) : GenM (Option (Array Bool)) := do
+  -- | Only special case, as it is a type constructor.
+  -- All other constants are theorems, defs, etc.
+  if n == ``BitVec then
+    return some #[true]
+
+  let constInfo ← getConstInfo n
+  let ty := constInfo.type
+  withTraceNode `WidthGeneralize
+    (fun k => return m!"genTable.getGenTable for {n}") do
+      forallTelescope ty fun xs ret => do
+        trace[WidthGeneralize] m!"getGenTable for {n} : {xs} → {ret}"
+        let mut widths : Std.HashSet Expr := {}
+        for x in xs do
+          let ty ← inferType x
+          -- TODO: add an assertion that ty is
+          -- Bool, Nat, Int, or BitVec w.
+          -- This lets us say that we are in the first order
+          -- fragment with sorts Nat, Int, Bool, and BitVec w.
+          trace[WidthGeneralize] m!"inspecting arg {x} : {ty}"
+          widths ← getBitVecTypeWidths ty widths
+        -- TODO: see that this needs to recurse,
+        -- since we have instAdd : w -> Add (BitVec w),
+        -- which needs us to recurse into Add (BitVec w)
+        -- to learn that 'w' is a width.
+        widths ← getBitVecTypeWidths ret widths
+        trace[WidthGeneralize] m!"found concrete widths: {widths.toArray}"
+        let mut out := #[]
+        for x in xs do
+          let x ← whnf x
+          let isWidth := widths.contains x
+          trace[WidthGeneralize] m!"inspecting concrete arg {x} isWidth: {isWidth}"
+          out := out.push isWidth
+        trace[WidthGeneralize] m!"genTable for {n} @ {out}"
+        return some out
+
+    -- match genTable.find? n with
+    -- | some arr =>
+    --   if arr.size == xs.size then
+    --     return some arr
+    --   else
+    --     return none
+    -- | none => return none
+
 
 partial def visit (t : Expr) : GenM Expr := do
   let t ← instantiateMVars t
@@ -78,11 +139,12 @@ partial def visit (t : Expr) : GenM Expr := do
   | .app _ _ =>
     let f := t.getAppFn
     let args := t.getAppArgs
-    let table :=
-      if let some (f, _) := f.const? then
-        genTable.getGenTable f
+    let table ←
+      if let some (f, _) := f.const? then do
+        let out ← genTable.getGenTable f
+        pure out
       else
-        none
+        pure none
     let bv? (n : Nat) :=
       match table with
       | .some xs => xs.getD n false
@@ -119,7 +181,7 @@ def specializeGoal (g : MVarId) (lengthCount : Nat) : TacticM Unit := do
     let mut t := t
     let mut substs := FVarSubst.empty
     for i in [0:lengthCount] do
-      let n := 2 * i + 1
+      let n := 2 * i + 5
       substs := substs.insert xs[i]!.fvarId! (mkNatLit n)
     let ys := xs.drop lengthCount
     let newT ← mkForallFVars ys t (binderInfoForMVars := .default)
@@ -166,12 +228,13 @@ error: unsolved goals
 ---
 trace: ⊢ ∀ (w w_1 : ℕ) (x y : BitVec w) (zs : List (BitVec w_1)), x = x
 -/
-#guard_msgs in theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) :
+#guard_msgs in theorem test_bv_generalize_simple
+  (x y : BitVec 32) (zs : List (BitVec 44)) :
     x = x := by
   bv_generalize
   trace_state
 
-/-- trace: ⊢ ∀ (x y : BitVec 1) (zs : List (BitVec 3)), x = x -/
+/-- trace: ⊢ ∀ (x y : BitVec 5) (zs : List (BitVec 7)), x = x -/
 #guard_msgs in theorem test_bv_generalize_simple_spec (x y : BitVec 32) (zs : List (BitVec 44)) :
     x = x := by
   bv_generalize +specialize
@@ -179,44 +242,41 @@ trace: ⊢ ∀ (w w_1 : ℕ) (x y : BitVec w) (zs : List (BitVec w_1)), x = x
   bv_decide
 
 /--
-error: unsolved goals
-⊢ ∀ (w w_1 w_2 : ℕ) (x y : BitVec w_1) (zs : List (BitVec w_2)) (z : BitVec w),
-    52 + 10 = 42 → x = y → BitVec.zeroExtend w x = BitVec.zeroExtend w y + 0
----
 trace: ⊢ ∀ (w w_1 w_2 : ℕ) (x y : BitVec w_1) (zs : List (BitVec w_2)) (z : BitVec w),
     52 + 10 = 42 → x = y → BitVec.zeroExtend w x = BitVec.zeroExtend w y + 0
+---
+warning: declaration uses 'sorry'
 -/
-#guard_msgs in theorem test_bv_generalize (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) :
+#guard_msgs in theorem test_bv_generalize
+      (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10)
+      (h : 52 + 10 = 42) (heq : x = y) :
     x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
   bv_generalize
   trace_state
+  sorry
 
 /--
-trace: ⊢ ∀ (x y : BitVec 3) (zs : List (BitVec 5)) (z : BitVec 1),
-    52 + 10 = 42 → x = y → BitVec.zeroExtend 1 x = BitVec.zeroExtend 1 y + 0
+trace: ⊢ ∀ (w w_1 w_2 : ℕ) (x y : BitVec w_1) (zs : List (BitVec w_2)) (z : BitVec w),
+    52 + 10 = 42 → x = y → BitVec.zeroExtend w x = BitVec.zeroExtend w y + 0
+---
+warning: declaration uses 'sorry'
 -/
 #guard_msgs in theorem test_bv_generalize_spec (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) :
     x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
-  bv_generalize +specialize
+  bv_generalize
   trace_state
-  bv_decide
+  sorry
+
 
 open BitVec
 
--- (kernel) application type mismatch
---   instHAndOfAndOp
--- argument has type
---   AndOp (BitVec 64)
--- but function has type
---   [AndOp (BitVec w)] → HAnd (BitVec w) (BitVec w) (BitVec w)
-
-theorem test_thm.extracted_1._1 : ∀ (x : BitVec 64),
+/-- trace: ⊢ ∀ (x : BitVec 7), zeroExtend 7 (truncate 5 x) = x &&& 4294967295#7 -/
+#guard_msgs in theorem test_thm.extracted_1._1 : ∀ (x : BitVec 64),
   zeroExtend 64 (truncate 32 x) = x &&& 4294967295#64 := by
     intros
     bv_generalize +specialize
+    trace_state
     sorry
-
-
 
 end Tactic
 end WidthGeneralize
