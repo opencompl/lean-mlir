@@ -21,7 +21,7 @@ def printSmtLib (g : MVarId) : SolverM Unit := do
   g.withContext do
     debugLog m!"goal after preprocessing: {indentD g}"
 
-  g.withContext do 
+  g.withContext do
     forallTelescope (← g.getType) fun _xs gTy => do
       debugLog m!"goal type after foralls: {indentD gTy}"
       let collect : CollectState := {}
@@ -35,7 +35,7 @@ def evalBvPrintSmtLib : Tactic := fun
 | `(tactic| bv_multi_width_print_smt_lib) => do
   let g ← getMainGoal
   g.withContext do
-    let ctx : Context := {}
+    let ctx : Context := { widthAbstraction := .never }
     SolverM.run (ctx := ctx) <| printSmtLib g
 | _ => throwUnsupportedSyntax
 
