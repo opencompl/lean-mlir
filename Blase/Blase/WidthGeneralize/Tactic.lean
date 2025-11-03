@@ -13,68 +13,6 @@ initialize Lean.registerTraceClass `Blase.WidthGeneralize
 namespace WidthGeneralize
 namespace Tactic
 open Lean Meta Elab Tactic
-/-
-A tactic to generalize the width of BitVectors
--/
-
-structure State where
-  /-- Maps fixed width to a new MVar for the generic width. -/
-  mapping : DiscrTree Expr
-  invMapping : Std.HashMap Expr Expr
-  deriving Inhabited
-
-abbrev GenM := StateT State TermElabM 
-
-def State.get? (e : Expr) : GenM (Option Expr) := do
-  let s ← get
-  match ← s.mapping.getMatch e with
-  | #[x] => return x
-  | #[] => return none
-  | _ => unreachable!
-
-def State.setMapping (e x : Expr) : GenM Unit := do
-  let s ← get
-  let m ← s.mapping.insert e x
-  set {s with mapping := m}
-
-/-- Get the generic width BV MVar corresponding to an existing BV width. -/
-def State.add? (e : Expr) : GenM Expr := do
-  match ← get? e with
-  | some x => pure x
-  | none =>
-    if e.isFVar || e.isBVar then pure e else
-    let x ← mkFreshExprMVar (some (.const ``Nat [])) (userName := `w)
-    setMapping e x
-    modify fun s => { s with invMapping := s.invMapping.insert x e }
-    pure x
-
-/--
-This table determines which arguments of important functions are bitwidths and
-should be generalized and which ones are normal parameters which should be
-recursively visited.
--/
-def genTable : Std.HashMap Name (Array Bool) := Id.run do
-  let mut table := .emptyWithCapacity 16
-  table := table.insert ``BitVec #[true]
-  table := table.insert ``BitVec.zeroExtend #[true, true, false]
-  table := table.insert ``BitVec.truncate #[true, true, false]
-  table := table.insert ``BitVec.signExtend #[true, true, false]
-  table := table.insert ``BitVec.instOfNat #[true, false, false]
-  table := table.insert ``BitVec.instAdd #[true]
-  table := table.insert ``BitVec.instSub #[true]
-  table := table.insert ``BitVec.instMul #[true]
-  table := table.insert ``BitVec.instDiv #[true]
-  table := table.insert ``AndOp #[true]
-  table := table.insert ``BitVec.ofNat #[true, false]
-  table
-
-/--
-Get arguments to generalize for a given function name.
-TODO: don't use a hardcoded table, but infer from definitions.
--/
-def getArgsToGeneralize (name : Name) : Option (Array Bool) :=
-  genTable[name]?
-
 
 def getBitVecType? (t : Expr) : MetaM (Option Expr) := do
   let t ← instantiateMVars t
@@ -90,27 +28,155 @@ def isNatType? (t : Expr) : MetaM (Option Expr) := do
   | Nat => return some t
   | _ => return none
 
-#check MVarId.revert
-#check MVarId.generalize
-#check MVarId.intros
-#check MVarId.substEqs
+structure BvGeneralizeConfig where
+  debug : Bool := false
 
-def doBvGeneralize (g : MVarId) : MetaM MVarId := do
-  let lctx ← getLCtx
-  let mut allFVars := #[]
-  for h in lctx do
-    if not h.isImplementationDetail then
-      allFVars := allFVars.push h.fvarId
-  let (_revertedFvars, g) ← g.revert allFVars
-  let (_introsdFvars, g) ← g.intros
-  return g
+abbrev GenM := ReaderT BvGeneralizeConfig MetaM
 
-axiom generalizeAxiom : ∀ P, P
-axiom specializeAxiom : ∀ P, P
+def GenM.debugLog (msg : MessageData) : GenM Unit := do
+  let cfg ← read
+  if cfg.debug then
+    logInfo msg
+  else
+    pure ()
 
+def GenM.run (x : GenM α)  (cfg : BvGeneralizeConfig) : MetaM α :=
+  ReaderT.run x cfg
+
+axiom generalizeAxiom {P : Prop} : P
 
 
-def substWidthsToDecls (ix : Nat) (fvars : Array FVarId) (g : MVarId) : MetaM MVarId := do
+structure ConcreteWidths where
+  /-- Mapping from a concrete width to its generalized variable index. -/
+  widths : Array Nat := #[]
+  width2ix : Std.HashMap Nat Nat := {}
+
+instance : EmptyCollection ConcreteWidths where
+  emptyCollection := {}
+
+def ConcreteWidths.addWidth (s : ConcreteWidths) (n : Nat) : ConcreteWidths :=
+  if s.width2ix.contains n then
+    s
+  else
+    { s with 
+      widths := s.widths.push n,
+      width2ix := s.width2ix.insert n (s.width2ix.size)
+    }
+
+partial def collectWidthsInExpr (e : Expr) (s : ConcreteWidths) : GenM ConcreteWidths := do
+  let mut s := s
+  if let some wExpr ← getBitVecType? e then
+    let wExpr ← instantiateMVars wExpr
+    if let some n ← Meta.getNatValue? wExpr then
+      -- we have a concrete nat width, so let's add it to our cache
+      s := s.addWidth n
+
+  -- We only bother in the first-order setting.
+  -- So we recurse into applications only.
+  let (_f, xs) := e.getAppFnArgs
+  for x in xs do
+      s ← collectWidthsInExpr x s
+  return s
+
+
+/-- Substitute concrete bitvector widths with their corresponding fvar. -/
+partial def substWidthInExpr 
+  (e : Expr)
+  (s : ConcreteWidths)
+  (fvars : Array Expr) : MetaM Expr := do
+  if let some n ← Meta.getNatValue? e then
+    if let some ix := s.width2ix[n]? then
+      -- This will replace the occurrence of e.g. 64 in '(BitVec.ofNat 64 k)
+      return fvars[ix]!
+    else
+      -- | We have a natural number that is not at the width type level,
+      -- so we don't replace it and leave it as-is.
+      return e
+  else
+    -- We only bother in the first-order setting.
+    -- So we recurse into applications only.
+    let (f, xs) := e.getAppFnArgs
+    let mut xsNew : Array Expr := #[]
+    for x in xs do
+        let xNew ← substWidthInExpr x s fvars
+        xsNew := xsNew.push xNew
+    mkAppM f xsNew
+
+-- | Add generalized width variables to the current context
+def addGeneralizedWidths {α : Type} (xs : Array Nat) (ix : Nat) (fvars : Array Expr)
+    (k : Array Expr → MetaM α) : MetaM α := do
+  if h : ix < xs.size then
+    let n := xs[ix]
+    let fvarName := Name.mkSimple s!"bv_width_{n}"
+    let fvarType := mkConst ``Nat
+    withLocalDecl fvarName BinderInfo.default fvarType fun fvarId => do
+      let fvars := fvars.push fvarId
+      addGeneralizedWidths xs (ix + 1) fvars k
+  else
+    k fvars
+
+def doBvGeneralize (g : MVarId) : GenM MVarId := do
+  g.withContext do
+    let lctx ← getLCtx
+    let mut widths : ConcreteWidths := ∅
+    for ldecl in lctx do
+      let declTy := ldecl.type
+      GenM.debugLog m!"inspecting local decl {ldecl.userName} : {declTy}"
+      if let some w ← getBitVecType? declTy then
+         GenM.debugLog m!"..has width expr: {w}"
+         if let some wVal ← getNatValue? w then
+           GenM.debugLog m!"....concrete width: {wVal}"
+           widths := widths.addWidth wVal
+         else
+           GenM.debugLog m!"....non-concrete width"
+    GenM.debugLog m!"collected concrete widths from fvars: {widths.widths.toList}"
+    -- | Now collect concrete widths from the goal type itself
+    widths ← collectWidthsInExpr (← g.getType) widths
+    addGeneralizedWidths widths.widths 0 #[] fun fvars => do
+      sorry
+    -- let's introduce new Fvars, one for each width
+    return g
+
+
+/--
+This tactic tries to generalize the bitvector width2ix, and only the bitvector
+width2ix. See `genTable` if the tactic fails to generalize the right parameters
+of a function over bitvectors.
+-/
+syntax (name := bvGeneralize) "bv_generalize"  : tactic
+@[tactic bvGeneralize]
+def evalBvGeneralize : Tactic := fun
+| `(tactic| bv_generalize) => do
+  let g₀ ← getMainGoal
+  g₀.withContext do
+    let g ← (doBvGeneralize g₀).run {}
+    let generalizeAx ← mkAppM ``generalizeAxiom #[← g₀.getType]
+    if ! (← isDefEq (.mvar g₀) generalizeAx) then
+        throwError "ERROR: unable to prove goal {g₀} with generalize axiom."
+    replaceMainGoal [g]
+| _ => throwUnsupportedSyntax
+
+structure SpecializeConfig where
+  debug : Bool := false
+
+
+abbrev SpecM := ReaderT SpecializeConfig MetaM
+
+def SpecM.debugLog (msg : MessageData) : SpecM Unit := do
+  let cfg ← read
+  if cfg.debug then
+    logInfo msg
+  else
+    pure ()
+
+def SpecM.run (x : SpecM α)  (cfg : SpecializeConfig) : MetaM α :=
+  ReaderT.run x cfg
+
+/-- Axiom used by width specialization tactic. -/
+axiom specializeAxiom {P : Prop} : P
+
+
+def substWidthsToDecls (ix : Nat) (fvars : Array FVarId) (g : MVarId) : SpecM MVarId := do
     if hix : ix < fvars.size then 
       let fvar := fvars[ix]
       let val : Nat := 3 + ix * 2
@@ -118,7 +184,7 @@ def substWidthsToDecls (ix : Nat) (fvars : Array FVarId) (g : MVarId) : MetaM MV
       let eqExpr ← mkEq (.fvar fvar) valExpr
       let eqValue ← mkAppM ``specializeAxiom #[eqExpr]
       Meta.withLetDecl (Name.mkSimple s!"wEq_{ix}") eqExpr eqValue fun newEq => do
-          logInfo m!"Adding equation {newEq} to goal {g}" 
+          SpecM.debugLog m!"Adding equation {newEq} to goal {g}" 
           if !newEq.isFVar then
               throwError "Expected newEq to be an FVar, got {newEq}"
           substWidthsToDecls (ix + 1) fvars g
@@ -128,62 +194,48 @@ def substWidthsToDecls (ix : Nat) (fvars : Array FVarId) (g : MVarId) : MetaM MV
         g.assign (← mkAppM ``specializeAxiom #[gType])
         let gNew := gNew.mvarId!
         gNew.withContext do
-          logInfo m!"Added equations all widths in goal {gNew}. Now substituting equations."
+          SpecM.debugLog
+            m!"Added equations all width2ix in goal {gNew}. Now substituting equations."
           let some gNew ← gNew.substEqs
             | throwError "Failed to substitute equations in goal {gNew}"
           return gNew
 
-/--
-This tactic tries to generalize the bitvector widths, and only the bitvector
-widths. See `genTable` if the tactic fails to generalize the right parameters
-of a function over bitvectors.
--/
-syntax (name := bvGeneralize) "bv_generalize"  : tactic
-@[tactic bvGeneralize]
-def evalBvGeneralize : Tactic := fun
-| `(tactic| bv_generalize) => do
-  let g₀ ← getMainGoal
-  g₀.withContext do
-    let g ← doBvGeneralize g₀
-    let generalizeAx ← mkAppM ``generalizeAxiom #[← g₀.getType]
-    if ! (← isDefEq (.mvar g₀) generalizeAx) then
-        throwError "ERROR: unable to prove goal {g₀} with generalize axiom."
-    replaceMainGoal [g]
-| _ => throwUnsupportedSyntax
-
 
 /-- 
-Returns a new goal where all bitvector widths in the context have been specialized
+Returns a new goal where all bitvector width2ix in the context have been specialized
 to concrete values.
 -/
-def specializeGoal (g : MVarId) : MetaM MVarId := do
+def specializeGoal (g : MVarId) : SpecM MVarId := do
     let lctx ← getLCtx
     let mut widthVars : Std.HashSet FVarId := {}
     for ldecl in lctx do
       let declTy := ldecl.type
-      logInfo m!"inspecting local decl {ldecl.userName} : {declTy}"
+      SpecM.debugLog m!"inspecting local decl {ldecl.userName} : {declTy}"
       let some w ← getBitVecType? declTy
         | continue
-      logInfo m!"..has width expr: {w}"
+      SpecM.debugLog m!"..has width expr: {w}"
       if w.isFVar then
-         logInfo m!"..has width fvar: {w}"
+         SpecM.debugLog m!"..has width fvar: {w}"
          widthVars := widthVars.insert w.fvarId!
-    logInfo m!"specializing widths: '{widthVars.toList.map Expr.fvar}'"
+    SpecM.debugLog m!"specializing width2ix: '{widthVars.toList.map Expr.fvar}'"
     substWidthsToDecls 0 widthVars.toArray g
 
-syntax (name := bvSpecialize) "bv_specialize" : tactic
+
+declare_config_elab elabBvSpecializeConfig SpecializeConfig 
+syntax (name := bvSpecialize) "bv_specialize" Lean.Parser.Tactic.optConfig : tactic
 
 
-def doSpecialize : TacticM Unit := do
+def doSpecialize (cfg : SpecializeConfig) : TacticM Unit := do
   let g ← getMainGoal
   g.withContext do
-    let newG ← specializeGoal g
+    let newG ← SpecM.run (specializeGoal g) cfg
     replaceMainGoal [newG]
 
 @[tactic bvSpecialize]
 def evalBvSpecialize : Tactic := fun
-| `(tactic| bv_specialize) => do
-    doSpecialize
+| `(tactic| bv_specialize $cfg) => do
+  let cfg ← elabBvSpecializeConfig cfg
+  doSpecialize cfg
 | _ => throwUnsupportedSyntax
 
 -- TODO: the `bv_generalize` tactic fails when a bit vector is already width generic
@@ -227,14 +279,14 @@ info: ..has width fvar: w
 ---
 info: inspecting local decl zs : List (BitVec v)
 ---
-info: specializing widths: '[w]'
+info: specializing width2ix: '[w]'
 ---
 info: Adding equation wEq_0 to goal w v : ℕ
 x y : BitVec w
 zs : List (BitVec v)
 ⊢ x = x
 ---
-info: Added equations all widths in goal w v : ℕ
+info: Added equations all width2ix in goal w v : ℕ
 x y : BitVec w
 zs : List (BitVec v)
 wEq_0 : w = 3 := ⋯
