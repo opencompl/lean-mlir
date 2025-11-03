@@ -69,6 +69,9 @@ def genTable : Std.HashMap Name (Array Bool) := Id.run do
   table := table.insert ``BitVec.ofNat #[true, false]
   table
 
+def genTable.getGenTable (n : Name) : Option (Array Bool) :=
+  genTable[n]?
+
 partial def visit (t : Expr) : GenM Expr := do
   let t ← instantiateMVars t
   match t with
@@ -77,7 +80,7 @@ partial def visit (t : Expr) : GenM Expr := do
     let args := t.getAppArgs
     let table :=
       if let some (f, _) := f.const? then
-        genTable[f]?
+        genTable.getGenTable f
       else
         none
     let bv? (n : Nat) :=
