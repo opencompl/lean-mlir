@@ -22,7 +22,7 @@ structure State where
   invMapping : Std.HashMap Expr Expr
   deriving Inhabited
 
-abbrev GenM := StateT State TermElabM 
+abbrev GenM := StateT State TermElabM
 
 def State.get? (e : Expr) : GenM (Option Expr) := do
   let s ← get
@@ -57,11 +57,16 @@ def genTable : Std.HashMap Name (Array Bool) := Id.run do
   table := table.insert ``BitVec #[true]
   table := table.insert ``BitVec.zeroExtend #[true, true, false]
   table := table.insert ``BitVec.signExtend #[true, true, false]
+  table := table.insert ``BitVec.truncate #[true, true, false]
   table := table.insert ``BitVec.instOfNat #[true, false, false]
+  -- table := table.insert ``instHAndOfAndOp #[true, false, false]
+  table := table.insert ``BitVec.instAndOp #[true]
   table := table.insert ``BitVec.instAdd #[true]
   table := table.insert ``BitVec.instSub #[true]
   table := table.insert ``BitVec.instMul #[true]
   table := table.insert ``BitVec.instDiv #[true]
+  table := table.insert ``BitVec.instOfNat #[true, false]
+  table := table.insert ``BitVec.ofNat #[true, false]
   table
 
 partial def visit (t : Expr) : GenM Expr := do
@@ -70,7 +75,7 @@ partial def visit (t : Expr) : GenM Expr := do
   | .app _ _ =>
     let f := t.getAppFn
     let args := t.getAppArgs
-    let table := 
+    let table :=
       if let some (f, _) := f.const? then
         genTable[f]?
       else
@@ -84,7 +89,7 @@ partial def visit (t : Expr) : GenM Expr := do
       pure <| .app res arg
   | .forallE n e₁ e₂ info =>
     pure <| .forallE n (← visit e₁) (← visit e₂) info
-  | e => 
+  | e =>
     pure e
 
 def doBvGeneralize (g : MVarId) : GenM (Expr × MVarId) := do
@@ -144,7 +149,7 @@ def evalBvGeneralize : Tactic := fun
       let mut newVals := #[]
       for x in s.mapping.elements do
         newVals := newVals.push (s.invMapping[x]!)
-      g.assign <| mkAppN g' newVals 
+      g.assign <| mkAppN g' newVals
       replaceMainGoal [g'.mvarId!]
       if cfg.specialize then
         specializeGoal g'.mvarId! s.invMapping.size
@@ -158,13 +163,13 @@ error: unsolved goals
 ---
 trace: ⊢ ∀ (w w_1 : ℕ) (x y : BitVec w) (zs : List (BitVec w_1)), x = x
 -/
-#guard_msgs in theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) : 
+#guard_msgs in theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) :
     x = x := by
   bv_generalize
   trace_state
 
 /-- trace: ⊢ ∀ (x y : BitVec 1) (zs : List (BitVec 3)), x = x -/
-#guard_msgs in theorem test_bv_generalize_simple_spec (x y : BitVec 32) (zs : List (BitVec 44)) : 
+#guard_msgs in theorem test_bv_generalize_simple_spec (x y : BitVec 32) (zs : List (BitVec 44)) :
     x = x := by
   bv_generalize +specialize
   trace_state
@@ -178,7 +183,7 @@ error: unsolved goals
 trace: ⊢ ∀ (w w_1 w_2 : ℕ) (x y : BitVec w_1) (zs : List (BitVec w_2)) (z : BitVec w),
     52 + 10 = 42 → x = y → BitVec.zeroExtend w x = BitVec.zeroExtend w y + 0
 -/
-#guard_msgs in theorem test_bv_generalize (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
+#guard_msgs in theorem test_bv_generalize (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) :
     x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
   bv_generalize
   trace_state
@@ -187,12 +192,28 @@ trace: ⊢ ∀ (w w_1 w_2 : ℕ) (x y : BitVec w_1) (zs : List (BitVec w_2)) (z 
 trace: ⊢ ∀ (x y : BitVec 3) (zs : List (BitVec 5)) (z : BitVec 1),
     52 + 10 = 42 → x = y → BitVec.zeroExtend 1 x = BitVec.zeroExtend 1 y + 0
 -/
-#guard_msgs in theorem test_bv_generalize_spec (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
+#guard_msgs in theorem test_bv_generalize_spec (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) :
     x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
   bv_generalize +specialize
   trace_state
   bv_decide
 
+open BitVec
+
+-- (kernel) application type mismatch
+--   instHAndOfAndOp
+-- argument has type
+--   AndOp (BitVec 64)
+-- but function has type
+--   [AndOp (BitVec w)] → HAnd (BitVec w) (BitVec w) (BitVec w)
+
+theorem test_thm.extracted_1._1 : ∀ (x : BitVec 64),
+  zeroExtend 64 (truncate 32 x) = x &&& 4294967295#64 := by
+    intros
+    bv_generalize +specialize
+    sorry
+
+
+
 end Tactic
 end WidthGeneralize
-
