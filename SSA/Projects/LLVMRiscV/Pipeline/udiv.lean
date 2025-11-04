@@ -35,8 +35,14 @@ def llvm_udiv_lower_riscv_no_flag_32: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bi
   {lhs := udiv_llvm_no_exact_32, rhs := udiv_riscv_32, correct :=
   by
     simp_lowering
-    ·sorry
-    ·sorry
+    · bv_decide
+    · /-
+        bv_decide
+        The prover found a counterexample, consider the following assignment:
+        x✝ = 1207959552#32
+        x✝¹ = 4294967295#32
+      -/
+      sorry
   }
 
 /-! # UDIV exact   -/
@@ -49,7 +55,17 @@ def udiv_llvm_exact_32 : Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitv
   }]
 
 def llvm_udiv_lower_riscv_flag_32: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
-  {lhs := udiv_llvm_exact_32, rhs := udiv_riscv_32, correct := sorry }
+  {lhs := udiv_llvm_exact_32, rhs := udiv_riscv_32,
+    correct := by
+      simp_lowering
+      · bv_decide
+      · /-
+          bv_decide
+          The prover found a counterexample, consider the following assignment:
+          x✝ = 4#32
+          x✝¹ = 4294967288#32
+        -/
+        sorry }
 
 
 /-! ### i64 -/

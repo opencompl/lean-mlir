@@ -30,7 +30,9 @@ def rem_riscv_8 := [LV| {
 def llvm_rem_lower_riscv_8 : LLVMPeepholeRewriteRefine 8 [Ty.llvm (.bitvec 8), Ty.llvm (.bitvec 8)] where
   lhs := rem_llvm_8
   rhs := rem_riscv_8
-  correct := by sorry
+  correct := by
+    simp_lowering
+    sorry
 
 /-! ### i16 -/
 
