@@ -10,7 +10,7 @@ open LLVMRiscV
 
 /-! ### sub_to_add -/
 
-/--
+/-- 
 Test the rewrite:
   (sub x, C) → (add x, -C)
 -/
@@ -505,7 +505,7 @@ def urem_pow2_to_mask : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 
 /-! ### canonicalize_icmp -/
 
-/--
+/-- 
 Test the rewrite:
   (cmp C, x) → (cmp x, C)
 -/
