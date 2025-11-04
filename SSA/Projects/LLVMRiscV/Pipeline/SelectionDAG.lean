@@ -6,27 +6,9 @@ import SSA.Projects.LLVMRiscV.Pipeline.ConstantMatching
 
 open LLVMRiscV
 
-/- This file implements `DAGCombiner` patterns extracted from the LLVM Risc-V backend.
-  First, we implement the Lean structure that implements the rewrite patterns and then we implement
-  optimizations for LLVM IR and RISC-V.
-  In particular, we implement the patterns supported by LLVM's `GlobalIsel` for RISC-V.
-  Because `GlobalIsel` is hybrid, some of these patterns regard generic IR,
-  while some are target-dependent.
+/-
+This file implements `DAGCombiner` patterns extracted from the LLVM SelectionDAG.
 -/
-
-@[simp_riscv] lemma toType_bv : TyDenote.toType (Ty.riscv (.bv)) = BitVec 64 := rfl
-@[simp_riscv] lemma id_eq1 {α : Type} (x y : α) :  @Eq (Id α) x y = (x = y):= by simp only
-
-structure RISCVPeepholeRewrite (Γ : List Ty) where
-  lhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
-  rhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
-  correct : lhs.denote = rhs.denote := by simp_lowering <;> bv_decide
-
-def RISCVPeepholeRewriteToRiscvPeephole (self : RISCVPeepholeRewrite Γ) :
-    PeepholeRewrite LLVMPlusRiscV Γ [Ty.riscv .bv] where
-  lhs := self.lhs
-  rhs := self.rhs
-  correct := self.correct
 
 /-! ### visitADD -/
 
