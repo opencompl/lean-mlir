@@ -877,7 +877,7 @@ def visitSRA : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 Test the rewrite:
   select (not Cond), N1, N2 -> select Cond, N2, N1
 -/
-def select_constant_not_cond : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
+def visitSELECT_constant_not_cond : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 1)] where
   lhs := [LV| {
     ^entry (%c: i1, %x: i64, %y: i64):
       %0 = llvm.not %c : i1
@@ -894,7 +894,7 @@ def select_constant_not_cond : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64
 Test the rewrite:
   (true ? x : y) -> x
 -/
-def select_constant_cmp_true : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSELECT_constant_cmp_true : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.mlir.constant (1) : i1
@@ -910,7 +910,7 @@ def select_constant_cmp_true : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64
 Test the rewrite:
   (false ? x : y) -> y
 -/
-def select_constant_cmp_false : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSELECT_constant_cmp_false : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.mlir.constant (0) : i1
@@ -923,9 +923,9 @@ def select_constant_cmp_false : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
   }]
 
 def visitSELECT : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  [⟨_, select_constant_not_cond⟩,
-   ⟨_, select_constant_cmp_true⟩,
-   ⟨_, select_constant_cmp_false⟩]
+  [⟨_, visitSELECT_constant_not_cond⟩,
+   ⟨_, visitSELECT_constant_cmp_true⟩,
+   ⟨_, visitSELECT_constant_cmp_false⟩]
 
  /-! ### Grouped patterns -/
 
