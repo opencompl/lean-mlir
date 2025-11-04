@@ -393,11 +393,53 @@ Test the rewrite:
         comment=comment
     )
     
+def generate_mulh_to_lshr(powers: List[int]) -> RewriteGroup:
+    patterns = []
+    group_name = "mulh_to_lshr"
+    comment = """
+/-! ### mulh_to_lshr -/
+
+/-- 
+Test the rewrite:
+  (mulh x, n^2) → (sra x, (64-n))
+-/
+""" 
+    for n in powers:
+        power_of_2 = 2 ** n
+        
+        definition = f"""def {group_name}_{power_of_2} : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {{
+    ^entry (%x: !riscv.reg):
+      %c = li ({power_of_2}) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: !riscv.reg):
+      %c = li ({64 - n}) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_{power_of_2}",
+            definition=definition
+        ))
+    
+    return RewriteGroup(
+        group_name=group_name,
+        patterns=patterns,
+        type_signature="RISCVPeepholeRewrite Γ",
+        comment=comment
+    )
+    
 REWRITE_GENERATORS = [
     lambda: generate_sub_to_add_rewrites(max_val=5),
     lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 10))),
     lambda: generate_urem_pow2_rewrites(powers=list(range(0, 10))),
     lambda: generate_canonicalize_icmp(max_val=5),
+    lambda: generate_mulh_to_lshr(powers=list(range(1, 10))),
 ]
 
 def generate_all_rewrites() -> str:

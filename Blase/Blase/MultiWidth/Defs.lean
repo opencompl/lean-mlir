@@ -394,8 +394,8 @@ deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 open Std Lean in
 def WidthExpr.toSexpr : WidthExpr → Sexpr
-| .const n => (Sexpr.array #[.atom "const", .atomOf n])
-| .var v => (Sexpr.array #[.atom "var", .atomOf v])
+| .const n => (Sexpr.array #[.atom "wconst", .atomOf n])
+| .var v => (Sexpr.array #[.atom "wvar", .atomOf v])
 | .max v w => Sexpr.array #[
     Sexpr.atom "max",
     v.toSexpr,
@@ -478,7 +478,7 @@ def Term.toSexpr : Term → Sexpr
     .atomOf n
   ]
 | .var v w => Sexpr.array #[
-    Sexpr.atom "var",
+    Sexpr.atom "bvvar",
     .atomOf v,
     w.toSexpr
   ]
@@ -522,7 +522,7 @@ def Term.toSexpr : Term → Sexpr
     a.toSexpr
   ]
 | .boolVar v => Sexpr.array #[
-    Sexpr.atom "boolVar",
+    Sexpr.atom "boolvar",
     .atomOf v
   ]
 | .boolConst b => Sexpr.array #[

@@ -346,27 +346,28 @@ def generatePreconditions (bvLogicalExpr: BoolExpr GenBVPred) (positiveExamples 
 
     let state ← get
     let widthId := state.widthId
-    let bitwidth := state.processingWidth
-
-    let specialConstants : Std.HashMap (GenBVExpr bitwidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
-        ((one bitwidth), {bv := BitVec.ofNat bitwidth 1}),
-        ((minusOne bitwidth), {bv := BitVec.ofInt bitwidth (-1)}),
-        (GenBVExpr.var widthId, {bv := BitVec.ofNat bitwidth bitwidth})]
 
     let validCandidates ← withTraceNode `Generalize (fun _ => return "Attempted to generate valid preconditions") do
       let mut preconditionCandidates : Std.HashSet (BoolExpr GenBVPred) := Std.HashSet.emptyWithCapacity
-      let synthesisComponents : Std.HashMap (GenBVExpr bitwidth)  PreconditionSynthesisCacheValue := getPreconditionSynthesisComponents positiveExamples negativeExamples specialConstants
 
       -- Check for power of 2: const & (const - 1) == 0
-      for const in positiveExamples[0]!.keys do
+      for (const, val) in positiveExamples[0]!.toArray do
         let bvExprVar := GenBVExpr.var const
-        let powerOf2Expr :=  GenBVExpr.bin bvExprVar BVBinOp.and (GenBVExpr.bin bvExprVar BVBinOp.add (minusOne bitwidth))
+        let powerOf2Expr :=  GenBVExpr.bin bvExprVar BVBinOp.and (GenBVExpr.bin bvExprVar BVBinOp.add (minusOne val.w))
         let powerOfTwoResults := positiveExamples.map (λ pos => evalBVExpr pos powerOf2Expr)
 
         if powerOfTwoResults.any (λ val => val == 0) then
-          let powerOf2 := BoolExpr.literal (GenBVPred.bin powerOf2Expr BVBinPred.eq (zero bitwidth))
+          let powerOf2 := BoolExpr.literal (GenBVPred.bin powerOf2Expr BVBinPred.eq (zero val.w))
           preconditionCandidates := preconditionCandidates.insert powerOf2
 
+      let mut bitwidth := negativeExamples[0]!.values[0]!.w -- Hack to work around variables sometimes having a different width from the processing width when dealing with width-changing ops
+
+      let specialConstants : Std.HashMap (GenBVExpr bitwidth) BVExpr.PackedBitVec := Std.HashMap.ofList [
+      ((one bitwidth), {bv := BitVec.ofNat bitwidth 1}),
+      ((minusOne bitwidth), {bv := BitVec.ofInt bitwidth (-1)}),
+      (GenBVExpr.var widthId, {bv := BitVec.ofNat bitwidth bitwidth})]
+
+      let synthesisComponents : Std.HashMap (GenBVExpr bitwidth)  PreconditionSynthesisCacheValue := getPreconditionSynthesisComponents positiveExamples negativeExamples specialConstants
       let mut previousLevelCache : Std.HashMap (GenBVExpr bitwidth) PreconditionSynthesisCacheValue := synthesisComponents
 
       let numVariables := positiveExamples[0]!.keys.length + 1 -- Add 1 for the width ID
@@ -880,7 +881,7 @@ def evalBvGeneralize : Tactic
 
 
 -- variable {x y z : BitVec 1}
--- #generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm; Need to think about how to use special constants with the same width as the variables during precondition synthesis
+-- #generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm;
 
 -- -- variable {x y z : BitVec 8}
 -- -- #generalize x + 0 = 0 --  TODO: This crashes because bv_normalize removes the symbolic variable from the expression when attempting to find counterexamples, and we only get counterexamples for the input variable, which is not ideal since we expect counterexamples for the symbolic constants if they exist.

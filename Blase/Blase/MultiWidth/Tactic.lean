@@ -656,7 +656,8 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (w, state) ← collectWidthAtom state w
       return (.binWidthRel .le v w, state)
     | _ =>
-      throwError m!"expected (· ≤ ·) for natural numbers, found:  {indentD e}"
+      debugLog m!"expected (· ≤ ·) for natural numbers, found:  {indentD e}, so abstracting over expression."
+      mkAtom
   | Eq α a b =>
     match_expr α with
     | Nat =>
@@ -1092,32 +1093,6 @@ def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM Unit :=
       g.assign (← mkLambdaFVars xs goalMVar)
 
 declare_config_elab elabBvMultiWidthConfig Config
-
-def printSmtLib (g : MVarId) : SolverM Unit := do
-  let g ← revertPropHyps g
-  let .some g ← g.withContext (Normalize.runPreprocessing g)
-    | do
-        debugLog m!"Preprocessing automatically closed goal."
-  g.withContext do
-    debugLog m!"goal after preprocessing: {indentD g}"
-
-  g.withContext do
-    let collect : CollectState := {}
-    let pRawExpr ← g.getType
-    let (p, _collect) ← collectBVPredicateAux collect pRawExpr
-    debugLog m!"collected predicate: '{repr p}'"
-    throwError (p.toSexpr |> format)
-
-syntax (name := bvPrintSmtLib) "bv_multi_width_print_smt_lib" : tactic
-@[tactic bvPrintSmtLib]
-def evalBvPrintSmtLib : Tactic := fun
-| `(tactic| bv_multi_width_print_smt_lib) => do
-  let g ← getMainGoal
-  g.withContext do
-    let ctx : Context := {}
-    SolverM.run (ctx := ctx) <| printSmtLib g
-| _ => throwUnsupportedSyntax
-
 
 syntax (name := bvMultiWidth) "bv_multi_width" Lean.Parser.Tactic.optConfig : tactic
 @[tactic bvMultiWidth]
