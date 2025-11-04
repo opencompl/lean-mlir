@@ -66,7 +66,7 @@ def visitADD_sameop : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 1)] where
 /-
   (and x, -1) -> x,
 -/
-def visitADD_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def visitADD_Neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64):
       %c = llvm.mlir.constant (-1) : i64
@@ -82,7 +82,7 @@ def visitADD_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 Test the rewrite:
   fold ((0-A)+B) -> B-A
 -/
-def ZeroMinusAPlusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def ZeroNegAPlusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64):
       %0 = llvm.mlir.constant (0) : i64
@@ -100,7 +100,7 @@ def ZeroMinusAPlusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llv
 Test the rewrite:
   fold (A+(0-B)) -> A-B
 -/
-def APlusZeroMinusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def APlusZeroNegB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64):
       %0 = llvm.mlir.constant (0) : i64
@@ -118,7 +118,7 @@ def APlusZeroMinusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llv
 Test the rewrite:
  fold (A+(B-A)) -> B
 -/
-def APlusBMinusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def APlusBNegA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64):
       %0 = llvm.sub %b, %a : i64
@@ -134,7 +134,7 @@ def APlusBMinusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
 Test the rewrite:
  fold ((B-A)+A) -> B
 -/
-def BMinusAPlusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def BNegAPlusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64):
       %0 = llvm.sub %b, %a : i64
@@ -150,7 +150,7 @@ def BMinusAPlusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (
 Test the rewrite:
  fold ((A-B)+(C-A)) -> (C-B)
 -/
-def AMinusBPlusCMinusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def ANegBPlusCNegA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64, %c: i64):
       %0 = llvm.sub %a, %b : i64
@@ -168,7 +168,7 @@ def AMinusBPlusCMinusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.
 Test the rewrite:
  fold ((A-B)+(B-C)) -> (A-C)
 -/
-def AMinusBPlusBMinusC : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def ANegBPlusBNegC : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64, %c: i64):
       %0 = llvm.sub %a, %b : i64
@@ -186,7 +186,7 @@ def AMinusBPlusBMinusC : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.
 Test the rewrite:
  fold (A+(B-(A+C))) -> (B-C)
 -/
-def APlusBMinusAPlusC : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def APlusBNegAPlusC : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64, %c: i64):
       %0 = llvm.add %a, %c : i64
@@ -204,7 +204,7 @@ def APlusBMinusAPlusC : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.l
 Test the rewrite:
  fold (A+(B-(C+A))) -> (B-C)
 -/
-def APlusBMinusCPlusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def APlusBNegCPlusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64, %c: i64):
       %0 = llvm.add %c, %a : i64
@@ -222,7 +222,7 @@ def APlusBMinusCPlusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.l
 Test the rewrite:
  fold (add (xor a, -1), 1) -> (sub 0, a)
 -/
-def visitADD_XorMinus1Plus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def visitADD_XorNeg1Plus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64):
       %c = llvm.mlir.constant (-1) : i64
@@ -242,7 +242,7 @@ def visitADD_XorMinus1Plus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)
 Test the rewrite:
  fold (add (add (xor a, -1), b), 1) -> (sub b, a)
 -/
-def visitADD_XorMinus1PlusBPlus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitADD_XorNeg1PlusBPlus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64):
       %c = llvm.mlir.constant (-1) : i64
@@ -262,7 +262,7 @@ def visitADD_XorMinus1PlusBPlus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitve
 Test the rewrite:
  (x - y) + -1  ->  add (xor y, -1), x
 -/
-def visitSUBPlusMinus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSUBPlusNeg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.sub %x, %y : i64
@@ -281,18 +281,18 @@ def visitSUBPlusMinus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.
 def visitADD : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 [⟨_, visitADD_0⟩,
  ⟨_, visitADD_sameop⟩,
- ⟨_, visitADD_minus1⟩,
- ⟨_, ZeroMinusAPlusB⟩,
- ⟨_, APlusZeroMinusB⟩,
- ⟨_, APlusBMinusA⟩,
- ⟨_, BMinusAPlusA⟩,
- ⟨_, AMinusBPlusCMinusA⟩,
- ⟨_, AMinusBPlusBMinusC⟩,
- ⟨_, APlusBMinusAPlusC⟩,
- ⟨_, APlusBMinusCPlusA⟩,
- ⟨_, visitADD_XorMinus1Plus1⟩,
- ⟨_, visitADD_XorMinus1PlusBPlus1⟩,
- ⟨_, visitSUBPlusMinus1⟩]
+ ⟨_, visitADD_Neg1⟩,
+ ⟨_, ZeroNegAPlusB⟩,
+ ⟨_, APlusZeroNegB⟩,
+ ⟨_, APlusBNegA⟩,
+ ⟨_, BNegAPlusA⟩,
+ ⟨_, ANegBPlusCNegA⟩,
+ ⟨_, ANegBPlusBNegC⟩,
+ ⟨_, APlusBNegAPlusC⟩,
+ ⟨_, APlusBNegCPlusA⟩,
+ ⟨_, visitADD_XorNeg1Plus1⟩,
+ ⟨_, visitADD_XorNeg1PlusBPlus1⟩,
+ ⟨_, visitSUBPlusNeg1⟩]
 
 /-! ### visitSUB -/
 
@@ -345,7 +345,7 @@ def visitSUB_0_x_nuw : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 /-
   Canonicalize (sub -1, x) -> ~x, i.e. (xor x, -1)
 -/
-def visitSUB_minus1_x : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def visitSUB_Neg1_x : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64):
       %c = llvm.mlir.constant (-1) : i64
@@ -362,7 +362,7 @@ def visitSUB_minus1_x : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] wher
 /-
   fold (A-(0-B)) -> A+B
 -/
-def visitSUB_A_0_minus_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSUB_A_0_Neg_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64):
       %c = llvm.mlir.constant (0) : i64
@@ -379,7 +379,7 @@ def visitSUB_A_0_minus_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), T
 /-
   fold A-(A-B) -> B
 -/
-def visitSUB_A_A_minus_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSUB_A_A_Neg_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64):
       %0 = llvm.sub %a, %b : i64
@@ -394,7 +394,7 @@ def visitSUB_A_A_minus_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), T
 /-
   fold (A+B)-A -> B
 -/
-def visitSUB_A_plus_B_minus_A : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSUB_A_plus_B_Neg_A : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64):
       %0 = llvm.add %a, %b : i64
@@ -409,7 +409,7 @@ def visitSUB_A_plus_B_minus_A : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
 /-
   fold (A+B)-B -> A
 -/
-def visitSUB_A_plus_B_minus_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSUB_A_plus_B_Neg_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64):
       %0 = llvm.add %a, %b : i64
@@ -424,7 +424,7 @@ def visitSUB_A_plus_B_minus_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 6
 /-
   fold ((A+(B+C))-B) -> A+C
 -/
-def visitSUB_A_plus_B_plus_C_minus_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSUB_A_plus_B_plus_C_Neg_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64, %c: i64):
       %0 = llvm.add %b, %c : i64
@@ -441,7 +441,7 @@ def visitSUB_A_plus_B_plus_C_minus_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.b
 /-
   fold ((A+(B-C))-B) -> A-C
 -/
-def visitSUB_A_plus_B_minus_C_minus_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSUB_A_plus_B_Neg_C_Neg_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64, %c: i64):
       %0 = llvm.sub %b, %c : i64
@@ -458,7 +458,7 @@ def visitSUB_A_plus_B_minus_C_minus_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.
 /-
   fold ((A-(B-C))-C) -> A-B
 -/
-def visitSUB_A_minus_B_minus_C_minus_C : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSUB_A_Neg_B_Neg_C_Neg_C : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64, %c: i64):
       %0 = llvm.sub %b, %c : i64
@@ -475,7 +475,7 @@ def visitSUB_A_minus_B_minus_C_minus_C : LLVMPeepholeRewriteRefine 64 [Ty.llvm (
 /-
   fold (A-(B-C)) -> A+(C-B)
 -/
-def visitSUB_A_minus_B_minus_C : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSUB_A_Neg_B_Neg_C : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64, %c: i64):
       %0 = llvm.sub %b, %c : i64
@@ -492,7 +492,7 @@ def visitSUB_A_minus_B_minus_C : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 
 /-
   A - (A & B)  ->  A & (~B)
 -/
-def visitSUB_A_minus_A_and_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def visitSUB_A_Neg_A_and_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%a: i64, %b: i64):
       %0 = llvm.and %a, %b : i64
@@ -510,16 +510,16 @@ def visitSUB_A_minus_A_and_B : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64
   [⟨_, visitSUB_x_x⟩,
    ⟨_, visitSUB_x_0⟩,
    ⟨_, visitSUB_0_x_nuw⟩,
-   ⟨_, visitSUB_minus1_x⟩,
-   ⟨_, visitSUB_A_0_minus_B⟩,
-   ⟨_, visitSUB_A_A_minus_B⟩,
-   ⟨_, visitSUB_A_plus_B_minus_A⟩,
-   ⟨_, visitSUB_A_plus_B_minus_B⟩,
-   ⟨_, visitSUB_A_plus_B_plus_C_minus_B⟩,
-   ⟨_, visitSUB_A_plus_B_minus_C_minus_B⟩,
-   ⟨_, visitSUB_A_minus_B_minus_C_minus_C⟩,
-   ⟨_, visitSUB_A_minus_B_minus_C⟩,
-   ⟨_, visitSUB_A_minus_A_and_B⟩]
+   ⟨_, visitSUB_Neg1_x⟩,
+   ⟨_, visitSUB_A_0_Neg_B⟩,
+   ⟨_, visitSUB_A_A_Neg_B⟩,
+   ⟨_, visitSUB_A_plus_B_Neg_A⟩,
+   ⟨_, visitSUB_A_plus_B_Neg_B⟩,
+   ⟨_, visitSUB_A_plus_B_plus_C_Neg_B⟩,
+   ⟨_, visitSUB_A_plus_B_Neg_C_Neg_B⟩,
+   ⟨_, visitSUB_A_Neg_B_Neg_C_Neg_C⟩,
+   ⟨_, visitSUB_A_Neg_B_Neg_C⟩,
+   ⟨_, visitSUB_A_Neg_A_and_B⟩]
 
 /-! ### visitAND -/
 
@@ -557,7 +557,7 @@ def visitMUL_x_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 /-
   fold (mul x, -1) -> 0-x
 -/
-def visitMUL_x_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def visitMUL_x_Neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64):
       %c = llvm.mlir.constant (-1) : i64
@@ -611,7 +611,7 @@ def visitMUL_x_neg_shift : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), T
 def visitMUL : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [⟨_, visitMUL_x_0⟩,
    ⟨_, visitMUL_x_1⟩,
-   ⟨_, visitMUL_x_minus1⟩,
+   ⟨_, visitMUL_x_Neg1⟩,
    ⟨_, visitMUL_x_shift⟩,
    ⟨_, visitMUL_x_neg_shift⟩]
 
@@ -620,7 +620,7 @@ def visitMUL : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 /-
   fold (sdiv X, -1) -> 0-X
 -/
-def visitSDIV_x_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def visitSDIV_x_Neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64):
       %c = llvm.mlir.constant (-1) : i64
@@ -635,7 +635,7 @@ def visitSDIV_x_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] whe
   }]
 
 def visitSDIV : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  [⟨_, visitSDIV_x_minus1⟩]
+  [⟨_, visitSDIV_x_Neg1⟩]
 
 
 /-! ### visitAND -/
@@ -673,7 +673,7 @@ def visitAND_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 /-
   (and x, -1) -> x,
 -/
-def visitAND_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def visitAND_Neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64):
       %c = llvm.mlir.constant (-1) : i64
@@ -688,7 +688,7 @@ def visitAND_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 def visitAND : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [⟨_, visitAND_sameop⟩,
   ⟨_, visitAND_0⟩,
-  ⟨_, visitAND_minus1⟩]
+  ⟨_, visitAND_Neg1⟩]
 
 /-! ### visitOR -/
 
@@ -724,7 +724,7 @@ def visitOR_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 /-
   fold (or x, -1) -> -1
 -/
-def visitOR_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def visitOR_Neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64):
       %c = llvm.mlir.constant (-1) : i64
@@ -758,7 +758,7 @@ def visitOR_and : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.
 def visitOR : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [⟨_, visitOR_sameop⟩,
    ⟨_, visitOR_0⟩,
-   ⟨_, visitOR_minus1⟩,
+   ⟨_, visitOR_Neg1⟩,
    ⟨_, visitOR_and⟩]
 
 /-! ### visitXOR -/
@@ -796,7 +796,7 @@ def visitXOR_x : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 /-
   fold (not (add X, -1)) -> (neg X)
 -/
-def visitXOR_add_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def visitXOR_add_Neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64):
       %c = llvm.mlir.constant (-1) : i64
@@ -847,7 +847,7 @@ def visitXOR_xor_and : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.ll
 def visitXOR : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [⟨_, visitXOR_0⟩,
    ⟨_, visitXOR_x⟩,
-   ⟨_, visitXOR_add_minus1⟩,
+   ⟨_, visitXOR_add_Neg1⟩,
    ⟨_, visitXOR_not_neg⟩,
    ⟨_, visitXOR_xor_and⟩]
 
@@ -872,7 +872,7 @@ def visitSRA_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 /-
   fold (sra -1, x) -> -1
 -/
-def visitSRA_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+def visitSRA_Neg1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64):
       %c = llvm.mlir.constant (-1) : i64
@@ -887,7 +887,7 @@ def visitSRA_minus1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 
 def visitSRA : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [⟨_, visitSRA_0⟩,
-   ⟨_, visitSRA_minus1⟩]
+   ⟨_, visitSRA_Neg1⟩]
 
 /-! ### visitSELECT -/
 
