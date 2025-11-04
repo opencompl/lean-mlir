@@ -26,7 +26,7 @@ def passriscv64 (fileName : String) : IO UInt32 := do
         | [Ty.llvm (.bitvec _w)]  =>
           /- calls to the instruction selector defined in `InstructionLowering`,
             `true` indicates pseudo variable lowering, `fuel` is 150-/
-          let lowered := selectionPipeFuelWithCSE 150 c true
+          let lowered := selectionPipeFuelWithCSE 150 c false
 
           IO.println <| lowered.printModule
           return 0
@@ -53,7 +53,7 @@ def passriscv64_optimized (fileName : String) : IO UInt32 := do
         | [Ty.llvm (.bitvec _w)]  =>
           /- calls to the optimized instruction selector defined in `InstructionLowering`,
           `true` indicates pseudo variable lowering, `fuel` is 150 -/
-          let lowered := selectionPipeFuelWithCSEWithOpt 150 c true
+          let lowered := selectionPipeFuelWithCSEWithOpt 150 c false
           IO.println <| lowered.printModule
           return 0
         | _ =>
