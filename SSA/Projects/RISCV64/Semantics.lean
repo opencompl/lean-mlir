@@ -748,6 +748,22 @@ def ZBB_EXTOP_pure64_RISCV_ZEXTH (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.zeroExtend 64 (BitVec.extractLsb 15 0 rs1_val)
 
 @[simp_riscv]
+def ZBB_EXTOP_pure64_RISCV_CLZ (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.clz rs1_val
+
+@[simp_riscv]
+def ZBB_EXTOP_pure64_RISCV_CLZW (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.zeroExtend 64 (BitVec.clz (BitVec.extractLsb 31 0 rs1_val))
+
+@[simp_riscv]
+def ZBB_EXTOP_pure64_RISCV_CTZ (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.ctz rs1_val
+
+@[simp_riscv]
+def ZBB_EXTOP_pure64_RISCV_CTZW (rs1_val : BitVec 64) : BitVec 64 :=
+  BitVec.zeroExtend 64 (BitVec.ctz (BitVec.extractLsb 31 0 rs1_val))
+
+@[simp_riscv]
 def ZBS_RTYPE_pure64_RISCV_BEXT (rs2_val : BitVec 64) (rs1_val : BitVec 64) : BitVec 64 :=
   BitVec.setWidth 64
     (match
