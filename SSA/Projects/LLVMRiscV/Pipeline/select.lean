@@ -26,15 +26,12 @@ def select_riscv_8 := [LV| {
     %0 = "builtin.unrealized_conversion_cast" (%arg0) : (i8) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast" (%arg1) : (i8) -> (!i64)
     %2 = "builtin.unrealized_conversion_cast" (%cond) : (i1) -> (!i64)
-    %3 = slli %2, 63 : !i64
-    %4 = srai %3, 63 : !i64 --propagating the condition bit to all bits within the 64 bit vector
-    %5 = and %0, %4 : !i64 -- mask the value_true with the condition
-    %6 = li (18446744073709551615) : !i64
-    %7 = xor %6, %4: !i64
-    %8 = and %7, %1 : !i64 -- mask the value_false with the condition
-    %9 = or %5, %8 : !i64 -- return either value_true or value_false
-    %10 = "builtin.unrealized_conversion_cast" (%9) : (!i64) -> (i8)
-    llvm.return %10 : i8
+    %3 = snez %2 : !i64
+    %4 = sub %0, %1 : !i64
+    %5 = mul %4, %3 : !i64
+    %6 = add %5, %1 : !i64
+    %7 = "builtin.unrealized_conversion_cast" (%6) : (!i64) -> (i8)
+    llvm.return %7 : i8
   }]
 
 @[simp_denote]
@@ -58,15 +55,12 @@ def select_riscv_16 := [LV| {
     %0 = "builtin.unrealized_conversion_cast" (%arg0) : (i16) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast" (%arg1) : (i16) -> (!i64)
     %2 = "builtin.unrealized_conversion_cast" (%cond) : (i1) -> (!i64)
-    %3 = slli %2, 63 : !i64
-    %4 = srai %3, 63 : !i64 --propagating the condition bit to all bits within the 64 bit vector
-    %5 = and %0, %4 : !i64 -- mask the value_true with the condition
-    %6 = li (18446744073709551615) : !i64
-    %7 = xor %6, %4: !i64
-    %8 = and %7, %1 : !i64 -- mask the value_false with the condition
-    %9 = or %5, %8 : !i64 -- return either value_true or value_false
-    %10 = "builtin.unrealized_conversion_cast" (%9) : (!i64) -> (i16)
-    llvm.return %10 : i16
+    %3 = snez %2 : !i64
+    %4 = sub %0, %1 : !i64
+    %5 = mul %4, %3 : !i64
+    %6 = add %5, %1 : !i64
+    %7 = "builtin.unrealized_conversion_cast" (%6) : (!i64) -> (i16)
+    llvm.return %7 : i16
   }]
 
 @[simp_denote]
@@ -90,15 +84,12 @@ def select_riscv_32 := [LV| {
     %0 = "builtin.unrealized_conversion_cast" (%arg0) : (i32) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast" (%arg1) : (i32) -> (!i64)
     %2 = "builtin.unrealized_conversion_cast" (%cond) : (i1) -> (!i64)
-    %3 = slli %2, 63 : !i64
-    %4 = srai %3, 63 : !i64 --propagating the condition bit to all bits within the 64 bit vector
-    %5 = and %0, %4 : !i64 -- mask the value_true with the condition
-    %6 = li (18446744073709551615) : !i64
-    %7 = xor %6, %4: !i64
-    %8 = and %7, %1 : !i64 -- mask the value_false with the condition
-    %9 = or %5, %8 : !i64 -- return either value_true or value_false
-    %10 = "builtin.unrealized_conversion_cast" (%9) : (!i64) -> (i32)
-    llvm.return %10 : i32
+    %3 = snez %2 : !i64
+    %4 = sub %0, %1 : !i64
+    %5 = mul %4, %3 : !i64
+    %6 = add %5, %1 : !i64
+    %7 = "builtin.unrealized_conversion_cast" (%6) : (!i64) -> (i32)
+    llvm.return %7 : i32
   }]
 
 @[simp_denote]
@@ -122,15 +113,12 @@ def select_riscv_64 := [LV| {
     %0 = "builtin.unrealized_conversion_cast" (%arg0) : (i64) -> (!i64)
     %1 = "builtin.unrealized_conversion_cast" (%arg1) : (i64) -> (!i64)
     %2 = "builtin.unrealized_conversion_cast" (%cond) : (i1) -> (!i64)
-    %3 = slli %2, 63 : !i64
-    %4 = srai %3, 63 : !i64
-    %5 = and %0, %4 : !i64
-    %6 = li (18446744073709551615) : !i64
-    %7 = xor %6, %4: !i64
-    %8 = and %7, %1 : !i64
-    %9 = or %5, %8 : !i64
-    %10 = "builtin.unrealized_conversion_cast" (%9) : (!i64) -> (i64)
-    llvm.return %10 : i64
+    %3 = snez %2 : !i64
+    %4 = sub %0, %1 : !i64
+    %5 = mul %4, %3 : !i64
+    %6 = add %5, %1 : !i64
+    %7 = "builtin.unrealized_conversion_cast" (%6) : (!i64) -> (i64)
+    llvm.return %7 : i64
   }]
 
 @[simp_denote]
