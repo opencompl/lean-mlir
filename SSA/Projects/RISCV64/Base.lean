@@ -136,6 +136,7 @@ inductive Op
   | negw
   | sext.w
   | zext.b
+  | zext.w
   | seqz
   | snez
   | sltz
@@ -276,6 +277,7 @@ def Op.sig : Op → List Ty
   | negw => [Ty.bv]
   | sext.w => [Ty.bv]
   | zext.b => [Ty.bv]
+  | zext.w => [Ty.bv]
   | seqz => [Ty.bv]
   | snez => [Ty.bv]
   | sltz => [Ty.bv]
@@ -380,6 +382,7 @@ def Op.outTy : Op  → Ty
   | negw => Ty.bv
   | sext.w => Ty.bv
   | zext.b => Ty.bv
+  | zext.w => Ty.bv
   | seqz => Ty.bv
   | snez => Ty.bv
   | sltz => Ty.bv
@@ -496,6 +499,7 @@ def opName (op : RISCV64.Op) : String :=
   | .negw => "negw"
   | sext.w => "sext.w"
   | zext.b => "zext.b"
+  | zext.w => "zext.w"
   | .seqz => "seqz"
   | .snez => "snez"
   | .sltz => "sltz"
@@ -647,6 +651,7 @@ abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
   | .negw, regs => NEGW_pure64_pseudo (regs.getN 0)
   | RISCV64.Op.sext.w, regs => SEXTW_pure64_pseudo (regs.getN 0)
   | RISCV64.Op.zext.b, regs => ZEXTB_pure64_pseudo (regs.getN 0)
+  | RISCV64.Op.zext.w, regs => ZEXTW_pure64_pseudo (regs.getN 0)
   | .seqz, regs => SEQZ_pure64_pseudo (regs.getN 0)
   | .snez, regs => SNEZ_pure64_pseudo (regs.getN 0)
   | .sltz, regs => SLTZ_pure64_pseudo (regs.getN 0)
