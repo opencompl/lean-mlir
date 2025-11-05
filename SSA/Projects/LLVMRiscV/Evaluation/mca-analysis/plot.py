@@ -134,7 +134,8 @@ def parse_instructions(filename):
                 parts = line.split()
                 instruction = parts[8] #inst name is in 9th column
                 instructions.append(instruction)
-    
+    if len(instructions) == 0:
+        return None 
     return instructions
 
 
@@ -151,13 +152,15 @@ def extract_data(results_directory, benchmark_name, parameter, opt) :
                 try:
                     with open(file_path, "r") as f:
                         file_lines = f.readlines()
-                        function_names.append(filename.split(".")[0].split('_'+opt)[0])
                         if parameter == "instructions":
                             instructions = parse_instructions(file_path)
-                            parameter_numbers.append(",".join(instructions))
+                            if instructions is not None:
+                                parameter_numbers.append(",".join(instructions))
+                                function_names.append(filename.split(".")[0].split('_'+opt)[0])
                             continue
                         for line in file_lines:
                             if parameters_match[parameter] in line : 
+                                function_names.append(filename.split(".")[0].split('_'+opt)[0])
                                 num = int(line.split(" ")[-1])
                                 if parameter == "tot_cycles" :
                                     parameter_numbers.append(int(num))
@@ -171,19 +174,18 @@ def extract_data(results_directory, benchmark_name, parameter, opt) :
             try:
                 with open(file_path, "r") as f:
                     file_lines = f.readlines()
-                    function_names.append(filename.split(".")[0])
                     if parameter == "instructions":
                         instructions = parse_instructions(file_path)
-                        parameter_numbers.append(",".join(instructions))
+                        if instructions is not None:
+                            parameter_numbers.append(",".join(instructions))
+                            function_names.append(filename.split(".")[0].split('_'+opt)[0])
                         continue
                     for line in file_lines:
                         if parameters_match[parameter] in line : 
+                            function_names.append(filename.split(".")[0].split('_'+opt)[0])
                             num = int(line.split(" ")[-1])
                             if parameter == "tot_cycles" :
                                 parameter_numbers.append(int(num))
-                            elif parameter == "instructions":
-                                    instructions = parse_instructions(file_path)
-                                    parameter_numbers.append(",".join(instructions))
                             else:
                                 parameter_numbers.append(int(num/100))
             except FileNotFoundError:
@@ -722,7 +724,6 @@ def main():
             
         join_dataframes(to_join, parameter)
         print(to_join)
-        
         
         for opt in opts_to_evaluate:
             if opt != 'default':
