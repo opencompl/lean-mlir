@@ -148,6 +148,7 @@ inductive Term {wcard tcard : Nat} (bcard : Nat)
 | sext (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard tctx (.bv v)
 -- | bvOfBool (b : Term bcard tctx .bool) : Term bcard tctx (.bv (.const 1))
 -- | boolMsb (w : WidthExpr wcard) (x : Term bcard tctx (.bv w)) : Term bcard tctx .bool
+| ult (x y : Term bcard tctx (.bv w)) : Term bcard tctx .bool
 | boolConst (b : Bool) : Term bcard tctx .bool
 | boolVar (v : Fin bcard) : Term bcard tctx .bool
 
@@ -225,6 +226,7 @@ def TermKind.denote (wenv : WidthExpr.Env wcard) : TermKind wcard → Type
 | .bool => Bool
 | .bv w => BitVec (w.toNat wenv)
 
+-- TODO: fix name and doc
 /-- Evaluate a term to get a concrete bitvector expression. -/
 def Term.toBV {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
@@ -233,6 +235,7 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
   Term bcard tctx k → k.denote wenv
 | .ofNat w n => BitVec.ofNat (w.toNat wenv) n
 | .boolConst b => b
+| .ult x y => (x.toBV benv tenv).ult (y.toBV benv tenv)
 | .var v => tenv.get v.1 v.2
 | .add (w := w) a b =>
     let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
@@ -256,13 +259,6 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
     let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
     ~~~ a
 | .boolVar v => benv v
-
-def BoolExpr.toBool
-    {tctx : Term.Ctx wcard tcard}
-    (benv : Term.BoolEnv bcard)  :
-  Term bcard tctx .bool → Bool
-| .boolVar v => benv v
-| .boolConst b => b
 
 @[simp]
 theorem Term.toBV_ofNat
@@ -329,6 +325,7 @@ deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 inductive BoolBinaryRelationKind
 | eq
+| ne
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 inductive Predicate :
@@ -382,6 +379,7 @@ def Predicate.toProp {wcard tcard bcard pcard : Nat} {wenv : WidthExpr.Env wcard
     match rel with
     -- | TODO: rename 'toBV' to 'toBool'.
     | .eq => (a.toBV benv tenv) = (b.toBV benv tenv)
+    | .ne => (a.toBV benv tenv) ≠ (b.toBV benv tenv)
 namespace Nondep
 
 inductive WidthExpr where
@@ -467,6 +465,7 @@ inductive Term
 | band (w : WidthExpr) (a b : Term) : Term
 | bxor (w : WidthExpr) (a b : Term) : Term
 | bnot (w : WidthExpr)  (a : Term) : Term
+| boolUlt (w : WidthExpr) (a b : Term) : Term
 | boolVar (v : Nat) : Term
 | boolConst (b : Bool) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
@@ -550,6 +549,7 @@ def Term.ofDep {wcard tcard bcard : Nat}
   | .band (w := w) a b => .band (.ofDep w) (.ofDep a) (.ofDep b)
   | .bxor (w := w) a b => .bxor (.ofDep w) (.ofDep a) (.ofDep b)
   | .bnot (w := w) a => .bnot (.ofDep w) (.ofDep a)
+  | .ult (w := w) x y => .boolUlt (.ofDep w) (.ofDep x) (.ofDep y)
   | .boolVar v => .boolVar v
   | .boolConst b => .boolConst b
 
@@ -571,6 +571,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .band w _a _b => w
   | .bxor w _a _b => w
   | .bnot w _a => w
+  | .boolUlt w _a _b => w
   | .boolVar _v => WidthExpr.const 1 -- dummy width.
   | .boolConst _b => WidthExpr.const 1
 
@@ -615,6 +616,7 @@ def Term.tcard (t : Term) : Nat :=
   | .band _w a b => (max (Term.tcard a) (Term.tcard b))
   | .bxor _w a b => (max (Term.tcard a) (Term.tcard b))
   | .bnot _w a => (Term.tcard a)
+  | .boolUlt _w a b => max (Term.tcard a) (Term.tcard b)
   | .boolVar _v => 0
   | .boolConst _b => 0
 
@@ -629,6 +631,7 @@ def Term.bcard (t : Term) : Nat :=
   | .band _w a b => (max (Term.bcard a) (Term.bcard b))
   | .bxor _w a b => (max (Term.bcard a) (Term.bcard b))
   | .bnot _w a => (Term.bcard a)
+  | .boolUlt _w a b => max (Term.bcard a) (Term.bcard b)
   | .boolVar v => v + 1
   | .boolConst _b => 0
 
@@ -730,7 +733,7 @@ def Predicate.wcard (p : Predicate) : Nat :=
   | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
   | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
-  | .boolBinRel .eq a b => max (a.wcard) (b.wcard)
+  | .boolBinRel _ a b => max (a.wcard) (b.wcard)
 def Predicate.tcard (p : Predicate) : Nat :=
   match p with
   | .var _ => 0
@@ -743,7 +746,7 @@ def Predicate.tcard (p : Predicate) : Nat :=
   | .binRel .slt w _a _b => w.wcard
   | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
   | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
-  | .boolBinRel .eq a b => max (a.tcard) (b.tcard)
+  | .boolBinRel _ a b => max (a.tcard) (b.tcard)
 
 def Predicate.pcard (p : Predicate) : Nat :=
   match p with
@@ -770,6 +773,7 @@ def Predicate.ofDep {wcard tcard pcard : Nat}
   | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
   | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
   | .boolBinRel .eq a b => .boolBinRel .eq (.ofDep a) (.ofDep b)
+  | .boolBinRel .ne a b => .boolBinRel .ne (.ofDep a) (.ofDep b)
 
 end Nondep
 

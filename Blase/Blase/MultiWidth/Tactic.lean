@@ -622,29 +622,6 @@ def collectPredicateAtom (state : CollectState)
   let (pix, pToIx) := state.pToIx.findOrInsertVal e
   return (.var pix, { state with pToIx })
 
-/-
-Certain predicates like `ult, slt` etc return booleans, and are thus
-encoded as `a.slt b = true` instead of a prop level `a.slt b`.
-To fix this, we have a special case in the reflection that looks for this pattern,
-and then reflects it into the appropriate prop.
--/
-def collectBVBooleanEqPredicateAux (state : CollectState) (a b : Expr) :
-  Option (SolverM (MultiWidth.Nondep.Predicate × CollectState)) :=
-  let_expr true := b | none
-  let out? := match_expr a with
-    | BitVec.slt w x y => some (w, MultiWidth.BinaryRelationKind.slt, x, y)
-    | BitVec.sle w x y => some (w, MultiWidth.BinaryRelationKind.sle, x, y)
-    | BitVec.ult w x y => some (w, MultiWidth.BinaryRelationKind.ult, x, y)
-    | BitVec.ule w x y => some (w, MultiWidth.BinaryRelationKind.ule, x, y)
-    | _ => none
-  -- NOTE: Lean bug prevents us from writing this with do-notation,
-  -- so we suffer as haskellers once did.
-  out? >>= fun ((w, kind, x, y)) => some do
-    let (w, state) ← collectWidthAtom state w
-    let (tx, state) ← collectTerm state x
-    let (ty, state) ← collectTerm state y
-    pure (.binRel kind w tx ty, state)
-
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
     SolverM (MultiWidth.Nondep.Predicate × CollectState) := do
@@ -670,13 +647,9 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (tb, state) ← collectTerm state b
       return (.binRel .eq w ta tb, state)
     | Bool =>
-      -- | TODO: Refactor to use our spanky new bool sort!
-      if let .some mkBoolPredicate := collectBVBooleanEqPredicateAux state a b then
-        mkBoolPredicate
-      else
-        let (a, state) ← collectBoolTerm state a
-        let (b, state) ← collectBoolTerm state b
-        return (.boolBinRel .eq a b, state)
+      let (a, state) ← collectBoolTerm state a
+      let (b, state) ← collectBoolTerm state b
+      return (.boolBinRel .eq a b, state)
     | _ => mkAtom
   | Ne α a b =>
     match_expr α with
@@ -685,6 +658,10 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .ne w ta tb, state)
+    | Bool =>
+      let (a, state) ← collectBoolTerm state a
+      let (b, state) ← collectBoolTerm state b
+      return (.boolBinRel .ne a b, state)
     | _ => collectPredicateAtom state e
   | Or p q =>
     let (ta, state) ← collectBVPredicateAux state p
