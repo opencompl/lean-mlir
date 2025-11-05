@@ -9,8 +9,8 @@ open LLVMRiscV
   This file implements the lowering for the `llvm.trunc` instruction for truncation:
   - from i32 to i8
   - from i32 to i16
-  - from i64 to i1
   - from i64 to i32
+  - from i64 to i1
 -/
 
 /-! ### i32 to i8 -/
