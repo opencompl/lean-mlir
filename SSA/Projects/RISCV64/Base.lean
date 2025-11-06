@@ -523,7 +523,7 @@ def printAttributes: RISCV64.Op → String
   | .bexti (imm : BitVec 6) =>s!"\{immediate = { imm.toInt} : i6 }"
   | .binvi (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
   | .bseti (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
-  | RISCV64.Op.slli.uw (imm : BitVec 6) => s!"\{immediate = { imm.toNat} : i6 }"
+  | RISCV64.Op.slli.uw (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
   | .rori (imm : BitVec 5) => s!"\{immediate = { imm.toInt} : i5 }"
   | .roriw (imm : BitVec 5) => s!"\{immediate = { imm.toInt} : i5 }"
   | _ => ""
