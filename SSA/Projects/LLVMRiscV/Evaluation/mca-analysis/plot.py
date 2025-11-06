@@ -96,14 +96,14 @@ parameters_match = {
     "tot_instructions" : "Instructions:      ",
     "tot_cycles" : "Total Cycles:      ",
     "tot_uops" : "Total uOps:        ",
-    "instructions": "Instructions List:      "
+    "similarity": "Instructions List:      "
 }
 
 parameters_labels = {
     "tot_instructions" : "#instructions",
     "tot_cycles" : "#cycles",
     "tot_uops" : "#uOps",
-    "instructions": "Instructions List:"
+    "similarity": "Instructions List:"
 }
 
 selector_labels = {
@@ -134,66 +134,42 @@ def parse_instructions(filename):
                 parts = line.split()
                 instruction = parts[8] #inst name is in 9th column
                 instructions.append(instruction)
-    
+    if len(instructions) == 0:
+        return None 
     return instructions
 
 
-def extract_data(results_directory, benchmark_name, parameter, opt) :
+def extract_data(results_directory, benchmark_name, parameter) :
     """
     Parses the results of mca and saves the result in a DataFrame, then printed to `.csv`
     """
     function_names = []
     parameter_numbers = []
-    if opt != '' :
-        for filename in os.listdir(results_directory):
-            if opt in filename : 
-                file_path = os.path.join(results_directory, filename)
-                try:
-                    with open(file_path, "r") as f:
-                        file_lines = f.readlines()
-                        function_names.append(filename.split(".")[0].split('_'+opt)[0])
-                        if parameter == "instructions":
-                            instructions = parse_instructions(file_path)
-                            parameter_numbers.append(",".join(instructions))
-                            continue
-                        for line in file_lines:
-                            if parameters_match[parameter] in line : 
-                                num = int(line.split(" ")[-1])
-                                if parameter == "tot_cycles" :
-                                    parameter_numbers.append(int(num))
-                                else:
-                                    parameter_numbers.append(int(num/100))
-                except FileNotFoundError:
-                    print(f"Warning: file not found at {file_path}. Skipping.")
-    else :
-        for filename in os.listdir(results_directory):
-            file_path = os.path.join(results_directory, filename)
-            try:
+    for filename in os.listdir(results_directory):
+        file_path = os.path.join(results_directory, filename)
+        try:
+            if parameter == "similarity": 
                 with open(file_path, "r") as f:
                     file_lines = f.readlines()
-                    function_names.append(filename.split(".")[0])
-                    if parameter == "instructions":
-                        instructions = parse_instructions(file_path)
+                    instructions = parse_instructions(file_path)
+                    if instructions is not None:
                         parameter_numbers.append(",".join(instructions))
-                        continue
+                        function_names.append(filename.split(".")[0])
+            else:  
+                with open(file_path, "r") as f:
+                    file_lines = f.readlines()
                     for line in file_lines:
                         if parameters_match[parameter] in line : 
+                            function_names.append(filename.split(".")[0])
                             num = int(line.split(" ")[-1])
                             if parameter == "tot_cycles" :
                                 parameter_numbers.append(int(num))
-                            elif parameter == "instructions":
-                                    instructions = parse_instructions(file_path)
-                                    parameter_numbers.append(",".join(instructions))
                             else:
                                 parameter_numbers.append(int(num/100))
-            except FileNotFoundError:
-                print(f"Warning: file not found at {file_path}. Skipping.")
-    if opt != '':
-        df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+opt+"_"+parameter : parameter_numbers})
-        df.to_csv(data_dir + benchmark_name+"_"+opt+'_'+ parameter  + '.csv')
-    else:
-        df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+parameter : parameter_numbers})
-        df.to_csv(data_dir + benchmark_name + "_" + parameter + '.csv')
+        except FileNotFoundError:
+            print(f"Warning: file not found at {file_path}. Skipping.")
+    df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+parameter : parameter_numbers})
+    df.to_csv(data_dir + benchmark_name + "_" + parameter + '.csv')
 
 def join_dataframes(dataframe_names, parameter) :
     """
@@ -205,57 +181,29 @@ def join_dataframes(dataframe_names, parameter) :
             complete_df = df 
         else: 
             complete_df = pd.merge(complete_df, df, on='function_name', how='inner')
-            print(complete_df)
-            
-    
     complete_df['instructions_number']= complete_df['function_name'].apply(lambda x: int(x.split('_')[0]))
     complete_df.to_csv(data_dir + parameter+".csv")
 
-def sorted_line_plot_all(parameter, opt):
+def sorted_line_plot_all(parameter):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
     
-    if opt != '':
-        sorted_df = df.sort_values(by = ['LEANMLIR_' + parameter, 'LEANMLIR_opt_' + parameter, 
-                                        'LLVM_globalisel_' + opt + '_'+ parameter, 'LLVM_selectiondag_' + opt + '_'+ parameter])
-        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
-            color= light_green)
-        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
-        plt.plot(range(len(sorted_df)), sorted_df['LLVM_globalisel_'+ opt + '_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
-        plt.plot(range(len(sorted_df)), sorted_df['LLVM_selectiondag_'+ opt + '_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
-        
-        plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
-                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
-                                sorted_df['LLVM_globalisel_' + opt + '_'+ parameter].min(), 
-                                sorted_df['LLVM_selectiondag_' + opt + '_'+ parameter].min()]) - 1)
-        plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
-                                    sorted_df['LEANMLIR_opt_' + parameter].min(), 
-                                    sorted_df['LLVM_globalisel_' + opt + '_'+ parameter].min(), 
-                                    sorted_df['LLVM_selectiondag_' + opt + '_'+ parameter].min()]) + 1
-        
-        plt.ylim(1, int(plot_max * 1.5) + 1)
-        plt.yticks(range(1, int(plot_max * 1.5) + 1, int((int(plot_max * 1.5) + 5)/5)))
 
-    else:
-        sorted_df = df.sort_values(by = ['LEANMLIR_' + parameter, 'LEANMLIR_opt_' + parameter, 
-                                        'LLVM_globalisel_' + parameter, 'LLVM_selectiondag_' + parameter])
+    sorted_df = df.sort_values(by = ['LEANMLIR_opt_' + parameter, 
+                                    'LLVM_globalisel_' + parameter, 'LLVM_selectiondag_' + parameter])
 
-        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
-            color= light_green)
-        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
-        plt.plot(range(len(sorted_df)), sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
-        plt.plot(range(len(sorted_df)), sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
-        plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
-                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
+    plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
+    plt.plot(range(len(sorted_df)), sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
+    plt.plot(range(len(sorted_df)), sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
+    plot_min = min(0, np.min([sorted_df['LEANMLIR_opt_' + parameter].min(), 
+                            sorted_df['LLVM_globalisel_' + parameter].min(), 
+                            sorted_df['LLVM_selectiondag_' + parameter].min()]) - 1)
+    plot_max = np.max([sorted_df['LEANMLIR_opt_' + parameter].min(), 
                                 sorted_df['LLVM_globalisel_' + parameter].min(), 
-                                sorted_df['LLVM_selectiondag_' + parameter].min()]) - 1)
-        plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
-                                    sorted_df['LEANMLIR_opt_' + parameter].min(), 
-                                    sorted_df['LLVM_globalisel_' + parameter].min(), 
-                                    sorted_df['LLVM_selectiondag_' + parameter].min()]) + 1
-        
-        plt.ylim(1, int(plot_max * 1.5) + 1)
-        plt.yticks(range(1, int(plot_max * 1.5) + 1, int((int(plot_max * 1.5) + 5)/5)))
+                                sorted_df['LLVM_selectiondag_' + parameter].min()]) + 1
+    
+    plt.ylim(1, int(plot_max * 1.5) + 1)
+    plt.yticks(range(1, int(plot_max * 1.5) + 1, int((int(plot_max * 1.5) + 5)/5)))
 
     plt.xlabel('Program Index')
     plt.ylabel(parameter)
@@ -296,11 +244,12 @@ def scatter_plot(parameter, selector1, selector2) :
     plt.scatter(df_plot_scaled[selector1+ '_' + parameter],
                 df_plot_scaled[selector2+ '_' + parameter],
                 s=df_plot_scaled['Scaled_Size'],
-                color='skyblue', alpha=0.7, edgecolors='w', label=f'Function data points (Size by frequency)')
+                color=light_blue, alpha=0.7, edgecolors='w', label=f'Function data points (Size by frequency)')
 
     min_val = min(df_plot_comparison[selector1+ '_' + parameter].min(), df_plot_comparison[selector2+ '_' + parameter].min())
     max_val = max(df_plot_comparison[selector1+ '_' + parameter].max(), df_plot_comparison[selector2+ '_' + parameter].max())
-    
+    print(min_val)
+    print(max_val)
     # Add a small buffer to the min/max values for better visualization
     plot_min = max(0, min_val - 1)
     plot_max = max_val + 1
@@ -329,6 +278,57 @@ def scatter_plot(parameter, selector1, selector2) :
 def clean_name(s):
     # Remove underscores and capitalize parts
     return ''.join([w.capitalize() for w in str(s).split('_')])
+
+def calculate_similarity(selector1, selector2, print_latex=True):
+    df = pd.read_csv(data_dir + "similarity" + '.csv')
+    print('done')
+
+    col1 = selector1 + '_' + "similarity"
+    col2 = selector2 + '_' + "similarity"
+    instruction_count = "instructions_number"
+
+    if col1 not in df.columns or col2 not in df.columns:
+        print(f"Error: One or both columns ({col1}, {col2}) do not exist in the dataframe.")
+        return
+
+    col1_values = df[col1].dropna().apply(lambda x: x.split(','))
+    col2_values = df[col2].dropna().apply(lambda x: x.split(','))
+
+    grouped = df.groupby(instruction_count)
+    similarity_percentages = {}
+
+    for count, group in grouped:
+        col1_values = group[col1].dropna().apply(lambda x: x.split(','))
+        col2_values = group[col2].dropna().apply(lambda x: x.split(','))
+        similarities = col1_values == col2_values
+        similarity_percentage = similarities.mean() * 100
+        similarity_percentages[count] = similarity_percentage
+        print(f"Similarity for instruction count {count} between {selector1} and {selector2}: {similarity_percentage:.2f}%")
+
+        if print_latex:
+            cmd_name = (
+                f"\\newcommand{{\\Similarity"
+                f"{clean_name(selector1.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}Vs{clean_name(selector2.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}"
+                f"{clean_name('instructions')}For{str(count).replace('3', 'three').replace('4', 'four').replace('5', 'five').replace('6', 'six').replace('7', 'seven').replace('8', 'eight')}Instructions}}{{{similarity_percentage:.2f}}}"
+            )
+            latex_file = os.path.join(plots_dir, "similarity_percentages.tex")
+            with open(latex_file, "a") as f:
+                f.write(cmd_name + "\n")
+                
+    mean_similarity = np.mean(list(similarity_percentages.values()))
+    print(f"Mean similarity {count} between {selector1} and {selector2}: {similarity_percentage:.2f}%")
+
+    if print_latex:
+        cmd_name = (
+            f"\\newcommand{{\\MeanSimilarity"
+            f"{clean_name(selector1.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}Vs{clean_name(selector2.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}"
+            f"}}{{{mean_similarity:.2f}}}"
+        )
+        latex_file = os.path.join(plots_dir, "similarity_percentages.tex")
+        with open(latex_file, "a") as f:
+            f.write(cmd_name + "\n")
+                
+    return similarity_percentages
 
 def bar_plot(parameter, selector1, selector2):
     plt.rcParams.update({'font.size': 23})
@@ -412,23 +412,39 @@ def bar_plot(parameter, selector1, selector2):
             '>1k': dark_red
         }
     # Plot
-    bottom = np.zeros(len(group))
-    x = group.index.astype(str)
-    plt.figure(figsize=(10, 5))
-    for c in class_order:
-        plt.bar(x, group[c], bottom=bottom, label=f'{c}', color=class_colors[c])
-        bottom += group[c].values
-    
-    
+    def plot_bar(with_similarity=False):
+        bottom = np.zeros(len(group))
+        x = group.index.astype(str)
+        plt.figure(figsize=(10, 5))
+        for c in class_order:
+            if c == '0' and with_similarity:
+                similarity_percentages = calculate_similarity(selector1, selector2, False)
+                similarity_list = list(similarity_percentages.values())
+                remaining = [a-b for a,b in zip(group[c], similarity_list)]
+                plt.bar(x, similarity_list, bottom=bottom, color=class_colors[c], hatch="//")
+                bottom += similarity_list
+                plt.bar(x, remaining, bottom=bottom, label=f'{c}', color=class_colors[c])
+                bottom += remaining
+            else:
+                plt.bar(x, group[c], bottom=bottom, label=f'{c}', color=class_colors[c])
+                bottom += group[c].values
 
-    plt.xlabel('#instructions - LLVM IR')
-    plt.ylabel('%Programs', rotation="horizontal", horizontalalignment="left", y=1.05)
-    plt.legend(ncols = 5, bbox_to_anchor=(0.5, -0.5), 
-           loc='lower center')
-    plt.subplots_adjust(bottom=0.4)
-    plt.tight_layout()
-        
+        plt.xlabel('#instructions - LLVM IR')
+        plt.ylabel('%Programs', rotation="horizontal", horizontalalignment="left", y=1.05)
+        plt.legend(ncols = 5, bbox_to_anchor=(0.5, -0.5), 
+            loc='lower center')
+        plt.subplots_adjust(bottom=0.4)
+        plt.tight_layout()
+            
+        name_extension = "_similarity_" if with_similarity else "_"
+        pdf_filename = plots_dir + f"{parameter}_stacked_bar{name_extension}{selector1}_vs_{selector2}.pdf"
+        plt.savefig(pdf_filename)
+        print(f"\nStacked bar plot saved to '{pdf_filename}' in the current working directory.")
+        plt.close()
     
+    plot_bar()
+    if parameter == 'tot_instructions':
+        plot_bar(with_similarity=True)
     
     total = len(df)
     class_counts = df['diff_class'].value_counts()
@@ -453,33 +469,19 @@ def bar_plot(parameter, selector1, selector2):
         for line in latex_lines:
             f.write(line + "\n")
     
-
-    pdf_filename = plots_dir + f"{parameter}_stacked_bar_{selector1}_vs_{selector2}.pdf"
-    plt.savefig(pdf_filename)
-    print(f"\nStacked bar plot saved to '{pdf_filename}' in the current working directory.")
-    plt.close()
-
 def clean_name(s):
     return ''.join([w.capitalize() for w in str(s).split('_')])
 
-def sorted_line_plot(parameter, selector1, selector2, opt):
+def sorted_line_plot(parameter, selector1, selector2):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
 
-    if opt != '':
-        sorted_df = df.sort_values(by = [selector1 + '_' + parameter , selector2 + '_'  + parameter])
-        plt.figure(figsize=(12, 5))
-        
+    sorted_df = df.sort_values(by = [selector1 + '_' + parameter, selector2 +'_'+ parameter])
+    plt.figure(figsize=(12, 5))
+    
 
-        plt.plot(range(len(sorted_df)), sorted_df[selector1 + '_' + parameter], label = selector_labels[selector1], color = light_green)
-        plt.plot(range(len(sorted_df)), sorted_df[selector2 + '_' + parameter], label = selector_labels[selector2], color = dark_green)
-    else: 
-        sorted_df = df.sort_values(by = [selector1 + '_' + parameter, selector2 +'_'+ parameter])
-        plt.figure(figsize=(12, 5))
-        
-
-        plt.plot(range(len(sorted_df)), sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
-        plt.plot(range(len(sorted_df)), sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
+    plt.plot(range(len(sorted_df)), sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
+    plt.plot(range(len(sorted_df)), sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
 
     plt.xlabel('Program Index')
     plt.ylabel(parameters_labels[parameter], rotation="horizontal", horizontalalignment="left", y=1)
@@ -530,41 +532,7 @@ def overhead_plot(parameter, selector1, selector2):
         print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
         plt.close()
 
-def calculate_similarity(selector1, selector2):
-    df = pd.read_csv(data_dir + "instructions" + '.csv')
 
-    col1 = selector1 + '_' + "instructions"
-    col2 = selector2 + '_' + "instructions"
-    instruction_count = "instructions_number"
-
-    if col1 not in df.columns or col2 not in df.columns:
-        print(f"Error: One or both columns ({col1}, {col2}) do not exist in the dataframe.")
-        return
-
-    col1_values = df[col1].dropna().apply(lambda x: x.split(','))
-    col2_values = df[col2].dropna().apply(lambda x: x.split(','))
-
-    similarities = col1_values == col2_values
-    grouped = df.groupby(instruction_count)
-    similarity_percentages = {}
-
-    for count, group in grouped:
-        col1_values = group[col1].dropna().apply(lambda x: x.split(','))
-        col2_values = group[col2].dropna().apply(lambda x: x.split(','))
-        similarities = col1_values == col2_values
-        similarity_percentage = similarities.mean() * 100
-        similarity_percentages[count] = similarity_percentage
-        print(f"Similarity for instruction count {count} between {selector1} and {selector2}: {similarity_percentage:.2f}%")
-
-        cmd_name = (
-            f"\\newcommand{{\\Similarity"
-            f"{clean_name(selector1)}Vs{clean_name(selector2)}"
-            f"{clean_name('instructions')}For{count}Instructions}}{{{similarity_percentage:.2f}}}"
-        )
-        latex_file = os.path.join(plots_dir, "similarity_percentages.tex")
-        with open(latex_file, "a") as f:
-            f.write(cmd_name + "\n")
-    
 def proportional_bar_plot(parameter, selector1, selector2):
         df = pd.read_csv(data_dir + parameter + '.csv')
 
@@ -579,12 +547,14 @@ def proportional_bar_plot(parameter, selector1, selector2):
         instruction_counts = grouped.index.tolist()
         grouped['proportion'] = grouped[col1] / grouped[col2]
 
-        plt.figure(figsize=(20, 10))
-        bars = plt.bar(grouped.index.astype(str), grouped['proportion'], color=dark_green, label=selector_labels[selector1])
-        plt.axhline(1, color=dark_gray, linestyle='--', linewidth=5, label=selector_labels[selector2])
+        legend_name1 = selector_labels[selector1].replace(' (O3)', '').replace(' (O2)', '').replace(' (O1)', '').replace(' (def.)', '')
+        legend_name2 = selector_labels[selector2].replace(' (O3)', '').replace(' (O2)', '').replace(' (O1)', '').replace(' (def.)', '')
+        plt.figure(figsize=(16, 8))
+        bars = plt.bar(grouped.index.astype(str), grouped['proportion'], color=dark_green, label=legend_name1)
+        plt.axhline(1, color=dark_gray, linestyle='--', linewidth=5, label=legend_name2)
 
-        plt.xlabel('#instructions - LLVM IR')
-        plt.ylabel(f'{parameters_labels[parameter]} overhead {selector_labels[selector1]}')
+        plt.xlabel('#Instructions - LLVM IR')
+        plt.ylabel(f'Relative {parameters_labels[parameter].replace("#instructions", "Program")} Size')
         plt.yticks(np.arange(0, math.ceil(max(grouped['proportion'])), 0.5))
         plt.legend()
         plt.tight_layout()
@@ -605,16 +575,22 @@ def proportional_bar_plot(parameter, selector1, selector2):
         
         latex_lines = []
         for idx, ratio in enumerate(grouped['proportion']):
+            idx_str = str(idx)
+            idx_str_clean = idx_str.replace('_', '')  # Remove underscores from index if any
+            # Ensure the last character is a letter by appending 'N' if it ends with a digit
+            if idx_str_clean and idx_str_clean[-1].isdigit():
+                idx_str_clean = idx_str_clean.replace('0', 'zero').replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace('6', 'six').replace('7', 'seven').replace('8', 'eight').replace('9', 'nine')
+                idx_str_clean += 'Instr'
             cmd = (
                 f"\\newcommand{{\\Ratio"
-                f"{clean_name(selector1)}Vs{clean_name(selector2)}"
-                f"{clean_name(parameter)}ForInstCount{instruction_counts[idx]}}}{{{ratio:.2f}}}"
+                f"{clean_name(selector1.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}Vs{clean_name(selector2.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}"
+                f"{clean_name(parameter)}For{idx_str_clean}}}{{{ratio:.2f}}}"
             )
             latex_lines.append(cmd)
             
         geomean_cmd = (
             f"\\newcommand{{\\GeoMean"
-            f"{clean_name(selector1)}Vs{clean_name(selector2)}"
+            f"{clean_name(selector1.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}Vs{clean_name(selector2.replace('1','one').replace('2','two').replace('3', 'three').replace('4','four').replace('5','five'))}"
             f"{clean_name(parameter)}}}{{{geomean_ratio:.2f}}}"
         )
         latex_lines.append(geomean_cmd)
@@ -634,7 +610,7 @@ def main():
         "-p",
         "--parameters",
         nargs="+",
-        choices=["tot_instructions", "tot_cycles", "tot_uops", "instructions", "all"]
+        choices=["tot_instructions", "tot_cycles", "tot_uops", "similarity", "all"]
     )
 
     parser.add_argument(
@@ -647,18 +623,17 @@ def main():
     parser.add_argument(
         "-llvm", "--llvm_opt", 
         help="Optimization level for LLVM.",
-        nargs="+",
-        choices=["O3", "O2", "O1", "O0" "default"]
+        choices=["O3", "O2", "O1", "O0", "default"]
     )
     
     args = parser.parse_args()
     
     opts_to_evaluate = (
-        ["O3", "Os", "default"] if "all" in args.llvm_opt else args.llvm_opt
+        ["similarity", "tot_instructions", "tot_cycles", "tot_uops"] if "all" in args.parameters else args.llvm_opt
     )
 
     params_to_evaluate = (
-        ["tot_instructions", "tot_cycles", "tot_uops", "instructions"] if "all" in args.parameters else args.parameters
+        ["similarity", "tot_instructions", "tot_cycles", "tot_uops"] if "all" in args.parameters else args.parameters
     )
 
     plots_to_produce = (
@@ -670,81 +645,38 @@ def main():
     print(args)
 
     for parameter in params_to_evaluate : 
-        for opt in opts_to_evaluate:
-            extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', parameter, opt)    
-            extract_data(LLVM_selectiondag_results_DIR_PATH, 'LLVM_selectiondag', parameter, opt)
-            
-        extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', parameter,'')
-        extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter,'')
+        extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', parameter)    
+        extract_data(LLVM_selectiondag_results_DIR_PATH, 'LLVM_selectiondag', parameter)
+        extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter)
         
-        to_join = ['LEANMLIR', 'LEANMLIR_opt']
-        for opt in opts_to_evaluate:
-            if opt != 'default':
-                to_join.append('LLVM_globalisel_'+opt)
-                to_join.append('LLVM_selectiondag_'+opt)
-            else:
-                to_join.append('LLVM_globalisel')
-                to_join.append('LLVM_selectiondag') 
-            
+        to_join = ['LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag']
         join_dataframes(to_join, parameter)
-        print(to_join)
-        
-        
-        for opt in opts_to_evaluate:
-            if opt != 'default':
-                if parameter == "instructions":
-                    calculate_similarity('LEANMLIR_opt', 'LLVM_globalisel_'+opt)
-                    calculate_similarity('LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
-                    calculate_similarity('LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
-                    continue
-                if "scatter" in plots_to_produce or "all" in plots_to_produce :
-                    scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
-                    scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
-                    scatter_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
-                if "sorted" in plots_to_produce or "all" in plots_to_produce :
-                    sorted_line_plot_all(parameter, opt)
-                    sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt, opt)
-                    sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt, opt)
-                    sorted_line_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt, opt)
-                if "overhead" in plots_to_produce or "all" in plots_to_produce :
-                    overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
-                    overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
-                    overhead_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
-                if "stacked" in plots_to_produce or "all" in plots_to_produce :
-                    bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
-                    bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
-                    bar_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
-                if "proportional" in plots_to_produce or "all" in plots_to_produce :
-                    proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
-                    proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
-                    proportional_bar_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
-            else:
-                if parameter == "instructions":
-                    calculate_similarity('LEANMLIR', 'LLVM_globalisel')
-                    calculate_similarity('LEANMLIR', 'LLVM_selectiondag')
-                    calculate_similarity('LLVM_globalisel', 'LLVM_selectiondag')
-                    continue
-                if "scatter" in plots_to_produce or "all" in plots_to_produce :
-                    scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-                    scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-                    scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-                if "sorted" in plots_to_produce or "all" in plots_to_produce :
-                    sorted_line_plot_all(parameter, '')
-                    sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-                    sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-                    sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-                if "overhead" in plots_to_produce or "all" in plots_to_produce :
-                    overhead_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-                    overhead_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-                    overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-                if "stacked" in plots_to_produce or "all" in plots_to_produce :
-                    bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-                    bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-                    bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-                if "proportional" in plots_to_produce or "all" in plots_to_produce :
-                    proportional_bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-                    proportional_bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-                    proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+        if parameter == "similarity" :
+            calculate_similarity('LEANMLIR_opt', 'LLVM_globalisel')
+            calculate_similarity('LEANMLIR_opt', 'LLVM_selectiondag')
+            # calculate_similarity('LLVM_globalisel', 'LLVM_selectiondag')
+        else: 
+            if "scatter" in plots_to_produce or "all" in plots_to_produce :
+                scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+                scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+                # scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "sorted" in plots_to_produce or "all" in plots_to_produce :
+                sorted_line_plot_all(parameter)
+                sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+                sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+                # sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "overhead" in plots_to_produce or "all" in plots_to_produce :
+                overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+                overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+                # overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "stacked" in plots_to_produce or "all" in plots_to_produce :
+                bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+                bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+                # bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "proportional" in plots_to_produce or "all" in plots_to_produce :
+                proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+                proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+                # proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
                     
 
 
