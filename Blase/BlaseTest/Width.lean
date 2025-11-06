@@ -20,3 +20,27 @@ theorem add_incr_left (x : BitVec v) :
   fail_if_success bv_multi_width
   sorry
 
+/-
+  {
+    "name": "add_assoc_1",
+    "preconditions": ["(>= q t)", "(>= u t)"],
+    "lhs": "(bw t ( + (bw u (+ (bw p a) (bw r b))) (bw s c)))",
+    "rhs": "(bw t ( + (bw p a) (bw q (+ (bw r b) (bw s c)))))"
+  },
+-/
+def bw (w : Nat) (x : BitVec v) : BitVec w := x.zeroExtend w
+
+def addMax (a : BitVec v) (b : BitVec w) : BitVec (max v w) :=
+   a.zeroExtend _ + b.zeroExtend _
+
+
+
+variable (w p q r s t : Nat)
+variable (a b : BitVec w)
+-- end preamble
+
+theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
+  (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c)))  =
+  (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
+  simp only [bw, addMax]
+  bv_multi_width
