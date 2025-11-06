@@ -189,6 +189,27 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
     -- TODO: implement 'w + K'.
     return (.var wix, { state with wToIx := wToIx })
 
+partial def collectWidthExpr (state : CollectState) (e : Expr) :
+    SolverM (MultiWidth.Nondep.WidthExpr × CollectState) := do
+  match_expr e with
+  | Nat.zero => return (.const 0, state)
+  | Nat.succ n =>
+    let (we, state) ← collectWidthExpr state n
+    return (.addK we 1, state)
+  | min _ty _inst x y =>
+    let (wx, state) ← collectWidthExpr state x
+    let (wy, state) ← collectWidthExpr state y
+    return (.min wx wy, state)
+  | max _ty _inst x y =>
+    let (wx, state) ← collectWidthExpr state x
+    let (wy, state) ← collectWidthExpr state y
+    return (.max wx wy, state)
+  | _ => mkAtom
+  where
+    mkAtom := do
+      let (we, state) ← collectWidthAtom state e
+      return (we, state)
+
 /-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
 #guard_msgs in #check Fin.mk
 
@@ -445,7 +466,7 @@ def collectBVAtom (state : CollectState)
   let t ← inferType e
   let_expr BitVec w := t
     | throwError m!"expected type 'BitVec w', found: {indentD t} (expression: {indentD e})"
-  let (wexpr, state) ← collectWidthAtom state w
+  let (wexpr, state) ← collectWidthExpr state w
   let (bvix, bvToIx) := state.bvToIx.findOrInsertVal (e, wexpr)
   return (.var bvix wexpr, { state with bvToIx })
 
@@ -453,7 +474,7 @@ partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
   match_expr e with
   | BitVec.ofNat wExpr nExpr =>
-    let (w, state) ← collectWidthAtom state wExpr
+    let (w, state) ← collectWidthExpr state wExpr
     if let some n ← getNatValue? nExpr then
       return (.ofNat w n, state)
     else
@@ -461,27 +482,27 @@ partial def collectTerm (state : CollectState) (e : Expr) :
   | HAdd.hAdd _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.add w ta tb, state)
     | _ => mkAtom
   | BitVec.zeroExtend _w v x =>
-      let (v, state) ← collectWidthAtom state v
+      let (v, state) ← collectWidthExpr state v
       let (x, state) ← collectTerm state x
       return (.zext x v, state)
   | BitVec.setWidth _w v x =>
-      let (v, state) ← collectWidthAtom state v
+      let (v, state) ← collectWidthExpr state v
       let (x, state) ← collectTerm state x
       return (.setWidth x v, state)
   | BitVec.signExtend _w v x =>
-      let (v, state) ← collectWidthAtom state v
+      let (v, state) ← collectWidthExpr state v
       let (x, state) ← collectTerm state x
       return (.sext x v, state)
   | HXor.hXor _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.bxor w ta tb, state)
@@ -489,7 +510,7 @@ partial def collectTerm (state : CollectState) (e : Expr) :
   | HAnd.hAnd _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.band w ta tb, state)
@@ -497,7 +518,7 @@ partial def collectTerm (state : CollectState) (e : Expr) :
   | HOr.hOr _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.bor w ta tb, state)
@@ -505,7 +526,7 @@ partial def collectTerm (state : CollectState) (e : Expr) :
   | Complement.complement bv _inst a =>
     match_expr bv with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       return (.bnot w ta, state)
     | _ => mkAtom
@@ -659,7 +680,7 @@ def collectBVBooleanEqPredicateAux (state : CollectState) (a b : Expr) :
   -- NOTE: Lean bug prevents us from writing this with do-notation,
   -- so we suffer as haskellers once did.
   out? >>= fun ((w, kind, x, y)) => some do
-    let (w, state) ← collectWidthAtom state w
+    let (w, state) ← collectWidthExpr state w
     let (tx, state) ← collectTerm state x
     let (ty, state) ← collectTerm state y
     pure (.binRel kind w tx ty, state)
@@ -671,8 +692,8 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
   | LE.le α _inst v w =>
     match_expr α with
     | Nat =>
-      let (v, state) ← collectWidthAtom state v
-      let (w, state) ← collectWidthAtom state w
+      let (v, state) ← collectWidthExpr state v
+      let (w, state) ← collectWidthExpr state w
       return (.binWidthRel .le v w, state)
     | _ =>
       debugLog m!"expected (· ≤ ·) for natural numbers, found:  {indentD e}, so abstracting over expression."
@@ -680,11 +701,11 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
   | Eq α a b =>
     match_expr α with
     | Nat =>
-      let (a, state) ← collectWidthAtom state a
-      let (b, state) ← collectWidthAtom state b
+      let (a, state) ← collectWidthExpr state a
+      let (b, state) ← collectWidthExpr state b
       return (.binWidthRel .eq a b, state)
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .eq w ta tb, state)
@@ -700,7 +721,7 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
   | Ne α a b =>
     match_expr α with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .ne w ta tb, state)

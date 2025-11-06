@@ -7,3 +7,4 @@ import BlaseTest.Preprocessing3
 import BlaseTest.Preprocessing4
 import BlaseTest.WidthGeneralize
 import BlaseTest.PrintSmtLib
+import BlaseTest.Width
