@@ -469,30 +469,30 @@ def generate_benchmarks(num, jobs, llvm_opt, compare_lowering_patterns=False):
         print(f"extracting the first basic block: {percentage:.2f}%")
 
     LAKE_file2ret = dict()
-    # Run the lean pass in parallel
-    LAKE_compile_riscv64(jobs, LAKE_file2ret)
+    # # Run the lean pass in parallel
+    # LAKE_compile_riscv64(jobs, LAKE_file2ret)
 
     LAKE_file2ret_opt = dict()
     # Run the optimized lean pass in parallel
     LAKE_compile_riscv64_opt(jobs, LAKE_file2ret_opt)
 
-    XDSL_create_func_file2ret = dict()
-    idx = 0
-    # Create `func.func`
-    for filename in os.listdir(LEANMLIR_ASM_DIR_PATH):
-        input_file = os.path.join(LEANMLIR_ASM_DIR_PATH, filename)
-        if LAKE_file2ret[input_file] == 0:
-            basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(XDSL_FUNC_ASM_DIR_PATH, basename + ".mlir")
-            log_file = open(
-                os.path.join(LOGS_DIR_PATH, basename + "_xdsl_create_func.log"), "w"
-            )
-            XDSL_create_func(
-                input_file, output_file, log_file, XDSL_create_func_file2ret
-            )
-        idx += 1
-        percentage = (float(idx) / float(len(LAKE_file2ret))) * 100
-        print(f"creating func.func module: {percentage:.2f}%")
+    # XDSL_create_func_file2ret = dict()
+    # idx = 0
+    # # Create `func.func`
+    # for filename in os.listdir(LEANMLIR_ASM_DIR_PATH):
+    #     input_file = os.path.join(LEANMLIR_ASM_DIR_PATH, filename)
+    #     if LAKE_file2ret[input_file] == 0:
+    #         basename, _ = os.path.splitext(filename)
+    #         output_file = os.path.join(XDSL_FUNC_ASM_DIR_PATH, basename + ".mlir")
+    #         log_file = open(
+    #             os.path.join(LOGS_DIR_PATH, basename + "_xdsl_create_func.log"), "w"
+    #         )
+    #         XDSL_create_func(
+    #             input_file, output_file, log_file, XDSL_create_func_file2ret
+    #         )
+    #     idx += 1
+    #     percentage = (float(idx) / float(len(LAKE_file2ret))) * 100
+    #     print(f"creating func.func module: {percentage:.2f}%")
 
     XDSL_create_func_file2ret_opt = dict()
     idx = 0
@@ -512,21 +512,21 @@ def generate_benchmarks(num, jobs, llvm_opt, compare_lowering_patterns=False):
         percentage = (float(idx) / float(len(LAKE_file2ret_opt))) * 100
         print(f"creating func.func module (opt): {percentage:.2f}%")
 
-    XDSL_reg_alloc_file2ret = dict()
-    idx = 0
-    # Register allocation with XDSL
-    for filename in os.listdir(XDSL_FUNC_ASM_DIR_PATH):
-        input_file = os.path.join(XDSL_FUNC_ASM_DIR_PATH, filename)
-        if XDSL_create_func_file2ret[input_file] == 0:
-            basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(XDSL_ASM_DIR_PATH, basename + ".mlir")
-            log_file = open(
-                os.path.join(LOGS_DIR_PATH, basename + "_xdsl_reg_alloc.log"), "w"
-            )
-            XDSL_reg_alloc(input_file, output_file, log_file, XDSL_reg_alloc_file2ret)
-        idx += 1
-        percentage = (float(idx) / float(len(XDSL_create_func_file2ret))) * 100
-        print(f"allocating registers and outputting assembly: {percentage:.2f}%")
+    # XDSL_reg_alloc_file2ret = dict()
+    # idx = 0
+    # # Register allocation with XDSL
+    # for filename in os.listdir(XDSL_FUNC_ASM_DIR_PATH):
+    #     input_file = os.path.join(XDSL_FUNC_ASM_DIR_PATH, filename)
+    #     if XDSL_create_func_file2ret[input_file] == 0:
+    #         basename, _ = os.path.splitext(filename)
+    #         output_file = os.path.join(XDSL_ASM_DIR_PATH, basename + ".mlir")
+    #         log_file = open(
+    #             os.path.join(LOGS_DIR_PATH, basename + "_xdsl_reg_alloc.log"), "w"
+    #         )
+    #         XDSL_reg_alloc(input_file, output_file, log_file, XDSL_reg_alloc_file2ret)
+    #     idx += 1
+    #     percentage = (float(idx) / float(len(XDSL_create_func_file2ret))) * 100
+    #     print(f"allocating registers and outputting assembly: {percentage:.2f}%")
 
     XDSL_reg_alloc_file2ret_opt = dict()
     idx = 0
