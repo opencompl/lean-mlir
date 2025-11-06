@@ -14,3 +14,7 @@ name = "fp-lean"
 git = "https://github.com/opencompl/fp-lean"
 rev = "5e45c0f"
 
+[[require]]
+name = "SexprPBV"
+path = "../SexprPBV"
+rev = "main"
