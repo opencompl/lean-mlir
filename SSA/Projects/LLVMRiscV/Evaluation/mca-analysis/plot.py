@@ -181,56 +181,29 @@ def join_dataframes(dataframe_names, parameter) :
             complete_df = df 
         else: 
             complete_df = pd.merge(complete_df, df, on='function_name', how='inner')
-            print(complete_df)
-    if parameter != "similarity":
-        complete_df['instructions_number']= complete_df['function_name'].apply(lambda x: int(x.split('_')[0]))
+    complete_df['instructions_number']= complete_df['function_name'].apply(lambda x: int(x.split('_')[0]))
     complete_df.to_csv(data_dir + parameter+".csv")
 
-def sorted_line_plot_all(parameter, opt):
+def sorted_line_plot_all(parameter):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
     
-    if opt != '':
-        sorted_df = df.sort_values(by = ['LEANMLIR_' + parameter, 'LEANMLIR_opt_' + parameter, 
-                                        'LLVM_globalisel_' + opt + '_'+ parameter, 'LLVM_selectiondag_' + opt + '_'+ parameter])
-        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
-            color= light_green)
-        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
-        plt.plot(range(len(sorted_df)), sorted_df['LLVM_globalisel_'+ opt + '_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
-        plt.plot(range(len(sorted_df)), sorted_df['LLVM_selectiondag_'+ opt + '_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
-        
-        plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
-                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
-                                sorted_df['LLVM_globalisel_' + opt + '_'+ parameter].min(), 
-                                sorted_df['LLVM_selectiondag_' + opt + '_'+ parameter].min()]) - 1)
-        plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
-                                    sorted_df['LEANMLIR_opt_' + parameter].min(), 
-                                    sorted_df['LLVM_globalisel_' + opt + '_'+ parameter].min(), 
-                                    sorted_df['LLVM_selectiondag_' + opt + '_'+ parameter].min()]) + 1
-        
-        plt.ylim(1, int(plot_max * 1.5) + 1)
-        plt.yticks(range(1, int(plot_max * 1.5) + 1, int((int(plot_max * 1.5) + 5)/5)))
 
-    else:
-        sorted_df = df.sort_values(by = ['LEANMLIR_' + parameter, 'LEANMLIR_opt_' + parameter, 
-                                        'LLVM_globalisel_' + parameter, 'LLVM_selectiondag_' + parameter])
+    sorted_df = df.sort_values(by = ['LEANMLIR_opt_' + parameter, 
+                                    'LLVM_globalisel_' + parameter, 'LLVM_selectiondag_' + parameter])
 
-        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_' + parameter], label = selector_labels['LEANMLIR'], 
-            color= light_green)
-        plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
-        plt.plot(range(len(sorted_df)), sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
-        plt.plot(range(len(sorted_df)), sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
-        plot_min = min(0, np.min([sorted_df['LEANMLIR_' + parameter].min(), 
-                                sorted_df['LEANMLIR_opt_' + parameter].min(), 
+    plt.plot(range(len(sorted_df)), sorted_df['LEANMLIR_opt_' + parameter], label = selector_labels['LEANMLIR_opt'], color = dark_green)
+    plt.plot(range(len(sorted_df)), sorted_df['LLVM_globalisel_' + parameter], label=selector_labels['LLVM_globalisel'], color = light_blue)
+    plt.plot(range(len(sorted_df)), sorted_df['LLVM_selectiondag_' + parameter], label=selector_labels['LLVM_selectiondag'], color = light_red)
+    plot_min = min(0, np.min([sorted_df['LEANMLIR_opt_' + parameter].min(), 
+                            sorted_df['LLVM_globalisel_' + parameter].min(), 
+                            sorted_df['LLVM_selectiondag_' + parameter].min()]) - 1)
+    plot_max = np.max([sorted_df['LEANMLIR_opt_' + parameter].min(), 
                                 sorted_df['LLVM_globalisel_' + parameter].min(), 
-                                sorted_df['LLVM_selectiondag_' + parameter].min()]) - 1)
-        plot_max = np.max([sorted_df['LEANMLIR_' + parameter].min(), 
-                                    sorted_df['LEANMLIR_opt_' + parameter].min(), 
-                                    sorted_df['LLVM_globalisel_' + parameter].min(), 
-                                    sorted_df['LLVM_selectiondag_' + parameter].min()]) + 1
-        
-        plt.ylim(1, int(plot_max * 1.5) + 1)
-        plt.yticks(range(1, int(plot_max * 1.5) + 1, int((int(plot_max * 1.5) + 5)/5)))
+                                sorted_df['LLVM_selectiondag_' + parameter].min()]) + 1
+    
+    plt.ylim(1, int(plot_max * 1.5) + 1)
+    plt.yticks(range(1, int(plot_max * 1.5) + 1, int((int(plot_max * 1.5) + 5)/5)))
 
     plt.xlabel('Program Index')
     plt.ylabel(parameter)
@@ -271,11 +244,12 @@ def scatter_plot(parameter, selector1, selector2) :
     plt.scatter(df_plot_scaled[selector1+ '_' + parameter],
                 df_plot_scaled[selector2+ '_' + parameter],
                 s=df_plot_scaled['Scaled_Size'],
-                color='skyblue', alpha=0.7, edgecolors='w', label=f'Function data points (Size by frequency)')
+                color=light_blue, alpha=0.7, edgecolors='w', label=f'Function data points (Size by frequency)')
 
     min_val = min(df_plot_comparison[selector1+ '_' + parameter].min(), df_plot_comparison[selector2+ '_' + parameter].min())
     max_val = max(df_plot_comparison[selector1+ '_' + parameter].max(), df_plot_comparison[selector2+ '_' + parameter].max())
-    
+    print(min_val)
+    print(max_val)
     # Add a small buffer to the min/max values for better visualization
     plot_min = max(0, min_val - 1)
     plot_max = max_val + 1
@@ -306,10 +280,11 @@ def clean_name(s):
     return ''.join([w.capitalize() for w in str(s).split('_')])
 
 def calculate_similarity(selector1, selector2, print_latex=True):
-    df = pd.read_csv(data_dir + "instructions" + '.csv')
+    df = pd.read_csv(data_dir + "similarity" + '.csv')
+    print('done')
 
-    col1 = selector1 + '_' + "instructions"
-    col2 = selector2 + '_' + "instructions"
+    col1 = selector1 + '_' + "similarity"
+    col2 = selector2 + '_' + "similarity"
     instruction_count = "instructions_number"
 
     if col1 not in df.columns or col2 not in df.columns:
@@ -497,24 +472,16 @@ def bar_plot(parameter, selector1, selector2):
 def clean_name(s):
     return ''.join([w.capitalize() for w in str(s).split('_')])
 
-def sorted_line_plot(parameter, selector1, selector2, opt):
+def sorted_line_plot(parameter, selector1, selector2):
 
     df = pd.read_csv(data_dir + parameter + '.csv')
 
-    if opt != '':
-        sorted_df = df.sort_values(by = [selector1 + '_' + parameter , selector2 + '_'  + parameter])
-        plt.figure(figsize=(12, 5))
-        
+    sorted_df = df.sort_values(by = [selector1 + '_' + parameter, selector2 +'_'+ parameter])
+    plt.figure(figsize=(12, 5))
+    
 
-        plt.plot(range(len(sorted_df)), sorted_df[selector1 + '_' + parameter], label = selector_labels[selector1], color = light_green)
-        plt.plot(range(len(sorted_df)), sorted_df[selector2 + '_' + parameter], label = selector_labels[selector2], color = dark_green)
-    else: 
-        sorted_df = df.sort_values(by = [selector1 + '_' + parameter, selector2 +'_'+ parameter])
-        plt.figure(figsize=(12, 5))
-        
-
-        plt.plot(range(len(sorted_df)), sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
-        plt.plot(range(len(sorted_df)), sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
+    plt.plot(range(len(sorted_df)), sorted_df[selector1 +'_'+ parameter], label = selector_labels[selector1], color = light_green)
+    plt.plot(range(len(sorted_df)), sorted_df[selector2 +'_'+ parameter], label = selector_labels[selector2], color = dark_green)
 
     plt.xlabel('Program Index')
     plt.ylabel(parameters_labels[parameter], rotation="horizontal", horizontalalignment="left", y=1)
@@ -684,36 +651,33 @@ def main():
         
         to_join = ['LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag']
         join_dataframes(to_join, parameter)
-        
-        print(to_join)
-        
-        if parameter == "instructions" :
-            calculate_similarity('LEANMLIR_opt', 'LLVM_globalisel_')
-            calculate_similarity('LEANMLIR_opt', 'LLVM_selectiondag_')
-            calculate_similarity('LLVM_globalisel_', 'LLVM_selectiondag_')
-            continue
-        if "scatter" in plots_to_produce or "all" in plots_to_produce :
-            scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_')
-            scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_')
-            scatter_plot(parameter, 'LLVM_globalisel_', 'LLVM_selectiondag_')
-        if "sorted" in plots_to_produce or "all" in plots_to_produce :
-            sorted_line_plot_all(parameter, opt)
-            sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_', opt)
-            sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_', opt)
-            sorted_line_plot(parameter, 'LLVM_globalisel_', 'LLVM_selectiondag_', opt)
-        if "overhead" in plots_to_produce or "all" in plots_to_produce :
-            overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_')
-            overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_')
-            overhead_plot(parameter, 'LLVM_globalisel_', 'LLVM_selectiondag_')
-        if "stacked" in plots_to_produce or "all" in plots_to_produce :
-            bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_')
-            bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_')
-            bar_plot(parameter, 'LLVM_globalisel_', 'LLVM_selectiondag_')
-        if "proportional" in plots_to_produce or "all" in plots_to_produce :
-            proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_')
-            proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_')
-            proportional_bar_plot(parameter, 'LLVM_globalisel_', 'LLVM_selectiondag_')
-                
+        if parameter == "similarity" :
+            calculate_similarity('LEANMLIR_opt', 'LLVM_globalisel')
+            calculate_similarity('LEANMLIR_opt', 'LLVM_selectiondag')
+            calculate_similarity('LLVM_globalisel', 'LLVM_selectiondag')
+        else: 
+            if "scatter" in plots_to_produce or "all" in plots_to_produce :
+                scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+                scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+                scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "sorted" in plots_to_produce or "all" in plots_to_produce :
+                sorted_line_plot_all(parameter)
+                sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+                sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+                sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "overhead" in plots_to_produce or "all" in plots_to_produce :
+                overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+                overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+                overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "stacked" in plots_to_produce or "all" in plots_to_produce :
+                bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+                bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+                bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "proportional" in plots_to_produce or "all" in plots_to_produce :
+                proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
+                proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
+                proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                    
 
 
 if __name__ == "__main__":
