@@ -1,4 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+#
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["xdsl"]
+# 
+# [tool.uv.sources]
+# xdsl = { git = "https://github.com/xdslproject/xdsl.git", rev = "84470026ca7dbf37837eb57030897202a6dc47d7" }
+# ///
+
 
 import sys
 import os
@@ -321,7 +330,7 @@ def XDSL_reg_alloc(input_file, output_file, log_file, pass_dict):
     pass_dict[output_file] = ret_code
 
 
-def generate_benchmarks(num, jobs, llvm_opts, compare_lowering_patterns=False):
+def generate_benchmarks(num, jobs, llvm_opt, compare_lowering_patterns=False):
     setup_benchmarking_directories()
     
     if compare_lowering_patterns:
@@ -367,86 +376,85 @@ def generate_benchmarks(num, jobs, llvm_opts, compare_lowering_patterns=False):
         percentage = (float(idx) / float(len(MLIR_opt_file2ret))) * 100
         print(f"translating to LLVMIR with mlir-translate: {percentage:.2f}%")
 
-    for llvm_opt in llvm_opts:
-        LLC_file2ret = dict()
-        idx = 0
-        # Use llc with `selectionDAG` to compile LLVMIR into RISCV
-        for filename in os.listdir(LLVMIR_DIR_PATH):
-            input_file = os.path.join(LLVMIR_DIR_PATH, filename)
-            # only run the lowering if the previous pass was successful:
-            if MLIR_translate_file2ret[input_file] == 0:
+    LLC_file2ret = dict()
+    idx = 0
+    # Use llc with `selectionDAG` to compile LLVMIR into RISCV
+    for filename in os.listdir(LLVMIR_DIR_PATH):
+        input_file = os.path.join(LLVMIR_DIR_PATH, filename)
+        # only run the lowering if the previous pass was successful:
+        if MLIR_translate_file2ret[input_file] == 0:
+            basename, _ = os.path.splitext(filename)
+
+            if llvm_opt == "default":
+                output_file = os.path.join(
+                    LLC_ASM_selectiondag_DIR_PATH, basename + ".s"
+                )
+                log_file = open(
+                    os.path.join(LOGS_DIR_PATH, basename + "_selectiondag_llc.log"),
+                    "w",
+                )
+                LLC_compile_riscv_selectiondag(
+                    input_file, output_file, log_file, LLC_file2ret, ""
+                )
+            else:
+                output_file = os.path.join(
+                    LLC_ASM_selectiondag_DIR_PATH, basename + "_" + llvm_opt + ".s"
+                )
+                log_file = open(
+                    os.path.join(
+                        LOGS_DIR_PATH,
+                        basename + "_selectiondag_llc" + "_" + llvm_opt + ".log",
+                    ),
+                    "w",
+                )
+                LLC_compile_riscv_selectiondag(
+                    input_file, output_file, log_file, LLC_file2ret, "-" + llvm_opt
+                )
+        idx += 1
+        percentage = (float(idx) / float(len(MLIR_translate_file2ret))) * 100
+        print(f"compiling with llc (selectionDAG {llvm_opt}): {percentage:.2f}%")
+
+    LLC_GLOBALISEL_file2ret = dict()
+    idx = 0
+    # Use llc with `GlobalISel` to compile LLVMIR into RISCV
+    for filename in os.listdir(LLVMIR_DIR_PATH):
+        input_file = os.path.join(LLVMIR_DIR_PATH, filename)
+        # only run the lowering if the previous pass was successful:
+        if MLIR_translate_file2ret[input_file] == 0:  # previous pass succeded
+            if llvm_opt == "default":
                 basename, _ = os.path.splitext(filename)
-
-                if llvm_opt == "default":
-                    output_file = os.path.join(
-                        LLC_ASM_selectiondag_DIR_PATH, basename + ".s"
-                    )
-                    log_file = open(
-                        os.path.join(LOGS_DIR_PATH, basename + "_selectiondag_llc.log"),
-                        "w",
-                    )
-                    LLC_compile_riscv_selectiondag(
-                        input_file, output_file, log_file, LLC_file2ret, ""
-                    )
-                else:
-                    output_file = os.path.join(
-                        LLC_ASM_selectiondag_DIR_PATH, basename + "_" + llvm_opt + ".s"
-                    )
-                    log_file = open(
-                        os.path.join(
-                            LOGS_DIR_PATH,
-                            basename + "_selectiondag_llc" + "_" + llvm_opt + ".log",
-                        ),
-                        "w",
-                    )
-                    LLC_compile_riscv_selectiondag(
-                        input_file, output_file, log_file, LLC_file2ret, "-" + llvm_opt
-                    )
-            idx += 1
-            percentage = (float(idx) / float(len(MLIR_translate_file2ret))) * 100
-            print(f"compiling with llc (selectionDAG {llvm_opt}): {percentage:.2f}%")
-
-        LLC_GLOBALISEL_file2ret = dict()
-        idx = 0
-        # Use llc with `GlobalISel` to compile LLVMIR into RISCV
-        for filename in os.listdir(LLVMIR_DIR_PATH):
-            input_file = os.path.join(LLVMIR_DIR_PATH, filename)
-            # only run the lowering if the previous pass was successful:
-            if MLIR_translate_file2ret[input_file] == 0:  # previous pass succeded
-                if llvm_opt == "default":
-                    basename, _ = os.path.splitext(filename)
-                    output_file = os.path.join(
-                        LLC_ASM_globalisel_DIR_PATH, basename + ".s"
-                    )
-                    log_file = open(
-                        os.path.join(LOGS_DIR_PATH, basename + "_globalisel_llc.log"),
-                        "w",
-                    )
-                    LLC_compile_riscv_globalisel(
-                        input_file, output_file, log_file, LLC_GLOBALISEL_file2ret, ""
-                    )
-                else:
-                    basename, _ = os.path.splitext(filename)
-                    output_file = os.path.join(
-                        LLC_ASM_globalisel_DIR_PATH, basename + "_" + llvm_opt + ".s"
-                    )
-                    log_file = open(
-                        os.path.join(
-                            LOGS_DIR_PATH,
-                            basename + "_globalisel_llc" + "_" + llvm_opt + ".log",
-                        ),
-                        "w",
-                    )
-                    LLC_compile_riscv_globalisel(
-                        input_file,
-                        output_file,
-                        log_file,
-                        LLC_GLOBALISEL_file2ret,
-                        "-" + llvm_opt,
-                    )
-            idx += 1
-            percentage = (float(idx) / float(len(MLIR_translate_file2ret))) * 100
-            print(f"compiling with llc (globalISel {llvm_opt}): {percentage:.2f}%")
+                output_file = os.path.join(
+                    LLC_ASM_globalisel_DIR_PATH, basename + ".s"
+                )
+                log_file = open(
+                    os.path.join(LOGS_DIR_PATH, basename + "_globalisel_llc.log"),
+                    "w",
+                )
+                LLC_compile_riscv_globalisel(
+                    input_file, output_file, log_file, LLC_GLOBALISEL_file2ret, ""
+                )
+            else:
+                basename, _ = os.path.splitext(filename)
+                output_file = os.path.join(
+                    LLC_ASM_globalisel_DIR_PATH, basename + "_" + llvm_opt + ".s"
+                )
+                log_file = open(
+                    os.path.join(
+                        LOGS_DIR_PATH,
+                        basename + "_globalisel_llc" + "_" + llvm_opt + ".log",
+                    ),
+                    "w",
+                )
+                LLC_compile_riscv_globalisel(
+                    input_file,
+                    output_file,
+                    log_file,
+                    LLC_GLOBALISEL_file2ret,
+                    "-" + llvm_opt,
+                )
+        idx += 1
+        percentage = (float(idx) / float(len(MLIR_translate_file2ret))) * 100
+        print(f"compiling with llc (globalISel {llvm_opt}): {percentage:.2f}%")
 
     # Extract bb0
     idx = 0
@@ -557,7 +565,6 @@ def main():
         "-llvm",
         "--llvm_opt",
         help="Optimization level for LLVM.",
-        nargs="+",
         choices=["O3", "O2", "O1", "O0", "default", "all"],
         default="default",
     )
@@ -572,11 +579,7 @@ def main():
     
     args = parser.parse_args()
 
-    opts_to_evaluate = (
-        ["O3", "O2", "O1", "O0", "default"] if "all" in args.llvm_opt else args.llvm_opt
-    )
-
-    generate_benchmarks(args.num, args.jobs, opts_to_evaluate, args.instruction_lowering)
+    generate_benchmarks(args.num, args.jobs, args.llvm_opt, args.instruction_lowering)
 
 
 if __name__ == "__main__":
