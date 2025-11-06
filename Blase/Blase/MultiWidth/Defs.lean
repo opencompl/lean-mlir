@@ -295,12 +295,26 @@ theorem Term.toBV_zext {wenv : WidthExpr.Env wcard}
   Term.toBV benv tenv (.zext a v) = (a.toBV benv tenv).zeroExtend (v.toNat wenv) := rfl
 
 @[simp]
+theorem Term.toBV_setWidth {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) :
+  Term.toBV benv tenv (.setWidth a v) = (a.toBV benv tenv).zeroExtend (v.toNat wenv) := rfl
+
+@[simp]
 theorem Term.toBV_sext {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
     (tenv : tctx.Env wenv) (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) :
   Term.toBV benv tenv (.sext a v) =
     (a.toBV benv tenv).signExtend (v.toNat wenv) := rfl
+
+@[simp]
+theorem Term.toBV_shiftl {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a : Term bcard tctx (.bv w)) (k : Nat):
+  Term.toBV benv tenv (.shiftl a k) = (a.toBV benv tenv) <<< k := rfl
 
 @[simp]
 theorem Term.toBV_add {wenv : WidthExpr.Env wcard}

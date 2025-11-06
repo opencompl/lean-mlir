@@ -470,6 +470,10 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       let (v, state) ← collectWidthAtom state v
       let (x, state) ← collectTerm state x
       return (.zext x v, state)
+  | BitVec.setWidth _w v x =>
+      let (v, state) ← collectWidthAtom state v
+      let (x, state) ← collectTerm state x
+      return (.setWidth x v, state)
   | BitVec.signExtend _w v x =>
       let (v, state) ← collectWidthAtom state v
       let (x, state) ← collectTerm state x
@@ -551,6 +555,12 @@ def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
       #[← mkTermExpr wcard tcard bcard tctx a, vExpr]
     debugCheck out
     return out
+  | .setWidth a v =>
+    let vExpr ← mkWidthExpr wcard v
+    let out ← mkAppM ``MultiWidth.Term.setWidth
+      #[← mkTermExpr wcard tcard bcard tctx a, vExpr]
+    debugCheck out
+    return out
   | .sext a v =>
     let vExpr ← mkWidthExpr wcard v
     let out ← mkAppM ``MultiWidth.Term.sext
@@ -602,6 +612,15 @@ def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
     let out := mkAppN (mkConst ``MultiWidth.Term.boolConst [])
       #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
         mkBoolLit b]
+    debugCheck out
+    return out
+  | .shiftl w a n =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
+    let nExpr := mkNatLit n
+    let out := mkAppN (mkConst ``MultiWidth.Term.shiftl)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        wExpr, aExpr, nExpr]
     debugCheck out
     return out
 
