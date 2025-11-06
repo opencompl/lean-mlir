@@ -9,6 +9,10 @@ theorem shiftl1 {v : Nat} (x : BitVec v) :
     x <<< 5 = x <<< 3 <<< 2 := by
   bv_multi_width
 
+/-- Check that by default, we understand width 1 bitvectors (ie, not specialized to width w). -/
+theorem width1_understood (x y : BitVec 1) : x + y = x ^^^ y := by
+  bv_multi_width
+
 
 /--
 error: CEX: Found exact counter-example at iteration 5 for predicate MultiWidth.Nondep.Predicate.binRel
