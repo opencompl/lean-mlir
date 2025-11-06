@@ -134,6 +134,8 @@ inductive Term {wcard tcard : Nat} (bcard : Nat)
 | var (v : Fin tcard) : Term bcard tctx (.bv (tctx v))
 /-- addition of two terms of the same width -/
 | add (a : Term bcard tctx (.bv w)) (b : Term bcard tctx (.bv w)) : Term bcard tctx (.bv w)
+/-- shift left by a known constant --/
+| shiftl (a : Term bcard tctx (.bv w)) (k : Nat) : Term bcard tctx (.bv w)
 /-- bitwise or -/
 | bor (a b : Term bcard tctx (.bv w)) : Term bcard tctx (.bv w)
 /-- bitwise and -/
@@ -144,6 +146,8 @@ inductive Term {wcard tcard : Nat} (bcard : Nat)
 | bnot (a : Term bcard tctx (.bv w)) : Term bcard tctx (.bv w)
 /-- zero extend a term to a given width -/
 | zext (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard tctx (.bv v)
+/-- setWidth a term to a given width, which is literally the same as zeroExtend. -/
+| setWidth (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard tctx (.bv v)
 /-- sign extend a term to a given width -/
 | sext (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard tctx (.bv v)
 -- | bvOfBool (b : Term bcard tctx .bool) : Term bcard tctx (.bv (.const 1))
@@ -239,6 +243,7 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
     let b : BitVec (w.toNat wenv) := (b.toBV benv tenv)
     a + b
 | .zext a v => (a.toBV benv tenv).zeroExtend (v.toNat wenv)
+| .setWidth a v => (a.toBV benv tenv).zeroExtend (v.toNat wenv)
 | .sext a v => (a.toBV benv tenv).signExtend (v.toNat wenv)
 | .bor a b (w := w) =>
     let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
@@ -256,6 +261,9 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
     let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
     ~~~ a
 | .boolVar v => benv v
+| .shiftl (w := w) a k =>
+    let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
+    a <<< k
 
 def BoolExpr.toBool
     {tctx : Term.Ctx wcard tcard}
@@ -462,6 +470,7 @@ inductive Term
 | var (v : Nat) (w : WidthExpr) : Term
 | add (w : WidthExpr) (a b : Term) : Term
 | zext (a : Term) (wnew : WidthExpr) : Term
+| setWidth (a : Term) (wnew : WidthExpr) : Term
 | sext (a : Term) (wnew : WidthExpr) : Term
 | bor (w : WidthExpr) (a b : Term) : Term
 | band (w : WidthExpr) (a b : Term) : Term
@@ -469,9 +478,21 @@ inductive Term
 | bnot (w : WidthExpr)  (a : Term) : Term
 | boolVar (v : Nat) : Term
 | boolConst (b : Bool) : Term
+| shiftl (w : WidthExpr) (a : Term) (k : Nat) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Term.toSexpr : Term → Sexpr
+| .shiftl w a k => Sexpr.array #[
+    Sexpr.atom "shiftl",
+    w.toSexpr,
+    a.toSexpr,
+    .atomOf k
+  ]
+| .setWidth a w => Sexpr.array #[
+    Sexpr.atom "setwidth",
+    a.toSexpr,
+    w.toSexpr
+  ]
 | .ofNat w n => Sexpr.array #[
     Sexpr.atom "ofNat",
     w.toSexpr,
@@ -552,6 +573,8 @@ def Term.ofDep {wcard tcard bcard : Nat}
   | .bnot (w := w) a => .bnot (.ofDep w) (.ofDep a)
   | .boolVar v => .boolVar v
   | .boolConst b => .boolConst b
+  | .shiftl (w := w) a k => .shiftl (.ofDep w) (.ofDep a) k
+  | .setWidth a wnew => .setWidth (.ofDep a) (.ofDep wnew)
 
 
 @[simp]
@@ -566,6 +589,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .var _v w => w
   | .add w _a _b => w
   | .zext _a wnew => wnew
+  | .setWidth _a wnew => wnew
   | .sext _a wnew => wnew
   | .bor w _a _b => w
   | .band w _a _b => w
@@ -573,6 +597,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .bnot w _a => w
   | .boolVar _v => WidthExpr.const 1 -- dummy width.
   | .boolConst _b => WidthExpr.const 1
+  | .shiftl w _a _k => w
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -582,25 +607,7 @@ theorem Term.width_ofDep_eq_ofDep {wcard tcard : Nat} (bcard : Nat)
     {tctx : Term.Ctx wcard tcard}
     (t : MultiWidth.Term bcard tctx (.bv w))
     : (Term.ofDep t).width = (.ofDep w) := by
-  cases t
-  case ofNat n =>
-    simp [Term.ofDep, Term.width]
-  case var v =>
-    simp [Term.width]
-  case add a b =>
-    simp [Term.ofDep, Term.width]
-  case zext a wnew =>
-    simp [Term.ofDep, Term.width]
-  case sext a wnew =>
-    simp [Term.ofDep, Term.width]
-  case bor a b =>
-    simp [Term.ofDep, Term.width]
-  case band a b =>
-    simp [Term.ofDep, Term.width]
-  case bxor a b =>
-    simp [Term.ofDep, Term.width]
-  case bnot a =>
-    simp [Term.ofDep, Term.width]
+  cases t <;> simp [Term.ofDep, Term.width]
 
 def Term.wcard (t : Term) : Nat := t.width.wcard
 
@@ -611,12 +618,14 @@ def Term.tcard (t : Term) : Nat :=
   | .add _w a b => max (Term.tcard a) (Term.tcard b)
   | .zext a _wnew => (Term.tcard a)
   | .sext a _wnew => (Term.tcard a)
+  | .setWidth a _wnew => (Term.tcard a)
   | .bor _w a b => (max (Term.tcard a) (Term.tcard b))
   | .band _w a b => (max (Term.tcard a) (Term.tcard b))
   | .bxor _w a b => (max (Term.tcard a) (Term.tcard b))
   | .bnot _w a => (Term.tcard a)
   | .boolVar _v => 0
   | .boolConst _b => 0
+  | .shiftl _w a _k => (Term.tcard a)
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -625,12 +634,14 @@ def Term.bcard (t : Term) : Nat :=
   | .add _w a b => max (Term.bcard a) (Term.bcard b)
   | .zext a _wnew => (Term.bcard a)
   | .sext a _wnew => (Term.bcard a)
+  | .setWidth a _wnew => (Term.bcard a)
   | .bor _w a b => (max (Term.bcard a) (Term.bcard b))
   | .band _w a b => (max (Term.bcard a) (Term.bcard b))
   | .bxor _w a b => (max (Term.bcard a) (Term.bcard b))
   | .bnot _w a => (Term.bcard a)
   | .boolVar v => v + 1
   | .boolConst _b => 0
+  | .shiftl _w a _k => (Term.bcard a)
 
 
 inductive Predicate
