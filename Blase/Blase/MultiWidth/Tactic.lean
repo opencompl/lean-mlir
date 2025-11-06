@@ -223,6 +223,21 @@ partial def collectWidthExpr (state : CollectState) (e : Expr) :
       let (wy, state) ← collectWidthExpr state y
       return (.max wx wy, state)
     | _ => mkAtom
+  | HAdd.hAdd _nat0 _nat1 _nat2 _inst a b =>
+    match_expr _nat0 with
+    | Nat =>
+      match_expr _nat1 with
+      | Nat =>
+        match_expr _nat2 with
+        | Nat => do
+          let (wa, state) ← collectWidthExpr state a
+          if let some b ← getNatValue? b then
+            return (.addK wa b, state)
+          else
+            mkAtom
+        | _ => mkAtom
+      | _ => mkAtom
+    | _ => mkAtom
   | _ => mkAtom
   where
     mkAtom := do
