@@ -654,29 +654,29 @@ def main():
         if parameter == "similarity" :
             calculate_similarity('LEANMLIR_opt', 'LLVM_globalisel')
             calculate_similarity('LEANMLIR_opt', 'LLVM_selectiondag')
-            calculate_similarity('LLVM_globalisel', 'LLVM_selectiondag')
+            # calculate_similarity('LLVM_globalisel', 'LLVM_selectiondag')
         else: 
             if "scatter" in plots_to_produce or "all" in plots_to_produce :
                 scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
                 scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-                scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                # scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
             if "sorted" in plots_to_produce or "all" in plots_to_produce :
                 sorted_line_plot_all(parameter)
                 sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
                 sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-                sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                # sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
             if "overhead" in plots_to_produce or "all" in plots_to_produce :
                 overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
                 overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-                overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                # overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
             if "stacked" in plots_to_produce or "all" in plots_to_produce :
                 bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
                 bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-                bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                # bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
             if "proportional" in plots_to_produce or "all" in plots_to_produce :
                 proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel')
                 proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag')
-                proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                # proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
                     
 
 
