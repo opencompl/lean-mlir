@@ -96,14 +96,14 @@ parameters_match = {
     "tot_instructions" : "Instructions:      ",
     "tot_cycles" : "Total Cycles:      ",
     "tot_uops" : "Total uOps:        ",
-    "instructions": "Instructions List:      "
+    "similarity": "Instructions List:      "
 }
 
 parameters_labels = {
     "tot_instructions" : "#instructions",
     "tot_cycles" : "#cycles",
     "tot_uops" : "#uOps",
-    "instructions": "Instructions List:"
+    "similarity": "Instructions List:"
 }
 
 selector_labels = {
@@ -139,63 +139,37 @@ def parse_instructions(filename):
     return instructions
 
 
-def extract_data(results_directory, benchmark_name, parameter, opt) :
+def extract_data(results_directory, benchmark_name, parameter) :
     """
     Parses the results of mca and saves the result in a DataFrame, then printed to `.csv`
     """
     function_names = []
     parameter_numbers = []
-    if opt != '' :
-        for filename in os.listdir(results_directory):
-            if opt in filename : 
-                file_path = os.path.join(results_directory, filename)
-                try:
-                    with open(file_path, "r") as f:
-                        file_lines = f.readlines()
-                        if parameter == "instructions":
-                            instructions = parse_instructions(file_path)
-                            if instructions is not None:
-                                parameter_numbers.append(",".join(instructions))
-                                function_names.append(filename.split(".")[0].split('_'+opt)[0])
-                            continue
-                        for line in file_lines:
-                            if parameters_match[parameter] in line : 
-                                function_names.append(filename.split(".")[0].split('_'+opt)[0])
-                                num = int(line.split(" ")[-1])
-                                if parameter == "tot_cycles" :
-                                    parameter_numbers.append(int(num))
-                                else:
-                                    parameter_numbers.append(int(num/100))
-                except FileNotFoundError:
-                    print(f"Warning: file not found at {file_path}. Skipping.")
-    else :
-        for filename in os.listdir(results_directory):
-            file_path = os.path.join(results_directory, filename)
-            try:
+    for filename in os.listdir(results_directory):
+        file_path = os.path.join(results_directory, filename)
+        try:
+            if parameter == "similarity": 
                 with open(file_path, "r") as f:
                     file_lines = f.readlines()
-                    if parameter == "instructions":
-                        instructions = parse_instructions(file_path)
-                        if instructions is not None:
-                            parameter_numbers.append(",".join(instructions))
-                            function_names.append(filename.split(".")[0].split('_'+opt)[0])
-                        continue
+                    instructions = parse_instructions(file_path)
+                    if instructions is not None:
+                        parameter_numbers.append(",".join(instructions))
+                        function_names.append(filename.split(".")[0])
+            else:  
+                with open(file_path, "r") as f:
+                    file_lines = f.readlines()
                     for line in file_lines:
                         if parameters_match[parameter] in line : 
-                            function_names.append(filename.split(".")[0].split('_'+opt)[0])
+                            function_names.append(filename.split(".")[0])
                             num = int(line.split(" ")[-1])
                             if parameter == "tot_cycles" :
                                 parameter_numbers.append(int(num))
                             else:
                                 parameter_numbers.append(int(num/100))
-            except FileNotFoundError:
-                print(f"Warning: file not found at {file_path}. Skipping.")
-    if opt != '':
-        df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+opt+"_"+parameter : parameter_numbers})
-        df.to_csv(data_dir + benchmark_name+"_"+opt+'_'+ parameter  + '.csv')
-    else:
-        df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+parameter : parameter_numbers})
-        df.to_csv(data_dir + benchmark_name + "_" + parameter + '.csv')
+        except FileNotFoundError:
+            print(f"Warning: file not found at {file_path}. Skipping.")
+    df = pd.DataFrame({"function_name": function_names, benchmark_name+"_"+parameter : parameter_numbers})
+    df.to_csv(data_dir + benchmark_name + "_" + parameter + '.csv')
 
 def join_dataframes(dataframe_names, parameter) :
     """
@@ -208,9 +182,8 @@ def join_dataframes(dataframe_names, parameter) :
         else: 
             complete_df = pd.merge(complete_df, df, on='function_name', how='inner')
             print(complete_df)
-            
-    
-    complete_df['instructions_number']= complete_df['function_name'].apply(lambda x: int(x.split('_')[0]))
+    if parameter != "similarity":
+        complete_df['instructions_number']= complete_df['function_name'].apply(lambda x: int(x.split('_')[0]))
     complete_df.to_csv(data_dir + parameter+".csv")
 
 def sorted_line_plot_all(parameter, opt):
@@ -670,7 +643,7 @@ def main():
         "-p",
         "--parameters",
         nargs="+",
-        choices=["tot_instructions", "tot_cycles", "tot_uops", "instructions", "all"]
+        choices=["tot_instructions", "tot_cycles", "tot_uops", "similarity", "all"]
     )
 
     parser.add_argument(
@@ -683,18 +656,17 @@ def main():
     parser.add_argument(
         "-llvm", "--llvm_opt", 
         help="Optimization level for LLVM.",
-        nargs="+",
-        choices=["O3", "O2", "O1", "O0" "default"]
+        choices=["O3", "O2", "O1", "O0", "default"]
     )
     
     args = parser.parse_args()
     
     opts_to_evaluate = (
-        ["O3", "Os", "default"] if "all" in args.llvm_opt else args.llvm_opt
+        ["similarity", "tot_instructions", "tot_cycles", "tot_uops"] if "all" in args.parameters else args.llvm_opt
     )
 
     params_to_evaluate = (
-        ["instructions", "tot_instructions", "tot_cycles", "tot_uops"] if "all" in args.parameters else args.parameters
+        ["similarity", "tot_instructions", "tot_cycles", "tot_uops"] if "all" in args.parameters else args.parameters
     )
 
     plots_to_produce = (
@@ -706,81 +678,42 @@ def main():
     print(args)
 
     for parameter in params_to_evaluate : 
-        for opt in opts_to_evaluate:
-            extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', parameter, opt)    
-            extract_data(LLVM_selectiondag_results_DIR_PATH, 'LLVM_selectiondag', parameter, opt)
-            
-        extract_data(LEANMLIR_results_DIR_PATH, 'LEANMLIR', parameter,'')
-        extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter,'')
+        extract_data(LLVM_globalisel_results_DIR_PATH, 'LLVM_globalisel', parameter)    
+        extract_data(LLVM_selectiondag_results_DIR_PATH, 'LLVM_selectiondag', parameter)
+        extract_data(LEANMLIR_opt_results_DIR_PATH, 'LEANMLIR_opt', parameter)
         
-        to_join = ['LEANMLIR', 'LEANMLIR_opt']
-        for opt in opts_to_evaluate:
-            if opt != 'default':
-                to_join.append('LLVM_globalisel_'+opt)
-                to_join.append('LLVM_selectiondag_'+opt)
-            else:
-                to_join.append('LLVM_globalisel')
-                to_join.append('LLVM_selectiondag') 
-            
+        to_join = ['LEANMLIR_opt', 'LLVM_globalisel', 'LLVM_selectiondag']
         join_dataframes(to_join, parameter)
+        
         print(to_join)
         
-        for opt in opts_to_evaluate:
-            if opt != 'default':
-                if parameter == "instructions" :
-                    calculate_similarity('LEANMLIR_opt', 'LLVM_globalisel_'+opt)
-                    calculate_similarity('LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
-                    calculate_similarity('LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
-                    continue
-                if "scatter" in plots_to_produce or "all" in plots_to_produce :
-                    scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
-                    scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
-                    scatter_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
-                if "sorted" in plots_to_produce or "all" in plots_to_produce :
-                    sorted_line_plot_all(parameter, opt)
-                    sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt, opt)
-                    sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt, opt)
-                    sorted_line_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt, opt)
-                if "overhead" in plots_to_produce or "all" in plots_to_produce :
-                    overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
-                    overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
-                    overhead_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
-                if "stacked" in plots_to_produce or "all" in plots_to_produce :
-                    bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
-                    bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
-                    bar_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
-                if "proportional" in plots_to_produce or "all" in plots_to_produce :
-                    proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_'+opt)
-                    proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_'+opt)
-                    proportional_bar_plot(parameter, 'LLVM_globalisel_'+opt, 'LLVM_selectiondag_'+opt)
-            else:
-                if parameter == "instructions":
-                    calculate_similarity('LEANMLIR', 'LLVM_globalisel')
-                    calculate_similarity('LEANMLIR', 'LLVM_selectiondag')
-                    calculate_similarity('LLVM_globalisel', 'LLVM_selectiondag')
-                    continue
-                if "scatter" in plots_to_produce or "all" in plots_to_produce :
-                    scatter_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-                    scatter_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-                    scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-                if "sorted" in plots_to_produce or "all" in plots_to_produce :
-                    sorted_line_plot_all(parameter, '')
-                    sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-                    sorted_line_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-                    sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-                if "overhead" in plots_to_produce or "all" in plots_to_produce :
-                    overhead_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-                    overhead_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-                    overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-                if "stacked" in plots_to_produce or "all" in plots_to_produce :
-                    bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-                    bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-                    bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-                if "proportional" in plots_to_produce or "all" in plots_to_produce :
-                    proportional_bar_plot(parameter, 'LEANMLIR', 'LLVM_globalisel')
-                    proportional_bar_plot(parameter, 'LEANMLIR', 'LLVM_selectiondag')
-                    proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-                    
+        if parameter == "instructions" :
+            calculate_similarity('LEANMLIR_opt', 'LLVM_globalisel_')
+            calculate_similarity('LEANMLIR_opt', 'LLVM_selectiondag_')
+            calculate_similarity('LLVM_globalisel_', 'LLVM_selectiondag_')
+            continue
+        if "scatter" in plots_to_produce or "all" in plots_to_produce :
+            scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_')
+            scatter_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_')
+            scatter_plot(parameter, 'LLVM_globalisel_', 'LLVM_selectiondag_')
+        if "sorted" in plots_to_produce or "all" in plots_to_produce :
+            sorted_line_plot_all(parameter, opt)
+            sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_', opt)
+            sorted_line_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_', opt)
+            sorted_line_plot(parameter, 'LLVM_globalisel_', 'LLVM_selectiondag_', opt)
+        if "overhead" in plots_to_produce or "all" in plots_to_produce :
+            overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_')
+            overhead_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_')
+            overhead_plot(parameter, 'LLVM_globalisel_', 'LLVM_selectiondag_')
+        if "stacked" in plots_to_produce or "all" in plots_to_produce :
+            bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_')
+            bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_')
+            bar_plot(parameter, 'LLVM_globalisel_', 'LLVM_selectiondag_')
+        if "proportional" in plots_to_produce or "all" in plots_to_produce :
+            proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_globalisel_')
+            proportional_bar_plot(parameter, 'LEANMLIR_opt', 'LLVM_selectiondag_')
+            proportional_bar_plot(parameter, 'LLVM_globalisel_', 'LLVM_selectiondag_')
+                
 
 
 if __name__ == "__main__":
