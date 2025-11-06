@@ -869,12 +869,12 @@ elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   generalizeCommand (H := bvHydrableParseAndGeneralize) expr
 
-syntax (name := bvGeneralize) "bv_generalize" : tactic
+syntax (name := medusaSynthGeneralize) "md_synth_generalize" : tactic
 
 open Lean Meta Elab Tactic in
-@[tactic bvGeneralize]
+@[tactic medusaSynthGeneralize]
 def evalBvGeneralize : Tactic
-  | `(tactic| bv_generalize) => do
+  | `(tactic| md_synth_generalize) => do
       withMainContext do
         generalizeTactic (H := bvHydrableParseAndGeneralize) (← getMainTarget)
   | _ => Lean.Elab.throwUnsupportedSyntax
@@ -897,7 +897,7 @@ info: theorem Generalize.BV.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1
 -/
 #guard_msgs in
 theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
-  bv_generalize
+  md_synth_generalize
   sorry
 
 
@@ -905,8 +905,9 @@ theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
 info: theorem Generalize.BV.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
 -/
 #guard_msgs in
-theorem demo2 (x y : BitVec 8) :  (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
-  bv_generalize
+theorem demo2 (x y : BitVec 8) :
+    (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
+  md_synth_generalize
   sorry
 
 
@@ -915,7 +916,7 @@ info: theorem Generalize.BV.demo3.generalized_1_1 {w} (x y C1 C2 : BitVec w) : i
 -/
 #guard_msgs in
 theorem demo3 (x y : BitVec 32) : (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y := by
-  bv_generalize
+  md_synth_generalize
   sorry
 
 end Examples
