@@ -2,9 +2,13 @@ import Blase
 open BitVec
 set_option warn.sorry false
 
+theorem setWidth_eq_zext (x : BitVec v) : x.zeroExtend w = x.setWidth w := by 
+  bv_multi_width
+
 theorem shiftl1 {v : Nat} (x : BitVec v) :
     x <<< 5 = x <<< 3 <<< 2 := by
   bv_multi_width
+
 
 /--
 error: CEX: Found exact counter-example at iteration 5 for predicate MultiWidth.Nondep.Predicate.binRel
