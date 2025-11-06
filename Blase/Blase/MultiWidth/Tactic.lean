@@ -196,14 +196,20 @@ partial def collectWidthExpr (state : CollectState) (e : Expr) :
   | Nat.succ n =>
     let (we, state) ← collectWidthExpr state n
     return (.addK we 1, state)
-  | min _ty _inst x y =>
-    let (wx, state) ← collectWidthExpr state x
-    let (wy, state) ← collectWidthExpr state y
-    return (.min wx wy, state)
-  | max _ty _inst x y =>
-    let (wx, state) ← collectWidthExpr state x
-    let (wy, state) ← collectWidthExpr state y
-    return (.max wx wy, state)
+  | min nat _inst x y =>
+    match_expr nat with 
+    | Nat =>
+      let (wx, state) ← collectWidthExpr state x
+      let (wy, state) ← collectWidthExpr state y
+      return (.min wx wy, state)
+    | _ => mkAtom 
+  | max nat _inst x y =>
+    match_expr nat with
+    | Nat =>
+      let (wx, state) ← collectWidthExpr state x
+      let (wy, state) ← collectWidthExpr state y
+      return (.max wx wy, state)
+    | _ => mkAtom
   | _ => mkAtom
   where
     mkAtom := do
@@ -529,6 +535,19 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       return (.bnot w ta, state)
+    | _ => mkAtom
+  | HShiftLeft.hShiftLeft _bv _nat _bv _inst a n =>
+    match_expr _bv with
+    | BitVec w =>
+      match_expr _nat with
+      | Nat =>
+        let (w, state) ← collectWidthExpr state w
+        let (ta, state) ← collectTerm state a
+        if let some nn ← getNatValue? n then
+          return (.shiftl w ta nn, state)
+        else
+          mkAtom
+      | _ => mkAtom
     | _ => mkAtom
   | _ => mkAtom
   where
