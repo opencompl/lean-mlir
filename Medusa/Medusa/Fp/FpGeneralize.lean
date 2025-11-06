@@ -750,6 +750,7 @@ private def prettifyAsTheorem (name: Name) (generalization : BoolExpr FpPredicat
 
 instance : HydrablePrettifyAsTheorem FpPredicate where
   prettifyAsTheorem := prettifyAsTheorem
+  prettifyAsSexpr _ _ := .atom "UNIMPLEMENTED"
 
 abbrev FpGeneralizerState := GeneralizerState ParsedFpExpr FpPredicate
 private def initialGeneralizerState (startTime timeout widthId targetWidth: Nat) (parsedLogicalExpr : ParsedFpLogicalExpr)

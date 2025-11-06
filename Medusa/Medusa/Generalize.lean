@@ -5,6 +5,7 @@ Authors: Timi Adeniran, Siddharth Bhat
 import Lean.Elab.Term
 import Lean.Meta.ForEachExpr
 import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
+import SexprPBV
 import Lean
 
 open Lean
@@ -617,6 +618,7 @@ Convert a generalization to a printable string, with variable IDs replaced with 
 -/
 class HydrablePrettify (genLogicalExpr : Type) where
   prettify : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
+  prettifyAsSexpr : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → SexprPBV.Sexpr
 
 
 /--
@@ -681,7 +683,9 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genPred genExp
             | some res => match context with
                           | GeneralizeContext.Command => let pretty := HydrablePrettify.prettify res variableDisplayNames
                                                          pure m! "Raw generalization result: {res} \n Input expression: {hExpr} has generalization: {pretty}"
-                          | GeneralizeContext.Tactic name => pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
+                          | GeneralizeContext.Tactic name => 
+                            throwError (H.prettifyAsSexpr res variableDisplayNames) |> format
+                            -- pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
             | none => throwError m! "Could not generalize {bvLogicalExpr}"
 
     | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"

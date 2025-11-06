@@ -763,6 +763,7 @@ def prettifyBVBinOp (op: BVBinOp) : String :=
   | .xor => "^^^"
   | _ => op.toString
 
+
 def prettifyBVBinPred (op : BVBinPred) : String :=
   match op with
   | .eq => "="
@@ -791,6 +792,23 @@ def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat Name) :
     | .signExtend v expr => s! "BitVec.signExtend {v} {prettifyBVExpr expr displayNames}"
     | .zeroExtend v expr => s! "BitVec.zeroExtend {v} {prettifyBVExpr expr displayNames}"
     | .truncate v expr =>   s! "BitVec.truncate {v} {prettifyBVExpr expr displayNames}"
+    | _ => bvExpr.toString
+
+def BVExpr.toSmtLib (bvExpr : GenBVExpr w) (displayNames : Std.HashMap Nat Name) : SexprPBV.Term :=
+    match bvExpr with
+    | .var idx => .var idx (.const w) --- TODO: what is the actual width of the BVExpr?
+    | .const bv =>
+       toString bv.toInt
+    | .bin lhs op rhs =>
+       s! "({op.toString} {bvExpr.toSmtLib lhs} {bvExpr.toSmtLib rhs})"
+    | .un op operand =>
+       s! "({op.toString} {bvExpr.toSmtLib operand})"
+    | .shiftLeft lhs rhs =>
+        s! "(bvshl {bvExpr.toSmtLib lhs} {bvExpr.toSmtLib rhs})"
+    | .shiftRight lhs rhs =>
+        s! "(bvlshr {bvExpr.toSmtLib lhs} {bvExpr.toSmtLib rhs})"
+    | .arithShiftRight lhs rhs =>
+        s! "(bvashr {bvExpr.toSmtLib lhs} {bvExpr.toSmtLib rhs})"
     | _ => bvExpr.toString
 
 def isGteZeroCheck (expr : BoolExpr GenBVPred) : Bool :=
@@ -833,9 +851,27 @@ def prettify (generalization: BoolExpr  GenBVPred) (displayNames: Std.HashMap Na
           s! "if {prettify cond displayNames} then {prettify positive displayNames} "
       | _ => generalization.toString
 
+def prettifyAsSexpr
+    (generalization :  BoolExpr GenBVPred)
+    (displayNames : Std.HashMap Nat Name) : SexprPBV.Sexpr :=
+  match (prettifyComparisonSexpr generalization displayNames) with
+  | some s => s
+  | none =>
+      match generalization with
+      | .literal (GenBVPred.bin lhs op rhs) =>
+          s! "{prettifyBVExpr lhs displayNames} {prettifyBVBinPred op} {prettifyBVExpr rhs displayNames}"
+      | .not boolExpr =>
+          s! "!({prettify boolExpr displayNames})"
+      | .gate op lhs rhs =>
+          s! "({prettify lhs displayNames}) {op.toString} ({prettify rhs displayNames})"
+      | .ite cond positive _ =>
+          s! "if {prettify cond displayNames} then {prettify positive displayNames} "
+      | _ => generalization.toString
+
 
 instance : HydrablePrettify GenBVPred where
   prettify := prettify
+  prettifyAsSexpr := prettifyAsSexpr
 
 def prettifyAsTheorem (name: Name) (generalization: BoolExpr GenBVPred) (displayNames: Std.HashMap Nat Name) : String := Id.run do
   let params := displayNames.values.filter (λ n => n.toString != "w")
@@ -843,6 +879,7 @@ def prettifyAsTheorem (name: Name) (generalization: BoolExpr GenBVPred) (display
   let res := res ++ s! " : {HydrablePrettify.prettify generalization displayNames}"
   let res := res ++ s! " := by sorry"
   pure res
+  
 
 instance : HydrablePrettifyAsTheorem GenBVPred where
   prettifyAsTheorem := prettifyAsTheorem
