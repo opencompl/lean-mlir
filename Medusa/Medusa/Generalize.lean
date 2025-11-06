@@ -618,7 +618,7 @@ Convert a generalization to a printable string, with variable IDs replaced with 
 -/
 class HydrablePrettify (genLogicalExpr : Type) where
   prettify : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
-  prettifyAsSexpr : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → SexprPBV.Sexpr
+  prettifyAsSexpr : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat HydraVariable) → SexprPBV.Sexpr
 
 
 /--
@@ -684,7 +684,7 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genPred genExp
                           | GeneralizeContext.Command => let pretty := HydrablePrettify.prettify res variableDisplayNames
                                                          pure m! "Raw generalization result: {res} \n Input expression: {hExpr} has generalization: {pretty}"
                           | GeneralizeContext.Tactic name => 
-                            throwError (H.prettifyAsSexpr res variableDisplayNames) |> format
+                            throwError (H.prettifyAsSexpr res allVariables) |> format
                             -- pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
             | none => throwError m! "Could not generalize {bvLogicalExpr}"
 
