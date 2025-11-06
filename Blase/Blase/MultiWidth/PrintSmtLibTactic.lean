@@ -27,7 +27,7 @@ def printSmtLib (g : MVarId) : SolverM Unit := do
       let collect : CollectState := {}
       let (p, _collect) ← collectBVPredicateAux collect gTy
       debugLog m!"collected predicate: '{repr p}'"
-      throwError (p.toSexpr |> format)
+      throwError (p.toSmtLib |>.toSexpr |> format)
 
 syntax (name := bvPrintSmtLib) "bv_multi_width_print_smt_lib" : tactic
 @[tactic bvPrintSmtLib]
