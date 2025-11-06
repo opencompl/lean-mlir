@@ -14,6 +14,8 @@ open Lean Meta Elab Tactic
 
 /-- Whether widths should be abstracted. -/
 inductive WidthAbstractionKind
+/-- widths should be abstracted for `≥ the cutoff -/
+| generalizeGeq (cutoff : Nat)
 /-- widths should always be abstracted. -/
 | always
 /-- widths should never be abstracted. -/
@@ -27,8 +29,8 @@ structure Config where
   niter : Nat := 30
   /-- debug printing verbosity. -/
   verbose?: Bool := false
-  /-- By default, widths are always abstracted. -/
-  widthAbstraction : WidthAbstractionKind := .always
+  /-- By default, widths larger than 1 (ie. non boolean) are always abstracted. -/
+  widthAbstraction : WidthAbstractionKind := .generalizeGeq 2
   /-- Make the final reflection proof as a 'sorry' for debugging. -/
   debugFillFinalReflectionProofWithSorry : Bool := false
 deriving DecidableEq, Repr
@@ -182,12 +184,23 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
       if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
         throwError m!"expected width to be a Nat, found: {indentD e}"
     -- If we do not want width abstraction, then try to interpret width as constant.
-    if (← read).widthAbstraction ≠ .always then
-      if let .some n ← getNatValue? e then
+    if let .some n ← getNatValue? e then
+      match (← read).widthAbstraction with 
+      | .never =>
         return (MultiWidth.Nondep.WidthExpr.const n, state)
-    let (wix, wToIx) := state.wToIx.findOrInsertVal e
-    -- TODO: implement 'w + K'.
-    return (.var wix, { state with wToIx := wToIx })
+      | .generalizeGeq cutoff =>
+        if n < cutoff then
+          return (MultiWidth.Nondep.WidthExpr.const n, state)
+        else
+          mkAtom
+      | .always => mkAtom
+    else
+      mkAtom
+    where
+      mkAtom := do
+        let (wix, wToIx) := state.wToIx.findOrInsertVal e
+        -- TODO: implement 'w + K'.
+        return (.var wix, { state with wToIx := wToIx })
 
 partial def collectWidthExpr (state : CollectState) (e : Expr) :
     SolverM (MultiWidth.Nondep.WidthExpr × CollectState) := do

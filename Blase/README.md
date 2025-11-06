@@ -16,9 +16,11 @@ For stable releases, please change the `rev` to the desired version tag.
 
 #### Algorithms Improvements TODO
 
-- [ ] Add support for left shift by constant which will give us much better multiplication encoding.
-- [ ] Add support for setWidth
-- [ ] Add support for min/max of width
+- [ ] Add support for a generalization mode that keeps width 1 and geneeralizes all other widths. This is useful for problems
+      with boolean substructure.
+- [x] Add support for left shift by constant which will give us much better multiplication encoding.
+- [x] Add support for setWidth
+- [x] Add support for min/max of width
 - [ ] I think we can handle ROVER like problems, canonicalize multiplication via ac_nf, have rules for how to distribute multiplication wrt addition/zext/sext/subtraction/negation, and we are done?
 - [x] Write a tactic that takes a goal state with BVs and generalizes them to an arbitrary width. 
       Call this `bv_abstract`.
