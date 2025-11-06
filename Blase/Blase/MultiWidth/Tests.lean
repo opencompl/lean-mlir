@@ -295,7 +295,7 @@ theorem shl1 : ∀ (w : Nat) (x : BitVec w), x <<< (0 : Nat) = x := by
 
 theorem shl2 : ∀ (w : Nat) (x : BitVec w), x <<< (1 : Nat) = x + x := by
   intros
-  bv_multi_width (config := { niter := 2 })
+  bv_multi_width (config := { niter := 5 })
 
 theorem shl3 : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
   intros; bv_multi_width
@@ -367,4 +367,3 @@ theorem egZextMin (u v : Nat) (x : BitVec w) :
   fail_if_success bv_multi_width (config := { widthAbstraction := .never })
   sorry
 
-end MultiWidthTests

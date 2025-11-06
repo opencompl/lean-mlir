@@ -41,22 +41,14 @@ Recall that booleans are coerced into props by writing it as '<bool> = true'. -/
 
 /-! Normal form for shifts
 
-We normalize all shifts into multiplication by constant bitvector on the left.
+See that `x <<< (n : Nat)` is strictly more expression than `x <<< BitVec.ofNat w n`,
+because in the former case, we can shift by arbitrary amounts, while in the latter case,
+we can only shift by numbers upto `2^w`. Therefore, we choose `x <<< (n : Nat)` as our simp
+and preprocessing normal form for the tactic.
 -/
 
-@[bv_multi_width_normalize] theorem BitVec.shiftLeft_ofNat_eq (x : BitVec w) (n : Nat) :
-  x <<< BitVec.ofNat w n = (BitVec.ofNat w (2 ^ (n % 2^w))) * x := by
-  apply BitVec.eq_of_toNat_eq
-  simp
-  rw [Nat.shiftLeft_eq]
-  rw [Nat.mul_comm]
-
-@[bv_multi_width_normalize] theorem BitVec.shiftLeft_nat_eq (x : BitVec w) (n : Nat) :
-  x <<< n = (BitVec.ofNat w (2 ^ n)) * x := by
-  apply BitVec.eq_of_toNat_eq
-  simp
-  rw [Nat.shiftLeft_eq]
-  rw [Nat.mul_comm]
+@[simp] theorem BitVec.shiftLeft_ofNat_eq (x : BitVec w) (n : Nat) :
+  x <<< BitVec.ofNat w n = x <<< (n % 2^w) := by simp
 
 /--
 Multiplying by an even number `e` is the same as shifting by `1`,
@@ -89,17 +81,6 @@ theorem BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one (w : Nat) (x : Bit
     rw [Nat.mul_assoc, Nat.mul_comm 2]
     omega
 
-@[bv_multi_width_normalize] theorem BitVec.two_mul_eq_add_add (x : BitVec w) : 2#w * x = x + x := by
-  apply BitVec.eq_of_toNat_eq;
-  simp only [BitVec.toNat_mul, BitVec.toNat_ofNat, Nat.mod_mul_mod, BitVec.toNat_add]
-  congr
-  omega
-
-@[bv_multi_width_normalize] theorem BitVec.two_mul (x : BitVec w) : 2#w * x = x + x := by
-  apply BitVec.eq_of_toNat_eq
-  simp only [BitVec.toNat_mul, BitVec.toNat_ofNat, Nat.mod_mul_mod, BitVec.toNat_add]
-  congr
-  omega
 
 @[bv_multi_width_normalize] theorem BitVec.one_mul (x : BitVec w) : 1#w * x = x := by simp
 
