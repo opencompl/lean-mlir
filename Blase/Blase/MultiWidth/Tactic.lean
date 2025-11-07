@@ -185,7 +185,7 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
         throwError m!"expected width to be a Nat, found: {indentD e}"
     -- If we do not want width abstraction, then try to interpret width as constant.
     if let .some n ← getNatValue? e then
-      match (← read).widthAbstraction with 
+      match (← read).widthAbstraction with
       | .never =>
         return (MultiWidth.Nondep.WidthExpr.const n, state)
       | .generalizeGeq cutoff =>
@@ -204,30 +204,51 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
 
 partial def collectWidthExpr (state : CollectState) (e : Expr) :
     SolverM (MultiWidth.Nondep.WidthExpr × CollectState) := do
-  match_expr e with
-  | Nat.zero => return (.const 0, state)
-  | Nat.succ n =>
-    let (we, state) ← collectWidthExpr state n
-    return (.addK we 1, state)
-  | min nat _inst x y =>
-    match_expr nat with 
-    | Nat =>
-      let (wx, state) ← collectWidthExpr state x
-      let (wy, state) ← collectWidthExpr state y
-      return (.min wx wy, state)
-    | _ => mkAtom 
-  | max nat _inst x y =>
-    match_expr nat with
-    | Nat =>
-      let (wx, state) ← collectWidthExpr state x
-      let (wy, state) ← collectWidthExpr state y
-      return (.max wx wy, state)
+  if let some v ← getNatValue? e then
+    return (.const v, state)
+  else
+    match_expr e with
+    | Nat.succ n =>
+      let (we, state) ← collectWidthExpr state n
+      return (.addK we 1, state)
+    | min nat _inst x y =>
+      match_expr nat with
+      | Nat =>
+        let (wx, state) ← collectWidthExpr state x
+        let (wy, state) ← collectWidthExpr state y
+        return (.min wx wy, state)
+      | _ => mkAtom
+    | max nat _inst x y =>
+      match_expr nat with
+      | Nat =>
+        let (wx, state) ← collectWidthExpr state x
+        let (wy, state) ← collectWidthExpr state y
+        return (.max wx wy, state)
+      | _ => mkAtom
+    | HAdd.hAdd _nat0 _nat1 _nat2 _inst a b =>
+      match_expr _nat0 with
+      | Nat =>
+        match_expr _nat1 with
+        | Nat =>
+          match_expr _nat2 with
+          | Nat => do
+            if let some a ← getNatValue? a then
+              let (wb, state) ← collectWidthExpr state b
+              return (.kadd a wb, state)
+            else
+              let (wa, state) ← collectWidthExpr state a
+              if let some b ← getNatValue? b then
+                return (.addK wa b, state)
+              else
+                mkAtom
+          | _ => mkAtom
+        | _ => mkAtom
+      | _ => mkAtom
     | _ => mkAtom
-  | _ => mkAtom
-  where
-    mkAtom := do
-      let (we, state) ← collectWidthAtom state e
-      return (we, state)
+    where
+      mkAtom := do
+        let (we, state) ← collectWidthAtom state e
+        return (we, state)
 
 /-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
 #guard_msgs in #check Fin.mk
@@ -279,6 +300,11 @@ def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
   | .addK v k =>
     let out := mkAppN (mkConst ``MultiWidth.WidthExpr.addK)
       #[mkNatLit wcard, ← mkWidthExpr wcard v, mkNatLit k]
+    debugCheck out
+    return out
+  | .kadd k v =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.kadd)
+      #[mkNatLit wcard, mkNatLit k, ← mkWidthExpr wcard v]
     debugCheck out
     return out
 

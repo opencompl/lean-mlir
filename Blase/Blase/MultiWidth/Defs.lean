@@ -45,6 +45,7 @@ inductive WidthExpr (wcard : Nat) : Type
 | min : (v w : WidthExpr wcard) → WidthExpr wcard
 | max : (v w : WidthExpr wcard) → WidthExpr wcard
 | addK : (v : WidthExpr wcard) → (k : Nat) → WidthExpr wcard
+| kadd : (k : Nat) → (v : WidthExpr wcard) → WidthExpr wcard
 
 
 /-- Cast the width expression along the fact that width is ≤. -/
@@ -55,6 +56,7 @@ def WidthExpr.castLe {wcard : Nat} (e : WidthExpr wcard) (hw : wcard ≤ wcard')
   | .min v w => .min (v.castLe hw) (w.castLe hw)
   | .max v w => .max (v.castLe hw) (w.castLe hw)
   | .addK v k => .addK (v.castLe hw) k
+  | .kadd k v => .kadd k (v.castLe hw)
 
 abbrev WidthExpr.Env (wcard : Nat) : Type :=
   Fin wcard → Nat
@@ -73,6 +75,7 @@ def WidthExpr.toNat (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
   | .min v w => Nat.min (v.toNat env) (w.toNat env)
   | .max v w => Nat.max (v.toNat env) (w.toNat env)
   | .addK v k => v.toNat env + k
+  | .kadd k v => k + v.toNat env
 
 @[simp]
 def WidthExpr.toNat_const {n : Nat} (env : WidthExpr.Env wcard) :
@@ -95,6 +98,11 @@ def WidthExpr.toNat_addK (v : WidthExpr wcard) (k : Nat)
     (env : WidthExpr.Env wcard) :
     WidthExpr.toNat (.addK v k) env = v.toNat env + k := rfl
 
+@[simp]
+def WidthExpr.toNat_kadd (v : WidthExpr wcard) (k : Nat)
+    (env : WidthExpr.Env wcard) :
+    WidthExpr.toNat (.kadd k v) env = k + v.toNat env := rfl
+
 def WidthExpr.toBitStream (e : WidthExpr wcard)
   (bsEnv : StateSpace wcard tcard bcard pcard → BitStream) : BitStream :=
   match e with
@@ -103,6 +111,7 @@ def WidthExpr.toBitStream (e : WidthExpr wcard)
   | .min v w => BitStream.minUnary (v.toBitStream bsEnv) (w.toBitStream bsEnv)
   | .max v w => BitStream.maxUnary (v.toBitStream bsEnv) (w.toBitStream bsEnv)
   | .addK v k => BitStream.addKUnary (v.toBitStream bsEnv) k
+  | .kadd k v => BitStream.addKUnary (v.toBitStream bsEnv) k
 
 inductive NatPredicate (wcard : Nat) : Type
 | eq : WidthExpr wcard → WidthExpr wcard → NatPredicate wcard
@@ -412,6 +421,7 @@ inductive WidthExpr where
 | max : WidthExpr → WidthExpr → WidthExpr
 | min : WidthExpr → WidthExpr → WidthExpr
 | addK : WidthExpr → Nat → WidthExpr
+| kadd : Nat → WidthExpr → WidthExpr
 deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 open Std Lean in
@@ -433,6 +443,11 @@ def WidthExpr.toSexpr : WidthExpr → Sexpr
     v.toSexpr,
     .atomOf k
   ]
+| .kadd k v => Sexpr.array #[
+    Sexpr.atom "kadd",
+    .atomOf k,
+    v.toSexpr
+  ]
 
 instance : ToSexpr WidthExpr where
   toSexpr := WidthExpr.toSexpr
@@ -445,6 +460,7 @@ def WidthExpr.wcard (w : WidthExpr) : Nat :=
   | .max v w => Nat.max (v.wcard) (w.wcard)
   | .min v w => Nat.min (v.wcard) (w.wcard)
   | .addK v k => v.wcard + k
+  | .kadd k v => k + v.wcard
 
 def WidthExpr.ofDep {wcard : Nat}
     (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
@@ -454,6 +470,7 @@ def WidthExpr.ofDep {wcard : Nat}
   | .max a b => .max (.ofDep a) (.ofDep b)
   | .min a b => .min (.ofDep a) (.ofDep b)
   | .addK a k => .addK (.ofDep a) k
+  | .kadd k a => .kadd k (.ofDep a)
 
 @[simp]
 def WidthExpr.ofDep_const {wcard : Nat} {n : Nat} :
@@ -478,6 +495,11 @@ def WidthExpr.ofDep_min {wcard : Nat} {v w : MultiWidth.WidthExpr wcard} :
 def WidthExpr.ofDep_addK {wcard : Nat} {v : MultiWidth.WidthExpr wcard} {k : Nat} :
     (WidthExpr.ofDep (MultiWidth.WidthExpr.addK v k)) =
     (.addK (.ofDep v) k) := rfl
+
+@[simp]
+def WidthExpr.ofDep_kadd {wcard : Nat} {v : MultiWidth.WidthExpr wcard} {k : Nat} :
+    (WidthExpr.ofDep (MultiWidth.WidthExpr.kadd k v)) =
+    (.kadd k (.ofDep v)) := rfl
 
 inductive Term
 | ofNat (w : WidthExpr) (n : Nat) : Term
