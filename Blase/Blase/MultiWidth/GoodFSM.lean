@@ -62,6 +62,10 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (bcard : Nat) (pcard : Nat) (w : Nond
     { toFsm :=
         composeUnaryAux (FSM.repeatN true k)  (mkWidthFSM wcard tcard bcard pcard v).toFsm
     }
+  | .kadd k v =>
+    { toFsm :=
+        composeUnaryAux (FSM.repeatN true k)  (mkWidthFSM wcard tcard bcard pcard v).toFsm
+    }
 
 def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (bcard : Nat) (pcard : Nat)  (w : WidthExpr wcard) :
     HNatFSMToBitstream (mkWidthFSM wcard tcard bcard pcard (.ofDep w)) where
@@ -95,10 +99,17 @@ def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (bcard : Nat) (pcard : N
       ext i
       simp
     case addK v k hv =>
-      simp [mkWidthFSM]
+      simp only [Nondep.WidthExpr.ofDep_addK, mkWidthFSM, composeUnaryAux_eval, FSM.eval_repeatN,
+        Bool.if_true_left, WidthExpr.toNat_addK]
       rw [hv]
       ext i
       simp
+      simp only [decide_or_decide_eq_decide, decide_eq_decide]
+      omega
+    case kadd k v hv =>
+      simp [mkWidthFSM]
+      rw [hv]
+      ext i
       simp only [decide_or_decide_eq_decide, decide_eq_decide]
       omega
 
