@@ -35,6 +35,7 @@ def llvm_xor_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty
   {lhs := llvm_xor_64, rhs := xor_riscv_64}
 
 
+
 def xor_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_xor_lower_riscv)
 ]
