@@ -2,8 +2,8 @@ import Mathlib.Algebra.Notation.Defs
 import Mathlib.Order.Notation
 import Blase.Fast.FiniteStateMachine
 import Blase.Vars
+import SexprPBV
 import Lean
-import Blase.Sexpr
 
 import Std.Tactic.BVDecide
 
@@ -341,6 +341,14 @@ inductive BinaryRelationKind
 | ult -- unsigned less than.
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
+def BinaryRelationKind.toSmtLib : BinaryRelationKind → SexprPBV.BinaryRelationKind
+| .eq => .eq
+| .ne => .ne
+| .ule => .ule
+| .slt => .slt
+| .sle => .sle
+| .ult => .ult
+
 def Predicate.Env (pcard : Nat) : Type :=
   Fin pcard → Prop
 
@@ -358,9 +366,16 @@ inductive WidthBinaryRelationKind
 -- a ≠ b: (a < b ∨ b < a)
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
+def WidthBinaryRelationKind.toSmtLib : WidthBinaryRelationKind → SexprPBV.WidthBinaryRelationKind
+| .eq => .eq
+| .le => .le
+
 inductive BoolBinaryRelationKind
 | eq
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
+def BoolBinaryRelationKind.toSmtLib : BoolBinaryRelationKind → SexprPBV.BoolBinaryRelationKind
+| .eq => .eq
 
 inductive Predicate :
   (wcard : Nat) →
@@ -425,32 +440,14 @@ inductive WidthExpr where
 deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 open Std Lean in
-def WidthExpr.toSexpr : WidthExpr → Sexpr
-| .const n => (Sexpr.array #[.atom "wconst", .atomOf n])
-| .var v => (Sexpr.array #[.atom "wvar", .atomOf v])
-| .max v w => Sexpr.array #[
-    Sexpr.atom "max",
-    v.toSexpr,
-    w.toSexpr
-  ]
-| .min v w => Sexpr.array #[
-    Sexpr.atom "min",
-    v.toSexpr,
-    w.toSexpr
-  ]
-| .addK v k => Sexpr.array #[
-    Sexpr.atom "addK",
-    v.toSexpr,
-    .atomOf k
-  ]
-| .kadd k v => Sexpr.array #[
-    Sexpr.atom "kadd",
-    .atomOf k,
-    v.toSexpr
-  ]
 
-instance : ToSexpr WidthExpr where
-  toSexpr := WidthExpr.toSexpr
+def WidthExpr.toSmtLib : WidthExpr → SexprPBV.WidthExpr
+| .const n => .const n
+| .var v => .var v
+| .max v w => .max v.toSmtLib w.toSmtLib
+| .min v w => .min v.toSmtLib w.toSmtLib
+| .addK v k => .addK v.toSmtLib k
+| .kadd k v => .kadd k v.toSmtLib
 
 
 def WidthExpr.wcard (w : WidthExpr) : Nat :=
@@ -517,78 +514,21 @@ inductive Term
 | shiftl (w : WidthExpr) (a : Term) (k : Nat) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
-def Term.toSexpr : Term → Sexpr
-| .shiftl w a k => Sexpr.array #[
-    Sexpr.atom "shiftl",
-    w.toSexpr,
-    a.toSexpr,
-    .atomOf k
-  ]
-| .setWidth a w => Sexpr.array #[
-    Sexpr.atom "setwidth",
-    a.toSexpr,
-    w.toSexpr
-  ]
-| .ofNat w n => Sexpr.array #[
-    Sexpr.atom "ofNat",
-    w.toSexpr,
-    .atomOf n
-  ]
-| .var v w => Sexpr.array #[
-    Sexpr.atom "bvvar",
-    .atomOf v,
-    w.toSexpr
-  ]
-| .add w a b => Sexpr.array #[
-    Sexpr.atom "add",
-    w.toSexpr,
-    a.toSexpr,
-    b.toSexpr
-  ]
-| .zext a wnew => Sexpr.array #[
-    Sexpr.atom "zext",
-    a.toSexpr,
-    wnew.toSexpr
-  ]
-| .sext a wnew => Sexpr.array #[
-    Sexpr.atom "sext",
-    a.toSexpr,
-    wnew.toSexpr
-  ]
-| .bor w a b => Sexpr.array #[
-    Sexpr.atom "bor",
-    w.toSexpr,
-    a.toSexpr,
-    b.toSexpr
-  ]
-| .band w a b => Sexpr.array #[
-    Sexpr.atom "band",
-    w.toSexpr,
-    a.toSexpr,
-    b.toSexpr
-  ]
-| .bxor w a b => Sexpr.array #[
-    Sexpr.atom "bxor",
-    w.toSexpr,
-    a.toSexpr,
-    b.toSexpr
-  ]
-| .bnot w a => Sexpr.array #[
-    Sexpr.atom "bnot",
-    w.toSexpr,
-    a.toSexpr
-  ]
-| .boolVar v => Sexpr.array #[
-    Sexpr.atom "boolvar",
-    .atomOf v
-  ]
-| .boolConst b => Sexpr.array #[
-    Sexpr.atom "boolConst",
-    .atomOf b
-  ]
+def Term.toSmtLib : Term → SexprPBV.Term
+| .ofNat w n => .ofNat w.toSmtLib n
+| .var v w => .var v w.toSmtLib
+| .add w a b => .add w.toSmtLib a.toSmtLib b.toSmtLib
+| .zext a wnew => .zext a.toSmtLib wnew.toSmtLib
+| .sext a wnew => .sext a.toSmtLib wnew.toSmtLib
+| .setWidth a wnew => .setWidth a.toSmtLib wnew.toSmtLib
+| .bor w a b => .bor w.toSmtLib a.toSmtLib b.toSmtLib
+| .band w a b => .band w.toSmtLib a.toSmtLib b.toSmtLib
+| .bxor w a b => .bxor w.toSmtLib a.toSmtLib b.toSmtLib
+| .bnot w a => .bnot w.toSmtLib a.toSmtLib
+| .boolVar v => .boolVar v
+| .boolConst b => .boolConst b
+| .shiftl w a k => .shiftl w.toSmtLib a.toSmtLib k
 
-instance : ToSexpr Term where
-  toSexpr := Term.toSexpr
 
 def Term.ofDep {wcard tcard bcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -692,78 +632,15 @@ inductive Predicate
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 
-def Predicate.toSexpr : Predicate → Sexpr
+def Predicate.toSmtLib : Predicate → SexprPBV.Predicate
 | .binWidthRel k wa wb =>
-  match k with
-  | .eq => Sexpr.array #[
-      Sexpr.atom "weq",
-      wa.toSexpr,
-      wb.toSexpr
-    ]
-  | .le => Sexpr.array #[
-      Sexpr.atom "wle",
-      wa.toSexpr,
-      wb.toSexpr
-    ]
+  .binWidthRel k.toSmtLib wa.toSmtLib wb.toSmtLib
 | .binRel k w a b =>
-  match k with
-  | .eq => Sexpr.array #[
-      Sexpr.atom "bveq",
-      w.toSexpr,
-      a.toSexpr,
-      b.toSexpr
-    ]
-  | .ne => Sexpr.array #[
-      Sexpr.atom "bvne",
-      w.toSexpr,
-      a.toSexpr,
-      b.toSexpr
-    ]
-  | .ult => Sexpr.array #[
-      Sexpr.atom "bvult",
-      w.toSexpr,
-      a.toSexpr,
-      b.toSexpr
-    ]
-  | .ule => Sexpr.array #[
-      Sexpr.atom "bvule",
-      w.toSexpr,
-      a.toSexpr,
-      b.toSexpr
-    ]
-  | .slt => Sexpr.array #[
-      Sexpr.atom "bvslt",
-      w.toSexpr,
-      a.toSexpr,
-      b.toSexpr
-    ]
-  | .sle => Sexpr.array #[
-      Sexpr.atom "bvsle",
-      w.toSexpr,
-      a.toSexpr,
-      b.toSexpr
-    ]
-| .or p1 p2 => Sexpr.array #[
-    Sexpr.atom "por",
-    p1.toSexpr,
-    p2.toSexpr
-  ]
-| .and p1 p2 => Sexpr.array #[
-    Sexpr.atom "pand",
-    p1.toSexpr,
-    p2.toSexpr
-  ]
-| .var v => Sexpr.array #[
-    Sexpr.atom "pvar",
-    .atomOf v
-  ]
-| .boolBinRel k a b =>
-  match k with
-  | .eq => Sexpr.array #[
-      Sexpr.atom "boolEq",
-      a.toSexpr,
-      b.toSexpr
-    ]
+  .binRel k.toSmtLib w.toSmtLib a.toSmtLib b.toSmtLib
+| .or p1 p2 => .or p1.toSmtLib p2.toSmtLib
+| .and p1 p2 => .and p1.toSmtLib p2.toSmtLib
+| .var v => .var v
+| .boolBinRel k a b => .boolBinRel k.toSmtLib a.toSmtLib b.toSmtLib
 
 def Predicate.wcard (p : Predicate) : Nat :=
   match p with
