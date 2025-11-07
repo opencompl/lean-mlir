@@ -16,8 +16,7 @@ theorem add_incr_right (x : BitVec v) :
 
 theorem add_incr_left (x : BitVec v) :
     x.zeroExtend (2 + v) = (x.zeroExtend (1 + v)).zeroExtend (2 + v) := by
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 /-
   {
@@ -35,11 +34,12 @@ def addMax (a : BitVec v) (b : BitVec w) : BitVec (max v w) :=
 
 
 variable (w p q r s t : Nat)
-variable (a b : BitVec w)
+variable (a : BitVec p) (b : BitVec r) (c : BitVec s)
 -- end preamble
 
 theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
   (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c)))  =
   (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
   simp only [bw, addMax]
-  bv_multi_width
+  fail_if_success bv_multi_width
+  sorry

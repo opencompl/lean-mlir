@@ -23,13 +23,10 @@ theorem abstract_prop {w : Nat} (p : Prop) (x : BitVec w) : p ∨ (x = x) := by
   bv_multi_width
 
 /--
-warning: abstracted non-variable width: ⏎
-  → 'x + 1'
----
-error: MAYCEX: Found possible counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.binWidthRel
+error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.binWidthRel
   (MultiWidth.WidthBinaryRelationKind.eq)
   (MultiWidth.Nondep.WidthExpr.var 0)
-  (MultiWidth.Nondep.WidthExpr.var 1)
+  (MultiWidth.Nondep.WidthExpr.addK (MultiWidth.Nondep.WidthExpr.var 0) 1)
 -/
 #guard_msgs in theorem abstract_prop_check_warn : ∀ (x : Nat), x = x + 1  := by
   -- | check that prop is abstracted.
@@ -364,6 +361,5 @@ theorem e_1 (x y : BitVec w) :
 
 theorem egZextMin (u v : Nat) (x : BitVec w) :
     u ≤ v → (x.zeroExtend v).zeroExtend u = x.zeroExtend u := by
-  fail_if_success bv_multi_width (config := { widthAbstraction := .never })
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
