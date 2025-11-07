@@ -958,9 +958,9 @@ instance : HydrableGeneralize ParsedBVExpr GenBVPred GenBVExpr where
 instance bvHydrableParseAndGeneralize : HydrableParseAndGeneralize ParsedBVExpr GenBVPred GenBVExpr where
 
 
-elab "#generalize" expr:term: command =>
+elab "#generalize" expr:term : command =>
   open Lean Lean.Elab Command Term in
-  generalizeCommand (H := bvHydrableParseAndGeneralize) expr
+  generalizeCommand (H := bvHydrableParseAndGeneralize) (cfg := ∅) expr
 
 syntax (name := medusaSynthGeneralize) "md_synth_generalize" Lean.Parser.Tactic.optConfig  : tactic
 
@@ -987,29 +987,32 @@ def evalBvGeneralize : Tactic
 section Examples
 set_option warn.sorry false
 /--
-error: (bveq (wconst 8) (add (wconst 8) (bor (wconst 8) (add (wconst 8) (bvvar 1001 (wvar 8)) (add (wconst 8) (ofNat (wconst 8) 1) (bnot (wconst 8) (bvvar 1 (wvar 8))))) (bvvar 2 (wvar 8))) (bvvar 2 (wvar 8))) (add (wconst 8) (bor (wconst 8) (bvvar 2 (wvar 8)) (add (wconst 8) (bvvar 1001 (wvar 8)) (add (wconst 8) (ofNat (wconst 8) 1) (bnot (wconst 8) (bvvar 1 (wvar 8)))))) (bvvar 2 (wvar 8))))
+info: theorem foo {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
+---
+error: (bveq (wconst 8) (add (wvar 8) (bor (wvar 8) (add (wvar 8) (bvvar 1001 (wvar 8)) (add (wvar 8) (ofNat (wvar 8) 1) (bnot (wvar 8) (bvvar 1 (wvar 8))))) (bvvar 2 (wvar 8))) (bvvar 2 (wvar 8))) (add (wvar 8) (bor (wvar 8) (bvvar 2 (wvar 8)) (add (wvar 8) (bvvar 1001 (wvar 8)) (add (wvar 8) (ofNat (wvar 8) 1) (bnot (wvar 8) (bvvar 1 (wvar 8)))))) (bvvar 2 (wvar 8))))
 -/
 #guard_msgs in
 theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
   md_synth_generalize
+  md_synth_generalize (config := {output := .sexpr})
 
 
 /--
-info: theorem Generalize.BV.demo2.generalized_1_1 {w} (x C1 C2 C3 C4 C5 : BitVec w) : (((x ^^^ C1) ||| C2) ^^^ C3) = ((x &&& (~ C2)) ^^^ (((0 ^^^ C2) ||| C1) ^^^ C3)) := by sorry
+error: (bveq (wconst 8) (bxor (wvar 8) (bor (wvar 8) (bxor (wvar 8) (bvvar 1 (wvar 8)) (bvvar 1001 (wvar 8))) (bvvar 1002 (wvar 8))) (bvvar 1003 (wvar 8))) (bxor (wvar 8) (band (wvar 8) (bvvar 1 (wvar 8)) (bnot (wvar 8) (bvvar 1002 (wvar 8)))) (bxor (wvar 8) (bor (wvar 8) (bxor (wvar 8) (ofNat (wvar 8) 0) (bvvar 1002 (wvar 8))) (bvvar 1001 (wvar 8))) (bvvar 1003 (wvar 8)))))
 -/
 #guard_msgs in
 theorem demo2 (x y : BitVec 8) :
     (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
-  md_synth_generalize
-  sorry
+  -- md_synth_generalize
+  md_synth_generalize (config := {output := .sexpr})
 
 
 /--
-info: theorem Generalize.BV.demo3.generalized_1_1 {w} (x y C1 C2 : BitVec w) : if (false) || (((C1 + C2) ^^^ -1) = 0) then (((x ^^^ y) &&& C1) ||| (y &&& C2)) = ((x &&& C1) ^^^ y)  := by sorry
+error: (pite (por (pBoolConst false) (bveq (wconst 8) (bxor (wvar 8) (add (wvar 8) (bvvar 1001 (wvar 32)) (bvvar 1002 (wvar 32))) (ofNat (wvar 8) 255)) (ofNat (wvar 8) 0))) (bveq (wconst 8) (bor (wvar 8) (band (wvar 8) (bxor (wvar 8) (bvvar 1 (wvar 32)) (bvvar 2 (wvar 32))) (bvvar 1001 (wvar 32))) (band (wvar 8) (bvvar 2 (wvar 32)) (bvvar 1002 (wvar 32)))) (bxor (wvar 8) (band (wvar 8) (bvvar 1 (wvar 32)) (bvvar 1001 (wvar 32))) (bvvar 2 (wvar 32)))) (pBoolConst false))
 -/
 #guard_msgs in
 theorem demo3 (x y : BitVec 32) : (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y := by
-  md_synth_generalize
-  sorry
+  -- md_synth_generalize
+  md_synth_generalize (config := {output := .sexpr})
 
 end Examples
