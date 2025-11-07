@@ -71,3 +71,8 @@ roots = ["SSA.Projects.CIRCT.CIRCT"]
 [[lean_lib]]
 name = "ISL"
 roots = ["SSA.Projects.ISL.ISL"]
+
+[[require]]
+name = "SailRV64"
+git = "https://github.com/opencompl/riscv-lean.git"
+rev = "main"

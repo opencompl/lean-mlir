@@ -1,664 +1,664 @@
-import SSA.Projects.RISCV64.Semantics
+import RISCV.Instructions
 import SSA.Projects.RISCV64.PseudoOpSemantics
 import LeanMLIR
 
-open RV64Semantics
-open RV64PseudoOpSemantics
+-- open RV64Semantics
+-- open RV64PseudoOpSemantics
 
-namespace RISCV64
-open LeanMLIR
+-- namespace RISCV64
+-- open LeanMLIR
 
-/-! ## The `RISCV64` dialect -/
+-- /-! ## The `RISCV64` dialect -/
 
-/-! ## Dialect operation definitions -/
+-- /-! ## Dialect operation definitions -/
 
--- Options needed for `Deriving DecidableEQ` on large inductives:
-set_option maxHeartbeats 1000000000000000000 in
-set_option maxRecDepth 10000000000000 in
-/--
-`Op` models the RV64I base instruction set [1] plus selected RISC-V ISA extensions:
-`M` for standard integer division and multiplication [2],
-`B` for bit manipulation instructions (comprises instructions provided by the `Zba`, `Zbb`, and `Zbs` extensions) [3],
-and `Zicond` for conditional operations [4].
+-- -- Options needed for `Deriving DecidableEQ` on large inductives:
+-- set_option maxHeartbeats 1000000000000000000 in
+-- set_option maxRecDepth 10000000000000 in
+-- /--
+-- `Op` models the RV64I base instruction set [1] plus selected RISC-V ISA extensions:
+-- `M` for standard integer division and multiplication [2],
+-- `B` for bit manipulation instructions (comprises instructions provided by the `Zba`, `Zbb`, and `Zbs` extensions) [3],
+-- and `Zicond` for conditional operations [4].
 
-We model RV64 as an SSA IR, meaning that instructions won't specify any registers
-(instead, they'll later receive SSA values).
-However, any other attributes (e.g., flags or immediate values) are still encoded as part of the operation.
+-- We model RV64 as an SSA IR, meaning that instructions won't specify any registers
+-- (instead, they'll later receive SSA values).
+-- However, any other attributes (e.g., flags or immediate values) are still encoded as part of the operation.
 
-[1] https://github.com/riscv/riscv-isa-manual/blob/main/src/rv64.adoc
-[2] https://github.com/riscv/riscv-isa-manual/blob/main/src/m-st-ext.adoc
-[3] https://github.com/riscv/riscv-isa-manual/blob/main/src/b-st-ext.adoc
-[4] https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
--/
-inductive Op
-  | li : (val : BitVec 64) → Op
-  | lui (imm : BitVec 20)
-  | auipc (imm : BitVec 20)
-  | addi (imm : BitVec 12)
-  | andi (imm : BitVec 12)
-  | ori (imm : BitVec 12)
-  | xori (imm : BitVec 12)
-  | addiw (imm : BitVec 12)
-  | add
-  | slli (shamt : BitVec 6)
-  | sub
-  | and
-  | or
-  | xor
-  | sll
-  | srl
-  | sra
-  | addw
-  | subw
-  | sllw
-  | srlw
-  | sraw
-  -- fence missing, future work.
-  | slti (imm : BitVec 12)
-  | sltiu (imm : BitVec 12)
-  | srli (shamt : BitVec 6)
-  | srai (shamt : BitVec 6)
-  | slliw (shamt : BitVec 5)
-  | srliw (shamt : BitVec 5)
-  | sraiw (shamt : BitVec 5)
-  | slt
-  | sltu
-  -- RISC-V `M` extension instructions (multiply & divide)
-  | mul    -- performs signed multiplication on 64 x 64 bits and returns the lower 64 bits of the result .
-  | mulw
-  | mulh   -- performs signed multiplication on 64 x 64 bits and returns the upper 64 bits of the result.
-  | mulhu  -- performs unsigned multiplication on 64 x 64 bits and returns the upper 64 bits of the result.
-  | mulhsu -- performs multiplication on (rs1 signed) x (rs2 unsigned) and returns the upper 64 bits of the result.
-  | divw
-  | divuw
-  | div    -- signed division
-  | divu   -- unsigned division
-  | remw
-  | rem    --sign of result is according to sign of dividend
-  | remuw
-  | remu
-  -- RISC-V `Zba` extension
-  | add.uw
-  | sh1add.uw
-  | sh2add.uw
-  | sh3add.uw
-  | sh1add
-  | sh2add
-  | sh3add
-  | slli.uw (shamt : BitVec 6)
-  -- part of the RISC-V `Zbb` & `Zbkb` extension
-  | andn
-  | orn
-  | xnor
-  | clz
-  | clzw
-  | ctz
-  | ctzw
-  -- | cpop
-  -- | cpopw
-  | max
-  | maxu
-  | min
-  | minu
-  | sext.b
-  | sext.h
-  | zext.h
-  | rol
-  | rolw
-  | ror
-  | rori (_shamt : BitVec 5)
-  | roriw (_shamt : BitVec 5)
-  | rorw
-  -- | orc.b
-  -- | rev8
-  /-
-  in the future:
-  |pack
-  |packh
-  -/
-  -- part of the RISC-V `Zbs` extension
-  | bclr
-  | bclri (shamt : BitVec 6)
-  | bext
-  | bexti (shamt : BitVec 6)
-  | binv
-  | binvi (shamt : BitVec 6)
-  | bset
-  | bseti (shamt : BitVec 6)
-  /- RISC-V `Zicond` conditional operations extension  -/
-  | czero.eqz
-  | czero.nez
-  -- RISC-V standard pseudo-instructions according to:
-  -- https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc
-  | mv
-  | not
-  | neg
-  | negw
-  | sext.w
-  | zext.b
-  | zext.w
-  | seqz
-  | snez
-  | sltz
-  | sgtz
+-- [1] https://github.com/riscv/riscv-isa-manual/blob/main/src/rv64.adoc
+-- [2] https://github.com/riscv/riscv-isa-manual/blob/main/src/m-st-ext.adoc
+-- [3] https://github.com/riscv/riscv-isa-manual/blob/main/src/b-st-ext.adoc
+-- [4] https://github.com/riscvarchive/riscv-zicond/blob/main/zicondops.adoc
+-- -/
+-- inductive Op
+--   | li : (val : BitVec 64) → Op
+--   | lui (imm : BitVec 20)
+--   | auipc (imm : BitVec 20)
+--   | addi (imm : BitVec 12)
+--   | andi (imm : BitVec 12)
+--   | ori (imm : BitVec 12)
+--   | xori (imm : BitVec 12)
+--   | addiw (imm : BitVec 12)
+--   | add
+--   | slli (shamt : BitVec 6)
+--   | sub
+--   | and
+--   | or
+--   | xor
+--   | sll
+--   | srl
+--   | sra
+--   | addw
+--   | subw
+--   | sllw
+--   | srlw
+--   | sraw
+--   -- fence missing, future work.
+--   | slti (imm : BitVec 12)
+--   | sltiu (imm : BitVec 12)
+--   | srli (shamt : BitVec 6)
+--   | srai (shamt : BitVec 6)
+--   | slliw (shamt : BitVec 5)
+--   | srliw (shamt : BitVec 5)
+--   | sraiw (shamt : BitVec 5)
+--   | slt
+--   | sltu
+--   -- RISC-V `M` extension instructions (multiply & divide)
+--   | mul    -- performs signed multiplication on 64 x 64 bits and returns the lower 64 bits of the result .
+--   | mulw
+--   | mulh   -- performs signed multiplication on 64 x 64 bits and returns the upper 64 bits of the result.
+--   | mulhu  -- performs unsigned multiplication on 64 x 64 bits and returns the upper 64 bits of the result.
+--   | mulhsu -- performs multiplication on (rs1 signed) x (rs2 unsigned) and returns the upper 64 bits of the result.
+--   | divw
+--   | divuw
+--   | div    -- signed division
+--   | divu   -- unsigned division
+--   | remw
+--   | rem    --sign of result is according to sign of dividend
+--   | remuw
+--   | remu
+--   -- RISC-V `Zba` extension
+--   | add.uw
+--   | sh1add.uw
+--   | sh2add.uw
+--   | sh3add.uw
+--   | sh1add
+--   | sh2add
+--   | sh3add
+--   | slli.uw (shamt : BitVec 6)
+--   -- part of the RISC-V `Zbb` & `Zbkb` extension
+--   | andn
+--   | orn
+--   | xnor
+--   | clz
+--   | clzw
+--   | ctz
+--   | ctzw
+--   -- | cpop
+--   -- | cpopw
+--   | max
+--   | maxu
+--   | min
+--   | minu
+--   | sext.b
+--   | sext.h
+--   | zext.h
+--   | rol
+--   | rolw
+--   | ror
+--   | rori (_shamt : BitVec 5)
+--   | roriw (_shamt : BitVec 5)
+--   | rorw
+--   -- | orc.b
+--   -- | rev8
+--   /-
+--   in the future:
+--   |pack
+--   |packh
+--   -/
+--   -- part of the RISC-V `Zbs` extension
+--   | bclr
+--   | bclri (shamt : BitVec 6)
+--   | bext
+--   | bexti (shamt : BitVec 6)
+--   | binv
+--   | binvi (shamt : BitVec 6)
+--   | bset
+--   | bseti (shamt : BitVec 6)
+--   /- RISC-V `Zicond` conditional operations extension  -/
+--   | czero.eqz
+--   | czero.nez
+--   -- RISC-V standard pseudo-instructions according to:
+--   -- https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc
+--   | mv
+--   | not
+--   | neg
+--   | negw
+--   | sext.w
+--   | zext.b
+--   | zext.w
+--   | seqz
+--   | snez
+--   | sltz
+--   | sgtz
 
-  deriving DecidableEq, Repr, Lean.ToExpr
--- ^^ **NOTE:** this deriving clause is prone to causing stack overflows in the
---    lsp while interactively editing. This is not surprising, given the quadratic
---    nature of `deriving DecidableEq`, but annoying nonetheless.
---    However, nothing in the current file actually depends on these derives, so
---    the workaround is to comment out the line above while editing.
---    Once satisfied, uncommment, and build via the CLI (which does not seem to
---    trigger the stack overflow)!
+--   deriving DecidableEq, Repr, Lean.ToExpr
+-- -- ^^ **NOTE:** this deriving clause is prone to causing stack overflows in the
+-- --    lsp while interactively editing. This is not surprising, given the quadratic
+-- --    nature of `deriving DecidableEq`, but annoying nonetheless.
+-- --    However, nothing in the current file actually depends on these derives, so
+-- --    the workaround is to comment out the line above while editing.
+-- --    Once satisfied, uncommment, and build via the CLI (which does not seem to
+-- --    trigger the stack overflow)!
 
 
 
-/--
-## Dialect type definitions
-Defining a type system for the `RISCV64` dialect. `bv` represents bit vector.
--/
-inductive Ty
-  | bv : Ty
-  deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+-- /--
+-- ## Dialect type definitions
+-- Defining a type system for the `RISCV64` dialect. `bv` represents bit vector.
+-- -/
+-- inductive Ty
+--   | bv : Ty
+--   deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
-/-!
-Connecting the `bv` type to its underlying Lean type `BitVec 64`. By providing a `TyDenote` instance,
-we define how the `RISCV64` types transalte into actual Lean types.
--/
-instance : TyDenote Ty where
-  toType
-  | Ty.bv => BitVec 64
+-- /-!
+-- Connecting the `bv` type to its underlying Lean type `BitVec 64`. By providing a `TyDenote` instance,
+-- we define how the `RISCV64` types transalte into actual Lean types.
+-- -/
+-- instance : TyDenote Ty where
+--   toType
+--   | Ty.bv => BitVec 64
 
-instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
-  default := match ty with
-  | .bv  => 0#64
+-- instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
+--   default := match ty with
+--   | .bv  => 0#64
 
-/-! ## Dialect operation definitions-/
-/--
-Specifing the signature of each `RISCV64` operation. `Sig` refers to the input types
-for each operation as a list of types.
+-- /-! ## Dialect operation definitions-/
+-- /--
+-- Specifing the signature of each `RISCV64` operation. `Sig` refers to the input types
+-- for each operation as a list of types.
 
-We mark it as `simp` and `reducible` such that the type checker and elaborator
-always fully unfold a `sig` to its underlying definition and when the simplifier
-encounters a `sig` it can replace it by its definition.
--/
-@[simp, reducible]
-def Op.sig : Op → List Ty
-  | .li _ => []
-  | .mulh  => [Ty.bv, Ty.bv]
-  | .mulhu  => [Ty.bv, Ty.bv]
-  | .mulhsu  => [Ty.bv, Ty.bv]
-  | .divu =>  [Ty.bv, Ty.bv]
-  | .remuw  => [Ty.bv, Ty.bv]
-  | .remu  =>  [Ty.bv, Ty.bv]
-  | .addiw (_imm : BitVec 12) => [Ty.bv]
-  | .lui (_imm : BitVec 20) => [Ty.bv]
-  | .auipc (_imm : BitVec 20)  => [Ty.bv]
-  | .slliw (_shamt : BitVec 5)  => [Ty.bv]
-  | .srliw (_shamt : BitVec 5) => [Ty.bv]
-  | .sraiw (_shamt : BitVec 5) => [Ty.bv]
-  | .slli (_shamt : BitVec 6) => [Ty.bv]
-  | .srli (_shamt : BitVec 6) => [Ty.bv]
-  | .srai (_shamt : BitVec 6) => [Ty.bv]
-  | .addw => [Ty.bv, Ty.bv]
-  | .subw => [Ty.bv, Ty.bv]
-  | .sllw => [Ty.bv, Ty.bv]
-  | .srlw => [Ty.bv, Ty.bv]
-  | .sraw => [Ty.bv, Ty.bv]
-  | .add => [Ty.bv, Ty.bv]
-  | .slt => [Ty.bv, Ty.bv]
-  | .sltu => [Ty.bv, Ty.bv]
-  | .and => [Ty.bv, Ty.bv]
-  | .or => [Ty.bv, Ty.bv]
-  | .xor => [Ty.bv, Ty.bv]
-  | .sll => [Ty.bv, Ty.bv]
-  | .srl => [Ty.bv, Ty.bv]
-  | .sub => [Ty.bv, Ty.bv]
-  | .sra => [Ty.bv, Ty.bv]
-  | .remw  => [Ty.bv, Ty.bv]
-  | .rem  =>  [Ty.bv, Ty.bv]
-  | .mul => [Ty.bv, Ty.bv]
-  | .mulw => [Ty.bv, Ty.bv]
-  | .div  =>  [Ty.bv, Ty.bv]
-  | .divw  =>  [Ty.bv, Ty.bv]
-  | .divuw  =>  [Ty.bv, Ty.bv]
-  | .addi (_imm : BitVec 12) => [Ty.bv]
-  | .slti (_imm : BitVec 12) => [Ty.bv]
-  | .sltiu (_imm : BitVec 12) => [Ty.bv]
-  | .andi (_imm : BitVec 12) => [Ty.bv]
-  | .ori (_imm : BitVec 12) => [Ty.bv]
-  | .xori (_imm : BitVec 12) => [Ty.bv]
-  | RISCV64.Op.czero.eqz =>  [Ty.bv, Ty.bv]
-  | RISCV64.Op.czero.nez =>  [Ty.bv, Ty.bv]
-  | .bclr => [Ty.bv, Ty.bv]
-  | .bext => [Ty.bv, Ty.bv]
-  | .binv => [Ty.bv, Ty.bv]
-  | .bset  => [Ty.bv, Ty.bv]
-  | .bclri (_shamt : BitVec 6) => [Ty.bv]
-  | .bexti (_shamt : BitVec 6) => [Ty.bv]
-  | .binvi (_shamt : BitVec 6) => [Ty.bv]
-  | .bseti (_shamt : BitVec 6) => [Ty.bv]
-  | RISCV64.Op.add.uw => [Ty.bv, Ty.bv]
-  | RISCV64.Op.sh1add.uw => [Ty.bv, Ty.bv]
-  | RISCV64.Op.sh2add.uw => [Ty.bv, Ty.bv]
-  | RISCV64.Op.sh3add.uw => [Ty.bv, Ty.bv]
-  | .sh1add => [Ty.bv, Ty.bv]
-  | .sh2add => [Ty.bv, Ty.bv]
-  | .sh3add => [Ty.bv, Ty.bv]
-  | RISCV64.Op.slli.uw (_shamt : BitVec 6) => [Ty.bv]
-  | andn => [Ty.bv, Ty.bv]
-  | orn => [Ty.bv, Ty.bv]
-  | xnor => [Ty.bv, Ty.bv]
-  | clz
-  | clzw
-  | ctz
-  | ctzw
-  -- | cpop
-  -- | cpopw
-  | max => [Ty.bv, Ty.bv]
-  | maxu => [Ty.bv, Ty.bv]
-  | min  => [Ty.bv, Ty.bv]
-  | minu  => [Ty.bv, Ty.bv]
-  | RISCV64.Op.sext.b => [Ty.bv]
-  | RISCV64.Op.sext.h => [Ty.bv]
-  | RISCV64.Op.zext.h => [Ty.bv]
-  | .rol => [Ty.bv, Ty.bv]
-  | .rolw => [Ty.bv, Ty.bv]
-  | .ror => [Ty.bv, Ty.bv]
-  | rori (_shamt : BitVec 5) =>[Ty.bv]
-  | roriw (_shamt : BitVec 5) =>[Ty.bv]
-  | .rorw => [Ty.bv, Ty.bv]
-  -- orc.b
-  -- rev8
-  -- pseudo-instructions
-  | mv => [Ty.bv]
-  | not => [Ty.bv]
-  | neg => [Ty.bv]
-  | negw => [Ty.bv]
-  | sext.w => [Ty.bv]
-  | zext.b => [Ty.bv]
-  | zext.w => [Ty.bv]
-  | seqz => [Ty.bv]
-  | snez => [Ty.bv]
-  | sltz => [Ty.bv]
-  | sgtz => [Ty.bv]
+-- We mark it as `simp` and `reducible` such that the type checker and elaborator
+-- always fully unfold a `sig` to its underlying definition and when the simplifier
+-- encounters a `sig` it can replace it by its definition.
+-- -/
+-- @[simp, reducible]
+-- def Op.sig : Op → List Ty
+--   | .li _ => []
+--   | .mulh  => [Ty.bv, Ty.bv]
+--   | .mulhu  => [Ty.bv, Ty.bv]
+--   | .mulhsu  => [Ty.bv, Ty.bv]
+--   | .divu =>  [Ty.bv, Ty.bv]
+--   | .remuw  => [Ty.bv, Ty.bv]
+--   | .remu  =>  [Ty.bv, Ty.bv]
+--   | .addiw (_imm : BitVec 12) => [Ty.bv]
+--   | .lui (_imm : BitVec 20) => [Ty.bv]
+--   | .auipc (_imm : BitVec 20)  => [Ty.bv]
+--   | .slliw (_shamt : BitVec 5)  => [Ty.bv]
+--   | .srliw (_shamt : BitVec 5) => [Ty.bv]
+--   | .sraiw (_shamt : BitVec 5) => [Ty.bv]
+--   | .slli (_shamt : BitVec 6) => [Ty.bv]
+--   | .srli (_shamt : BitVec 6) => [Ty.bv]
+--   | .srai (_shamt : BitVec 6) => [Ty.bv]
+--   | .addw => [Ty.bv, Ty.bv]
+--   | .subw => [Ty.bv, Ty.bv]
+--   | .sllw => [Ty.bv, Ty.bv]
+--   | .srlw => [Ty.bv, Ty.bv]
+--   | .sraw => [Ty.bv, Ty.bv]
+--   | .add => [Ty.bv, Ty.bv]
+--   | .slt => [Ty.bv, Ty.bv]
+--   | .sltu => [Ty.bv, Ty.bv]
+--   | .and => [Ty.bv, Ty.bv]
+--   | .or => [Ty.bv, Ty.bv]
+--   | .xor => [Ty.bv, Ty.bv]
+--   | .sll => [Ty.bv, Ty.bv]
+--   | .srl => [Ty.bv, Ty.bv]
+--   | .sub => [Ty.bv, Ty.bv]
+--   | .sra => [Ty.bv, Ty.bv]
+--   | .remw  => [Ty.bv, Ty.bv]
+--   | .rem  =>  [Ty.bv, Ty.bv]
+--   | .mul => [Ty.bv, Ty.bv]
+--   | .mulw => [Ty.bv, Ty.bv]
+--   | .div  =>  [Ty.bv, Ty.bv]
+--   | .divw  =>  [Ty.bv, Ty.bv]
+--   | .divuw  =>  [Ty.bv, Ty.bv]
+--   | .addi (_imm : BitVec 12) => [Ty.bv]
+--   | .slti (_imm : BitVec 12) => [Ty.bv]
+--   | .sltiu (_imm : BitVec 12) => [Ty.bv]
+--   | .andi (_imm : BitVec 12) => [Ty.bv]
+--   | .ori (_imm : BitVec 12) => [Ty.bv]
+--   | .xori (_imm : BitVec 12) => [Ty.bv]
+--   | RISCV64.Op.czero.eqz =>  [Ty.bv, Ty.bv]
+--   | RISCV64.Op.czero.nez =>  [Ty.bv, Ty.bv]
+--   | .bclr => [Ty.bv, Ty.bv]
+--   | .bext => [Ty.bv, Ty.bv]
+--   | .binv => [Ty.bv, Ty.bv]
+--   | .bset  => [Ty.bv, Ty.bv]
+--   | .bclri (_shamt : BitVec 6) => [Ty.bv]
+--   | .bexti (_shamt : BitVec 6) => [Ty.bv]
+--   | .binvi (_shamt : BitVec 6) => [Ty.bv]
+--   | .bseti (_shamt : BitVec 6) => [Ty.bv]
+--   | RISCV64.Op.add.uw => [Ty.bv, Ty.bv]
+--   | RISCV64.Op.sh1add.uw => [Ty.bv, Ty.bv]
+--   | RISCV64.Op.sh2add.uw => [Ty.bv, Ty.bv]
+--   | RISCV64.Op.sh3add.uw => [Ty.bv, Ty.bv]
+--   | .sh1add => [Ty.bv, Ty.bv]
+--   | .sh2add => [Ty.bv, Ty.bv]
+--   | .sh3add => [Ty.bv, Ty.bv]
+--   | RISCV64.Op.slli.uw (_shamt : BitVec 6) => [Ty.bv]
+--   | andn => [Ty.bv, Ty.bv]
+--   | orn => [Ty.bv, Ty.bv]
+--   | xnor => [Ty.bv, Ty.bv]
+--   | clz
+--   | clzw
+--   | ctz
+--   | ctzw
+--   -- | cpop
+--   -- | cpopw
+--   | max => [Ty.bv, Ty.bv]
+--   | maxu => [Ty.bv, Ty.bv]
+--   | min  => [Ty.bv, Ty.bv]
+--   | minu  => [Ty.bv, Ty.bv]
+--   | RISCV64.Op.sext.b => [Ty.bv]
+--   | RISCV64.Op.sext.h => [Ty.bv]
+--   | RISCV64.Op.zext.h => [Ty.bv]
+--   | .rol => [Ty.bv, Ty.bv]
+--   | .rolw => [Ty.bv, Ty.bv]
+--   | .ror => [Ty.bv, Ty.bv]
+--   | rori (_shamt : BitVec 5) =>[Ty.bv]
+--   | roriw (_shamt : BitVec 5) =>[Ty.bv]
+--   | .rorw => [Ty.bv, Ty.bv]
+--   -- orc.b
+--   -- rev8
+--   -- pseudo-instructions
+--   | mv => [Ty.bv]
+--   | not => [Ty.bv]
+--   | neg => [Ty.bv]
+--   | negw => [Ty.bv]
+--   | sext.w => [Ty.bv]
+--   | zext.b => [Ty.bv]
+--   | zext.w => [Ty.bv]
+--   | seqz => [Ty.bv]
+--   | snez => [Ty.bv]
+--   | sltz => [Ty.bv]
+--   | sgtz => [Ty.bv]
 
-/--
-Specifing the `outTy` of each `RISCV64` operation.
-Again, we mark  it as `simp` and `reducible`.
--/
-@[simp, reducible]
-def Op.outTy : Op  → Ty
-  | .li _ => Ty.bv
-  | .mulh => Ty.bv
-  | .mulhu => Ty.bv
-  | .mulhsu => Ty.bv
-  | .divu => Ty.bv
-  | .remuw => Ty.bv
-  | .remu =>  Ty.bv
-  | .addiw (_imm : BitVec 12) => Ty.bv
-  | .lui (_imm : BitVec 20) => Ty.bv
-  | .auipc (_imm : BitVec 20) => Ty.bv
-  | .slliw (_shamt : BitVec 5) => Ty.bv
-  | .srliw (_shamt : BitVec 5) => Ty.bv
-  | .sraiw (_shamt : BitVec 5) => Ty.bv
-  | .slli (_shamt : BitVec 6) => Ty.bv
-  | .srli (_shamt : BitVec 6) => Ty.bv
-  | .srai (_shamt : BitVec 6) => Ty.bv
-  | .addw => Ty.bv
-  | .subw => Ty.bv
-  | .sllw => Ty.bv
-  | .srlw => Ty.bv
-  | .sraw => Ty.bv
-  | .add => Ty.bv
-  | .slt => Ty.bv
-  | .sltu => Ty.bv
-  | .and => Ty.bv
-  | .or => Ty.bv
-  | .xor => Ty.bv
-  | .sll => Ty.bv
-  | .srl => Ty.bv
-  | .sub => Ty.bv
-  | .sra => Ty.bv
-  | .remw  => Ty.bv
-  | .rem => Ty.bv
-  | .mul => Ty.bv
-  | .mulw => Ty.bv
-  | .div => Ty.bv
-  | .divw => Ty.bv
-  | .divuw => Ty.bv
-  | .addi (_imm : BitVec 12) => Ty.bv
-  | .slti (_imm : BitVec 12) => Ty.bv
-  | .sltiu (_imm : BitVec 12) => Ty.bv
-  | .andi (_imm : BitVec 12) => Ty.bv
-  | .ori (_imm : BitVec 12) => Ty.bv
-  | .xori (_imm : BitVec 12) => Ty.bv
-  | RISCV64.Op.czero.eqz => Ty.bv
-  | RISCV64.Op.czero.nez => Ty.bv
-  | .bclr => Ty.bv
-  | .bext => Ty.bv
-  | .binv => Ty.bv
-  | .bset => Ty.bv
-  | .bclri (_shamt : BitVec 6) => Ty.bv
-  | .bexti (_shamt : BitVec 6) => Ty.bv
-  | .binvi (_shamt : BitVec 6) => Ty.bv
-  | .bseti (_shamt : BitVec 6) => Ty.bv
-  | RISCV64.Op.add.uw => Ty.bv
-  | RISCV64.Op.sh1add.uw => Ty.bv
-  | RISCV64.Op.sh2add.uw => Ty.bv
-  | RISCV64.Op.sh3add.uw => Ty.bv
-  | .sh1add => Ty.bv
-  | .sh2add => Ty.bv
-  | .sh3add => Ty.bv
-  | RISCV64.Op.slli.uw (_shamt : BitVec 6) => Ty.bv
-  | .andn =>  Ty.bv
-  | .orn =>  Ty.bv
-  | .xnor =>  Ty.bv
-  | clz => Ty.bv
-  | clzw => Ty.bv
-  | ctz => Ty.bv
-  | ctzw => Ty.bv
-  -- | cpop
-  -- | cpopw
-  | .max =>  Ty.bv
-  | .maxu =>  Ty.bv
-  | .min  =>  Ty.bv
-  | .minu  =>  Ty.bv
-  | RISCV64.Op.sext.b => Ty.bv
-  | RISCV64.Op.sext.h => Ty.bv
-  | RISCV64.Op.zext.h => Ty.bv
-  | .rol => Ty.bv
-  | .rolw => Ty.bv
-  | .ror => Ty.bv
-  | .rori (_shamt : BitVec 5) => Ty.bv
-  | .roriw (_shamt : BitVec 5) => Ty.bv
-  | .rorw => Ty.bv
-  -- orc.b
-  -- rev8
-  -- pseudo-instructions
-  | mv => Ty.bv
-  | not => Ty.bv
-  | neg => Ty.bv
-  | negw => Ty.bv
-  | sext.w => Ty.bv
-  | zext.b => Ty.bv
-  | zext.w => Ty.bv
-  | seqz => Ty.bv
-  | snez => Ty.bv
-  | sltz => Ty.bv
-  | sgtz => Ty.bv
+-- /--
+-- Specifing the `outTy` of each `RISCV64` operation.
+-- Again, we mark  it as `simp` and `reducible`.
+-- -/
+-- @[simp, reducible]
+-- def Op.outTy : Op  → Ty
+--   | .li _ => Ty.bv
+--   | .mulh => Ty.bv
+--   | .mulhu => Ty.bv
+--   | .mulhsu => Ty.bv
+--   | .divu => Ty.bv
+--   | .remuw => Ty.bv
+--   | .remu =>  Ty.bv
+--   | .addiw (_imm : BitVec 12) => Ty.bv
+--   | .lui (_imm : BitVec 20) => Ty.bv
+--   | .auipc (_imm : BitVec 20) => Ty.bv
+--   | .slliw (_shamt : BitVec 5) => Ty.bv
+--   | .srliw (_shamt : BitVec 5) => Ty.bv
+--   | .sraiw (_shamt : BitVec 5) => Ty.bv
+--   | .slli (_shamt : BitVec 6) => Ty.bv
+--   | .srli (_shamt : BitVec 6) => Ty.bv
+--   | .srai (_shamt : BitVec 6) => Ty.bv
+--   | .addw => Ty.bv
+--   | .subw => Ty.bv
+--   | .sllw => Ty.bv
+--   | .srlw => Ty.bv
+--   | .sraw => Ty.bv
+--   | .add => Ty.bv
+--   | .slt => Ty.bv
+--   | .sltu => Ty.bv
+--   | .and => Ty.bv
+--   | .or => Ty.bv
+--   | .xor => Ty.bv
+--   | .sll => Ty.bv
+--   | .srl => Ty.bv
+--   | .sub => Ty.bv
+--   | .sra => Ty.bv
+--   | .remw  => Ty.bv
+--   | .rem => Ty.bv
+--   | .mul => Ty.bv
+--   | .mulw => Ty.bv
+--   | .div => Ty.bv
+--   | .divw => Ty.bv
+--   | .divuw => Ty.bv
+--   | .addi (_imm : BitVec 12) => Ty.bv
+--   | .slti (_imm : BitVec 12) => Ty.bv
+--   | .sltiu (_imm : BitVec 12) => Ty.bv
+--   | .andi (_imm : BitVec 12) => Ty.bv
+--   | .ori (_imm : BitVec 12) => Ty.bv
+--   | .xori (_imm : BitVec 12) => Ty.bv
+--   | RISCV64.Op.czero.eqz => Ty.bv
+--   | RISCV64.Op.czero.nez => Ty.bv
+--   | .bclr => Ty.bv
+--   | .bext => Ty.bv
+--   | .binv => Ty.bv
+--   | .bset => Ty.bv
+--   | .bclri (_shamt : BitVec 6) => Ty.bv
+--   | .bexti (_shamt : BitVec 6) => Ty.bv
+--   | .binvi (_shamt : BitVec 6) => Ty.bv
+--   | .bseti (_shamt : BitVec 6) => Ty.bv
+--   | RISCV64.Op.add.uw => Ty.bv
+--   | RISCV64.Op.sh1add.uw => Ty.bv
+--   | RISCV64.Op.sh2add.uw => Ty.bv
+--   | RISCV64.Op.sh3add.uw => Ty.bv
+--   | .sh1add => Ty.bv
+--   | .sh2add => Ty.bv
+--   | .sh3add => Ty.bv
+--   | RISCV64.Op.slli.uw (_shamt : BitVec 6) => Ty.bv
+--   | .andn =>  Ty.bv
+--   | .orn =>  Ty.bv
+--   | .xnor =>  Ty.bv
+--   | clz => Ty.bv
+--   | clzw => Ty.bv
+--   | ctz => Ty.bv
+--   | ctzw => Ty.bv
+--   -- | cpop
+--   -- | cpopw
+--   | .max =>  Ty.bv
+--   | .maxu =>  Ty.bv
+--   | .min  =>  Ty.bv
+--   | .minu  =>  Ty.bv
+--   | RISCV64.Op.sext.b => Ty.bv
+--   | RISCV64.Op.sext.h => Ty.bv
+--   | RISCV64.Op.zext.h => Ty.bv
+--   | .rol => Ty.bv
+--   | .rolw => Ty.bv
+--   | .ror => Ty.bv
+--   | .rori (_shamt : BitVec 5) => Ty.bv
+--   | .roriw (_shamt : BitVec 5) => Ty.bv
+--   | .rorw => Ty.bv
+--   -- orc.b
+--   -- rev8
+--   -- pseudo-instructions
+--   | mv => Ty.bv
+--   | not => Ty.bv
+--   | neg => Ty.bv
+--   | negw => Ty.bv
+--   | sext.w => Ty.bv
+--   | zext.b => Ty.bv
+--   | zext.w => Ty.bv
+--   | seqz => Ty.bv
+--   | snez => Ty.bv
+--   | sltz => Ty.bv
+--   | sgtz => Ty.bv
 
-/--
-Bundling the `Ops`and `Ty`into a dialect and abbreviating `RISCV64`
-into a dialect named `RV64`.
-We pass our `Op.signature` as an instance -/
-@[simp]
-abbrev RV64 : Dialect where
-  Op := Op
-  Ty := Ty
+-- /--
+-- Bundling the `Ops`and `Ty`into a dialect and abbreviating `RISCV64`
+-- into a dialect named `RV64`.
+-- We pass our `Op.signature` as an instance -/
+-- @[simp]
+-- abbrev RV64 : Dialect where
+--   Op := Op
+--   Ty := Ty
 
-/-- Combine `outTy` and `sig` together into a `Signature`. -/
-instance : DialectSignature RV64 where
-  signature o := {sig := Op.sig o, returnTypes := [Op.outTy o], regSig := []}
+-- /-- Combine `outTy` and `sig` together into a `Signature`. -/
+-- instance : DialectSignature RV64 where
+--   signature o := {sig := Op.sig o, returnTypes := [Op.outTy o], regSig := []}
 
-/-! ## Printing -/
+-- /-! ## Printing -/
 
-instance : ToString Ty where
-  toString
-  | Ty.bv => "!riscv.reg"
+-- instance : ToString Ty where
+--   toString
+--   | Ty.bv => "!riscv.reg"
 
-open RISCV64.Op in
-def opName (op : RISCV64.Op) : String :=
-  let op  : String := match op with
-  | .li _ => "li"
-  | .mulh => "mulh"
-  | .mulhu => "mulhu"
-  | .mulhsu => "mulhsu"
-  | .divu => "divu"
-  | .remuw => "remuw"
-  | .remu => "remu"
-  | .addiw _ => "addiw"
-  | .lui _ => "lui"
-  | .auipc _ => "auipc"
-  | .slliw _ => "slliw"
-  | .srliw _ => "srliw"
-  | .sraiw _ => "sraiw"
-  | .slli _ => "slli"
-  | .srli _ => "srli"
-  | .srai _ => "srai"
-  | .addw => "addw"
-  | .subw => "subw"
-  | .sllw => "sllw"
-  | .srlw => "srlw"
-  | .sraw => "sraw"
-  | .add => "add"
-  | .slt => "slt"
-  | .sltu => "sltu"
-  | .and => "and"
-  | .or => "or"
-  | .xor => "xor"
-  | .sll => "sll"
-  | .srl => "srl"
-  | .sub => "sub"
-  | .sra => "sra"
-  | .remw  => "remw"
-  | .rem => "rem"
-  | .mul => "mul"
-  | .mulw => "mulw"
-  | .div => "div"
-  | .divw => "divw"
-  | .divuw => "divuw"
-  | .addi _ => "addi"
-  | .slti _ => "slti"
-  | .sltiu _ => "sltiu"
-  | .andi _ => "andi"
-  | .ori _ => "ori"
-  | .xori _ => "xori"
-  | czero.eqz => "czero.eqz"
-  | czero.nez => "czero.nez"
-  | .bclr => "bclr"
-  | .bext => "bext"
-  | .binv => "binv"
-  | .bset => "bset"
-  | .bclri _ => "bclri"
-  | .bexti _ => "bexti"
-  | .binvi _ => "binvi"
-  | .bseti _ => "bseti"
-  | add.uw => "add.uw"
-  | sh1add.uw => "sh1add.uw"
-  | sh2add.uw => "sh2add.uw"
-  | sh3add.uw => "sh3add.uw"
-  | .sh1add => "sh1add"
-  | .sh2add => "sh2add"
-  | .sh3add => "sh3add"
-  | slli.uw _ => "slli.uw"
-  | .andn => "andn"
-  | .orn => "orn"
-  | .xnor => "xnor"
-  | clz => "clz"
-  | clzw => "clzw"
-  | ctz => "ctz"
-  | ctzw => "ctzw"
-  | .max => "max"
-  | .maxu => "maxu"
-  | .min  => "min"
-  | .minu  => "minu"
-  | sext.b => "sext.b"
-  | sext.h => "sext.h"
-  | zext.h => "zext.h"
-  | .rol => "rol"
-  | .rolw => "rolw"
-  | .ror => "ror"
-  | .rori _ => "rori"
-  | .roriw _ => "roriw"
-  | .rorw => "rorw"
-  -- pseudo-instructions
-  | .mv => "mv"
-  | .not => "not"
-  | .neg => "neg"
-  | .negw => "negw"
-  | sext.w => "sext.w"
-  | zext.b => "zext.b"
-  | zext.w => "zext.w"
-  | .seqz => "seqz"
-  | .snez => "snez"
-  | .sltz => "sltz"
-  | .sgtz => "sgtz"
-  op
+-- open RISCV64.Op in
+-- def opName (op : RISCV64.Op) : String :=
+--   let op  : String := match op with
+--   | .li _ => "li"
+--   | .mulh => "mulh"
+--   | .mulhu => "mulhu"
+--   | .mulhsu => "mulhsu"
+--   | .divu => "divu"
+--   | .remuw => "remuw"
+--   | .remu => "remu"
+--   | .addiw _ => "addiw"
+--   | .lui _ => "lui"
+--   | .auipc _ => "auipc"
+--   | .slliw _ => "slliw"
+--   | .srliw _ => "srliw"
+--   | .sraiw _ => "sraiw"
+--   | .slli _ => "slli"
+--   | .srli _ => "srli"
+--   | .srai _ => "srai"
+--   | .addw => "addw"
+--   | .subw => "subw"
+--   | .sllw => "sllw"
+--   | .srlw => "srlw"
+--   | .sraw => "sraw"
+--   | .add => "add"
+--   | .slt => "slt"
+--   | .sltu => "sltu"
+--   | .and => "and"
+--   | .or => "or"
+--   | .xor => "xor"
+--   | .sll => "sll"
+--   | .srl => "srl"
+--   | .sub => "sub"
+--   | .sra => "sra"
+--   | .remw  => "remw"
+--   | .rem => "rem"
+--   | .mul => "mul"
+--   | .mulw => "mulw"
+--   | .div => "div"
+--   | .divw => "divw"
+--   | .divuw => "divuw"
+--   | .addi _ => "addi"
+--   | .slti _ => "slti"
+--   | .sltiu _ => "sltiu"
+--   | .andi _ => "andi"
+--   | .ori _ => "ori"
+--   | .xori _ => "xori"
+--   | czero.eqz => "czero.eqz"
+--   | czero.nez => "czero.nez"
+--   | .bclr => "bclr"
+--   | .bext => "bext"
+--   | .binv => "binv"
+--   | .bset => "bset"
+--   | .bclri _ => "bclri"
+--   | .bexti _ => "bexti"
+--   | .binvi _ => "binvi"
+--   | .bseti _ => "bseti"
+--   | add.uw => "add.uw"
+--   | sh1add.uw => "sh1add.uw"
+--   | sh2add.uw => "sh2add.uw"
+--   | sh3add.uw => "sh3add.uw"
+--   | .sh1add => "sh1add"
+--   | .sh2add => "sh2add"
+--   | .sh3add => "sh3add"
+--   | slli.uw _ => "slli.uw"
+--   | .andn => "andn"
+--   | .orn => "orn"
+--   | .xnor => "xnor"
+--   | clz => "clz"
+--   | clzw => "clzw"
+--   | ctz => "ctz"
+--   | ctzw => "ctzw"
+--   | .max => "max"
+--   | .maxu => "maxu"
+--   | .min  => "min"
+--   | .minu  => "minu"
+--   | sext.b => "sext.b"
+--   | sext.h => "sext.h"
+--   | zext.h => "zext.h"
+--   | .rol => "rol"
+--   | .rolw => "rolw"
+--   | .ror => "ror"
+--   | .rori _ => "rori"
+--   | .roriw _ => "roriw"
+--   | .rorw => "rorw"
+--   -- pseudo-instructions
+--   | .mv => "mv"
+--   | .not => "not"
+--   | .neg => "neg"
+--   | .negw => "negw"
+--   | sext.w => "sext.w"
+--   | zext.b => "zext.b"
+--   | zext.w => "zext.w"
+--   | .seqz => "seqz"
+--   | .snez => "snez"
+--   | .sltz => "sltz"
+--   | .sgtz => "sgtz"
+--   op
 
-def printAttributes: RISCV64.Op → String
-  | .li imm => s! "\{immediate = { imm.toInt } : i64 }"
-  | .addiw (imm : BitVec 12) => s!"\{immediate = { imm.toInt} : i12 }"
-  | .lui (imm : BitVec 20) => s!"\{immediate = { imm.toInt} : i20 } "
-  | .auipc (imm : BitVec 20) => s!"\{immediate = { imm.toInt} : si20 }" -- adding a s such that xdsl can parsee it, double-check when needed and when not
-  | .slliw (imm : BitVec 5) => s!"\{immediate = { imm.toNat} : i5 }"
-  | .srliw (imm : BitVec 5) => s!"\{immediate = { imm.toNat} : i5 }"
-  | .sraiw (imm : BitVec 5) => s!"\{immediate = { imm.toNat} : i5 }"
-  | .slli (imm : BitVec 6) => s!"\{immediate = { imm.toNat} : i6 }"
-  | .srli (imm : BitVec 6) => s!"\{immediate = { imm.toNat} : i6 }"
-  | .srai (imm : BitVec 6) => s!"\{immediate = { imm.toNat} : i6 }"
-  | .addi (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : i12 }"
-  | .slti (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : i12 }"
-  | .sltiu (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : i12 }"
-  | .andi (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : i12 }"
-  | .ori (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : i12 }"
-  | .xori (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : si12 }"
-  | .bclri (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
-  | .bexti (imm : BitVec 6) =>s!"\{immediate = { imm.toInt} : i6 }"
-  | .binvi (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
-  | .bseti (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
-  | RISCV64.Op.slli.uw (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
-  | .rori (imm : BitVec 5) => s!"\{immediate = { imm.toInt} : i5 }"
-  | .roriw (imm : BitVec 5) => s!"\{immediate = { imm.toInt} : i5 }"
-  | _ => ""
+-- def printAttributes: RISCV64.Op → String
+--   | .li imm => s! "\{immediate = { imm.toInt } : i64 }"
+--   | .addiw (imm : BitVec 12) => s!"\{immediate = { imm.toInt} : i12 }"
+--   | .lui (imm : BitVec 20) => s!"\{immediate = { imm.toInt} : i20 } "
+--   | .auipc (imm : BitVec 20) => s!"\{immediate = { imm.toInt} : si20 }" -- adding a s such that xdsl can parsee it, double-check when needed and when not
+--   | .slliw (imm : BitVec 5) => s!"\{immediate = { imm.toNat} : i5 }"
+--   | .srliw (imm : BitVec 5) => s!"\{immediate = { imm.toNat} : i5 }"
+--   | .sraiw (imm : BitVec 5) => s!"\{immediate = { imm.toNat} : i5 }"
+--   | .slli (imm : BitVec 6) => s!"\{immediate = { imm.toNat} : i6 }"
+--   | .srli (imm : BitVec 6) => s!"\{immediate = { imm.toNat} : i6 }"
+--   | .srai (imm : BitVec 6) => s!"\{immediate = { imm.toNat} : i6 }"
+--   | .addi (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : i12 }"
+--   | .slti (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : i12 }"
+--   | .sltiu (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : i12 }"
+--   | .andi (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : i12 }"
+--   | .ori (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : i12 }"
+--   | .xori (imm : BitVec 12) => s!"\{immediate = { imm.toInt } : si12 }"
+--   | .bclri (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
+--   | .bexti (imm : BitVec 6) =>s!"\{immediate = { imm.toInt} : i6 }"
+--   | .binvi (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
+--   | .bseti (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
+--   | RISCV64.Op.slli.uw (imm : BitVec 6) => s!"\{immediate = { imm.toInt} : i6 }"
+--   | .rori (imm : BitVec 5) => s!"\{immediate = { imm.toInt} : i5 }"
+--   | .roriw (imm : BitVec 5) => s!"\{immediate = { imm.toInt} : i5 }"
+--   | _ => ""
 
-instance : DialectPrint RV64 where
-  printOpName op := "riscv." ++ opName op
-  printTy := toString
-  printAttributes := printAttributes
-  dialectName := "riscv"
-  printReturn _ := "riscv.ret"
-  printFunc _ := "riscv_func.func @f"
+-- instance : DialectPrint RV64 where
+--   printOpName op := "riscv." ++ opName op
+--   printTy := toString
+--   printAttributes := printAttributes
+--   dialectName := "riscv"
+--   printReturn _ := "riscv.ret"
+--   printFunc _ := "riscv_func.func @f"
 
--- We extend `hvector_get_elem_tactic` so that `HVector.getN` can automatically
--- prove that indices are in-bounds when defining the semantics of RV64.
-macro_rules
-| `(tactic| hvector_get_elem_tactic) =>
-    `(tactic| simp [DialectSignature.sig, signature])
+-- -- We extend `hvector_get_elem_tactic` so that `HVector.getN` can automatically
+-- -- prove that indices are in-bounds when defining the semantics of RV64.
+-- macro_rules
+-- | `(tactic| hvector_get_elem_tactic) =>
+--     `(tactic| simp [DialectSignature.sig, signature])
 
-/--
-## Dialect semantics
-We assign semantics defined in `RV64` to each operation.
-This defines the meaning of each operation in Lean.
-When writting RISC-V-like abstract MLIR ISA intuitively
-we write `op  arg1 arg2`.
-The `RISCV64` semantics are defined to first process the second operand
-then the first. Therefore we first pass `.get 1` then `.get 0` into the
-functions that define our semantics.
--/
-@[simp, simp_denote]
-abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
-  | .li imm, _  => imm
-  | .addiw imm, regs => pure64_RISCV_ADDIW imm (regs.getN 0)
-  | .lui imm, regs  => UTYPE_pure64_RISCV_LUI imm
-  | .auipc imm, regs => UTYPE_pure64_RISCV_AUIPC imm (regs.getN 0)
-  | .slliw shamt, regs => SHIFTIWOP_pure64_RISCV_SLLIW_bv shamt (regs.getN 0)
-  | .srliw shamt, regs => SHIFTIWOP_pure64_RISCV_SRLIW_bv shamt (regs.getN 0)
-  | .sraiw shamt, regs => SHIFTIWOP_pure64_RISCV_SRAIW_bv shamt (regs.getN 0)
-  | .slli shamt, regs => SHIFTIOP_pure64_RISCV_SLLI_bv shamt (regs.getN 0)
-  | .srli shamt, regs => SHIFTIOP_pure64_RISCV_SRLI_bv shamt (regs.getN 0)
-  | .srai shamt, regs => SHIFTIOP_pure64_RISCV_SRAI_bv shamt (regs.getN 0)
-  | .addw, regs => RTYPEW_pure64_RISCV_ADDW (regs.getN 1) (regs.getN 0)
-  | .subw, regs => RTYPEW_pure64_RISCV_SUBW (regs.getN 1) (regs.getN 0)
-  | .sllw, regs => RTYPEW_pure64_RISCV_SLLW_bv (regs.getN 1) (regs.getN 0)
-  | .srlw, regs => RTYPEW_pure64_RISCV_SRLW_bv (regs.getN 1) (regs.getN 0)
-  | .sraw, regs => RTYPEW_pure64_RISCV_SRAW_bv (regs.getN 1) (regs.getN 0)
-  | .add, regs => RTYPE_pure64_RISCV_ADD (regs.getN 1) (regs.getN 0)
-  | .slt, regs => RTYPE_pure64_RISCV_SLT (regs.getN 1) (regs.getN 0)
-  | .sltu, regs => RTYPE_pure64_RISCV_SLTU (regs.getN 1) (regs.getN 0)
-  | .and, regs => RTYPE_pure64_RISCV_AND (regs.getN 1) (regs.getN 0)
-  | .or, regs => RTYPE_pure64_RISCV_OR (regs.getN 1) (regs.getN 0)
-  | .xor, regs => RTYPE_pure64_RISCV_XOR (regs.getN 1) (regs.getN 0)
-  | .sll, regs => RTYPE_pure64_RISCV_SLL_bv (regs.getN 1) (regs.getN 0)
-  | .srl, regs => RTYPE_pure64_RISCV_SRL_bv (regs.getN 1) (regs.getN 0)
-  | .sub, regs => RTYPE_pure64_RISCV_SUB (regs.getN 1) (regs.getN 0)
-  | .sra, regs => RTYPE_pure64_RISCV_SRA_bv (regs.getN 1) (regs.getN 0)
-  | .remw, regs => SIGNED_pure64_REMW_bv (regs.getN 1) (regs.getN 0)
-  | .remuw, regs => UNSIGNED_pure64_REMW_bv (regs.getN 1) (regs.getN 0)
-  | .rem, regs => SIGNED_pure64_REM_bv (regs.getN 1) (regs.getN 0)
-  | .remu, regs => UNSIGNED_pure64_REM_bv (regs.getN 1) (regs.getN 0)
-  | .mulhu,regs => pure64_MUL_bv_tff (regs.getN 1) (regs.getN 0)
-  | .mul ,regs => pure64_MUL_ftt (regs.getN 1) (regs.getN 0)
-  | .mulhsu ,regs => pure64_MUL_bv_ttf (regs.getN 1) (regs.getN 0)
-  | .mulh,regs => pure64_MUL_bv_ttt (regs.getN 1) (regs.getN 0)
-  | .mulw,  regs => pure64_MULW_bv (regs.getN 1) (regs.getN 0)
-  | .div, regs => SIGNED_pure64_DIV_bv (regs.getN 1) (regs.getN 0)
-  | .divu,  regs => UNSIGNED_pure64_DIV_bv (regs.getN 1) (regs.getN 0)
-  | .divw, regs => SIGNED_pure64_DIVW (regs.getN 1) (regs.getN 0)
-  | .divuw, regs => UNSIGNED_pure64_DIVW (regs.getN 1) (regs.getN 0)
-  | .addi imm, reg => ITYPE_pure64_RISCV_ADDI imm (reg.getN 0)
-  | .slti imm, reg => ITYPE_pure64_RISCV_SLTI imm (reg.getN 0)
-  | .sltiu imm, reg => ITYPE_pure64_RISCV_SLTIU imm (reg.getN 0)
-  | .andi imm, reg => ITYPE_pure64_RISCV_ANDI imm (reg.getN 0)
-  | .ori imm, reg => ITYPE_pure64_RISCV_ORI imm (reg.getN 0)
-  | .xori imm, reg => ITYPE_pure64_RISCV_XORI imm (reg.getN 0)
-  | RISCV64.Op.czero.eqz, regs => ZICOND_RTYPE_pure64_RISCV_CZERO_EQZ (regs.getN 1) (regs.getN 0)
-  | RISCV64.Op.czero.nez, regs => ZICOND_RTYPE_pure64_RISCV_CZERO_NEZ (regs.getN 1) (regs.getN 0)
-  | .bclr, regs => ZBS_RTYPE_pure64_RISCV_BCLR_bv (regs.getN 1) (regs.getN 0)
-  | .bext, regs => ZBS_RTYPE_pure64_RISCV_BEXT_bv (regs.getN 1) (regs.getN 0)
-  | .binv, regs => ZBS_RTYPE_pure64_BINV_bv (regs.getN 1) (regs.getN 0)
-  | .bset, regs => ZBS_RTYPE_pure64_RISCV_BSET_bv (regs.getN 1) (regs.getN 0)
-  | .bclri shamt , reg => ZBS_IOP_pure64_RISCV_BCLRI_bv shamt (reg.getN 0)
-  | .bexti shamt, reg => ZBS_IOP_pure64_RISCV_BEXTI_bv shamt (reg.getN 0)
-  | .binvi shamt, reg => ZBS_IOP_pure64_RISCV_BINVI_bv shamt (reg.getN 0)
-  | .bseti shamt, reg => ZBS_IOP_pure64_RISCV_BSETI_bv shamt (reg.getN 0)
-  | RISCV64.Op.add.uw, regs => ZBA_RTYPEUW_pure64_RISCV_ADDUW (regs.getN 1) (regs.getN 0)
-  | RISCV64.Op.sh1add.uw , regs => ZBA_RTYPEUW_pure64_RISCV_SH1ADDUW (regs.getN 1) (regs.getN 0)
-  | RISCV64.Op.sh2add.uw, regs => ZBA_RTYPEUW_pure64_RISCV_SH2ADDUW (regs.getN 1) (regs.getN 0)
-  | RISCV64.Op.sh3add.uw, regs => ZBA_RTYPEUW_pure64_RISCV_SH3ADDUW (regs.getN 1) (regs.getN 0)
-  | .sh1add, regs => ZBA_RTYPE_pure64_RISCV_SH1ADD (regs.getN 1) (regs.getN 0)
-  | .sh2add, regs => ZBA_RTYPE_pure64_RISCV_SH2ADD (regs.getN 1) (regs.getN 0)
-  | .sh3add, regs => ZBA_RTYPE_pure64_RISCV_SH3ADD (regs.getN 1) (regs.getN 0)
-  | RISCV64.Op.slli.uw shamt, regs => ZBA_pure64_RISCV_SLLIUW shamt (regs.getN 0)
-  | .andn, regs => ZBB_RTYPE_pure_RISCV_ANDN (regs.getN 1) (regs.getN 0)
-  | .orn, regs => ZBB_RTYPE_pure_RISCV_ORN (regs.getN 1) (regs.getN 0)
-  | .xnor, regs => ZBB_RTYPE_pure_RISCV_XNOR (regs.getN 1) (regs.getN 0)
-  | clz, regs => ZBB_EXTOP_pure64_RISCV_CLZ (regs.getN 1)
-  | clzw, regs => ZBB_EXTOP_pure64_RISCV_CLZW (regs.getN 1)
-  | ctz, regs => ZBB_EXTOP_pure64_RISCV_CTZ (regs.getN 1)
-  | ctzw, regs => ZBB_EXTOP_pure64_RISCV_CTZW (regs.getN 1)
-  -- | cpop
-  -- | cpopw
-  | .max, regs => ZBB_RTYPE_pure_RISCV_MAX_bv (regs.getN 1) (regs.getN 0)
-  | .maxu, regs => ZBB_RTYPE_pure_RISCV_MAXU_bv (regs.getN 1) (regs.getN 0)
-  | .min, regs => ZBB_RTYPE_pure_RISCV_MIN_bv (regs.getN 1) (regs.getN 0)
-  | .minu, regs => ZBB_RTYPE_pure_RISCV_MINU_bv (regs.getN 1) (regs.getN 0)
-  | RISCV64.Op.sext.b, reg => ZBB_EXTOP_pure64_RISCV_SEXTB (reg.getN 0)
-  | RISCV64.Op.sext.h, reg => ZBB_EXTOP_pure64_RISCV_SEXTH (reg.getN 0)
-  | RISCV64.Op.zext.h, reg => ZBB_EXTOP_pure64_RISCV_ZEXTH (reg.getN 0)
-  | .rol, regs => ZBB_RTYPE_pure64_RISCV_ROL_bv (regs.getN 1) (regs.getN 0)
-  | .rolw, regs => ZBB_RTYPEW_pure64_RISCV_ROLW (regs.getN 1) (regs.getN 0)
-  | .ror, regs => ZBB_RTYPE_pure64_RISCV_ROR_bv (regs.getN 1) (regs.getN 0)
-  | .rori shamt, regs => ZBB_pure64_RISCV_RORI shamt (regs.getN 0)
-  | .roriw shamt, regs => ZBB_pure64_RISCV_RORIW shamt (regs.getN 0)
-  | .rorw, regs => ZBB_RTYPEW_pure64_RISCV_RORW (regs.getN 1) (regs.getN 0)
-  -- orc.b
-  -- rev8
-  -- pseudo-instructions
-  | .mv, regs  => MV_pure64_pseudo (regs.getN 0)
-  | .not, regs => NOT_pure64_pseudo (regs.getN 0)
-  | .neg, regs => NEG_pure64_pseudo (regs.getN 0)
-  | .negw, regs => NEGW_pure64_pseudo (regs.getN 0)
-  | RISCV64.Op.sext.w, regs => SEXTW_pure64_pseudo (regs.getN 0)
-  | RISCV64.Op.zext.b, regs => ZEXTB_pure64_pseudo (regs.getN 0)
-  | RISCV64.Op.zext.w, regs => ZEXTW_pure64_pseudo (regs.getN 0)
-  | .seqz, regs => SEQZ_pure64_pseudo (regs.getN 0)
-  | .snez, regs => SNEZ_pure64_pseudo (regs.getN 0)
-  | .sltz, regs => SLTZ_pure64_pseudo (regs.getN 0)
-  | .sgtz, regs => SGZT_pure64_pseudo (regs.getN 0)
+-- /--
+-- ## Dialect semantics
+-- We assign semantics defined in `RV64` to each operation.
+-- This defines the meaning of each operation in Lean.
+-- When writting RISC-V-like abstract MLIR ISA intuitively
+-- we write `op  arg1 arg2`.
+-- The `RISCV64` semantics are defined to first process the second operand
+-- then the first. Therefore we first pass `.get 1` then `.get 0` into the
+-- functions that define our semantics.
+-- -/
+-- @[simp, simp_denote]
+-- abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
+--   | .li imm, _  => imm
+--   | .addiw imm, regs => pure64_RISCV_ADDIW imm (regs.getN 0)
+--   | .lui imm, regs  => UTYPE_pure64_RISCV_LUI imm
+--   | .auipc imm, regs => UTYPE_pure64_RISCV_AUIPC imm (regs.getN 0)
+--   | .slliw shamt, regs => SHIFTIWOP_pure64_RISCV_SLLIW_bv shamt (regs.getN 0)
+--   | .srliw shamt, regs => SHIFTIWOP_pure64_RISCV_SRLIW_bv shamt (regs.getN 0)
+--   | .sraiw shamt, regs => SHIFTIWOP_pure64_RISCV_SRAIW_bv shamt (regs.getN 0)
+--   | .slli shamt, regs => SHIFTIOP_pure64_RISCV_SLLI_bv shamt (regs.getN 0)
+--   | .srli shamt, regs => SHIFTIOP_pure64_RISCV_SRLI_bv shamt (regs.getN 0)
+--   | .srai shamt, regs => SHIFTIOP_pure64_RISCV_SRAI_bv shamt (regs.getN 0)
+--   | .addw, regs => RTYPEW_pure64_RISCV_ADDW (regs.getN 1) (regs.getN 0)
+--   | .subw, regs => RTYPEW_pure64_RISCV_SUBW (regs.getN 1) (regs.getN 0)
+--   | .sllw, regs => RTYPEW_pure64_RISCV_SLLW_bv (regs.getN 1) (regs.getN 0)
+--   | .srlw, regs => RTYPEW_pure64_RISCV_SRLW_bv (regs.getN 1) (regs.getN 0)
+--   | .sraw, regs => RTYPEW_pure64_RISCV_SRAW_bv (regs.getN 1) (regs.getN 0)
+--   | .add, regs => RTYPE_pure64_RISCV_ADD (regs.getN 1) (regs.getN 0)
+--   | .slt, regs => RTYPE_pure64_RISCV_SLT (regs.getN 1) (regs.getN 0)
+--   | .sltu, regs => RTYPE_pure64_RISCV_SLTU (regs.getN 1) (regs.getN 0)
+--   | .and, regs => RTYPE_pure64_RISCV_AND (regs.getN 1) (regs.getN 0)
+--   | .or, regs => RTYPE_pure64_RISCV_OR (regs.getN 1) (regs.getN 0)
+--   | .xor, regs => RTYPE_pure64_RISCV_XOR (regs.getN 1) (regs.getN 0)
+--   | .sll, regs => RTYPE_pure64_RISCV_SLL_bv (regs.getN 1) (regs.getN 0)
+--   | .srl, regs => RTYPE_pure64_RISCV_SRL_bv (regs.getN 1) (regs.getN 0)
+--   | .sub, regs => RTYPE_pure64_RISCV_SUB (regs.getN 1) (regs.getN 0)
+--   | .sra, regs => RTYPE_pure64_RISCV_SRA_bv (regs.getN 1) (regs.getN 0)
+--   | .remw, regs => SIGNED_pure64_REMW_bv (regs.getN 1) (regs.getN 0)
+--   | .remuw, regs => UNSIGNED_pure64_REMW_bv (regs.getN 1) (regs.getN 0)
+--   | .rem, regs => SIGNED_pure64_REM_bv (regs.getN 1) (regs.getN 0)
+--   | .remu, regs => UNSIGNED_pure64_REM_bv (regs.getN 1) (regs.getN 0)
+--   | .mulhu,regs => pure64_MUL_bv_tff (regs.getN 1) (regs.getN 0)
+--   | .mul ,regs => pure64_MUL_ftt (regs.getN 1) (regs.getN 0)
+--   | .mulhsu ,regs => pure64_MUL_bv_ttf (regs.getN 1) (regs.getN 0)
+--   | .mulh,regs => pure64_MUL_bv_ttt (regs.getN 1) (regs.getN 0)
+--   | .mulw,  regs => pure64_MULW_bv (regs.getN 1) (regs.getN 0)
+--   | .div, regs => SIGNED_pure64_DIV_bv (regs.getN 1) (regs.getN 0)
+--   | .divu,  regs => UNSIGNED_pure64_DIV_bv (regs.getN 1) (regs.getN 0)
+--   | .divw, regs => SIGNED_pure64_DIVW (regs.getN 1) (regs.getN 0)
+--   | .divuw, regs => UNSIGNED_pure64_DIVW (regs.getN 1) (regs.getN 0)
+--   | .addi imm, reg => ITYPE_pure64_RISCV_ADDI imm (reg.getN 0)
+--   | .slti imm, reg => ITYPE_pure64_RISCV_SLTI imm (reg.getN 0)
+--   | .sltiu imm, reg => ITYPE_pure64_RISCV_SLTIU imm (reg.getN 0)
+--   | .andi imm, reg => ITYPE_pure64_RISCV_ANDI imm (reg.getN 0)
+--   | .ori imm, reg => ITYPE_pure64_RISCV_ORI imm (reg.getN 0)
+--   | .xori imm, reg => ITYPE_pure64_RISCV_XORI imm (reg.getN 0)
+--   | RISCV64.Op.czero.eqz, regs => ZICOND_RTYPE_pure64_RISCV_CZERO_EQZ (regs.getN 1) (regs.getN 0)
+--   | RISCV64.Op.czero.nez, regs => ZICOND_RTYPE_pure64_RISCV_CZERO_NEZ (regs.getN 1) (regs.getN 0)
+--   | .bclr, regs => ZBS_RTYPE_pure64_RISCV_BCLR_bv (regs.getN 1) (regs.getN 0)
+--   | .bext, regs => ZBS_RTYPE_pure64_RISCV_BEXT_bv (regs.getN 1) (regs.getN 0)
+--   | .binv, regs => ZBS_RTYPE_pure64_BINV_bv (regs.getN 1) (regs.getN 0)
+--   | .bset, regs => ZBS_RTYPE_pure64_RISCV_BSET_bv (regs.getN 1) (regs.getN 0)
+--   | .bclri shamt , reg => ZBS_IOP_pure64_RISCV_BCLRI_bv shamt (reg.getN 0)
+--   | .bexti shamt, reg => ZBS_IOP_pure64_RISCV_BEXTI_bv shamt (reg.getN 0)
+--   | .binvi shamt, reg => ZBS_IOP_pure64_RISCV_BINVI_bv shamt (reg.getN 0)
+--   | .bseti shamt, reg => ZBS_IOP_pure64_RISCV_BSETI_bv shamt (reg.getN 0)
+--   | RISCV64.Op.add.uw, regs => ZBA_RTYPEUW_pure64_RISCV_ADDUW (regs.getN 1) (regs.getN 0)
+--   | RISCV64.Op.sh1add.uw , regs => ZBA_RTYPEUW_pure64_RISCV_SH1ADDUW (regs.getN 1) (regs.getN 0)
+--   | RISCV64.Op.sh2add.uw, regs => ZBA_RTYPEUW_pure64_RISCV_SH2ADDUW (regs.getN 1) (regs.getN 0)
+--   | RISCV64.Op.sh3add.uw, regs => ZBA_RTYPEUW_pure64_RISCV_SH3ADDUW (regs.getN 1) (regs.getN 0)
+--   | .sh1add, regs => ZBA_RTYPE_pure64_RISCV_SH1ADD (regs.getN 1) (regs.getN 0)
+--   | .sh2add, regs => ZBA_RTYPE_pure64_RISCV_SH2ADD (regs.getN 1) (regs.getN 0)
+--   | .sh3add, regs => ZBA_RTYPE_pure64_RISCV_SH3ADD (regs.getN 1) (regs.getN 0)
+--   | RISCV64.Op.slli.uw shamt, regs => ZBA_pure64_RISCV_SLLIUW shamt (regs.getN 0)
+--   | .andn, regs => ZBB_RTYPE_pure_RISCV_ANDN (regs.getN 1) (regs.getN 0)
+--   | .orn, regs => ZBB_RTYPE_pure_RISCV_ORN (regs.getN 1) (regs.getN 0)
+--   | .xnor, regs => ZBB_RTYPE_pure_RISCV_XNOR (regs.getN 1) (regs.getN 0)
+--   | clz, regs => ZBB_EXTOP_pure64_RISCV_CLZ (regs.getN 1)
+--   | clzw, regs => ZBB_EXTOP_pure64_RISCV_CLZW (regs.getN 1)
+--   | ctz, regs => ZBB_EXTOP_pure64_RISCV_CTZ (regs.getN 1)
+--   | ctzw, regs => ZBB_EXTOP_pure64_RISCV_CTZW (regs.getN 1)
+--   -- | cpop
+--   -- | cpopw
+--   | .max, regs => ZBB_RTYPE_pure_RISCV_MAX_bv (regs.getN 1) (regs.getN 0)
+--   | .maxu, regs => ZBB_RTYPE_pure_RISCV_MAXU_bv (regs.getN 1) (regs.getN 0)
+--   | .min, regs => ZBB_RTYPE_pure_RISCV_MIN_bv (regs.getN 1) (regs.getN 0)
+--   | .minu, regs => ZBB_RTYPE_pure_RISCV_MINU_bv (regs.getN 1) (regs.getN 0)
+--   | RISCV64.Op.sext.b, reg => ZBB_EXTOP_pure64_RISCV_SEXTB (reg.getN 0)
+--   | RISCV64.Op.sext.h, reg => ZBB_EXTOP_pure64_RISCV_SEXTH (reg.getN 0)
+--   | RISCV64.Op.zext.h, reg => ZBB_EXTOP_pure64_RISCV_ZEXTH (reg.getN 0)
+--   | .rol, regs => ZBB_RTYPE_pure64_RISCV_ROL_bv (regs.getN 1) (regs.getN 0)
+--   | .rolw, regs => ZBB_RTYPEW_pure64_RISCV_ROLW (regs.getN 1) (regs.getN 0)
+--   | .ror, regs => ZBB_RTYPE_pure64_RISCV_ROR_bv (regs.getN 1) (regs.getN 0)
+--   | .rori shamt, regs => ZBB_pure64_RISCV_RORI shamt (regs.getN 0)
+--   | .roriw shamt, regs => ZBB_pure64_RISCV_RORIW shamt (regs.getN 0)
+--   | .rorw, regs => ZBB_RTYPEW_pure64_RISCV_RORW (regs.getN 1) (regs.getN 0)
+--   -- orc.b
+--   -- rev8
+--   -- pseudo-instructions
+--   | .mv, regs  => MV_pure64_pseudo (regs.getN 0)
+--   | .not, regs => NOT_pure64_pseudo (regs.getN 0)
+--   | .neg, regs => NEG_pure64_pseudo (regs.getN 0)
+--   | .negw, regs => NEGW_pure64_pseudo (regs.getN 0)
+--   | RISCV64.Op.sext.w, regs => SEXTW_pure64_pseudo (regs.getN 0)
+--   | RISCV64.Op.zext.b, regs => ZEXTB_pure64_pseudo (regs.getN 0)
+--   | RISCV64.Op.zext.w, regs => ZEXTW_pure64_pseudo (regs.getN 0)
+--   | .seqz, regs => SEQZ_pure64_pseudo (regs.getN 0)
+--   | .snez, regs => SNEZ_pure64_pseudo (regs.getN 0)
+--   | .sltz, regs => SLTZ_pure64_pseudo (regs.getN 0)
+--   | .sgtz, regs => SGZT_pure64_pseudo (regs.getN 0)
 
-@[simp, reducible]
-instance : DialectDenote RV64 where
-  denote o args _ := [o.denote args]ₕ
+-- @[simp, reducible]
+-- instance : DialectDenote RV64 where
+--   denote o args _ := [o.denote args]ₕ
 
-end RISCV64
+-- end RISCV64
