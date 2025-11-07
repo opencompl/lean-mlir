@@ -5,7 +5,7 @@
    "type": "git",
    "subDir": null,
    "scope": "",
-   "rev": "92fba2f7638889fa5f4fd4f11535bdb8c61aa538",
+   "rev": "db7bdea8024bb6090dfb3a5f63dfe7cb326f957d",
    "name": "SailRV64",
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",
