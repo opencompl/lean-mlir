@@ -5,6 +5,8 @@
 -/
 import Blase
 import Blase.MultiWidth.Preprocessing
+set_option warn.sorry false
+
 open BitVec
 
 
