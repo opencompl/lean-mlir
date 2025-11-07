@@ -1,10 +1,12 @@
-import SexprPBV.Sexpr 
+import SexprPBV.Sexpr
 
 namespace SexprPBV
 
 inductive WidthBinaryRelationKind
 | eq
 | le
+| lt
+| ne
 -- lt: a < b ↔ a + 1 ≤ b
 -- a ≠ b: (a < b ∨ b < a)
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
@@ -70,12 +72,34 @@ inductive Term
 | band (w : WidthExpr) (a b : Term) : Term
 | bxor (w : WidthExpr) (a b : Term) : Term
 | bnot (w : WidthExpr)  (a : Term) : Term
+| mul (w : WidthExpr) (a b : Term) : Term
+| udiv (w : WidthExpr) (a b : Term) : Term
+| umod (w : WidthExpr) (a b : Term) : Term
 | boolVar (v : Nat) : Term
 | boolConst (b : Bool) : Term
 | shiftl (w : WidthExpr) (a : Term) (k : Nat) : Term
+| junk (s : String)  : Term -- junk unknown stuff
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Term.toSexpr : Term → Sexpr
+| .mul w a b => Sexpr.array #[
+    Sexpr.atom "mul",
+    w.toSexpr,
+    a.toSexpr,
+    b.toSexpr
+  ]
+| .udiv w a b => Sexpr.array #[
+    Sexpr.atom "udiv",
+    w.toSexpr,
+    a.toSexpr,
+    b.toSexpr
+  ]
+| .umod w a b => Sexpr.array #[
+    Sexpr.atom "umod",
+    w.toSexpr,
+    a.toSexpr,
+    b.toSexpr
+  ]
 | .shiftl w a k => Sexpr.array #[
     Sexpr.atom "shiftl",
     w.toSexpr,
@@ -144,6 +168,10 @@ def Term.toSexpr : Term → Sexpr
     Sexpr.atom "boolConst",
     .atomOf b
   ]
+| .junk f => Sexpr.array #[
+    Sexpr.atom "bvjunk",
+    .atomOf f
+  ]
 
 instance : ToSexpr Term where
   toSexpr := Term.toSexpr
@@ -155,9 +183,15 @@ inductive Predicate
     (a : Term) (b : Term) : Predicate
 | or (p1 p2 : Predicate) : Predicate
 | and (p1 p2 : Predicate) : Predicate
+| eq (p1 p2 : Predicate) : Predicate -- WTF?
+| xor (p1 p2 : Predicate) : Predicate -- WTF?
 | var (v : Nat) : Predicate
 | boolBinRel (k : BoolBinaryRelationKind)
     (a b : Term) : Predicate
+| not (p : Predicate) : Predicate
+| boolConstPred (b : Bool) : Predicate
+| ite (cond : Predicate) (thenP : Predicate) (elseP : Predicate) : Predicate
+| junk (s : String)  : Predicate -- junk unknown stuff
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 
@@ -171,6 +205,16 @@ def Predicate.toSexpr : Predicate → Sexpr
     ]
   | .le => Sexpr.array #[
       Sexpr.atom "wle",
+      wa.toSexpr,
+      wb.toSexpr
+    ]
+  | .lt => Sexpr.array #[
+      Sexpr.atom "wlt",
+      wa.toSexpr,
+      wb.toSexpr
+    ]
+  | .ne =>  Sexpr.array #[
+      Sexpr.atom "wne",
       wa.toSexpr,
       wb.toSexpr
     ]
@@ -222,6 +266,16 @@ def Predicate.toSexpr : Predicate → Sexpr
     p1.toSexpr,
     p2.toSexpr
   ]
+| .eq p1 p2 => Sexpr.array #[
+    Sexpr.atom "peq",
+    p1.toSexpr,
+    p2.toSexpr
+  ]
+| .xor p1 p2 => Sexpr.array #[
+    Sexpr.atom "pxor",
+    p1.toSexpr,
+    p2.toSexpr
+  ]
 | .var v => Sexpr.array #[
     Sexpr.atom "pvar",
     .atomOf v
@@ -233,6 +287,23 @@ def Predicate.toSexpr : Predicate → Sexpr
       a.toSexpr,
       b.toSexpr
    ]
-
+| .not p => Sexpr.array #[
+    Sexpr.atom "pnot",
+    p.toSexpr
+  ]
+| .ite cond thenP elseP => Sexpr.array #[
+    Sexpr.atom "pite",
+    cond.toSexpr,
+    thenP.toSexpr,
+    elseP.toSexpr
+  ]
+| .boolConstPred b => Sexpr.array #[
+    Sexpr.atom "pBoolConst",
+    .atomOf b
+  ]
+| .junk f =>
+  Sexpr.array #[
+    Sexpr.atom "pjunk",
+    .atomOf f
+  ]
 end SexprPBV
-

@@ -639,10 +639,26 @@ class HydrableParseAndGeneralize (parsedExpr : Type) (genPred : Type) (genExpr :
   HydrableGetInputWidth
   where
 
+inductive MedusaSynthGeneralizeConfig.Output 
+  | thmStmt
+  | sexpr
+
+structure MedusaSynthGeneralizeConfig where
+  output : MedusaSynthGeneralizeConfig.Output := .thmStmt
+
+instance : EmptyCollection MedusaSynthGeneralizeConfig where
+  emptyCollection := {}
+
+declare_config_elab elabMedusaSynthGeneralizeConfig MedusaSynthGeneralizeConfig
+
+
 /--
 Process the input `Expr` and print the generalization result.
 -/
-def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genPred genExpr] (hExpr : Expr) (context: GeneralizeContext): TermElabM MessageData := do
+def parseAndGeneralize 
+  [H : HydrableParseAndGeneralize parsedExpr genPred genExpr]
+  (cfg : MedusaSynthGeneralizeConfig) 
+  (hExpr : Expr) (context: GeneralizeContext): TermElabM MessageData := do
     let targetWidth := 8
     let timeoutMs := 300000
 
@@ -683,33 +699,38 @@ def parseAndGeneralize [H : HydrableParseAndGeneralize parsedExpr genPred genExp
             | some res => match context with
                           | GeneralizeContext.Command => let pretty := HydrablePrettify.prettify res variableDisplayNames
                                                          pure m! "Raw generalization result: {res} \n Input expression: {hExpr} has generalization: {pretty}"
-                          | GeneralizeContext.Tactic name => 
-                            throwError (H.prettifyAsSexpr res allVariables) |> format
-                            -- pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
+                          | GeneralizeContext.Tactic _name =>
+                            match cfg.output with
+                            | .thmStmt =>
+                              let name := Name.mkSimple "foo"
+                              pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
+                            | .sexpr =>
+                              throwError (H.prettifyAsSexpr res allVariables) |> format
             | none => throwError m! "Could not generalize {bvLogicalExpr}"
-
     | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
 
 open Lean Lean.Elab Command Term in
 def generalizeCommand
       (H : HydrableParseAndGeneralize parsedExpr genLogicalExpr genExpr)
+      (cfg : MedusaSynthGeneralizeConfig)
       (stx : Syntax) : CommandElabM Unit := do
   withoutModifyingEnv <| runTermElabM fun _ =>
     Term.withDeclName `_reduceWidth do
       let hExpr ← Term.elabTerm stx none
       trace[Generalize] m! "hexpr: {hExpr}"
-      let res ← parseAndGeneralize (H := H) hExpr GeneralizeContext.Command
+      let res ← parseAndGeneralize (H := H) cfg hExpr GeneralizeContext.Command
       logInfo m! "{res}"
 
 open Lean Lean.Elab Command Term in
 def generalizeTactic
       (H : HydrableParseAndGeneralize parsedExpr genLogicalExpr genExpr)
+      (cfg : MedusaSynthGeneralizeConfig)
       (expr : Expr) : TacticM Unit := do
   let name ← mkAuxDeclName `generalized
   let msg ← withoutModifyingEnv <| withoutModifyingState do
     Lean.Elab.Tactic.withMainContext do
       -- | TODO: should we add a unification check, that allows the user
       -- to prove the more general version?
-      let res ← parseAndGeneralize (H := H) expr (GeneralizeContext.Tactic name)
+      let res ← parseAndGeneralize (H := H) cfg expr (GeneralizeContext.Tactic name)
       pure m! "{res}"
   logInfo m! "{msg}"

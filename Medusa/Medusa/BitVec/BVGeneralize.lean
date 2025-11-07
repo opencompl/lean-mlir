@@ -795,30 +795,53 @@ def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat Name) :
     | _ => bvExpr.toString
 
 def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
-      (vars : Std.HashMap Nat HydraVariable) (widths : Array Nat) : SexprPBV.Term :=
+      (vars : Std.HashMap Nat HydraVariable) : SexprPBV.Term :=
     match bvExpr with
-    | .var idx => 
+    | .var idx =>
        let varInfo := vars.getD idx default
-       let widthIx := widths.idxOf varInfo.width 
+       let widthIx := varInfo.width
        .var idx (.var widthIx) --- TODO: what is the actual width of the BVExpr?
-    | .const bv => -- TODO: is this even right?
-        .ofNat (.const w) bv.toNat
+    | .const bv => 
+        -- TODO: is this even right Whatis the width of a const?
+        .ofNat (.var w) bv.toNat
     | .bin lhs op rhs =>
-       match op with 
-       | .add => SexprPBV.Term.add _ (GenBVExpr.toSmtLib lhs vars widths) (GenBVExpr.toSmtLib rhs vars widths)
-       | .sub => SexprPBV.Term.sub _ (GenBVExpr.toSmtLib lhs vars widths) (GenBVExpr.toSmtLib rhs vars widths)
-       | .mul => SexprPBV.Term.mul _ (GenBVExpr.toSmtLib lhs vars widths) (GenBVExpr.toSmtLib rhs vars widths)
-       | .and => SexprPBV.Term.bvand _ (GenBVExpr.toSmtLib lhs vars widths) (GenBVExpr.toSmtLib rhs vars widths)
-       | .or  => SexprPBV.Term.bvor _ (GenBVExpr.toSmtLib lhs vars widths) (GenBVExpr.toSmtLib rhs vars widths)
+      -- TODO: is this even right? The 'w' is the *old* (pre generalization) width
+      let w := SexprPBV.WidthExpr.var w
+      match op with
+      | .add => SexprPBV.Term.add w
+        (GenBVExpr.toSmtLib lhs vars)
+        (GenBVExpr.toSmtLib rhs vars)
+      | .mul => SexprPBV.Term.mul w
+        (GenBVExpr.toSmtLib lhs vars)
+        (GenBVExpr.toSmtLib rhs vars)
+      | .umod => SexprPBV.Term.umod w
+        (GenBVExpr.toSmtLib lhs vars)
+        (GenBVExpr.toSmtLib rhs vars)
+      | .udiv => SexprPBV.Term.udiv w
+        (GenBVExpr.toSmtLib lhs vars)
+        (GenBVExpr.toSmtLib rhs vars) 
+      | .and => SexprPBV.Term.band w
+        (GenBVExpr.toSmtLib lhs vars)
+        (GenBVExpr.toSmtLib rhs vars)
+      | .or  => SexprPBV.Term.bor w
+        (GenBVExpr.toSmtLib lhs vars)
+        (GenBVExpr.toSmtLib rhs vars)
+      | .xor  => SexprPBV.Term.bxor w
+        (GenBVExpr.toSmtLib lhs vars)
+        (GenBVExpr.toSmtLib rhs vars)
     | .un op operand =>
-       sorry -- s! "({op.toString} {bvExpr.toSmtLib operand})"
-    | .shiftLeft lhs rhs =>
-        sorry -- s! "(bvshl {bvExpr.toSmtLib lhs} {bvExpr.toSmtLib rhs})"
-    | .shiftRight lhs rhs =>
-        sorry -- s! "(bvlshr {bvExpr.toSmtLib lhs} {bvExpr.toSmtLib rhs})"
-    | .arithShiftRight lhs rhs =>
-        sorry -- s! "(bvashr {bvExpr.toSmtLib lhs} {bvExpr.toSmtLib rhs})"
-    | _ => bvExpr.toString
+      -- TODO: is this even right? The 'w' is the *old* (pre generalization) width
+      let w := SexprPBV.WidthExpr.var w
+      match op with
+      | .not => SexprPBV.Term.bnot w (GenBVExpr.toSmtLib operand vars)
+      | _ => .junk bvExpr.toString
+    | .shiftLeft _lhs _rhs =>
+        .junk bvExpr.toString
+    | .shiftRight _lhs _rhs =>
+        .junk bvExpr.toString
+    | .arithShiftRight _lhs _rhs =>
+        .junk bvExpr.toString
+    | _ => .junk bvExpr.toString
 
 def isGteZeroCheck (expr : BoolExpr GenBVPred) : Bool :=
   match expr with
@@ -860,21 +883,50 @@ def prettify (generalization: BoolExpr  GenBVPred) (displayNames: Std.HashMap Na
           s! "if {prettify cond displayNames} then {prettify positive displayNames} "
       | _ => generalization.toString
 
-def GenBVPred.toSmtLib (pred : BoolExpr GenBVPred)
-    (displayNames : Std.HashMap Nat HydraVariable) : SexprPBV.Predicate := 
+
+def genBvPredToSmtLib
+    (litPred : GenBVPred) (vars : Std.HashMap Nat HydraVariable) : SexprPBV.Predicate :=
+  match litPred with
+  | .bin (w := w) lhs op rhs =>
+      match op with
+      | .eq => SexprPBV.Predicate.binRel .eq (.const w)
+                (GenBVExpr.toSmtLib lhs vars)
+                (GenBVExpr.toSmtLib rhs vars)
+      | .ult => SexprPBV.Predicate.binRel .ult (.const w)
+                (GenBVExpr.toSmtLib lhs vars)
+                (GenBVExpr.toSmtLib rhs vars)
+  | _ => SexprPBV.Predicate.junk litPred.toString
+
+
+def boolExprToSmtLib (pred : BoolExpr α) (f : α → SexprPBV.Predicate)
+    (displayNames : Std.HashMap Nat HydraVariable) : SexprPBV.Predicate :=
   match pred with
-  | .literal (GenBVPred.bin lhs op rhs) => sorry -- GenBVPred.toSmtLib litPred displayNames
-  | .not expr => SexprPBV.Predicate.not (prettifyAsSexpr expr displayNames)
+  | .literal litPred => f litPred
+  | .not expr => SexprPBV.Predicate.not (boolExprToSmtLib expr f displayNames)
   | .gate gate lhs rhs =>
+      -- | TODO: these should be binRel, I think? But it's totally unclear.
+      -- But that doesn't exactly type-check, because binRel needs two terms, not predicates.
+      -- Not sure, I need to ask Timi.
       match gate with
-      | .and => SexprPBV.Predicate.and (prettifyAsSexpr lhs displayNames) (prettifyAsSexpr rhs displayNames)
-      | .or  => SexprPBV.Predicate.or (prettifyAsSexpr lhs displayNames) (prettifyAsSexpr rhs displayNames)
-  | .ite cond positive negative => sorry
+      | .beq => SexprPBV.Predicate.eq (boolExprToSmtLib lhs f displayNames) (boolExprToSmtLib rhs f displayNames)
+      | .xor => SexprPBV.Predicate.xor (boolExprToSmtLib lhs f displayNames) (boolExprToSmtLib rhs f displayNames)
+      | .and => SexprPBV.Predicate.and (boolExprToSmtLib lhs f displayNames) (boolExprToSmtLib rhs f displayNames)
+      | .or  => SexprPBV.Predicate.or (boolExprToSmtLib lhs f displayNames) (boolExprToSmtLib rhs f displayNames)
+  | .ite cond positive negative =>
+      SexprPBV.Predicate.ite (boolExprToSmtLib cond f displayNames)
+                            (boolExprToSmtLib positive f displayNames)
+                            (boolExprToSmtLib negative f displayNames)
+  | .const b => SexprPBV.Predicate.boolConstPred b
+
+def GenBVPred.toSmtLib
+    (pred : BoolExpr GenBVPred) (vars : Std.HashMap Nat HydraVariable) :
+    SexprPBV.Predicate :=
+  boolExprToSmtLib pred (fun p => genBvPredToSmtLib p vars) vars
 
 
 instance : HydrablePrettify GenBVPred where
   prettify := prettify
-  prettifyAsSexpr := prettifyAsSexpr
+  prettifyAsSexpr  pred vars := GenBVPred.toSmtLib pred vars |>.toSexpr
 
 def prettifyAsTheorem (name: Name) (generalization: BoolExpr GenBVPred) (displayNames: Std.HashMap Nat Name) : String := Id.run do
   let params := displayNames.values.filter (λ n => n.toString != "w")
@@ -882,7 +934,7 @@ def prettifyAsTheorem (name: Name) (generalization: BoolExpr GenBVPred) (display
   let res := res ++ s! " : {HydrablePrettify.prettify generalization displayNames}"
   let res := res ++ s! " := by sorry"
   pure res
-  
+
 
 instance : HydrablePrettifyAsTheorem GenBVPred where
   prettifyAsTheorem := prettifyAsTheorem
@@ -905,18 +957,20 @@ instance : HydrableInitializeGeneralizerState ParsedBVExpr GenBVPred GenBVExpr w
 instance : HydrableGeneralize ParsedBVExpr GenBVPred GenBVExpr where
 instance bvHydrableParseAndGeneralize : HydrableParseAndGeneralize ParsedBVExpr GenBVPred GenBVExpr where
 
+
 elab "#generalize" expr:term: command =>
   open Lean Lean.Elab Command Term in
   generalizeCommand (H := bvHydrableParseAndGeneralize) expr
 
-syntax (name := medusaSynthGeneralize) "md_synth_generalize" : tactic
+syntax (name := medusaSynthGeneralize) "md_synth_generalize" Lean.Parser.Tactic.optConfig  : tactic
 
 open Lean Meta Elab Tactic in
 @[tactic medusaSynthGeneralize]
 def evalBvGeneralize : Tactic
-  | `(tactic| md_synth_generalize) => do
+  | `(tactic| md_synth_generalize $cfg) => do
+      let cfg ← elabMedusaSynthGeneralizeConfig cfg
       withMainContext do
-        generalizeTactic (H := bvHydrableParseAndGeneralize) (← getMainTarget)
+        generalizeTactic (H := bvHydrableParseAndGeneralize) cfg (← getMainTarget)
   | _ => Lean.Elab.throwUnsupportedSyntax
 
 
@@ -933,12 +987,11 @@ def evalBvGeneralize : Tactic
 section Examples
 set_option warn.sorry false
 /--
-info: theorem Generalize.BV.demo.generalized_1_1 {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
+error: (bveq (wconst 8) (add (wconst 8) (bor (wconst 8) (add (wconst 8) (bvvar 1001 (wvar 8)) (add (wconst 8) (ofNat (wconst 8) 1) (bnot (wconst 8) (bvvar 1 (wvar 8))))) (bvvar 2 (wvar 8))) (bvvar 2 (wvar 8))) (add (wconst 8) (bor (wconst 8) (bvvar 2 (wvar 8)) (add (wconst 8) (bvvar 1001 (wvar 8)) (add (wconst 8) (ofNat (wconst 8) 1) (bnot (wconst 8) (bvvar 1 (wvar 8)))))) (bvvar 2 (wvar 8))))
 -/
 #guard_msgs in
 theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
   md_synth_generalize
-  sorry
 
 
 /--
