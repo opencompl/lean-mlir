@@ -73,7 +73,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                 ⟩⟩
       | .bv, "sext.w" => do
         return ⟨.pure, [.bv], ⟨
-                  RISCV64.Op.sext.w,
+                  .sextw,
                   rfl,
                   by constructor,
                    .cons v₁ <| .nil,
@@ -81,7 +81,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                 ⟩⟩
       | .bv, "zext.b" => do
         return ⟨.pure, [.bv], ⟨
-                  RISCV64.Op.zext.b,
+                  .zextb,
                   rfl,
                   by constructor,
                    .cons v₁ <| .nil,
@@ -89,7 +89,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                 ⟩⟩
       | .bv, "zext.w" => do
         return ⟨.pure, [.bv], ⟨
-                  RISCV64.Op.zext.w,
+                  .zextw,
                   rfl,
                   by constructor,
                    .cons v₁ <| .nil,
@@ -394,15 +394,15 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
             ⟩⟩
         | _ => throw <| .unsupportedOp s!"unsupported operation {repr opStx}"
       | .bv, "sext.b" =>
-            return ⟨ .pure, [.bv], ⟨ RISCV64.Op.sext.b, by rfl, by constructor,
+            return ⟨ .pure, [.bv], ⟨ .sextb, by rfl, by constructor,
                .cons v₁ <| .nil,
                 .nil⟩⟩
       | .bv, "sext.h" =>
-            return ⟨ .pure, [.bv], ⟨ RISCV64.Op.sext.h, by rfl, by constructor,
+            return ⟨ .pure, [.bv], ⟨ .sexth, by rfl, by constructor,
                .cons v₁ <| .nil,
                 .nil⟩⟩
       | .bv, "zext.h" =>
-            return ⟨ .pure, [.bv], ⟨ RISCV64.Op.zext.h, by rfl, by constructor,
+            return ⟨ .pure, [.bv], ⟨ .zexth, by rfl, by constructor,
                .cons v₁ <| .nil,
                 .nil⟩⟩
       | .bv, "roriw" => do
@@ -426,7 +426,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, [opTy], ⟨
-              .rori (BitVec.ofInt 5 val),
+              .rori (BitVec.ofInt 6 val),
               rfl,
               by constructor,
               .cons v₁ <| .nil,
@@ -440,7 +440,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
         | .int val ty =>
             let opTy@(.bv) ← mkTy ty
             return ⟨.pure, [opTy], ⟨
-              RISCV64.Op.slli.uw (BitVec.ofInt 6 val),
+              .slliuw (BitVec.ofInt 6 val),
               rfl,
               by constructor,
               .cons v₁ <| .nil,
@@ -528,28 +528,20 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
               return ⟨ .pure, [.bv], ⟨ .and, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
-      | .bv , .bv , "czero.eqz" =>
-              return ⟨ .pure, [.bv], ⟨ RISCV64.Op.czero.eqz, by rfl, by constructor,
-               .cons v₁ <| .cons v₂ <| .nil,
-                .nil⟩⟩
-      | .bv , .bv , "czero.nez" =>
-              return ⟨ .pure, [.bv], ⟨ RISCV64.Op.czero.nez, by rfl, by constructor,
-               .cons v₁ <| .cons v₂ <| .nil,
-                .nil⟩⟩
       | .bv , .bv , "bclr" =>
-              return ⟨ .pure, [.bv], ⟨ RISCV64.Op.bclr, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .bclr, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "bext" =>
-              return ⟨ .pure, [.bv], ⟨ RISCV64.Op.bext, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .bext, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "binv" =>
-              return ⟨ .pure, [.bv], ⟨ RISCV64.Op.binv, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .binv, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "bset" =>
-              return ⟨ .pure, [.bv], ⟨ RISCV64.Op.bset, by rfl, by constructor,
+              return ⟨ .pure, [.bv], ⟨ .bset, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv , .bv , "rolw" =>
@@ -605,19 +597,19 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv, .bv, "add.uw" =>
-            return ⟨ .pure, [.bv], ⟨ RISCV64.Op.add.uw, by rfl, by constructor,
+            return ⟨ .pure, [.bv], ⟨ .adduw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv, .bv, "sh1add.uw" =>
-            return ⟨ .pure, [.bv], ⟨ RISCV64.Op.sh1add.uw, by rfl, by constructor,
+            return ⟨ .pure, [.bv], ⟨ .sh1adduw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv, .bv, "sh2add.uw" =>
-            return ⟨ .pure, [.bv], ⟨ RISCV64.Op.sh2add.uw, by rfl, by constructor,
+            return ⟨ .pure, [.bv], ⟨ .sh2adduw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv, .bv, "sh3add.uw" =>
-            return ⟨ .pure, [.bv], ⟨ RISCV64.Op.sh3add.uw, by rfl, by constructor,
+            return ⟨ .pure, [.bv], ⟨ .sh3adduw, by rfl, by constructor,
                .cons v₁ <| .cons v₂ <| .nil,
                 .nil⟩⟩
       | .bv, .bv, "sh1add" =>
