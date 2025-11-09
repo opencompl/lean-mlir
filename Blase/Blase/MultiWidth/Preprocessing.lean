@@ -433,7 +433,7 @@ def getSimpData (simpsetName : Name) : MetaM (SimpTheorems × Simprocs) := do
   return (theorems, simprocs)
 
 open Lean Elab Meta
-def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
+def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := g.withContext do
   let mut theorems : Array SimpTheorems := #[]
   let mut simprocs : Array Simprocs := #[]
 
@@ -447,7 +447,7 @@ def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
   let ctx ← Simp.mkContext (config := config)
     (simpTheorems := theorems)
     (congrTheorems := ← Meta.getSimpCongrTheorems)
-  let lctx ← g.withContext <| getLCtx
+  let lctx ← getLCtx
   let fvars := lctx.getFVarIds
   match ← simpGoal g ctx (simprocs := simprocs) (fvarIdsToSimp := fvars) with
   | (.none, _stats) => return none

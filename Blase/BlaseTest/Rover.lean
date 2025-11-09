@@ -12,18 +12,10 @@ namespace Rover
 
 set_option warn.sorry false
 
-/-
-  {
-    "name": "add_assoc_1",
-    "preconditions": ["(>= q t)", "(>= u t)"],
-    "lhs": "(bw t ( + (bw u (+ (bw p a) (bw r b))) (bw s c)))",
-    "rhs": "(bw t ( + (bw p a) (bw q (+ (bw r b) (bw s c)))))"
-  },
--/
 def bw (w : Nat) (x : BitVec v) : BitVec w := x.zeroExtend w
 
 def addMax (a : BitVec v) (b : BitVec w) : BitVec (max v w) :=
-   a.zeroExtend _ + b.zeroExtend _
+   a.zeroExtend (max v w) + b.zeroExtend (max v w)
 
 def mulMax (a : BitVec v) (b : BitVec w) : BitVec (max v w) :=
    a.zeroExtend _ * b.zeroExtend _
@@ -37,23 +29,45 @@ def shlMax (a : BitVec v) (b : BitVec w) : BitVec (max v w) :=
 def shrMax (a : BitVec v) (b : BitVec w) : BitVec (max v w) :=
     a.zeroExtend (max v w) >>> b.zeroExtend (max v w)
 
-variable (w p q r s t : Nat)
-variable (a b c : BitVec w)
 
 
+variable (w p q r s t u : Nat)
+-- variable (a b c : BitVec w)
+variable (a : BitVec p)
+variable (b : BitVec r)
+variable (c : BitVec s)
 
-
-variable (w p q r s t : Nat)
-variable (a b : BitVec w)
 -- end preamble
 
-theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
-  (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c)))  =
-  (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
-  simp only [bw, addMax]
-  fail_if_success bv_multi_width
-  sorry
+@[simp]
+theorem signExtend_zero : (0#w).signExtend v = 0#v := by
+  apply BitVec.eq_of_toInt_eq
+  simp [BitVec.toInt_signExtend]
 
+@[simp]
+theorem max_zero (a : Nat) : max a 0 = a := by
+  omega
+
+@[simp]
+theorem zero_max (a : Nat) : max 0 a = a := by
+  omega
+
+/-
+  {
+    "name": "add_assoc_1",
+    "preconditions": ["(>= q t)", "(>= u t)"],
+    "lhs": "(bw t ( + (bw u (+ (bw p a) (bw r b))) (bw s c)))",
+    "rhs": "(bw t ( + (bw p a) (bw q (+ (bw r b) (bw s c)))))"
+  },
+-/
+
+theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
+  (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c))) =
+  (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
+  simp only [bw, addMax] at *
+  bv_multi_width +verbose?
+
+#exit
 /-
 {
   "name": "add_assoc_2",
