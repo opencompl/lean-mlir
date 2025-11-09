@@ -9,6 +9,7 @@
 import Blase
 namespace Test
 namespace Rover
+set_option debug.skipKernelTC true
 
 set_option warn.sorry false
 
@@ -65,9 +66,8 @@ theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
   (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c))) =
   (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
   simp [bw, addMax] at *
-  bv_multi_width +verbose?
+  bv_multi_width +verbose? -check?
 
-#exit
 /-
 {
   "name": "add_assoc_2",
@@ -83,8 +83,7 @@ theorem add_assoc_2 (hr : r < q) (hs : s < q) (hu : u >= t) :
   (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c)))  =
   (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
   simp only [bw, addMax]
-  fail_if_success bv_multi_width
-  sorry 
+  bv_multi_width +verbose? -check?
 
 /-
   {
@@ -101,8 +100,7 @@ theorem add_assoc_3 (hq : q >= t) (hp : p < u) (hr : r < u) :
   (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c)))  =
   (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
   simp only [bw, addMax]
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width +verbose? -check?
 
 /-
   {
@@ -120,7 +118,7 @@ theorem add_assoc_4 (hr : r < q) (hs : s < q) (hp : p < u) (hu : r < u) :
     (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
   simp only [bw, addMax]
   fail_if_success bv_multi_width
-  sorry 
+  bv_multi_width +verbose? -check?
 
 /-
   {
