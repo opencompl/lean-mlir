@@ -64,7 +64,7 @@ theorem zero_max (a : Nat) : max 0 a = a := by
 theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
   (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c))) =
   (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
-  simp only [bw, addMax] at *
+  simp [bw, addMax] at *
   bv_multi_width +verbose?
 
 #exit
