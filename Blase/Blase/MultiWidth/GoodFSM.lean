@@ -2015,6 +2015,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
       simp at h1
       obtain ⟨i2, h2⟩ := h2
       simp at h2
+
       have := congrFun h (max i1 i2)
       simp at this
       exact AxFSMOrSorry

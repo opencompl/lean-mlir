@@ -1129,30 +1129,40 @@ def solve (g : MVarId) : SolverM Unit := do
       debugLog m!"PROVE: proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
         -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
+        debugLog "Making certs... [1/?]"
         let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
+        debugLog "Making certs... [2/?]"
         -- let fsmExpr ← Expr.mkPredicateFSMtoFSM predFsmExpr
         let fsmExpr ← Expr.mkPredicateFSMtoFSM predNondepFsmExpr
+        debugLog "Making certs... [3/?]"
         let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
+        debugLog "Making certs... [4/?]"
         let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niters)
         debugLog "making safety certs..."
         -- | verifyCircuit (mkSafetyCircuit circs)
+        debugLog "Making certs... [5/?]"
         let verifyCircuitMkSafetyCircuitExpr ← Expr.mkVerifyCircuit
           (← Expr.KInductionCircuits.mkMkSafetyCircuit circsExpr)
           (toExpr safetyCert)
         -- debugLog m!"made safety cert expr: {verifyCircuitMkSafetyCircuitExpr}"
+        debugLog "Making certs... [6/?]"
         debugLog "making safety cert = true proof..."
         let safetyCertProof ←
           mkEqReflBoolNativeDecideProof `safetyCert verifyCircuitMkSafetyCircuitExpr true
         -- debugLog m!"made safety cert proof: {safetyCertProof}"
+        debugLog "Making certs... [7/?]"
         let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
             (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
             (toExpr indCert)
         -- debugLog m!"made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
+        debugLog "Making certs... [8/?]"
         let indCertProof ←
           mkEqReflBoolNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
         debugLog m!"made induction cert = true proof..."
+        debugLog "Making certs... [9/?]"
         let pEqVal ← mkEqRefl pRawExpr  -- mkEqReflNativeDecideProof `pReflectEq (mkConst `Prop) pToProp pRawExpr
         debugCheck pEqVal
+        debugLog "Making certs... [10/?]"
         let prf ← mkAppM ``MultiWidth.Predicate.toProp_of_KInductionCircuits'
           #[pRawExpr,
             tctx,
@@ -1173,7 +1183,9 @@ def solve (g : MVarId) : SolverM Unit := do
             benv,
             penv,
             pEqVal]
+        debugLog "Making certs... [11/?]"
         debugCheck prf
+        debugLog "Making certs... [12/?]"
         let prf ←
           if (← read).debugFillFinalReflectionProofWithSorry then
             mkSorry (synthetic := true) (← g.getType)
