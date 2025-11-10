@@ -27,6 +27,8 @@ structure Config where
   check? : Bool := true
   -- number of k-induction iterations.
   niter : Nat := 30
+  /-- start verified at this  K-induction iteration. -/
+  startVerifyAtIter : Nat := 10
   /-- debug printing verbosity. -/
   verbose?: Bool := false
   /-- By default, widths larger than 1 (ie. non boolean) are always abstracted. -/
@@ -1111,7 +1113,7 @@ def solve (g : MVarId) : SolverM Unit := do
     debugLog m!"fsm circuit size: {fsm.toFsm.circuitSize}"
     if ! (← isDefEq pRawExpr (← mkAppM ``Predicate.toProp #[benv, tenv, penv, pExpr])) then
       throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
-    let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter)
+    let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
     match stats with
     | .safetyFailure i =>
       let suspiciousVars ← collect.logSuspiciousFvars
