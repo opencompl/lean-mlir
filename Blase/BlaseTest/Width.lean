@@ -33,17 +33,3 @@ def bw (w : Nat) (x : BitVec v) : BitVec w := x.zeroExtend w
 
 def addMax (a : BitVec v) (b : BitVec w) : BitVec (max v w + 1) :=
    a.zeroExtend _ + b.zeroExtend _
-
-
-
-variable (w p q r s t : Nat)
-variable (a : BitVec p) (b : BitVec r) (c : BitVec s)
--- end preamble
-
-set_option debug.skipKernelTC true in
-theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
-  (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c)))  =
-  (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
-  simp only [bw, addMax]
-  bv_multi_width -check? +verbose?
-  sorry
