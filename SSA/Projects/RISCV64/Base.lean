@@ -490,8 +490,8 @@ def opName (op : RISCV64.Op) : String :=
 
 def printAttributes: RISCV64.Op → String
   | .li imm => s! "\{immediate = { imm.toInt } : i64 }"
-  | .addiw (imm : BitVec 12) => s!"\{immediate = { imm.toInt} : i12 }"
-  | .lui (imm : BitVec 20) => s!"\{immediate = { imm.toInt} : i20 } "
+  | .addiw (imm : BitVec 12) => s!"\{immediate = { imm.toInt} : si12 }"
+  | .lui (imm : BitVec 20) => s!"\{immediate = { imm.toInt} : ui20 } "
   | .auipc (imm : BitVec 20) => s!"\{immediate = { imm.toInt} : si20 }" -- adding a s such that xdsl can parsee it, double-check when needed and when not
   | .slliw (imm : BitVec 5) => s!"\{immediate = { imm.toNat} : ui5 }"
   | .srliw (imm : BitVec 5) => s!"\{immediate = { imm.toNat} : ui5 }"
