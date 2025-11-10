@@ -2,6 +2,8 @@ name = "Blase"
 version = "0.1.0"
 testDriver = "BlaseTest"
 defaultTargets = ["Blase"]
+moreLeanArgs = ["--tstack=400000"]
+moreServerArgs = ["--tstack=400000"]
 
 [[lean_lib]]
 name = "Blase"
