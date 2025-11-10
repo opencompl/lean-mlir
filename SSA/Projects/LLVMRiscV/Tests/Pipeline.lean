@@ -128,7 +128,7 @@ info: {
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i32) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i32) -> (!riscv.reg)
     %5 = "riscv.xor"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-    %6 = "riscv.sltiu"(%5){immediate = 1 : i12 } : (!riscv.reg) -> (!riscv.reg)
+    %6 = "riscv.sltiu"(%5){immediate = 1 : si12 } : (!riscv.reg) -> (!riscv.reg)
     %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
     "llvm.return"(%7) : (i1) -> ()
 }
@@ -276,7 +276,7 @@ info: {
     %3 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
     %4 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
     %5 = "riscv.xor"(%3, %4) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
-    %6 = "riscv.sltiu"(%5){immediate = 1 : i12 } : (!riscv.reg) -> (!riscv.reg)
+    %6 = "riscv.sltiu"(%5){immediate = 1 : si12 } : (!riscv.reg) -> (!riscv.reg)
     %7 = "builtin.unrealized_conversion_cast"(%6) : (!riscv.reg) -> (i1)
     "llvm.return"(%7) : (i1) -> ()
 }
