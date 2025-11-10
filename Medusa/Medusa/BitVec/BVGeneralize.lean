@@ -801,7 +801,7 @@ def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
        let varInfo := vars.getD idx default
        let widthIx := varInfo.width
        .var idx (.var widthIx) --- TODO: what is the actual width of the BVExpr?
-    | .const bv => 
+    | .const bv =>
         -- TODO: is this even right Whatis the width of a const?
         .ofNat (.var w) bv.toNat
     | .bin lhs op rhs =>
@@ -819,7 +819,7 @@ def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
         (GenBVExpr.toSmtLib rhs vars)
       | .udiv => SexprPBV.Term.udiv w
         (GenBVExpr.toSmtLib lhs vars)
-        (GenBVExpr.toSmtLib rhs vars) 
+        (GenBVExpr.toSmtLib rhs vars)
       | .and => SexprPBV.Term.band w
         (GenBVExpr.toSmtLib lhs vars)
         (GenBVExpr.toSmtLib rhs vars)
@@ -835,6 +835,12 @@ def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
       match op with
       | .not => SexprPBV.Term.bnot w (GenBVExpr.toSmtLib operand vars)
       | _ => .junk bvExpr.toString
+    | .signExtend v expr =>
+          SexprPBV.Term.sext (GenBVExpr.toSmtLib expr vars) (SexprPBV.WidthExpr.var v)
+    | .zeroExtend v expr =>
+      SexprPBV.Term.zext (GenBVExpr.toSmtLib expr vars) (SexprPBV.WidthExpr.var v)
+    | .truncate v expr =>
+      SexprPBV.Term.zext (GenBVExpr.toSmtLib expr vars) (SexprPBV.WidthExpr.var v)
     | .shiftLeft _lhs _rhs =>
         .junk bvExpr.toString
     | .shiftRight _lhs _rhs =>
@@ -996,12 +1002,20 @@ theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
   md_synth_generalize
   md_synth_generalize (config := {output := .sexpr})
 
+/--
+error: (bveq (wconst 8) (zext (zext (bvvar 1 (wvar 64)) (wvar 4)) (wvar 8)) (band (wvar 8) (bvvar 1 (wvar 64)) (zext (zext (ofNat (wvar 8) 255) (wvar 4)) (wvar 8))))
+-/
+#guard_msgs in 
+theorem demo2 (x : BitVec 64) : BitVec.zeroExtend 64 (BitVec.truncate 32 x) = x &&& 4294967295#64 := by
+  md_synth_generalize (output := .sexpr)
+
+
 
 /--
 error: (bveq (wconst 8) (bxor (wvar 8) (bor (wvar 8) (bxor (wvar 8) (bvvar 1 (wvar 8)) (bvvar 1001 (wvar 8))) (bvvar 1002 (wvar 8))) (bvvar 1003 (wvar 8))) (bxor (wvar 8) (band (wvar 8) (bvvar 1 (wvar 8)) (bnot (wvar 8) (bvvar 1002 (wvar 8)))) (bxor (wvar 8) (bor (wvar 8) (bxor (wvar 8) (ofNat (wvar 8) 0) (bvvar 1002 (wvar 8))) (bvvar 1001 (wvar 8))) (bvvar 1003 (wvar 8)))))
 -/
 #guard_msgs in
-theorem demo2 (x y : BitVec 8) :
+theorem demo3 (x y : BitVec 8) :
     (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
   -- md_synth_generalize
   md_synth_generalize (config := {output := .sexpr})
@@ -1011,7 +1025,7 @@ theorem demo2 (x y : BitVec 8) :
 error: (pite (por (pBoolConst false) (bveq (wconst 8) (bxor (wvar 8) (add (wvar 8) (bvvar 1001 (wvar 32)) (bvvar 1002 (wvar 32))) (ofNat (wvar 8) 255)) (ofNat (wvar 8) 0))) (bveq (wconst 8) (bor (wvar 8) (band (wvar 8) (bxor (wvar 8) (bvvar 1 (wvar 32)) (bvvar 2 (wvar 32))) (bvvar 1001 (wvar 32))) (band (wvar 8) (bvvar 2 (wvar 32)) (bvvar 1002 (wvar 32)))) (bxor (wvar 8) (band (wvar 8) (bvvar 1 (wvar 32)) (bvvar 1001 (wvar 32))) (bvvar 2 (wvar 32)))) (pBoolConst false))
 -/
 #guard_msgs in
-theorem demo3 (x y : BitVec 32) : (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y := by
+theorem demo4 (x y : BitVec 32) : (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y := by
   -- md_synth_generalize
   md_synth_generalize (config := {output := .sexpr})
 
