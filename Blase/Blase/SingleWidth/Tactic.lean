@@ -801,6 +801,7 @@ private lemma simple_test (x y : BitVec w) : x + y = y + x ∨ x = 0 := by
 info: '_private.Blase.SingleWidth.Tactic.0.simple_test' depends on axioms: [hashMap_missing,
  propext,
  Classical.choice,
+ FSM.AxEvalCanonizeState,
  Lean.ofReduceBool,
  Lean.trustCompiler,
  Quot.sound]

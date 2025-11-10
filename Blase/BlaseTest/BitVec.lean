@@ -15,7 +15,7 @@ theorem width1_understood (x y : BitVec 1) : x + y = x ^^^ y := by
 
 
 /--
-error: CEX: Found exact counter-example at iteration 5 for predicate MultiWidth.Nondep.Predicate.binRel
+error: CEX: Found exact counter-example at iteration 10 for predicate MultiWidth.Nondep.Predicate.binRel
   (MultiWidth.BinaryRelationKind.eq)
   (MultiWidth.Nondep.WidthExpr.var 0)
   (MultiWidth.Nondep.Term.shiftl
