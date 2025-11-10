@@ -69,7 +69,7 @@ theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
   (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c))) =
   (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
   simp only [bw, addMax] at *
-  -- bv_multi_width -check?
+  -- bv_multi_width -check? (niter := 30)
   sorry
 
 /-
@@ -87,7 +87,7 @@ theorem add_assoc_2 (hr : r < q) (hs : s < q) (hu : u >= t) :
   (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c)))  =
   (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
   simp only [bw, addMax]
-  -- fail_if_success bv_multi_width
+  -- bv_multi_width -check? (niter := 30)
   sorry 
 
 /-
@@ -105,7 +105,7 @@ theorem add_assoc_3 (hq : q >= t) (hp : p < u) (hr : r < u) :
   (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c)))  =
   (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
   simp only [bw, addMax]
-  -- fail_if_success bv_multi_width
+  -- bv_multi_width -check? (niter := 30)
   sorry
 
 /-
@@ -123,7 +123,7 @@ theorem add_assoc_4 (hr : r < q) (hs : s < q) (hp : p < u) (hu : r < u) :
     (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c)))  =
     (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
   simp only [bw, addMax]
-  -- fail_if_success bv_multi_width
+  -- bv_multi_width -check? (niter := 30)
   sorry 
 
 /-
@@ -160,11 +160,12 @@ theorem add_right_shift (hq : q >= t) (hs : s >= p + (2 ^ u - 1)) (hv_s : v > s)
 
 -- end preamble
 
+-- SHOULDPASS, ADD
 theorem add_zero :
     (bw p (addMax (bw p a) (bw q (0#1))))  =
     (bw p a) := by
   simp only [bw, addMax]
-  -- fail_if_success bv_multi_width
+  fail_if_success bv_multi_width -check? (niter := 1) -- ofBool crap
   sorry
 
 /-
@@ -178,11 +179,11 @@ theorem add_zero :
 
 -- end preamble
 
+-- SHOULDPASS, ADD
 theorem commutativity_add :
       bw r (addMax (bw p a) (bw q b))  = bw r (addMax (bw q b) (bw p a)) := by
   simp only [bw, addMax]
-  -- bv_multi_width
-  sorry
+  bv_multi_width -check? (niter := 30)
 
 /-
   {
@@ -195,11 +196,12 @@ theorem commutativity_add :
 
 -- end preamble
 
+-- MAYPASS, MULT, CANONICALIZE
 theorem commutativity_mult :
       bw r (mulMax (bw p a) (bw q b))  = bw r (mulMax (bw q b) (bw p a)) := by
   simp only [bw, mulMax]
   -- TODO: normalize 'max' by ac_nf.
-  -- fail_if_success bv_multi_width
+  fail_if_success bv_multi_width -check? (niter := 5)
   sorry
 
 /-
@@ -213,6 +215,7 @@ theorem commutativity_mult :
 
 -- end preamble
 
+-- MAYPASS, MULT, ADD
 theorem dist_over_add (hq : q >= r) (hu : u >= r) (hv : v >= r) :
   (bw r (mulMax (bw p a) (addMax (bw s b) (bw t c))))  =
   (bw r (addMax (bw u (mulMax (bw p a) (bw s b))) (bw v (mulMax (bw p a) (bw t c))))) := by
@@ -232,6 +235,7 @@ theorem dist_over_add (hq : q >= r) (hu : u >= r) (hv : v >= r) :
 
 -- end preamble
 
+-- NOPASS
 theorem left_shift_add_1 (hu : u >= r) (hs : s >= r) :
   (bw r (shlMax (bw s (addMax (bw p a) (bw q b))) (bw t c)))  =
   (bw r (addMax (bw u (shlMax (bw p a) (bw t c))) (bw u (shlMax (bw q b) (bw t c))))) := by
@@ -248,6 +252,7 @@ theorem left_shift_add_1 (hu : u >= r) (hs : s >= r) :
 -/
 -- end preamble
 
+-- NOPASS
 theorem left_shift_add_2 (hu : u >= r) (hs : s > p) (hsq : s > q) :
   (bw r (shlMax (bw s (addMax (bw p a) (bw q b))) (bw t c)))  =
   (bw r (addMax (bw u (shlMax (bw p a) (bw t c))) (bw u (shlMax (bw q b) (bw t c))))) := by
@@ -265,6 +270,7 @@ theorem left_shift_add_2 (hu : u >= r) (hs : s > p) (hsq : s > q) :
 
 -- end preamble
 
+-- NOPASS
 theorem left_shift_mult (ht : t >= r) (hv : v >= r) :
   (bw r (shlMax (bw t (mulMax (bw p a) (bw q b))) (bw u c)))  =
   (bw r (mulMax (bw v (shlMax (bw p a) (bw u c))) (bw q b))) := by
@@ -283,6 +289,7 @@ theorem left_shift_mult (ht : t >= r) (hv : v >= r) :
 
 -- end preamble
 
+-- NOPASS
 theorem merge_left_shift (hu : u >= r) (hts : t > s) (htq : t > q) :
   (bw r (shlMax (bw u (shlMax (bw p a) (bw q b))) (bw s c)))  =
   (bw r (shlMax (bw p a) (bw t (addMax (bw q b) (bw s c))))) := by
@@ -300,6 +307,7 @@ theorem merge_left_shift (hu : u >= r) (hts : t > s) (htq : t > q) :
 
 -- end preamble
 
+-- NOPASS
 theorem merge_right_shift (hu : u >= p) (hts : t > s) (htq : t > q) :
   (bw r (shrMax (bw u (shrMax (bw p a) (bw q b))) (bw s c)))  =
   (bw r (shrMax (bw p a) (bw t (addMax (bw q b) (bw s c))))) := by
@@ -317,6 +325,7 @@ theorem merge_right_shift (hu : u >= p) (hts : t > s) (htq : t > q) :
 
 -- end preamble
 
+-- SHOULDPASS, MULT
 theorem mul_one :
   (bw p (mulMax (bw p a) (bw q (1#1))))  =
   (bw p a) := by
@@ -335,6 +344,7 @@ theorem mul_one :
 
 -- end preamble
 
+-- SHOULDPASS, MULT
 theorem mul_two :
   (bw r (mulMax (bw p a) (bw 2 (2#2))))  =
   (bw r ((bw p a) <<< 1)) := by
@@ -354,6 +364,7 @@ theorem mul_two :
 -/
 
 
+-- NOPASS
 theorem mult_assoc_1 (hq : q >= t) (hu : u >= t) :
   (bw t (mulMax (bw u (mulMax (bw p a) (bw r b))) (bw s c))) =
   (bw t (mulMax (bw p a) (bw q (mulMax (bw r b) (bw s c))))) := by
@@ -372,6 +383,7 @@ theorem mult_assoc_1 (hq : q >= t) (hu : u >= t) :
 
 -- end preamble
 
+-- NOPASS
 theorem mult_assoc_2 (hq : q >= t) (hu : (p + r) <= u) :
   (bw t (mulMax (bw u (mulMax (bw p a) (bw r b))) (bw s c)))  =
   (bw t (mulMax (bw p a) (bw q (mulMax (bw r b) (bw s c))))) := by
@@ -389,6 +401,7 @@ theorem mult_assoc_2 (hq : q >= t) (hu : (p + r) <= u) :
 
 -- end preamble
 
+-- NOPASS
 theorem mult_assoc_3 (hq : (r + s) <= q) (hu : u >= t) :
   (bw t (mulMax (bw u (mulMax (bw p a) (bw r b))) (bw s c)))  =
   (bw t (mulMax (bw p a) (bw q (mulMax (bw r b) (bw s c))))) := by
@@ -408,6 +421,7 @@ theorem mult_assoc_3 (hq : (r + s) <= q) (hu : u >= t) :
 
 -- end preamble
 
+-- NOPASS
 theorem mult_assoc_4 (hq : (r + s) <= q) (hu : (p + r) <= u) :
   (bw t (mulMax (bw u (mulMax (bw p a) (bw r b))) (bw s c))) =
   (bw t (mulMax (bw p a) (bw q (mulMax (bw r b) (bw s c))))) := by
@@ -426,6 +440,7 @@ theorem mult_assoc_4 (hq : (r + s) <= q) (hu : (p + r) <= u) :
 
 -- end preamble
 
+-- NOPASS
 theorem mult_sum_same (htp : t > p) (ht1 : t > 1) (hs : s >= (p + q)) :
   (bw r (addMax (bw s (mulMax (bw p a) (bw q b))) (bw q b)))  =
   (bw r (mulMax (bw t (addMax (bw p a) (bw 1 (1#1)))) (bw q b))) := by
@@ -445,6 +460,7 @@ theorem mult_sum_same (htp : t > p) (ht1 : t > 1) (hs : s >= (p + q)) :
 
 -- end preamble
 
+-- MAYPASS
 theorem one_to_two_mult (hq : q > (p + 2)) (hpq : q > p) :
   (bw p (mulMax (bw 1 (1#1)) (bw p a)))  =
   (bw p (subMax (bw q (mulMax (bw 2 (2#2)) (bw p a))) (bw p a))) := by
@@ -463,13 +479,13 @@ theorem one_to_two_mult (hq : q > (p + 2)) (hpq : q > p) :
 -/
 
 -- end preamble
-
+-- SHOULDPASS
 theorem sub_to_neg :
   (bw r (subMax (bw p a) (bw q b)))  =
   (bw r (addMax (bw p a) (- (bw q b)))) := by
   simp only [bw, subMax, addMax]
   -- TODO: should not fail.
-  -- fail_if_success bv_multi_width
+  fail_if_success bv_multi_width +verbose? (niter := 2)
   sorry
 
 /-
@@ -483,6 +499,7 @@ theorem sub_to_neg :
 
 -- end preamble
 
+-- SHOULDPASS: CONSTMUL, ADD
 theorem sum_same :
   (bw q (addMax (bw p a) (bw p a)))  =
   (bw q (mulMax (bw 2 (2#2)) (bw p a))) := by
