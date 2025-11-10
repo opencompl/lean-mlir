@@ -1955,6 +1955,7 @@ theorem Formula.denote_of_isUniversal {p : Predicate}
 info: 'Formula.denote_of_isUniversal' depends on axioms: [hashMap_missing,
  propext,
  Classical.choice,
+ FSM.AxEvalCanonizeState,
  Lean.ofReduceBool,
  Lean.trustCompiler,
  Quot.sound]

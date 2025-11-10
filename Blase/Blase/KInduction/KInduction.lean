@@ -26,6 +26,7 @@ import Lean.Meta.Tactic.Simp.BuiltinSimprocs.BitVec
 import Blase.Fast.ForLean
 import Blase.Vars
 import Blase.EnvBitstream
+import SexprPBV.Sexpr
 
 import Lean
 
@@ -1834,6 +1835,7 @@ theorem Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkInd
 /--
 info: 'ReflectVerif.BvDecide.KInductionCircuits.Predicate.denote_of_verifyCircuit_mkSafetyCircuit_of_verifyCircuit_mkIndHypCycleBreaking' depends on axioms: [propext,
  Classical.choice,
+ FSM.AxEvalCanonizeState,
  Lean.ofReduceBool,
  Lean.trustCompiler,
  Quot.sound]

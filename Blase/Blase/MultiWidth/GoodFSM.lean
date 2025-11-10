@@ -425,7 +425,10 @@ theorem eval_fsmUnaryUle_eq_lt_or_decide
   · simp [hiv]
     omega
 /--
-info: 'MultiWidth.eval_fsmUnaryUle_eq_decide' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'MultiWidth.eval_fsmUnaryUle_eq_decide' depends on axioms: [propext,
+ Classical.choice,
+ FSM.AxEvalCanonizeState,
+ Quot.sound]
 -/
 #guard_msgs in #print axioms eval_fsmUnaryUle_eq_decide
 
@@ -657,7 +660,9 @@ theorem fsmSext_eval_eq
       rw [BitVec.getLsbD_signExtend]
       simp; omega
 
-/-- info: 'MultiWidth.fsmSext_eval_eq' depends on axioms: [propext, Classical.choice, Quot.sound] -/
+/--
+info: 'MultiWidth.fsmSext_eval_eq' depends on axioms: [propext, Classical.choice, FSM.AxEvalCanonizeState, Quot.sound]
+-/
 #guard_msgs in #print axioms fsmSext_eval_eq
 
 /-- Create a finite state machine that masks the zero bit.
@@ -1014,8 +1019,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
 
 
 /--
-info: 'MultiWidth.IsGoodTermFSM_mkTermFSM' depends on axioms:
-[propext, Classical.choice, Quot.sound]
+info: 'MultiWidth.IsGoodTermFSM_mkTermFSM' depends on axioms: [propext, Classical.choice, FSM.AxEvalCanonizeState, Quot.sound]
 -/
 #guard_msgs in #print axioms IsGoodTermFSM_mkTermFSM
 
@@ -1235,7 +1239,10 @@ theorem eval_fsmTermUlt_eq_decide_lt {wcard tcard : Nat}
     rw [hbfsm.heq (henv := henv)]
 
 /--
-info: 'MultiWidth.eval_fsmTermUlt_eq_decide_lt' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'MultiWidth.eval_fsmTermUlt_eq_decide_lt' depends on axioms: [propext,
+ Classical.choice,
+ FSM.AxEvalCanonizeState,
+ Quot.sound]
 -/
 #guard_msgs in #print axioms eval_fsmTermUlt_eq_decide_lt
 
@@ -1530,8 +1537,10 @@ def fsmWidthUle (a b : FSM α) : FSM α :=
 def fsmWidthNe (a b : FSM α) : FSM α :=
   composeUnaryAux FSM.scanOr (composeBinaryAux' FSM.xor a b)
 /--
-info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
-[propext, Classical.choice, Quot.sound]
+info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms: [propext,
+ Classical.choice,
+ FSM.AxEvalCanonizeState,
+ Quot.sound]
 -/
 #guard_msgs in #print axioms eval_fsmTermSle_eq_decide_sle
 
@@ -2134,8 +2143,10 @@ theorem Predicate.toProp_of_KInductionCircuits
   · simp
 
 /--
-info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits'
-depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits' depends on axioms: [propext,
+ Classical.choice,
+ FSM.AxEvalCanonizeState,
+ Quot.sound]
 -/
 #guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits
 
@@ -2166,8 +2177,10 @@ theorem Predicate.toProp_of_KInductionCircuits'
   apply Predicate.toProp_of_KInductionCircuits <;> assumption
 
 /--
-info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits''
-depends on axioms: [propext, Classical.choice, Quot.sound]
+info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits'' depends on axioms: [propext,
+ Classical.choice,
+ FSM.AxEvalCanonizeState,
+ Quot.sound]
 -/
 #guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits'
 

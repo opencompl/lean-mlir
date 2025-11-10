@@ -96,33 +96,17 @@ def circuitSize : Nat := Id.run do
     stateCircSize := stateCircSize + a.size
   return outCircSize + stateCircSize
 
-/-
-open Lean in
-def format (fsm : FSM arity) [Fintype arity] [DecidableEq arity] : Format := Id.run do
-  have : DecidableEq fsm.α := fsm.dec_eq
-  let fα : fsm.α → Format := fun x => formatDecEqFinset x ++ ":st"
-  let farity : arity → Format := fun x => formatDecEqFinset x ++ ":in"
-  let formatSum : (fsm.α ⊕ arity) → Format := Sum.elim fα farity
-  let mut out := f!""
-  out := out ++ f!"Initial state:"
-  for a in @Finset.univ fsm.α |>.toListUnsafe do
-    out := out ++ f!"  - {fα a} → {fsm.initCarry a}" ++ Format.line
-    pure ()
-  let numStateBits : Nat := @Finset.univ (fsm.α) inferInstance |>.card
-  let arity : Nat := @Finset.univ arity inferInstance |>.card
-  let fsm := Lean.ShareCommon.shareCommon fsm
-  out := out ++ f!"⋆ #args '{arity}'" ++ Format.line
-  out := out ++ f!"⋆ #state bits '{numStateBits}'" ++ Format.line
-  out := out ++ Format.line ++  .text "**Projection:**" ++ Format.line
-  out := out ++ "'" ++ Format.group (Format.nest 2 (formatCircuit formatSum (fsm.nextBitCirc none))) ++ "'" ++ Format.line
-  out := out ++ "**State Transition:**" ++  Format.line
-  let as : List fsm.α := Finset.univ |>.toListUnsafe
-  let mut ts := f!""
-  for (a, _i) in List.zipIdx as do
-    ts := ts ++ Format.align true ++ f!"{fα a}: '{(formatCircuit formatSum (fsm.nextBitCirc (some a)))}'" ++ Format.line
-  out := out ++ Format.group (Format.nest 2 ts)
-  return out
--/
+def Sum.lmap {α β α'} (f : α → α') : α ⊕ β → α' ⊕ β
+  | .inl a => .inl (f a)
+  | .inr b => .inr b
+
+/-- Canonize the state into a Fin n, which is much faster. -/
+def canonizeState (f : FSM arity) : FSM arity where
+    α := Fin (f.i.card)
+    initCarry := fun s => (f.i.equiv.invFun s) |> f.initCarry
+    outputCirc := f.outputCirc.map <| Sum.lmap f.i.equiv.toFun
+    nextStateCirc := fun s =>
+      (f.nextStateCirc (f.i.equiv.invFun s)) |>.map (Sum.lmap f.i.equiv.toFun)
 
 
 /-- The state of FSM `p` is given by a function from `p.α` to `Bool`.
@@ -512,7 +496,7 @@ a family of `n` FSMs `qᵢ` of posibly different arities `mᵢ`,
 and given yet another arity `m` such that `mᵢ ≤ m` for all `i`,
 we can compose `p` with `qᵢ` yielding a single FSM of arity `m`,
 such that each FSM `qᵢ` computes the `i`th bit that is fed to the FSM `p`. -/
-def compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
+def compose_ [FinEnum arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)        -- `new_arity` is the resulting arity
     (q_arity : arity → Type)  -- `q_arityₐ` is the arity of FSM `qₐ`
     (vars : ∀ (a : arity), q_arity a → new_arity)
@@ -553,15 +537,15 @@ lemma carry_compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
     (vars : ∀ (a : arity), q_arity a → new_arity)
     (q : ∀ (a : arity), FSM (q_arity a))
     (x : new_arity → BitStream) : ∀ (n : ℕ),
-    (p.compose new_arity q_arity vars q).carry x n =
+    (p.compose_ new_arity q_arity vars q).carry x n =
       let z := p.carry (λ a => (q a).eval (fun i => x (vars _ i))) n
       Sum.elim z (fun a => (q a.1).carry (fun t => x (vars _ t)) n a.2)
-  | 0 => by simp [carry, compose]
+  | 0 => by simp [carry, compose_]
   | n+1 => by
       rw [carry, carry_compose _ _ _ _ _ n]
       ext y
       cases y
-      · simp [carry, nextBit, compose, Circuit.eval_bind, eval]
+      · simp [carry, nextBit, compose_, Circuit.eval_bind, eval]
         congr
         ext z
         cases z
@@ -572,7 +556,7 @@ lemma carry_compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
           cases s
           · simp
           · simp
-      · simp [Circuit.eval_map, carry, compose, eval, carry, nextBit]
+      · simp [Circuit.eval_map, carry, compose_, eval, carry, nextBit]
         congr
         ext z
         cases z
@@ -580,17 +564,17 @@ lemma carry_compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
         · simp
 
 /-- Evaluating a composed fsm is equivalent to composing the evaluations of the constituent FSMs -/
-lemma eval_compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
+lemma eval_compose_ [FinEnum arity] [DecidableEq arity] [Hashable arity]
     (new_arity : Type)
     (q_arity : arity → Type)
     (vars : ∀ (a : arity), q_arity a → new_arity)
     (q : ∀ (a : arity), FSM (q_arity a))
     (x : new_arity → BitStream) :
-    (p.compose new_arity q_arity vars q).eval x =
+    (p.compose_ new_arity q_arity vars q).eval x =
       p.eval (λ a => (q a).eval (fun i => x (vars _ i))) := by
   ext n
   rw [eval, carry_compose, eval]
-  simp [compose, nextBit, Circuit.eval_bind]
+  simp [compose_, nextBit, Circuit.eval_bind]
   congr
   ext a
   cases a
@@ -658,6 +642,40 @@ def simplify (p : FSM arity) : FSM arity := p
 instance : Hashable Unit where
   hash _ := 42
 
+
+
+
+def compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
+    (new_arity : Type)        -- `new_arity` is the resulting arity
+    (q_arity : arity → Type)  -- `q_arityₐ` is the arity of FSM `qₐ`
+    (vars : ∀ (a : arity), q_arity a → new_arity)
+    -- ^^ `vars` is the function that tells us, for each FSM `qₐ`,
+    --     which bits of the final `new_arity` corresponds to the `q_arityₐ` bits expected by `qₐ`
+    (q : ∀ (a : arity), FSM (q_arity a)) : -- `q` gives the FSMs to be composed with `p`
+    FSM new_arity :=
+  (p.compose_ new_arity q_arity vars q).canonizeState
+
+
+axiom AxEvalCanonizeState :
+  ∀ (f : FSM arity) (x : arity → BitStream),
+    f.canonizeState.eval x = f.eval x
+
+@[simp]
+theorem eval_canonizeState (f : FSM arity) (x : arity → BitStream) :
+    f.canonizeState.eval x = f.eval x := by apply AxEvalCanonizeState
+
+
+/-- Evaluating a composed fsm is equivalent to composing the evaluations of the constituent FSMs -/
+lemma eval_compose [FinEnum arity] [DecidableEq arity] [Hashable arity]
+    (new_arity : Type)
+    (q_arity : arity → Type)
+    (vars : ∀ (a : arity), q_arity a → new_arity)
+    (q : ∀ (a : arity), FSM (q_arity a))
+    (x : new_arity → BitStream) :
+    (p.compose new_arity q_arity vars q).eval x =
+      p.eval (λ a => (q a).eval (fun i => x (vars _ i))) := by
+  simp [compose]
+  apply eval_compose_
 
 /--
 Scan a sequence of booleans with the bitwise and operator
