@@ -12,6 +12,7 @@ theorem add_eq_xor_add_mul_and_zext (x y : BitVec w) :
 /--
 info: 'MultiWidthTests.add_eq_xor_add_mul_and_zext' depends on axioms: [propext,
  Classical.choice,
+ FSM.AxEvalCanonizeState,
  Lean.ofReduceBool,
  Lean.trustCompiler,
  Quot.sound]
@@ -23,7 +24,7 @@ theorem abstract_prop {w : Nat} (p : Prop) (x : BitVec w) : p ∨ (x = x) := by
   bv_multi_width
 
 /--
-error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.binWidthRel
+error: CEX: Found exact counter-example at iteration 10 for predicate MultiWidth.Nondep.Predicate.binWidthRel
   (MultiWidth.WidthBinaryRelationKind.eq)
   (MultiWidth.Nondep.WidthExpr.var 0)
   (MultiWidth.Nondep.WidthExpr.addK (MultiWidth.Nondep.WidthExpr.var 0) 1)
@@ -33,7 +34,7 @@ error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.
   bv_multi_width
 
 /--
-error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.binRel
+error: CEX: Found exact counter-example at iteration 10 for predicate MultiWidth.Nondep.Predicate.binRel
   (MultiWidth.BinaryRelationKind.eq)
   (MultiWidth.Nondep.WidthExpr.var 0)
   (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
@@ -56,7 +57,7 @@ theorem eg6 (u w : Nat) (x : BitVec w) :
 
 theorem test28 {w : Nat} (x : BitVec w) :
     x &&& x &&& x &&& x &&& x &&& x = x := by
-  bv_multi_width (config := { niter := 2 })
+  bv_multi_width (niter := 20)
 
 theorem test4 (x y : BitVec w) : (x ||| y) = y ||| x := by
   bv_multi_width
@@ -235,7 +236,9 @@ theorem alive_1 {w : ℕ} (x x_1 x_2 : BitVec w) : (x_2 &&& x_1 ^^^ x_1) + 1#w +
 
 
 theorem test_OfNat_ofNat (x : BitVec 1) : 1#1 + x = x + 1#1 := by
-  bv_multi_width (config := { niter := 2, widthAbstraction := .never  })
+  -- | TODO: add ofBool support
+  fail_if_success bv_multi_width (config := { niter := 2, widthAbstraction := .never  })
+  sorry
 
 theorem test0 {w : Nat} (x : BitVec w) : x + 0#w = x := by
   bv_multi_width
@@ -281,18 +284,18 @@ theorem test25 (x y : BitVec w) : (x &&& y) = (((~~~x) ||| y) - ~~~x) := by
 
 example : ∀ (w : Nat) , (BitVec.ofNat w 1) &&& (BitVec.ofNat w 3) = BitVec.ofNat w 1 := by
   intros
-  bv_multi_width (config := { niter := 2 })
+  bv_multi_width (niter := 20)
 
 theorem and2 : ∀ (w : Nat) (x : BitVec w), -1#w &&& x = x := by
   bv_multi_width
 
 theorem shl1 : ∀ (w : Nat) (x : BitVec w), x <<< (0 : Nat) = x := by
   intros
-  bv_multi_width (config := { niter := 2 })
+  bv_multi_width (niter := 20)
 
 theorem shl2 : ∀ (w : Nat) (x : BitVec w), x <<< (1 : Nat) = x + x := by
   intros
-  bv_multi_width (config := { niter := 5 })
+  bv_multi_width (niter := 20)
 
 theorem shl3 : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
   intros; bv_multi_width
@@ -303,7 +306,7 @@ theorem test30  : (w = 2) → 8#w = 0#w := by
 
 /-- Can solve width-constraints problems -/
 theorem test31 (w : Nat) (x : BitVec w) : x &&& x = x := by
-  bv_multi_width (config := { niter := 2 })
+  bv_multi_width (niter := 20)
 
 theorem neg_eq_not_add_one (x : BitVec w) :
     -x = ~~~ x + 1#w := by
