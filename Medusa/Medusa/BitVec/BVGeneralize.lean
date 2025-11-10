@@ -1062,7 +1062,7 @@ theorem demo2 (x : BitVec 64) : BitVec.zeroExtend 64 (BitVec.truncate 32 x) = x 
 error: (bveq (wconst 8) (bxor (wvar 8) (bor (wvar 8) (bxor (wvar 8) (bvvar 1 (wvar 8)) (bvvar 1001 (wvar 8))) (bvvar 1002 (wvar 8))) (bvvar 1003 (wvar 8))) (bxor (wvar 8) (band (wvar 8) (bvvar 1 (wvar 8)) (bnot (wvar 8) (bvvar 1002 (wvar 8)))) (bxor (wvar 8) (bor (wvar 8) (bxor (wvar 8) (ofNat (wvar 8) 0) (bvvar 1002 (wvar 8))) (bvvar 1001 (wvar 8))) (bvvar 1003 (wvar 8)))))
 -/
 #guard_msgs in
-theorem demo2 (x y : BitVec 8) :
+theorem demo3 (x y : BitVec 8) :
     (x ^^^ -1#8 ||| 7#8) ^^^ 12#8 = x &&& BitVec.ofInt 8 (-8) ^^^ BitVec.ofInt 8 (-13) := by
   -- md_synth_generalize
   md_synth_generalize (config := {output := .sexpr})
@@ -1072,7 +1072,7 @@ theorem demo2 (x y : BitVec 8) :
 error: (pite (por (pBoolConst false) (bveq (wconst 8) (bxor (wvar 8) (add (wvar 8) (bvvar 1001 (wvar 32)) (bvvar 1002 (wvar 32))) (ofNat (wvar 8) 255)) (ofNat (wvar 8) 0))) (bveq (wconst 8) (bor (wvar 8) (band (wvar 8) (bxor (wvar 8) (bvvar 1 (wvar 32)) (bvvar 2 (wvar 32))) (bvvar 1001 (wvar 32))) (band (wvar 8) (bvvar 2 (wvar 32)) (bvvar 1002 (wvar 32)))) (bxor (wvar 8) (band (wvar 8) (bvvar 1 (wvar 32)) (bvvar 1001 (wvar 32))) (bvvar 2 (wvar 32)))) (pBoolConst false))
 -/
 #guard_msgs in
-theorem demo3 (x y : BitVec 32) : (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y := by
+theorem demo4 (x y : BitVec 32) : (x ^^^ y) &&& 1#32 ||| y &&& BitVec.ofInt 32 (-2) = x &&& 1#32 ^^^ y := by
   -- md_synth_generalize
   md_synth_generalize (config := {output := .sexpr})
 
