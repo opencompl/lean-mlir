@@ -17,15 +17,17 @@ def bw (w : Nat) (x : BitVec v) : BitVec w := x.zeroExtend w
 def addMax (a : BitVec v) (b : BitVec w) : BitVec (max v w + 1) :=
    a.zeroExtend _ + b.zeroExtend _
 
-def mulMax (a : BitVec v) (b : BitVec w) : BitVec (max v w) :=
+def mulMax (a : BitVec v) (b : BitVec w) : BitVec (max v w * 2) :=
    a.zeroExtend _ * b.zeroExtend _
 
 def subMax (a : BitVec v) (b : BitVec w) : BitVec (max v w + 1) :=
    a.zeroExtend _ - b.zeroExtend _
 
+-- TODO: this is a lie anyway, so whatever.
 def shlMax (a : BitVec v) (b : BitVec w) : BitVec (max v w) :=
    a.zeroExtend (max v w) <<< b.zeroExtend (max v w)
 
+-- TODO: this is a lie anyway, so whatever.
 def shrMax (a : BitVec v) (b : BitVec w) : BitVec (max v w) :=
     a.zeroExtend (max v w) >>> b.zeroExtend (max v w)
 
