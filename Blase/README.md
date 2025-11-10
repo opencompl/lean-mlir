@@ -16,7 +16,9 @@ For stable releases, please change the `rev` to the desired version tag.
 
 #### Algorithms Improvements TODO
 
-- [ ] Add support for a generalization mode that keeps width 1 and geneeralizes all other widths. This is useful for problems
+- [ ] Write multi-width as a reduction from single-width, with a variable `v` such that `v & (v - 1) = 0`.
+   This makes the multi-width version reducible, with the mask being created as `v - 1`.
+- [x] Add support for a generalization mode that keeps width 1 and geneeralizes all other widths. This is useful for problems
       with boolean substructure.
 - [x] Add support for left shift by constant which will give us much better multiplication encoding.
 - [x] Add support for setWidth
