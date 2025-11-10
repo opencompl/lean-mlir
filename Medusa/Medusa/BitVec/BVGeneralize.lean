@@ -794,53 +794,6 @@ def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat Name) :
     | .truncate v expr =>   s! "BitVec.truncate {v} {prettifyBVExpr expr displayNames}"
     | _ => bvExpr.toString
 
-/-
-| ofNat (w : WidthExpr) (n : Nat) : Term
-| var (v : Nat) (w : WidthExpr) : Term
-| add (w : WidthExpr) (a b : Term) : Term
-| zext (a : Term) (wnew : WidthExpr) : Term
-| setWidth (a : Term) (wnew : WidthExpr) : Term
-| sext (a : Term) (wnew : WidthExpr) : Term
-| bor (w : WidthExpr) (a b : Term) : Term
-| band (w : WidthExpr) (a b : Term) : Term
-| bxor (w : WidthExpr) (a b : Term) : Term
-| bnot (w : WidthExpr)  (a : Term) : Term
-| mul (w : WidthExpr) (a b : Term) : Term
-| udiv (w : WidthExpr) (a b : Term) : Term
-| umod (w : WidthExpr) (a b : Term) : Term
-| boolVar (v : Nat) : Term
-| boolConst (b : Bool) : Term
-| shiftl (w : WidthExpr) (a : Term) (k : Nat) : Term
-| junk (s : String)  : Term -- junk unknown stuff
--/
-/-
-Generalize.BV.GenBVExpr.var : {w : Nat} → Nat → GenBVExpr w
-Generalize.BV.GenBVExpr.const : {w : Nat} → BitVec w → GenBVExpr w
-Generalize.BV.GenBVExpr.extract : {w : Nat} → Nat → (len : Nat) → GenBVExpr w → GenBVExpr len
-Generalize.BV.GenBVExpr.bin : {w : Nat} → GenBVExpr w → BVBinOp → GenBVExpr w → GenBVExpr w
-Generalize.BV.GenBVExpr.un : {w : Nat} → BVUnOp → GenBVExpr w → GenBVExpr w
-Generalize.BV.GenBVExpr.append : {l r w : Nat} → GenBVExpr l → GenBVExpr r → w = l + r → GenBVExpr w
-Generalize.BV.GenBVExpr.replicate : {w w' : Nat} → (n : Nat) → GenBVExpr w → w' = w * n → GenBVExpr w'
-Generalize.BV.GenBVExpr.shiftLeft : {m n : Nat} → GenBVExpr m → GenBVExpr n → GenBVExpr m
-Generalize.BV.GenBVExpr.shiftRight : {m n : Nat} → GenBVExpr m → GenBVExpr n → GenBVExpr m
-Generalize.BV.GenBVExpr.arithShiftRight : {m n : Nat} → GenBVExpr m → GenBVExpr n → GenBVExpr m
-Generalize.BV.GenBVExpr.signExtend : {w : Nat} → (v : Nat) → GenBVExpr w → GenBVExpr v
-Generalize.BV.GenBVExpr.zeroExtend : {w : Nat} → (v : Nat) → GenBVExpr w → GenBVExpr v
-Generalize.BV.GenBVExpr.truncate : {w : Nat} → (v : Nat) → GenBVExpr w → GenBVExpr
--/
-
-
-
-#print BVUnOp
--- Std.Tactic.BVDecide.BVUnOp.not : BVUnOp
--- Std.Tactic.BVDecide.BVUnOp.rotateLeft : Nat → BVUnOp
--- Std.Tactic.BVDecide.BVUnOp.rotateRight : Nat → BVUnOp
--- Std.Tactic.BVDecide.BVUnOp.arithShiftRightConst : Nat → BVUnOp
--- Std.Tactic.BVDecide.BVUnOp.reverse : BVUnOp
--- Std.Tactic.BVDecide.BVUnOp.clz : BVUnOp
-
-#print GenBVExpr
-
 def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
       (vars : Std.HashMap Nat HydraVariable) : SexprPBV.Term :=
     match bvExpr with
