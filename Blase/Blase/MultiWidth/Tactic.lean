@@ -33,6 +33,8 @@ structure Config where
   widthAbstraction : WidthAbstractionKind := .generalizeGeq 2
   /-- Make the final reflection proof as a 'sorry' for debugging. -/
   debugFillFinalReflectionProofWithSorry : Bool := false
+  /-- Make the certificate proof as a 'sorry' for debugging. -/
+  debugFillCertProofWithSorry : Bool := false
 deriving DecidableEq, Repr
 
 /-- Default user configuration -/
@@ -1077,15 +1079,18 @@ info: MultiWidth.Predicate.toProp_of_KInductionCircuits' {wcard tcard bcard pcar
 Revert all prop-valued hyps.
 -/
 def revertPropHyps (g : MVarId) : SolverM MVarId := do
-  let (_, g) ← g.revert (← g.getNondepPropHyps)
-  return g
+  g.withContext do
+    let (_, g) ← g.revert (← g.getNondepPropHyps)
+    return g
 
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM Unit := do
+  debugLog m!"Original goal: {indentD g}"
   let g ← revertPropHyps g
+  debugLog m!"Goal after reverting: {indentD g}"
   let .some g ← g.withContext (Normalize.runPreprocessing g)
-    | do
-        debugLog m!"Preprocessing automatically closed goal."
+    | do debugLog m!"Preprocessing automatically closed goal."
+
   g.withContext do
     debugLog m!"goal after preprocessing: {indentD g}"
 
@@ -1104,6 +1109,8 @@ def solve (g : MVarId) : SolverM Unit := do
     let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard p
     debugLog m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
     debugLog m!"fsm circuit size: {fsm.toFsm.circuitSize}"
+    if ! (← isDefEq pRawExpr (← mkAppM ``Predicate.toProp #[benv, tenv, penv, pExpr])) then
+      throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter)
     match stats with
     | .safetyFailure i =>

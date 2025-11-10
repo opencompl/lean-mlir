@@ -2,6 +2,9 @@ import Blase
 open BitVec
 set_option warn.sorry false
 
+theorem or2 {v w k l : Nat} (a : BitVec k) : v < w ∨ w < v ∨ 
+  (a.setWidth v).setWidth l = (a.setWidth w).setWidth l := by bv_multi_width 
+
 theorem width1 {v w : Nat} (x : BitVec v) :
     x.zeroExtend (min v (max v w)) = x.signExtend (min v (max v w)) := by
   bv_multi_width
@@ -28,18 +31,5 @@ theorem add_incr_left (x : BitVec v) :
 -/
 def bw (w : Nat) (x : BitVec v) : BitVec w := x.zeroExtend w
 
-def addMax (a : BitVec v) (b : BitVec w) : BitVec (max v w) :=
+def addMax (a : BitVec v) (b : BitVec w) : BitVec (max v w + 1) :=
    a.zeroExtend _ + b.zeroExtend _
-
-
-
-variable (w p q r s t : Nat)
-variable (a : BitVec p) (b : BitVec r) (c : BitVec s)
--- end preamble
-
-theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
-  (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c)))  =
-  (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
-  simp only [bw, addMax]
-  fail_if_success bv_multi_width
-  sorry
