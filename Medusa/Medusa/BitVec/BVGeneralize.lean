@@ -794,6 +794,53 @@ def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat Name) :
     | .truncate v expr =>   s! "BitVec.truncate {v} {prettifyBVExpr expr displayNames}"
     | _ => bvExpr.toString
 
+/-
+| ofNat (w : WidthExpr) (n : Nat) : Term
+| var (v : Nat) (w : WidthExpr) : Term
+| add (w : WidthExpr) (a b : Term) : Term
+| zext (a : Term) (wnew : WidthExpr) : Term
+| setWidth (a : Term) (wnew : WidthExpr) : Term
+| sext (a : Term) (wnew : WidthExpr) : Term
+| bor (w : WidthExpr) (a b : Term) : Term
+| band (w : WidthExpr) (a b : Term) : Term
+| bxor (w : WidthExpr) (a b : Term) : Term
+| bnot (w : WidthExpr)  (a : Term) : Term
+| mul (w : WidthExpr) (a b : Term) : Term
+| udiv (w : WidthExpr) (a b : Term) : Term
+| umod (w : WidthExpr) (a b : Term) : Term
+| boolVar (v : Nat) : Term
+| boolConst (b : Bool) : Term
+| shiftl (w : WidthExpr) (a : Term) (k : Nat) : Term
+| junk (s : String)  : Term -- junk unknown stuff
+-/
+/-
+Generalize.BV.GenBVExpr.var : {w : Nat} → Nat → GenBVExpr w
+Generalize.BV.GenBVExpr.const : {w : Nat} → BitVec w → GenBVExpr w
+Generalize.BV.GenBVExpr.extract : {w : Nat} → Nat → (len : Nat) → GenBVExpr w → GenBVExpr len
+Generalize.BV.GenBVExpr.bin : {w : Nat} → GenBVExpr w → BVBinOp → GenBVExpr w → GenBVExpr w
+Generalize.BV.GenBVExpr.un : {w : Nat} → BVUnOp → GenBVExpr w → GenBVExpr w
+Generalize.BV.GenBVExpr.append : {l r w : Nat} → GenBVExpr l → GenBVExpr r → w = l + r → GenBVExpr w
+Generalize.BV.GenBVExpr.replicate : {w w' : Nat} → (n : Nat) → GenBVExpr w → w' = w * n → GenBVExpr w'
+Generalize.BV.GenBVExpr.shiftLeft : {m n : Nat} → GenBVExpr m → GenBVExpr n → GenBVExpr m
+Generalize.BV.GenBVExpr.shiftRight : {m n : Nat} → GenBVExpr m → GenBVExpr n → GenBVExpr m
+Generalize.BV.GenBVExpr.arithShiftRight : {m n : Nat} → GenBVExpr m → GenBVExpr n → GenBVExpr m
+Generalize.BV.GenBVExpr.signExtend : {w : Nat} → (v : Nat) → GenBVExpr w → GenBVExpr v
+Generalize.BV.GenBVExpr.zeroExtend : {w : Nat} → (v : Nat) → GenBVExpr w → GenBVExpr v
+Generalize.BV.GenBVExpr.truncate : {w : Nat} → (v : Nat) → GenBVExpr w → GenBVExpr
+-/
+
+
+
+#print BVUnOp
+-- Std.Tactic.BVDecide.BVUnOp.not : BVUnOp
+-- Std.Tactic.BVDecide.BVUnOp.rotateLeft : Nat → BVUnOp
+-- Std.Tactic.BVDecide.BVUnOp.rotateRight : Nat → BVUnOp
+-- Std.Tactic.BVDecide.BVUnOp.arithShiftRightConst : Nat → BVUnOp
+-- Std.Tactic.BVDecide.BVUnOp.reverse : BVUnOp
+-- Std.Tactic.BVDecide.BVUnOp.clz : BVUnOp
+
+#print GenBVExpr
+
 def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
       (vars : Std.HashMap Nat HydraVariable) : SexprPBV.Term :=
     match bvExpr with
@@ -801,7 +848,7 @@ def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
        let varInfo := vars.getD idx default
        let widthIx := varInfo.width
        .var idx (.var widthIx) --- TODO: what is the actual width of the BVExpr?
-    | .const bv => 
+    | .const bv =>
         -- TODO: is this even right Whatis the width of a const?
         .ofNat (.var w) bv.toNat
     | .bin lhs op rhs =>
@@ -819,7 +866,7 @@ def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
         (GenBVExpr.toSmtLib rhs vars)
       | .udiv => SexprPBV.Term.udiv w
         (GenBVExpr.toSmtLib lhs vars)
-        (GenBVExpr.toSmtLib rhs vars) 
+        (GenBVExpr.toSmtLib rhs vars)
       | .and => SexprPBV.Term.band w
         (GenBVExpr.toSmtLib lhs vars)
         (GenBVExpr.toSmtLib rhs vars)
@@ -835,6 +882,12 @@ def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
       match op with
       | .not => SexprPBV.Term.bnot w (GenBVExpr.toSmtLib operand vars)
       | _ => .junk bvExpr.toString
+    | .signExtend v expr =>
+          SexprPBV.Term.sext (GenBVExpr.toSmtLib expr vars) (SexprPBV.WidthExpr.var v)
+    | .zeroExtend v expr =>
+      SexprPBV.Term.zext (GenBVExpr.toSmtLib expr vars) (SexprPBV.WidthExpr.var v)
+    | .truncate v expr =>
+      SexprPBV.Term.zext (GenBVExpr.toSmtLib expr vars) (SexprPBV.WidthExpr.var v)
     | .shiftLeft _lhs _rhs =>
         .junk bvExpr.toString
     | .shiftRight _lhs _rhs =>
@@ -995,6 +1048,14 @@ error: (bveq (wconst 8) (add (wvar 8) (bor (wvar 8) (add (wvar 8) (bvvar 1001 (w
 theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
   md_synth_generalize
   md_synth_generalize (config := {output := .sexpr})
+
+/--
+error: (bveq (wconst 8) (zext (zext (bvvar 1 (wvar 64)) (wvar 4)) (wvar 8)) (band (wvar 8) (bvvar 1 (wvar 64)) (zext (zext (ofNat (wvar 8) 255) (wvar 4)) (wvar 8))))
+-/
+#guard_msgs in 
+theorem demo2 (x : BitVec 64) : BitVec.zeroExtend 64 (BitVec.truncate 32 x) = x &&& 4294967295#64 := by
+  md_synth_generalize (output := .sexpr)
+
 
 
 /--
