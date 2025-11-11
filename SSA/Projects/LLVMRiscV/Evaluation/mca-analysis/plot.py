@@ -574,6 +574,7 @@ def violin_plot(parameter, selector1, selector2):
         pc.set_alpha(1.0)
         
     plt.axhline(1, color=dark_red, linestyle="--", linewidth=1, label="1x")
+    plt.text(positions[0], 1.02, "1x", color=dark_red, ha='center', fontsize=12)
         
     for partname in ('cbars', 'cmins', 'cmaxes', 'cmedians'):
         if partname in parts:
