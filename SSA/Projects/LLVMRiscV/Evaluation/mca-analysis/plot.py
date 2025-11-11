@@ -15,6 +15,7 @@ import math
 
 
 matplotlib.rcParams['pdf.fonttype'] = 42
+matplotlib.rcParams['font.size'] = 20
 
 
 matplotlib.rcParams['figure.autolayout'] = True
@@ -331,7 +332,6 @@ def calculate_similarity(selector1, selector2, print_latex=True):
     return similarity_percentages
 
 def bar_plot(parameter, selector1, selector2):
-    plt.rcParams.update({'font.size': 23})
     
     df = pd.read_csv(data_dir + parameter + '.csv')
 
@@ -346,35 +346,20 @@ def bar_plot(parameter, selector1, selector2):
         return
 
     # Compute the difference
-    df['diff'] = df[col1] - df[col2]
+    df['diff'] = df[col1]/df[col2]
 
     # Classify the differences
-    def classify_instructions_count(diff):
-        if diff == 0:
-            return '0'
+    def classify(diff):
+        if diff < 1:
+            return '<1x'
         elif diff == 1:
-            return '1'
-        elif diff == 2:
-            return '2'
-        elif diff <0:
-            return '<0'
+            return '1x'
+        elif diff < 1.5:
+            return '1x-1.5x'
+        elif diff < 2:
+            return '1.5x-2x'
         else:
-            return '>2'
-    def classify_cycles_count(diff):
-        if diff == 0:
-            return '0'
-        elif 0 <= diff and diff < 500:
-            return '<500'
-        elif 500 <= diff and diff < 1000:
-            return '<1k'
-        elif diff < 0 :
-            return '<0'
-        else:
-            return '>1k'
-    if parameter == 'tot_instructions':
-        classify = classify_instructions_count
-    else :
-        classify = classify_cycles_count
+            return '>2x'
         
     df['diff_class'] = df['diff'].apply(classify)
     
@@ -384,33 +369,21 @@ def bar_plot(parameter, selector1, selector2):
     group = df.groupby('instructions_number')['diff_class'].value_counts(normalize=True).unstack(fill_value=0) * 100
 
     # Ensure all classes are present for consistent coloring/order
-    if parameter == 'tot_instructions':
-        class_order = ['<0', '0', '1', '2', '>2']
-    else:
-        class_order = ['<0', '0', '<500', '<1k', '>1k']
-        
+    class_order = ['<1x', '1x', '1x-1.5x', '1.5x-2x', '>2x']
+    
     for c in class_order:
         if c not in group.columns:
             group[c] = 0
     group = group[class_order]
 
     # Colors for each class
-    if parameter == 'tot_instructions':
-        class_colors = {
-            '<0': light_blue,
-            '0': dark_green,
-            '1': light_green,
-            '2': light_red,
-            '>2': dark_red
-        }
-    else:
-        class_colors = {
-            '<0': light_blue,
-            '0': dark_green,
-            '<500': light_green,
-            '<1k': light_red,
-            '>1k': dark_red
-        }
+    class_colors = {
+        '<1x': light_blue,
+        '1x': dark_green,
+        '1x-1.5x': light_green,
+        '1.5x-2x': light_red,
+        '>2x': dark_red
+    }
     # Plot
     def plot_bar(with_similarity=False):
         bottom = np.zeros(len(group))

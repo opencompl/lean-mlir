@@ -5,7 +5,7 @@
 # dependencies = ["xdsl"]
 # 
 # [tool.uv.sources]
-# xdsl = { git = "https://github.com/luisacicolini/xdsl.git", rev = "0ed8d8a6c98781385fb51f43a5571f96ffc328cb" }
+# xdsl = { git = "https://github.com/luisacicolini/xdsl.git", rev = "5e00c8487235fb56db9183bc3434b44baa4151cf" }
 # ///
 
 
