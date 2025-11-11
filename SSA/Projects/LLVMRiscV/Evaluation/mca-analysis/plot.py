@@ -524,14 +524,16 @@ def bar_plot(parameter, selector1, selector2):
                 .replace("7", "seven")
                 .replace("8", "eight")
                 .replace("9", "nine")
+                .replace("-", "dash")
+                .replace(".", "")
             )
             idx_str_clean += "Instr"
         for c in class_order:
             perc = row[c]
             cmd = (
                 f"\\newcommand{{\\Perc"
-                f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}"
-                f"{clean_name(parameter)}For{idx_str_clean}On{c.replace('<', 'lt').replace('>', 'gt').replace('0', 'zero').replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five')}}}{{{perc:.1f}}}"
+                f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace("-", "dash").replace(".", ""))}"
+                f"{clean_name(parameter)}For{idx_str_clean}On{c.replace('<', 'lt').replace('>', 'gt').replace('0', 'zero').replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace("-", "dash").replace(".", "")}}}{{{perc:.1f}}}"
             )
             latex_lines.append(cmd)
     latex_file = os.path.join(plots_dir, "bar_plot_percentages.tex")
