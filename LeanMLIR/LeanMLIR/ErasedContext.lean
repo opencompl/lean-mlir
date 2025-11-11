@@ -809,7 +809,7 @@ theorem Valuation.ofPair_snd {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂
 
 /-- Transport a valuation for `Γ` to a valuation for any mapped context `Γ.map f`.
 The value of each variable is transformed according to `f'`. -/
-def toMap {f : Ty → Ty'} (f' : ∀ t, ⟦t⟧ → ⟦f t⟧) : Valuation Γ → Valuation (Γ.map f)
+def Valuation.toMap {f : Ty → Ty'} (f' : ∀ t, ⟦t⟧ → ⟦f t⟧) : Valuation Γ → Valuation (Γ.map f)
 | val, t, ⟨i, h⟩ =>
   have : i < Γ.length := by rw [←length_map]; exact Var.mk i h |>.lt_length
   have heq : t = f Γ[i] := by
@@ -819,7 +819,7 @@ def toMap {f : Ty → Ty'} (f' : ∀ t, ⟦t⟧ → ⟦f t⟧) : Valuation Γ �
 
 /-- Transport a valuation for any mapped context `Γ.map f` to a valuation for `Γ`.
 The value of each variable is transformed according to `f'`. -/
-def fromMap {f : Ty → Ty'} (f' : ∀ t, ⟦f t⟧ → ⟦t⟧) : Valuation (Γ.map f) → Valuation Γ
+def Valuation.fromMap {f : Ty → Ty'} (f' : ∀ t, ⟦f t⟧ → ⟦t⟧) : Valuation (Γ.map f) → Valuation Γ
 | val, t, var => f' t <| val.eval var.toMap
 
 /-! ### Valuation Pullback (comap) -/
