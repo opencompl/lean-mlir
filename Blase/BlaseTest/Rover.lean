@@ -71,7 +71,7 @@ An axiom that allows us to do bounded model checking up to bitwidth 64.
 @[elab_as_elim]
 axiom AxBoundedModelCheck {P : Nat → Prop} : (P 64) → ∀ i, P i
 
--- PROBLEM
+-- BMC
 theorem add_assoc_1' (o : Nat)
   (pmask : BitVec o) (hpmask : pmask &&& (pmask - 1) = 0)
   (qmask : BitVec o) (hqmask : qmask &&& (qmask - 1) = 0)
