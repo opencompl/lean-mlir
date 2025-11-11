@@ -4,6 +4,7 @@ import subprocess
 import os
 import argparse
 import shutil
+from turtle import width
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
@@ -519,12 +520,12 @@ def violin_plot(parameter, selector1, selector2):
     violin_data = grouped["ratio"].values
     positions = grouped["instructions_number"].values
     
-    
+    print("max ratio:", df["ratio"].max())
 
     plt.figure(figsize=(10, 5))
     parts = plt.violinplot(
-        violin_data,
-        positions=positions,
+        grouped["ratio"].values,
+        grouped["instructions_number"].values,
         showmedians=True
     )
 
@@ -542,12 +543,16 @@ def violin_plot(parameter, selector1, selector2):
             parts[partname].set_linewidth(1)
     parts['cmedians'].set_edgecolor(dark_green)
 
-    plt.xlabel("#Instructions - LLVM IR")
+    plt.xlabel(f"#Instructions - LLVM IR")
     plt.ylabel(
-        f"{selector_labels[selector1]}/{selector_labels[selector2]}, {parameters_labels[parameter]}",
+        f"{parameters_labels[parameter]},$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$",
         rotation="horizontal", horizontalalignment="left", y=1.05
     )
-    plt.yticks(np.arange(0, math.ceil(df["ratio"].max()) + 1, 2))
+    if df["ratio"].max() < 10:
+        plt.yticks(np.arange(0, math.ceil(df["ratio"].max()) + 1, 2))
+    else:
+        plt.yticks(np.arange(0, math.ceil(df["ratio"].max()) + 1, 100))
+    
     plt.tight_layout()
 
     pdf_filename = (
@@ -704,20 +709,27 @@ def proportional_bar_plot(parameter, selector1, selector2):
         average_ratios_by_instruction["instructions_number"],
         average_ratios_by_instruction["average_ratio"],
         color=dark_green,
-        label=f"Avg. {selector_labels[selector1]} / {selector_labels[selector2]}, {parameters_labels[parameter]}",
+        label=f"Avg. {parameters_labels[parameter]},$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$"
     )
 
-    plt.axhline(1, color=dark_gray, linestyle="--", linewidth=5, label={selector_labels[selector2]})
+    plt.axhline(1, color=dark_red, linestyle="--", linewidth=2)
+    print(average_ratios_by_instruction["instructions_number"])
+    plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 1.05, f"{selector_labels[selector2]}", color=dark_red, ha='center', fontsize=20)
+    
 
     plt.xlabel("#Instructions - LLVM IR")
     
     plt.ylabel(
-            f"{selector_labels[selector1]}/{selector_labels[selector2]}, {parameters_labels[parameter]}",
-            rotation="horizontal", horizontalalignment="left", y=1.05
-        )
+        f"$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$, {parameters_labels[parameter]}",
+        rotation="horizontal", horizontalalignment="left", y=1.08
+    )
     
-    plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 1))
-    plt.legend(ncols=2, bbox_to_anchor=(0.5, -0.5), loc="lower center")
+    if max(average_ratios_by_instruction["average_ratio"]) < 10:
+        
+        plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 1))
+    else : 
+        plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 100))
+        
     plt.tight_layout()
 
     # uncomment to have numbers on top of the bars
