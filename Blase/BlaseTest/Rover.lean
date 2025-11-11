@@ -87,6 +87,10 @@ theorem add_assoc_1' (o : Nat)
   (hsmask : smask &&& (smask - 1) = 0)
   (htmask : tmask &&& (tmask - 1) = 0)
   (humask : umask &&& (umask - 1) = 0)
+  -- (q ≥ t)
+  -- (u ≥ t)
+  (hqt : ~~~ (qmask - 1) &&& (tmask - 1) = 0)
+  (hut : ~~~ (umask - 1) &&& (tmask - 1) = 0)
   (a' : BitVec o) (b' : BitVec o) (c' : BitVec o) :
   (bw' tmask
     (addMax' 
@@ -102,6 +106,9 @@ theorem add_assoc_1' (o : Nat)
         (addMax' (bw' rmask b') rmask (bw' smask c') smask))
       qmask)) := by
   simp only [bw', addMax'] at *
+  -- (have hoval : o = 64 := by sorry); subst hoval; bv_decide
+  -- bv_automata_gen (config := {backend := .circuit_cadical_verified 100 })
+  -- bv_multi_width +verbose? (niter := 1)
   bv_automata_classic
   -- bv_multi_width -check? (niter := 30)
   -- sorry
