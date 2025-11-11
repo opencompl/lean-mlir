@@ -41,19 +41,6 @@ variable (c : BitVec s)
 
 -- end preamble
 
-@[simp]
-theorem signExtend_zero : (0#w).signExtend v = 0#v := by
-  apply BitVec.eq_of_toInt_eq
-  simp [BitVec.toInt_signExtend]
-
-@[simp]
-theorem max_zero (a : Nat) : max a 0 = a := by
-  omega
-
-@[simp]
-theorem zero_max (a : Nat) : max 0 a = a := by
-  omega
-
 -- PROBLEM
 /-
   {
@@ -73,6 +60,10 @@ def unaryIncr (mask : BitVec o) : BitVec o := (mask ||| 1)
 def addMax' (a : BitVec o) (wa : BitVec o) (b : BitVec o) (wb : BitVec o) : BitVec o :=
     let max := ((((wa - 1) ||| (wb - 1)) <<< 1) ||| 1)
     (a + b) &&& max
+
+def mulMax' (a : BitVec o) (wa : BitVec o) (b : BitVec o) (wb : BitVec o) : BitVec o :=
+    let max := ((((wa - 1) ||| (wb - 1)) <<< 1) ||| 1)
+    (a * b) &&& max
 
 /-
 An axiom that allows us to do bounded model checking up to bitwidth 64.
@@ -223,12 +214,12 @@ theorem add_right_shift (hq : q >= t) (hs : s >= p + (2 ^ u - 1)) (hv_s : v > s)
 
 -- end preamble
 
+-- MULTIWIDTH
 theorem add_zero :
     (bw p (addMax (bw p a) (bw q (0#1))))  =
     (bw p a) := by
   simp only [bw, addMax]
-  fail_if_success bv_multi_width
-  sorry
+  bv_multi_width
 
 /-
 {
@@ -241,11 +232,11 @@ theorem add_zero :
 
 -- end preamble
 
+-- MULTIWIDTH
 theorem commutativity_add :
       bw r (addMax (bw p a) (bw q b))  = bw r (addMax (bw q b) (bw p a)) := by
   simp only [bw, addMax]
-  -- bv_multi_width
-  sorry
+  bv_multi_width
 
 -- PROBLEM
 /-
@@ -263,7 +254,8 @@ theorem commutativity_mult :
       bw r (mulMax (bw p a) (bw q b))  = bw r (mulMax (bw q b) (bw p a)) := by
   simp only [bw, mulMax]
   -- TODO: normalize 'max' by ac_nf.
-  -- fail_if_success bv_multi_width
+  -- | TODO: 'max p q' should be rewritten to the same normal form ':('
+  fail_if_success bv_multi_width
   sorry
 
 -- PROBLEM
@@ -397,8 +389,7 @@ theorem mul_one :
   (bw p (mulMax (bw p a) (bw q (1#1))))  =
   (bw p a) := by
    simp only [bw, mulMax]
-   -- fail_if_success bv_multi_width
-   sorry
+   bv_multi_width
 
 -- PROBLEM
 /-
