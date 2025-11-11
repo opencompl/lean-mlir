@@ -393,6 +393,22 @@ def cast {A : α → Type u} {B : β → Type u} {as : List α} {bs : List β}
                         (fun i => by simpa using h_elem i.succ)
       (h₀ ▸ x) ::ₕ xs
 
+/-- A version of `cast` where the result index list is a mapping of the original index list.
+In situations where we get `h_elem` for free by definitional equality,
+this is the same as `map' f fun _ => id`. -/
+def castMap {A : α → Type u} {B : β → Type u} {l : List α} (f : α → β)
+    (h_elem : ∀ a, A a = B (f a)) :
+    HVector A l → HVector B (l.map f) :=
+  cast (List.length_map f).symm fun i h => List.getElem_map f ▸ h_elem l[i]
+
+/-- A version of `cast` where the original index list is a mapping of the result index list.
+In situations where we get `h_elem` for free by definitional equality,
+this is the same as `fromMap' f fun _ => id`. -/
+def castFromMap {A : α → Type u} {B : β → Type u} {l : List β} (f : β → α)
+    (h_elem : ∀ b, A (f b) = B b) :
+    HVector A (l.map f) → HVector B l :=
+  cast (List.length_map f) fun i h => List.getElem_map f ▸ h_elem (l[i]'(List.length_map f ▸ h))
+
 /-!
 ## Find
 -/
