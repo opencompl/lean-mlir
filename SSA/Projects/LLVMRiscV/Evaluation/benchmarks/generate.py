@@ -326,7 +326,7 @@ def XDSL_reg_alloc(input_file, output_file, log_file, pass_dict):
     """
     try : 
         from xdsl.xdsl_opt_main import xDSLOptMain
-        xdsl_opt_main = xDSLOptMain(args = f"{input_file} -p convert-func-to-riscv-func,reconcile-unrealized-casts,riscv-allocate-registers{{force-infinite=true}},riscv-allocate-infinite-registers,canonicalize -t riscv-asm -o {output_file}".split())
+        xdsl_opt_main = xDSLOptMain(args = f"{input_file} -p convert-func-to-riscv-func,reconcile-unrealized-casts,riscv-allocate-registers{{force-infinite=true}},riscv-allocate-infinite-registers,canonicalize-register-allocation -t riscv-asm -o {output_file}".split())
         xdsl_opt_main.run()
         # cmd = cmd_base + input_file + " > " + output_file
         # ret_code = run_command(cmd, log_file)
