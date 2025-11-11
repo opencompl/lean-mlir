@@ -740,10 +740,10 @@ def proportional_bar_plot(parameter, selector1, selector2):
 
 
 def latex_commands_bar_plot_proportions(grouped, selector1, selector2, parameter):
-    geomean_ratio = np.exp(np.mean(np.log(grouped["proportion"])))
+    geomean_ratio = np.exp(np.mean(np.log(grouped["average_ratio"])))
     
     latex_lines = []
-    for idx, ratio in enumerate(grouped["proportion"]):
+    for idx, ratio in enumerate(grouped["average_ratio"]):
         idx_str = str(idx)
         idx_str_clean = idx_str.replace("_", "")  # Remove underscores from index if any
         # Ensure the last character is a letter by appending 'N' if it ends with a digit
