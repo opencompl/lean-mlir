@@ -28,7 +28,7 @@ structure Config where
   -- number of k-induction iterations.
   niter : Nat := 30
   /-- start verified at this  K-induction iteration. -/
-  startVerifyAtIter : Nat := 10
+  startVerifyAtIter : Nat := 0
   /-- debug printing verbosity. -/
   verbose?: Bool := false
   /-- By default, widths larger than 1 (ie. non boolean) are always abstracted. -/
