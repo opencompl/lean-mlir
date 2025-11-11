@@ -568,7 +568,14 @@ def violin_plot(parameter, selector1, selector2):
     )
 
     for pc in parts["bodies"]:
-        pc.set_facecolor(dark_green)
+        pc.set_facecolor(light_green)
+        pc.set_edgecolor(light_green)
+        pc.set_alpha(1.0)
+        
+    for partname in ('cbars', 'cmins', 'cmaxes', 'cmedians'):
+        if partname in parts:
+            parts[partname].set_edgecolor(dark_green)
+            parts[partname].set_linewidth(2)
 
     plt.xlabel("#Instructions - LLVM IR")
     plt.ylabel(
