@@ -54,8 +54,7 @@ theorem max_zero (a : Nat) : max a 0 = a := by
 theorem zero_max (a : Nat) : max 0 a = a := by
   omega
 
--- Note that we need a '+1' in the implement of 'addMax',
--- to ensure that the addition does not overflow.
+-- PROBLEM
 /-
   {
     "name": "add_assoc_1",
@@ -67,9 +66,13 @@ theorem zero_max (a : Nat) : max 0 a = a := by
 
 def bw' (w : BitVec o) (x : BitVec o) : BitVec o := x &&& (w - 1)
 
-def addMax' (a : BitVec o) (wa : BitVec o) (b : BitVec o) (wb : BitVec o) : BitVec o :=
-    (a + b) &&& ((((wa - 1) ||| (wb - 1)) <<< 1) ||| 1)
+def unaryMax (pmask qmask : BitVec o) : BitVec o := (pmask ||| qmask)
 
+def unaryIncr (mask : BitVec o) : BitVec o := (mask ||| 1)
+
+def addMax' (a : BitVec o) (wa : BitVec o) (b : BitVec o) (wb : BitVec o) : BitVec o :=
+    let max := ((((wa - 1) ||| (wb - 1)) <<< 1) ||| 1)
+    (a + b) &&& max
 
 /-
 An axiom that allows us to do bounded model checking up to bitwidth 64.
@@ -77,23 +80,14 @@ An axiom that allows us to do bounded model checking up to bitwidth 64.
 @[elab_as_elim]
 axiom AxBoundedModelCheck {P : Nat → Prop} : (P 64) → ∀ i, P i
 
+-- PROBLEM
 theorem add_assoc_1' (o : Nat)
-  (pmask : BitVec o)
-  (qmask : BitVec o)
-  (rmask : BitVec o)
-  (smask : BitVec o)
-  (tmask : BitVec o)
-  (umask : BitVec o)
-  -- (wmask : BitVec o)
-  -- (hwmask : wmask &&& (wmask - 1) = 0) 
-  (hpmask : pmask &&& (pmask - 1) = 0)
-  (hqmask : qmask &&& (qmask - 1) = 0)
-  (hrmask : rmask &&& (rmask - 1) = 0)
-  (hsmask : smask &&& (smask - 1) = 0)
-  (htmask : tmask &&& (tmask - 1) = 0)
-  (humask : umask &&& (umask - 1) = 0)
-  -- (q ≥ t)
-  -- (u ≥ t)
+  (pmask : BitVec o) (hpmask : pmask &&& (pmask - 1) = 0)
+  (qmask : BitVec o) (hqmask : qmask &&& (qmask - 1) = 0)
+  (rmask : BitVec o) (hrmask : rmask &&& (rmask - 1) = 0)
+  (smask : BitVec o) (hsmask : smask &&& (smask - 1) = 0)
+  (tmask : BitVec o) (htmask : tmask &&& (tmask - 1) = 0)
+  (umask : BitVec o) (humask : umask &&& (umask - 1) = 0)
   (hqt : ~~~ (qmask - 1) &&& (tmask - 1) = 0)
   (hut : ~~~ (umask - 1) &&& (tmask - 1) = 0)
   (a' : BitVec o) (b' : BitVec o) (c' : BitVec o) :
@@ -118,6 +112,7 @@ theorem add_assoc_1' (o : Nat)
   -- bv_automata_classic
   -- bv_multi_width -check? (niter := 30)
   -- sorry
+
 /--
 info: 'Test.Rover.add_assoc_1'' depends on axioms: [propext,
  Classical.choice,
@@ -135,6 +130,7 @@ theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
   -- bv_multi_width -check?
   sorry
 
+-- PROBLEM
 /-
 {
   "name": "add_assoc_2",
@@ -153,6 +149,7 @@ theorem add_assoc_2 (hr : r < q) (hs : s < q) (hu : u >= t) :
   -- fail_if_success bv_multi_width
   sorry 
 
+-- PROBLEM
 /-
   {
     "name": "add_assoc_3",
@@ -171,6 +168,7 @@ theorem add_assoc_3 (hq : q >= t) (hp : p < u) (hr : r < u) :
   -- fail_if_success bv_multi_width
   sorry
 
+-- PROBLEM
 /-
   {
     "name": "add_assoc_4",
@@ -189,6 +187,7 @@ theorem add_assoc_4 (hr : r < q) (hs : s < q) (hp : p < u) (hu : r < u) :
   -- fail_if_success bv_multi_width
   sorry 
 
+-- PROBLEM
 /-
   {
     "name": "add_right_shift",
@@ -212,6 +211,7 @@ theorem add_right_shift (hq : q >= t) (hs : s >= p + (2 ^ u - 1)) (hv_s : v > s)
    -- fail_if_success bv_multi_width
    sorry 
 
+-- PROBLEM
 /-
   {
     "name": "add_zero",
@@ -227,7 +227,7 @@ theorem add_zero :
     (bw p (addMax (bw p a) (bw q (0#1))))  =
     (bw p a) := by
   simp only [bw, addMax]
-  -- fail_if_success bv_multi_width
+  fail_if_success bv_multi_width
   sorry
 
 /-
@@ -247,6 +247,7 @@ theorem commutativity_add :
   -- bv_multi_width
   sorry
 
+-- PROBLEM
 /-
   {
     "name": "commutativity_mult",
@@ -265,6 +266,7 @@ theorem commutativity_mult :
   -- fail_if_success bv_multi_width
   sorry
 
+-- PROBLEM
 /-
   {
     "name": "dist_over_add",
@@ -284,6 +286,7 @@ theorem dist_over_add (hq : q >= r) (hu : u >= r) (hv : v >= r) :
     -- fail_if_success bv_multi_width
     sorry
 
+-- PROBLEM
 /-
   {
     "name": "left_shift_add_1",
@@ -301,6 +304,8 @@ theorem left_shift_add_1 (hu : u >= r) (hs : s >= r) :
    simp only [bw, addMax, shlMax]
    -- fail_if_success bv_multi_width
    sorry
+
+-- PROBLEM
 /-
   {
     "name": "left_shift_add_2",
@@ -317,6 +322,8 @@ theorem left_shift_add_2 (hu : u >= r) (hs : s > p) (hsq : s > q) :
    simp only [bw, addMax, shlMax]
    -- fail_if_success bv_multi_width
    sorry
+
+-- PROBLEM
 /-
   {
     "name": "left_shift_mult",
@@ -334,6 +341,8 @@ theorem left_shift_mult (ht : t >= r) (hv : v >= r) :
    simp only [bw, mulMax, shlMax]
    -- fail_if_success bv_multi_width
    sorry
+
+-- PROBLEM
 /-
   {
     "name": "merge_left_shift",
@@ -352,6 +361,8 @@ theorem merge_left_shift (hu : u >= r) (hts : t > s) (htq : t > q) :
    simp only [bw, addMax, shlMax]
    -- fail_if_success bv_multi_width
    sorry
+
+-- PROBLEM
 /-
   {
     "name": "merge_right_shift",
@@ -369,6 +380,8 @@ theorem merge_right_shift (hu : u >= p) (hts : t > s) (htq : t > q) :
    simp only [bw, addMax, shrMax]
    -- fail_if_success bv_multi_width
    sorry
+
+-- PROBLEM
 /-
   {
     "name": "mul_one",
@@ -387,6 +400,7 @@ theorem mul_one :
    -- fail_if_success bv_multi_width
    sorry
 
+-- PROBLEM
 /-
   {
     "name": "mul_two",
@@ -407,6 +421,7 @@ theorem mul_two :
    -- fail_if_success bv_multi_width
    sorry
 
+-- PROBLEM
 /-
 {
   "name": "mult_assoc_1",
@@ -424,6 +439,7 @@ theorem mult_assoc_1 (hq : q >= t) (hu : u >= t) :
    fail_if_success bv_multi_width
    sorry
 
+-- PROBLEM
 /-
   {
     "name": "mult_assoc_2",
@@ -441,6 +457,8 @@ theorem mult_assoc_2 (hq : q >= t) (hu : (p + r) <= u) :
   simp only [bw, mulMax]
   -- fail_if_success bv_multi_width
   sorry
+
+-- PROBLEM
 /-
   {
     "name": "mult_assoc_3",
@@ -459,6 +477,7 @@ theorem mult_assoc_3 (hq : (r + s) <= q) (hu : u >= t) :
   -- fail_if_success bv_multi_width
   sorry
 
+-- PROBLEM
 /-
   {
     "name": "mult_assoc_4",
@@ -478,6 +497,7 @@ theorem mult_assoc_4 (hq : (r + s) <= q) (hu : (p + r) <= u) :
   -- fail_if_success bv_multi_width
   sorry
 
+-- PROBLEM
 /-
   {
     "name": "mult_sum_same",
@@ -496,6 +516,7 @@ theorem mult_sum_same (htp : t > p) (ht1 : t > 1) (hs : s >= (p + q)) :
   -- fail_if_success bv_multi_width
   sorry
 
+-- PROBLEM
 /-
   {
     "name": "one_to_two_mult",
@@ -516,6 +537,7 @@ theorem one_to_two_mult (hq : q > (p + 2)) (hpq : q > p) :
   -- fail_if_success bv_multi_width
   sorry
 
+-- PROBLEM
 /-
   {
     "name": "sub_to_neg",
@@ -535,6 +557,7 @@ theorem sub_to_neg :
   -- fail_if_success bv_multi_width
   sorry
 
+-- PROBLEM
 /-
   {
     "name": "sum_same",
