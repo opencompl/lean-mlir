@@ -10,7 +10,9 @@ import Blase
 namespace Test
 namespace Rover
 
+set_option linter.unusedSimpArgs false
 set_option warn.sorry false
+set_option linter.unusedVariables false 
 
 def bw (w : Nat) (x : BitVec v) : BitVec w := x.signExtend w
 
