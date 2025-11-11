@@ -522,6 +522,9 @@ def collectBVAtom (state : CollectState)
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
   match_expr e with
+  | BitVec.ofBool bExpr =>
+      let (b, state) ← collectBoolTerm state bExpr
+      return (.bvOfBool b, state)
   | BitVec.ofNat wExpr nExpr =>
     let (w, state) ← collectWidthExpr state wExpr
     if let some n ← getNatValue? nExpr then
@@ -615,6 +618,12 @@ This needs to be checked carefully for equivalence. -/
 def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
     (t : MultiWidth.Nondep.Term) : SolverM Expr := do
   match t with
+  | .bvOfBool b =>
+    let bExpr ← mkTermExpr wcard tcard bcard tctx b
+    let out := mkAppN (mkConst ``MultiWidth.Term.bvOfBool [])
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, bExpr]
+    debugCheck out
+    return out
   | .ofNat w n =>
     let wExpr ← mkWidthExpr wcard w
     let out := mkAppN (mkConst ``MultiWidth.Term.ofNat [])
