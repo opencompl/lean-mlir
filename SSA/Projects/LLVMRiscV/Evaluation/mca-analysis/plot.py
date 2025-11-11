@@ -100,16 +100,15 @@ parameters_labels = {
 }
 
 selector_labels = {
-    "LEANMLIR": "CertISel",
-    "LEANMLIR_opt": "CertOptISel",
+    "LEANMLIR_opt": "our",
     "LLVM_globalisel_O1": "GlobalISel (O1)",
     "LLVM_globalisel_O2": "GlobalISel (O2)",
     "LLVM_globalisel_O3": "GlobalISel (O3)",
-    "LLVM_globalisel": "GlobalISel (def.)",
+    "LLVM_globalisel": "GlobalISel",
     "LLVM_selectiondag_O1": "SelectionDAG (O1)",
     "LLVM_selectiondag_O2": "SelectionDAG (O2)",
     "LLVM_selectiondag_O3": "SelectionDAG (O3)",
-    "LLVM_selectiondag": "SelectionDAG (def.)",
+    "LLVM_selectiondag": "SelectionDAG",
 }
 
 
@@ -244,7 +243,7 @@ def sorted_line_plot_all(parameter):
     plt.tight_layout()
 
     pdf_filename = plots_dir + parameter + "_line.pdf"
-    plt.savefig(pdf_filename, bbox_inches='tight')
+    plt.savefig(pdf_filename)
     print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
@@ -578,19 +577,21 @@ def violin_plot(parameter, selector1, selector2):
         
     for partname in ('cbars', 'cmins', 'cmaxes', 'cmedians'):
         if partname in parts:
-            parts[partname].set_edgecolor(dark_green)
-            parts[partname].set_linewidth(2)
+            parts[partname].set_edgecolor(light_gray)
+            parts[partname].set_linewidth(1)
 
     plt.xlabel("#Instructions - LLVM IR")
     plt.ylabel(
-        f"{parameters_labels[parameter]} [x]"
+        f"{selector_labels[selector1]}/{selector_labels[selector2]}, {parameters_labels[parameter]}",
+        rotation="horizontal", horizontalalignment="left", y=1.05
     )
+    plt.yticks(np.arange(0, math.ceil(df["ratio"].max()) + 1, 2))
     plt.tight_layout()
 
     pdf_filename = (
         plots_dir + f"{parameter}_violin_{selector1}_vs_{selector2}.pdf"
     )
-    plt.savefig(pdf_filename, bbox_inches='tight')
+    plt.savefig(pdf_filename)
     print(f"\nViolin plot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
@@ -745,9 +746,12 @@ def proportional_bar_plot(parameter, selector1, selector2):
     plt.axhline(1, color=dark_gray, linestyle="--", linewidth=5, label=legend_name2)
 
     plt.xlabel("#Instructions - LLVM IR")
+    
     plt.ylabel(
-        f"{parameters_labels[parameter]} [x]"
-    )
+            f"{selector_labels[selector1]}/{selector_labels[selector2]}, {parameters_labels[parameter]}",
+            rotation="horizontal", horizontalalignment="left", y=1.05
+        )
+    
     plt.yticks(np.arange(0, math.ceil(max(grouped["proportion"])+1), 1))
     plt.legend(ncols=2, bbox_to_anchor=(0.5, -0.5), loc="lower center")
     plt.tight_layout()
@@ -762,7 +766,7 @@ def proportional_bar_plot(parameter, selector1, selector2):
     pdf_filename = (
         plots_dir + f"{parameter}_proportional_bar_{selector1}_vs_{selector2}.pdf"
     )
-    plt.savefig(pdf_filename, bbox_inches='tight')
+    plt.savefig(pdf_filename)
     print(
         f"\nProportional bar plot saved to '{pdf_filename}' in the current working directory."
     )
