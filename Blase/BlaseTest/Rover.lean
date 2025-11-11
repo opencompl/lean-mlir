@@ -51,19 +51,20 @@ variable (c : BitVec s)
   },
 -/
 
-def bw' (w : BitVec o) (x : BitVec o) : BitVec o := x &&& (w - 1)
+
+def bw' (wmask : BitVec o) (x : BitVec o) : BitVec o := x &&& (wmask)
 
 def unaryMax (pmask qmask : BitVec o) : BitVec o := (pmask ||| qmask)
 
-def unaryIncr (mask : BitVec o) : BitVec o := (mask ||| 1)
+def unaryIncr (mask : BitVec o) : BitVec o := (mask <<< 1) ||| 1
 
-def addMax' (a : BitVec o) (wa : BitVec o) (b : BitVec o) (wb : BitVec o) : BitVec o :=
-    let max := ((((wa - 1) ||| (wb - 1)) <<< 1) ||| 1)
+def addMax' (a : BitVec o) (wmask : BitVec o) (b : BitVec o) (vmask : BitVec o) : BitVec o :=
+    let max := unaryMax wmask vmask |> unaryIncr
     (a + b) &&& max
 
-def mulMax' (a : BitVec o) (wa : BitVec o) (b : BitVec o) (wb : BitVec o) : BitVec o :=
-    let max := ((((wa - 1) ||| (wb - 1)) <<< 1) ||| 1)
-    (a * b) &&& max
+-- large ≥ small
+def UnaryGe (largemask smallmask : BitVec o) : Prop :=
+  ~~~ largemask &&& smallmask = 0#o
 
 /-
 An axiom that allows us to do bounded model checking up to bitwidth 64.
@@ -73,14 +74,20 @@ axiom AxBoundedModelCheck {P : Nat → Prop} : (P 64) → ∀ i, P i
 
 -- BMC
 theorem add_assoc_1' (o : Nat)
-  (pmask : BitVec o) (hpmask : pmask &&& (pmask - 1) = 0)
-  (qmask : BitVec o) (hqmask : qmask &&& (qmask - 1) = 0)
-  (rmask : BitVec o) (hrmask : rmask &&& (rmask - 1) = 0)
-  (smask : BitVec o) (hsmask : smask &&& (smask - 1) = 0)
-  (tmask : BitVec o) (htmask : tmask &&& (tmask - 1) = 0)
-  (umask : BitVec o) (humask : umask &&& (umask - 1) = 0)
-  (hqt : ~~~ (qmask - 1) &&& (tmask - 1) = 0)
-  (hut : ~~~ (umask - 1) &&& (tmask - 1) = 0)
+  (ppot : BitVec o) (hppot : ppot &&& (ppot - 1) = 0)
+  (qpot : BitVec o) (hqpot : qpot &&& (qpot - 1) = 0)
+  (rpot : BitVec o) (hrpot : rpot &&& (rpot - 1) = 0)
+  (spot : BitVec o) (hspot : spot &&& (spot - 1) = 0)
+  (tpot : BitVec o) (htpot : tpot &&& (tpot - 1) = 0)
+  (upot : BitVec o) (hupot : upot &&& (upot - 1) = 0)
+  (pmask : BitVec o) (hpmask : pmask = ppot - 1)
+  (qmask : BitVec o) (hqmask : qmask = qpot - 1)
+  (rmask : BitVec o) (hrmask : rmask = rpot - 1)
+  (smask : BitVec o) (hsmask : smask = spot - 1)
+  (tmask : BitVec o) (htmask : tmask = tpot - 1)
+  (umask : BitVec o) (humask : umask = upot - 1)
+  (hqt :  UnaryGe qmask tmask)
+  (hut : UnaryGe umask tmask)
   (a' : BitVec o) (b' : BitVec o) (c' : BitVec o) :
   (bw' tmask
     (addMax' 
@@ -95,7 +102,7 @@ theorem add_assoc_1' (o : Nat)
       (bw' qmask 
         (addMax' (bw' rmask b') rmask (bw' smask c') smask))
       qmask)) := by
-  simp only [bw', addMax'] at *
+  simp only [bw', addMax', UnaryGe, unaryIncr, unaryMax] at *
   induction o using AxBoundedModelCheck
   bv_decide
   -- bv_automata_gen (config := {backend := .circuit_cadical_verified 100 })
