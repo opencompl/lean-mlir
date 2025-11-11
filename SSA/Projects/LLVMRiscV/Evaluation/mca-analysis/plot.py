@@ -560,6 +560,8 @@ def violin_plot(parameter, selector1, selector2):
 
     violin_data = grouped["ratio"].values
     positions = grouped["instructions_number"].values
+    
+    
 
     plt.figure(figsize=(10, 5))
     parts = plt.violinplot(
@@ -571,6 +573,8 @@ def violin_plot(parameter, selector1, selector2):
         pc.set_facecolor(light_green)
         pc.set_edgecolor(light_green)
         pc.set_alpha(1.0)
+        
+    plt.axhline(1, color=dark_red, linestyle="--", linewidth=2, label="1x")
         
     for partname in ('cbars', 'cmins', 'cmaxes', 'cmedians'):
         if partname in parts:
