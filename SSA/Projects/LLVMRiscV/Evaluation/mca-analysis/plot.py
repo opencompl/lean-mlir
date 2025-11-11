@@ -522,9 +522,8 @@ def violin_plot(parameter, selector1, selector2):
         print(f"LLVM #Instructions: {instr_num}, #programs with ratio > 50 : {len(group)}")    
         
     # remove points above 50 for y-axis scaling
-    df_filtered = df[df["ratio"] <= 50]
     
-    grouped = df_filtered.groupby("instructions_number")["ratio"].apply(list).reset_index()
+    grouped = df.groupby("instructions_number")["ratio"].apply(list).reset_index()
 
     violin_data = grouped["ratio"].values
     positions = grouped["instructions_number"].values
@@ -558,16 +557,14 @@ def violin_plot(parameter, selector1, selector2):
     )
     
     # add a marker at the top of every column indicating the number of outliers removed
-    outlier_counts = df[df["ratio"] > 50].groupby("instructions_number").size()
-    for pos in positions:
-        count = outlier_counts.get(pos, 0)
-        if count > 0:
-            plt.text(pos, 46, "↯", ha='center', va='bottom', fontsize=16, color=dark_red)
+
+    max_ratio = df["ratio"].max()
     
-    if df_filtered["ratio"].max() < 10:
-        plt.yticks(np.arange(0, math.ceil(df_filtered["ratio"].max()) + 1, 2))
+    
+    if max_ratio > 200:
+        plt.yticks(np.arange(0, 270, 50))
     else:
-        plt.yticks(np.arange(0, math.ceil(df_filtered["ratio"].max() + 5), 10))
+        plt.yticks(np.arange(0, math.ceil(df["ratio"].max()) + 2, 2))
     
     plt.tight_layout()
 
