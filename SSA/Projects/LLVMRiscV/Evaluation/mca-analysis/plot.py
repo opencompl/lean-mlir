@@ -566,6 +566,7 @@ def violin_plot(parameter, selector1, selector2):
     parts = plt.violinplot(
         violin_data,
         positions=positions,
+        showmedians=True
     )
 
     for pc in parts["bodies"]:
@@ -574,12 +575,13 @@ def violin_plot(parameter, selector1, selector2):
         pc.set_alpha(1.0)
         
     plt.axhline(1, color=dark_red, linestyle="--", linewidth=1, label="1x")
-    plt.text(positions[0], 1.02, "1x", color=dark_red, ha='center', fontsize=12)
+    plt.text(positions[-1]*1.08, 1.02, "1x", color=dark_red, ha='center', fontsize=20)
         
-    for partname in ('cbars', 'cmins', 'cmaxes', 'cmedians'):
+    for partname in ('cbars', 'cmins', 'cmaxes'):
         if partname in parts:
             parts[partname].set_edgecolor(light_gray)
             parts[partname].set_linewidth(1)
+    parts['cmedians'].set_edgecolor(dark_green)
 
     plt.xlabel("#Instructions - LLVM IR")
     plt.ylabel(
