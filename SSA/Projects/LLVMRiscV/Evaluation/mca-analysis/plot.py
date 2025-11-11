@@ -686,26 +686,28 @@ def proportional_bar_plot(parameter, selector1, selector2):
             f"Error: One or both columns ({col1}, {col2}) do not exist in the dataframe."
         )
         return
-
-    grouped = df.groupby("instructions_number")[[col1, col2]].mean()
-    grouped["proportion"] = grouped[col1] / grouped[col2]
-    legend_name1 = (
-        selector_labels[selector1]
-        .replace(" (O3)", "")
-        .replace(" (O2)", "")
-        .replace(" (O1)", "")
-        .replace(" (def.)", "")
+    
+    df['ratios'] = df[col1] / df[col2]
+    
+    average_ratios_by_instruction = (
+        df.groupby('instructions_number')['ratios']
+        .mean()
+        .reset_index(name='average_ratio')
     )
-    legend_name2 = selector_labels[selector2]
+    
+    # average difference per group 
+    print(average_ratios_by_instruction)
+
+
 
     plt.bar(
-        grouped.index.astype(str),
-        grouped["proportion"],
+        average_ratios_by_instruction["instructions_number"],
+        average_ratios_by_instruction["average_ratio"],
         color=dark_green,
-        label=legend_name1,
+        label=f"Avg. {selector_labels[selector1]} / {selector_labels[selector2]}, {parameters_labels[parameter]}",
     )
 
-    plt.axhline(1, color=dark_gray, linestyle="--", linewidth=5, label=legend_name2)
+    plt.axhline(1, color=dark_gray, linestyle="--", linewidth=5, label={selector_labels[selector2]})
 
     plt.xlabel("#Instructions - LLVM IR")
     
@@ -714,7 +716,7 @@ def proportional_bar_plot(parameter, selector1, selector2):
             rotation="horizontal", horizontalalignment="left", y=1.05
         )
     
-    plt.yticks(np.arange(0, math.ceil(max(grouped["proportion"])+1), 1))
+    plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 1))
     plt.legend(ncols=2, bbox_to_anchor=(0.5, -0.5), loc="lower center")
     plt.tight_layout()
 
@@ -734,7 +736,7 @@ def proportional_bar_plot(parameter, selector1, selector2):
     )
     plt.close()
     
-    latex_commands_bar_plot_proportions(grouped, selector1, selector2, parameter)
+    latex_commands_bar_plot_proportions(average_ratios_by_instruction, selector1, selector2, parameter)
 
 
 def latex_commands_bar_plot_proportions(grouped, selector1, selector2, parameter):
