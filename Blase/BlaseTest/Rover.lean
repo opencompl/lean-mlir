@@ -65,6 +65,69 @@ theorem zero_max (a : Nat) : max 0 a = a := by
   },
 -/
 
+def bw' (w : BitVec o) (x : BitVec o) : BitVec o := x &&& (w - 1)
+
+def addMax' (a : BitVec o) (wa : BitVec o) (b : BitVec o) (wb : BitVec o) : BitVec o :=
+    (a + b) &&& ((((wa - 1) ||| (wb - 1)) <<< 1) ||| 1)
+
+
+/-
+An axiom that allows us to do bounded model checking up to bitwidth 64.
+-/
+@[elab_as_elim]
+axiom AxBoundedModelCheck {P : Nat → Prop} : (P 64) → ∀ i, P i
+
+theorem add_assoc_1' (o : Nat)
+  (pmask : BitVec o)
+  (qmask : BitVec o)
+  (rmask : BitVec o)
+  (smask : BitVec o)
+  (tmask : BitVec o)
+  (umask : BitVec o)
+  -- (wmask : BitVec o)
+  -- (hwmask : wmask &&& (wmask - 1) = 0) 
+  (hpmask : pmask &&& (pmask - 1) = 0)
+  (hqmask : qmask &&& (qmask - 1) = 0)
+  (hrmask : rmask &&& (rmask - 1) = 0)
+  (hsmask : smask &&& (smask - 1) = 0)
+  (htmask : tmask &&& (tmask - 1) = 0)
+  (humask : umask &&& (umask - 1) = 0)
+  -- (q ≥ t)
+  -- (u ≥ t)
+  (hqt : ~~~ (qmask - 1) &&& (tmask - 1) = 0)
+  (hut : ~~~ (umask - 1) &&& (tmask - 1) = 0)
+  (a' : BitVec o) (b' : BitVec o) (c' : BitVec o) :
+  (bw' tmask
+    (addMax' 
+      (bw' umask 
+        (addMax' ((bw' pmask a')) pmask (bw' rmask b') rmask))
+      umask
+      (bw' smask c')
+      smask)) =
+  (bw' tmask
+    (addMax'
+      (bw' pmask a') pmask
+      (bw' qmask 
+        (addMax' (bw' rmask b') rmask (bw' smask c') smask))
+      qmask)) := by
+  simp only [bw', addMax'] at *
+  induction o using AxBoundedModelCheck
+  bv_decide
+  -- bv_automata_gen (config := {backend := .circuit_cadical_verified 100 })
+  -- bv_multi_width +verbose? (niter := 1)
+  -- bv_automata_classic
+  -- bv_multi_width -check? (niter := 30)
+  -- sorry
+/--
+info: 'Test.Rover.add_assoc_1'' depends on axioms: [propext,
+ Classical.choice,
+ Lean.ofReduceBool,
+ Lean.trustCompiler,
+ Quot.sound,
+ Test.Rover.AxBoundedModelCheck]
+-/
+#guard_msgs in #print axioms add_assoc_1'
+
 theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
   (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c))) =
   (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
