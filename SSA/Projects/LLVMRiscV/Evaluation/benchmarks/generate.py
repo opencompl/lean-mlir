@@ -343,7 +343,6 @@ def XDSL_reg_alloc(input_file, output_file, log_file, pass_dict):
 
 def generate_benchmarks(num, jobs, llvm_opt, compare_lowering_patterns=False):
     setup_benchmarking_directories()
-    print("ciao")
 
     if compare_lowering_patterns:
         print(
