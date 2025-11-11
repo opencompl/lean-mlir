@@ -244,7 +244,7 @@ def sorted_line_plot_all(parameter):
     plt.tight_layout()
 
     pdf_filename = plots_dir + parameter + "_line.pdf"
-    plt.savefig(pdf_filename)
+    plt.savefig(pdf_filename, bbox_inches='tight')
     print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
@@ -334,7 +334,7 @@ def scatter_plot(parameter, selector1, selector2):
     pdf_filename = (
         plots_dir + f"{parameter}_scatter_plot_{selector1}_vs_{selector2}.pdf"
     )
-    plt.savefig(pdf_filename)
+    plt.savefig(pdf_filename, bbox_inches='tight')
     print(f"\nScatter plot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
@@ -497,7 +497,7 @@ def bar_plot(parameter, selector1, selector2):
             plots_dir
             + f"{parameter}_stacked_bar{name_extension}{selector1}_vs_{selector2}.pdf"
         )
-        plt.savefig(pdf_filename)
+        plt.savefig(pdf_filename, bbox_inches='tight')
         print(
             f"\nStacked bar plot saved to '{pdf_filename}' in the current working directory."
         )
@@ -532,8 +532,8 @@ def bar_plot(parameter, selector1, selector2):
             perc = row[c]
             cmd = (
                 f"\\newcommand{{\\Perc"
-                f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace("-", "dash").replace(".", ""))}"
-                f"{clean_name(parameter)}For{idx_str_clean}On{c.replace('<', 'lt').replace('>', 'gt').replace('0', 'zero').replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace("-", "dash").replace(".", "")}}}{{{perc:.1f}}}"
+                f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace('-', 'dash').replace('.', ''))}"
+                f"{clean_name(parameter)}For{idx_str_clean}On{c.replace('<', 'lt').replace('>', 'gt').replace('0', 'zero').replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace('-', 'dash').replace('.', '')}}}{{{perc:.1f}}}"
             )
             latex_lines.append(cmd)
     latex_file = os.path.join(plots_dir, "bar_plot_percentages.tex")
@@ -576,7 +576,7 @@ def sorted_line_plot(parameter, selector1, selector2):
     plt.tight_layout()
 
     pdf_filename = plots_dir + parameter + f"_{selector1}_vs_{selector2}_line.pdf"
-    plt.savefig(pdf_filename)
+    plt.savefig(pdf_filename, bbox_inches='tight')
     print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
@@ -652,13 +652,15 @@ def overhead_plot(parameter, selector1, selector2):
         pdf_filename = (
             plots_dir + f"{parameter}_overhead_{selector1}_vs_{selector2}.pdf"
         )
-        plt.savefig(pdf_filename)
+        plt.savefig(pdf_filename, bbox_inches='tight')
         print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
         plt.close()
 
 
 def proportional_bar_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + ".csv")
+
+    plt.figure(figsize=(10, 5))
 
     col1 = selector1 + "_" + parameter
     col2 = selector2 + "_" + parameter
@@ -671,24 +673,30 @@ def proportional_bar_plot(parameter, selector1, selector2):
 
     grouped = df.groupby("instructions_number")[[col1, col2]].mean()
     grouped["proportion"] = grouped[col1] / grouped[col2]
-
-    legend_name2 = (
-        selector_labels[selector2]
+    legend_name1 = (
+        selector_labels[selector1]
         .replace(" (O3)", "")
         .replace(" (O2)", "")
         .replace(" (O1)", "")
         .replace(" (def.)", "")
     )
-    plt.figure(figsize=(16, 8))
+    legend_name2 = selector_labels[selector2]
+
+    plt.bar(
+        grouped.index.astype(str),
+        grouped["proportion"],
+        color=dark_green,
+        label=legend_name1,
+    )
 
     plt.axhline(1, color=dark_gray, linestyle="--", linewidth=5, label=legend_name2)
 
     plt.xlabel("#Instructions - LLVM IR")
     plt.ylabel(
-        f"Relative {parameters_labels[parameter].replace('#instructions', 'Program')} Size"
+        f"{parameters_labels[parameter]} [x]"
     )
-    plt.yticks(np.arange(0, math.ceil(max(grouped["proportion"])), 0.5))
-    plt.legend()
+    plt.yticks(np.arange(0, math.ceil(max(grouped["proportion"])+1), 1))
+    plt.legend(ncols=2, bbox_to_anchor=(0.5, -0.5), loc="lower center")
     plt.tight_layout()
 
     # uncomment to have numbers on top of the bars
@@ -701,7 +709,7 @@ def proportional_bar_plot(parameter, selector1, selector2):
     pdf_filename = (
         plots_dir + f"{parameter}_proportional_bar_{selector1}_vs_{selector2}.pdf"
     )
-    plt.savefig(pdf_filename)
+    plt.savefig(pdf_filename, bbox_inches='tight')
     print(
         f"\nProportional bar plot saved to '{pdf_filename}' in the current working directory."
     )
@@ -805,19 +813,19 @@ def main():
             calculate_similarity("LEANMLIR_opt", "LLVM_selectiondag")
             # calculate_similarity('LLVM_globalisel', 'LLVM_selectiondag')
         else:
-            if "scatter" in plots_to_produce or "all" in plots_to_produce:
-                scatter_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
-                scatter_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
-                # scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-            if "sorted" in plots_to_produce or "all" in plots_to_produce:
-                sorted_line_plot_all(parameter)
-                sorted_line_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
-                sorted_line_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
-                # sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-            if "overhead" in plots_to_produce or "all" in plots_to_produce:
-                overhead_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
-                overhead_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
-                # overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            # if "scatter" in plots_to_produce or "all" in plots_to_produce:
+            #     scatter_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
+            #     scatter_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+            #     # scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            # if "sorted" in plots_to_produce or "all" in plots_to_produce:
+            #     sorted_line_plot_all(parameter)
+            #     sorted_line_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
+            #     sorted_line_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+            #     # sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            # if "overhead" in plots_to_produce or "all" in plots_to_produce:
+            #     overhead_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
+            #     overhead_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+            #     # overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
             if "stacked" in plots_to_produce or "all" in plots_to_produce:
                 bar_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
                 bar_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
