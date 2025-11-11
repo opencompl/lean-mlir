@@ -100,7 +100,7 @@ parameters_labels = {
 }
 
 selector_labels = {
-    "LEANMLIR_opt": "our",
+    "LEANMLIR_opt": "Lean-mlir",
     "LLVM_globalisel_O1": "GlobalISel (O1)",
     "LLVM_globalisel_O2": "GlobalISel (O2)",
     "LLVM_globalisel_O3": "GlobalISel (O3)",
