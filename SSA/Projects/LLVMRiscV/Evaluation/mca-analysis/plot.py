@@ -285,8 +285,6 @@ def scatter_plot(parameter, selector1, selector2):
 
     df_plot_scaled["Scaled_Size"] = np.sqrt((df_plot_scaled["Frequency"])) * 50 + 20
 
-    print("\nData test for plotting (first 5 rows, with frequency and scaled size):")
-    print(df_plot_scaled.head())
 
     plt.scatter(
         df_plot_scaled[selector1 + "_" + parameter],
@@ -306,8 +304,6 @@ def scatter_plot(parameter, selector1, selector2):
         df_plot_comparison[selector1 + "_" + parameter].max(),
         df_plot_comparison[selector2 + "_" + parameter].max(),
     )
-    print(min_val)
-    print(max_val)
     # Add a small buffer to the min/max values for better visualization
     plot_min = max(0, min_val - 1)
     plot_max = max_val + 1
@@ -514,13 +510,25 @@ def violin_plot(parameter, selector1, selector2):
         return
 
     df["ratio"] = df[col1] / df[col2]
-
-    grouped = df.groupby("instructions_number")["ratio"].apply(list).reset_index()
+    
+    num_above_50 = sum(df["ratio"] > 50)
+    
+    print(f"Number of programs with ratio above 50: {num_above_50} out of {len(df)}")
+    
+    # extract the columns with ratio > 50
+    
+    high_ratio_df =( df[df["ratio"] > 50]).groupby("instructions_number") 
+    for instr_num, group in high_ratio_df:
+        print(f"LLVM #Instructions: {instr_num}, #programs with ratio > 50 : {len(group)}")    
+        
+    # remove points above 50 for y-axis scaling
+    df_filtered = df[df["ratio"] <= 50]
+    
+    grouped = df_filtered.groupby("instructions_number")["ratio"].apply(list).reset_index()
 
     violin_data = grouped["ratio"].values
     positions = grouped["instructions_number"].values
     
-    print("max ratio:", df["ratio"].max())
 
     plt.figure(figsize=(10, 5))
     parts = plt.violinplot(
@@ -548,10 +556,18 @@ def violin_plot(parameter, selector1, selector2):
         f"{parameters_labels[parameter]},$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$",
         rotation="horizontal", horizontalalignment="left", y=1.05
     )
-    if df["ratio"].max() < 15:
-        plt.yticks(np.arange(0, math.ceil(df["ratio"].max()) + 1, 2))
+    
+    # add a marker at the top of every column indicating the number of outliers removed
+    outlier_counts = df[df["ratio"] > 50].groupby("instructions_number").size()
+    for pos in positions:
+        count = outlier_counts.get(pos, 0)
+        if count > 0:
+            plt.text(pos, 46, "↯", ha='center', va='bottom', fontsize=16, color=dark_red)
+    
+    if df_filtered["ratio"].max() < 10:
+        plt.yticks(np.arange(0, math.ceil(df_filtered["ratio"].max()) + 1, 2))
     else:
-        plt.yticks(np.arange(0, math.ceil(df["ratio"].max()) + 1, 100))
+        plt.yticks(np.arange(0, math.ceil(df_filtered["ratio"].max() + 5), 10))
     
     plt.tight_layout()
 
@@ -700,10 +716,6 @@ def proportional_bar_plot(parameter, selector1, selector2):
         .reset_index(name='average_ratio')
     )
     
-    # average difference per group 
-    print(average_ratios_by_instruction)
-
-
 
     plt.bar(
         average_ratios_by_instruction["instructions_number"],
@@ -713,7 +725,6 @@ def proportional_bar_plot(parameter, selector1, selector2):
     )
 
     plt.axhline(1, color=dark_red, linestyle="--", linewidth=2)
-    print(average_ratios_by_instruction["instructions_number"])
     plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 1.05, f"{selector_labels[selector2]}", color=dark_red, ha='center', fontsize=20)
     
 
@@ -847,8 +858,6 @@ def main():
     )
 
     setup_benchmarking_directories()
-
-    print(args)
 
     for parameter in params_to_evaluate:
         extract_data(LLVM_globalisel_results_DIR_PATH, "LLVM_globalisel", parameter)
