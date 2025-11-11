@@ -541,6 +541,48 @@ def bar_plot(parameter, selector1, selector2):
         for line in latex_lines:
             f.write(line + "\n")
 
+def violin_plot(parameter, selector1, selector2):
+    df = pd.read_csv(data_dir + parameter + ".csv")
+
+    col1 = selector1 + "_" + parameter
+    col2 = selector2 + "_" + parameter
+
+    if col1 not in df.columns:
+        print(f"Error: the column {col1} does not exist in the dataframe.")
+        return
+    if col2 not in df.columns:
+        print(f"Error: the column {col2} does not exist in the dataframe.")
+        return
+
+    df["ratio"] = df[col1] / df[col2]
+
+    grouped = df.groupby("instructions_number")["ratio"].apply(list).reset_index()
+
+    violin_data = grouped["ratio"].values
+    positions = grouped["instructions_number"].values
+
+    plt.figure(figsize=(10, 5))
+    parts = plt.violinplot(
+        violin_data,
+        positions=positions,
+    )
+
+    for pc in parts["bodies"]:
+        pc.set_facecolor(dark_green)
+
+    plt.xlabel("#Instructions - LLVM IR")
+    plt.ylabel(
+        f"{parameters_labels[parameter]} [x]"
+    )
+    plt.tight_layout()
+
+    pdf_filename = (
+        plots_dir + f"{parameter}_violin_{selector1}_vs_{selector2}.pdf"
+    )
+    plt.savefig(pdf_filename, bbox_inches='tight')
+    print(f"\nViolin plot saved to '{pdf_filename}' in the current working directory.")
+    plt.close()
+
 
 def sorted_line_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + ".csv")
@@ -773,7 +815,7 @@ def main():
         "-t",
         "--plot_type",
         nargs="+",
-        choices=["scatter", "sorted", "stacked", "overhead", "all"],
+        choices=["scatter", "sorted", "stacked", "overhead", "violin", "all"],
     )
 
     parser.add_argument(
@@ -792,7 +834,7 @@ def main():
     )
 
     plots_to_produce = (
-        ["scatter", "sorted", "stacked", "overhead", "proportional"]
+        ["scatter", "sorted", "stacked", "overhead", "proportional", "violin"]
         if "all" in args.plot_type
         else args.plot_type
     )
@@ -829,6 +871,10 @@ def main():
             if "stacked" in plots_to_produce or "all" in plots_to_produce:
                 bar_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
                 bar_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+                # bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "violin" in plots_to_produce or "all" in plots_to_produce:
+                violin_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
+                violin_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
                 # bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
             if "proportional" in plots_to_produce or "all" in plots_to_produce:
                 proportional_bar_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
