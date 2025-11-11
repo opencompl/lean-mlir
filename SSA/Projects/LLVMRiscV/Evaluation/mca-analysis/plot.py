@@ -466,7 +466,7 @@ def bar_plot(parameter, selector1, selector2):
         x = group.index.astype(str)
         plt.figure(figsize=(10, 5))
         for c in class_order:
-            if c == "0" and with_similarity:
+            if c == "1x" and with_similarity:
                 similarity_percentages = calculate_similarity(
                     selector1, selector2, False
                 )
