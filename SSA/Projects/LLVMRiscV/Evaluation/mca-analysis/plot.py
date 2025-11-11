@@ -497,7 +497,7 @@ def bar_plot(parameter, selector1, selector2):
             plots_dir
             + f"{parameter}_stacked_bar{name_extension}{selector1}_vs_{selector2}.pdf"
         )
-        plt.savefig(pdf_filename, bbox_inches='tight')
+        plt.savefig(pdf_filename)
         print(
             f"\nStacked bar plot saved to '{pdf_filename}' in the current working directory."
         )
