@@ -100,7 +100,7 @@ parameters_labels = {
 }
 
 selector_labels = {
-    "LEANMLIR_opt": "Lean-mlir",
+    "LEANMLIR_opt": "Lean-mlir-ISel",
     "LLVM_globalisel_O1": "GlobalISel (O1)",
     "LLVM_globalisel_O2": "GlobalISel (O2)",
     "LLVM_globalisel_O3": "GlobalISel (O3)",
@@ -401,30 +401,33 @@ def bar_plot(parameter, selector1, selector2):
         "1.5x-2x": light_red,
         ">2x": dark_red,
     }
+    
+    similarity_df = pd.read_csv(data_dir + "similarity.csv")
+    similarity_percentages = {}
+    col_name = f"is_eqv_{selector2}"
+    for instr_num, group_df in similarity_df.groupby("instructions_number"):
+        total_count = len(group_df)
+        true_count = group_df[col_name].sum()
+        percentage = (true_count / total_count) * 100 if total_count > 0 else 0.0
+        similarity_percentages[int(instr_num)] = percentage
+        
 
-    # Plot
-    def plot_bar(with_similarity=False):
+    def plot_columns(with_similarity=False):
         bottom = np.zeros(len(group))
+        similarity_df = pd.read_csv(data_dir + "similarity.csv")
+        similarity_df_grouped = similarity_df.groupby("instructions_number")
         x = group.index.astype(str)
         plt.figure(figsize=(10, 5))
-        similarity_list = []
-        similarity_df = pd.read_csv(data_dir + "similarity.csv")
         for c in class_order:
-            if c == "1x":
-                for idx in group.index:
-                    subset = similarity_df[similarity_df["instructions_number"] == idx]
-                    print(selector1, selector2)
-                    num_true = subset[f"is_eqv_{selector2}"].sum()
-                    total = len(subset)
-                    percentage = (num_true / total) * 100 if total > 0 else 0
-                    similarity_list.append(percentage)
-                remaining = [a - b for a, b in zip(group["1x"], similarity_list)]
+            if c == "1x" and with_similarity:
+                similarity_list = list(similarity_percentages.values())
+                remaining = [a - b for a, b in zip(group[c], similarity_list)]
                 plt.bar(
-                    x, similarity_list, bottom=bottom, color=class_colors["1x"], hatch="//"
+                    x, similarity_list, bottom=bottom, color=class_colors[c], hatch="//"
                 )
                 bottom += similarity_list
                 plt.bar(
-                    x, remaining, bottom=bottom, label=f"{"1x"}", color=class_colors["1x"]
+                    x, remaining, bottom=bottom, label=f"{c}", color=class_colors[c]
                 )
                 bottom += remaining
             else:
@@ -450,9 +453,16 @@ def bar_plot(parameter, selector1, selector2):
         )
         plt.close()
 
-    plot_bar()
+    plot_columns()
     if parameter == "tot_instructions":
-        plot_bar(with_similarity=True)
+        plot_columns(with_similarity=True)
+    
+    
+    latex_commands_bar_plot_percentages(group, class_order, selector1, selector2, parameter)
+
+
+
+def latex_commands_bar_plot_percentages(group, class_order, selector1, selector2, parameter):
 
     latex_lines = []
     for idx, row in group.iterrows():
@@ -723,9 +733,13 @@ def proportional_bar_plot(parameter, selector1, selector2):
         f"\nProportional bar plot saved to '{pdf_filename}' in the current working directory."
     )
     plt.close()
+    
+    latex_commands_bar_plot_proportions(grouped, selector1, selector2, parameter)
 
+
+def latex_commands_bar_plot_proportions(grouped, selector1, selector2, parameter):
     geomean_ratio = np.exp(np.mean(np.log(grouped["proportion"])))
-
+    
     latex_lines = []
     for idx, ratio in enumerate(grouped["proportion"]):
         idx_str = str(idx)
@@ -856,6 +870,7 @@ def main():
             if "proportional" in plots_to_produce or "all" in plots_to_produce:
                 proportional_bar_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
                 proportional_bar_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+                
                 # proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
 
 
