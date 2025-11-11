@@ -7,6 +7,7 @@
   of ac_nf for e.g. `Nat.max` to allow unification.
 -/
 import Blase
+import Blase.SingleWidth.Tactic
 namespace Test
 namespace Rover
 
@@ -65,12 +66,54 @@ theorem zero_max (a : Nat) : max 0 a = a := by
   },
 -/
 
+def bw' (w : BitVec o) (x : BitVec o) : BitVec o := x &&& w
+
+def addMax' (a : BitVec o) (wa : BitVec o) (b : BitVec o) (wb : BitVec o) : BitVec o :=
+    (a + b) &&& ((wa ||| wb) <<< 1)
+
 theorem add_assoc_1 (hq : q >= t) (hu : u >= t) :
   (bw t (addMax (bw u (addMax (bw p a) (bw r b))) (bw s c))) =
   (bw t (addMax (bw p a) (bw q (addMax (bw r b) (bw s c))))) := by
   simp only [bw, addMax] at *
   -- bv_multi_width -check? (niter := 30)
   sorry
+
+theorem add_assoc_1' (o : Nat)
+  (pmask : BitVec o)
+  (qmask : BitVec o)
+  (rmask : BitVec o)
+  (smask : BitVec o)
+  (tmask : BitVec o)
+  (umask : BitVec o)
+  (wmask : BitVec o)
+  (hwmask : wmask &&& (wmask - 1) = 0) 
+  (hpmask : pmask &&& (pmask - 1) = 0)
+  (hqmask : qmask &&& (qmask - 1) = 0)
+  (hrmask : rmask &&& (rmask - 1) = 0)
+  (hsmask : smask &&& (smask - 1) = 0)
+  (htmask : tmask &&& (tmask - 1) = 0)
+  (humask : umask &&& (umask - 1) = 0)
+  (a' : BitVec o) (b' : BitVec o) (c' : BitVec o) :
+  (bw' tmask
+    (addMax' 
+      (bw' umask 
+        (addMax' ((bw' pmask a')) pmask (bw' rmask b') rmask))
+      umask
+      (bw' smask c')
+      smask)) =
+  (bw' tmask
+    (addMax'
+      (bw' pmask a') pmask
+      (bw' qmask 
+        (addMax' (bw' rmask b') rmask (bw' smask c') smask))
+      qmask)) := by
+  simp only [bw', addMax'] at *
+  bv_automata_classic
+  -- bv_multi_width -check? (niter := 30)
+  -- sorry
+#print axioms add_assoc_1'
+
+#exit
 
 /-
 {
