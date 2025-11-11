@@ -5,7 +5,7 @@
 # dependencies = ["xdsl"]
 # 
 # [tool.uv.sources]
-# xdsl = { git = "https://github.com/xdslproject/xdsl.git", rev = "84470026ca7dbf37837eb57030897202a6dc47d7" }
+# xdsl = { git = "https://github.com/luisacicolini/xdsl.git", rev = "7db9460afbe0b15ef39c0a3d803e951c3b00b89f" }
 # ///
 
 
@@ -324,10 +324,16 @@ def XDSL_reg_alloc(input_file, output_file, log_file, pass_dict):
     """
     Remove unrealized casts from the RISCV64 dialect MLIR files with xdsl.
     """
-    cmd_base = "xdsl-opt -p convert-func-to-riscv-func,reconcile-unrealized-casts,riscv-allocate-registers -t riscv-asm "
-    cmd = cmd_base + input_file + " > " + output_file
-    ret_code = run_command(cmd, log_file)
-    pass_dict[output_file] = ret_code
+    try : 
+        from xdsl.xdsl_opt_main import xDSLOptMain
+        xdsl_opt_main = xDSLOptMain(args = f"{input_file} -p convert-func-to-riscv-func,reconcile-unrealized-casts,riscv-allocate-registers{{force-infinite=true}},riscv-allocate-infinite-registers,canonicalize -t riscv-asm -o {output_file}".split())
+        xdsl_opt_main.run()
+        # cmd = cmd_base + input_file + " > " + output_file
+        # ret_code = run_command(cmd, log_file)
+        pass_dict[output_file] = 1
+    except Exception as e:
+        print(f"XDSL_reg_alloc failed for {input_file} with error: {e}", file=log_file)
+        pass_dict[output_file] = 0
 
 
 def generate_benchmarks(num, jobs, llvm_opt, compare_lowering_patterns=False):
