@@ -127,7 +127,7 @@ def parse_instructions(filename):
 
             if in_instruction_section and line.strip():
                 parts = line.split()
-                instruction = parts[8]  # inst name is in 9th column
+                instruction = parts[8:]  # inst name is in 9th column
                 instructions.append(instruction)
     if len(instructions) == 0:
         return None
@@ -148,7 +148,7 @@ def extract_data(results_directory, benchmark_name, parameter):
                     file_lines = f.readlines()
                     instructions = parse_instructions(file_path)
                     if instructions is not None:
-                        parameter_numbers.append(",".join(instructions))
+                        parameter_numbers.append(instructions)
                         function_names.append(filename.split(".")[0])
             else:
                 with open(file_path, "r") as f:
@@ -187,6 +187,13 @@ def join_dataframes(dataframe_names, parameter):
     complete_df["instructions_number"] = complete_df["function_name"].apply(
         lambda x: int(x.split("_")[0])
     )
+    if parameter == "similarity":
+        complete_df["is_eqv_LLVM_globalisel"] = complete_df["LLVM_globalisel_" + parameter] == complete_df["LEANMLIR_opt_" + parameter]
+        complete_df["is_eqv_LLVM_selectiondag"] = complete_df["LLVM_selectiondag_" + parameter] == complete_df["LEANMLIR_opt_" + parameter]
+        # drop LLVM_globalisel_similarity and LLVM_selectiondag_similarity columns
+        complete_df = complete_df.drop(
+            ["LLVM_globalisel_" + parameter, "LLVM_selectiondag_" + parameter, "LEANMLIR_opt_" + parameter], axis=1
+        )
     complete_df.to_csv(data_dir + parameter + ".csv")
 
 
@@ -337,70 +344,6 @@ def scatter_plot(parameter, selector1, selector2):
     print(f"\nScatter plot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
-
-def clean_name(s):
-    # Remove underscores and capitalize parts
-    return "".join([w.capitalize() for w in str(s).split("_")])
-
-
-def calculate_similarity(selector1, selector2, print_latex=True):
-    df = pd.read_csv(data_dir + "similarity" + ".csv")
-    print("done")
-
-    col1 = selector1 + "_" + "similarity"
-    col2 = selector2 + "_" + "similarity"
-    instruction_count = "instructions_number"
-
-    if col1 not in df.columns or col2 not in df.columns:
-        print(
-            f"Error: One or both columns ({col1}, {col2}) do not exist in the dataframe."
-        )
-        return
-
-    col1_values = df[col1].dropna().apply(lambda x: x.split(","))
-    col2_values = df[col2].dropna().apply(lambda x: x.split(","))
-
-    grouped = df.groupby(instruction_count)
-    similarity_percentages = {}
-
-    for count, group in grouped:
-        col1_values = group[col1].dropna().apply(lambda x: x.split(","))
-        col2_values = group[col2].dropna().apply(lambda x: x.split(","))
-        similarities = col1_values == col2_values
-        similarity_percentage = similarities.mean() * 100
-        similarity_percentages[count] = similarity_percentage
-        print(
-            f"Similarity for instruction count {count} between {selector1} and {selector2}: {similarity_percentage:.2f}%"
-        )
-
-        if print_latex:
-            cmd_name = (
-                f"\\newcommand{{\\Similarity"
-                f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}"
-                f"{clean_name('instructions')}For{str(count).replace('3', 'three').replace('4', 'four').replace('5', 'five').replace('6', 'six').replace('7', 'seven').replace('8', 'eight')}Instructions}}{{{similarity_percentage:.2f}}}"
-            )
-            latex_file = os.path.join(plots_dir, "similarity_percentages.tex")
-            with open(latex_file, "a") as f:
-                f.write(cmd_name + "\n")
-
-    mean_similarity = np.mean(list(similarity_percentages.values()))
-    print(
-        f"Mean similarity {count} between {selector1} and {selector2}: {similarity_percentage:.2f}%"
-    )
-
-    if print_latex:
-        cmd_name = (
-            f"\\newcommand{{\\MeanSimilarity"
-            f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}"
-            f"}}{{{mean_similarity:.2f}}}"
-        )
-        latex_file = os.path.join(plots_dir, "similarity_percentages.tex")
-        with open(latex_file, "a") as f:
-            f.write(cmd_name + "\n")
-
-    return similarity_percentages
-
-
 def bar_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + ".csv")
 
@@ -464,19 +407,24 @@ def bar_plot(parameter, selector1, selector2):
         bottom = np.zeros(len(group))
         x = group.index.astype(str)
         plt.figure(figsize=(10, 5))
+        similarity_list = []
+        similarity_df = pd.read_csv(data_dir + "similarity.csv")
         for c in class_order:
-            if c == "1x" and with_similarity:
-                similarity_percentages = calculate_similarity(
-                    selector1, selector2, False
-                )
-                similarity_list = list(similarity_percentages.values())
-                remaining = [a - b for a, b in zip(group[c], similarity_list)]
+            if c == "1x":
+                for idx in group.index:
+                    subset = similarity_df[similarity_df["instructions_number"] == idx]
+                    print(selector1, selector2)
+                    num_true = subset[f"is_eqv_{selector2}"].sum()
+                    total = len(subset)
+                    percentage = (num_true / total) * 100 if total > 0 else 0
+                    similarity_list.append(percentage)
+                remaining = [a - b for a, b in zip(group["1x"], similarity_list)]
                 plt.bar(
-                    x, similarity_list, bottom=bottom, color=class_colors[c], hatch="//"
+                    x, similarity_list, bottom=bottom, color=class_colors["1x"], hatch="//"
                 )
                 bottom += similarity_list
                 plt.bar(
-                    x, remaining, bottom=bottom, label=f"{c}", color=class_colors[c]
+                    x, remaining, bottom=bottom, label=f"{"1x"}", color=class_colors["1x"]
                 )
                 bottom += remaining
             else:
@@ -539,6 +487,7 @@ def bar_plot(parameter, selector1, selector2):
     with open(latex_file, "a") as f:
         for line in latex_lines:
             f.write(line + "\n")
+
 
 def violin_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + ".csv")
@@ -815,6 +764,18 @@ def proportional_bar_plot(parameter, selector1, selector2):
         for line in latex_lines:
             f.write(line + "\n")
 
+def clean_name(s):
+    return ''.join([w.capitalize() for w in str(s).split('_')])
+
+def print_latex_similarity_command(selector1, selector2, parameter, percentage):
+    cmd = (
+        f"\\newcommand{{\\Similarity"
+        f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}"
+        f"{clean_name(parameter)}}}{{{percentage:.2f}}}"
+    )
+    latex_file = os.path.join(plots_dir, "similarities.tex")
+    with open(latex_file, "a") as f:
+        f.write(cmd + "\n")
 
 def main():
     parser = argparse.ArgumentParser(
@@ -869,9 +830,7 @@ def main():
         to_join = ["LEANMLIR_opt", "LLVM_globalisel", "LLVM_selectiondag"]
         join_dataframes(to_join, parameter)
         if parameter == "similarity":
-            calculate_similarity("LEANMLIR_opt", "LLVM_globalisel")
-            calculate_similarity("LEANMLIR_opt", "LLVM_selectiondag")
-            # calculate_similarity('LLVM_globalisel', 'LLVM_selectiondag')
+            continue
         else:
             # if "scatter" in plots_to_produce or "all" in plots_to_produce:
             #     scatter_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
