@@ -42,6 +42,12 @@ def map' {A : α → Type*} {B : β → Type*} (f' : α → β) (f : ∀ (a : α
   | [],   .nil        => .nil
   | t::_, .cons a as  => .cons (f t a) (map' f' f as)
 
+/-- An alternative to `map` which also undoes a mapped function over the index list -/
+def fromMap' {A : α → Type*} {B : β → Type*} (f' : β → α) (f : ∀ (b : β), A (f' b) → B b) :
+    ∀ {l : List β}, HVector A (l.map f') → HVector B l
+  | [],   .nil        => .nil
+  | t::_, .cons a as  => .cons (f t a) (fromMap' f' f as)
+
 def mapM [Monad m] {α : Type 0} {A : α → Type} {B : α → Type}
     (f : ∀ (a : α), A a → m (B a)) :
     ∀ {l : List α}, HVector A l → m (HVector B l)
@@ -235,6 +241,8 @@ section Map'
 
 @[simp] theorem map'_cons : map' f g (cons x xs) = cons (g _ x) (map' f g xs) := rfl
 @[simp] theorem map'_nil : map' f g nil = nil := rfl
+@[simp] theorem fromMap'_cons : fromMap' f g (cons x xs) = cons (g _ x) (fromMap' f g xs) := rfl
+@[simp] theorem fromMap'_nil : fromMap' f g nil = nil := rfl
 
 end Map'
 
