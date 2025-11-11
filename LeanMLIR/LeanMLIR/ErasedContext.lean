@@ -914,6 +914,20 @@ def Valuation.recOn {motive : ∀ {Γ : Ctxt Ty}, Γ.Valuation → Sort*}
 def Valuation.cast {Γ Δ : Ctxt Ty} (h : Γ = Δ) (V : Valuation Γ) : Valuation Δ :=
   fun _ v => V <| v.castCtxt h.symm
 
+/-- Cast a valuation to a mapped context when the type denotations are equal.
+In situations where we get `h_elem` for free by definitional equality,
+this is the same as `toMap fun _ => id`. -/
+def Valuation.castToMap {f : Ty → Ty'} (h_elem : ∀ {t}, (⟦t⟧ : Type) = (⟦f t⟧ : Type)) :
+    Valuation Γ → Valuation (Γ.map f) :=
+  toMap fun _ => h_elem ▸ id
+
+/-- Cast a valuation from a mapped context when the type denotations are equal.
+In situations where we get `h_elem` for free by definitional equality,
+this is the same as `fromMap fun _ => id`. -/
+def Valuation.castFromMap {f : Ty → Ty'} (h_elem : ∀ {t}, (⟦t⟧ : Type) = (⟦f t⟧ : Type)) :
+    Valuation (Γ.map f) → Valuation Γ :=
+  fromMap fun _ => h_elem ▸ id
+
 @[simp] theorem Valuation.cast_rfl {Γ : Ctxt Ty} (h : Γ = Γ) (V : Valuation Γ) : V.cast h = V := rfl
 
 @[simp] theorem Valuation.cast_apply {Γ : Ctxt Ty} (h : Γ = Δ) (V : Γ.Valuation) (v : Δ.Var t) :
