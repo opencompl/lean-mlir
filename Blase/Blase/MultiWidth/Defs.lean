@@ -159,7 +159,8 @@ inductive Term {wcard tcard : Nat} (bcard : Nat)
 | setWidth (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard tctx (.bv v)
 /-- sign extend a term to a given width -/
 | sext (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard tctx (.bv v)
--- | bvOfBool (b : Term bcard tctx .bool) : Term bcard tctx (.bv (.const 1))
+/-- convert a bool to a bitvector of width 1 -/
+| bvOfBool (b : Term bcard tctx .bool) : Term bcard tctx (.bv (.const 1))
 -- | boolMsb (w : WidthExpr wcard) (x : Term bcard tctx (.bv w)) : Term bcard tctx .bool
 | boolConst (b : Bool) : Term bcard tctx .bool
 | boolVar (v : Fin bcard) : Term bcard tctx .bool
@@ -238,6 +239,13 @@ def TermKind.denote (wenv : WidthExpr.Env wcard) : TermKind wcard → Type
 | .bool => Bool
 | .bv w => BitVec (w.toNat wenv)
 
+def BoolExpr.toBool
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)  :
+  Term bcard tctx .bool → Bool
+| .boolVar v => benv v
+| .boolConst b => b
+
 /-- Evaluate a term to get a concrete bitvector expression. -/
 def Term.toBV {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
@@ -273,13 +281,8 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
 | .shiftl (w := w) a k =>
     let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
     a <<< k
+| .bvOfBool b => BitVec.ofBool (b.toBV benv tenv)
 
-def BoolExpr.toBool
-    {tctx : Term.Ctx wcard tcard}
-    (benv : Term.BoolEnv bcard)  :
-  Term bcard tctx .bool → Bool
-| .boolVar v => benv v
-| .boolConst b => b
 
 @[simp]
 theorem Term.toBV_ofNat
@@ -331,6 +334,13 @@ theorem Term.toBV_add {wenv : WidthExpr.Env wcard}
     (benv : Term.BoolEnv bcard)
     (tenv : tctx.Env wenv) (a b : Term bcard tctx (.bv w)) :
   Term.toBV benv tenv (.add a b) = a.toBV benv tenv + b.toBV benv tenv := rfl
+
+@[simp]
+theorem Term.toBV_ofBool {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (b : Term bcard tctx .bool) :
+  Term.toBV benv tenv (.bvOfBool b) = BitVec.ofBool (b.toBV benv tenv) := rfl
 
 inductive BinaryRelationKind
 | eq
@@ -512,6 +522,7 @@ inductive Term
 | boolVar (v : Nat) : Term
 | boolConst (b : Bool) : Term
 | shiftl (w : WidthExpr) (a : Term) (k : Nat) : Term
+| bvOfBool (b : Term) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Term.toSmtLib : Term → SexprPBV.Term
@@ -528,7 +539,7 @@ def Term.toSmtLib : Term → SexprPBV.Term
 | .boolVar v => .boolVar v
 | .boolConst b => .boolConst b
 | .shiftl w a k => .shiftl w.toSmtLib a.toSmtLib k
-
+| .bvOfBool _b => .junk ("bvOfBool")
 
 def Term.ofDep {wcard tcard bcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -551,6 +562,7 @@ def Term.ofDep {wcard tcard bcard : Nat}
   | .boolConst b => .boolConst b
   | .shiftl (w := w) a k => .shiftl (.ofDep w) (.ofDep a) k
   | .setWidth a wnew => .setWidth (.ofDep a) (.ofDep wnew)
+  | .bvOfBool b => .bvOfBool (.ofDep b)
 
 
 @[simp]
@@ -560,7 +572,7 @@ def Term.ofDep_var {wcard tcard : Nat} (bcard : Nat)
 
 def Term.width (t : Term) : WidthExpr :=
   match t with
-  -- | .ofBool _b => WidthExpr.const 1
+--  | .ofBool _b => WidthExpr.const 1
   | .ofNat w _n => w
   | .var _v w => w
   | .add w _a _b => w
@@ -574,6 +586,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .boolVar _v => WidthExpr.const 1 -- dummy width.
   | .boolConst _b => WidthExpr.const 1
   | .shiftl w _a _k => w
+  | .bvOfBool _b => WidthExpr.const 1
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -602,6 +615,7 @@ def Term.tcard (t : Term) : Nat :=
   | .boolVar _v => 0
   | .boolConst _b => 0
   | .shiftl _w a _k => (Term.tcard a)
+  | bvOfBool b => b.tcard
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -618,6 +632,7 @@ def Term.bcard (t : Term) : Nat :=
   | .boolVar v => v + 1
   | .boolConst _b => 0
   | .shiftl _w a _k => (Term.bcard a)
+  | bvOfBool b => b.bcard
 
 
 inductive Predicate
