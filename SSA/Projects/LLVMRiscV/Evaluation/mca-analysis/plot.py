@@ -524,8 +524,8 @@ def violin_plot(parameter, selector1, selector2):
 
     plt.figure(figsize=(10, 5))
     parts = plt.violinplot(
-        grouped["ratio"].values,
-        grouped["instructions_number"].values,
+        violin_data,
+        positions,
         showmedians=True
     )
 
@@ -548,7 +548,7 @@ def violin_plot(parameter, selector1, selector2):
         f"{parameters_labels[parameter]},$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$",
         rotation="horizontal", horizontalalignment="left", y=1.05
     )
-    if df["ratio"].max() < 10:
+    if df["ratio"].max() < 15:
         plt.yticks(np.arange(0, math.ceil(df["ratio"].max()) + 1, 2))
     else:
         plt.yticks(np.arange(0, math.ceil(df["ratio"].max()) + 1, 100))
