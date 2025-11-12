@@ -18,6 +18,10 @@ rev = "nightly-testing-2025-10-26"
 [[lean_lib]]
 name = "BlaseTest"
 
+[[lean_lib]]
+name = "BlaseEval"
+
+
 [[require]]
 name = "SexprPBV"
 path = "../SexprPBV"
