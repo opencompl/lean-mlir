@@ -2109,6 +2109,9 @@ def GLobalISelO0PreLegalizerCombiner :
   ++
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   mul_to_shl)
+  ++
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  udiv_pow2)
 
 /-- We group all the rewrites that form the post-legalization optimizations in GlobalISel-/
 def GLobalISelPostLegalizerCombiner :
