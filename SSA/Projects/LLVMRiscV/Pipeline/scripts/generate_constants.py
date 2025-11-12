@@ -236,9 +236,14 @@ Test the rewrite:
   }}]
   rhs := [LV| {{
     ^entry (%x: i64):
-      %c = llvm.mlir.constant ({n}) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
+      %c0 = llvm.mlir.constant (63) : i64
+      %c1 = llvm.mlir.constant ({64-n}) : i64
+      %c2 = llvm.mlir.constant ({n}) : i64
+      %0 = llvm.ashr %x, %c0 : i64
+      %1 = llvm.lshr %0, %c1 : i64
+      %2 = llvm.add %x, %1 : i64 
+      %3 = llvm.ashr %2, %c2 : i64
+      llvm.return %3 : i64
   }}]
 """
         
@@ -667,7 +672,7 @@ REWRITE_GENERATORS = [
     lambda: generate_mulh_to_lshr(powers=list(range(1, 10))),
     lambda: generate_integer_reassoc_combines(max_val=2),
     lambda: generate_udiv_pow2_rewrites(powers=list(range(0, 10))),
-    lambda: generate_sdiv_pow2_rewrites(powers=list(range(0, 10))),
+    lambda: generate_sdiv_pow2_rewrites(powers=list(range(1, 10))),
 ]
 
 def generate_all_rewrites() -> str:
@@ -683,7 +688,9 @@ def generate_all_rewrites() -> str:
 def GlobalISelPostLegalizerCombinerConstantFolding :
   List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
     (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-    irc_constants)
+    irc_constants) ++ 
+    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+    sdiv_pow2)
     """
     return body
 

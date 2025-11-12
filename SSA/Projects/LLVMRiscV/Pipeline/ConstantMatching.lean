@@ -4863,20 +4863,6 @@ def udiv_pow2 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 Test the rewrite:
     sdiv(x, 2^n) -> x >> (n)
 -/
-def sdiv_pow2_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (1) : i64
-      %0 = llvm.sdiv %x, %c : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
-  }]
-
 def sdiv_pow2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64):
@@ -4886,9 +4872,14 @@ def sdiv_pow2_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   }]
   rhs := [LV| {
     ^entry (%x: i64):
-      %c = llvm.mlir.constant (1) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
+      %c0 = llvm.mlir.constant (63) : i64
+      %c1 = llvm.mlir.constant (63) : i64
+      %c2 = llvm.mlir.constant (1) : i64
+      %0 = llvm.ashr %x, %c0 : i64
+      %1 = llvm.lshr %0, %c1 : i64
+      %2 = llvm.add %x, %1 : i64 
+      %3 = llvm.ashr %2, %c2 : i64
+      llvm.return %3 : i64
   }]
 
 def sdiv_pow2_4 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -4900,9 +4891,14 @@ def sdiv_pow2_4 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   }]
   rhs := [LV| {
     ^entry (%x: i64):
-      %c = llvm.mlir.constant (2) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
+      %c0 = llvm.mlir.constant (63) : i64
+      %c1 = llvm.mlir.constant (62) : i64
+      %c2 = llvm.mlir.constant (2) : i64
+      %0 = llvm.ashr %x, %c0 : i64
+      %1 = llvm.lshr %0, %c1 : i64
+      %2 = llvm.add %x, %1 : i64 
+      %3 = llvm.ashr %2, %c2 : i64
+      llvm.return %3 : i64
   }]
 
 def sdiv_pow2_8 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -4914,9 +4910,14 @@ def sdiv_pow2_8 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   }]
   rhs := [LV| {
     ^entry (%x: i64):
-      %c = llvm.mlir.constant (3) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
+      %c0 = llvm.mlir.constant (63) : i64
+      %c1 = llvm.mlir.constant (61) : i64
+      %c2 = llvm.mlir.constant (3) : i64
+      %0 = llvm.ashr %x, %c0 : i64
+      %1 = llvm.lshr %0, %c1 : i64
+      %2 = llvm.add %x, %1 : i64 
+      %3 = llvm.ashr %2, %c2 : i64
+      llvm.return %3 : i64
   }]
 
 def sdiv_pow2_16 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -4928,9 +4929,14 @@ def sdiv_pow2_16 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   }]
   rhs := [LV| {
     ^entry (%x: i64):
-      %c = llvm.mlir.constant (4) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
+      %c0 = llvm.mlir.constant (63) : i64
+      %c1 = llvm.mlir.constant (60) : i64
+      %c2 = llvm.mlir.constant (4) : i64
+      %0 = llvm.ashr %x, %c0 : i64
+      %1 = llvm.lshr %0, %c1 : i64
+      %2 = llvm.add %x, %1 : i64 
+      %3 = llvm.ashr %2, %c2 : i64
+      llvm.return %3 : i64
   }]
 
 def sdiv_pow2_32 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -4942,9 +4948,14 @@ def sdiv_pow2_32 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   }]
   rhs := [LV| {
     ^entry (%x: i64):
-      %c = llvm.mlir.constant (5) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
+      %c0 = llvm.mlir.constant (63) : i64
+      %c1 = llvm.mlir.constant (59) : i64
+      %c2 = llvm.mlir.constant (5) : i64
+      %0 = llvm.ashr %x, %c0 : i64
+      %1 = llvm.lshr %0, %c1 : i64
+      %2 = llvm.add %x, %1 : i64 
+      %3 = llvm.ashr %2, %c2 : i64
+      llvm.return %3 : i64
   }]
 
 def sdiv_pow2_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -4956,9 +4967,14 @@ def sdiv_pow2_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   }]
   rhs := [LV| {
     ^entry (%x: i64):
-      %c = llvm.mlir.constant (6) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
+      %c0 = llvm.mlir.constant (63) : i64
+      %c1 = llvm.mlir.constant (58) : i64
+      %c2 = llvm.mlir.constant (6) : i64
+      %0 = llvm.ashr %x, %c0 : i64
+      %1 = llvm.lshr %0, %c1 : i64
+      %2 = llvm.add %x, %1 : i64 
+      %3 = llvm.ashr %2, %c2 : i64
+      llvm.return %3 : i64
   }]
 
 def sdiv_pow2_128 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -4970,9 +4986,14 @@ def sdiv_pow2_128 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   }]
   rhs := [LV| {
     ^entry (%x: i64):
-      %c = llvm.mlir.constant (7) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
+      %c0 = llvm.mlir.constant (63) : i64
+      %c1 = llvm.mlir.constant (57) : i64
+      %c2 = llvm.mlir.constant (7) : i64
+      %0 = llvm.ashr %x, %c0 : i64
+      %1 = llvm.lshr %0, %c1 : i64
+      %2 = llvm.add %x, %1 : i64 
+      %3 = llvm.ashr %2, %c2 : i64
+      llvm.return %3 : i64
   }]
 
 def sdiv_pow2_256 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -4984,9 +5005,14 @@ def sdiv_pow2_256 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   }]
   rhs := [LV| {
     ^entry (%x: i64):
-      %c = llvm.mlir.constant (8) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
+      %c0 = llvm.mlir.constant (63) : i64
+      %c1 = llvm.mlir.constant (56) : i64
+      %c2 = llvm.mlir.constant (8) : i64
+      %0 = llvm.ashr %x, %c0 : i64
+      %1 = llvm.lshr %0, %c1 : i64
+      %2 = llvm.add %x, %1 : i64 
+      %3 = llvm.ashr %2, %c2 : i64
+      llvm.return %3 : i64
   }]
 
 def sdiv_pow2_512 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
@@ -4998,14 +5024,18 @@ def sdiv_pow2_512 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   }]
   rhs := [LV| {
     ^entry (%x: i64):
-      %c = llvm.mlir.constant (9) : i64
-      %0 = llvm.lshr %x, %c : i64
-      llvm.return %0 : i64
+      %c0 = llvm.mlir.constant (63) : i64
+      %c1 = llvm.mlir.constant (55) : i64
+      %c2 = llvm.mlir.constant (9) : i64
+      %0 = llvm.ashr %x, %c0 : i64
+      %1 = llvm.lshr %0, %c1 : i64
+      %2 = llvm.add %x, %1 : i64 
+      %3 = llvm.ashr %2, %c2 : i64
+      llvm.return %3 : i64
   }]
 
 def sdiv_pow2 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   [
-    ⟨_, sdiv_pow2_1⟩,
     ⟨_, sdiv_pow2_2⟩,
     ⟨_, sdiv_pow2_4⟩,
     ⟨_, sdiv_pow2_8⟩,
@@ -5021,5 +5051,7 @@ def sdiv_pow2 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
 def GlobalISelPostLegalizerCombinerConstantFolding :
   List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
     (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-    irc_constants)
+    irc_constants) ++ 
+    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+    sdiv_pow2)
     
