@@ -560,6 +560,8 @@ def violin_plot(parameter, selector1, selector2):
 
     max_ratio = df["ratio"].max()
     
+    print(f"Max ratio for {parameter} between {selector1} and {selector2} is {max_ratio}")
+    
     
     if max_ratio > 200:
         plt.yticks(np.arange(0, 270, 50))
@@ -733,7 +735,6 @@ def proportional_bar_plot(parameter, selector1, selector2):
     )
     
     if max(average_ratios_by_instruction["average_ratio"]) < 10:
-        
         plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 1))
     else : 
         plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 100))
@@ -886,6 +887,7 @@ def main():
             if "violin" in plots_to_produce or "all" in plots_to_produce:
                 violin_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
                 violin_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+                violin_plot(parameter, "LLVM_globalisel", "LLVM_selectiondag")
                 # bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
             if "proportional" in plots_to_produce or "all" in plots_to_produce:
                 proportional_bar_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
