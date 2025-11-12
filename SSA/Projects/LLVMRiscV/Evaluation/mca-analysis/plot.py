@@ -541,7 +541,7 @@ def violin_plot(parameter, selector1, selector2):
         pc.set_edgecolor(light_green)
         pc.set_alpha(1.0)
         
-    plt.axhline(1, color=dark_red, linestyle="--", linewidth=1, label="1x")
+    plt.axhline(1, color=black, linestyle="--", linewidth=1, label="1x")
     plt.text(positions[-1]*1.08, 1.02, "1x", color=dark_red, ha='center', fontsize=20)
         
     for partname in ('cbars', 'cmins', 'cmaxes'):
@@ -719,11 +719,11 @@ def proportional_bar_plot(parameter, selector1, selector2):
     plt.bar(
         average_ratios_by_instruction["instructions_number"],
         average_ratios_by_instruction["average_ratio"],
-        color=dark_green,
+        color=light_green,
         label=f"Avg. {parameters_labels[parameter]},$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$"
     )
 
-    plt.axhline(1, color=dark_red, linestyle="--", linewidth=2)
+    plt.axhline(1, color=black, linestyle="--", linewidth=2)
     plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 1.05, f"{selector_labels[selector2]}", color=dark_red, ha='center', fontsize=20)
     
 
@@ -825,6 +825,7 @@ def main():
         "--parameters",
         nargs="+",
         choices=["tot_instructions", "tot_cycles", "tot_uops", "similarity", "all"],
+        default="all"
     )
 
     parser.add_argument(
@@ -832,13 +833,7 @@ def main():
         "--plot_type",
         nargs="+",
         choices=["scatter", "sorted", "stacked", "overhead", "violin", "all"],
-    )
-
-    parser.add_argument(
-        "-llvm",
-        "--llvm_opt",
-        help="Optimization level for LLVM.",
-        choices=["O3", "O2", "O1", "O0", "default"],
+        default="all"
     )
 
     args = parser.parse_args()
