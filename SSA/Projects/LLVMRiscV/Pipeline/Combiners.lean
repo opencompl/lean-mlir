@@ -14,20 +14,6 @@ open LLVMRiscV
   while some are target-dependent.
 -/
 
-@[simp_riscv] lemma toType_bv : TyDenote.toType (Ty.riscv (.bv)) = BitVec 64 := rfl
-@[simp_riscv] lemma id_eq1 {α : Type} (x y : α) :  @Eq (Id α) x y = (x = y):= by simp only
-
-structure RISCVPeepholeRewrite (Γ : List Ty) where
-  lhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
-  rhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
-  correct : lhs.denote = rhs.denote := by simp_lowering <;> bv_decide
-
-def RISCVPeepholeRewriteToRiscvPeephole (self : RISCVPeepholeRewrite Γ) :
-    PeepholeRewrite LLVMPlusRiscV Γ [Ty.riscv .bv] where
-  lhs := self.lhs
-  rhs := self.rhs
-  correct := self.correct
-
 /-!
   # Post-legalization optimizations
 
@@ -1900,6 +1886,28 @@ def double_icmp_zero_combine : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
   [⟨_, double_icmp_zero_and_combine⟩,
   ⟨_, double_icmp_zero_or_combine⟩]
 
+/-! ### idempotent_prop -/
+
+/-
+Test the rewrite:
+  Fold (freeze (freeze x)) -> (freeze x)
+-/
+def idempotent_prop_freeze : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.freeze %x : i64
+      %1 = llvm.freeze %0 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %0 = llvm.freeze %x : i64
+      llvm.return %0 : i64
+  }]
+
+def idempotent_prop : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, idempotent_prop_freeze⟩]
+
  /-! ### Grouped patterns -/
 
 /-- We assemble the `identity_combines` patterns for RISCV as in GlobalISel -/
@@ -1922,7 +1930,8 @@ def LLVMIR_cast_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) := s
 def PostLegalizerCombiner_RISCV: List (Σ Γ,RISCVPeepholeRewrite  Γ) :=
     RISCV_identity_combines ++
     commute_int_constant_to_rhs ++
-    simplify_neg
+    simplify_neg ++
+    mulh_to_lshr
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
@@ -1935,7 +1944,8 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
   LLVMIR_cast_combines_64 ++
   xor_of_and_with_same_reg_list ++
   LLVMIR_identity_combines_64 ++
-  match_selects
+  match_selects ++
+  idempotent_prop
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32  Γ) :=
@@ -1974,6 +1984,9 @@ def GLobalISelPostLegalizerCombiner :
   ++
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   PostLegalizerCombiner_LLVMIR_32)
+  ++
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  canonicalize_icmp)
   ++
   List.map (fun ⟨_,y⟩ => mkRewrite (RISCVPeepholeRewriteToRiscvPeephole y))
   PostLegalizerCombiner_RISCV

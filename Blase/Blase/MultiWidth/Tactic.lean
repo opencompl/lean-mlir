@@ -14,6 +14,8 @@ open Lean Meta Elab Tactic
 
 /-- Whether widths should be abstracted. -/
 inductive WidthAbstractionKind
+/-- widths should be abstracted for `≥ the cutoff -/
+| generalizeGeq (cutoff : Nat)
 /-- widths should always be abstracted. -/
 | always
 /-- widths should never be abstracted. -/
@@ -25,12 +27,16 @@ structure Config where
   check? : Bool := true
   -- number of k-induction iterations.
   niter : Nat := 30
+  /-- start verified at this  K-induction iteration. -/
+  startVerifyAtIter : Nat := 0
   /-- debug printing verbosity. -/
   verbose?: Bool := false
-  /-- By default, widths are always abstracted. -/
-  widthAbstraction : WidthAbstractionKind := .always
+  /-- By default, widths larger than 1 (ie. non boolean) are always abstracted. -/
+  widthAbstraction : WidthAbstractionKind := .generalizeGeq 2
   /-- Make the final reflection proof as a 'sorry' for debugging. -/
   debugFillFinalReflectionProofWithSorry : Bool := false
+  /-- Make the certificate proof as a 'sorry' for debugging. -/
+  debugFillCertProofWithSorry : Bool := false
 deriving DecidableEq, Repr
 
 /-- Default user configuration -/
@@ -182,12 +188,71 @@ def collectWidthAtom (state : CollectState) (e : Expr) :
       if !(← isDefEq (← inferType e) (mkConst ``Nat)) then
         throwError m!"expected width to be a Nat, found: {indentD e}"
     -- If we do not want width abstraction, then try to interpret width as constant.
-    if (← read).widthAbstraction ≠ .always then
-      if let .some n ← getNatValue? e then
+    if let .some n ← getNatValue? e then
+      match (← read).widthAbstraction with
+      | .never =>
         return (MultiWidth.Nondep.WidthExpr.const n, state)
-    let (wix, wToIx) := state.wToIx.findOrInsertVal e
-    -- TODO: implement 'w + K'.
-    return (.var wix, { state with wToIx := wToIx })
+      | .generalizeGeq cutoff =>
+        if n < cutoff then
+          return (MultiWidth.Nondep.WidthExpr.const n, state)
+        else
+          mkAtom
+      | .always => mkAtom
+    else
+      mkAtom
+    where
+      mkAtom := do
+        let (wix, wToIx) := state.wToIx.findOrInsertVal e
+        -- TODO: implement 'w + K'.
+        return (.var wix, { state with wToIx := wToIx })
+
+partial def collectWidthExpr (state : CollectState) (e : Expr) :
+    SolverM (MultiWidth.Nondep.WidthExpr × CollectState) := do
+  if let some v ← getNatValue? e then
+    return (.const v, state)
+  else
+    match_expr e with
+    | Nat.succ n =>
+      let (we, state) ← collectWidthExpr state n
+      return (.addK we 1, state)
+    | min nat _inst x y =>
+      match_expr nat with
+      | Nat =>
+        let (wx, state) ← collectWidthExpr state x
+        let (wy, state) ← collectWidthExpr state y
+        return (.min wx wy, state)
+      | _ => mkAtom
+    | max nat _inst x y =>
+      match_expr nat with
+      | Nat =>
+        let (wx, state) ← collectWidthExpr state x
+        let (wy, state) ← collectWidthExpr state y
+        return (.max wx wy, state)
+      | _ => mkAtom
+    | HAdd.hAdd _nat0 _nat1 _nat2 _inst a b =>
+      match_expr _nat0 with
+      | Nat =>
+        match_expr _nat1 with
+        | Nat =>
+          match_expr _nat2 with
+          | Nat => do
+            if let some a ← getNatValue? a then
+              let (wb, state) ← collectWidthExpr state b
+              return (.kadd a wb, state)
+            else
+              let (wa, state) ← collectWidthExpr state a
+              if let some b ← getNatValue? b then
+                return (.addK wa b, state)
+              else
+                mkAtom
+          | _ => mkAtom
+        | _ => mkAtom
+      | _ => mkAtom
+    | _ => mkAtom
+    where
+      mkAtom := do
+        let (we, state) ← collectWidthAtom state e
+        return (we, state)
 
 /-- info: Fin.mk {n : ℕ} (val : ℕ) (isLt : val < n) : Fin n -/
 #guard_msgs in #check Fin.mk
@@ -239,6 +304,11 @@ def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
   | .addK v k =>
     let out := mkAppN (mkConst ``MultiWidth.WidthExpr.addK)
       #[mkNatLit wcard, ← mkWidthExpr wcard v, mkNatLit k]
+    debugCheck out
+    return out
+  | .kadd k v =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.kadd)
+      #[mkNatLit wcard, mkNatLit k, ← mkWidthExpr wcard v]
     debugCheck out
     return out
 
@@ -445,15 +515,18 @@ def collectBVAtom (state : CollectState)
   let t ← inferType e
   let_expr BitVec w := t
     | throwError m!"expected type 'BitVec w', found: {indentD t} (expression: {indentD e})"
-  let (wexpr, state) ← collectWidthAtom state w
+  let (wexpr, state) ← collectWidthExpr state w
   let (bvix, bvToIx) := state.bvToIx.findOrInsertVal (e, wexpr)
   return (.var bvix wexpr, { state with bvToIx })
 
 partial def collectTerm (state : CollectState) (e : Expr) :
      SolverM (MultiWidth.Nondep.Term × CollectState) := do
   match_expr e with
+  | BitVec.ofBool bExpr =>
+      let (b, state) ← collectBoolTerm state bExpr
+      return (.bvOfBool b, state)
   | BitVec.ofNat wExpr nExpr =>
-    let (w, state) ← collectWidthAtom state wExpr
+    let (w, state) ← collectWidthExpr state wExpr
     if let some n ← getNatValue? nExpr then
       return (.ofNat w n, state)
     else
@@ -461,23 +534,27 @@ partial def collectTerm (state : CollectState) (e : Expr) :
   | HAdd.hAdd _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.add w ta tb, state)
     | _ => mkAtom
   | BitVec.zeroExtend _w v x =>
-      let (v, state) ← collectWidthAtom state v
+      let (v, state) ← collectWidthExpr state v
       let (x, state) ← collectTerm state x
       return (.zext x v, state)
+  | BitVec.setWidth _w v x =>
+      let (v, state) ← collectWidthExpr state v
+      let (x, state) ← collectTerm state x
+      return (.setWidth x v, state)
   | BitVec.signExtend _w v x =>
-      let (v, state) ← collectWidthAtom state v
+      let (v, state) ← collectWidthExpr state v
       let (x, state) ← collectTerm state x
       return (.sext x v, state)
   | HXor.hXor _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.bxor w ta tb, state)
@@ -485,7 +562,7 @@ partial def collectTerm (state : CollectState) (e : Expr) :
   | HAnd.hAnd _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.band w ta tb, state)
@@ -493,7 +570,7 @@ partial def collectTerm (state : CollectState) (e : Expr) :
   | HOr.hOr _bv _bv _bv _inst a b =>
     match_expr _bv with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.bor w ta tb, state)
@@ -501,9 +578,22 @@ partial def collectTerm (state : CollectState) (e : Expr) :
   | Complement.complement bv _inst a =>
     match_expr bv with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       return (.bnot w ta, state)
+    | _ => mkAtom
+  | HShiftLeft.hShiftLeft _bv _nat _bv _inst a n =>
+    match_expr _bv with
+    | BitVec w =>
+      match_expr _nat with
+      | Nat =>
+        let (w, state) ← collectWidthExpr state w
+        let (ta, state) ← collectTerm state a
+        if let some nn ← getNatValue? n then
+          return (.shiftl w ta nn, state)
+        else
+          mkAtom
+      | _ => mkAtom
     | _ => mkAtom
   | _ => mkAtom
   where
@@ -528,6 +618,12 @@ This needs to be checked carefully for equivalence. -/
 def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
     (t : MultiWidth.Nondep.Term) : SolverM Expr := do
   match t with
+  | .bvOfBool b =>
+    let bExpr ← mkTermExpr wcard tcard bcard tctx b
+    let out := mkAppN (mkConst ``MultiWidth.Term.bvOfBool [])
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, bExpr]
+    debugCheck out
+    return out
   | .ofNat w n =>
     let wExpr ← mkWidthExpr wcard w
     let out := mkAppN (mkConst ``MultiWidth.Term.ofNat [])
@@ -548,6 +644,12 @@ def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
   | .zext a v =>
     let vExpr ← mkWidthExpr wcard v
     let out ← mkAppM ``MultiWidth.Term.zext
+      #[← mkTermExpr wcard tcard bcard tctx a, vExpr]
+    debugCheck out
+    return out
+  | .setWidth a v =>
+    let vExpr ← mkWidthExpr wcard v
+    let out ← mkAppM ``MultiWidth.Term.setWidth
       #[← mkTermExpr wcard tcard bcard tctx a, vExpr]
     debugCheck out
     return out
@@ -604,6 +706,15 @@ def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
         mkBoolLit b]
     debugCheck out
     return out
+  | .shiftl w a n =>
+    let wExpr ← mkWidthExpr wcard w
+    let aExpr ← mkTermExpr wcard tcard bcard tctx a
+    let nExpr := mkNatLit n
+    let out := mkAppN (mkConst ``MultiWidth.Term.shiftl)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx,
+        wExpr, aExpr, nExpr]
+    debugCheck out
+    return out
 
 set_option pp.explicit true in
 /--
@@ -640,7 +751,7 @@ def collectBVBooleanEqPredicateAux (state : CollectState) (a b : Expr) :
   -- NOTE: Lean bug prevents us from writing this with do-notation,
   -- so we suffer as haskellers once did.
   out? >>= fun ((w, kind, x, y)) => some do
-    let (w, state) ← collectWidthAtom state w
+    let (w, state) ← collectWidthExpr state w
     let (tx, state) ← collectTerm state x
     let (ty, state) ← collectTerm state y
     pure (.binRel kind w tx ty, state)
@@ -652,19 +763,20 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
   | LE.le α _inst v w =>
     match_expr α with
     | Nat =>
-      let (v, state) ← collectWidthAtom state v
-      let (w, state) ← collectWidthAtom state w
+      let (v, state) ← collectWidthExpr state v
+      let (w, state) ← collectWidthExpr state w
       return (.binWidthRel .le v w, state)
     | _ =>
-      throwError m!"expected (· ≤ ·) for natural numbers, found:  {indentD e}"
+      debugLog m!"expected (· ≤ ·) for natural numbers, found:  {indentD e}, so abstracting over expression."
+      mkAtom
   | Eq α a b =>
     match_expr α with
     | Nat =>
-      let (a, state) ← collectWidthAtom state a
-      let (b, state) ← collectWidthAtom state b
+      let (a, state) ← collectWidthExpr state a
+      let (b, state) ← collectWidthExpr state b
       return (.binWidthRel .eq a b, state)
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .eq w ta tb, state)
@@ -680,7 +792,7 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
   | Ne α a b =>
     match_expr α with
     | BitVec w =>
-      let (w, state) ← collectWidthAtom state w
+      let (w, state) ← collectWidthExpr state w
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.binRel .ne w ta tb, state)
@@ -866,19 +978,25 @@ def mkDecideTy : SolverM Expr := do
   debugCheck ty
   return ty
 
-def CollectState.logSuspiciousFvars (state : CollectState) : SolverM Unit := do
+def CollectState.logSuspiciousFvars (state : CollectState) : SolverM (Array Expr) := do
+  let mut exprs := #[]
   for (e, _w) in state.bvToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted non-variable bitvector: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+      exprs := exprs.push e
   for e in state.wToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted non-variable width: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+      exprs := exprs.push e
   for e in state.pToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted prop: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+      exprs := exprs.push e
   for e in state.boolToIx.toArrayAsc do
     if !e.isFVar then
       logWarning m!"abstracted boolean: {indentD <| "→ '" ++ toMessageData e ++ "'"}"
+      exprs := exprs.push e
+  return exprs
 
 /--
 info: Circuit.verifyCircuit {α : Type} [DecidableEq α] [Fintype α] [Hashable α] (c : Circuit α) (cert : String) : Bool
@@ -972,15 +1090,18 @@ info: MultiWidth.Predicate.toProp_of_KInductionCircuits' {wcard tcard bcard pcar
 Revert all prop-valued hyps.
 -/
 def revertPropHyps (g : MVarId) : SolverM MVarId := do
-  let (_, g) ← g.revert (← g.getNondepPropHyps)
-  return g
+  g.withContext do
+    let (_, g) ← g.revert (← g.getNondepPropHyps)
+    return g
 
 open Lean Meta Elab Tactic in
 def solve (g : MVarId) : SolverM Unit := do
+  debugLog m!"Original goal: {indentD g}"
   let g ← revertPropHyps g
+  debugLog m!"Goal after reverting: {indentD g}"
   let .some g ← g.withContext (Normalize.runPreprocessing g)
-    | do
-        debugLog m!"Preprocessing automatically closed goal."
+    | do debugLog m!"Preprocessing automatically closed goal."
+
   g.withContext do
     debugLog m!"goal after preprocessing: {indentD g}"
 
@@ -999,18 +1120,24 @@ def solve (g : MVarId) : SolverM Unit := do
     let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard p
     debugLog m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
     debugLog m!"fsm circuit size: {fsm.toFsm.circuitSize}"
-    let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter)
+    if ! (← isDefEq pRawExpr (← mkAppM ``Predicate.toProp #[benv, tenv, penv, pExpr])) then
+      throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
+    let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
     match stats with
     | .safetyFailure i =>
-      collect.logSuspiciousFvars
-      throwError m!"safety failure at iteration {i} for predicate {repr p}"
+      let suspiciousVars ← collect.logSuspiciousFvars
+      -- | Found precise counter-example to claimed predicate.
+      if suspiciousVars.isEmpty then
+          throwError m!"CEX: Found exact counter-example at iteration {i} for predicate {repr p}"
+        else
+          throwError m!"MAYCEX: Found possible counter-example at iteration {i} for predicate {repr p}"
     | .exhaustedIterations _ =>
-      collect.logSuspiciousFvars
-      throwError m!"exhausted iterations for predicate {repr p}"
+      let _ ← collect.logSuspiciousFvars
+      throwError m!"PROOFNOTFOUND: exhausted iterations for predicate {repr p}"
     | .provenByKIndCycleBreaking niters safetyCert indCert =>
       if (← read).verbose? then
-        collect.logSuspiciousFvars
-      debugLog m!"proven by KInduction with {niters} iterations"
+        let _ ← collect.logSuspiciousFvars
+      debugLog m!"PROVE: proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
         -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
         let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
@@ -1092,127 +1219,6 @@ def evalBvMultiWidth : Tactic := fun
   g.withContext do
     solveEntrypoint g cfg
 | _ => throwUnsupportedSyntax
-
-/-
-A tactic to generalize the width of BitVectors
--/
-
-structure State where
-  /-- Maps fixed width to a new MVar for the generic width. -/
-  mapping : DiscrTree Expr
-  invMapping : Std.HashMap Expr Expr
-  deriving Inhabited
-
-abbrev GenM := StateT State TermElabM 
-
-def State.get? (e : Expr) : GenM (Option Expr) := do
-  let s ← get
-  match ← s.mapping.getMatch e with
-  | #[x] => return x
-  | #[] => return none
-  | _ => unreachable!
-
-def State.setMapping (e x : Expr) : GenM Unit := do
-  let s ← get
-  let m ← s.mapping.insert e x
-  set {s with mapping := m}
-
-/-- Get the generic width BV MVar corresponding to an existing BV width. -/
-def State.add? (e : Expr) : GenM Expr := do
-  match ← get? e with
-  | some x => pure x
-  | none =>
-    if e.isFVar || e.isBVar then pure e else
-    let x ← mkFreshExprMVar (some (.const ``Nat [])) (userName := `w)
-    setMapping e x
-    modify fun s => { s with invMapping := s.invMapping.insert x e }
-    pure x
-
-/--
-This table determines which arguments of important functions are bitwidths and
-should be generalized and which ones are normal parameters which should be
-recursively visited.
--/
-def genTable : Std.HashMap Name (Array Bool) := Id.run do
-  let mut table := .emptyWithCapacity 16
-  table := table.insert ``BitVec #[true]
-  table := table.insert ``BitVec.zeroExtend #[true, true, false]
-  table := table.insert ``BitVec.signExtend #[true, true, false]
-  table := table.insert ``BitVec.instAdd #[true]
-  table := table.insert ``BitVec.instSub #[true]
-  table := table.insert ``BitVec.instMul #[true]
-  table := table.insert ``BitVec.instDiv #[true]
-  table
-
-partial def visit (t : Expr) : GenM Expr := do
-  let t ← instantiateMVars t
-  match t with
-  | .app _ _ =>
-    let f := t.getAppFn
-    let args := t.getAppArgs
-    let table := 
-      if let some (f, _) := f.const? then
-        genTable[f]?
-      else
-        none
-    let bv? (n : Nat) :=
-      match table with
-      | .some xs => xs.getD n false
-      | .none => false
-    args.zipIdx.foldlM (init := f) fun res (arg, i) => do
-      let arg ← if bv? i then State.add? arg else visit arg
-      pure <| .app res arg
-  | .forallE n e₁ e₂ info =>
-    pure <| .forallE n (← visit e₁) (← visit e₂) info
-  | e => 
-    pure e
-
-def doBvGeneralize (g : MVarId) : GenM (Expr × MVarId) := do
-  let lctx ← getLCtx
-  let mut allFVars := #[]
-  for h in lctx do
-    if not h.isImplementationDetail then
-      allFVars := allFVars.push h.fvarId
-  let (_, g) ← g.revert allFVars
-  let e ← visit (← g.getType)
-  let mut newVars := #[]
-  for x in (←get).mapping.elements do
-    newVars := newVars.push x
-
-  let e ← mkForallFVars newVars e (binderInfoForMVars := .default)
-  let e ← instantiateMVars e
-  pure (e, g)
-
-/--
-This tactic tries to generalize the bitvector widths, and only the bitvector
-widths. See `genTable` if the tactic fails to generalize the right parameters
-of a function over bitvectors.
--/
-syntax (name := bvGeneralize) "bv_generalize" Lean.Parser.Tactic.optConfig : tactic
-@[tactic bvGeneralize]
-def evalBvGeneralize : Tactic := fun
-| `(tactic| bv_generalize) => do
-  let g₀ ← getMainGoal
-  g₀.withContext do
-    let ((e, g), s) ← (doBvGeneralize g₀).run default
-    g.withContext do
-      let g' ← mkFreshExprMVar (some e)
-      let mut newVals := #[]
-      for x in s.mapping.elements do
-        newVals := newVals.push (s.invMapping[x]!)
-      g.assign <| mkAppN g' newVals 
-      replaceMainGoal [g'.mvarId!]
-| _ => throwUnsupportedSyntax
-
-theorem test_bv_generalize_simple (x y : BitVec 32) (zs : List (BitVec 44)) : 
-    x = x := by
-  bv_generalize
-  bv_multi_width
-
-theorem test_bv_generalize (x y : BitVec 32) (zs : List (BitVec 44)) (z : BitVec 10) (h : 52 + 10 = 42) (heq : x = y) : 
-    x.zeroExtend 10 = y.zeroExtend 10 + 0 := by
-  bv_generalize
-  bv_multi_width
 
 end Tactic
 end MultiWidth

@@ -23,15 +23,26 @@ theorem abstract_prop {w : Nat} (p : Prop) (x : BitVec w) : p ∨ (x = x) := by
   bv_multi_width
 
 /--
-warning: abstracted non-variable width: ⏎
-  → 'x + 1'
----
-error: safety failure at iteration 0 for predicate MultiWidth.Nondep.Predicate.binWidthRel
+error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.binWidthRel
   (MultiWidth.WidthBinaryRelationKind.eq)
   (MultiWidth.Nondep.WidthExpr.var 0)
-  (MultiWidth.Nondep.WidthExpr.var 1)
+  (MultiWidth.Nondep.WidthExpr.addK (MultiWidth.Nondep.WidthExpr.var 0) 1)
 -/
 #guard_msgs in theorem abstract_prop_check_warn : ∀ (x : Nat), x = x + 1  := by
+  -- | check that prop is abstracted.
+  bv_multi_width
+
+/--
+error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.binRel
+  (MultiWidth.BinaryRelationKind.eq)
+  (MultiWidth.Nondep.WidthExpr.var 0)
+  (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
+  (MultiWidth.Nondep.Term.add
+    (MultiWidth.Nondep.WidthExpr.var 0)
+    (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
+    (MultiWidth.Nondep.Term.ofNat (MultiWidth.Nondep.WidthExpr.var 0) 1))
+-/
+#guard_msgs in theorem fail_prop_check_warn : ∀ (x : BitVec w), x = x + 1  := by
   -- | check that prop is abstracted.
   bv_multi_width
 
@@ -281,7 +292,7 @@ theorem shl1 : ∀ (w : Nat) (x : BitVec w), x <<< (0 : Nat) = x := by
 
 theorem shl2 : ∀ (w : Nat) (x : BitVec w), x <<< (1 : Nat) = x + x := by
   intros
-  bv_multi_width (config := { niter := 2 })
+  bv_multi_width (config := { niter := 5 })
 
 theorem shl3 : ∀ (w : Nat) (x : BitVec w), x <<< (2 : Nat) = x + x + x + x := by
   intros; bv_multi_width
@@ -350,7 +361,5 @@ theorem e_1 (x y : BitVec w) :
 
 theorem egZextMin (u v : Nat) (x : BitVec w) :
     u ≤ v → (x.zeroExtend v).zeroExtend u = x.zeroExtend u := by
-  fail_if_success bv_multi_width (config := { widthAbstraction := .never })
-  sorry
+  bv_multi_width (config := { widthAbstraction := .never })
 
-end MultiWidthTests

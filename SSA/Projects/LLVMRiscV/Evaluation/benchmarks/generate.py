@@ -1,4 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run --script
+#
+# /// script
+# requires-python = ">=3.12"
+# dependencies = ["xdsl"]
+#
+# [tool.uv.sources]
+# xdsl = { git = "https://github.com/luisacicolini/xdsl.git", rev = "5e00c8487235fb56db9183bc3434b44baa4151cf" }
+# ///
+
 
 import sys
 import os
@@ -34,6 +43,7 @@ MLIR_single_DIR_PATH = (
 MLIR_multi_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_multi/"
 )
+isolated_instructions_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/compare-lowering-patterns/isolated_instructions/"
 LLC_ASM_selectiondag_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM_selectiondag/"
 LLC_ASM_globalisel_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM_globalisel/"
@@ -44,23 +54,17 @@ LEANMLIR_ASM_DIR_PATH = (
 LEANMLIR_ASM_opt_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LEANMLIR_ASM_opt/"
 )
-XDSL_no_casts_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_no_casts/"
-)
-XDSL_no_casts_opt_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_no_casts_opt/"
-)
-XDSL_reg_alloc_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_reg_alloc/"
-)
-XDSL_reg_alloc_opt_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_reg_alloc_opt/"
-)
 XDSL_ASM_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_ASM/"
 )
 XDSL_opt_ASM_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_opt_ASM/"
+)
+XDSL_FUNC_ASM_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_FUNC/"
+)
+XDSL_FUNC_opt_ASM_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/XDSL_FUNC_opt/"
 )
 LOGS_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/logs/"
 
@@ -72,14 +76,12 @@ AUTOGEN_DIR_PATHS = [
     MLIR_single_DIR_PATH,
     LLC_ASM_selectiondag_DIR_PATH,
     LLC_ASM_globalisel_DIR_PATH,
-    LEANMLIR_ASM_DIR_PATH,
-    XDSL_no_casts_DIR_PATH,
-    XDSL_reg_alloc_DIR_PATH,
-    XDSL_ASM_DIR_PATH,
+    # XDSL_FUNC_ASM_DIR_PATH,
+    XDSL_FUNC_opt_ASM_DIR_PATH,
+    # LEANMLIR_ASM_DIR_PATH,
+    # XDSL_ASM_DIR_PATH,
     LOGS_DIR_PATH,
     LEANMLIR_ASM_opt_DIR_PATH,
-    XDSL_no_casts_opt_DIR_PATH,
-    XDSL_reg_alloc_opt_DIR_PATH,
     XDSL_opt_ASM_DIR_PATH,
 ]
 
@@ -94,46 +96,41 @@ def setup_benchmarking_directories():
         else:
             shutil.rmtree(directory)
             os.makedirs(directory)
-            
-            
-            
-            
-            
-            
-            
+
+
 def replace_hyphens_in_variables(file_path):
     """
     Reads a file, replaces hyphens (-) with underscores (_) within
     MLIR variable names (starting with %), and overwrites the file.
     """
-    
+
     if not os.path.exists(file_path):
         print(f"Error: File not found at {file_path}")
         return
 
-    pattern = r'(%[a-zA-Z0-9_-]+)'
-    
+    pattern = r"(%[a-zA-Z0-9_-]+)"
+
     def variable_replacer(match):
         """Replace all hyphens with underscores in the matched variable name."""
         variable_name = match.group(0)
-        if '-' in variable_name:
-            return variable_name.replace('-', '_')
+        if "-" in variable_name:
+            return variable_name.replace("-", "_")
         return variable_name
-    
+
     try:
-        with open(file_path, 'r') as f:
+        with open(file_path, "r") as f:
             original_content = f.read()
-            
+
         modified_content = re.sub(pattern, variable_replacer, original_content)
-        with open(file_path, 'w') as f:
+        with open(file_path, "w") as f:
             f.write(modified_content)
-            
+
     except IOError as e:
         print(f"Error processing file {file_path}: {e}")
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
-        
-        
+
+
 def run_command(cmd, log_file, timeout=TIMEOUT_SEC):
     try:
         ret_code = subprocess.Popen(
@@ -146,28 +143,23 @@ def run_command(cmd, log_file, timeout=TIMEOUT_SEC):
         print(f"{log_file} - timeout of {timeout} seconds reached")
 
 
-def extract_mlir_blocks(input_file, output_base, max_functions):
-    """
-    Extracts individual MLIR module blocks (functions) from a large input file
-    and saves each into a separate file.
-    """
+def extract_helper(input_file, output_base, max_functions, base_name):
     f = open(input_file, "r")
     all_lines = f.readlines()
-    size = input_file.split("_")[-1].split(".")[0]  
     function_count = 0
     curr_program = []
-    brackets_count = 0 
-    for line in all_lines: 
+    brackets_count = 0
+    for line in all_lines:
         if "{" in line:
             brackets_count += 1
-        if brackets_count == 2: 
+        if brackets_count == 2:
             # remove indentation
-            curr_program.append(line[2:]) 
+            curr_program.append(line[2:])
         if "}" in line:
             brackets_count -= 1
-        if brackets_count == 1 and len(curr_program) > 0: 
-            # write file 
-            out_f = open(output_base + f"{size}_function_{function_count}.mlir", 'w')
+        if brackets_count == 1 and len(curr_program) > 0:
+            # write file
+            out_f = open(output_base + f"{base_name}{function_count}.mlir", "w")
             out_f.writelines(curr_program)
             out_f.write("\n")
             out_f.close()
@@ -176,7 +168,22 @@ def extract_mlir_blocks(input_file, output_base, max_functions):
             curr_program = []
         if function_count >= max_functions:
             print(f"Reached maximum of {max_functions} functions. Stopping extraction.")
-            break   
+            break
+
+
+def extract(input_dir, output_base, max_functions, type):
+    if type:
+        for filename in os.listdir(input_dir):
+            input_file = os.path.join(input_dir, filename)
+            instruction_name = "".join(filename.split(".")[0])
+            extract_helper(
+                input_file, output_base, max_functions, f"{instruction_name}_"
+            )
+    else:
+        size = input_dir.split("_")[-1].split(".")[0]
+        base_name = f"{size}_function_"
+        extract_helper(input_dir, output_base, max_functions, base_name)
+
 
 def MLIR_opt_arith_llvm(input_file, output_file, log_file, pass_dict):
     """
@@ -204,7 +211,9 @@ def LLC_compile_riscv_selectiondag(input_file, output_file, log_file, pass_dict,
     """
     Compile LLVMIR to RISCV assembly with llc.
     """
-    cmd_base = "llc -march=riscv64 -mcpu=generic-rv64 -mattr=+m,+b -filetype=asm "+ opt+" "
+    cmd_base = (
+        "llc -march=riscv64 -mcpu=generic-rv64 -mattr=+m,+b -filetype=asm " + opt + " "
+    )
     cmd = cmd_base + input_file + " -o " + output_file
     ret_code = run_command(cmd, log_file)
     pass_dict[output_file] = ret_code
@@ -214,7 +223,11 @@ def LLC_compile_riscv_globalisel(input_file, output_file, log_file, pass_dict, o
     """
     Compile LLVMIR to RISCV assembly with llc using the GlobalISel framework.
     """
-    cmd_base = "llc -march=riscv64 -mcpu=generic-rv64 --global-isel -mattr=+m,+b -filetype=asm "+ opt+" "
+    cmd_base = (
+        "llc -march=riscv64 -mcpu=generic-rv64 --global-isel -mattr=+m,+b -filetype=asm "
+        + opt
+        + " "
+    )
     cmd = cmd_base + input_file + " -o " + output_file
     ret_code = run_command(cmd, log_file)
     pass_dict[output_file] = ret_code
@@ -269,7 +282,7 @@ def LAKE_compile_riscv64(jobs, pass_dict):
             file_path = futures[future]
             ret_code = future.result()
             pass_dict[file_path] = ret_code
-            percentage = ((float(idx) + float(1)) / float(total)) * 100
+            percentage = (float(idx) / float(total)) * 100
             print(f"compiling with lean-mlir {percentage:.2f}%")
 
 
@@ -289,23 +302,21 @@ def LAKE_compile_riscv64_opt(jobs, pass_dict):
             cmd = cmd_base + input_file + " > " + output_file
             future = executor.submit(run_command, cmd, log_file)
             futures[future] = output_file
-            
 
         total = len(futures)
         for idx, future in enumerate(concurrent.futures.as_completed(futures)):
             file_path = futures[future]
             ret_code = future.result()
             pass_dict[file_path] = ret_code
-            percentage = ((float(idx) + float(1)) / float(total)) * 100
+            percentage = (float(idx) / float(total)) * 100
             print(f"compiling with lean-mlir (optimized pass): {percentage:.2f}%")
 
 
-# this is just a temporary solution because I don't understand python classes.
-def XDSL_remove_casts(input_file, output_file, log_file, pass_dict):
+def XDSL_create_func(input_file, output_file, log_file, pass_dict):
     """
     Remove unrealized casts from the RISCV64 dialect MLIR files with xdsl.
     """
-    cmd_base = f"python3 {ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/remove_casts.py "
+    cmd_base = f"python3 {ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/create_func.py "
     cmd = cmd_base + input_file + " > " + output_file
     ret_code = run_command(cmd, log_file)
     pass_dict[output_file] = ret_code
@@ -315,31 +326,41 @@ def XDSL_reg_alloc(input_file, output_file, log_file, pass_dict):
     """
     Remove unrealized casts from the RISCV64 dialect MLIR files with xdsl.
     """
-    cmd_base = "xdsl-opt -p riscv-allocate-registers "
-    cmd = cmd_base + input_file + " > " + output_file
-    ret_code = run_command(cmd, log_file)
-    pass_dict[output_file] = ret_code
+    try:
+        from xdsl.xdsl_opt_main import xDSLOptMain
+
+        xdsl_opt_main = xDSLOptMain(
+            args=f"{input_file} -p convert-func-to-riscv-func,reconcile-unrealized-casts,riscv-allocate-registers{{force-infinite=true}},riscv-allocate-infinite-registers,canonicalize-register-allocation -t riscv-asm -o {output_file}".split()
+        )
+        xdsl_opt_main.run()
+        # cmd = cmd_base + input_file + " > " + output_file
+        # ret_code = run_command(cmd, log_file)
+        pass_dict[output_file] = 1
+    except Exception as e:
+        print(f"XDSL_reg_alloc failed for {input_file} with error: {e}", file=log_file)
+        pass_dict[output_file] = 0
 
 
-def XDSL_compile_riscv(input_file, output_file, log_file, pass_dict):
-    """
-    Remove unrealized casts from the RISCV64 dialect MLIR files with xdsl.
-    """
-    cmd_base = "xdsl-opt -t riscv-asm "
-    cmd = cmd_base + input_file + " > " + output_file
-    ret_code = run_command(cmd, log_file)
-    pass_dict[output_file] = ret_code
-
-
-def generate_benchmarks(num, jobs, llvm_opts):
+def generate_benchmarks(num, jobs, llvm_opt, compare_lowering_patterns=False):
     setup_benchmarking_directories()
 
-    # extract mlir blocks and put them all in separate files
-    # for each file with programs of a certain size 
-    for file in os.listdir(MLIR_multi_DIR_PATH):
-        input_file = os.path.join(MLIR_multi_DIR_PATH, file)
-        replace_hyphens_in_variables(input_file)
-        extract_mlir_blocks(input_file, MLIR_single_DIR_PATH, num)
+    if compare_lowering_patterns:
+        print(
+            f"Using instruction-specific files from: {isolated_instructions_DIR_PATH}"
+        )
+        extract(
+            isolated_instructions_DIR_PATH,
+            MLIR_single_DIR_PATH,
+            num,
+            compare_lowering_patterns,
+        )
+    else:
+        # extract mlir blocks and put them all in separate files
+        # for each file with programs of a certain size
+        for file in os.listdir(MLIR_multi_DIR_PATH):
+            input_file = os.path.join(MLIR_multi_DIR_PATH, file)
+            replace_hyphens_in_variables(input_file)
+            extract(input_file, MLIR_single_DIR_PATH, num, compare_lowering_patterns)
 
     MLIR_opt_file2ret = dict()
     idx = 0
@@ -351,7 +372,7 @@ def generate_benchmarks(num, jobs, llvm_opts):
         log_file = open(os.path.join(LOGS_DIR_PATH, basename + "_mlir_opt.log"), "w")
         MLIR_opt_arith_llvm(input_file, output_file, log_file, MLIR_opt_file2ret)
         idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(os.listdir(MLIR_single_DIR_PATH)))) * 100
+        percentage = (float(idx) / float(len(os.listdir(MLIR_single_DIR_PATH)))) * 100
         print(f"translating to LLVM with mlir-opt: {percentage:.2f}%")
 
     MLIR_translate_file2ret = dict()
@@ -370,68 +391,86 @@ def generate_benchmarks(num, jobs, llvm_opts):
                 input_file, output_file, log_file, MLIR_translate_file2ret
             )
         idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(MLIR_opt_file2ret))) * 100
+        percentage = (float(idx) / float(len(MLIR_opt_file2ret))) * 100
         print(f"translating to LLVMIR with mlir-translate: {percentage:.2f}%")
-    
-    for llvm_opt in llvm_opts:
-    
-        LLC_file2ret = dict()
-        idx = 0
-        # Use llc with `selectionDAG` to compile LLVMIR into RISCV
-        for filename in os.listdir(LLVMIR_DIR_PATH):
-            input_file = os.path.join(LLVMIR_DIR_PATH, filename)
-            # only run the lowering if the previous pass was successful:
-            if MLIR_translate_file2ret[input_file] == 0:
+
+    LLC_file2ret = dict()
+    idx = 0
+    # Use llc with `selectionDAG` to compile LLVMIR into RISCV
+    for filename in os.listdir(LLVMIR_DIR_PATH):
+        input_file = os.path.join(LLVMIR_DIR_PATH, filename)
+        # only run the lowering if the previous pass was successful:
+        if MLIR_translate_file2ret[input_file] == 0:
+            basename, _ = os.path.splitext(filename)
+
+            if llvm_opt == "default":
+                output_file = os.path.join(
+                    LLC_ASM_selectiondag_DIR_PATH, basename + ".s"
+                )
+                log_file = open(
+                    os.path.join(LOGS_DIR_PATH, basename + "_selectiondag_llc.log"),
+                    "w",
+                )
+                LLC_compile_riscv_selectiondag(
+                    input_file, output_file, log_file, LLC_file2ret, ""
+                )
+            else:
+                output_file = os.path.join(
+                    LLC_ASM_selectiondag_DIR_PATH, basename + "_" + llvm_opt + ".s"
+                )
+                log_file = open(
+                    os.path.join(
+                        LOGS_DIR_PATH,
+                        basename + "_selectiondag_llc" + "_" + llvm_opt + ".log",
+                    ),
+                    "w",
+                )
+                LLC_compile_riscv_selectiondag(
+                    input_file, output_file, log_file, LLC_file2ret, "-" + llvm_opt
+                )
+        idx += 1
+        percentage = (float(idx) / float(len(MLIR_translate_file2ret))) * 100
+        print(f"compiling with llc (selectionDAG {llvm_opt}): {percentage:.2f}%")
+
+    LLC_GLOBALISEL_file2ret = dict()
+    idx = 0
+    # Use llc with `GlobalISel` to compile LLVMIR into RISCV
+    for filename in os.listdir(LLVMIR_DIR_PATH):
+        input_file = os.path.join(LLVMIR_DIR_PATH, filename)
+        # only run the lowering if the previous pass was successful:
+        if MLIR_translate_file2ret[input_file] == 0:  # previous pass succeded
+            if llvm_opt == "default":
                 basename, _ = os.path.splitext(filename)
-
-                if llvm_opt == "default":
-                    output_file = os.path.join(LLC_ASM_selectiondag_DIR_PATH, basename + ".s")
-                    log_file = open(
-                        os.path.join(LOGS_DIR_PATH, basename + "_selectiondag_llc.log"), "w"
-                    )
-                    LLC_compile_riscv_selectiondag(
-                        input_file, output_file, log_file, LLC_file2ret, ""
-                    )
-                else:
-                    output_file = os.path.join(LLC_ASM_selectiondag_DIR_PATH, basename +"_"+llvm_opt + ".s")
-                    log_file = open(
-                        os.path.join(LOGS_DIR_PATH, basename + "_selectiondag_llc"+"_"+llvm_opt+".log"), "w"
-                    )
-                    LLC_compile_riscv_selectiondag(
-                        input_file, output_file, log_file, LLC_file2ret, "-"+llvm_opt
-                    )
-            idx += 1
-            percentage = ((float(idx) + float(1)) / float(len(MLIR_translate_file2ret))) * 100
-            print(f"compiling with llc (selectionDAG {llvm_opt}): {percentage:.2f}%") 
-
-        LLC_GLOBALISEL_file2ret = dict()
-        idx = 0
-        # Use llc with `GlobalISel` to compile LLVMIR into RISCV
-        for filename in os.listdir(LLVMIR_DIR_PATH):
-            input_file = os.path.join(LLVMIR_DIR_PATH, filename)
-            # only run the lowering if the previous pass was successful:
-            if MLIR_translate_file2ret[input_file] == 0:  # previous pass succeded
-                if llvm_opt == "default":
-                    basename, _ = os.path.splitext(filename)
-                    output_file = os.path.join(LLC_ASM_globalisel_DIR_PATH, basename + ".s")
-                    log_file = open(
-                        os.path.join(LOGS_DIR_PATH, basename + "_globalisel_llc.log"), "w"
-                    )
-                    LLC_compile_riscv_globalisel(
-                        input_file, output_file, log_file, LLC_GLOBALISEL_file2ret, ""
-                    )
-                else:
-                    basename, _ = os.path.splitext(filename)
-                    output_file = os.path.join(LLC_ASM_globalisel_DIR_PATH, basename +"_"+llvm_opt + ".s")
-                    log_file = open(
-                        os.path.join(LOGS_DIR_PATH, basename + "_globalisel_llc"+"_"+llvm_opt+".log"), "w"
-                    )
-                    LLC_compile_riscv_globalisel(
-                        input_file, output_file, log_file, LLC_GLOBALISEL_file2ret, "-"+llvm_opt
-                    )
-            idx += 1
-            percentage = ((float(idx) + float(1)) / float(len(MLIR_translate_file2ret))) * 100
-            print(f"compiling with llc (globalISel {llvm_opt}): {percentage:.2f}%")
+                output_file = os.path.join(LLC_ASM_globalisel_DIR_PATH, basename + ".s")
+                log_file = open(
+                    os.path.join(LOGS_DIR_PATH, basename + "_globalisel_llc.log"),
+                    "w",
+                )
+                LLC_compile_riscv_globalisel(
+                    input_file, output_file, log_file, LLC_GLOBALISEL_file2ret, ""
+                )
+            else:
+                basename, _ = os.path.splitext(filename)
+                output_file = os.path.join(
+                    LLC_ASM_globalisel_DIR_PATH, basename + "_" + llvm_opt + ".s"
+                )
+                log_file = open(
+                    os.path.join(
+                        LOGS_DIR_PATH,
+                        basename + "_globalisel_llc" + "_" + llvm_opt + ".log",
+                    ),
+                    "w",
+                )
+                LLC_compile_riscv_globalisel(
+                    input_file,
+                    output_file,
+                    log_file,
+                    LLC_GLOBALISEL_file2ret,
+                    "-" + llvm_opt,
+                )
+        idx += 1
+        percentage = (float(idx) / float(len(MLIR_translate_file2ret))) * 100
+        print(f"compiling with llc (globalISel {llvm_opt}): {percentage:.2f}%")
 
     # Extract bb0
     idx = 0
@@ -442,77 +481,77 @@ def generate_benchmarks(num, jobs, llvm_opts):
         log_file = open(os.path.join(LOGS_DIR_PATH, basename + "_bb0_extract.log"), "w")
         extract_bb0(input_file, output_file, log_file)
         idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(os.listdir(LLVM_DIR_PATH)))) * 100
-        print(f"extracting the first basic block: {percentage:.2f}%") 
+        percentage = (float(idx) / float(len(os.listdir(LLVM_DIR_PATH)))) * 100
+        print(f"extracting the first basic block: {percentage:.2f}%")
 
-    LAKE_file2ret = dict()
-    # Run the lean pass in parallel
-    LAKE_compile_riscv64(jobs, LAKE_file2ret)
+    # LAKE_file2ret = dict()
+    # # Run the lean pass in parallel
+    # LAKE_compile_riscv64(jobs, LAKE_file2ret)
 
     LAKE_file2ret_opt = dict()
     # Run the optimized lean pass in parallel
     LAKE_compile_riscv64_opt(jobs, LAKE_file2ret_opt)
 
-    XDSL_remove_casts_file2ret = dict()
-    idx = 0
-    # Remove unrealized casts
-    for filename in os.listdir(LEANMLIR_ASM_DIR_PATH):
-        input_file = os.path.join(LEANMLIR_ASM_DIR_PATH, filename)
-        if LAKE_file2ret[input_file] == 0:
-            basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(XDSL_no_casts_DIR_PATH, basename + ".mlir")
-            log_file = open(
-                os.path.join(LOGS_DIR_PATH, basename + "_xdsl_remove_casts.log"), "w"
-            )
-            XDSL_remove_casts(
-                input_file, output_file, log_file, XDSL_remove_casts_file2ret
-            )
-        idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(LAKE_file2ret))) * 100
-        print(f"removing unrealized casts: {percentage:.2f}%")
+    # XDSL_create_func_file2ret = dict()
+    # idx = 0
+    # # Create `func.func`
+    # for filename in os.listdir(LEANMLIR_ASM_DIR_PATH):
+    #     input_file = os.path.join(LEANMLIR_ASM_DIR_PATH, filename)
+    #     if LAKE_file2ret[input_file] == 0:
+    #         basename, _ = os.path.splitext(filename)
+    #         output_file = os.path.join(XDSL_FUNC_ASM_DIR_PATH, basename + ".mlir")
+    #         log_file = open(
+    #             os.path.join(LOGS_DIR_PATH, basename + "_xdsl_create_func.log"), "w"
+    #         )
+    #         XDSL_create_func(
+    #             input_file, output_file, log_file, XDSL_create_func_file2ret
+    #         )
+    #     idx += 1
+    #     percentage = (float(idx) / float(len(LAKE_file2ret))) * 100
+    #     print(f"creating func.func module: {percentage:.2f}%")
 
-    XDSL_remove_casts_file2ret_opt = dict()
+    XDSL_create_func_file2ret_opt = dict()
     idx = 0
-    # Remove unrealized casts
+    # Create `func.func`
     for filename in os.listdir(LEANMLIR_ASM_opt_DIR_PATH):
         input_file = os.path.join(LEANMLIR_ASM_opt_DIR_PATH, filename)
         if LAKE_file2ret_opt[input_file] == 0:
             basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(XDSL_no_casts_opt_DIR_PATH, basename + ".mlir")
+            output_file = os.path.join(XDSL_FUNC_opt_ASM_DIR_PATH, basename + ".mlir")
             log_file = open(
-                os.path.join(LOGS_DIR_PATH, basename + "_xdsl_remove_casts.log"), "w"
+                os.path.join(LOGS_DIR_PATH, basename + "_xdsl_create_func_opt.log"), "w"
             )
-            XDSL_remove_casts(
-                input_file, output_file, log_file, XDSL_remove_casts_file2ret_opt
+            XDSL_create_func(
+                input_file, output_file, log_file, XDSL_create_func_file2ret_opt
             )
         idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(LAKE_file2ret_opt))) * 100
-        print(f"removing unrealized casts (opt): {percentage:.2f}%") 
+        percentage = (float(idx) / float(len(LAKE_file2ret_opt))) * 100
+        print(f"creating func.func module (opt): {percentage:.2f}%")
 
-    XDSL_reg_alloc_file2ret = dict()
-    idx = 0
-    # Register allocation with XDSL
-    for filename in os.listdir(XDSL_no_casts_DIR_PATH):
-        input_file = os.path.join(XDSL_no_casts_DIR_PATH, filename)
-        if XDSL_remove_casts_file2ret[input_file] == 0:
-            basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(XDSL_reg_alloc_DIR_PATH, basename + ".mlir")
-            log_file = open(
-                os.path.join(LOGS_DIR_PATH, basename + "_xdsl_reg_alloc.log"), "w"
-            )
-            XDSL_reg_alloc(input_file, output_file, log_file, XDSL_reg_alloc_file2ret)
-        idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(XDSL_remove_casts_file2ret))) * 100
-        print(f"allocating registers: {percentage:.2f}%")
-        
+    # XDSL_reg_alloc_file2ret = dict()
+    # idx = 0
+    # # Register allocation with XDSL
+    # for filename in os.listdir(XDSL_FUNC_ASM_DIR_PATH):
+    #     input_file = os.path.join(XDSL_FUNC_ASM_DIR_PATH, filename)
+    #     if XDSL_create_func_file2ret[input_file] == 0:
+    #         basename, _ = os.path.splitext(filename)
+    #         output_file = os.path.join(XDSL_ASM_DIR_PATH, basename + ".mlir")
+    #         log_file = open(
+    #             os.path.join(LOGS_DIR_PATH, basename + "_xdsl_reg_alloc.log"), "w"
+    #         )
+    #         XDSL_reg_alloc(input_file, output_file, log_file, XDSL_reg_alloc_file2ret)
+    #     idx += 1
+    #     percentage = (float(idx) / float(len(XDSL_create_func_file2ret))) * 100
+    #     print(f"allocating registers and outputting assembly: {percentage:.2f}%")
+
     XDSL_reg_alloc_file2ret_opt = dict()
     idx = 0
     # Register allocation with XDSL
-    for filename in os.listdir(XDSL_no_casts_opt_DIR_PATH):
-        input_file = os.path.join(XDSL_no_casts_opt_DIR_PATH, filename)
-        if XDSL_remove_casts_file2ret_opt[input_file] == 0:
+    for filename in os.listdir(XDSL_FUNC_opt_ASM_DIR_PATH):
+        input_file = os.path.join(XDSL_FUNC_opt_ASM_DIR_PATH, filename)
+        if XDSL_create_func_file2ret_opt[input_file] == 0:
             basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(XDSL_reg_alloc_opt_DIR_PATH, basename + ".mlir")
+            output_file = os.path.join(XDSL_opt_ASM_DIR_PATH, basename + ".mlir")
             log_file = open(
                 os.path.join(LOGS_DIR_PATH, basename + "_xdsl_reg_alloc.log"), "w"
             )
@@ -520,42 +559,8 @@ def generate_benchmarks(num, jobs, llvm_opts):
                 input_file, output_file, log_file, XDSL_reg_alloc_file2ret_opt
             )
         idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(XDSL_remove_casts_file2ret_opt))) * 100
-        print(f"allocating registers (opt): {percentage:.2f}%") 
-
-    XDSL_riscv_file2ret = dict()
-    idx = 0
-    # Compile to RISCV asm with XDSL
-    for filename in os.listdir(XDSL_reg_alloc_DIR_PATH):
-        input_file = os.path.join(XDSL_reg_alloc_DIR_PATH, filename)
-        if XDSL_reg_alloc_file2ret[input_file] == 0:
-            basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(XDSL_ASM_DIR_PATH, basename + ".s")
-            log_file = open(
-                os.path.join(LOGS_DIR_PATH, basename + "_xdsl_riscv.log"), "w"
-            )
-            XDSL_compile_riscv(input_file, output_file, log_file, XDSL_riscv_file2ret)
-        idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(XDSL_reg_alloc_file2ret))) * 100
-        print(f"compiling with xdsl: {percentage:.2f}%")
-        
-    XDSL_riscv_file2ret_opt = dict()
-    idx = 0
-    # Compile to RISCV asm with XDSL
-    for filename in os.listdir(XDSL_reg_alloc_opt_DIR_PATH):
-        input_file = os.path.join(XDSL_reg_alloc_opt_DIR_PATH, filename)
-        if XDSL_reg_alloc_file2ret_opt[input_file] == 0:
-            basename, _ = os.path.splitext(filename)
-            output_file = os.path.join(XDSL_opt_ASM_DIR_PATH, basename + ".s")
-            log_file = open(
-                os.path.join(LOGS_DIR_PATH, basename + "_xdsl_riscv.log"), "w"
-            )
-            XDSL_compile_riscv(
-                input_file, output_file, log_file, XDSL_riscv_file2ret_opt
-            )
-        idx += 1
-        percentage = ((float(idx) + float(1)) / float(len(XDSL_reg_alloc_file2ret_opt))) * 100
-        print(f"compiling with xdsl (opt): {percentage:.2f}%")
+        percentage = (float(idx) / float(len(XDSL_create_func_file2ret_opt))) * 100
+        print(f"allocating registers and outputting assembly (opt): {percentage:.2f}%")
 
 
 def main():
@@ -563,7 +568,7 @@ def main():
         prog="generate",
         description="Generate a new set of benchmarks in all the representations, from MLIR to RISCV assembly.",
     )
-    
+
     parser.add_argument(
         "-n", "--num", type=int, default=100, help="Number of benchmarks to generate. "
     )
@@ -571,23 +576,26 @@ def main():
     parser.add_argument(
         "-j", "--jobs", type=int, default=1, help="Parallel jobs for all benchmarks"
     )
-    
-    
+
     parser.add_argument(
-        "-llvm", "--llvm_opt", 
+        "-llvm",
+        "--llvm_opt",
         help="Optimization level for LLVM.",
-        nargs="+",
-        choices=["O3", "O2", "O1", "O0" "default"]
+        choices=["O3", "O2", "O1", "O0", "default", "all"],
+        default="default",
     )
-    
+
+    parser.add_argument(
+        "-l",
+        "--instruction_lowering",
+        help="Create files for instruction lowering patterns comparison.",
+        action="store_true",
+        default=False,
+    )
+
     args = parser.parse_args()
-    
-    opts_to_evaluate = (
-        ["O3", "Os", "default"] if "all" in args.llvm_opt else args.llvm_opt
-    )
 
-
-    generate_benchmarks(args.num, args.jobs, opts_to_evaluate)
+    generate_benchmarks(args.num, args.jobs, args.llvm_opt, args.instruction_lowering)
 
 
 if __name__ == "__main__":

@@ -86,6 +86,7 @@ syntax "neg" : MLIR.Pretty.uniform_op
 syntax "negw" : MLIR.Pretty.uniform_op
 syntax "sext.w" : MLIR.Pretty.uniform_op
 syntax "zext.b" : MLIR.Pretty.uniform_op
+syntax "zext.w" : MLIR.Pretty.uniform_op
 syntax "seqz" : MLIR.Pretty.uniform_op
 syntax "snez" : MLIR.Pretty.uniform_op
 syntax "sltz" : MLIR.Pretty.uniform_op

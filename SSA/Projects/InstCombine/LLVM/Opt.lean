@@ -40,6 +40,9 @@ def runMainCmd (args : Cli.Parsed) : IO UInt32 := do
   if args.hasFlag "passriscv64_optimized" then -- lowering pass to a RISC-V 64 SSA-assembly IR
     let code ← passriscv64_optimized fileName
     return code
+  if args.hasFlag "passriscv64_selectiondag" then -- lowering pass to RISC-V 64 SSA-assembly IR applying optimizations from SelectionDAG
+    let code ← passriscv64_selectiondag fileName
+    return code
   else
     let code ← wellformed fileName
     return code
@@ -52,6 +55,7 @@ def mainCmd := `[Cli|
       passriscv64; "Lowering pass to a RISC-V 64 SSA-assembly IR"
       riscv; "Allows to parse a file as a RISC-V 64 SSA-assembly IR"
       passriscv64_optimized; "Allows to parse a file as a RISC-V 64 SSA-assembly IR"
+      passriscv64_selectiondag; "Lowering pass to RISC-V 64 SSA-assembly IR applying optimizations from SelectionDAG"
     ARGS:
       file: String; "Input filename"
     ]

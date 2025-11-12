@@ -54,10 +54,6 @@ This directory structure is heavily inspired by the [Research Codebase Manifesto
 >     either go through the effort of polishing the code into core, or clone
 >     the code.
 
-##### - `related-work/`: 
-
-> Top-level folder for research dependencies.
-
 ##### `artifact-evaluation/`:
 
 > Docker container build for the current version of the library.
