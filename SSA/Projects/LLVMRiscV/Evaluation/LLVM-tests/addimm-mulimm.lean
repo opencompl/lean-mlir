@@ -40,6 +40,36 @@ def  add_mul_combine_accept_i64_pattern : LLVMPeepholeRewriteRefine 64 [Ty.llvm 
     simp
     bv_decide
 
+/-! ### add_mul_combine_accept_b3 -/
+
+@[simp_denote]
+def add_mul_combine_accept_b3_i64_llvm := [LV| {
+    ^entry (%x: i64):
+    %37 = llvm.mlir.constant (37) : i64
+    %29 = llvm.mlir.constant (29) : i64
+    %0 = llvm.add %x, %37 : i64
+    %1 = llvm.mul %0, %29 : i64
+    llvm.return %1 : i64
+  }]
+
+@[simp_denote]
+def add_mul_combine_accept_b3_i64_riscv :=
+  [LV| {
+    ^entry (%x: i64):
+    %a = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+    %23 = li (23) : !i64
+    %0 = sh1add %a, %a : !i64
+    %1 = slli %a, 5 : !i64
+    %2 = sub %1, %0 : !i64
+    %3 = addi %2, 1073 : !i64
+    %r = "builtin.unrealized_conversion_cast" (%3) : (!i64) -> (i64)
+    llvm.return %r : i64
+  }]
+
+def  add_mul_combine_accept_b3_i64_pattern : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := add_mul_combine_accept_b3_i64_llvm
+  rhs := add_mul_combine_accept_b3_i64_riscv
+  correct := by sorry
 -- define i64 @add_mul_combine_accept_b3(i64 %x) {
 -- ; RV32IMB-LABEL: add_mul_combine_accept_b3:
 -- ; RV32IMB:       # %bb.0:
