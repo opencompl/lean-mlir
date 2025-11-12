@@ -2,8 +2,26 @@ import Blase.ForLean
 import Blase.MultiWidth.Attr
 import Mathlib.Data.Nat.Bits
 import Mathlib.Algebra.Group.Nat.Defs
+import Lean
+
+open Lean
+open Std
 
 set_option grind.warning false
+
+
+instance : Commutative (max : ℕ → ℕ → ℕ) where
+   comm := by omega
+
+instance : IdempotentOp (max : ℕ → ℕ → ℕ) where
+  idempotent := by intros x; simp
+
+instance : Commutative (min : ℕ → ℕ → ℕ) where
+  comm := by omega
+
+instance : IdempotentOp (min : ℕ → ℕ → ℕ) where
+  idempotent := by intros x; simp
+
 
 namespace Normalize
 
@@ -41,22 +59,14 @@ Recall that booleans are coerced into props by writing it as '<bool> = true'. -/
 
 /-! Normal form for shifts
 
-We normalize all shifts into multiplication by constant bitvector on the left.
+See that `x <<< (n : Nat)` is strictly more expression than `x <<< BitVec.ofNat w n`,
+because in the former case, we can shift by arbitrary amounts, while in the latter case,
+we can only shift by numbers upto `2^w`. Therefore, we choose `x <<< (n : Nat)` as our simp
+and preprocessing normal form for the tactic.
 -/
 
-@[bv_multi_width_normalize] theorem BitVec.shiftLeft_ofNat_eq (x : BitVec w) (n : Nat) :
-  x <<< BitVec.ofNat w n = (BitVec.ofNat w (2 ^ (n % 2^w))) * x := by
-  apply BitVec.eq_of_toNat_eq
-  simp
-  rw [Nat.shiftLeft_eq]
-  rw [Nat.mul_comm]
-
-@[bv_multi_width_normalize] theorem BitVec.shiftLeft_nat_eq (x : BitVec w) (n : Nat) :
-  x <<< n = (BitVec.ofNat w (2 ^ n)) * x := by
-  apply BitVec.eq_of_toNat_eq
-  simp
-  rw [Nat.shiftLeft_eq]
-  rw [Nat.mul_comm]
+@[simp] theorem BitVec.shiftLeft_ofNat_eq (x : BitVec w) (n : Nat) :
+  x <<< BitVec.ofNat w n = x <<< (n % 2^w) := by simp
 
 /--
 Multiplying by an even number `e` is the same as shifting by `1`,
@@ -89,17 +99,6 @@ theorem BitVec.odd_mul_eq_shiftLeft_mul_of_eq_mul_two_add_one (w : Nat) (x : Bit
     rw [Nat.mul_assoc, Nat.mul_comm 2]
     omega
 
-@[bv_multi_width_normalize] theorem BitVec.two_mul_eq_add_add (x : BitVec w) : 2#w * x = x + x := by
-  apply BitVec.eq_of_toNat_eq;
-  simp only [BitVec.toNat_mul, BitVec.toNat_ofNat, Nat.mod_mul_mod, BitVec.toNat_add]
-  congr
-  omega
-
-@[bv_multi_width_normalize] theorem BitVec.two_mul (x : BitVec w) : 2#w * x = x + x := by
-  apply BitVec.eq_of_toNat_eq
-  simp only [BitVec.toNat_mul, BitVec.toNat_ofNat, Nat.mod_mul_mod, BitVec.toNat_add]
-  congr
-  omega
 
 @[bv_multi_width_normalize] theorem BitVec.one_mul (x : BitVec w) : 1#w * x = x := by simp
 
@@ -452,7 +451,7 @@ def getSimpData (simpsetName : Name) : MetaM (SimpTheorems × Simprocs) := do
   return (theorems, simprocs)
 
 open Lean Elab Meta
-def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
+def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := g.withContext do
   let mut theorems : Array SimpTheorems := #[]
   let mut simprocs : Array Simprocs := #[]
 
@@ -466,7 +465,7 @@ def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
   let ctx ← Simp.mkContext (config := config)
     (simpTheorems := theorems)
     (congrTheorems := ← Meta.getSimpCongrTheorems)
-  let lctx ← g.withContext <| getLCtx
+  let lctx ← getLCtx
   let fvars := lctx.getFVarIds
   match ← simpGoal g ctx (simprocs := simprocs) (fvarIdsToSimp := fvars) with
   | (.none, _stats) => return none
@@ -486,15 +485,15 @@ elab "bv_multi_width_normalize" : tactic => do
       -- by just working on disjunctions.
       -- let g ← g.revertAll
       return [g]
-
+  Lean.Meta.AC.acNfTargetTactic
+  (← (← getMainGoal).getNondepPropHyps).forM Lean.Meta.AC.acNfHypTactic
 
 /--
 trace: w : ℕ
 _example :
-  (∀ (x : ℕ) (x_1 x_2 : BitVec x), x_2.ule x_1 = true) ∧
-    ∀ (x : ℕ) (x_1 x_2 : BitVec x), x_1.ule x_2 = true ∨ x_2.ult x_1 = true ∨ x_1.ule x_2 = true ∨ x_1 ≠ x_2
-⊢ (∀ (x x_1 : BitVec w), x_1.ule x = true) ∧
-    ∀ (x x_1 : BitVec w), x.ule x_1 = true ∨ x_1.ult x = true ∨ x.ule x_1 = true ∨ x ≠ x_1
+  (∀ (x : ℕ) (x_1 x_2 : BitVec x), x_1.ule x_2 = true ∨ x_2.ult x_1 = true ∨ x_1 ≠ x_2) ∧
+    ∀ (x : ℕ) (x_1 x_2 : BitVec x), x_2.ule x_1 = true
+⊢ (∀ (x x_1 : BitVec w), x.ule x_1 = true ∨ x_1.ult x = true ∨ x ≠ x_1) ∧ ∀ (x x_1 : BitVec w), x_1.ule x = true
 ---
 warning: declaration uses 'sorry'
 -/
@@ -504,8 +503,8 @@ warning: declaration uses 'sorry'
 
 /--
 trace: w : ℕ
-_example : ∀ {w : ℕ} (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
-⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
+_example : ∀ {w : ℕ} (a b : BitVec w), a = b ∨ a &&& b ≠ 0#w
+⊢ ∀ (a b : BitVec w), a = b ∨ a &&& b ≠ 0#w
 ---
 warning: declaration uses 'sorry'
 -/

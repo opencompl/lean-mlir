@@ -23,6 +23,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.pseudo
 import SSA.Projects.LLVMRiscV.Pipeline.freeze
 import SSA.Projects.LLVMRiscV.Pipeline.Combiners
 import SSA.Projects.LLVMRiscV.Pipeline.ConstantMatching
+import SSA.Projects.LLVMRiscV.Pipeline.SelectionDAG
 
 import LeanMLIR.Transforms.DCE
 import LeanMLIR.Transforms.CSE
@@ -241,4 +242,42 @@ def selectionPipeFuelWithCSEWithOptConst {Γl : List LLVMPlusRiscV.Ty} (fuel : N
   let optimize_final_2 := multiRewritePeephole 100
     GLobalISelPostLegalizerCombiner optimize_final_1;
   let dce_final := (DCE.repeatDce optimize_final_2).val
+  dce_final
+
+/--
+  Run the instruction selector pipeline with optimizations, resulting in the following pipeline:
+  - DCE
+  - Optimizations from SelectionDAG (on LLVM)
+  - lowering instructions in `rewritingPatterns1`
+  - lowering instructions in `rewritingPatterns0`
+  - DCE (to remove LLVM instructions)
+  - remove casting operations (`reconcile_casts`)
+  - DCE (dead code due to casting removal)
+  - CSE
+  - Optimizations from SelectionDAG (on RISCV assembly)
+-/
+def selectionPipeWithSelectionDAG {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : Com LLVMPlusRiscV
+    (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) (pseudo : Bool):=
+  let rmInitialDeadCode :=  (DCE.repeatDce prog).val;
+  let rmInitialDeadCode :=
+    if pseudo then
+      multiRewritePeephole fuel pseudo_match rmInitialDeadCode
+    else
+      rmInitialDeadCode
+  let optimize_initial := multiRewritePeephole fuel
+    SelectionDAGCombiner rmInitialDeadCode;
+  let loweredConst := multiRewritePeephole fuel
+    const_match optimize_initial;
+  let lowerPart1 := multiRewritePeephole fuel
+    rewritingPatterns1  loweredConst;
+  let lowerPart2 := multiRewritePeephole fuel
+    rewritingPatterns0 lowerPart1;
+  let postLoweringDCE := (DCE.repeatDce lowerPart2).val;
+  let postReconcileCast := multiRewritePeephole fuel (reconcile_cast_pass) postLoweringDCE;
+  let remove_dead_cast := (DCE.repeatDce postReconcileCast).val;
+  let optimize_eq_cast := (CSE.cse' remove_dead_cast).val;
+  let out := (DCE.repeatDce optimize_eq_cast).val;
+  let optimize_final := multiRewritePeephole 100
+    SelectionDAGCombiner out;
+  let dce_final := (DCE.repeatDce optimize_final).val
   dce_final

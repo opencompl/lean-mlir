@@ -172,6 +172,88 @@ Test the rewrite:
         comment=comment
     )
     
+def generate_udiv_pow2_rewrites(powers: List[int]) -> RewriteGroup:
+    patterns = []
+    group_name = "udiv_pow2"
+    comment = """
+/-! ### udiv_by_pow2 -/
+
+/--
+Test the rewrite:
+    udiv(x, 2^n) -> x >> (n)
+-/
+""" 
+    for n in powers:
+        power_of_2 = 2 ** n
+        
+        definition = f"""def {group_name}_{power_of_2} : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant ({power_of_2}) : i64
+      %0 = llvm.udiv %x, %c : i64
+      llvm.return %0 : i64
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant ({n}) : i64
+      %0 = llvm.lshr %x, %c : i64
+      llvm.return %0 : i64
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_{power_of_2}",
+            definition=definition
+        ))
+    
+    return RewriteGroup(
+        group_name=group_name,
+        patterns=patterns,
+        type_signature="LLVMPeepholeRewriteRefine 64 Γ",
+        comment=comment
+    )
+    
+def generate_sdiv_pow2_rewrites(powers: List[int]) -> RewriteGroup:
+    patterns = []
+    group_name = "sdiv_pow2"
+    comment = """
+/-! ### sdiv_by_pow2 -/
+
+/--
+Test the rewrite:
+    sdiv(x, 2^n) -> x >> (n)
+-/
+""" 
+    for n in powers:
+        power_of_2 = 2 ** n
+        
+        definition = f"""def {group_name}_{power_of_2} : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant ({power_of_2}) : i64
+      %0 = llvm.sdiv %x, %c : i64
+      llvm.return %0 : i64
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant ({n}) : i64
+      %0 = llvm.lshr %x, %c : i64
+      llvm.return %0 : i64
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_{power_of_2}",
+            definition=definition
+        ))
+    
+    return RewriteGroup(
+        group_name=group_name,
+        patterns=patterns,
+        type_signature="LLVMPeepholeRewriteRefine 64 Γ",
+        comment=comment
+    )
+    
 def generate_canonicalize_icmp(max_val: int) -> RewriteGroup:
     patterns = []
     group_name = "canonicalize_icmp"
@@ -393,6 +475,47 @@ Test the rewrite:
         comment=comment
     )
     
+def generate_mulh_to_lshr(powers: List[int]) -> RewriteGroup:
+    patterns = []
+    group_name = "mulh_to_lshr"
+    comment = """
+/-! ### mulh_to_lshr -/
+
+/-- 
+Test the rewrite:
+  (mulh x, n^2) → (sra x, (64-n))
+-/
+""" 
+    for n in powers:
+        power_of_2 = 2 ** n
+        
+        definition = f"""def {group_name}_{power_of_2} : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
+  lhs := [LV| {{
+    ^entry (%x: !riscv.reg):
+      %c = li ({power_of_2}) : !riscv.reg
+      %0 = mulh %c, %x : !riscv.reg
+      ret %0 : !riscv.reg
+  }}]
+  rhs := [LV| {{
+    ^entry (%x: !riscv.reg):
+      %c = li ({64 - n}) : !riscv.reg
+      %0 = sra %x, %c : !riscv.reg
+      ret %0 : !riscv.reg
+  }}]
+"""
+        
+        patterns.append(RewritePattern(
+            name=f"{group_name}_{power_of_2}",
+            definition=definition
+        ))
+    
+    return RewriteGroup(
+        group_name=group_name,
+        patterns=patterns,
+        type_signature="RISCVPeepholeRewrite Γ",
+        comment=comment
+    )
+    
 def generate_integer_reassoc_combines(max_val: int) -> RewriteGroup:
     patterns = []
     group_name = "irc_constants"
@@ -541,7 +664,10 @@ REWRITE_GENERATORS = [
     lambda: generate_mul_to_shl_rewrites(powers=list(range(0, 10))),
     lambda: generate_urem_pow2_rewrites(powers=list(range(0, 10))),
     lambda: generate_canonicalize_icmp(max_val=5),
+    lambda: generate_mulh_to_lshr(powers=list(range(1, 10))),
     lambda: generate_integer_reassoc_combines(max_val=2),
+    lambda: generate_udiv_pow2_rewrites(powers=list(range(0, 10))),
+    lambda: generate_sdiv_pow2_rewrites(powers=list(range(0, 10))),
 ]
 
 def generate_all_rewrites() -> str:

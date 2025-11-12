@@ -1,6 +1,7 @@
 import Lean
-
 open Lean
+
+namespace SexprPBV
 
 /-- Type of S-expressions -/
 inductive Sexpr
@@ -26,3 +27,5 @@ class ToSexpr (α : Type _) where
 
 instance : ToSexpr Sexpr where
   toSexpr s := s
+
+end SexprPBV
