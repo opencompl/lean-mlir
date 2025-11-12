@@ -542,7 +542,7 @@ def violin_plot(parameter, selector1, selector2):
         pc.set_alpha(1.0)
         
     plt.axhline(1, color=black, linestyle="--", linewidth=1, label="1x")
-    plt.text(positions[-1]*1.08, 1.02, "1x", color=dark_red, ha='center', fontsize=20)
+    plt.text(positions[-1]*1.08, 1.02, "1x", color=black, ha='center', fontsize=20)
         
     for partname in ('cbars', 'cmins', 'cmaxes'):
         if partname in parts:
@@ -724,7 +724,7 @@ def proportional_bar_plot(parameter, selector1, selector2):
     )
 
     plt.axhline(1, color=black, linestyle="--", linewidth=2)
-    plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 1.05, f"{selector_labels[selector2]}", color=dark_red, ha='center', fontsize=20)
+    plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 1.05, f"{selector_labels[selector2]}", color=black, ha='center', fontsize=20)
     
 
     plt.xlabel("#Instructions - LLVM IR")
