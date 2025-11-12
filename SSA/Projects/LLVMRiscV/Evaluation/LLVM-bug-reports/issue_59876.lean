@@ -33,7 +33,6 @@ def optimized_correct := [LV| {
   llvm.return %x : i1
   }]
 
-
 def bug : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 1)] where
   lhs:= original
   rhs:= optimized_incorrect
