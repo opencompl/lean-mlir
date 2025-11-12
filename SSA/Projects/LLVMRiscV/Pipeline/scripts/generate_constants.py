@@ -677,7 +677,7 @@ Test the rewrite:
     return RewriteGroup(
         group_name=group_name,
         patterns=patterns,
-        type_signature="LLVMPeepholeRewriteRefine 64 Γ",
+        type_signature="LLVMPeepholeRewriteRefine 32 Γ",
         comment=comment
     )
     
@@ -833,7 +833,7 @@ REWRITE_GENERATORS = [
     lambda: generate_integer_reassoc_combines(max_val=2),
     lambda: generate_udiv_pow2_rewrites(powers=list(range(0, 10))),
     lambda: generate_sdiv_pow2_rewrites(powers=list(range(1, 10))),
-    lambda: generate_narrow_binop_rewrites(max_val=10),
+    lambda: generate_narrow_binop_rewrites(max_val=2),
 ]
 
 def generate_all_rewrites() -> str:
@@ -851,7 +851,9 @@ def GlobalISelPostLegalizerCombinerConstantFolding :
     (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
     irc_constants) ++ 
     (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-    sdiv_pow2)
+    sdiv_pow2) ++
+    (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+    cast_combines_narrow_binops)
     """
     return body
 
