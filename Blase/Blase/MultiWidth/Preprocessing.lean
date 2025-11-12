@@ -2,8 +2,26 @@ import Blase.ForLean
 import Blase.MultiWidth.Attr
 import Mathlib.Data.Nat.Bits
 import Mathlib.Algebra.Group.Nat.Defs
+import Lean
+
+open Lean
+open Std
 
 set_option grind.warning false
+
+
+instance : Commutative (max : ℕ → ℕ → ℕ) where
+   comm := by omega
+
+instance : IdempotentOp (max : ℕ → ℕ → ℕ) where
+  idempotent := by intros x; simp
+
+instance : Commutative (min : ℕ → ℕ → ℕ) where
+  comm := by omega
+
+instance : IdempotentOp (min : ℕ → ℕ → ℕ) where
+  idempotent := by intros x; simp
+
 
 namespace Normalize
 
@@ -467,15 +485,15 @@ elab "bv_multi_width_normalize" : tactic => do
       -- by just working on disjunctions.
       -- let g ← g.revertAll
       return [g]
-
+  Lean.Meta.AC.acNfTargetTactic
+  (← (← getMainGoal).getNondepPropHyps).forM Lean.Meta.AC.acNfHypTactic
 
 /--
 trace: w : ℕ
 _example :
-  (∀ (x : ℕ) (x_1 x_2 : BitVec x), x_2.ule x_1 = true) ∧
-    ∀ (x : ℕ) (x_1 x_2 : BitVec x), x_1.ule x_2 = true ∨ x_2.ult x_1 = true ∨ x_1.ule x_2 = true ∨ x_1 ≠ x_2
-⊢ (∀ (x x_1 : BitVec w), x_1.ule x = true) ∧
-    ∀ (x x_1 : BitVec w), x.ule x_1 = true ∨ x_1.ult x = true ∨ x.ule x_1 = true ∨ x ≠ x_1
+  (∀ (x : ℕ) (x_1 x_2 : BitVec x), x_1.ule x_2 = true ∨ x_2.ult x_1 = true ∨ x_1 ≠ x_2) ∧
+    ∀ (x : ℕ) (x_1 x_2 : BitVec x), x_2.ule x_1 = true
+⊢ (∀ (x x_1 : BitVec w), x.ule x_1 = true ∨ x_1.ult x = true ∨ x ≠ x_1) ∧ ∀ (x x_1 : BitVec w), x_1.ule x = true
 ---
 warning: declaration uses 'sorry'
 -/
@@ -485,8 +503,8 @@ warning: declaration uses 'sorry'
 
 /--
 trace: w : ℕ
-_example : ∀ {w : ℕ} (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
-⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
+_example : ∀ {w : ℕ} (a b : BitVec w), a = b ∨ a &&& b ≠ 0#w
+⊢ ∀ (a b : BitVec w), a = b ∨ a &&& b ≠ 0#w
 ---
 warning: declaration uses 'sorry'
 -/

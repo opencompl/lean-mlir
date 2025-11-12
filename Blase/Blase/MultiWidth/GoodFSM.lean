@@ -675,6 +675,13 @@ theorem eval_mkMaskZeroFsm_eq_decide (env : α → BitStream):
 def mkTermFSM (wcard tcard bcard pcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard bcard pcard t) :=
   match t with
+  | .bvOfBool b => 
+     let fsmB := mkTermFSM wcard tcard bcard pcard b
+     let fsmW := mkWidthFSM wcard tcard bcard pcard (.const 1)
+     {
+      toFsmZext := fsmB.toFsmZext &&& fsmW.toFsm
+      width := fsmW
+     }
   | .ofNat w n =>
     let fsmW  := (mkWidthFSM wcard tcard bcard pcard w)
     let fsmN : FSM (StateSpace wcard tcard bcard pcard) := (FSM.ofNat n).map Fin.elim0
@@ -1011,6 +1018,21 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
         omega
       · simp [hi]
     · simp [hk]
+  case bvOfBool b =>
+    constructor
+    intros wenv benv tenv fsmEnv htenv
+    simp [Nondep.Term.ofDep, mkTermFSM]
+    have hb := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard pcard b
+    have hw := IsGoodNatFSM_mkWidthFSM tcard bcard (wcard := wcard) (pcard := pcard) (.const 1)
+    simp at hw
+    ext i 
+    simp
+    rw [hb.heq (henv := htenv) (benv := benv)]
+    rw [hw.heq (henv := htenv.toHWidthEnv)]
+    simp
+    by_cases hi0 : i = 0 
+    · simp [hi0]
+    · simp [hi0]
 
 
 /--

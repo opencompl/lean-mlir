@@ -16,6 +16,7 @@ For stable releases, please change the `rev` to the desired version tag.
 
 #### Algorithms Improvements TODO
 
+
 - [ ] Write multi-width as a reduction from single-width, with a variable `v` such that `v & (v - 1) = 0`.
    This makes the multi-width version reducible, with the mask being created as `v - 1`.
 - [x] Add support for a generalization mode that keeps width 1 and geneeralizes all other widths. This is useful for problems
