@@ -902,7 +902,7 @@ def zext_trunc : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 64)] where
       llvm.return %0 : i32
   }]
 
-def sext_trunc_fold : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) :=
+def sext_trunc_fold_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) :=
   [⟨_, sext_trunc⟩,
   ⟨_, zext_trunc⟩]
 
@@ -2089,7 +2089,7 @@ def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 
   LLVMIR_cast_combines_32 ++
   hoist_logic_op_with_same_opcode_hands_32 ++
   cast_of_cast_combines_32 ++
-  sext_trunc_fold ++
+  sext_trunc_fold_32 ++
   LLVMIR_identity_combines_32
 
 /-- We group all the rewrites that form the pre-legalization optimizations in GlobalISel-/
