@@ -12,6 +12,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 namespace BitVec
 open LLVMRiscV
 
+@[simp_denote]
 def original := [LV| {
   ^entry (%x : i1):
   %1 = llvm.mlir.constant (1) : i1
@@ -19,11 +20,19 @@ def original := [LV| {
   llvm.return %0 : i1
 }]
 
+@[simp_denote]
 def optimized_incorrect := [LV| {
   ^entry (%x : i1):
   %0 = llvm.mlir.constant (0) : i1
   llvm.return %0 : i1
   }]
+
+@[simp_denote]
+def optimized_correct := [LV| {
+  ^entry (%x : i1):
+  llvm.return %x : i1
+  }]
+
 
 def bug : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 1)] where
   lhs:= original
@@ -31,3 +40,10 @@ def bug : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 1)] where
   correct := by
     simp_lowering
     <;> sorry
+
+def fix : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 1)] where
+  lhs:= original
+  rhs:= optimized_correct
+  correct := by
+    simp_lowering
+    bv_decide

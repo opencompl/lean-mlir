@@ -13,6 +13,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 namespace BitVec
 open LLVMRiscV
 
+@[simp_denote]
 def original := [LV| {
   ^entry (%x : i32, %replacement_low : i32, %replacement_high : i32):
   %0 = llvm.mlir.constant (0) : i32
@@ -26,6 +27,7 @@ def original := [LV| {
   llvm.return %r : i32
 }]
 
+@[simp_denote]
 def optimized_incorrect := [LV| {
   ^entry (%x : i32, %replacement_low : i32, %replacement_high : i32):
   %0 = llvm.mlir.constant (0) : i32
