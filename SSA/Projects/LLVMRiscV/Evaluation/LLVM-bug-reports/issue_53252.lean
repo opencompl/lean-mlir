@@ -7,6 +7,7 @@ import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 
 /-!
   Bug reported in https://github.com/llvm/llvm-project/issues/53252
+  and fixed in https://github.com/llvm/llvm-project/commit/4041c44853588c1e4918ec4a160c053cf08432b5
 -/
 
 namespace BitVec
@@ -25,7 +26,7 @@ def original := [LV| {
   llvm.return %r : i32
 }]
 
-def optimized := [LV| {
+def optimized_incorrect := [LV| {
   ^entry (%x : i32, %replacement_low : i32, %replacement_high : i32):
   %0 = llvm.mlir.constant (0) : i32
   %1 = llvm.icmp.slt %x, %0 : i32
@@ -33,12 +34,30 @@ def optimized := [LV| {
   %2 = llvm.icmp.sgt %x, %65535 : i32
   %3 = llvm.select %1, %replacement_low, %x : i32
   %4 = llvm.select %2, %replacement_high, %3 : i32
-  llvm.return %x : i32
+  llvm.return %4 : i32
   }]
 
 def bug : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
   lhs:= original
-  rhs:= optimized
+  rhs:= optimized_incorrect
+  correct := by
+    simp_lowering
+    <;> sorry
+
+def optimized_correct := [LV| {
+  ^entry (%x : i32, %replacement_low : i32, %replacement_high : i32):
+  %0 = llvm.mlir.constant (0) : i32
+  %1 = llvm.icmp.slt %x, %0 : i32
+  %2 = llvm.select %1, %replacement_low, %replacement_high : i32
+  %65535 = llvm.mlir.constant (65535) : i32
+  %3 = llvm.icmp.ugt %x, %65535 : i32
+  %4 = llvm.select %3, %x, %2 : i32
+  llvm.return %x : i32
+  }]
+
+def fix : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
+  lhs:= original
+  rhs:= optimized_correct
   correct := by
     simp_lowering
     <;> sorry
