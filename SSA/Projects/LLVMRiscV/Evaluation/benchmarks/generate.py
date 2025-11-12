@@ -3,9 +3,9 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = ["xdsl"]
-# 
+#
 # [tool.uv.sources]
-# xdsl = { git = "https://github.com/xdslproject/xdsl.git", rev = "84470026ca7dbf37837eb57030897202a6dc47d7" }
+# xdsl = { git = "https://github.com/luisacicolini/xdsl.git", rev = "5e00c8487235fb56db9183bc3434b44baa4151cf" }
 # ///
 
 
@@ -43,9 +43,7 @@ MLIR_single_DIR_PATH = (
 MLIR_multi_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_multi/"
 )
-isolated_instructions_DIR_PATH = (
-    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/compare-lowering-patterns/isolated_instructions/"
-)
+isolated_instructions_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/compare-lowering-patterns/isolated_instructions/"
 LLC_ASM_selectiondag_DIR_PATH = f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM_selectiondag/"
 LLC_ASM_globalisel_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/LLC_ASM_globalisel/"
@@ -78,10 +76,10 @@ AUTOGEN_DIR_PATHS = [
     MLIR_single_DIR_PATH,
     LLC_ASM_selectiondag_DIR_PATH,
     LLC_ASM_globalisel_DIR_PATH,
-    XDSL_FUNC_ASM_DIR_PATH,
+    # XDSL_FUNC_ASM_DIR_PATH,
     XDSL_FUNC_opt_ASM_DIR_PATH,
-    LEANMLIR_ASM_DIR_PATH,
-    XDSL_ASM_DIR_PATH,
+    # LEANMLIR_ASM_DIR_PATH,
+    # XDSL_ASM_DIR_PATH,
     LOGS_DIR_PATH,
     LEANMLIR_ASM_opt_DIR_PATH,
     XDSL_opt_ASM_DIR_PATH,
@@ -144,6 +142,7 @@ def run_command(cmd, log_file, timeout=TIMEOUT_SEC):
         log_file.write(f"timeout of {timeout} seconds reached\n")
         print(f"{log_file} - timeout of {timeout} seconds reached")
 
+
 def extract_helper(input_file, output_base, max_functions, base_name):
     f = open(input_file, "r")
     all_lines = f.readlines()
@@ -170,18 +169,21 @@ def extract_helper(input_file, output_base, max_functions, base_name):
         if function_count >= max_functions:
             print(f"Reached maximum of {max_functions} functions. Stopping extraction.")
             break
-    
+
+
 def extract(input_dir, output_base, max_functions, type):
     if type:
         for filename in os.listdir(input_dir):
             input_file = os.path.join(input_dir, filename)
-            instruction_name = ''.join(filename.split('.')[0])
-            extract_helper(input_file, output_base, max_functions, f"{instruction_name}_")
+            instruction_name = "".join(filename.split(".")[0])
+            extract_helper(
+                input_file, output_base, max_functions, f"{instruction_name}_"
+            )
     else:
         size = input_dir.split("_")[-1].split(".")[0]
         base_name = f"{size}_function_"
         extract_helper(input_dir, output_base, max_functions, base_name)
-            
+
 
 def MLIR_opt_arith_llvm(input_file, output_file, log_file, pass_dict):
     """
@@ -324,18 +326,34 @@ def XDSL_reg_alloc(input_file, output_file, log_file, pass_dict):
     """
     Remove unrealized casts from the RISCV64 dialect MLIR files with xdsl.
     """
-    cmd_base = "xdsl-opt -p convert-func-to-riscv-func,reconcile-unrealized-casts,riscv-allocate-registers -t riscv-asm "
-    cmd = cmd_base + input_file + " > " + output_file
-    ret_code = run_command(cmd, log_file)
-    pass_dict[output_file] = ret_code
+    try:
+        from xdsl.xdsl_opt_main import xDSLOptMain
+
+        xdsl_opt_main = xDSLOptMain(
+            args=f"{input_file} -p convert-func-to-riscv-func,reconcile-unrealized-casts,riscv-allocate-registers{{force-infinite=true}},riscv-allocate-infinite-registers,canonicalize-register-allocation -t riscv-asm -o {output_file}".split()
+        )
+        xdsl_opt_main.run()
+        # cmd = cmd_base + input_file + " > " + output_file
+        # ret_code = run_command(cmd, log_file)
+        pass_dict[output_file] = 1
+    except Exception as e:
+        print(f"XDSL_reg_alloc failed for {input_file} with error: {e}", file=log_file)
+        pass_dict[output_file] = 0
 
 
 def generate_benchmarks(num, jobs, llvm_opt, compare_lowering_patterns=False):
     setup_benchmarking_directories()
-    
+
     if compare_lowering_patterns:
-        print(f"Using instruction-specific files from: {isolated_instructions_DIR_PATH}")
-        extract(isolated_instructions_DIR_PATH, MLIR_single_DIR_PATH, num, compare_lowering_patterns)
+        print(
+            f"Using instruction-specific files from: {isolated_instructions_DIR_PATH}"
+        )
+        extract(
+            isolated_instructions_DIR_PATH,
+            MLIR_single_DIR_PATH,
+            num,
+            compare_lowering_patterns,
+        )
     else:
         # extract mlir blocks and put them all in separate files
         # for each file with programs of a certain size
@@ -423,9 +441,7 @@ def generate_benchmarks(num, jobs, llvm_opt, compare_lowering_patterns=False):
         if MLIR_translate_file2ret[input_file] == 0:  # previous pass succeded
             if llvm_opt == "default":
                 basename, _ = os.path.splitext(filename)
-                output_file = os.path.join(
-                    LLC_ASM_globalisel_DIR_PATH, basename + ".s"
-                )
+                output_file = os.path.join(LLC_ASM_globalisel_DIR_PATH, basename + ".s")
                 log_file = open(
                     os.path.join(LOGS_DIR_PATH, basename + "_globalisel_llc.log"),
                     "w",
@@ -468,7 +484,7 @@ def generate_benchmarks(num, jobs, llvm_opt, compare_lowering_patterns=False):
         percentage = (float(idx) / float(len(os.listdir(LLVM_DIR_PATH)))) * 100
         print(f"extracting the first basic block: {percentage:.2f}%")
 
-    LAKE_file2ret = dict()
+    # LAKE_file2ret = dict()
     # # Run the lean pass in parallel
     # LAKE_compile_riscv64(jobs, LAKE_file2ret)
 
@@ -576,7 +592,7 @@ def main():
         action="store_true",
         default=False,
     )
-    
+
     args = parser.parse_args()
 
     generate_benchmarks(args.num, args.jobs, args.llvm_opt, args.instruction_lowering)
