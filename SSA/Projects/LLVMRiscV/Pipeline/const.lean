@@ -2331,108 +2331,154 @@ def llvm_const_lower_riscv_li50 : LLVMPeepholeRewriteRefine 64 [] :=
       simp
   }
 
+@[simp_denote]
+def liRiscv0_1bit := [LV| {
+  ^entry ():
+    %0 = "li"() {imm = 0 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i1)
+    llvm.return %1 : i1
+  }]
+
+@[simp_denote]
+def constLLVM0_1bit : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 1)) := [LV| {
+  ^entry ():
+    %1 = llvm.mlir.constant (0) : i1
+    llvm.return %1 : i1
+  }]
+
+def llvm_const_lower_riscv_li0_1bit : LLVMPeepholeRewriteRefine 1 [] where
+  lhs := constLLVM0_1bit
+  rhs := liRiscv0_1bit
+
+@[simp_denote]
+def liRiscv1_1bit := [LV| {
+  ^entry ():
+    %0 = "li"() {imm = 1 : !i64} : (!i64) -> (!i64)
+    %1 = "builtin.unrealized_conversion_cast"(%0) : (!i64) -> (i1)
+    llvm.return %1 : i1
+  }]
+
+@[simp_denote]
+def constLLVM1_1bit : Com LLVMPlusRiscV ⟨[]⟩ .pure (.llvm (.bitvec 1)) := [LV| {
+  ^entry ():
+    %1 = llvm.mlir.constant (1) : i1
+    llvm.return %1 : i1
+  }]
+
+def llvm_const_lower_riscv_li1_1bit : LLVMPeepholeRewriteRefine 1 [] where
+  lhs := constLLVM1_1bit
+  rhs := liRiscv1_1bit
+
+
+def constantLowering64bit : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, llvm_const_lower_riscv_li_50⟩,
+  ⟨_, llvm_const_lower_riscv_li_49⟩,
+  ⟨_, llvm_const_lower_riscv_li_48⟩,
+  ⟨_, llvm_const_lower_riscv_li_47⟩,
+  ⟨_, llvm_const_lower_riscv_li_46⟩,
+  ⟨_, llvm_const_lower_riscv_li_45⟩,
+  ⟨_, llvm_const_lower_riscv_li_44⟩,
+  ⟨_, llvm_const_lower_riscv_li_43⟩,
+  ⟨_, llvm_const_lower_riscv_li_42⟩,
+  ⟨_, llvm_const_lower_riscv_li_41⟩,
+  ⟨_, llvm_const_lower_riscv_li_40⟩,
+  ⟨_, llvm_const_lower_riscv_li_39⟩,
+  ⟨_, llvm_const_lower_riscv_li_38⟩,
+  ⟨_, llvm_const_lower_riscv_li_37⟩,
+  ⟨_, llvm_const_lower_riscv_li_36⟩,
+  ⟨_, llvm_const_lower_riscv_li_35⟩,
+  ⟨_, llvm_const_lower_riscv_li_34⟩,
+  ⟨_, llvm_const_lower_riscv_li_33⟩,
+  ⟨_, llvm_const_lower_riscv_li_32⟩,
+  ⟨_, llvm_const_lower_riscv_li_31⟩,
+  ⟨_, llvm_const_lower_riscv_li_30⟩,
+  ⟨_, llvm_const_lower_riscv_li_29⟩,
+  ⟨_, llvm_const_lower_riscv_li_28⟩,
+  ⟨_, llvm_const_lower_riscv_li_27⟩,
+  ⟨_, llvm_const_lower_riscv_li_26⟩,
+  ⟨_, llvm_const_lower_riscv_li_25⟩,
+  ⟨_, llvm_const_lower_riscv_li_24⟩,
+  ⟨_, llvm_const_lower_riscv_li_23⟩,
+  ⟨_, llvm_const_lower_riscv_li_22⟩,
+  ⟨_, llvm_const_lower_riscv_li_21⟩,
+  ⟨_, llvm_const_lower_riscv_li_20⟩,
+  ⟨_, llvm_const_lower_riscv_li_19⟩,
+  ⟨_, llvm_const_lower_riscv_li_18⟩,
+  ⟨_, llvm_const_lower_riscv_li_17⟩,
+  ⟨_, llvm_const_lower_riscv_li_16⟩,
+  ⟨_, llvm_const_lower_riscv_li_15⟩,
+  ⟨_, llvm_const_lower_riscv_li_14⟩,
+  ⟨_, llvm_const_lower_riscv_li_13⟩,
+  ⟨_, llvm_const_lower_riscv_li_12⟩,
+  ⟨_, llvm_const_lower_riscv_li_11⟩,
+  ⟨_, llvm_const_lower_riscv_li_10⟩,
+  ⟨_, llvm_const_lower_riscv_li_9⟩,
+  ⟨_, llvm_const_lower_riscv_li_8⟩,
+  ⟨_, llvm_const_lower_riscv_li_7⟩,
+  ⟨_, llvm_const_lower_riscv_li_6⟩,
+  ⟨_, llvm_const_lower_riscv_li_5⟩,
+  ⟨_, llvm_const_lower_riscv_li_4⟩,
+  ⟨_, llvm_const_lower_riscv_li_3⟩,
+  ⟨_, llvm_const_lower_riscv_li_2⟩,
+  ⟨_, llvm_const_lower_riscv_li_1⟩,
+  ⟨_, llvm_const_lower_riscv_li0⟩,
+  ⟨_, llvm_const_lower_riscv_li1⟩,
+  ⟨_, llvm_const_lower_riscv_li2⟩,
+  ⟨_, llvm_const_lower_riscv_li3⟩,
+  ⟨_, llvm_const_lower_riscv_li4⟩,
+  ⟨_, llvm_const_lower_riscv_li5⟩,
+  ⟨_, llvm_const_lower_riscv_li6⟩,
+  ⟨_, llvm_const_lower_riscv_li7⟩,
+  ⟨_, llvm_const_lower_riscv_li8⟩,
+  ⟨_, llvm_const_lower_riscv_li9⟩,
+  ⟨_, llvm_const_lower_riscv_li10⟩,
+  ⟨_, llvm_const_lower_riscv_li11⟩,
+  ⟨_, llvm_const_lower_riscv_li12⟩,
+  ⟨_, llvm_const_lower_riscv_li13⟩,
+  ⟨_, llvm_const_lower_riscv_li14⟩,
+  ⟨_, llvm_const_lower_riscv_li15⟩,
+  ⟨_, llvm_const_lower_riscv_li16⟩,
+  ⟨_, llvm_const_lower_riscv_li17⟩,
+  ⟨_, llvm_const_lower_riscv_li18⟩,
+  ⟨_, llvm_const_lower_riscv_li19⟩,
+  ⟨_, llvm_const_lower_riscv_li20⟩,
+  ⟨_, llvm_const_lower_riscv_li21⟩,
+  ⟨_, llvm_const_lower_riscv_li22⟩,
+  ⟨_, llvm_const_lower_riscv_li23⟩,
+  ⟨_, llvm_const_lower_riscv_li24⟩,
+  ⟨_, llvm_const_lower_riscv_li25⟩,
+  ⟨_, llvm_const_lower_riscv_li26⟩,
+  ⟨_, llvm_const_lower_riscv_li27⟩,
+  ⟨_, llvm_const_lower_riscv_li28⟩,
+  ⟨_, llvm_const_lower_riscv_li29⟩,
+  ⟨_, llvm_const_lower_riscv_li30⟩,
+  ⟨_, llvm_const_lower_riscv_li31⟩,
+  ⟨_, llvm_const_lower_riscv_li32⟩,
+  ⟨_, llvm_const_lower_riscv_li33⟩,
+  ⟨_, llvm_const_lower_riscv_li34⟩,
+  ⟨_, llvm_const_lower_riscv_li35⟩,
+  ⟨_, llvm_const_lower_riscv_li36⟩,
+  ⟨_, llvm_const_lower_riscv_li37⟩,
+  ⟨_, llvm_const_lower_riscv_li38⟩,
+  ⟨_, llvm_const_lower_riscv_li39⟩,
+  ⟨_, llvm_const_lower_riscv_li40⟩,
+  ⟨_, llvm_const_lower_riscv_li41⟩,
+  ⟨_, llvm_const_lower_riscv_li42⟩,
+  ⟨_, llvm_const_lower_riscv_li43⟩,
+  ⟨_, llvm_const_lower_riscv_li44⟩,
+  ⟨_, llvm_const_lower_riscv_li45⟩,
+  ⟨_, llvm_const_lower_riscv_li46⟩,
+  ⟨_, llvm_const_lower_riscv_li47⟩,
+  ⟨_, llvm_const_lower_riscv_li48⟩,
+  ⟨_, llvm_const_lower_riscv_li49⟩]
+
+def constantLowering1bit : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
+  [⟨_, llvm_const_lower_riscv_li0_1bit⟩,
+  ⟨_, llvm_const_lower_riscv_li1_1bit⟩]
+
 def const_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) :=
- List.map (fun x =>  ⟨[], [Ty.llvm (.bitvec 64)], (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND x)⟩)
- [
-llvm_const_lower_riscv_li_50,
-  llvm_const_lower_riscv_li_49,
-  llvm_const_lower_riscv_li_48,
-  llvm_const_lower_riscv_li_47,
-  llvm_const_lower_riscv_li_46,
-  llvm_const_lower_riscv_li_45,
-  llvm_const_lower_riscv_li_44,
-  llvm_const_lower_riscv_li_43,
-  llvm_const_lower_riscv_li_42,
-  llvm_const_lower_riscv_li_41,
-  llvm_const_lower_riscv_li_40,
-  llvm_const_lower_riscv_li_39,
-  llvm_const_lower_riscv_li_38,
-  llvm_const_lower_riscv_li_37,
-  llvm_const_lower_riscv_li_36,
-  llvm_const_lower_riscv_li_35,
-  llvm_const_lower_riscv_li_34,
-  llvm_const_lower_riscv_li_33,
-  llvm_const_lower_riscv_li_32,
-  llvm_const_lower_riscv_li_31,
-  llvm_const_lower_riscv_li_30,
-  llvm_const_lower_riscv_li_29,
-  llvm_const_lower_riscv_li_28,
-  llvm_const_lower_riscv_li_27,
-  llvm_const_lower_riscv_li_26,
-  llvm_const_lower_riscv_li_25,
-  llvm_const_lower_riscv_li_24,
-  llvm_const_lower_riscv_li_23,
-  llvm_const_lower_riscv_li_22,
-  llvm_const_lower_riscv_li_21,
-  llvm_const_lower_riscv_li_20,
-  llvm_const_lower_riscv_li_19,
-  llvm_const_lower_riscv_li_18,
-  llvm_const_lower_riscv_li_17,
-  llvm_const_lower_riscv_li_16,
-  llvm_const_lower_riscv_li_15,
-  llvm_const_lower_riscv_li_14,
-  llvm_const_lower_riscv_li_13,
-  llvm_const_lower_riscv_li_12,
-  llvm_const_lower_riscv_li_11,
-  llvm_const_lower_riscv_li_10,
-  llvm_const_lower_riscv_li_9,
-  llvm_const_lower_riscv_li_8,
-  llvm_const_lower_riscv_li_7,
-  llvm_const_lower_riscv_li_6,
-  llvm_const_lower_riscv_li_5,
-  llvm_const_lower_riscv_li_4,
-  llvm_const_lower_riscv_li_3,
-  llvm_const_lower_riscv_li_2,
-  llvm_const_lower_riscv_li_1,
-  llvm_const_lower_riscv_li0,
-  llvm_const_lower_riscv_li1,
-  llvm_const_lower_riscv_li2,
-  llvm_const_lower_riscv_li3,
-  llvm_const_lower_riscv_li4,
-  llvm_const_lower_riscv_li5,
-  llvm_const_lower_riscv_li6,
-  llvm_const_lower_riscv_li7,
-  llvm_const_lower_riscv_li8,
-  llvm_const_lower_riscv_li9,
-  llvm_const_lower_riscv_li10,
-  llvm_const_lower_riscv_li11,
-  llvm_const_lower_riscv_li12,
-  llvm_const_lower_riscv_li13,
-  llvm_const_lower_riscv_li14,
-  llvm_const_lower_riscv_li15,
-  llvm_const_lower_riscv_li16,
-  llvm_const_lower_riscv_li17,
-  llvm_const_lower_riscv_li18,
-  llvm_const_lower_riscv_li19,
-  llvm_const_lower_riscv_li20,
-  llvm_const_lower_riscv_li21,
-  llvm_const_lower_riscv_li22,
-  llvm_const_lower_riscv_li23,
-  llvm_const_lower_riscv_li24,
-  llvm_const_lower_riscv_li25,
-  llvm_const_lower_riscv_li26,
-  llvm_const_lower_riscv_li27,
-  llvm_const_lower_riscv_li28,
-  llvm_const_lower_riscv_li29,
-  llvm_const_lower_riscv_li30,
-  llvm_const_lower_riscv_li31,
-  llvm_const_lower_riscv_li32,
-  llvm_const_lower_riscv_li33,
-  llvm_const_lower_riscv_li34,
-  llvm_const_lower_riscv_li35,
-  llvm_const_lower_riscv_li36,
-  llvm_const_lower_riscv_li37,
-  llvm_const_lower_riscv_li38,
-  llvm_const_lower_riscv_li39,
-  llvm_const_lower_riscv_li40,
-  llvm_const_lower_riscv_li41,
-  llvm_const_lower_riscv_li42,
-  llvm_const_lower_riscv_li43,
-  llvm_const_lower_riscv_li44,
-  llvm_const_lower_riscv_li45,
-  llvm_const_lower_riscv_li46,
-  llvm_const_lower_riscv_li47,
-  llvm_const_lower_riscv_li48,
-  llvm_const_lower_riscv_li49,
-  llvm_const_lower_riscv_li50
-  ]
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  constantLowering1bit)
+  ++
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  constantLowering64bit)

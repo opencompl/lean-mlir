@@ -29,7 +29,7 @@ This will be the starting point of the conversion.
 
 To generate the remaining benchmarks, run: 
 ```
-python3 generate.py --num --jobs --llvm_opt
+uv run generate.py --num --jobs --llvm_opt
 ```
 
 The script `generate.py` populates the folders in `benchmarks` by running the following: 

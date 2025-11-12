@@ -1,0 +1,7 @@
+name = "SexprPBV"
+version = "0.1.0"
+defaultTargets = ["SexprPBV"]
+
+[[lean_lib]]
+name = "SexprPBV"
+

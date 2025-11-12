@@ -811,3 +811,47 @@ info: {
 -/
 #guard_msgs in
 #eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner zext_of_sext.lhs)).val
+
+/--
+info: {
+  riscv_func.func @f(%0 : !riscv.reg):
+    %1 = "riscv.li"(){immediate = 63 : i64 } : () -> (!riscv.reg)
+    %2 = "riscv.sra"(%0, %1) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    "riscv.ret"(%2) : (!riscv.reg) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner mulh_to_lshr_2.lhs)).val
+
+/--
+info: {
+  riscv_func.func @f(%0 : !riscv.reg):
+    %1 = "riscv.li"(){immediate = 62 : i64 } : () -> (!riscv.reg)
+    %2 = "riscv.sra"(%0, %1) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    "riscv.ret"(%2) : (!riscv.reg) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner mulh_to_lshr_4.lhs)).val
+
+/--
+info: {
+  riscv_func.func @f(%0 : !riscv.reg):
+    %1 = "riscv.li"(){immediate = 61 : i64 } : () -> (!riscv.reg)
+    %2 = "riscv.sra"(%0, %1) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    "riscv.ret"(%2) : (!riscv.reg) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner mulh_to_lshr_8.lhs)).val
+
+/--
+info: {
+  riscv_func.func @f(%0 : !riscv.reg):
+    %1 = "riscv.li"(){immediate = 60 : i64 } : () -> (!riscv.reg)
+    %2 = "riscv.sra"(%0, %1) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    "riscv.ret"(%2) : (!riscv.reg) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner mulh_to_lshr_16.lhs)).val
