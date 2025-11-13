@@ -118,27 +118,7 @@ theorem AvoidCollision_setWidth_or {x y : BitVec w} :
 theorem AvoidCollision_setWidth_setWidth {x : BitVec u} {w v : Nat} (h : ¬ (v < u ∧ v < w)) :
     setWidth w (setWidth v x) = setWidth w x  := sorry
 -- NOTPOSSIBLE: twoPow with symbolic natural number as index? Wait, maybe possible? Needs thought!
--- TODO HIGH: twoPow
-/--
-warning: abstracted non-variable bitvector: ⏎
-  → 'twoPow w w''
----
-error: MAYCEX: Found possible counter-example at iteration 2 for predicate MultiWidth.Nondep.Predicate.or
-  (MultiWidth.Nondep.Predicate.binRel
-    (MultiWidth.BinaryRelationKind.ule)
-    (MultiWidth.Nondep.WidthExpr.var 0)
-    (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
-    (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 0)))
-  (MultiWidth.Nondep.Predicate.binRel
-    (MultiWidth.BinaryRelationKind.eq)
-    (MultiWidth.Nondep.WidthExpr.var 0)
-    (MultiWidth.Nondep.Term.setWidth
-      (MultiWidth.Nondep.Term.setWidth
-        (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 0))
-        (MultiWidth.Nondep.WidthExpr.var 1))
-      (MultiWidth.Nondep.WidthExpr.var 0))
-    (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 0)))
--/
+-- TODO HIGH: twoPow [done]
 #guard_msgs in theorem AvoidCollision_setWidth_setWidth_eq_self {a : BitVec w} {w' : Nat} (h : a < BitVec.twoPow w w') : (a.setWidth w').setWidth w = a  := by bv_multi_width
 -- DONE
 theorem AvoidCollision_setWidth_setWidth_of_le (x : BitVec w) (h : k ≤ l) :
@@ -195,18 +175,8 @@ theorem signExtend_eq (x : BitVec w) : x.signExtend w = x  := sorry
 -- | We are solving this now.
 -- v
 -- TODO HIGH: x.msb
-/--
-error: unsolved goals
-w : ℕ
-x : BitVec w
-v : ℕ
-hmsb : x.msb = false
-AvoidCollision_signExtend_eq_setWidth_of_msb_false :
-  ∀ {w : ℕ} {x : BitVec w} {v : ℕ}, x.msb = true ∨ signExtend v x = setWidth v x
-⊢ signExtend v x = setWidth v x
--/
 #guard_msgs in theorem AvoidCollision_signExtend_eq_setWidth_of_msb_false {x : BitVec w} {v : Nat} (hmsb : x.msb = false) :
-    x.signExtend v = x.setWidth v  := by bv_multi_width_normalize
+    x.signExtend v = x.setWidth v  := by bv_multi_width
 -- DONE
 theorem AvoidCollision_signExtend_not {x : BitVec w} (h : 0 < w) :
     (~~~x).signExtend v = ~~~(x.signExtend v)  := sorry
@@ -253,6 +223,7 @@ theorem AvoidCollision_toNat_setWidth_of_le {w w' : Nat} {b : BitVec w} (h : w �
 theorem AvoidCollision_toNat_signExtend (x : BitVec w) {v : Nat} :
     (x.signExtend v).toNat = (x.setWidth v).toNat + if x.msb then 2^v - 2^w else 0  := sorry
 -- TODO: toNat, msb, 2^v (note: every 2^v should be encoded as a width variable, not a nat variable.
+-- [msb done, next add toNAt]
 theorem AvoidCollision_toNat_signExtend_of_le (x : BitVec w) {v : Nat} (hv : w ≤ v) :
     (x.signExtend v).toNat = x.toNat + if x.msb then 2^v - 2^w else 0  := sorry
 -- DONE
