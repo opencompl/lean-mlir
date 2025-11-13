@@ -5,8 +5,14 @@ open BitVec
 -- | TODO: Needs 'getLsbD'. doable, but complex. We should handle by having a predicate
 -- 'x.getLsbD = v', and then casing on this value.
 -- | TODO HIGH: allOnes → -1
-theorem AvoidCollision_and_one_eq_setWidth_ofBool_getLsbD {x : BitVec w} :
-    (x &&& 1#w) = setWidth w (ofBool (x.getLsbD 0))  := sorry
+/--
+error: unsolved goals
+w : ℕ
+x : BitVec w
+⊢ x &&& 1#w = setWidth w (ofBool (x.getLsbD 0))
+-/
+#guard_msgs in theorem AvoidCollision_and_one_eq_setWidth_ofBool_getLsbD {x : BitVec w} :
+    (x &&& 1#w) = setWidth w (ofBool (x.getLsbD 0))  := by bv_multi_width_normalize
 -- NOTPOSSIBLE: append, width addition
 theorem AvoidCollision_and_setWidth_allOnes (w' w : Nat) (b : BitVec (w' + w)) :
     b &&& (BitVec.allOnes w).setWidth (w' + w) = 0#w' ++ b.setWidth w  := sorry
@@ -14,9 +20,10 @@ theorem AvoidCollision_and_setWidth_allOnes (w' w : Nat) (b : BitVec (w' + w)) :
 -- NOTPOSSIBLE: append
 theorem AvoidCollision_append_def (x : BitVec v) (y : BitVec w) :
     x ++ y = (shiftLeftZeroExtend x w ||| setWidth' (Nat.le_add_left w v) y)  := sorry
--- TODO HIGH: BitVec.cast
+-- TODO HIGH: BitVec.cast | cannot, need to unify Term and Predicate to be able to write 'v = w' in the
+-- calculus.
 theorem AvoidCollision_cast_setWidth (h : v = v') (x : BitVec w) :
-    (x.setWidth v).cast h = x.setWidth v'  := sorry
+    (x.setWidth v).cast h = x.setWidth v' := by bv_multi_width_normalize
 -- TODO LOW: reflection bug
 theorem AvoidCollision_getElem_signExtend {x  : BitVec w} {v i : Nat} (h : i < v) :
     (x.signExtend v)[i] = if h : i < w then x[i] else x.msb  := sorry
@@ -78,7 +85,7 @@ theorem AvoidCollision_setWidth_append_eq_shiftLeft_setWidth_or {b : BitVec w} {
 theorem AvoidCollision_setWidth_append_of_eq {x : BitVec v} {y : BitVec w} (h : w' = w) :
     setWidth (v' + w') (x ++ y) = setWidth v' x ++ setWidth w' y  := sorry
 -- TODO HIGH: cast
-theorem AvoidCollision_setWidth_cast {x : BitVec w} {h : w = v} : (x.cast h).setWidth k = x.setWidth k  := sorry
+theorem AvoidCollision_setWidth_cast {x : BitVec w} {h : w = v} : (x.cast h).setWidth k = x.setWidth k  := by bv_multi_width_normalize
 -- TODO HIGH: cons
 theorem AvoidCollision_setWidth_cons {x : BitVec w} : (cons a x).setWidth w = x  := by sorry
 -- DONE

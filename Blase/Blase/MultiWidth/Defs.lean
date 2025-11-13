@@ -165,7 +165,6 @@ inductive Term {wcard tcard : Nat} (bcard : Nat)
 | boolConst (b : Bool) : Term bcard tctx .bool
 | boolVar (v : Fin bcard) : Term bcard tctx .bool
 
-
 def Term.BoolEnv (bcard : Nat) : Type := Fin bcard → Bool
 
 def Term.BoolEnv.empty : Term.BoolEnv 0 :=
@@ -846,7 +845,7 @@ structure HTermBoolFSMToBitStream
       (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
       (henv : HTermEnv fsmEnv tenv benv) →
         fsm.toFsmZext.eval fsmEnv =
-        BitStream.ofBool (t.toBV benv tenv)
+        BitStream.ofBool (t.toBV benv tenv) -- TODO: make this exactly the same as predicate?
 
 
 structure HPredFSMToBitStream {pcard : Nat}

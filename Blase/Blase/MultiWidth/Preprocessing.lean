@@ -27,6 +27,11 @@ namespace Normalize
 
 
 /-!
+Canonicalize cast by rfl
+-/
+attribute [bv_multi_width_normalize] BitVec.cast_eq
+
+/-!
 Caonicalize allOnes into -1
 -/
 @[bv_multi_width_normalize]
@@ -457,43 +462,58 @@ def getSimpData (simpsetName : Name) : MetaM (SimpTheorems × Simprocs) := do
   let simprocs ← ext.getSimprocs
   return (theorems, simprocs)
 
+
+-- subst bitvector equalities so we don't build large problems.
+def substBvEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
+  let gs ← g.casesRec fun localDecl => do
+    let some (ty, _lhs, _rhs) := localDecl.type.eq?
+      | return false
+    return ty.isConstOf ``BitVec
+  ensureAtMostOne gs
+
+-- subst equalities so we don't build large problems.
+def substNatEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
+  let gs ← g.casesRec fun localDecl => do
+    let some (ty, _lhs, _rhs) := localDecl.type.eq?
+      | return false
+    return ty == mkConst ``Nat
+  ensureAtMostOne gs
+
 open Lean Elab Meta
-def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := g.withContext do
-  let mut theorems : Array SimpTheorems := #[]
-  let mut simprocs : Array Simprocs := #[]
+def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
+  let some g ← g.withContext <| substNatEqualities g
+    | return none
+  let some g ← g.withContext <| substBvEqualities g
+    | return none
+  g.withContext do
+    let mut theorems : Array SimpTheorems := #[]
+    let mut simprocs : Array Simprocs := #[]
 
-  for name in [`seval, `bv_multi_width_normalize] do
-    let res ← getSimpData name
-    theorems := theorems.push res.1
-    simprocs := simprocs.push res.2
+    for name in [`seval, `bv_multi_width_normalize] do
+      let res ← getSimpData name
+      theorems := theorems.push res.1
+      simprocs := simprocs.push res.2
 
-  let config : Simp.Config := { }
-  let config := { config with failIfUnchanged := false }
-  let ctx ← Simp.mkContext (config := config)
-    (simpTheorems := theorems)
-    (congrTheorems := ← Meta.getSimpCongrTheorems)
-  let lctx ← getLCtx
-  let fvars := lctx.getFVarIds
-  match ← simpGoal g ctx (simprocs := simprocs) (fvarIdsToSimp := fvars) with
-  | (.none, _stats) => return none
-  | (.some (_fs, g), _stats) => return some g
+    let config : Simp.Config := { }
+    let config := { config with failIfUnchanged := false }
+    let ctx ← Simp.mkContext (config := config)
+      (simpTheorems := theorems)
+      (congrTheorems := ← Meta.getSimpCongrTheorems)
+    let lctx ← getLCtx
+    let fvars := lctx.getFVarIds
+    match ← simpGoal g ctx (simprocs := simprocs) (fvarIdsToSimp := fvars) with
+    | (.none, _stats) => return none
+    | (.some (_fs, g), _stats) => return some g
 
 open Lean Elab Meta
 open Lean Elab Meta Tactic in
 /-- Convert the goal into negation normal form. -/
 elab "bv_multi_width_normalize" : tactic => do
-  liftMetaTactic fun g => do
-    match ← runPreprocessing g with
-    | none => return []
-    | some g => do
-      -- revert after running the simp-set, so that we don't transform
-      -- with `forall_and : (∀ x, p x ∧ q x) ↔ (∀ x, p x) ∧ (∀ x, q x)`.
-      -- TODO(@bollu): This opens up an interesting possibility, where we can handle smaller problems
-      -- by just working on disjunctions.
-      -- let g ← g.revertAll
-      return [g]
-  Lean.Meta.AC.acNfTargetTactic
-  (← (← getMainGoal).getNondepPropHyps).forM Lean.Meta.AC.acNfHypTactic
+  liftMetaTactic1 runPreprocessing
+  allGoals do
+    -- | add more sharing.
+    Lean.Meta.AC.acNfTargetTactic
+    (← (← getMainGoal).getNondepPropHyps).forM Lean.Meta.AC.acNfHypTactic
 
 /--
 trace: w : ℕ
