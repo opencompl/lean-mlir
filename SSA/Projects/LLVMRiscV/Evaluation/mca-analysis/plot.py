@@ -892,9 +892,19 @@ def create_latex_command(parameters, filename):
         geomean_gisel_tot = np.exp(np.log(df['ratios_gisel']).mean())
         latex_command_gisel_geomean = f"\\newcommand{{\\GeomeanTotLeanmlirVsGisel{p}}}{{{geomean_gisel_tot:.1f}}}\n"
         f.write(latex_command_gisel_geomean)
+        
+        geomean_gisel_tot_perc = (np.exp(np.log(df['ratios_gisel']).mean()) - 1) * 100
+        latex_command_gisel_geomean_perc = f"\\newcommand{{\\GeomeanTotLeanmlirVsGiselSlowDown{p}}}{{{geomean_gisel_tot_perc:.1f}}}\n"
+        f.write(latex_command_gisel_geomean_perc)
+        
         geomean_sdag_tot = np.exp(np.log(df['ratios_sdag']).mean())
         latex_command_sdag_geomean = f"\\newcommand{{\\GeomeanTotLeanmlirVsSdag{p}}}{{{geomean_sdag_tot:.1f}}}\n"
         f.write(latex_command_sdag_geomean)
+        
+        geomean_sdag_tot_perc = (np.exp(np.log(df['ratios_sdag']).mean()) - 1) * 100
+        latex_command_sdag_geomean_perc = f"\\newcommand{{\\GeomeanTotLeanmlirVsSdagSlowDown{p}}}{{{geomean_sdag_tot_perc:.1f}}}\n"
+        f.write(latex_command_sdag_geomean_perc)
+        
         
     # print the percentage of programs that are identical, for each number of instructions
     
