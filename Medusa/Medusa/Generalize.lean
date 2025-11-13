@@ -138,12 +138,14 @@ instance : ToString HydraVariable where
 
 structure ParsedInputState where
   maxFreeVarId : Nat
+  maxWidthId: Nat
   numSymVars :  Nat
   displayNameToVariable : Std.HashMap Name HydraVariable
   inputVarIdToVariable : Std.HashMap Nat HydraVariable
   originalWidth : Nat
   symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
   symVarIdToVariable : Std.HashMap Nat HydraVariable
+  widthToVariable: Std.HashMap Nat HydraVariable
   valToSymVar : Std.HashMap BVExpr.PackedBitVec Nat
 
 class HydrableInitialParserState
@@ -446,7 +448,7 @@ partial def countModel
                   return count
                 pure (← go (count + 1) (BoolExpr.gate .and expr constrainedBVExpr))
 
-def generateCombinations (num: Nat) (values: List α) : List (List α) :=
+def generateCombinations {α} (num: Nat) (values: List α) : List (List α) :=
     match num, values with
     | 0, _ => [[]]
     | _, [] => []
@@ -569,6 +571,25 @@ class HydrableGeneralize (parsedExpr : Type) (genPred : outParam Type) (genExpr 
   HydrableCheckForPreconditions parsedExpr genPred genExpr
   where
 
+def findRelationsBetweenWidths(widths: Std.HashMap Nat HydraVariable) : List Expr := Id.run do
+    let combinations := generateCombinations 2 widths.keys
+
+    let mut res : List Expr := []
+    for combo in combinations do
+      let x := combo[0]!
+      let y := combo[1]!
+      let xName : Name := widths[x]!.name
+      let yName := widths[y]!.name
+
+      if x < y then
+        res := ((mkApp2) (.const ``LT.lt []) (toExpr xName) (toExpr yName)) :: res
+      else
+        res := ((mkApp2) (.const ``GT.gt []) (toExpr xName) (toExpr yName)) :: res
+
+    return res
+
+
+
 def generalize [H : HydrableGeneralize parsedExpr genPred genExpr]
                   : GeneralizerStateM parsedExpr genPred (Option (BoolExpr genPred)) := do
     let state ← get
@@ -579,6 +600,16 @@ def generalize [H : HydrableGeneralize parsedExpr genPred genExpr]
     let targetWidth := state.targetWidth
 
     let mut constantAssignments := [parsedLogicalExprState.symVarToVal]
+
+    logInfo m! "vars: {parsedLogicalExprState.widthToVariable}; symvars: {parsedLogicalExprState.valToSymVar}"
+
+    if parsedLogicalExprState.symVarToVal.isEmpty then -- Assume we're dealing with sign changing ops! Pretty messy but desperate times ay
+      let exprs := findRelationsBetweenWidths parsedLogicalExprState.widthToVariable
+      for expr in exprs do
+        let s ← ppExpr expr
+        logInfo m! "{s.pretty}"
+
+
 
     if originalWidth > targetWidth then
       let newAssignments ← reduceWidth originalWidth targetWidth 1
@@ -639,7 +670,7 @@ class HydrableParseAndGeneralize (parsedExpr : Type) (genPred : Type) (genExpr :
   HydrableGetInputWidth
   where
 
-inductive MedusaSynthGeneralizeConfig.Output 
+inductive MedusaSynthGeneralizeConfig.Output
   | thmStmt
   | sexpr
 
@@ -655,9 +686,9 @@ declare_config_elab elabMedusaSynthGeneralizeConfig MedusaSynthGeneralizeConfig
 /--
 Process the input `Expr` and print the generalization result.
 -/
-def parseAndGeneralize 
+def parseAndGeneralize
   [H : HydrableParseAndGeneralize parsedExpr genPred genExpr]
-  (cfg : MedusaSynthGeneralizeConfig) 
+  (cfg : MedusaSynthGeneralizeConfig)
   (hExpr : Expr) (context: GeneralizeContext): TermElabM MessageData := do
     let targetWidth := 8
     let timeoutMs := 300000
@@ -677,6 +708,8 @@ def parseAndGeneralize
           initialState := { initialState with
                           symVarIdToVariable := initialState.symVarIdToVariable.insert widthId widthVariable
                           , displayNameToVariable := initialState.displayNameToVariable.insert widthName widthVariable
+                          , widthToVariable := initialState.widthToVariable.insert width widthVariable
+                          , maxWidthId := 1
                           , originalWidth := width}
 
           let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr width).run' initialState

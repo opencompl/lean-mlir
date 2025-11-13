@@ -980,6 +980,11 @@ def evalBvGeneralize : Tactic
   | _ => Lean.Elab.throwUnsupportedSyntax
 
 
+variable {x y : BitVec 32}
+
+#generalize BitVec.signExtend 34 (BitVec.zeroExtend 33 x) = BitVec.zeroExtend 34 x
+
+
 -- variable {x y z : BitVec 1}
 -- #generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm;
 
@@ -1005,7 +1010,7 @@ theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
 /--
 error: (bveq (wconst 8) (zext (zext (bvvar 1 (wvar 64)) (wvar 4)) (wvar 8)) (band (wvar 8) (bvvar 1 (wvar 64)) (zext (zext (ofNat (wvar 8) 255) (wvar 4)) (wvar 8))))
 -/
-#guard_msgs in 
+#guard_msgs in
 theorem demo2 (x : BitVec 64) : BitVec.zeroExtend 64 (BitVec.truncate 32 x) = x &&& 4294967295#64 := by
   md_synth_generalize (output := .sexpr)
 
