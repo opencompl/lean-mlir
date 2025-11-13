@@ -685,7 +685,7 @@ def equivalent_plot_perc():
     )
     plt.figure(figsize=(7, 5))
 
-    width = 0.25
+    width = 0.4
     
     plt.bar((df_eqv_gisel.index) - width/2, (df_eqv_gisel[True]).to_list(), width, label=selector_labels["LLVM_globalisel"], color=light_blue)
     plt.bar((df_eqv_gisel.index) + width/2, (df_eqv_sdag[True]).to_list(), width, label=selector_labels["LLVM_selectiondag"], color=light_red)
