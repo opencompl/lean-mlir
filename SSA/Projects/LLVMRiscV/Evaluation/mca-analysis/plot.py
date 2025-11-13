@@ -9,7 +9,6 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-from Blase.Blase.Fast.Dataset2.plotter import geomean
 from num2words import num2words
 
 matplotlib.rcParams["pdf.fonttype"] = 42
@@ -772,18 +771,34 @@ def proportional_bar_plot(parameter, selector1, selector2):
         f"\nProportional bar plot saved to '{pdf_filename}' in the current working directory."
     )
     plt.close()
+    
 
-def create_latex_command(parameters):
-    print(f"In the following commands the following rules apply:")
-    print(f"A: class  <1x")
-    print(f"B: class 1x")
-    print(f"C: class 1x-1.5x")
-    print(f"D: class 1.5x-2x")
-    print(f"E: class >2x")
+    
+
+def create_latex_command(parameters, filename):
+    f = open(filename, 'w')
+    
+    git_command = ["git", "rev-parse", "--short", "HEAD"]
+    result = subprocess.run(
+        git_command, cwd=ROOT_DIR_PATH, capture_output=True, text=True, check=True
+    )
+
+    commit_hash = result.stdout.strip()
+
+    f.write(f"Lean-mlir commit hash: {commit_hash}\n")
+    
+    f.write(f"In the following commands the following rules apply:\n")
+    f.write(f"A: class  <1x\n")
+    f.write(f"B: class 1x\n")
+    f.write(f"C: class 1x-1.5x\n")
+    f.write(f"D: class 1.5x-2x\n")
+    f.write(f"E: class >2x\n")
+    f.write('\n\n')
     
     # print the percentage of programs in each of the above classes, for each number of instructions
     for p in parameters:
         df = pd.read_csv(data_dir + p + ".csv")
+        
         df['ratios_gisel'] = df['LEANMLIR_opt_' + p] / df['LLVM_globalisel_' + p]
         df['ratios_sdag'] = df['LEANMLIR_opt_' + p] / df['LLVM_selectiondag_' + p]
         df['ratios_gisel_sdag'] = df['LLVM_globalisel_' + p] / df['LLVM_selectiondag_' + p]
@@ -804,24 +819,36 @@ def create_latex_command(parameters):
         df_grouped_gisel_sdag = df_grouped_gisel_sdag.reset_index()
         
         for _, row in df_grouped_gisel.iterrows(): 
+            if p == 'tot_cycles': 
+                p = 'NumCycles'
+            else: 
+                p = 'NumInstr'
             c = row['ratios_gisel_class']
             percentage = row['proportion']
             instructions_number = num2words(row['instructions_number'])
-            latex_command = f"\\def\\Perc_leanmlir_vs_gisel_class{c}_{instructions_number}_instr{{{int(percentage)}\%}}"
-            print(latex_command)
+            latex_command = f"\\newcommand{{\\PercLeanmlirVsGiselParam{p}Class{c}Instr{instructions_number}}}{{{int(percentage)}\%}}\n"
+            f.write(latex_command)
         for _, row in df_grouped_sdag.iterrows(): 
+            if p == 'tot_cycles': 
+                p = 'NumCycles'
+            else: 
+                p = 'NumInstr'
             c = row['ratios_sdag_class']
             percentage = row['proportion']
             instructions_number = num2words(row['instructions_number'])
-            latex_command = f"\\def\\Perc_leanmlir_vs_sdag_{p}_class{c}_{instructions_number}_instr{{{int(percentage)}\%}}"
-            print(latex_command)
+            latex_command = f"\\newcommand{{\\PercLeanmlirVsSdagParam{p}Class{c}Instr{instructions_number}}}{{{int(percentage)}\%}}\n"
+            f.write(latex_command)
             
         for _, row in df_grouped_gisel_sdag.iterrows(): 
+            if p == 'tot_cycles': 
+                p = 'NumCycles'
+            else: 
+                p = 'NumInstr'
             c = row['ratios_gisel_sdag_class']
             percentage = row['proportion']
             instructions_number = num2words(row['instructions_number'])
-            latex_command = f"\\def\\Perc_gisel_vs_sdag_{p}_class{c}_{instructions_number}_instr{{{int(percentage)}\%}}"
-            print(latex_command)
+            latex_command = f"\\newcommand{{\\PercGiselVsSdagParam{p}Class{c}Instr{instructions_number}}}{{{int(percentage)}\%}}\n"
+            f.write(latex_command)
         
         # geomean ratios and total geomeans
         
@@ -829,24 +856,34 @@ def create_latex_command(parameters):
             lambda x: np.exp(np.log(x).mean())
         )
         for instr_num, geomean_value in geomeans_gisel.items():
+            if p == 'tot_cycles': 
+                p = 'NumCycles'
+            else: 
+                p = 'NumInstr'
             instructions_number = num2words(instr_num)
-            latex_command = f"\\def\\Geomean_ratio_leanmlir_vs_gisel_{p}_{instructions_number}_instr{{{geomean_value:.1f}}}"
-            print(latex_command)
+            latex_command = f"\\newcommand{{\\GeomeanLeanmlirVsGiselParam{p}Instr{instructions_number}}}{{{geomean_value:.1f}}}\n"
+            f.write(latex_command)
             
         geomeans_sdag = df.groupby('instructions_number')['ratios_sdag'].apply(
             lambda x: np.exp(np.log(x).mean())
         )
         for instr_num, geomean_value in geomeans_sdag.items():
+            if p == 'tot_cycles': 
+                p = 'NumCycles'
+            else: 
+                p = 'NumInstr'
             instructions_number = num2words(instr_num)
-            latex_command = f"\\def\\Geomean_ratio_leanmlir_vs_sdag_{p}_{instructions_number}_instr{{{geomean_value:.1f}}}"
-            print(latex_command)
+            latex_command = f"\\newcommand{{\\GeomeanLeanmlirVsSdagParam{p}Instr{instructions_number}}}{{{geomean_value:.1f}}}\n"
+            f.write(latex_command)
         
         # total geomeans
         
         geomean_gisel_tot = np.exp(np.log(df['ratios_gisel']).mean())
-        print(geomean_gisel_tot)
+        latex_command_gisel_geomean = f"\\newcommand{{\\GeomeanTotLeanmlirVsGisel{p}}}{{{geomean_gisel_tot:.1f}}}\n"
+        f.write(latex_command_gisel_geomean)
         geomean_sdag_tot = np.exp(np.log(df['ratios_sdag']).mean())
-        print(geomean_sdag_tot)
+        latex_command_sdag_geomean = f"\\newcommand{{\\GeomeanTotLeanmlirVsSdag{p}}}{{{geomean_sdag_tot:.1f}}}\n"
+        f.write(latex_command_sdag_geomean)
         
             
     # print the percentage of programs that are identical, for each number of instructions
@@ -863,25 +900,25 @@ def create_latex_command(parameters):
         if row['is_eqv_LLVM_globalisel']: 
             percentage = row['proportion']
             instructions_number = num2words(row['instructions_number'])
-            latex_command = f"\\def\\Perc_identical_gisel_{instructions_number}_instr{{{int(percentage)}}}"
-            print(latex_command)
+            latex_command = f"\\newcommand{{\\PercIdenticalGiselInstr{instructions_number}}}{{{int(percentage)}\%}}\n"
+            f.write(latex_command)
     for idx, row in df_similarity_sdag.iterrows(): 
         if row['is_eqv_LLVM_selectiondag']: 
             percentage = row['proportion']
             instructions_number = num2words(row['instructions_number'])
-            latex_command = f"\\def\\Perc_identical_gisel_{instructions_number}_instr{{{int(percentage)}\%}}"
-            print(latex_command)
+            latex_command = f"\\newcommand{{\\PercIdenticalSdagInstr{instructions_number}}}{{{int(percentage)}\%}}\n"
+            f.write(latex_command)
     
     # total similarity 
     
     tot_similarity_gisel_true = df_similarity['is_eqv_LLVM_globalisel'].sum()
     tot_similarity_sdag_true = df_similarity['is_eqv_LLVM_selectiondag'].sum()
     
-    latex_command_similarity_tot_gisel = f"\\def\\Perc_identical_gisel_tot{{{tot_similarity_gisel_true}\%}}"
-    latex_command_similarity_tot_sdag = f"\\def\\Perc_identical_sdad_tot{{{tot_similarity_sdag_true}\%}}"
-    
-    
-    
+    latex_command_similarity_tot_gisel = f"\\newcommand{{\\PercIdenticalGiselTot}}{{{tot_similarity_gisel_true}\%}}\n"
+    f.write(latex_command_similarity_tot_gisel)
+    latex_command_similarity_tot_sdag = f"\\newcommand{{\\PercIdenticalSdagTot}}{{{tot_similarity_sdag_true}\%}}\n"
+    f.write(latex_command_similarity_tot_sdag)
+    f.close()
 
     
 
@@ -963,7 +1000,7 @@ def main():
 
     # geomean_plot_tot_cycles()
     # equivalent_plot_perc()
-    create_latex_command(['tot_cycles', 'tot_instructions'])
+    create_latex_command(['tot_cycles', 'tot_instructions'], plots_dir + 'numerical_commands.tex')
     
 if __name__ == "__main__":
     main()
