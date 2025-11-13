@@ -4,9 +4,9 @@ open BitVec
 
 -- | TODO: Needs 'getLsbD'. doable, but complex. We should handle by having a predicate
 -- 'x.getLsbD = v', and then casing on this value.
+-- | TODO HIGH: allOnes → -1
 theorem AvoidCollision_and_one_eq_setWidth_ofBool_getLsbD {x : BitVec w} :
     (x &&& 1#w) = setWidth w (ofBool (x.getLsbD 0))  := sorry
--- | TODO HIGH: allOnes → -1
 -- NOTPOSSIBLE: append, width addition
 theorem AvoidCollision_and_setWidth_allOnes (w' w : Nat) (b : BitVec (w' + w)) :
     b &&& (BitVec.allOnes w).setWidth (w' + w) = 0#w' ++ b.setWidth w  := sorry

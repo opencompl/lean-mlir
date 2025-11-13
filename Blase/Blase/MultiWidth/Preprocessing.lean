@@ -25,6 +25,13 @@ instance : IdempotentOp (min : ℕ → ℕ → ℕ) where
 
 namespace Normalize
 
+
+/-!
+Caonicalize allOnes into -1
+-/
+@[bv_multi_width_normalize]
+theorem allOnes_eq_minus_one : BitVec.allOnes w = -1#w := by simp [BitVec.neg_one_eq_allOnes]
+
 /-!
 Canonicalize `OfNat.ofNat`, `BitVec.ofNat` and `Nat` multiplication to become
 `BitVec.ofNat` multiplication with constant on the left.
