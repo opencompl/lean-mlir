@@ -6,23 +6,6 @@ open BitVec
 -- 1 0 0 = 4
 -- x.msb ↔ x.zext(w + 1) + x.zext(w+1) ≥u twoPow w (w + 1)
 
--- Write msb in terms of twoPow, ule, and zeroExtend.
--- TODO: we need to move 'ule' and add twoPow support.
-theorem BitVec.msb_eq_twoPow_ule_two_mul_zext (x : BitVec w) :
-  x.msb = (BitVec.twoPow (w + 1) w).ule (2 * x.zeroExtend (w + 1))  := by
-  rw [BitVec.msb_eq_toNat]
-  simp [BitVec.ule_eq_decide]
-  have : 2^w < 2^(w + 1) := by
-    apply Nat.pow_lt_pow_succ
-    omega
-  rw [Nat.mod_eq_of_lt (by omega)]
-  rw [Nat.mod_eq_of_lt (by omega)]
-  rcases w with rfl | w
-  · simp;
-    omega
-  · simp
-    rw [Nat.pow_succ]
-    omega
 
 
 -- | TODO: Needs 'getLsbD'. doable, but complex. We should handle by having a predicate
@@ -136,7 +119,27 @@ theorem AvoidCollision_setWidth_setWidth {x : BitVec u} {w v : Nat} (h : ¬ (v <
     setWidth w (setWidth v x) = setWidth w x  := sorry
 -- NOTPOSSIBLE: twoPow with symbolic natural number as index? Wait, maybe possible? Needs thought!
 -- TODO HIGH: twoPow
-theorem AvoidCollision_setWidth_setWidth_eq_self {a : BitVec w} {w' : Nat} (h : a < BitVec.twoPow w w') : (a.setWidth w').setWidth w = a  := sorry
+/--
+warning: abstracted non-variable bitvector: ⏎
+  → 'twoPow w w''
+---
+error: MAYCEX: Found possible counter-example at iteration 2 for predicate MultiWidth.Nondep.Predicate.or
+  (MultiWidth.Nondep.Predicate.binRel
+    (MultiWidth.BinaryRelationKind.ule)
+    (MultiWidth.Nondep.WidthExpr.var 0)
+    (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
+    (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 0)))
+  (MultiWidth.Nondep.Predicate.binRel
+    (MultiWidth.BinaryRelationKind.eq)
+    (MultiWidth.Nondep.WidthExpr.var 0)
+    (MultiWidth.Nondep.Term.setWidth
+      (MultiWidth.Nondep.Term.setWidth
+        (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 0))
+        (MultiWidth.Nondep.WidthExpr.var 1))
+      (MultiWidth.Nondep.WidthExpr.var 0))
+    (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 0)))
+-/
+#guard_msgs in theorem AvoidCollision_setWidth_setWidth_eq_self {a : BitVec w} {w' : Nat} (h : a < BitVec.twoPow w w') : (a.setWidth w').setWidth w = a  := by bv_multi_width
 -- DONE
 theorem AvoidCollision_setWidth_setWidth_of_le (x : BitVec w) (h : k ≤ l) :
     (x.setWidth l).setWidth k = x.setWidth k  := sorry

@@ -430,6 +430,37 @@ Boolean normalization:
 @[bv_multi_width_normalize] theorem not_eq_iff_ne {α : Sort u} (x y : α) :
   ¬ (x = y) ↔ x ≠ y := by simp
 
+-- | Write twoPow in terms of existing constructs.
+@[bv_multi_width_normalize]
+theorem BitVec.twoPow_eq_minusOne_zext_plus_one : BitVec.twoPow w i = (-(1#i)).zeroExtend w + 1 := by
+  apply BitVec.eq_of_toNat_eq
+  simp
+  have : 2^i > 0 := by exact Nat.two_pow_pos i
+  rcases i with rfl | i
+  · simp
+  · simp
+    have : (2 : Nat) ^(i + 1) - 1 + 1 = 2^(i + 1) := by  omega
+    rw [this]
+
+-- Write msb in terms of twoPow, ule, and zeroExtend.
+-- TODO: we need to move 'ule' and add twoPow support.
+@[bv_multi_width_normalize]
+theorem BitVec.msb_eq_twoPow_ule_two_mul_zext (x : BitVec w) :
+  x.msb = (BitVec.twoPow (w + 1) w).ule (2 * x.zeroExtend (w + 1))  := by
+  rw [BitVec.msb_eq_toNat]
+  simp [BitVec.ule_eq_decide]
+  have : 2^w < 2^(w + 1) := by
+    apply Nat.pow_lt_pow_succ
+    omega
+  rw [Nat.mod_eq_of_lt (by omega)]
+  rw [Nat.mod_eq_of_lt (by omega)]
+  rcases w with rfl | w
+  · simp;
+    omega
+  · simp
+    rw [Nat.pow_succ]
+    omega
+
 open Lean in
 simproc [bv_multi_width_normalize] boolEqIff (@Eq Bool _ _) := fun e => do
   match_expr e with
@@ -449,6 +480,7 @@ simproc [bv_multi_width_normalize] boolEqIff (@Eq Bool _ _) := fun e => do
         let pf := mkApp2 (.const ``bool_eq_iff []) e₁ e₂
         pure $ .done { expr := e', proof? := some pf }
   | _ => pure .continue
+
 
 
 
