@@ -812,10 +812,14 @@ def create_latex_command(parameters, filename):
         min_ratio_gisel = df["ratios_gisel"].min()
         min_ratio_sdag = df["ratios_sdag"].min()
         
-        latex_command_max_gisel = f"\\newcommand{{\\MaxRatioVsGiselParam{p}}}{{{int(max_ratio_gisel)}}}\n"
-        latex_command_max_sdag = f"\\newcommand{{\\MaxRatioVsSdagParam{p}}}{{{int(max_ratio_sdag)}}}\n"
-        latex_command_min_gisel = f"\\newcommand{{\\MaxRatioVsGiselParam{p}}}{{{int(min_ratio_gisel)}}}\n"
-        latex_command_min_sdag = f"\\newcommand{{\\MaxRatioVsSdagParam{p}}}{{{int(min_ratio_sdag)}}}\n"
+        if p == "tot_cycles": 
+            p = 'NumCycles'
+        else: 
+            p = 'NumInstr'
+        latex_command_max_gisel = f"\\newcommand{{\\MaxRatioVsGiselParam{p}}}{{{max_ratio_gisel:2f}}}\n"
+        latex_command_max_sdag = f"\\newcommand{{\\MaxRatioVsSdagParam{p}}}{{{max_ratio_sdag:2f}}}\n"
+        latex_command_min_gisel = f"\\newcommand{{\\MinRatioVsGiselParam{p}}}{{{min_ratio_gisel:2f}}}\n"
+        latex_command_min_sdag = f"\\newcommand{{\\MinRatioVsSdagParam{p}}}{{{min_ratio_sdag:2f}}}\n"
         
         f.write(latex_command_max_gisel)
         f.write(latex_command_max_sdag)
@@ -838,20 +842,12 @@ def create_latex_command(parameters, filename):
         df_grouped_gisel_sdag = df_grouped_gisel_sdag.reset_index()
         
         for _, row in df_grouped_gisel.iterrows(): 
-            if p == 'tot_cycles': 
-                p = 'NumCycles'
-            else: 
-                p = 'NumInstr'
             c = row['ratios_gisel_class']
             percentage = row['proportion']
             instructions_number = num2words(row['instructions_number'])
             latex_command = f"\\newcommand{{\\PercLeanmlirVsGiselParam{p}Class{c}Instr{instructions_number}}}{{{int(percentage)}\%}}\n"
             f.write(latex_command)
         for _, row in df_grouped_sdag.iterrows(): 
-            if p == 'tot_cycles': 
-                p = 'NumCycles'
-            else: 
-                p = 'NumInstr'
             c = row['ratios_sdag_class']
             percentage = row['proportion']
             instructions_number = num2words(row['instructions_number'])
@@ -859,10 +855,6 @@ def create_latex_command(parameters, filename):
             f.write(latex_command)
             
         for _, row in df_grouped_gisel_sdag.iterrows(): 
-            if p == 'tot_cycles': 
-                p = 'NumCycles'
-            else: 
-                p = 'NumInstr'
             c = row['ratios_gisel_sdag_class']
             percentage = row['proportion']
             instructions_number = num2words(row['instructions_number'])
@@ -875,10 +867,6 @@ def create_latex_command(parameters, filename):
             lambda x: np.exp(np.log(x).mean())
         )
         for instr_num, geomean_value in geomeans_gisel.items():
-            if p == 'tot_cycles': 
-                p = 'NumCycles'
-            else: 
-                p = 'NumInstr'
             instructions_number = num2words(instr_num)
             latex_command = f"\\newcommand{{\\GeomeanLeanmlirVsGiselParam{p}Instr{instructions_number}}}{{{geomean_value:.1f}}}\n"
             f.write(latex_command)
@@ -887,10 +875,6 @@ def create_latex_command(parameters, filename):
             lambda x: np.exp(np.log(x).mean())
         )
         for instr_num, geomean_value in geomeans_sdag.items():
-            if p == 'tot_cycles': 
-                p = 'NumCycles'
-            else: 
-                p = 'NumInstr'
             instructions_number = num2words(instr_num)
             latex_command = f"\\newcommand{{\\GeomeanLeanmlirVsSdagParam{p}Instr{instructions_number}}}{{{geomean_value:.1f}}}\n"
             f.write(latex_command)
@@ -904,7 +888,6 @@ def create_latex_command(parameters, filename):
         latex_command_sdag_geomean = f"\\newcommand{{\\GeomeanTotLeanmlirVsSdag{p}}}{{{geomean_sdag_tot:.1f}}}\n"
         f.write(latex_command_sdag_geomean)
         
-            
     # print the percentage of programs that are identical, for each number of instructions
     
     df_similarity = pd.read_csv(data_dir + "similarity.csv")
@@ -938,6 +921,8 @@ def create_latex_command(parameters, filename):
     latex_command_similarity_tot_sdag = f"\\newcommand{{\\PercIdenticalSdagTot}}{{{tot_similarity_sdag_true}\%}}\n"
     f.write(latex_command_similarity_tot_sdag)
     f.close()
+    
+    
 
     
 
