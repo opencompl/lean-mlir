@@ -809,22 +809,30 @@ def create_latex_command(parameters, filename):
         # max and min values
         max_ratio_gisel = df["ratios_gisel"].max()
         max_ratio_sdag = df["ratios_sdag"].max()
+        max_ratio_gisel_sdag = df["ratios_gisel_sdag"].max()
         min_ratio_gisel = df["ratios_gisel"].min()
         min_ratio_sdag = df["ratios_sdag"].min()
+        min_ratio_gisel_sdag = df["ratios_gisel_sdag"].min()
+        
+        print(df[df['ratios_sdag']==df['ratios_sdag'].min()])
         
         if p == "tot_cycles": 
             p = 'NumCycles'
         else: 
             p = 'NumInstr'
-        latex_command_max_gisel = f"\\newcommand{{\\MaxRatioVsGiselParam{p}}}{{{max_ratio_gisel:2f}}}\n"
-        latex_command_max_sdag = f"\\newcommand{{\\MaxRatioVsSdagParam{p}}}{{{max_ratio_sdag:2f}}}\n"
-        latex_command_min_gisel = f"\\newcommand{{\\MinRatioVsGiselParam{p}}}{{{min_ratio_gisel:2f}}}\n"
-        latex_command_min_sdag = f"\\newcommand{{\\MinRatioVsSdagParam{p}}}{{{min_ratio_sdag:2f}}}\n"
+        latex_command_max_gisel = f"\\newcommand{{\\MaxRatioLeanmlirVsGiselParam{p}}}{{{max_ratio_gisel:.2f}}}\n"
+        latex_command_max_sdag = f"\\newcommand{{\\MaxRatioLeanmlirVsSdagParam{p}}}{{{max_ratio_sdag:.2f}}}\n"
+        latex_command_max_gisel_sdag = f"\\newcommand{{\\MaxRatioGiselVsSdagParam{p}}}{{{max_ratio_gisel_sdag:.2f}}}\n"
+        latex_command_min_gisel = f"\\newcommand{{\\MinRatioLeanmlirVsGiselParam{p}}}{{{min_ratio_gisel:.2f}}}\n"
+        latex_command_min_sdag = f"\\newcommand{{\\MinRatioLeanmlirVsSdagParam{p}}}{{{min_ratio_sdag:.2f}}}\n"
+        latex_command_min_gisel_sdag = f"\\newcommand{{\\MinRatioGiselVsSdagParam{p}}}{{{min_ratio_gisel_sdag:.2f}}}\n"
         
         f.write(latex_command_max_gisel)
         f.write(latex_command_max_sdag)
         f.write(latex_command_min_gisel)
         f.write(latex_command_min_sdag)
+        f.write(latex_command_max_gisel_sdag)
+        f.write(latex_command_min_gisel_sdag)
         
         
         # calculate % of elements in each class 
@@ -913,12 +921,12 @@ def create_latex_command(parameters, filename):
     
     # total similarity 
     
-    tot_similarity_gisel_true = df_similarity['is_eqv_LLVM_globalisel'].sum()
-    tot_similarity_sdag_true = df_similarity['is_eqv_LLVM_selectiondag'].sum()
+    tot_similarity_gisel_true = df_similarity['is_eqv_LLVM_globalisel'].sum()/len(df_similarity)*100
+    tot_similarity_sdag_true = df_similarity['is_eqv_LLVM_selectiondag'].sum()/len(df_similarity)*100
     
-    latex_command_similarity_tot_gisel = f"\\newcommand{{\\PercIdenticalGiselTot}}{{{tot_similarity_gisel_true}\%}}\n"
+    latex_command_similarity_tot_gisel = f"\\newcommand{{\\PercIdenticalGiselTot}}{{{tot_similarity_gisel_true:.1f}\%}}\n"
     f.write(latex_command_similarity_tot_gisel)
-    latex_command_similarity_tot_sdag = f"\\newcommand{{\\PercIdenticalSdagTot}}{{{tot_similarity_sdag_true}\%}}\n"
+    latex_command_similarity_tot_sdag = f"\\newcommand{{\\PercIdenticalSdagTot}}{{{tot_similarity_sdag_true:.1f}\%}}\n"
     f.write(latex_command_similarity_tot_sdag)
     f.close()
     
