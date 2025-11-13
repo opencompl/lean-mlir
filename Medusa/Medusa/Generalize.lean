@@ -145,7 +145,8 @@ structure ParsedInputState where
   originalWidth : Nat
   symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
   symVarIdToVariable : Std.HashMap Nat HydraVariable
-  widthToVariable: Std.HashMap Nat HydraVariable
+  widthIdToVariable: Std.HashMap Nat HydraVariable
+  widthValToVar : Std.HashMap Nat HydraVariable
   valToSymVar : Std.HashMap BVExpr.PackedBitVec Nat
 
 class HydrableInitialParserState
@@ -571,23 +572,6 @@ class HydrableGeneralize (parsedExpr : Type) (genPred : outParam Type) (genExpr 
   HydrableCheckForPreconditions parsedExpr genPred genExpr
   where
 
-def findRelationsBetweenWidths(widths: Std.HashMap Nat HydraVariable) : List Expr := Id.run do
-    let combinations := generateCombinations 2 widths.keys
-
-    let mut res : List Expr := []
-    for combo in combinations do
-      let x := combo[0]!
-      let y := combo[1]!
-      let xName : Name := widths[x]!.name
-      let yName := widths[y]!.name
-
-      if x < y then
-        res := ((mkApp2) (.const ``LT.lt []) (toExpr xName) (toExpr yName)) :: res
-      else
-        res := ((mkApp2) (.const ``GT.gt []) (toExpr xName) (toExpr yName)) :: res
-
-    return res
-
 
 
 def generalize [H : HydrableGeneralize parsedExpr genPred genExpr]
@@ -600,16 +584,6 @@ def generalize [H : HydrableGeneralize parsedExpr genPred genExpr]
     let targetWidth := state.targetWidth
 
     let mut constantAssignments := [parsedLogicalExprState.symVarToVal]
-
-    logInfo m! "vars: {parsedLogicalExprState.widthToVariable}; symvars: {parsedLogicalExprState.valToSymVar}"
-
-    if parsedLogicalExprState.symVarToVal.isEmpty then -- Assume we're dealing with sign changing ops! Pretty messy but desperate times ay
-      let exprs := findRelationsBetweenWidths parsedLogicalExprState.widthToVariable
-      for expr in exprs do
-        let s ← ppExpr expr
-        logInfo m! "{s.pretty}"
-
-
 
     if originalWidth > targetWidth then
       let newAssignments ← reduceWidth originalWidth targetWidth 1
@@ -648,23 +622,30 @@ inductive GeneralizeContext where
 Convert a generalization to a printable string, with variable IDs replaced with proper display names.
 -/
 class HydrablePrettify (genLogicalExpr : Type) where
-  prettify : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
-  prettifyAsSexpr : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat HydraVariable) → SexprPBV.Sexpr
+  prettify : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → (widthVals : Std.HashMap Nat HydraVariable) -> String
+  prettifyAsSexpr : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat HydraVariable) -> (widthVals : Std.HashMap Nat HydraVariable) → SexprPBV.Sexpr
 
 
 /--
 Convert a generalization to a theorem, with variable IDs replaced with proper display names. For use in a Tactic context.
 -/
 class HydrablePrettifyAsTheorem (genLogicalExpr : Type) where
-  prettifyAsTheorem : (name : Name) → (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
+  prettifyAsTheorem : (name : Name) → (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → (widthVals : Std.HashMap Nat HydraVariable) -> String
 
 class HydrableGetInputWidth where
   getWidth : Expr → MetaM (Option Nat)
+
+class HydrableGeneralizeNoConcreteConstants (parsedExpr : Type) (genPred : Type) (genExpr : Nat → Type) extends
+    HydrableInstances genPred
+    where
+  generalizeNoConcreteConstants : GeneralizerStateM parsedExpr genPred (Option (BoolExpr genPred))
+
 
 class HydrableParseAndGeneralize (parsedExpr : Type) (genPred : Type) (genExpr : Nat → Type) extends
   HydrableGeneralize parsedExpr genPred genExpr,
   HydrableParseExprs parsedExpr genPred,
   HydrableInitializeGeneralizerState parsedExpr genPred genExpr,
+  HydrableGeneralizeNoConcreteConstants parsedExpr genPred genExpr,
   HydrablePrettify genPred,
   HydrablePrettifyAsTheorem genPred,
   HydrableGetInputWidth
@@ -708,8 +689,9 @@ def parseAndGeneralize
           initialState := { initialState with
                           symVarIdToVariable := initialState.symVarIdToVariable.insert widthId widthVariable
                           , displayNameToVariable := initialState.displayNameToVariable.insert widthName widthVariable
-                          , widthToVariable := initialState.widthToVariable.insert width widthVariable
-                          , maxWidthId := 1
+                          , widthIdToVariable := initialState.widthIdToVariable.insert widthId widthVariable
+                          , widthValToVar := initialState.widthValToVar.insert width widthVariable
+                          , maxWidthId := widthId
                           , originalWidth := width}
 
           let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr width).run' initialState
@@ -720,25 +702,35 @@ def parseAndGeneralize
 
           let mut initialGeneralizerState := H.initializeGeneralizerState startTime timeoutMs widthId targetWidth parsedLogicalExpr
 
-          let generalizeRes ← generalize.run' initialGeneralizerState
-          let allVariables := Std.HashMap.union parsedBVState.inputVarIdToVariable parsedBVState.symVarIdToVariable
+          logInfo m! "vars: {parsedBVState.widthIdToVariable}; symvars: {parsedBVState.valToSymVar}"
+
+          let mut generalizeRes := none
+          if parsedBVState.symVarToVal.isEmpty then -- Assume we're dealing with sign changing ops! Pretty messy but desperate times ay
+            generalizeRes ← H.generalizeNoConcreteConstants.run' initialGeneralizerState
+            logInfo m! "Generalize res: {generalizeRes}"
+          else
+              generalizeRes ← generalize.run' initialGeneralizerState
+
+          let allVariables := Std.HashMap.union parsedBVState.inputVarIdToVariable (Std.HashMap.union parsedBVState.widthIdToVariable parsedBVState.symVarIdToVariable)
 
           let mut variableDisplayNames : Std.HashMap Nat Name := Std.HashMap.emptyWithCapacity
           for (id, var) in allVariables.toList do
             variableDisplayNames := variableDisplayNames.insert id var.name
 
+          let widthVals := parsedBVState.widthValToVar
+
           trace[Generalize] m! "All vars: {variableDisplayNames}"
           match generalizeRes with
             | some res => match context with
-                          | GeneralizeContext.Command => let pretty := HydrablePrettify.prettify res variableDisplayNames
+                          | GeneralizeContext.Command => let pretty := HydrablePrettify.prettify res variableDisplayNames widthVals
                                                          pure m! "Raw generalization result: {res} \n Input expression: {hExpr} has generalization: {pretty}"
                           | GeneralizeContext.Tactic _name =>
                             match cfg.output with
                             | .thmStmt =>
                               let name := Name.mkSimple "foo"
-                              pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
+                              pure m! "{H.prettifyAsTheorem name res variableDisplayNames widthVals}"
                             | .sexpr =>
-                              throwError (H.prettifyAsSexpr res allVariables) |> format
+                              throwError (H.prettifyAsSexpr res allVariables) widthVals|> format
             | none => throwError m! "Could not generalize {bvLogicalExpr}"
     | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
 

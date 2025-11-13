@@ -218,6 +218,40 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
 
 def wrap (bvExpr : GenBVExpr w) : BVExprWrapper := { bvExpr := bvExpr, width := w}
 
+
+def findRelationsBetweenWidths(widths: Std.HashMap Nat HydraVariable) (width: Nat) : BoolExpr GenBVPred := Id.run do
+    let combinations := generateCombinations 2 widths.keys
+
+    let mut res : List (BoolExpr GenBVPred) := []
+    for combo in combinations do
+      let x := widths[combo[0]!]!
+      let y := widths[combo[1]!]!
+
+      let xVar : GenBVExpr width := GenBVExpr.var x.id
+      let yVar : GenBVExpr width := GenBVExpr.var y.id
+
+      if x.width < y.width then
+        res := (BoolExpr.literal (GenBVPred.bin xVar BVBinPred.ult yVar)) :: res
+      else if (x.width == y.width) then
+        res := (BoolExpr.literal (GenBVPred.bin xVar BVBinPred.eq yVar)) :: res
+      else
+        res := (BoolExpr.literal (GenBVPred.bin yVar BVBinPred.ult xVar)) :: res
+
+    return bigAnd res
+
+
+def generalizeNoConcreteConstants : GeneralizerStateM ParsedBVExpr GenBVPred (BoolExpr GenBVPred) := do
+    let state ← get
+    let parsedLogicalExprState :=  state.parsedLogicalExpr.state
+
+    let processingWidth := state.processingWidth
+
+    let relations := findRelationsBetweenWidths parsedLogicalExprState.widthIdToVariable processingWidth
+    return BoolExpr.ite relations state.parsedLogicalExpr.logicalExpr (BoolExpr.const False)
+
+instance : HydrableGeneralizeNoConcreteConstants ParsedBVExpr GenBVPred GenBVExpr where
+  generalizeNoConcreteConstants := generalizeNoConcreteConstants
+
 def filterCandidatePredicates  (bvLogicalExpr: BoolExpr GenBVPred) (preconditionCandidates visited: Std.HashSet (BoolExpr GenBVPred))
                                                     : GeneralizerStateM ParsedBVExpr GenBVPred (List (BoolExpr GenBVPred)) :=
   withTraceNode `Generalize (fun _ => return "Filtered out invalid expression sketches") do
@@ -769,33 +803,33 @@ def prettifyBVBinPred (op : BVBinPred) : String :=
   | .eq => "="
   | _ => op.toString
 
-def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat Name) : String :=
+def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat Name) (widthVals: Std.HashMap Nat HydraVariable): String :=
     match bvExpr with
     | .var idx => displayNames[idx]!.toString
     | .const bv =>
        toString bv.toInt
     | .bin lhs BVBinOp.add (.bin  (GenBVExpr.const bv) BVBinOp.add (GenBVExpr.un BVUnOp.not rhs)) =>
       if bv.toInt == 1 then -- A subtraction
-        s! "({prettifyBVExpr lhs displayNames} - {prettifyBVExpr rhs displayNames})"
+        s! "({prettifyBVExpr lhs displayNames widthVals} - {prettifyBVExpr rhs displayNames widthVals})"
       else
-        s! "({prettifyBVExpr lhs displayNames} + ({prettifyBVExpr (GenBVExpr.const bv) displayNames} + {prettifyBVExpr (GenBVExpr.un BVUnOp.not rhs) displayNames}))"
+        s! "({prettifyBVExpr lhs displayNames widthVals} + ({prettifyBVExpr (GenBVExpr.const bv) displayNames widthVals} + {prettifyBVExpr (GenBVExpr.un BVUnOp.not rhs) displayNames widthVals}))"
     | .bin lhs op rhs =>
-       s! "({prettifyBVExpr lhs displayNames} {prettifyBVBinOp op} {prettifyBVExpr rhs displayNames})"
+       s! "({prettifyBVExpr lhs displayNames widthVals} {prettifyBVBinOp op} {prettifyBVExpr rhs displayNames widthVals})"
     | .un op operand =>
-       s! "({op.toString} {prettifyBVExpr operand displayNames})"
+       s! "({op.toString} {prettifyBVExpr operand displayNames widthVals})"
     | .shiftLeft lhs rhs =>
-        s! "({prettifyBVExpr lhs displayNames} <<< {prettifyBVExpr rhs displayNames})"
+        s! "({prettifyBVExpr lhs displayNames widthVals} <<< {prettifyBVExpr rhs displayNames widthVals})"
     | .shiftRight lhs rhs =>
-        s! "({prettifyBVExpr lhs displayNames} >>> {prettifyBVExpr rhs displayNames})"
+        s! "({prettifyBVExpr lhs displayNames widthVals} >>> {prettifyBVExpr rhs displayNames widthVals})"
     | .arithShiftRight lhs rhs =>
-        s! "({prettifyBVExpr lhs displayNames} >>>a {prettifyBVExpr rhs displayNames})"
-    | .signExtend v expr => s! "BitVec.signExtend {v} {prettifyBVExpr expr displayNames}"
-    | .zeroExtend v expr => s! "BitVec.zeroExtend {v} {prettifyBVExpr expr displayNames}"
-    | .truncate v expr =>   s! "BitVec.truncate {v} {prettifyBVExpr expr displayNames}"
+        s! "({prettifyBVExpr lhs displayNames widthVals} >>>a {prettifyBVExpr rhs displayNames widthVals})"
+    | .signExtend v expr => s! "BitVec.signExtend {widthVals[v]!.name.toString} {prettifyBVExpr expr displayNames widthVals}"
+    | .zeroExtend v expr => s! "BitVec.zeroExtend {widthVals[v]!.name.toString} {prettifyBVExpr expr displayNames widthVals}"
+    | .truncate v expr =>   s! "BitVec.truncate {widthVals[v]!.name.toString} {prettifyBVExpr expr displayNames widthVals}"
     | _ => bvExpr.toString
 
 def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
-      (vars : Std.HashMap Nat HydraVariable) : SexprPBV.Term :=
+      (vars : Std.HashMap Nat HydraVariable) (widthVals : Std.HashMap Nat HydraVariable) : SexprPBV.Term :=
     match bvExpr with
     | .var idx =>
        let varInfo := vars.getD idx default
@@ -809,38 +843,41 @@ def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
       let w := SexprPBV.WidthExpr.var w
       match op with
       | .add => SexprPBV.Term.add w
-        (GenBVExpr.toSmtLib lhs vars)
-        (GenBVExpr.toSmtLib rhs vars)
+        (GenBVExpr.toSmtLib lhs vars widthVals)
+        (GenBVExpr.toSmtLib rhs vars widthVals)
       | .mul => SexprPBV.Term.mul w
-        (GenBVExpr.toSmtLib lhs vars)
-        (GenBVExpr.toSmtLib rhs vars)
+        (GenBVExpr.toSmtLib lhs vars widthVals)
+        (GenBVExpr.toSmtLib rhs vars widthVals)
       | .umod => SexprPBV.Term.umod w
-        (GenBVExpr.toSmtLib lhs vars)
-        (GenBVExpr.toSmtLib rhs vars)
+        (GenBVExpr.toSmtLib lhs vars widthVals)
+        (GenBVExpr.toSmtLib rhs vars widthVals)
       | .udiv => SexprPBV.Term.udiv w
-        (GenBVExpr.toSmtLib lhs vars)
-        (GenBVExpr.toSmtLib rhs vars)
+        (GenBVExpr.toSmtLib lhs vars widthVals)
+        (GenBVExpr.toSmtLib rhs vars widthVals)
       | .and => SexprPBV.Term.band w
-        (GenBVExpr.toSmtLib lhs vars)
-        (GenBVExpr.toSmtLib rhs vars)
+        (GenBVExpr.toSmtLib lhs vars widthVals)
+        (GenBVExpr.toSmtLib rhs vars widthVals)
       | .or  => SexprPBV.Term.bor w
-        (GenBVExpr.toSmtLib lhs vars)
-        (GenBVExpr.toSmtLib rhs vars)
+        (GenBVExpr.toSmtLib lhs vars widthVals)
+        (GenBVExpr.toSmtLib rhs vars widthVals)
       | .xor  => SexprPBV.Term.bxor w
-        (GenBVExpr.toSmtLib lhs vars)
-        (GenBVExpr.toSmtLib rhs vars)
+        (GenBVExpr.toSmtLib lhs vars widthVals)
+        (GenBVExpr.toSmtLib rhs vars widthVals)
     | .un op operand =>
       -- TODO: is this even right? The 'w' is the *old* (pre generalization) width
       let w := SexprPBV.WidthExpr.var w
       match op with
-      | .not => SexprPBV.Term.bnot w (GenBVExpr.toSmtLib operand vars)
+      | .not => SexprPBV.Term.bnot w (GenBVExpr.toSmtLib operand vars widthVals)
       | _ => .junk bvExpr.toString
-    | .signExtend v expr =>
-          SexprPBV.Term.sext (GenBVExpr.toSmtLib expr vars) (SexprPBV.WidthExpr.var v)
+    | .signExtend (w := w) v expr =>
+          let var : GenBVExpr w := GenBVExpr.var widthVals[v]!.id
+          SexprPBV.Term.sext (GenBVExpr.toSmtLib var vars widthVals) (SexprPBV.WidthExpr.var v)
     | .zeroExtend v expr =>
-      SexprPBV.Term.zext (GenBVExpr.toSmtLib expr vars) (SexprPBV.WidthExpr.var v)
+          let var : GenBVExpr w := GenBVExpr.var widthVals[v]!.id
+      SexprPBV.Term.zext (GenBVExpr.toSmtLib var vars widthVals) (SexprPBV.WidthExpr.var v)
     | .truncate v expr =>
-      SexprPBV.Term.zext (GenBVExpr.toSmtLib expr vars) (SexprPBV.WidthExpr.var v)
+        let var : GenBVExpr w := GenBVExpr.var widthVals[v]!.id
+      SexprPBV.Term.zext (GenBVExpr.toSmtLib var vars widthVals) (SexprPBV.WidthExpr.var v)
     | .shiftLeft _lhs _rhs =>
         .junk bvExpr.toString
     | .shiftRight _lhs _rhs =>
@@ -855,89 +892,88 @@ def isGteZeroCheck (expr : BoolExpr GenBVPred) : Bool :=
           bv.toInt == 1 && bv'.toInt == 1 && bv''.toInt == 1
   | _ => false
 
-def prettifyComparison (bvLogicalExpr : BoolExpr GenBVPred) (displayNames: Std.HashMap Nat Name)  : Option String := Id.run do
+def prettifyComparison (bvLogicalExpr : BoolExpr GenBVPred) (displayNames: Std.HashMap Nat Name) (widthVals: Std.HashMap Nat HydraVariable)  : Option String := Id.run do
   let mut res : Option String := none
   match bvLogicalExpr with
   | .literal (GenBVPred.bin lhs BVBinPred.ult _) =>
     if isGteZeroCheck bvLogicalExpr then
-      res := some s! "{prettifyBVExpr lhs displayNames} >= 0"
+      res := some s! "{prettifyBVExpr lhs displayNames widthVals} >= 0"
   | .gate Gate.and (BoolExpr.literal (GenBVPred.bin (GenBVExpr.const bv) BVBinPred.ult expr)) rhs =>
     if bv.toInt == 0 && isGteZeroCheck rhs then
-      res := some s! "{prettifyBVExpr expr displayNames} > 0"
+      res := some s! "{prettifyBVExpr expr displayNames widthVals} > 0"
   | .not expr  =>
      if isGteZeroCheck expr then
       match expr with
-      |  .literal (GenBVPred.bin lhs _ _) => res := some s! "{prettifyBVExpr lhs displayNames} < 0"
+      |  .literal (GenBVPred.bin lhs _ _) => res := some s! "{prettifyBVExpr lhs displayNames widthVals} < 0"
       | _ => return none
   | _ => return none
 
   res
 
 
-def prettify (generalization: BoolExpr  GenBVPred) (displayNames: Std.HashMap Nat Name) : String :=
-  match (prettifyComparison generalization displayNames) with
+def prettify (generalization: BoolExpr  GenBVPred) (displayNames: Std.HashMap Nat Name) (widthVals: Std.HashMap Nat HydraVariable)  : String :=
+  match (prettifyComparison generalization displayNames widthVals) with
   | some s => s
   | none =>
       match generalization with
       | .literal (GenBVPred.bin lhs op rhs) =>
-          s! "{prettifyBVExpr lhs displayNames} {prettifyBVBinPred op} {prettifyBVExpr rhs displayNames}"
+          s! "{prettifyBVExpr lhs displayNames widthVals} {prettifyBVBinPred op} {prettifyBVExpr rhs displayNames widthVals}"
       | .not boolExpr =>
-          s! "!({prettify boolExpr displayNames})"
+          s! "!({prettify boolExpr displayNames widthVals})"
       | .gate op lhs rhs =>
-          s! "({prettify lhs displayNames}) {op.toString} ({prettify rhs displayNames})"
+          s! "({prettify lhs displayNames widthVals}) {op.toString} ({prettify rhs displayNames widthVals})"
       | .ite cond positive _ =>
-          s! "if {prettify cond displayNames} then {prettify positive displayNames} "
+          s! "if {prettify cond displayNames widthVals} then {prettify positive displayNames widthVals} "
       | _ => generalization.toString
 
 
 def genBvPredToSmtLib
-    (litPred : GenBVPred) (vars : Std.HashMap Nat HydraVariable) : SexprPBV.Predicate :=
+    (litPred : GenBVPred) (vars : Std.HashMap Nat HydraVariable) (widthVals : Std.HashMap Nat HydraVariable) : SexprPBV.Predicate :=
   match litPred with
   | .bin (w := w) lhs op rhs =>
       match op with
       | .eq => SexprPBV.Predicate.binRel .eq (.const w)
-                (GenBVExpr.toSmtLib lhs vars)
-                (GenBVExpr.toSmtLib rhs vars)
+                (GenBVExpr.toSmtLib lhs vars widthVals)
+                (GenBVExpr.toSmtLib rhs vars widthVals)
       | .ult => SexprPBV.Predicate.binRel .ult (.const w)
-                (GenBVExpr.toSmtLib lhs vars)
-                (GenBVExpr.toSmtLib rhs vars)
+                (GenBVExpr.toSmtLib lhs vars widthVals)
+                (GenBVExpr.toSmtLib rhs vars widthVals)
   | _ => SexprPBV.Predicate.junk litPred.toString
 
-
 def boolExprToSmtLib (pred : BoolExpr α) (f : α → SexprPBV.Predicate)
-    (displayNames : Std.HashMap Nat HydraVariable) : SexprPBV.Predicate :=
+    (displayNames : Std.HashMap Nat HydraVariable) (widthVals : Std.HashMap Nat HydraVariable) : SexprPBV.Predicate :=
   match pred with
   | .literal litPred => f litPred
-  | .not expr => SexprPBV.Predicate.not (boolExprToSmtLib expr f displayNames)
+  | .not expr => SexprPBV.Predicate.not (boolExprToSmtLib expr f displayNames widthVals)
   | .gate gate lhs rhs =>
       -- | TODO: these should be binRel, I think? But it's totally unclear.
       -- But that doesn't exactly type-check, because binRel needs two terms, not predicates.
       -- Not sure, I need to ask Timi.
       match gate with
-      | .beq => SexprPBV.Predicate.eq (boolExprToSmtLib lhs f displayNames) (boolExprToSmtLib rhs f displayNames)
-      | .xor => SexprPBV.Predicate.xor (boolExprToSmtLib lhs f displayNames) (boolExprToSmtLib rhs f displayNames)
-      | .and => SexprPBV.Predicate.and (boolExprToSmtLib lhs f displayNames) (boolExprToSmtLib rhs f displayNames)
-      | .or  => SexprPBV.Predicate.or (boolExprToSmtLib lhs f displayNames) (boolExprToSmtLib rhs f displayNames)
+      | .beq => SexprPBV.Predicate.eq (boolExprToSmtLib lhs f displayNames widthVals) (boolExprToSmtLib rhs f displayNames widthVals)
+      | .xor => SexprPBV.Predicate.xor (boolExprToSmtLib lhs f displayNames widthVals) (boolExprToSmtLib rhs f displayNames widthVals)
+      | .and => SexprPBV.Predicate.and (boolExprToSmtLib lhs f displayNames widthVals) (boolExprToSmtLib rhs f displayNames widthVals)
+      | .or  => SexprPBV.Predicate.or (boolExprToSmtLib lhs f displayNames widthVals) (boolExprToSmtLib rhs f displayNames widthVals)
   | .ite cond positive negative =>
-      SexprPBV.Predicate.ite (boolExprToSmtLib cond f displayNames)
-                            (boolExprToSmtLib positive f displayNames)
-                            (boolExprToSmtLib negative f displayNames)
+      SexprPBV.Predicate.ite (boolExprToSmtLib cond f displayNames widthVals)
+                            (boolExprToSmtLib positive f displayNames widthVals)
+                            (boolExprToSmtLib negative f displayNames widthVals)
   | .const b => SexprPBV.Predicate.boolConstPred b
 
 def GenBVPred.toSmtLib
-    (pred : BoolExpr GenBVPred) (vars : Std.HashMap Nat HydraVariable) :
+    (pred : BoolExpr GenBVPred) (vars : Std.HashMap Nat HydraVariable) (widthVals : Std.HashMap Nat HydraVariable) :
     SexprPBV.Predicate :=
-  boolExprToSmtLib pred (fun p => genBvPredToSmtLib p vars) vars
+  boolExprToSmtLib pred (fun p => genBvPredToSmtLib p vars widthVals) vars widthVals
 
 
 instance : HydrablePrettify GenBVPred where
   prettify := prettify
-  prettifyAsSexpr  pred vars := GenBVPred.toSmtLib pred vars |>.toSexpr
+  prettifyAsSexpr  pred vars widthVals := GenBVPred.toSmtLib pred vars widthVals |>.toSexpr
 
-def prettifyAsTheorem (name: Name) (generalization: BoolExpr GenBVPred) (displayNames: Std.HashMap Nat Name) : String := Id.run do
+def prettifyAsTheorem (name: Name) (generalization: BoolExpr GenBVPred) (displayNames: Std.HashMap Nat Name) (widthVals : Std.HashMap Nat HydraVariable) : String := Id.run do
   let params := displayNames.values.filter (λ n => n.toString != "w")
   let res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " (params.map (λ p => p.toString))} : BitVec w)"
-  let res := res ++ s! " : {HydrablePrettify.prettify generalization displayNames}"
+  let res := res ++ s! " : {HydrablePrettify.prettify generalization displayNames widthVals}"
   let res := res ++ s! " := by sorry"
   pure res
 

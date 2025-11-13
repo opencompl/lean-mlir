@@ -13,7 +13,8 @@ open Std.Sat
 open Std.Tactic.BVDecide
 open Tactic
 
-def defaultParsedExprState : ParsedInputState := { maxFreeVarId := 0, maxWidthId := 1, widthToVariable := {}
+def defaultParsedExprState : ParsedInputState := { maxFreeVarId := 0, maxWidthId := 1, widthIdToVariable := {},
+                                                                 widthValToVar := {}
                                                                  , numSymVars := 0, originalWidth := 32
                                                                 , inputVarIdToVariable := {}, symVarToVal := {}
                                                                 , symVarIdToVariable := {}, displayNameToVariable := {}, valToSymVar:= {}}
@@ -172,11 +173,12 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (BVExprWrap
 
   storeWidth (v: Nat) : ParseExprM Unit := do
     let currState ← get
-    if !currState.widthToVariable.contains v then
+
+    if !currState.widthValToVar.contains v then
       let newWidthId := currState.maxWidthId + 1
-      let userFacingName := Lean.Name.mkSimple s!"w{newWidthId}"
+      let userFacingName := Lean.Name.mkSimple s!"w{currState.widthIdToVariable.size + 1}"
       let var : HydraVariable := {name := userFacingName, id := newWidthId, width := v}
-      let updatedState : ParsedInputState := { currState with maxWidthId := newWidthId, widthToVariable := currState.widthToVariable.insert v var}
+      let updatedState : ParsedInputState := { currState with maxWidthId := newWidthId, widthIdToVariable := currState.widthIdToVariable.insert newWidthId var, widthValToVar := currState.widthValToVar.insert v var}
       set updatedState
 
   rotateReflection (innerExpr distanceExpr resType: Expr) (rotateOp: Nat → BVUnOp)
