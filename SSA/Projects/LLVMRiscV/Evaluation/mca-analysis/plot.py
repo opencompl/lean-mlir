@@ -806,10 +806,29 @@ def create_latex_command(parameters, filename):
         df['ratios_sdag_class'] = df['ratios_sdag'].apply(lambda x: 'A' if x < 1 else 'B' if x == 1 else 'C' if x < 1.5 else 'D' if x < 2 else 'E')
         df['ratios_gisel_sdag_class'] = df['ratios_gisel_sdag'].apply(lambda x: 'A' if x < 1 else 'B' if x == 1 else 'C' if x < 1.5 else 'D' if x < 2 else 'E')
         
+        # max and min values
+        max_ratio_gisel = df["ratios_gisel"].max()
+        max_ratio_sdag = df["ratios_sdag"].max()
+        min_ratio_gisel = df["ratios_gisel"].min()
+        min_ratio_sdag = df["ratios_sdag"].min()
+        
+        latex_command_max_gisel = f"\\newcommand{{\\MaxRatioVsGiselParam{p}}}{{{int(max_ratio_gisel)}}}\n"
+        latex_command_max_sdag = f"\\newcommand{{\\MaxRatioVsSdagParam{p}}}{{{int(max_ratio_sdag)}}}\n"
+        latex_command_min_gisel = f"\\newcommand{{\\MaxRatioVsGiselParam{p}}}{{{int(min_ratio_gisel)}}}\n"
+        latex_command_min_sdag = f"\\newcommand{{\\MaxRatioVsSdagParam{p}}}{{{int(min_ratio_sdag)}}}\n"
+        
+        f.write(latex_command_max_gisel)
+        f.write(latex_command_max_sdag)
+        f.write(latex_command_min_gisel)
+        f.write(latex_command_min_sdag)
+        
+        
         # calculate % of elements in each class 
         df_grouped_gisel = df.groupby('instructions_number')['ratios_gisel_class'].value_counts(normalize=True) * 100
         df_grouped_sdag = df.groupby('instructions_number')['ratios_sdag_class'].value_counts(normalize=True) * 100
         df_grouped_gisel_sdag = df.groupby('instructions_number')['ratios_gisel_sdag_class'].value_counts(normalize=True) * 100
+        
+        
         
         # print a latex command for each percentage, specify in the name the class it belongs to 
         # and the `instructions_number`
@@ -967,39 +986,39 @@ def main():
 
         to_join = ["LEANMLIR_opt", "LLVM_globalisel", "LLVM_selectiondag"]
         join_dataframes(to_join, parameter)
-    #     if parameter == "similarity":
-    #         continue
-    #     else:
-    #         # if "scatter" in plots_to_produce or "all" in plots_to_produce:
-    #         #     scatter_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
-    #         #     scatter_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
-    #         #     # scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-    #         # if "sorted" in plots_to_produce or "all" in plots_to_produce:
-    #         #     sorted_line_plot_all(parameter)
-    #         #     sorted_line_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
-    #         #     sorted_line_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
-    #         #     # sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-    #         # if "overhead" in plots_to_produce or "all" in plots_to_produce:
-    #         #     overhead_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
-    #         #     overhead_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
-    #         #     # overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-    #         if "stacked" in plots_to_produce or "all" in plots_to_produce:
-    #             bar_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
-    #             bar_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
-    #             # bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-    #         if "violin" in plots_to_produce or "all" in plots_to_produce:
-    #             violin_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
-    #             violin_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
-    #             violin_plot(parameter, "LLVM_globalisel", "LLVM_selectiondag")
-    #             # bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
-    #         if "proportional" in plots_to_produce or "all" in plots_to_produce:
-    #             proportional_bar_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
-    #             proportional_bar_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+        if parameter == "similarity":
+            continue
+        else:
+            # if "scatter" in plots_to_produce or "all" in plots_to_produce:
+            #     scatter_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
+            #     scatter_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+            #     # scatter_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            # if "sorted" in plots_to_produce or "all" in plots_to_produce:
+            #     sorted_line_plot_all(parameter)
+            #     sorted_line_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
+            #     sorted_line_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+            #     # sorted_line_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            # if "overhead" in plots_to_produce or "all" in plots_to_produce:
+            #     overhead_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
+            #     overhead_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+            #     # overhead_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "stacked" in plots_to_produce or "all" in plots_to_produce:
+                bar_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
+                bar_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+                # bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "violin" in plots_to_produce or "all" in plots_to_produce:
+                violin_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
+                violin_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
+                violin_plot(parameter, "LLVM_globalisel", "LLVM_selectiondag")
+                # bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+            if "proportional" in plots_to_produce or "all" in plots_to_produce:
+                proportional_bar_plot(parameter, "LEANMLIR_opt", "LLVM_globalisel")
+                proportional_bar_plot(parameter, "LEANMLIR_opt", "LLVM_selectiondag")
                 
-    #             # proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
+                # proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
 
-    # geomean_plot_tot_cycles()
-    # equivalent_plot_perc()
+    geomean_plot_tot_cycles()
+    equivalent_plot_perc()
     create_latex_command(['tot_cycles', 'tot_instructions'], plots_dir + 'numerical_commands.tex')
     
 if __name__ == "__main__":
