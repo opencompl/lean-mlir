@@ -726,7 +726,7 @@ def proportional_bar_plot(parameter, selector1, selector2):
     
     average_ratios_by_instruction = (
         df.groupby('instructions_number')['ratios']
-        .mean()
+        .apply(lambda x: np.exp(np.log(x).mean()))
         .reset_index(name='average_ratio')
     )
     
