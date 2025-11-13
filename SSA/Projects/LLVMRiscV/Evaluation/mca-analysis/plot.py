@@ -728,7 +728,8 @@ def proportional_bar_plot(parameter, selector1, selector2):
         .apply(lambda x: np.exp(np.log(x).mean()))
         .reset_index(name='average_ratio')
     )
-    
+    print(selector2)
+    print(average_ratios_by_instruction)
     width = 0.8
 
     plt.bar(
