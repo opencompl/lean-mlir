@@ -574,7 +574,7 @@ def getCombinationWithNoPreconditions (exprSynthesisResults : Std.HashMap Nat (L
 
     let mut needsPreconditionExprs := state.needsPreconditionsExprs
     for subst in substitutions.reverse do -- We reverse in a few places so we can process in roughly increasing cost
-      let negativeExample ← getNegativeExamples subst parsedBVLogicalExpr.lhs.symVars.keys 1
+      let negativeExample ← getNegativeExamples subst 1
       if negativeExample.isEmpty then
         return some subst
       needsPreconditionExprs := subst :: needsPreconditionExprs
@@ -790,7 +790,7 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
   for numConjunctions in (List.range (maxConjunctions + 1)) do
     logInfo m! "Running with {numConjunctions} allowed conjunctions"
     for expr in state.needsPreconditionsExprs.reverse do
-        let negativeExamples ← getNegativeExamples expr positiveExamples[0]!.keys 3
+        let negativeExamples ← getNegativeExamples expr 3
         logInfo m! "Negative examples for {expr} : {negativeExamples}"
 
         let mut preconditions := none

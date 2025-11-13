@@ -467,7 +467,7 @@ class HydrableGetNegativeExamples (parsedExpr : Type) (genLogicalExpr : outParam
   HydrableGenExpr genExpr
   -- HydrableAddConstraints genLogicalExpr genExpr
 
-def getNegativeExamples [H : HydrableGetNegativeExamples parsedExpr genPred genExpr] (bvExpr: BoolExpr genPred) (consts: List Nat) (numEx: Nat) :
+def getNegativeExamples [H : HydrableGetNegativeExamples parsedExpr genPred genExpr] (bvExpr: BoolExpr genPred) (numEx: Nat) :
               GeneralizerStateM parsedExpr genPred (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
   let targetExpr := BoolExpr.not bvExpr
   return (← helper targetExpr numEx)
