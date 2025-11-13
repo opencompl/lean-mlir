@@ -93,8 +93,8 @@ parameters_match = {
 }
 
 parameters_labels = {
-    "tot_instructions": "#instructions",
-    "tot_cycles": "#cycles",
+    "tot_instructions": "#Instructions",
+    "tot_cycles": "#Cycles",
     "tot_uops": "#uOps",
     "similarity": "Instructions List:",
 }
@@ -683,10 +683,9 @@ def equivalent_plot_perc():
         .unstack(fill_value=0)
         * 100
     )
-    plt.figure(figsize=(10, 5))
-    
-    
-    width = 0.35
+    plt.figure(figsize=(7, 5))
+
+    width = 0.25
     
     plt.bar((df_eqv_gisel.index) - width/2, (df_eqv_gisel[True]).to_list(), width, label=selector_labels["LLVM_globalisel"], color=light_blue)
     plt.bar((df_eqv_gisel.index) + width/2, (df_eqv_sdag[True]).to_list(), width, label=selector_labels["LLVM_selectiondag"], color=light_red)
@@ -711,7 +710,7 @@ def equivalent_plot_perc():
 def proportional_bar_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + ".csv")
 
-    plt.figure(figsize=(10, 5))
+    plt.figure(figsize=(7, 5))
 
     col1 = selector1 + "_" + parameter
     col2 = selector2 + "_" + parameter
@@ -730,30 +729,41 @@ def proportional_bar_plot(parameter, selector1, selector2):
         .reset_index(name='average_ratio')
     )
     
+    width = 0.8
 
     plt.bar(
         average_ratios_by_instruction["instructions_number"],
         average_ratios_by_instruction["average_ratio"],
         color=light_green,
+        width=width,
         label=f"Avg. {parameters_labels[parameter]},$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$"
     )
 
     plt.axhline(1, color=black, linestyle="--", linewidth=2)
-    plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 1.05, f"{selector_labels[selector2]}", color=black, ha='center', fontsize=20)
+
     
 
     plt.xlabel("#Instructions - LLVM IR")
     
     plt.ylabel(
-        f"$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$, {parameters_labels[parameter]}",
+        f"$\\frac{{\\text{{{parameters_labels[parameter]},{selector_labels[selector1]}}}}}{{\\text{{{parameters_labels[parameter]},{selector_labels[selector2]}}}}}$",
         rotation="horizontal", horizontalalignment="left", y=1.08
     )
     
-    if max(average_ratios_by_instruction["average_ratio"]) < 10:
-        plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 1))
-    else : 
-        plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 100))
+    # if max(average_ratios_by_instruction["average_ratio"]) < 10:
+    #     plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 0.5))
+    # else : 
+    #     plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 100))
+    if (selector2 == "LLVM_globalisel") and (parameter == "tot_instructions"): 
+        plt.yticks(np.arange(0, 2, 0.5))
+        plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 0.95, f"GISel", color=black, ha='center', fontsize=20)
+    elif (selector2 == "LLVM_selectiondag") and (parameter == "tot_instructions"): 
+        plt.yticks(np.arange(0, 3, 1))
+        plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 0.95, f"SDAG", color=black, ha='center', fontsize=20)
         
+        
+    plt.xticks(np.arange(3, 9, 1))
+    
     plt.tight_layout()
 
     # uncomment to have numbers on top of the bars
@@ -785,14 +795,14 @@ def create_latex_command(parameters, filename):
 
     commit_hash = result.stdout.strip()
 
-    f.write(f"Lean-mlir commit hash: {commit_hash}\n")
+    f.write(f"% Lean-mlir commit hash: {commit_hash}\n")
     
-    f.write(f"In the following commands the following rules apply:\n")
-    f.write(f"A: class  <1x\n")
-    f.write(f"B: class 1x\n")
-    f.write(f"C: class 1x-1.5x\n")
-    f.write(f"D: class 1.5x-2x\n")
-    f.write(f"E: class >2x\n")
+    f.write(f"% In the following commands the following rules apply:\n")
+    f.write(f"% A: class  <1x\n")
+    f.write(f"% B: class 1x\n")
+    f.write(f"% C: class 1x-1.5x\n")
+    f.write(f"% D: class 1.5x-2x\n")
+    f.write(f"% E: class >2x\n")
     f.write('\n\n')
     
     # print the percentage of programs in each of the above classes, for each number of instructions
@@ -894,7 +904,7 @@ def create_latex_command(parameters, filename):
         f.write(latex_command_gisel_geomean)
         
         geomean_gisel_tot_perc = (np.exp(np.log(df['ratios_gisel']).mean()) - 1) * 100
-        latex_command_gisel_geomean_perc = f"\\newcommand{{\\GeomeanTotLeanmlirVsGiselSlowDownPerc{p}}}{{{geomean_gisel_tot_perc:.1f}}}\n"
+        latex_command_gisel_geomean_perc = f"\\newcommand{{\\GeomeanTotLeanmlirVsGiselSlowDownPerc{p}}}{{{geomean_gisel_tot_perc:.1f}\%}}\n"
         f.write(latex_command_gisel_geomean_perc)
         
         geomean_sdag_tot = np.exp(np.log(df['ratios_sdag']).mean())
@@ -902,7 +912,7 @@ def create_latex_command(parameters, filename):
         f.write(latex_command_sdag_geomean)
         
         geomean_sdag_tot_perc = (np.exp(np.log(df['ratios_sdag']).mean()) - 1) * 100
-        latex_command_sdag_geomean_perc = f"\\newcommand{{\\GeomeanTotLeanmlirVsSdagSlowDownPerc{p}}}{{{geomean_sdag_tot_perc:.1f}}}\n"
+        latex_command_sdag_geomean_perc = f"\\newcommand{{\\GeomeanTotLeanmlirVsSdagSlowDownPerc{p}}}{{{geomean_sdag_tot_perc:.1f}\%}}\n"
         f.write(latex_command_sdag_geomean_perc)
         
         
