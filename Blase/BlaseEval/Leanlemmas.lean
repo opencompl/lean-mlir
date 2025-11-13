@@ -2,9 +2,32 @@ import Blase
 set_option warn.sorry false
 open BitVec
 
+-- 1 1 1 = 7
+-- 1 0 0 = 4
+-- x.msb ↔ x.zext(w + 1) + x.zext(w+1) ≥u twoPow w (w + 1)
+
+-- Write msb in terms of twoPow, ule, and zeroExtend.
+-- TODO: we need to move 'ule' and add twoPow support.
+theorem BitVec.msb_eq_twoPow_ule_two_mul_zext (x : BitVec w) :
+  x.msb = (BitVec.twoPow (w + 1) w).ule (2 * x.zeroExtend (w + 1))  := by
+  rw [BitVec.msb_eq_toNat]
+  simp [BitVec.ule_eq_decide]
+  have : 2^w < 2^(w + 1) := by
+    apply Nat.pow_lt_pow_succ
+    omega
+  rw [Nat.mod_eq_of_lt (by omega)]
+  rw [Nat.mod_eq_of_lt (by omega)]
+  rcases w with rfl | w
+  · simp;
+    omega
+  · simp
+    rw [Nat.pow_succ]
+    omega
+
+
 -- | TODO: Needs 'getLsbD'. doable, but complex. We should handle by having a predicate
 -- 'x.getLsbD = v', and then casing on this value.
--- | TODO HIGH: allOnes → -1
+-- | TODO HIGH: allOnes → -1 [DONE]
 /--
 error: unsolved goals
 w : ℕ
@@ -20,7 +43,7 @@ theorem AvoidCollision_and_setWidth_allOnes (w' w : Nat) (b : BitVec (w' + w)) :
 -- NOTPOSSIBLE: append
 theorem AvoidCollision_append_def (x : BitVec v) (y : BitVec w) :
     x ++ y = (shiftLeftZeroExtend x w ||| setWidth' (Nat.le_add_left w v) y)  := sorry
--- TODO HIGH: BitVec.cast | cannot, need to unify Term and Predicate to be able to write 'v = w' in the
+-- TODO HIGH: BitVec.cast | cannot, need to unify Term and Predicate to be able to write 'v = w' in the [DONE]
 -- calculus.
 theorem AvoidCollision_cast_setWidth (h : v = v') (x : BitVec w) :
     (x.setWidth v).cast h = x.setWidth v' := by bv_multi_width_normalize
@@ -41,7 +64,7 @@ theorem AvoidCollision_getLsbD_signExtend (x  : BitVec w) {v i : Nat} :
 -- TODO LOW: getMsbD
 theorem AvoidCollision_getMsbD_setWidth {m : Nat} {x : BitVec n} {i : Nat} :
     getMsbD (setWidth m x) i = (decide (m - n ≤ i) && getMsbD x (i + n - m))  := by sorry
--- TODO LOW: getMsbD
+-- TODO LOW: getMsbD, subtraction of indices (hard?)
 theorem AvoidCollision_getMsbD_setWidth_add {x : BitVec w} (h : k ≤ i) :
     (x.setWidth (w + k)).getMsbD i = x.getMsbD (i - k)  := by sorry
 -- TODO LOW: Reflection bug
@@ -84,7 +107,7 @@ theorem AvoidCollision_setWidth_append_eq_shiftLeft_setWidth_or {b : BitVec w} {
     (b ++ b').setWidth w'' = (b.setWidth w'' <<< w') ||| b'.setWidth w''  := sorry
 theorem AvoidCollision_setWidth_append_of_eq {x : BitVec v} {y : BitVec w} (h : w' = w) :
     setWidth (v' + w') (x ++ y) = setWidth v' x ++ setWidth w' y  := sorry
--- TODO HIGH: cast
+-- TODO HIGH: cast [DONE]
 theorem AvoidCollision_setWidth_cast {x : BitVec w} {h : w = v} : (x.cast h).setWidth k = x.setWidth k  := by bv_multi_width_normalize
 -- TODO HIGH: cons
 theorem AvoidCollision_setWidth_cons {x : BitVec w} : (cons a x).setWidth w = x  := by sorry
@@ -165,9 +188,22 @@ theorem AvoidCollision_signExtend_eq_setWidth_of_lt (x : BitVec w) {v : Nat} (hv
   x.signExtend v = x.setWidth v := sorry
 -- DONE
 theorem signExtend_eq (x : BitVec w) : x.signExtend w = x  := sorry
+
+-- | We are solving this now.
+-- v
 -- TODO HIGH: x.msb
-theorem AvoidCollision_signExtend_eq_setWidth_of_msb_false {x : BitVec w} {v : Nat} (hmsb : x.msb = false) :
-    x.signExtend v = x.setWidth v  := by sorry
+/--
+error: unsolved goals
+w : ℕ
+x : BitVec w
+v : ℕ
+hmsb : x.msb = false
+AvoidCollision_signExtend_eq_setWidth_of_msb_false :
+  ∀ {w : ℕ} {x : BitVec w} {v : ℕ}, x.msb = true ∨ signExtend v x = setWidth v x
+⊢ signExtend v x = setWidth v x
+-/
+#guard_msgs in theorem AvoidCollision_signExtend_eq_setWidth_of_msb_false {x : BitVec w} {v : Nat} (hmsb : x.msb = false) :
+    x.signExtend v = x.setWidth v  := by bv_multi_width_normalize
 -- DONE
 theorem AvoidCollision_signExtend_not {x : BitVec w} (h : 0 < w) :
     (~~~x).signExtend v = ~~~(x.signExtend v)  := sorry
