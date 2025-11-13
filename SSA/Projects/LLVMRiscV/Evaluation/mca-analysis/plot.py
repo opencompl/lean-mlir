@@ -9,6 +9,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import math
+from Blase.Blase.Fast.Dataset2.plotter import geomean
 from num2words import num2words
 
 matplotlib.rcParams["pdf.fonttype"] = 42
@@ -839,6 +840,14 @@ def create_latex_command(parameters):
             instructions_number = num2words(instr_num)
             latex_command = f"\\def\\Geomean_ratio_leanmlir_vs_sdag_{p}_{instructions_number}_instr{{{geomean_value:.1f}}}"
             print(latex_command)
+        
+        # total geomeans
+        
+        geomean_gisel_tot = np.exp(np.log(df['ratios_gisel']).mean())
+        print(geomean_gisel_tot)
+        geomean_sdag_tot = np.exp(np.log(df['ratios_sdag']).mean())
+        print(geomean_sdag_tot)
+        
             
     # print the percentage of programs that are identical, for each number of instructions
     
