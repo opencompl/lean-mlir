@@ -799,7 +799,6 @@ def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.Pa
                       generatePreconditions expr positiveExamples negativeExamples numConjunctions
 
         let widthRelations ← getWidthRelations
-        logInfo m! "Width relations: {widthRelations}"
         match (preconditions, widthRelations) with
         | (none, none) => logInfo m! "Could not generate precondition for expr: {expr} with negative examples: {negativeExamples}"
         | (some weakPC, some widthRel) =>
@@ -936,7 +935,7 @@ def prettifyComparison (bvLogicalExpr : BoolExpr GenBVPred) (displayNames: Std.H
   res
 
 
-def prettify (generalization: BoolExpr  GenBVPred) (displayNames: Std.HashMap Nat HydraVariable) (widthVals: Std.HashMap Nat HydraVariable)  : String :=
+partial def prettify (generalization: BoolExpr  GenBVPred) (displayNames: Std.HashMap Nat HydraVariable) (widthVals: Std.HashMap Nat HydraVariable)  : String :=
   match (prettifyComparison generalization displayNames widthVals) with
   | some s => s
   | none =>
@@ -946,9 +945,15 @@ def prettify (generalization: BoolExpr  GenBVPred) (displayNames: Std.HashMap Na
       | .not boolExpr =>
           s! "!({prettify boolExpr displayNames widthVals})"
       | .gate op lhs rhs =>
-          s! "({prettify lhs displayNames widthVals}) {op.toString} ({prettify rhs displayNames widthVals})"
+          match (lhs, rhs) with
+          | (BoolExpr.const _, rhs) =>
+             s! "({prettify rhs displayNames widthVals})"
+          | (lhs, BoolExpr.const _) =>
+             s! "({prettify lhs displayNames widthVals})"
+          | _ =>
+             s! "({prettify lhs displayNames widthVals}) {op.toString} ({prettify rhs displayNames widthVals})"
       | .ite cond positive _ =>
-          s! "if {prettify cond displayNames widthVals} then {prettify positive displayNames widthVals} "
+          s! "(h : {prettify cond displayNames widthVals}) : ({prettify positive displayNames widthVals})"
       | _ => generalization.toString
 
 
@@ -996,10 +1001,24 @@ instance : HydrablePrettify GenBVPred where
   prettifyAsSexpr  pred vars widthVals := GenBVPred.toSmtLib pred vars widthVals |>.toSexpr
 
 def prettifyAsTheorem (name: Name) (generalization: BoolExpr GenBVPred) (displayNames: Std.HashMap Nat HydraVariable) (widthVals : Std.HashMap Nat HydraVariable) : String := Id.run do
-  let params := displayNames.values.filter (λ n => n.name.toString != "w")
-  let res := s! "theorem {name}" ++ " {w} " ++ s! "({String.intercalate " " (params.map (λ p => p.name.toString))} : BitVec w)"
-  let res := res ++ s! " : {HydrablePrettify.prettify generalization displayNames widthVals}"
-  let res := res ++ s! " := by sorry"
+  let mut widthsById : Std.HashMap Nat HydraVariable := Std.HashMap.emptyWithCapacity
+  for var in widthVals.values do
+    widthsById := widthsById.insert var.id var
+
+  let inputAndSymbolicVars := displayNames.filter (λ id _ => !widthsById.contains id)
+  let mut res := s! "theorem {name}" ++ s! " {String.intercalate " " (inputAndSymbolicVars.values.map (λ var => "(" ++ var.name.toString ++ " : BitVec " ++ (toString widthVals[var.width]!.name) ++  ")"))}"
+
+  let inputWidths := Std.HashSet.ofList (inputAndSymbolicVars.values.map (λ var => widthVals[var.width]!.id))
+  let widthsForZextSextTrunc := widthsById.filter (λ id _ => !inputWidths.contains id) --basically the widths not attached to an input or symbolic variable
+
+  if (!widthsForZextSextTrunc.isEmpty) then
+    res := res ++ s! " ({String.intercalate " " (widthsForZextSextTrunc.values.map (λ var => var.name.toString))} : Nat)"
+
+  match generalization with
+  | .ite _ _ _ => res := res ++  s! " {HydrablePrettify.prettify generalization displayNames widthVals}"
+  | _ => res := res ++  s! " : {HydrablePrettify.prettify generalization displayNames widthVals}"
+
+  res := res ++ s! " := by sorry"
   pure res
 
 
@@ -1040,8 +1059,6 @@ def evalBvGeneralize : Tactic
         generalizeTactic (H := bvHydrableParseAndGeneralize) cfg (← getMainTarget)
   | _ => Lean.Elab.throwUnsupportedSyntax
 
-
-
 -- variable {x y z : BitVec 1}
 -- #generalize BitVec.zeroExtend 64 (BitVec.zeroExtend 32 x ^^^ 1#32) = BitVec.zeroExtend 64 (x ^^^ 1#1) --#fold_xor_zext_sandwich_thm;
 
@@ -1050,20 +1067,29 @@ def evalBvGeneralize : Tactic
 -- -- #generalize (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
 
 -- variable {x y z: BitVec 32}
+-- #generalize BitVec.signExtend 34 (BitVec.zeroExtend 33 x) = BitVec.zeroExtend 34 x
 -- #generalize BitVec.zeroExtend 32 ((BitVec.truncate 16 x) <<< 8) = (x <<< 8) &&& 0xFF00#32
 
 section Examples
 set_option warn.sorry false
 /--
-info: theorem foo {w} (x y C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
+info: theorem foo (x : BitVec w) (y : BitVec w) (C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
 ---
-error: (bveq (wconst 8) (add (wvar 8) (bor (wvar 8) (add (wvar 8) (bvvar 1001 (wvar 8)) (add (wvar 8) (ofNat (wvar 8) 1) (bnot (wvar 8) (bvvar 1 (wvar 8))))) (bvvar 2 (wvar 8))) (bvvar 2 (wvar 8))) (add (wvar 8) (bor (wvar 8) (bvvar 2 (wvar 8)) (add (wvar 8) (bvvar 1001 (wvar 8)) (add (wvar 8) (ofNat (wvar 8) 1) (bnot (wvar 8) (bvvar 1 (wvar 8)))))) (bvvar 2 (wvar 8))))
+error: unsolved goals
+x y : BitVec 8
+⊢ (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y
 -/
 #guard_msgs in
 theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
   md_synth_generalize
-  md_synth_generalize (config := {output := .sexpr})
 
+
+-- theorem new (x y : BitVec 9) : (x ^^^ y) &&& 42#9 ||| x &&& BitVec.ofInt 9 (-43) = y &&& 42#9 ^^^ x := by
+--   md_synth_generalize
+
+
+-- theorem new2 (x : BitVec 32) :  BitVec.signExtend 34 (BitVec.zeroExtend 33 x) = BitVec.zeroExtend 34 x := by
+--   md_synth_generalize
 
 /--
 error: (bveq (wconst 8) (zext (bvvar 9481 (wvar 8)) (wvar 8)) (band (wvar 8) (bvvar 1 (wvar 8)) (zext (bvvar 9481 (wvar 8)) (wvar 8))))
