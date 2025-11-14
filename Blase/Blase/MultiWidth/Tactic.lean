@@ -1222,9 +1222,22 @@ def evalBvMultiWidth : Tactic := fun
     pure g
   Normalize.generalizeOfBoolTac
   Normalize.substNatEqualitiesTac
+  if let [] ← getUnsolvedGoals then
+    -- all goals closed by generalization
+    return
   Normalize.substBvEqualitiesTac
-  let _ ← tryTactic <| liftMetaTactic1 Normalize.runPreprocessing
-  let _ ← tryTactic do
+  if let [] ← getUnsolvedGoals then
+    -- all goals closed by generalization
+    return
+  liftMetaTactic1 Normalize.runPreprocessing
+  if let [] ← getUnsolvedGoals then
+    -- all goals closed by generalization
+    return
+  liftMetaTactic1 fun g => do
+    let (_fvars, g) ← g.intros
+    let g ← revertNonDepPropHyps g
+    pure g
+  do
     let cfg ← elabBvMultiWidthConfig cfg
     let g ← getMainGoal
     g.withContext do

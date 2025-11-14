@@ -29,7 +29,7 @@ theorem AvoidCollision_append_def (x : BitVec v) (y : BitVec w) :
 -- TODO HIGH: BitVec.cast | cannot, need to unify Term and Predicate to be able to write 'v = w' in the [DONE]
 -- calculus.
 theorem AvoidCollision_cast_setWidth (h : v = v') (x : BitVec w) :
-    (x.setWidth v).cast h = x.setWidth v' := by bv_multi_width_normalize
+    (x.setWidth v).cast h = x.setWidth v' := by bv_multi_width
 -- TODO LOW: reflection bug
 theorem AvoidCollision_getElem_signExtend {x  : BitVec w} {v i : Nat} (h : i < v) :
     (x.signExtend v)[i] = if h : i < w then x[i] else x.msb  := sorry
@@ -91,7 +91,7 @@ theorem AvoidCollision_setWidth_append_eq_shiftLeft_setWidth_or {b : BitVec w} {
 theorem AvoidCollision_setWidth_append_of_eq {x : BitVec v} {y : BitVec w} (h : w' = w) :
     setWidth (v' + w') (x ++ y) = setWidth v' x ++ setWidth w' y  := sorry
 -- TODO HIGH: cast [DONE]
-theorem AvoidCollision_setWidth_cast {x : BitVec w} {h : w = v} : (x.cast h).setWidth k = x.setWidth k  := by bv_multi_width_normalize
+theorem AvoidCollision_setWidth_cast {x : BitVec w} {h : w = v} : (x.cast h).setWidth k = x.setWidth k  := by bv_multi_width
 -- TODO HIGH: cons
 theorem AvoidCollision_setWidth_cons {x : BitVec w} : (cons a x).setWidth w = x  := by sorry
 -- DONE
@@ -176,7 +176,7 @@ theorem signExtend_eq (x : BitVec w) : x.signExtend w = x  := sorry
 -- v
 -- TODO HIGH: x.msb
 #guard_msgs in theorem AvoidCollision_signExtend_eq_setWidth_of_msb_false {x : BitVec w} {v : Nat} (hmsb : x.msb = false) :
-    x.signExtend v = x.setWidth v  := by bv_multi_width
+    x.signExtend v = x.setWidth v  := by revert hmsb; bv_multi_width_normalize; bv_multi_width
 -- DONE
 theorem AvoidCollision_signExtend_not {x : BitVec w} (h : 0 < w) :
     (~~~x).signExtend v = ~~~(x.signExtend v)  := sorry

@@ -520,7 +520,7 @@ def substBvEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
   ensureAtMostOne gs
 
 def substBvEqualitiesTac : TacticM Unit := do
-  let _ ← tryTactic <| liftMetaTactic1 substBvEqualities
+  liftMetaTactic1 substBvEqualities
 
 -- subst equalities so we don't build large problems.
 def substNatEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
@@ -531,7 +531,7 @@ def substNatEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
   ensureAtMostOne gs
 
 def substNatEqualitiesTac : TacticM Unit := do
-  let _ <- tryTactic <| liftMetaTactic1 substNatEqualities
+  liftMetaTactic1 substNatEqualities
 
 partial def scanOfBool (t : Expr) (acc : Array Expr := #[]) : MetaM (Array Expr) := do
   match t.getAppFn with
@@ -544,8 +544,8 @@ def generalizeOfBool (g : MVarId) : MetaM MVarId := do
   let t ← g.getType
   g.withContext do
     let occs ← scanOfBool t
-    for occ in occs do
-      dbg_trace s!"found occurrence: {occ}"
+    -- for occ in occs do
+    --   dbg_trace s!"found occurrence: {occ}"
     let genArgs : Array GeneralizeArg := occs.map (fun occ => {
       expr := occ -- mkAppN (mkConst ``BitVec.ofBool) #[occ]
       xName? := Name.mkSimple "b_ofBool"
