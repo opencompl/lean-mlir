@@ -143,13 +143,13 @@ theorem eq_signed_to_small_unsigned_thm.extracted_1._1 : ∀ (x : BitVec 8),
 theorem foo_thm.extracted_1._1 : ∀ (x x_1 : BitVec 64),
   zeroExtend 64 (truncate 32 x_1 &&& truncate 32 x) = x_1 &&& x &&& 4294967295#64 :=
       by bv_generalize ; bv_multi_width
-theorem test_thm.extracted_1._1 : ∀ (x : BitVec 8),
+theorem test_thm.extracted_1._1_1 : ∀ (x : BitVec 8),
   ¬zeroExtend 32 x ≥ ↑32 → True ∧ x.msb = true ∨ zeroExtend 32 x ≥ ↑32 → False :=
       by bv_generalize ; bv_multi_width
-theorem test_thm.extracted_1._1 : ∀ (x x_1 : BitVec 8),
+theorem test_thm.extracted_1._1_1 : ∀ (x x_1 : BitVec 8),
   ofBool (zeroExtend 32 x <ₛ zeroExtend 32 x_1) = ofBool (x <ᵤ x_1) :=
       by bv_generalize ; bv_multi_width
-theorem test_thm.extracted_1._1 : ∀ (x : BitVec 31),
+theorem test_thm.extracted_1._1_1 : ∀ (x : BitVec 31),
   ¬15#32 ≥ ↑32 → True ∧ (zeroExtend 32 x).uaddOverflow 16384#32 = true ∨ 15#32 ≥ ↑32 → False :=
       by bv_generalize ; bv_multi_width
 theorem test_thm.extracted_1._2 : ∀ (x : BitVec 31),
@@ -157,14 +157,18 @@ theorem test_thm.extracted_1._2 : ∀ (x : BitVec 31),
     ¬(True ∧ (zeroExtend 32 x).uaddOverflow 16384#32 = true ∨ 15#32 ≥ ↑32) →
       truncate 16 ((signExtend 32 x + 16384#32) >>> 15#32) = truncate 16 ((zeroExtend 32 x + 16384#32) >>> 15#32) :=
       by bv_generalize ; bv_multi_width
-theorem test_thm.extracted_1._1 : ∀ (x x_1 : BitVec 16),
+-- | TODO: -2^32 - 1 (twoPow more generally)
+-- TODO: saddOveflow
+theorem test_thm.extracted_1._1_1_1 : ∀ (x x_1 : BitVec 16),
   True ∧ (signExtend 32 x_1).saddOverflow (signExtend 32 x) = true → False :=
-      by bv_generalize ; bv_multi_width
+      by bv_generalize ; simp [saddOverflow]; bv_multi_width
 theorem test1_thm.extracted_1._2 : ∀ (x : BitVec 16),
   ¬8#32 ≥ ↑32 →
     ¬8#16 ≥ ↑16 → truncate 16 (zeroExtend 32 x >>> 8#32 ||| zeroExtend 32 x * 5#32) = x >>> 8#16 ||| x * 5#16 :=
       by bv_generalize ; bv_multi_width
-theorem PR2539_A_thm.extracted_1._1 : ∀ (x : BitVec 1), ofBool (zeroExtend 32 x <ₛ 1#32) = x ^^^ 1#1 :=
+-- abstracted boolean: 
+-- → 'setWidth w✝ x✝ <ₛ 1#w✝'
+theorem PR2539_A_thm.extracted_1._1_1 : ∀ (x : BitVec 1), ofBool (zeroExtend 32 x <ₛ 1#32) = x ^^^ 1#1 :=
       by bv_generalize ; bv_multi_width
 theorem main_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ¬(6#8 ≥ ↑8 ∨ 7#8 ≥ ↑8) → 5#8 ≥ ↑8 ∨ True ∧ ((truncate 8 x ^^^ -1#8) <<< 5#8 &&& 64#8).msb = true → False :=
