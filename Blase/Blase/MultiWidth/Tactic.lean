@@ -1208,10 +1208,7 @@ def solve (gorig : MVarId) : SolverM Unit := do
 
 def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM Unit :=
   let ctx := { toConfig := cfg}
-  SolverM.run (ctx := ctx) do
-    let (_fvars, g) ← g.intros
-    g.withContext do debugLog m!"goal after intros: {indentD g}"
-    solve g
+  SolverM.run (ctx := ctx) (solve g)
 
 declare_config_elab elabBvMultiWidthConfig Config
 
@@ -1219,6 +1216,10 @@ syntax (name := bvMultiWidth) "bv_multi_width" Lean.Parser.Tactic.optConfig : ta
 @[tactic bvMultiWidth]
 def evalBvMultiWidth : Tactic := fun
 | `(tactic| bv_multi_width $cfg) => do
+  liftMetaTactic1 fun g => do
+    let (_fvars, g) ← g.intros
+    pure g
+  Normalize.generalizeOfBoolTac
   liftMetaTactic1 Normalize.runPreprocessing
   let cfg ← elabBvMultiWidthConfig cfg
   let g ← getMainGoal

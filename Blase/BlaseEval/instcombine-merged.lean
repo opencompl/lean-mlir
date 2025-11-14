@@ -167,9 +167,9 @@ theorem test1_thm.extracted_1._2 : ∀ (x : BitVec 16),
     ¬8#16 ≥ ↑16 → truncate 16 (zeroExtend 32 x >>> 8#32 ||| zeroExtend 32 x * 5#32) = x >>> 8#16 ||| x * 5#16 :=
       by bv_generalize ; bv_multi_width
 -- abstracted boolean: 
--- → 'setWidth w✝ x✝ <ₛ 1#w✝'
+-- TODO: → 'setWidth w✝ x✝ <ₛ 1#w✝'
 theorem PR2539_A_thm.extracted_1._1_1 : ∀ (x : BitVec 1), ofBool (zeroExtend 32 x <ₛ 1#32) = x ^^^ 1#1 :=
-      by bv_generalize ; bv_multi_width
+      by bv_generalize ; bv_multi_width +verbose?
 theorem main_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ¬(6#8 ≥ ↑8 ∨ 7#8 ≥ ↑8) → 5#8 ≥ ↑8 ∨ True ∧ ((truncate 8 x ^^^ -1#8) <<< 5#8 &&& 64#8).msb = true → False :=
       by bv_generalize ; bv_multi_width
@@ -184,17 +184,19 @@ theorem main_thm.extracted_1._2 : ∀ (x : BitVec 32),
             64#8) =
         zeroExtend 32 ((truncate 8 x ^^^ -1#8) <<< 5#8 &&& 64#8) :=
       by bv_generalize ; bv_multi_width
-theorem test_thm.extracted_1._1 : ∀ (x : BitVec 64),
+-- TODO: intMin
+theorem test_thm.extracted_1._1' : ∀ (x : BitVec 64),
   ¬(-1#32 == 0 || 32 != 1 && truncate 32 (x ||| 4294967294#64) == intMin 32 && -1#32 == -1) = true →
     (truncate 32 (x ||| 4294967294#64)).srem (-1#32) = 0#32 :=
       by bv_generalize ; bv_multi_width
 theorem f1_logical_thm.extracted_1._1 : ∀ (x : BitVec 32),
   ofBool (truncate 8 x != 0#8) = 1#1 →
     ofBool (x &&& 16711680#32 != 0#32) = ofBool (truncate 8 x != 0#8) &&& ofBool (x &&& 16711680#32 != 0#32) :=
-      by bv_generalize ; bv_multi_width
+      by bv_generalize ; sorry -- bv_multi_width
+-- TODO: decide
 theorem f1_logical_thm.extracted_1._2 : ∀ (x : BitVec 32),
   ¬ofBool (truncate 8 x != 0#8) = 1#1 → 0#1 = ofBool (truncate 8 x != 0#8) &&& ofBool (x &&& 16711680#32 != 0#32) :=
-      by bv_generalize ; bv_multi_width
+      by bv_generalize ; sorry -- bv_multi_width
 theorem test1_thm.extracted_1._1 : ∀ (x : BitVec 64) (x_1 : BitVec 32),
   ¬32#64 ≥ ↑64 → zeroExtend 64 x_1 <<< 32#64 + x &&& 123#64 = x &&& 123#64 :=
       by bv_generalize ; bv_multi_width

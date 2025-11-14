@@ -4,7 +4,7 @@ import Mathlib.Data.Nat.Bits
 import Mathlib.Algebra.Group.Nat.Defs
 import Lean
 
-open Lean
+open Lean Meta Elab Tactic
 open Std
 
 set_option grind.warning false
@@ -521,6 +521,37 @@ def substNatEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
       | return false
     return ty == mkConst ``Nat
   ensureAtMostOne gs
+
+partial def scanOfBool (t : Expr) (acc : Array Expr := #[]) : MetaM (Array Expr) := do
+  match t.getAppFn with
+  | .const ``BitVec.ofBool _ =>
+      pure (acc.push t)
+  | _ =>
+      t.getAppArgs.foldlM (init := acc) fun a e => scanOfBool e a
+
+def generalizeOfBool (g : MVarId) : MetaM MVarId := do
+  let t ← g.getType
+  g.withContext do
+    let occs ← scanOfBool t
+    for occ in occs do
+      dbg_trace s!"found occurrence: {occ}"
+    let genArgs : Array GeneralizeArg := occs.map (fun occ => {
+      expr := occ -- mkAppN (mkConst ``BitVec.ofBool) #[occ]
+      xName? := Name.mkSimple "b_ofBool"
+      hName? := Name.mkSimple "h_ofBool"
+     
+    })
+    let (_, g) ← g.generalize genArgs 
+    return g
+
+def generalizeOfBoolTac : TacticM Unit := do
+  let g ← getMainGoal
+  let g ← generalizeOfBool g
+  replaceMainGoal [g]
+
+elab "generalize_all_bitvec_ofbool" : tactic => do
+  generalizeOfBoolTac
+
 
 open Lean Elab Meta
 def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
