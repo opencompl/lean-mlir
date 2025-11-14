@@ -613,6 +613,14 @@ info: MultiWidth.Term.ofNat {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tca
 -/
 #guard_msgs in set_option pp.explicit true in #check MultiWidth.Term.ofNat
 
+/--
+info: MultiWidth.Term.bvOfBool {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard}
+  (b : @Term wcard tcard bcard tctx (@TermKind.bool wcard)) :
+  @Term wcard tcard bcard tctx
+    (@TermKind.bv wcard (@WidthExpr.const wcard (@OfNat.ofNat Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+-/
+#guard_msgs in set_option pp.explicit true in #check MultiWidth.Term.bvOfBool
+
 /-- Convert a raw expression into a `Term`.
 This needs to be checked carefully for equivalence. -/
 def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
@@ -1095,21 +1103,19 @@ def revertPropHyps (g : MVarId) : SolverM MVarId := do
     return g
 
 open Lean Meta Elab Tactic in
-def solve (g : MVarId) : SolverM Unit := do
-  debugLog m!"Original goal: {indentD g}"
-  let g ← revertPropHyps g
-  debugLog m!"Goal after reverting: {indentD g}"
-  let .some g ← g.withContext (Normalize.runPreprocessing g)
-    | do debugLog m!"Preprocessing automatically closed goal."
-
-  g.withContext do
+def solve (gorig : MVarId) : SolverM Unit := do
+  -- debugLog m!"Original goal: {indentD g}"
+  -- let g ← revertPropHyps g
+  -- debugLog m!"Goal after reverting: {indentD g}"
+  match ← gorig.withContext (Normalize.runPreprocessing gorig) with
+  | none => debugLog m!"Preprocessing automatically closed goal."
+  | some g => g.withContext do
     debugLog m!"goal after preprocessing: {indentD g}"
-
-  g.withContext do
     let collect : CollectState := {}
-    let pRawExpr ← g.getType
+    let pRawExpr ← inferType (.mvar g)
+    debugLog m!"collecting raw expr '{pRawExpr}'."
     let (p, collect) ← collectBVPredicateAux collect pRawExpr
-    debugLog m!"collected predicate: '{repr p}'"
+    debugLog m!"collected predicate: '{repr p}' for raw expr."
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
@@ -1203,10 +1209,9 @@ def solve (g : MVarId) : SolverM Unit := do
 def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM Unit :=
   let ctx := { toConfig := cfg}
   SolverM.run (ctx := ctx) do
-    forallTelescope (← g.getType) fun xs gTy => do
-      let goalMVar ← mkFreshExprMVar gTy
-      solve goalMVar.mvarId!
-      g.assign (← mkLambdaFVars xs goalMVar)
+    let (_fvars, g) ← g.intros
+    g.withContext do debugLog m!"goal after intros: {indentD g}"
+    solve g
 
 declare_config_elab elabBvMultiWidthConfig Config
 
@@ -1214,6 +1219,7 @@ syntax (name := bvMultiWidth) "bv_multi_width" Lean.Parser.Tactic.optConfig : ta
 @[tactic bvMultiWidth]
 def evalBvMultiWidth : Tactic := fun
 | `(tactic| bv_multi_width $cfg) => do
+  liftMetaTactic1 Normalize.runPreprocessing
   let cfg ← elabBvMultiWidthConfig cfg
   let g ← getMainGoal
   g.withContext do

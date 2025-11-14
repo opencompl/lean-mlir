@@ -25,6 +25,11 @@ instance : IdempotentOp (min : ℕ → ℕ → ℕ) where
 
 namespace Normalize
 
+@[bv_multi_width_normalize]
+theorem eq_true_iff_eq_true_iff_eq (b c : Bool) : (b = true ↔ c = true) = (b = c) := by
+    rcases b <;> rcases c <;> simp
+
+
 
 attribute [bv_multi_width_normalize] BitVec.truncate_eq_setWidth
 
@@ -39,6 +44,10 @@ Caonicalize allOnes into -1
 -/
 @[bv_multi_width_normalize]
 theorem allOnes_eq_minus_one : BitVec.allOnes w = -1#w := by simp [BitVec.neg_one_eq_allOnes]
+
+@[bv_multi_width_normalize]
+theorem iff_iff_and_or_not_and_not {P Q : Prop} : (P ↔ Q) ↔ ((P ∧ Q) ∨  (¬ P ∧ ¬ Q)) := by
+  by_cases hp : P <;> by_cases hq : Q <;> simp [*]
 
 /-!
 Canonicalize `OfNat.ofNat`, `BitVec.ofNat` and `Nat` multiplication to become
@@ -515,10 +524,10 @@ def substNatEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
 
 open Lean Elab Meta
 def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
-  let some g ← g.withContext <| substNatEqualities g
-    | return none
-  let some g ← g.withContext <| substBvEqualities g
-    | return none
+  -- let some g ← g.withContext <| substNatEqualities g
+  --   | return none
+  -- let some g ← g.withContext <| substBvEqualities g
+  --   | return none
   g.withContext do
     let mut theorems : Array SimpTheorems := #[]
     let mut simprocs : Array Simprocs := #[]
@@ -533,11 +542,12 @@ def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
     let ctx ← Simp.mkContext (config := config)
       (simpTheorems := theorems)
       (congrTheorems := ← Meta.getSimpCongrTheorems)
-    let lctx ← getLCtx
-    let fvars := lctx.getFVarIds
-    match ← simpGoal g ctx (simprocs := simprocs) (fvarIdsToSimp := fvars) with
-    | (.none, _stats) => return none
-    | (.some (_fs, g), _stats) => return some g
+    -- let lctx ← getLCtx
+    -- let fvars := lctx.getFVarIds
+    match ← simpTargetStar g ctx (simprocs := simprocs) /- (fvarIdsToSimp := fvars) -/ with
+    | (.closed, _stats) => return none
+    | (.noChange , _stats) => return some g
+    | (.modified gnew , _stats) => return some gnew
 
 open Lean Elab Meta
 open Lean Elab Meta Tactic in
@@ -551,7 +561,6 @@ elab "bv_multi_width_normalize" : tactic => do
 
 /--
 trace: w : ℕ
-_example : ∀ {w : ℕ} (a b : BitVec w), b.ule a = true ∧ (a.ule b = true ∨ b.ult a = true ∨ a.ule b = true ∨ a ≠ b)
 ⊢ ∀ (a b : BitVec w), b.ule a = true ∧ (a.ule b = true ∨ b.ult a = true ∨ a.ule b = true ∨ a ≠ b)
 ---
 warning: declaration uses 'sorry'
@@ -562,7 +571,6 @@ warning: declaration uses 'sorry'
 
 /--
 trace: w : ℕ
-_example : ∀ {w : ℕ} (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
 ⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
 ---
 warning: declaration uses 'sorry'
