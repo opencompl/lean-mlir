@@ -26,6 +26,9 @@ instance : IdempotentOp (min : ℕ → ℕ → ℕ) where
 namespace Normalize
 
 
+attribute [bv_multi_width_normalize] BitVec.truncate_eq_setWidth
+
+
 /-!
 Canonicalize cast by rfl
 -/

@@ -894,7 +894,7 @@ def Expr.mkPredicateExpr (wcard tcard bcard pcard : Nat) (tctx : Expr)
     return out
   | .var v =>
     let out := mkAppN (mkConst ``MultiWidth.Predicate.var)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, ← mkFinLit pcard v]
+      #[mkNatLit pcard, mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, ← mkFinLit pcard v]
     debugCheck out
     return out
 

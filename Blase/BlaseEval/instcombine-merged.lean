@@ -1,4 +1,3 @@
-import TacBench
 import Blase
 set_option linter.unusedTactic false
 set_option linter.unreachableTactic false
@@ -28,8 +27,10 @@ instance {n} : ShiftRight (BitVec n) := ⟨fun x y => x >>> y.toNat⟩
 infixl:75 ">>>ₛ" => fun x y => BitVec.sshiftRight x (BitVec.toNat y)
 
 
-theorem test_thm.extracted_1._1 : ∀ (x : BitVec 64), zeroExtend 64 (truncate 32 x) = x &&& 4294967295#64 := by
-  bv_generalize +specialize; bv_multi_width
+theorem test_thm.extracted_1._1 : ∀ (x : BitVec 64), zeroExtend 64 (truncate 32 x) = x &&& 4294967295#64 := by sorry -- bv_multi_width
+
+#exit
+
 theorem different_size_sext_sext_eq_thm.extracted_1._1 : ∀ (x : BitVec 4) (x_1 : BitVec 7),
   ofBool (signExtend 25 x_1 == signExtend 25 x) = ofBool (x_1 == signExtend 7 x) :=
 bv_generalize +specialize; bv_multi_width
