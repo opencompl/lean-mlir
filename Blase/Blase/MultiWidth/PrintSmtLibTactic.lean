@@ -14,7 +14,7 @@ namespace Tactic
 open Lean Meta Elab Tactic
 
 def printSmtLib (g : MVarId) : SolverM Unit := do
-  let g ← revertPropHyps g
+  let g ← revertNonDepPropHyps g
   let .some g ← g.withContext (Normalize.runPreprocessing g)
     | do
         debugLog m!"Preprocessing automatically closed goal."

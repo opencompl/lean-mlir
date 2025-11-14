@@ -519,6 +519,9 @@ def substBvEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
     return ty.isConstOf ``BitVec
   ensureAtMostOne gs
 
+def substBvEqualitiesTac : TacticM Unit := do
+  let _ ← tryTactic <| liftMetaTactic1 substBvEqualities
+
 -- subst equalities so we don't build large problems.
 def substNatEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
   let gs ← g.casesRec fun localDecl => do
@@ -526,6 +529,9 @@ def substNatEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
       | return false
     return ty == mkConst ``Nat
   ensureAtMostOne gs
+
+def substNatEqualitiesTac : TacticM Unit := do
+  let _ <- tryTactic <| liftMetaTactic1 substNatEqualities
 
 partial def scanOfBool (t : Expr) (acc : Array Expr := #[]) : MetaM (Array Expr) := do
   match t.getAppFn with

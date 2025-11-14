@@ -1097,7 +1097,7 @@ info: MultiWidth.Predicate.toProp_of_KInductionCircuits' {wcard tcard bcard pcar
 /--
 Revert all prop-valued hyps.
 -/
-def revertPropHyps (g : MVarId) : SolverM MVarId := do
+def revertNonDepPropHyps (g : MVarId) : MetaM MVarId := do
   g.withContext do
     let (_, g) ← g.revert (← g.getNondepPropHyps)
     return g
@@ -1105,7 +1105,7 @@ def revertPropHyps (g : MVarId) : SolverM MVarId := do
 open Lean Meta Elab Tactic in
 def solve (gorig : MVarId) : SolverM Unit := do
   -- debugLog m!"Original goal: {indentD g}"
-  -- let g ← revertPropHyps g
+  -- let g ← revertNonDepPropHyps g
   -- debugLog m!"Goal after reverting: {indentD g}"
   match ← gorig.withContext (Normalize.runPreprocessing gorig) with
   | none => debugLog m!"Preprocessing automatically closed goal."
@@ -1218,13 +1218,17 @@ def evalBvMultiWidth : Tactic := fun
 | `(tactic| bv_multi_width $cfg) => do
   liftMetaTactic1 fun g => do
     let (_fvars, g) ← g.intros
+    let g ← revertNonDepPropHyps g
     pure g
   Normalize.generalizeOfBoolTac
-  liftMetaTactic1 Normalize.runPreprocessing
-  let cfg ← elabBvMultiWidthConfig cfg
-  let g ← getMainGoal
-  g.withContext do
-    solveEntrypoint g cfg
+  Normalize.substNatEqualitiesTac
+  Normalize.substBvEqualitiesTac
+  let _ ← tryTactic <| liftMetaTactic1 Normalize.runPreprocessing
+  let _ ← tryTactic do
+    let cfg ← elabBvMultiWidthConfig cfg
+    let g ← getMainGoal
+    g.withContext do
+      solveEntrypoint g cfg
 | _ => throwUnsupportedSyntax
 
 end Tactic
