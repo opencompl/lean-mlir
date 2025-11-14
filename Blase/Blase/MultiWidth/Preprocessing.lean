@@ -33,6 +33,11 @@ theorem eq_true_iff_eq_true_iff_eq (b c : Bool) : (b = true ↔ c = true) = (b =
 
 attribute [bv_multi_width_normalize] BitVec.truncate_eq_setWidth
 
+attribute [bv_multi_width_normalize] Bool.xor_true Bool.xor_false Bool.true_xor Bool.false_xor
+attribute [bv_multi_width_normalize] Bool.or_true Bool.or_false  Bool.false_or Bool.true_or
+attribute [bv_multi_width_normalize] Bool.and_true Bool.and_false  Bool.false_and Bool.true_and
+attribute [bv_multi_width_normalize] Bool.not_true not_false
+
 
 /-!
 Canonicalize cast by rfl

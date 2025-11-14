@@ -726,7 +726,7 @@ theorem sub_select_not_sext_thm.extracted_1._1 : ∀ (x : BitVec 1),
       by bv_generalize ; bv_multi_width
 theorem sub_select_not_sext_thm.extracted_1._2 : ∀ (x : BitVec 64) (x_1 : BitVec 1),
   x_1 = 1#1 → x - signExtend 64 (x_1 ^^^ 1#1) = x :=
-      by bv_generalize ; bv_multi_width
+      by bv_generalize ; bv_multi_width +verbose?
 theorem sub_select_not_sext_thm.extracted_1._3 : ∀ (x : BitVec 64) (x_1 : BitVec 1),
   ¬x_1 = 1#1 → 64#64 - signExtend 64 (x_1 ^^^ 1#1) = 65#64 :=
       by bv_generalize ; bv_multi_width
