@@ -277,11 +277,10 @@ attribute [bv_multi_width_normalize] ite_true ite_false
 
 -- Forall
 @[bv_multi_width_normalize↓] theorem not_forall (p : α → Prop) : (¬∀ x, p x) = ∃ x, ¬p x := by simp
-attribute [bv_multi_width_normalize] forall_and
 
 -- Exists
 @[bv_multi_width_normalize↓] theorem not_exists (p : α → Prop) : (¬∃ x, p x) = ∀ x, ¬p x := by simp
-attribute [bv_multi_width_normalize] exists_const exists_or exists_prop exists_and_left exists_and_right
+attribute [bv_multi_width_normalize] exists_const exists_prop 
 
 -- Bool cond
 @[bv_multi_width_normalize] theorem cond_eq_ite (c : Bool) (a b : α) : cond c a b = ite c a b := by
@@ -545,17 +544,15 @@ open Lean Elab Meta Tactic in
 /-- Convert the goal into negation normal form. -/
 elab "bv_multi_width_normalize" : tactic => do
   liftMetaTactic1 runPreprocessing
-  allGoals do
-    -- | add more sharing.
-    Lean.Meta.AC.acNfTargetTactic
-    (← (← getMainGoal).getNondepPropHyps).forM Lean.Meta.AC.acNfHypTactic
+  -- allGoals do
+  --   -- | add more sharing.
+  --   Lean.Meta.AC.acNfTargetTactic
+  --   (← (← getMainGoal).getNondepPropHyps).forM Lean.Meta.AC.acNfHypTactic
 
 /--
 trace: w : ℕ
-_example :
-  (∀ (x : ℕ) (x_1 x_2 : BitVec x), x_1.ule x_2 = true ∨ x_2.ult x_1 = true ∨ x_1 ≠ x_2) ∧
-    ∀ (x : ℕ) (x_1 x_2 : BitVec x), x_2.ule x_1 = true
-⊢ (∀ (x x_1 : BitVec w), x.ule x_1 = true ∨ x_1.ult x = true ∨ x ≠ x_1) ∧ ∀ (x x_1 : BitVec w), x_1.ule x = true
+_example : ∀ {w : ℕ} (a b : BitVec w), b.ule a = true ∧ (a.ule b = true ∨ b.ult a = true ∨ a.ule b = true ∨ a ≠ b)
+⊢ ∀ (a b : BitVec w), b.ule a = true ∧ (a.ule b = true ∨ b.ult a = true ∨ a.ule b = true ∨ a ≠ b)
 ---
 warning: declaration uses 'sorry'
 -/
@@ -565,8 +562,8 @@ warning: declaration uses 'sorry'
 
 /--
 trace: w : ℕ
-_example : ∀ {w : ℕ} (a b : BitVec w), a = b ∨ a &&& b ≠ 0#w
-⊢ ∀ (a b : BitVec w), a = b ∨ a &&& b ≠ 0#w
+_example : ∀ {w : ℕ} (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
+⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
 ---
 warning: declaration uses 'sorry'
 -/
