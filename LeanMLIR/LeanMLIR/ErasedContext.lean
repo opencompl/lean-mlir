@@ -26,7 +26,7 @@ structure Ctxt (Ty : Type) : Type where
 
 attribute [coe] Ctxt.ofList
 
-variable {Ty : Type} {Γ Δ : Ctxt Ty}
+variable {Ty Ty' : Type} {Γ Δ : Ctxt Ty}
 namespace Ctxt
 
 /-! ### Typeclass Instances-/
@@ -610,7 +610,7 @@ def Hom.castCodomain (h : Δ = Δ') (f : Γ.Hom Δ) : Γ.Hom Δ' :=
 ## Context Valuations
 -/
 section Valuation
-variable [TyDenote Ty]
+variable [TyDenote Ty] [TyDenote Ty']
 -- ^^ for a valuation, we need to evaluate the Lean `Type` corresponding to a `Ty`
 
 /-- A valuation for a context. Provide a way to evaluate every variable in a context. -/
@@ -805,6 +805,35 @@ theorem Valuation.ofPair_fst {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂
 theorem Valuation.ofPair_snd {t₁ t₂ : Ty} (v₁: ⟦t₁⟧) (v₂ : ⟦t₂⟧) :
   (Ctxt.Valuation.ofPair v₁ v₂) ⟨1, by rfl⟩ = v₂ := rfl
 
+/-! ### Valuation Maps -/
+
+/-- Transport a valuation for `Γ` to a valuation for any mapped context `Γ.map f`.
+The value of each variable is transformed according to `f'`. -/
+def Valuation.toMap {f : Ty → Ty'} (f' : ∀ t, ⟦t⟧ → ⟦f t⟧) : Γ.Valuation → (Γ.map f).Valuation
+| V, t, ⟨i, h⟩ =>
+  have : i < Γ.length := by rw [←length_map]; exact Var.mk i h |>.lt_length
+  have heq : t = f Γ[i] := by
+    simp only [getElem?_map, Option.map_eq_some_iff] at h
+    match h with | ⟨_, h₁, h₂⟩ => rw [getElem?_eq_some_iff.mp h₁ |>.2, h₂]
+  heq ▸ (f' Γ[i] <| V ⟨i, getElem?_eq_some_getElem_iff _ |>.mpr trivial⟩)
+
+/-- Transport a valuation for any mapped context `Γ.map f` to a valuation for `Γ`.
+The value of each variable is transformed according to `f'`. -/
+def Valuation.fromMap {f : Ty → Ty'} (f' : ∀ t, ⟦f t⟧ → ⟦t⟧) : (Γ.map f).Valuation → Γ.Valuation
+| V, t, v => f' t <| V v.toMap
+
+@[simp] theorem Valuation.toMap_apply {f : Ty → Ty'}
+    (f' : ∀ t, ⟦t⟧ → ⟦f t⟧) (V : Γ.Valuation) (v : Γ.Var t) :
+    V.toMap f' v.toMap = f' t (V v) := by
+  dsimp only [toMap, Var.toMap]
+  match v with
+  | ⟨_, _⟩ => grind
+
+@[simp] theorem Valuation.fromMap_apply {f : Ty → Ty'}
+    (f' : ∀ t, ⟦f t⟧ → ⟦t⟧) (V : (Γ.map f).Valuation) (v : Γ.Var t) :
+    V.fromMap f' v = f' t (V v.toMap) :=
+  rfl
+
 /-! ### Valuation Pullback (comap) -/
 
 /-- transport/pullback a valuation along a context homomorphism. -/
@@ -897,10 +926,34 @@ def Valuation.recOn {motive : ∀ {Γ : Ctxt Ty}, Γ.Valuation → Sort*}
 def Valuation.cast {Γ Δ : Ctxt Ty} (h : Γ = Δ) (V : Valuation Γ) : Valuation Δ :=
   fun _ v => V <| v.castCtxt h.symm
 
+/-- Cast a valuation to a mapped context when the type denotations are equal.
+In situations where we get `h_elem` for free by definitional equality,
+this is the same as `toMap fun _ => id`. -/
+def Valuation.castToMap {f : Ty → Ty'} (h_elem : ∀ {t}, (⟦t⟧ : Type) = (⟦f t⟧ : Type)) :
+    Γ.Valuation → (Γ.map f).Valuation :=
+  toMap fun _ v => h_elem ▸ v
+
+/-- Cast a valuation from a mapped context when the type denotations are equal.
+In situations where we get `h_elem` for free by definitional equality,
+this is the same as `fromMap fun _ => id`. -/
+def Valuation.castFromMap {f : Ty → Ty'} (h_elem : ∀ {t}, (⟦t⟧ : Type) = (⟦f t⟧ : Type)) :
+    (Γ.map f).Valuation → Γ.Valuation :=
+  fromMap fun _ v => h_elem ▸ v
+
 @[simp] theorem Valuation.cast_rfl {Γ : Ctxt Ty} (h : Γ = Γ) (V : Valuation Γ) : V.cast h = V := rfl
 
 @[simp] theorem Valuation.cast_apply {Γ : Ctxt Ty} (h : Γ = Δ) (V : Γ.Valuation) (v : Δ.Var t) :
     V.cast h v = V (v.castCtxt h.symm) := rfl
+
+@[simp] theorem Valuation.castToMap_apply {f : Ty → Ty'}
+    (h_elem : ∀ {t}, (⟦t⟧ : Type) = (⟦f t⟧ : Type)) (V : Γ.Valuation) (v : Γ.Var t) :
+    V.castToMap h_elem v.toMap = h_elem ▸ V v := by
+  simp [castToMap]
+
+@[simp] theorem Valuation.castFromMap_apply {f : Ty → Ty'}
+    (h_elem : ∀ {t}, (⟦t⟧ : Type) = (⟦f t⟧ : Type)) (V : (Γ.map f).Valuation) (v : Γ.Var t) :
+    V.castFromMap h_elem v = h_elem ▸ V v.toMap := by
+  simp [castFromMap]
 
 /-- Show that a valuation is equivalent to a `HVector` -/
 def Valuation.equivHVector {Γ : List Ty} : Valuation ⟨Γ⟩ ≃ HVector toType Γ where
