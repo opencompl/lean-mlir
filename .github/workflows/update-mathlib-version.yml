@@ -35,9 +35,13 @@ jobs:
         run: |
            echo date=`uv run -q .github/workflows/get_lean_version.py` >> $GITHUB_OUTPUT
 
-      - name: install zsh
-        run: |
-          sudo apt-get update; sudo apt-get install zsh
+      - id: check-branch-exists
+        uses: GuillaumeFalourd/branch-exists@v1.1
+        with:
+          branch: auto-mathlib-update-${{steps.mldate.outputs.date}}
+
+      - if: steps.check-branch-exists.outputs.exists == 'true'
+        run: Skip any updates
 
       - name: Set Mathlib Date
         run: |
@@ -55,11 +59,6 @@ jobs:
         env:
           LAKE_NO_CACHE: true
           MATHLIB_NO_CACHE_ON_UPDATE: true
-
-      - name: Merge pre-existing pull request
-        continue-on-error: true
-        run: |
-           git merge origin/auto-mathlib-update-${{steps.mldate.outputs.date}}
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
