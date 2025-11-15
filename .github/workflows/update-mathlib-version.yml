@@ -33,7 +33,7 @@ jobs:
       - name: Get Mathlib Date
         id: mldate
         run: |
-           echo date=`uv run -q .github/workflows/update-mathlib-version.yml` >> $GITHUB_OUTPUT
+           echo date=`uv run -q .github/workflows/get_lean_version.py` >> $GITHUB_OUTPUT
 
       - name: install zsh
         run: |
