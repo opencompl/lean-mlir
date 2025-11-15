@@ -26,6 +26,10 @@ jobs:
           ~/.elan/bin/lean --version
           echo "$HOME/.elan/bin" >> $GITHUB_PATH
 
+      - name: Install uv
+        run: |
+           pip install uv
+
       - name: Get Mathlib Date
         id: mldate
         run: |
