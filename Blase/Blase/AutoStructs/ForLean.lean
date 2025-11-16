@@ -120,6 +120,14 @@ instance [BEq α] [LawfulBEq α]  (P : α → Prop) : LawfulBEq { x // P x } := 
 @[inline] private unsafe def Std.HashSet.attachWithImpl [BEq α] [LawfulBEq α] [Hashable α] [LawfulHashable α]
     (xs : Std.HashSet α) (P : α → Prop) (_ : ∀ x ∈ xs, P x) : Std.HashSet {x // P x} := unsafeCast xs
 
+variable {α : Type u} {_ : BEq α} {_ : Hashable α}
+variable {m : Std.HashSet α}
+
+@[simp, grind =]
+theorem mem_toList [LawfulBEq α] {k : α} :
+    k ∈ m.toList ↔ k ∈ m :=
+  Std.HashMap.mem_keys
+
 /-- `O(1)`. "Attach" a proof `P x` that holds for all the elements of `xs` to produce a new hash set
   with the same elements but in the type `{x // P x}`. -/
 @[implemented_by attachWithImpl] def Std.HashSet.attachWith [BEq α] [LawfulBEq α] [Hashable α] [LawfulHashable α]
