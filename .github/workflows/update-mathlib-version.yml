@@ -61,9 +61,15 @@ jobs:
           MATHLIB_NO_CACHE_ON_UPDATE: true
 
       - name: Create Pull Request
+        id: create-pr
         uses: peter-evans/create-pull-request@v7
         with:
           title: "${{steps.mldate.outputs.date}} lean nightly update"
           branch: "auto-mathlib-update-${{steps.mldate.outputs.date}}"
           body: "automatic update of mathlib + lean via GitHub action."
           token: ${{secrets.PAT}}
+
+      - name: Enable Pull Request Automerge
+        run: gh pr merge --squash --auto ${{steps.create-pr.outputs.pull-request-number}}
+        env:
+          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
