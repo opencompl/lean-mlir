@@ -1080,7 +1080,7 @@ theorem toHom_succ {Γ₁ Γ₂ : Ctxt Ty} {d : Nat} (h : Valid Γ₁ (Γ₂.con
 @[simp] theorem toHom_comp_toHom (f : Γ.Diff Δ) (g : Δ.Diff Ξ) :
     f.toHom.comp g.toHom = (f + g).toHom := by
   funext t v
-  apply Subtype.eq
+  apply Subtype.ext
   grind
 
 end Lemmas
