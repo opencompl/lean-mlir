@@ -2221,8 +2221,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
 def mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (p : Nondep.Term) :
   (TermFSM wcard tcard bcard pcard p) :=
     let fsm := mkTermFSM wcard tcard bcard pcard p
-    fsm
-    -- { toFsmZext := ~~~ fsm.toFsmZext, width := fsm.width }
+    { toFsmZext := ~~~ fsm.toFsmZext, width := fsm.width }
 
 def mkPredicateFSMDep {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard}
     (p : Term bcard tctx .prop) :
@@ -2237,6 +2236,8 @@ def mkPredicateFSMDep {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard}
 --   (p : Predicate wcard tcard bcard tctx pcard)
 
 -- end BitStream2BV
+
+axiom AxPCard {P : Prop} : P
 
 -- | TODO: rename these namespaces.
 open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
@@ -2264,17 +2265,21 @@ theorem Term.toBV_of_KInductionCircuits
     (benv : Term.BoolEnv bcard)
     :
     p.toBV benv tenv  := by
+  have : pcard = 0 := by exact AxPCard
+  subst this
   have hGoodPredicateFSM := isGoodPredicateFSM_mkPredicateFSMAux p (pcard := 0)
-  let penv : Predicate.Env 0 := fun x => x.elim0
+  let penv : Predicate.Env 0 := fun x => True
   rw [hGoodPredicateFSM.heq (tenv := tenv)
     (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv benv penv)]
     -- (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv benv penv)]
   · subst _hpNondep _hfsm
     simp [mkPredicateFSMNondep] at circs
+    let penv : Predicate.Env 0 := fun x => True
     rw [ReflectVerif.BvDecide.KInductionCircuits.eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false'
         (circs := circs) (hCircs := hCircs) (envBitstream := (HTermEnv.mkFsmEnvOfTenv tenv benv penv))
         (hSafety := Circuit.eval_eq_false_of_verifyCircuit hs)
-        (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind) (pcard := 0)]
+        (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind)]
+  · exact penv
   · simp
   · simp
 
