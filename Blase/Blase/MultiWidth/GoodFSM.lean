@@ -158,7 +158,7 @@ theorem eval_fsmMsb_eq {wcard bcard tcard : Nat}
     (benv : Term.BoolEnv bcard)
     (w : WidthExpr wcard)
     (x : Term bcard tctx (.bv w))
-    (xfsm : TermFSM wcard tcard bcard pcard (.ofDep x))
+    (xfsm : TermFSM wcard tcard bcard pcard (.ofDepTerm x))
     (hxfsm : HTermFSMToBitStream xfsm)
     (wfsm : NatFSM wcard tcard bcard pcard (.ofDep w))
     (hwfsm : HNatFSMToBitstream wfsm)
@@ -214,7 +214,7 @@ theorem eval_fsmMsb_eq_BitStream_ofBitVecSext {wenv : WidthExpr.Env wcard}
     (benv : Term.BoolEnv bcard)
     (w : WidthExpr wcard)
     (x : Term bcard tctx (.bv w))
-    (xfsm : TermFSM wcard tcard bcard pcard (.ofDep x))
+    (xfsm : TermFSM wcard tcard bcard pcard (.ofDepTerm x))
     (hxfsm : HTermFSMToBitStream xfsm)
     (wfsm : NatFSM wcard tcard bcard pcard (.ofDep w))
     (hwfsm : HNatFSMToBitstream wfsm)
@@ -595,7 +595,7 @@ theorem fsmZext_eval_eq
     (tenv : Term.Ctx.Env tctx wenv)
     (benv : Term.BoolEnv bcard)
     (t : Term bcard tctx (.bv w))
-    (tFsm : TermFSM wcard tcard bcard pcard (.ofDep t))
+    (tFsm : TermFSM wcard tcard bcard pcard (.ofDepTerm t))
     (ht : HTermFSMToBitStream tFsm)
     (htenv : HTermEnv fsmEnv tenv benv)
     :
@@ -623,7 +623,7 @@ theorem fsmSext_eval_eq
     (tenv : Term.Ctx.Env tctx wenv)
     (benv : Term.BoolEnv bcard)
     (t : Term bcard tctx (.bv wold))
-    (tFsm : TermFSM wcard tcard bcard pcard (.ofDep t))
+    (tFsm : TermFSM wcard tcard bcard pcard (.ofDepTerm t))
     (htfsm : HTermFSMToBitStream tFsm)
     (htenv : HTermEnv fsmEnv tenv benv) :
     (fsmSext tFsm.toFsmZext woldFsm.toFsm  wnewFsm.toFsm).eval fsmEnv = fun i =>
@@ -855,9 +855,9 @@ theorem eval_fsmTermUlt_eq_decide_lt {wcard tcard : Nat}
     (w : WidthExpr wcard)
     (a : Term bcard tctx (.bv w))
     (b : Term bcard tctx (.bv w))
-    (afsm : TermFSM wcard tcard bcard pcard (.ofDep a))
+    (afsm : TermFSM wcard tcard bcard pcard (.ofDepTerm a))
     (hafsm : HTermFSMToBitStream afsm)
-    (bfsm : TermFSM wcard tcard bcard pcard (.ofDep b))
+    (bfsm : TermFSM wcard tcard bcard pcard (.ofDepTerm b))
     (hbfsm : HTermFSMToBitStream bfsm)
     (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream)
     (henv : HTermEnv fsmEnv tenv benv)
@@ -916,9 +916,9 @@ theorem eval_fsmTermUle_eq_decide_le {wcard tcard : Nat}
     (w : WidthExpr wcard)
     (a : Term bcard tctx (.bv w))
     (b : Term bcard tctx (.bv w))
-    (afsm : TermFSM wcard tcard bcard pcard (.ofDep a))
+    (afsm : TermFSM wcard tcard bcard pcard (.ofDepTerm a))
     (hafsm : HTermFSMToBitStream afsm)
-    (bfsm : TermFSM wcard tcard bcard pcard (.ofDep b))
+    (bfsm : TermFSM wcard tcard bcard pcard (.ofDepTerm b))
     (hbfsm : HTermFSMToBitStream bfsm)
     (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream)
     (henv : HTermEnv fsmEnv tenv benv)
@@ -1010,9 +1010,9 @@ theorem eval_fsmTermSlt_eq_decide_slt {wcard tcard : Nat}
     (b : Term bcard tctx (.bv w))
     (wfsm : NatFSM wcard tcard bcard pcard (.ofDep w))
     (hwfsm : HNatFSMToBitstream wfsm)
-    (afsm : TermFSM wcard tcard bcard pcard (.ofDep a))
+    (afsm : TermFSM wcard tcard bcard pcard (.ofDepTerm a))
     (hafsm : HTermFSMToBitStream afsm)
-    (bfsm : TermFSM wcard tcard bcard pcard (.ofDep b))
+    (bfsm : TermFSM wcard tcard bcard pcard (.ofDepTerm b))
     (hbfsm : HTermFSMToBitStream bfsm)
     (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream)
     (henv : HTermEnv fsmEnv tenv benv)
@@ -1111,9 +1111,9 @@ theorem eval_fsmTermSle_eq_decide_sle {wcard tcard bcard : Nat}
     (hwfsm : HNatFSMToBitstream wfsm)
     (a : Term bcard tctx (.bv w))
     (b : Term bcard tctx (.bv w))
-    (afsm : TermFSM wcard tcard bcard pcard (.ofDep a))
+    (afsm : TermFSM wcard tcard bcard pcard (.ofDepTerm a))
     (hafsm : HTermFSMToBitStream afsm)
-    (bfsm : TermFSM wcard tcard bcard pcard (.ofDep b))
+    (bfsm : TermFSM wcard tcard bcard pcard (.ofDepTerm b))
     (hbfsm : HTermFSMToBitStream bfsm)
     (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream)
     (henv : HTermEnv fsmEnv tenv benv)
@@ -1407,6 +1407,11 @@ def mkTermFSM (wcard tcard bcard pcard : Nat) (t : Nondep.Term) :
       { toFsmZext := composeUnaryAux FSM.scanAnd (fsmEq) ,
         width := NatFSM.mk ((FSM.negOne).map Fin.elim0)
       }
+  | .pvar _ => {
+
+    toFsmZext := FSM.zero.map Fin.elim0,
+    width := NatFSM.mk ((FSM.negOne).map Fin.elim0)
+  }
 
 /-- if we concatenate, then the bitstreams remain equal. -/
 @[simp]
@@ -1454,26 +1459,24 @@ theorem ofBitVecZextMsb_eq_ofNatUnary_and_ofBitVecZextMsb {w} (x : BitVec w) :
 
 def IsGoodTermBoolFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wcard tcard}
     (t : Term bcard tctx .bool) :
-    (HTermBoolFSMToBitStream (mkTermFSM wcard tcard bcard pcard (.ofDep t))) := by
+    (HTermBoolFSMToBitStream (mkTermFSM wcard tcard bcard pcard (.ofDepTerm t))) := by
   constructor
   intros wenv benv tenv fsmEnv htenv
   cases t
   case boolVar v =>
-    simp [mkTermFSM, Nondep.Term.ofDep]
-    simp [Term.toBV]
+    simp [mkTermFSM, Nondep.Term.ofDepTerm]
     rw [htenv.heq_bool]
     ext i
     simp
   case boolConst b =>
-    simp [mkTermFSM, Nondep.Term.ofDep]
-    simp [Term.toBV]
+    simp [mkTermFSM, Nondep.Term.ofDepTerm]
     ext i
     simp
 
 def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wcard tcard}
     {wold : WidthExpr wcard}
     (t : Term bcard tctx (.bv wold)) :
-    (HTermFSMToBitStream (mkTermFSM wcard tcard bcard pcard (.ofDep t))) := by
+    (HTermFSMToBitStream (mkTermFSM wcard tcard bcard pcard (.ofDepTerm t))) := by
   cases t
   case ofNat n =>
     constructor
@@ -1482,7 +1485,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
     obtain htenv_width := htenv.heq_width
     have hwgood :=
       IsGoodNatFSM_mkWidthFSM (wcard := wcard) (tcard := tcard) (bcard := bcard) (pcard := pcard) wold
-    simp [mkTermFSM, Nondep.Term.ofDep]
+    simp [mkTermFSM, Nondep.Term.ofDepTerm]
     rw [hwgood.heq (henv := htenv.toHWidthEnv)]
     ext i
     simp
@@ -1510,7 +1513,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
   case add p q =>
     constructor
     intros wenv benv tenv fsmEnv htenv
-    simp only [Nondep.Term.ofDep, mkTermFSM, composeBinaryAux'_eval, FSM.eval_add, cond_true,
+    simp only [Nondep.Term.ofDepTerm, mkTermFSM, composeBinaryAux'_eval, FSM.eval_add, cond_true,
       cond_false]
     have hp := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard p
     rw [hp.heq (henv := htenv)]
@@ -1534,7 +1537,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
   case zext wold' a  =>
     constructor
     intros wenv benv tenv fsmEnv htenv
-    simp only [Nondep.Term.ofDep, mkTermFSM, Term.toBV_zext, BitVec.truncate_eq_setWidth]
+    simp only [Nondep.Term.ofDepTerm, mkTermFSM, Term.toBV_zext, BitVec.truncate_eq_setWidth]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
     let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold'
     let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold
@@ -1546,7 +1549,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
   case setWidth wold' a  =>
     constructor
     intros wenv benv tenv fsmEnv htenv
-    simp only [Nondep.Term.ofDep, mkTermFSM, Term.toBV_setWidth, BitVec.truncate_eq_setWidth]
+    simp only [Nondep.Term.ofDepTerm, mkTermFSM, Term.toBV_setWidth, BitVec.truncate_eq_setWidth]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
     let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold'
     let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold
@@ -1564,7 +1567,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
     intros wenv benv tenv fsmEnv htenv
     let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold
     let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold'
-    simp [Nondep.Term.ofDep, mkTermFSM]
+    simp [Nondep.Term.ofDepTerm, mkTermFSM]
     -- | TODO: why does this not unify?
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
     rw [MultiWidth.Nondep.Term.width_ofDep_eq_ofDep]
@@ -1575,34 +1578,31 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
   case band a b  =>
     constructor
     intros wenv benv tenv fsmEnv htenv
-    simp [Nondep.Term.ofDep, mkTermFSM]
+    simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
     have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard b
     rw [ha.heq (henv := htenv) (benv := benv)]
     rw [hb.heq (henv := htenv) (benv := benv)]
-    simp [Term.toBV]
     ext i
     rcases i with rfl | i <;> simp
   case bor a b =>
     constructor
     intros wenv benv tenv fsmEnv htenv
-    simp [Nondep.Term.ofDep, mkTermFSM]
+    simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
     have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard b
     rw [ha.heq (henv := htenv) (benv := benv)]
     rw [hb.heq (henv := htenv) (benv := benv)]
-    simp [Term.toBV]
     ext i
     rcases i with rfl | i <;> simp
   case bxor a b =>
     constructor
     intros wenv benv tenv fsmEnv htenv
-    simp [Nondep.Term.ofDep, mkTermFSM]
+    simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
     have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard b
     rw [ha.heq (benv := benv) (henv := htenv)]
     rw [hb.heq (benv := benv) (henv := htenv)]
-    simp [Term.toBV]
     ext i
     rcases i with rfl | i <;> simp
   case bnot a =>
@@ -1610,7 +1610,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
     constructor
     intros wenv benv tenv fsmEnv htenv
-    simp [Nondep.Term.ofDep, mkTermFSM]
+    simp [Nondep.Term.ofDepTerm, mkTermFSM]
     rw [ha.heq (henv := htenv) (benv := benv)]
     ext i
     simp [Term.toBV]
@@ -1620,7 +1620,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
     constructor
     intros wenv benv tenv fsmEnv htenv
-    simp [Nondep.Term.ofDep, mkTermFSM]
+    simp [Nondep.Term.ofDepTerm, mkTermFSM]
     rw [ha.heq (henv := htenv) (benv := benv)]
     rw [hw.heq (henv := htenv.toHWidthEnv)]
     ext i
@@ -1637,7 +1637,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard pcard : Nat) {tctx : Term.Ctx wca
   case bvOfBool b =>
     constructor
     intros wenv benv tenv fsmEnv htenv
-    simp [Nondep.Term.ofDep, mkTermFSM]
+    simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have hb := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard pcard b
     have hw := IsGoodNatFSM_mkWidthFSM tcard bcard (wcard := wcard) (pcard := pcard) (.const 1)
     simp at hw
@@ -1658,98 +1658,98 @@ info: 'MultiWidth.IsGoodTermFSM_mkTermFSM' depends on axioms:
 #guard_msgs in #print axioms IsGoodTermFSM_mkTermFSM
 
 
--- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
-def mkPredicateFSMAux (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
-  (PredicateFSM wcard tcard bcard pcard p) :=
-  match p with
-  | .var x =>
-    if hx : x < pcard then
-      { toFsm := FSM.var' (StateSpace.predVar ⟨x, hx⟩) }
-    else
-      { toFsm := FSM.zero' } -- default, should not be used.
-  | .binWidthRel .eq a b =>
-    let fsmA := mkWidthFSM wcard tcard bcard pcard a
-    let fsmB := mkWidthFSM wcard tcard bcard pcard b
-    { toFsm := fsmWidthEq fsmA.toFsm fsmB.toFsm }
-  | .binWidthRel .le a b =>
-    let fsmA := mkWidthFSM wcard tcard bcard pcard a
-    let fsmB := mkWidthFSM wcard tcard bcard pcard b
-    { toFsm := fsmWidthUle fsmA.toFsm fsmB.toFsm }
-  | .binRel .eq w a b =>
-    let fsmW := mkWidthFSM wcard tcard bcard pcard w
-    let fsmA := mkTermFSM wcard tcard bcard pcard a
-    let fsmB := mkTermFSM wcard tcard bcard pcard b
-    { toFsm := ~~~ fsmW.toFsm ||| fsmTermEq fsmA fsmB }
-  | .binRel .ne w a b =>
-    let fsmW := mkWidthFSM wcard tcard bcard pcard w
-    let fsmA := mkTermFSM wcard tcard bcard pcard a
-    let fsmB := mkTermFSM wcard tcard bcard pcard b
-    { toFsm := fsmW.toFsm ||| fsmTermNe fsmA fsmB }
-  | .binRel .ult w a b =>
-    let fsmA := mkTermFSM wcard tcard bcard pcard a
-    let fsmB := mkTermFSM wcard tcard bcard pcard b
-    let fsmW := mkWidthFSM wcard tcard bcard pcard w
-    { toFsm :=
-      -- upto 'w', don't make a decision, then
-      -- spit out what fsmTermUlt believes.
-      -- TODO: try to replace with a 'latchImmediate',
-      -- since that should be a much more long-term solution.
-      fsmW.toFsm ||| (fsmTermUlt fsmA fsmB)
-    }
-  | .binRel .ule w a b =>
-    let fsmA := mkTermFSM wcard tcard bcard pcard a
-    let fsmB := mkTermFSM wcard tcard bcard pcard b
-    let fsmW := mkWidthFSM wcard tcard bcard pcard w
-    { toFsm :=
-      -- upto 'w', don't make a decision, then
-      -- spit out what fsmTermUlt believes.
-      -- TODO: try to replace with a 'latchImmediate',
-      -- since that should be a much more long-term solution.
-      fsmW.toFsm ||| (fsmTermUle fsmA fsmB)
-    }
-  | .binRel .slt w a b =>
-    let fsmA := mkTermFSM wcard tcard bcard pcard a
-    let fsmB := mkTermFSM wcard tcard bcard pcard b
-    let fsmW := mkWidthFSM wcard tcard bcard pcard w
-    { toFsm :=
-      -- upto 'w', don't make a decision, then
-      -- spit out what fsmTermUlt believes.
-      -- TODO: try to replace with a 'latchImmediate',
-      -- since that should be a much more long-term solution.
-      fsmW.toFsm ||| (fsmTermSlt fsmW fsmA fsmB)
-    }
-  | .binRel .sle w a b =>
-    let fsmA := mkTermFSM wcard tcard bcard pcard a
-    let fsmB := mkTermFSM wcard tcard bcard pcard b
-    let fsmW := mkWidthFSM wcard tcard bcard pcard w
-    { toFsm :=
-      -- upto 'w', don't make a decision, then
-      -- spit out what fsmTermUlt believes.
-      -- TODO: try to replace with a 'latchImmediate',
-      -- since that should be a much more long-term solution.
-      fsmW.toFsm ||| (fsmTermSle fsmW fsmA fsmB)
-    }
-  | .or p q  =>
-    let fsmP :=  mkPredicateFSMAux wcard tcard bcard pcard p
-    let fsmQ :=  mkPredicateFSMAux wcard tcard bcard pcard q
-    let fsmP := composeUnaryAux FSM.scanAnd fsmP.toFsm
-    let fsmQ := composeUnaryAux FSM.scanAnd fsmQ.toFsm
-    { toFsm := (fsmP ||| fsmQ) }
-  | .and p q =>
-    let fsmP := mkPredicateFSMAux wcard tcard bcard pcard p
-    let fsmQ := mkPredicateFSMAux wcard tcard bcard pcard q
-    { toFsm := (fsmP.toFsm &&& fsmQ.toFsm) }
-  | .boolBinRel k a b  =>
-    let fsmA := mkTermFSM wcard tcard bcard pcard a
-    let fsmB := mkTermFSM wcard tcard bcard pcard b
-    match k with
-    | .eq =>
-      -- TODO: rename this Aux' business, it's ugly.
-      let fsmEq := composeBinaryAux' FSM.nxor (fsmA.toFsmZext) (fsmB.toFsmZext)
-      { toFsm := composeUnaryAux FSM.scanAnd (fsmEq) }
+-- -- fSM that returns 1 ifthe predicate is true, and 0 otherwise -/
+-- def mkPredicateFSMAux (wcard tcard bcard pcard : Nat) (p : Nondep.Term) :
+--   (PredicateFSM wcard tcard bcard pcard p) :=
+--   match p with
+--   -- | .var x =>
+--   --   if hx : x < pcard then
+--   --     { toFsm := FSM.var' (StateSpace.predVar ⟨x, hx⟩) }
+--   --   else
+--   --     { toFsm := FSM.zero' } -- default, should not be used.
+--   | .binWidthRel .eq a b =>
+--     let fsmA := mkWidthFSM wcard tcard bcard pcard a
+--     let fsmB := mkWidthFSM wcard tcard bcard pcard b
+--     { toFsm := fsmWidthEq fsmA.toFsm fsmB.toFsm }
+--   | .binWidthRel .le a b =>
+--     let fsmA := mkWidthFSM wcard tcard bcard pcard a
+--     let fsmB := mkWidthFSM wcard tcard bcard pcard b
+--     { toFsm := fsmWidthUle fsmA.toFsm fsmB.toFsm }
+--   | .binRel .eq w a b =>
+--     let fsmW := mkWidthFSM wcard tcard bcard pcard w
+--     let fsmA := mkTermFSM wcard tcard bcard pcard a
+--     let fsmB := mkTermFSM wcard tcard bcard pcard b
+--     { toFsm := ~~~ fsmW.toFsm ||| fsmTermEq fsmA fsmB }
+--   | .binRel .ne w a b =>
+--     let fsmW := mkWidthFSM wcard tcard bcard pcard w
+--     let fsmA := mkTermFSM wcard tcard bcard pcard a
+--     let fsmB := mkTermFSM wcard tcard bcard pcard b
+--     { toFsm := fsmW.toFsm ||| fsmTermNe fsmA fsmB }
+--   | .binRel .ult w a b =>
+--     let fsmA := mkTermFSM wcard tcard bcard pcard a
+--     let fsmB := mkTermFSM wcard tcard bcard pcard b
+--     let fsmW := mkWidthFSM wcard tcard bcard pcard w
+--     { toFsm :=
+--       -- upto 'w', don't make a decision, then
+--       -- spit out what fsmTermUlt believes.
+--       -- TODO: try to replace with a 'latchImmediate',
+--       -- since that should be a much more long-term solution.
+--       fsmW.toFsm ||| (fsmTermUlt fsmA fsmB)
+--     }
+--   | .binRel .ule w a b =>
+--     let fsmA := mkTermFSM wcard tcard bcard pcard a
+--     let fsmB := mkTermFSM wcard tcard bcard pcard b
+--     let fsmW := mkWidthFSM wcard tcard bcard pcard w
+--     { toFsm :=
+--       -- upto 'w', don't make a decision, then
+--       -- spit out what fsmTermUlt believes.
+--       -- TODO: try to replace with a 'latchImmediate',
+--       -- since that should be a much more long-term solution.
+--       fsmW.toFsm ||| (fsmTermUle fsmA fsmB)
+--     }
+--   | .binRel .slt w a b =>
+--     let fsmA := mkTermFSM wcard tcard bcard pcard a
+--     let fsmB := mkTermFSM wcard tcard bcard pcard b
+--     let fsmW := mkWidthFSM wcard tcard bcard pcard w
+--     { toFsm :=
+--       -- upto 'w', don't make a decision, then
+--       -- spit out what fsmTermUlt believes.
+--       -- TODO: try to replace with a 'latchImmediate',
+--       -- since that should be a much more long-term solution.
+--       fsmW.toFsm ||| (fsmTermSlt fsmW fsmA fsmB)
+--     }
+--   | .binRel .sle w a b =>
+--     let fsmA := mkTermFSM wcard tcard bcard pcard a
+--     let fsmB := mkTermFSM wcard tcard bcard pcard b
+--     let fsmW := mkWidthFSM wcard tcard bcard pcard w
+--     { toFsm :=
+--       -- upto 'w', don't make a decision, then
+--       -- spit out what fsmTermUlt believes.
+--       -- TODO: try to replace with a 'latchImmediate',
+--       -- since that should be a much more long-term solution.
+--       fsmW.toFsm ||| (fsmTermSle fsmW fsmA fsmB)
+--     }
+--   | .or p q  =>
+--     let fsmP :=  mkPredicateFSMAux wcard tcard bcard pcard p
+--     let fsmQ :=  mkPredicateFSMAux wcard tcard bcard pcard q
+--     let fsmP := composeUnaryAux FSM.scanAnd fsmP.toFsm
+--     let fsmQ := composeUnaryAux FSM.scanAnd fsmQ.toFsm
+--     { toFsm := (fsmP ||| fsmQ) }
+--   | .and p q =>
+--     let fsmP := mkPredicateFSMAux wcard tcard bcard pcard p
+--     let fsmQ := mkPredicateFSMAux wcard tcard bcard pcard q
+--     { toFsm := (fsmP.toFsm &&& fsmQ.toFsm) }
+--   | .boolBinRel k a b  =>
+--     let fsmA := mkTermFSM wcard tcard bcard pcard a
+--     let fsmB := mkTermFSM wcard tcard bcard pcard b
+--     match k with
+--     | .eq =>
+--       -- TODO: rename this Aux' business, it's ugly.
+--       let fsmEq := composeBinaryAux' FSM.nxor (fsmA.toFsmZext) (fsmB.toFsmZext)
+--       { toFsm := composeUnaryAux FSM.scanAnd (fsmEq) }
 
-theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
-  exact Function.ne_iff.mp h
+-- theorem foo (f g : α → β) (h : f ≠ g) : ∃ x, f x ≠ g x := by
+--   exact Function.ne_iff.mp h
 
 /-- if 'x < y', then also 'x.setWidth N < y.setWidthN'. -/
 private theorem BitVec.setWidth_lt_setWidth_of_lt {x y : BitVec w}
@@ -1786,28 +1786,32 @@ private theorem eq_of_lt_iff_lt_of_le  (h : ∀ (a i : ℕ), i ≤ a → (i < v'
 
 def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
     {tctx : Term.Ctx wcard tcard}
-    (p : MultiWidth.Predicate wcard tcard bcard tctx pcard) :
-    HPredFSMToBitStream (mkPredicateFSMAux wcard tcard bcard pcard (.ofDep p)) := by
-  induction p
-  case var v =>
+    (p : MultiWidth.Term bcard tctx .prop) :
+    HPredFSMToBitStream (mkTermFSM wcard tcard bcard pcard (Nondep.Term.ofDepPredicate p)) := by
+  cases p
+  case pvar v =>
     constructor
     intros wenv benv tenv penv fsmEnv htenv hpenv
-    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep, Predicate.toProp]
+    rw [Nondep.Term.ofDepPredicate]
+    simp [mkTermFSM, Term.toBV]
     obtain ⟨hpenv⟩ := hpenv
-    simp [hpenv v]
-  case binWidthRel wcard' tcard' bcard' tctx' pcard' rel v w  =>
+    apply Fin.elim0 v
+    -- simp [hpenv v]
+  case binWidthRel rel v w  =>
     cases rel
     case eq =>
       -- | TODO: refactor into separate toplevel lemma
       constructor
       intros wenv benv tenv penv fsmEnv htenv hpenv
-      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      rw [Nondep.Term.ofDepPredicate]
+      simp
+      rw [mkTermFSM]
+      simp
+      have hv := IsGoodNatFSM_mkWidthFSM tcard bcard pcard v
+      have hw := IsGoodNatFSM_mkWidthFSM tcard bcard pcard w
       simp [fsmWidthEq]
-      have hv := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' v
-      have hw := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' w
       rw [hw.heq (henv := htenv.toHWidthEnv)]
       rw [hv.heq (henv := htenv.toHWidthEnv)]
-      simp [Predicate.toProp]
       constructor
       · intros heq
         ext i
@@ -1816,8 +1820,8 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
         intros j hj
         rw [heq]
       · intros heq
-        have hv := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' v
-        have hw := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' w
+        have hv := IsGoodNatFSM_mkWidthFSM tcard bcard pcard v
+        have hw := IsGoodNatFSM_mkWidthFSM tcard bcard pcard w
         have := congrFun heq
         simp [BitStream.scanAnd_eq_decide] at this
         specialize this (max (v.toNat wenv) (w.toNat wenv)) (min (v.toNat wenv) (w.toNat wenv))
@@ -1827,13 +1831,14 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
       -- | TODO: refactor into separate toplevel lemma
       constructor
       intros wenv benv tenv penv fsmEnv htenv hpenv
-      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      rw [Nondep.Term.ofDepPredicate]
+      simp [mkTermFSM]
+      -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       simp [fsmWidthUle]
-      have hv := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' v
-      have hw := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' w
+      have hv := IsGoodNatFSM_mkWidthFSM tcard bcard pcard v
+      have hw := IsGoodNatFSM_mkWidthFSM tcard bcard pcard w
       rw [hw.heq (henv := htenv.toHWidthEnv)]
       rw [hv.heq (henv := htenv.toHWidthEnv)]
-      simp [Predicate.toProp]
       constructor
       · intros heq
         ext i
@@ -1849,22 +1854,22 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
         specialize this (max (v.toNat wenv) (w.toNat wenv)) (min (v.toNat wenv) (w.toNat wenv))
         simp at this
         omega
-  case binRel wcard' tcard' bcard' tctx' pcard' rel w a b =>
+  case binRel rel w a b =>
     rcases rel
     case eq =>
       -- | TODO: refactor into separate toplevel lemma
       constructor
       intros wenv benv tenv penv fsmEnv htenv hpenv
-      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      rw [Nondep.Term.ofDepPredicate]
+      -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       -- fsmTermEqProof starts here.
-      simp [fsmTermEq]
-      have ha := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' a
-      have hb := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' b
-      have hw := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' w
+      simp [mkTermFSM, fsmTermEq]
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard b
+      have hw := IsGoodNatFSM_mkWidthFSM tcard bcard pcard w
       rw [ha.heq (henv := htenv) (benv := benv)]
       rw [hb.heq (henv := htenv) (benv := benv)]
       rw [hw.heq (henv := htenv.toHWidthEnv)]
-      simp [Predicate.toProp]
       constructor
       · intros h
         simp at h
@@ -1886,16 +1891,16 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
       -- | TODO: extract proof.
       constructor
       intros wenv benv tenv penv fsmEnv htenv hpenv
-      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      rw [Nondep.Term.ofDepPredicate]
+      -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       -- fsmTermEqProof starts here.
-      have ha := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' a
-      have hb := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' b
-      have hw := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' w
-      simp [fsmTermNe]
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard b
+      have hw := IsGoodNatFSM_mkWidthFSM tcard bcard pcard w
+      simp [mkTermFSM, fsmTermNe]
       rw [ha.heq (henv := htenv) (benv := benv)]
       rw [hb.heq (henv := htenv) (benv := benv)]
       rw [hw.heq (henv := htenv.toHWidthEnv)]
-      simp [Predicate.toProp]
       constructor
       · intros h
         simp at h
@@ -1926,14 +1931,15 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
     case ult =>
       constructor
       intros wenv benv tenv penv fsmEnv htenv hpenv
-      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-      have hw := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' w
-      have ha := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' a
-      have hb := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' b
+      rw [Nondep.Term.ofDepPredicate]
+      -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      have hw := IsGoodNatFSM_mkWidthFSM tcard bcard pcard w
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard b
+      simp [mkTermFSM]
       rw [hw.heq (henv := htenv.toHWidthEnv)]
       -- rw [ha.heq (henv := henv)]
       -- rw [hb.heq (henv := henv)]
-      simp [Predicate.toProp]
       constructor
       -- I understand the problem:
       -- I need to build an automata that checks that you are ult
@@ -1980,12 +1986,14 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
     case ule =>
       constructor
       intros wenv benv tenv penv fsmEnv htenv hpenv
-      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-      have hw := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' w
-      have ha := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' a
-      have hb := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' b
+      rw [Nondep.Term.ofDepPredicate]
+      -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      have hw := IsGoodNatFSM_mkWidthFSM tcard bcard pcard w
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard b
+      simp [mkTermFSM]
       rw [hw.heq (henv := htenv.toHWidthEnv)]
-      simp [Predicate.toProp]
+      -- simp [Term.toBV]
       constructor
       · intros h
         simp at h
@@ -2023,12 +2031,14 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
     case slt =>
       constructor
       intros wenv benv tenv penv fsmEnv htenv hpenv
-      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-      have hwfsm := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' w
-      have ha := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' a
-      have hb := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' b
+      -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      rw [Nondep.Term.ofDepPredicate]
+      have hwfsm := IsGoodNatFSM_mkWidthFSM tcard bcard pcard w
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard b
+      simp [mkTermFSM]
       rw [hwfsm.heq (henv := htenv.toHWidthEnv)]
-      simp [Predicate.toProp]
+      -- simp [Term.toBV]
       constructor
       · intros h
         simp at h
@@ -2068,12 +2078,13 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
     case sle =>
       constructor
       intros wenv benv tenv penv fsmEnv htenv hpenv
-      simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-      have hwfsm := IsGoodNatFSM_mkWidthFSM tcard' bcard' pcard' w
-      have ha := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' a
-      have hb := IsGoodTermFSM_mkTermFSM wcard' tcard' bcard' pcard' b
+      -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+      rw [Nondep.Term.ofDepPredicate]
+      have hwfsm := IsGoodNatFSM_mkWidthFSM tcard bcard pcard w
+      have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard a
+      have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard pcard b
+      simp [mkTermFSM]
       rw [hwfsm.heq (henv := htenv.toHWidthEnv)]
-      simp [Predicate.toProp]
       constructor
       · intros h
         simp at h
@@ -2110,11 +2121,15 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
         ] at h
         simp at h
         exact h
-  case or p q hp hq =>
+  case or p q =>
     constructor
     intros wenv benv tenv penv fsmEnv htenv hpenv
-    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
-    simp [Predicate.toProp]
+    -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    -- simp [Term.toBV]
+    rw [Nondep.Term.ofDepPredicate]
+    have hp := isGoodPredicateFSM_mkPredicateFSMAux (pcard := pcard) (tctx := tctx) p
+    have hq := isGoodPredicateFSM_mkPredicateFSMAux (pcard := pcard) (tctx := tctx) q
+    simp [mkTermFSM]
     rw [hp.heq (htenv := htenv) (hpenv := hpenv)]
     rw [hq.heq (htenv := htenv) (hpenv := hpenv)]
     constructor
@@ -2157,11 +2172,15 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
         simp at this
         specialize this i2 (by omega)
         simp [this] at h2
-  case and p q hp hq =>
+  case and p q =>
     constructor
-    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    have hp := isGoodPredicateFSM_mkPredicateFSMAux (pcard := pcard) (tctx := tctx) p
+    have hq := isGoodPredicateFSM_mkPredicateFSMAux (pcard := pcard) (tctx := tctx) q
+    -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    rw [Nondep.Term.ofDepPredicate]
     intros wenv benv tenv penv fsmEnv htenv hpenv
-    simp [Predicate.toProp]
+    simp [Term.toBV]
+    simp [mkTermFSM]
     rw [hp.heq (htenv := htenv) (hpenv := hpenv)]
     rw [hq.heq (htenv := htenv) (hpenv := hpenv)]
     constructor
@@ -2180,15 +2199,15 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
         simp at this
         simp [this]
 
-  case boolBinRel wcard' tcard' bcard' tctx' pcard'  k a b =>
+  case boolBinRel k a b =>
     constructor
     intros wenv benv tenv penv fsmEnv htenv hpenv
-    have ha := IsGoodTermBoolFSM_mkTermFSM wcard' tcard' bcard' pcard' a
-    have hb := IsGoodTermBoolFSM_mkTermFSM wcard' tcard' bcard' pcard' b
-    simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
+    rw [Nondep.Term.ofDepPredicate]
+    have ha := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard pcard a
+    have hb := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard pcard b
+    simp [mkTermFSM]
     rw [ha.heq (benv := benv) (tenv := tenv) (henv := htenv)]
     rw [hb.heq (benv := benv) (tenv := tenv) (henv := htenv)]
-    simp [Predicate.toProp]
     rw [BitStream.ext_iff]
     simp [BitStream.scanAnd_eq_decide] -- TODO: mark this a simp lemma.
     constructor
@@ -2199,40 +2218,41 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
       exact hp
 
 /-- Negate the FSM so we can decide if zeroes. -/
-def mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) :
-  (PredicateFSM wcard tcard bcard pcard p) :=
-    let fsm := mkPredicateFSMAux wcard tcard bcard pcard p
-    { toFsm := ~~~ fsm.toFsm }
+def mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (p : Nondep.Term) :
+  (TermFSM wcard tcard bcard pcard p) :=
+    let fsm := mkTermFSM wcard tcard bcard pcard p
+    fsm
+    -- { toFsmZext := ~~~ fsm.toFsmZext, width := fsm.width }
 
-def mkPredicateFSMDep {wcard tcard bcard pcard : Nat} {tctx : Term.Ctx wcard tcard}
-    (p : MultiWidth.Predicate wcard tcard bcard tctx pcard) :
-    PredicateFSM wcard tcard bcard pcard (.ofDep p) :=
-  mkPredicateFSMNondep wcard tcard bcard pcard (.ofDep p)
+def mkPredicateFSMDep {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard}
+    (p : Term bcard tctx .prop) :
+    TermFSM wcard tcard bcard pcard (.ofDepPredicate p) :=
+  mkPredicateFSMNondep wcard tcard bcard pcard (.ofDepPredicate p)
 
-section BitStream2BV
+-- section BitStream2BV
 
-variable
-  {bcard : Nat}
-  {tctx : Term.Ctx wcard tcard}
-  (p : Predicate wcard tcard bcard tctx pcard)
+-- variable
+--   {bcard : Nat}
+--   {tctx : Term.Ctx wcard tcard}
+--   (p : Predicate wcard tcard bcard tctx pcard)
 
-end BitStream2BV
+-- end BitStream2BV
 
 -- | TODO: rename these namespaces.
 open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
 /-- If the FSM passes the safety and induction certificates,
 then the predicate is satisfied.
 -/
-theorem Predicate.toProp_of_KInductionCircuits
+theorem Term.toBV_of_KInductionCircuits
     {wcard tcard bcard pcard : Nat}
     (tctx : Term.Ctx wcard tcard)
-    (p : MultiWidth.Predicate wcard tcard bcard tctx pcard)
-    (pNondep : Nondep.Predicate)
-    (_hpNondep : pNondep = (.ofDep p))
-    (fsm : PredicateFSM wcard tcard bcard pcard pNondep)
+    (p : Term  bcard tctx .prop)
+    (pNondep : Nondep.Term)
+    (_hpNondep : pNondep = (.ofDepPredicate p))
+    (fsm : TermFSM wcard tcard bcard pcard pNondep)
     (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep)
     (n : Nat)
-    (circs : KInductionCircuits fsm.toFsm n)
+    (circs : KInductionCircuits fsm.toFsmZext n)
     (hCircs : circs.IsLawful)
     (sCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
     (hs : Circuit.verifyCircuit (circs.mkSafetyCircuit) sCert = true)
@@ -2243,55 +2263,57 @@ theorem Predicate.toProp_of_KInductionCircuits
     (tenv : tctx.Env wenv)
     (benv : Term.BoolEnv bcard)
     :
-    p.toProp benv tenv penv := by
-  have hGoodPredicateFSM := isGoodPredicateFSM_mkPredicateFSMAux p
+    p.toBV benv tenv  := by
+  have hGoodPredicateFSM := isGoodPredicateFSM_mkPredicateFSMAux p (pcard := 0)
+  let penv : Predicate.Env 0 := fun x => x.elim0
   rw [hGoodPredicateFSM.heq (tenv := tenv)
     (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv benv penv)]
+    -- (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv benv penv)]
   · subst _hpNondep _hfsm
     simp [mkPredicateFSMNondep] at circs
-    apply ReflectVerif.BvDecide.KInductionCircuits.eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false'
-      (circs := circs) (hCircs := hCircs) (envBitstream := (HTermEnv.mkFsmEnvOfTenv tenv benv penv))
-      (hSafety := Circuit.eval_eq_false_of_verifyCircuit hs)
-      (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind)
+    rw [ReflectVerif.BvDecide.KInductionCircuits.eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false'
+        (circs := circs) (hCircs := hCircs) (envBitstream := (HTermEnv.mkFsmEnvOfTenv tenv benv penv))
+        (hSafety := Circuit.eval_eq_false_of_verifyCircuit hs)
+        (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind) (pcard := 0)]
   · simp
   · simp
 
-/--
-info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits'
-depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits
+-- /--
+-- info: 'MultiWidth.Term.toBV_of_KInductionCircuits'
+-- depends on axioms: [propext, Classical.choice, Quot.sound]
+-- -/
+-- #guard_msgs in #print axioms Term.toBV_of_KInductionCircuits
 
-open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
-theorem Predicate.toProp_of_KInductionCircuits'
-    {wcard tcard bcard pcard : Nat}
-    (P : Prop)
-    (tctx : Term.Ctx wcard tcard)
-    (p : MultiWidth.Predicate wcard tcard bcard tctx pcard)
-    (pNondep : Nondep.Predicate)
-    (_hpNondep : pNondep = (.ofDep p))
-    (fsm : PredicateFSM wcard tcard bcard pcard pNondep)
-    (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep)
-    (n : Nat)
-    (circs : KInductionCircuits fsm.toFsm n)
-    (hCircs : circs.IsLawful)
-    (sCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
-    (hs : Circuit.verifyCircuit (circs.mkSafetyCircuit) sCert = true)
-    (indCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
-    (hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
-    (wenv : WidthExpr.Env wcard)
-    (tenv : tctx.Env wenv)
-    (benv : Term.BoolEnv bcard)
-    (penv : Predicate.Env pcard)
-    (hp : p.toProp benv tenv penv = P) :
-    P := by
-  rw [← hp]
-  apply Predicate.toProp_of_KInductionCircuits <;> assumption
+-- open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
+-- theorem Term.toBV_of_KInductionCircuits'
+--     {wcard tcard bcard pcard : Nat}
+--     (P : Prop)
+--     (tctx : Term.Ctx wcard tcard)
+--     (p : MultiWidth.Predicate wcard tcard bcard tctx pcard)
+--     (pNondep : Nondep.Predicate)
+--     (_hpNondep : pNondep = (.ofDep p))
+--     (fsm : PredicateFSM wcard tcard bcard pcard pNondep)
+--     (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep)
+--     (n : Nat)
+--     (circs : KInductionCircuits fsm.toFsm n)
+--     (hCircs : circs.IsLawful)
+--     (sCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
+--     (hs : Circuit.verifyCircuit (circs.mkSafetyCircuit) sCert = true)
+--     (indCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
+--     (hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
+--     (wenv : WidthExpr.Env wcard)
+--     (tenv : tctx.Env wenv)
+--     (benv : Term.BoolEnv bcard)
+--     (penv : Predicate.Env pcard)
+--     (hp : p.toProp benv tenv penv = P) :
+--     P := by
+--   rw [← hp]
+--   apply Term.toBV_of_KInductionCircuits <;> assumption
 
-/--
-info: 'MultiWidth.Predicate.toProp_of_KInductionCircuits''
-depends on axioms: [propext, Classical.choice, Quot.sound]
--/
-#guard_msgs in #print axioms Predicate.toProp_of_KInductionCircuits'
+-- /--
+-- info: 'MultiWidth.Term.toBV_of_KInductionCircuits''
+-- depends on axioms: [propext, Classical.choice, Quot.sound]
+-- -/
+-- #guard_msgs in #print axioms Term.toBV_of_KInductionCircuits'
 
 end MultiWidth
