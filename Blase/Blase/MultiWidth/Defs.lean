@@ -433,7 +433,7 @@ theorem Term.toBV_ofBool {wenv : WidthExpr.Env wcard}
 theorem Term.toBV_pvar {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
-    (tenv : tctx.Env wenv) (v : Fin 0) :
+    (tenv : tctx.Env wenv) (v : Fin pcard) :
   Term.toBV benv penv tenv (.pvar v) = penv v := rfl
 
 
@@ -1030,7 +1030,7 @@ structure HTermFSMToBitStream {w : WidthExpr wcard}
   {t : Term bcard pcard tctx (.bv w)}
   (fsm : TermFSM wcard tcard bcard pcard (.ofDepTerm t)) : Prop where
   heq :
-    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv)
+    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
       (henv : HTermEnv fsmEnv tenv benv) →
         fsm.toFsmZext.eval fsmEnv =
@@ -1041,7 +1041,7 @@ structure HTermBoolFSMToBitStream
   {t : Term bcard pcard tctx .bool}
   (fsm : TermFSM wcard tcard bcard pcard (.ofDepTerm t)) : Prop where
   heq :
-    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv)
+    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
       (henv : HTermEnv fsmEnv tenv benv) →
         fsm.toFsmZext.eval fsmEnv =
@@ -1054,8 +1054,7 @@ structure HPredFSMToBitStream {pcard : Nat}
   (fsm : TermFSM wcard tcard bcard pcard
     (.ofDepPredicate p)) : Prop where
   heq :
-    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv)
-      (penv : Predicate.Env pcard)
+    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
       (htenv : HTermEnv fsmEnv tenv benv) →
       (hpenv : HPredicateEnv fsmEnv penv) →
