@@ -17,6 +17,8 @@ For stable releases, please change the `rev` to the desired version tag.
 #### Algorithms Improvements TODO
 
 
+
+- [ ] Add support for `BitVec.cast`, as well as `decide : Prop -> Bool`, as well as `\b. b = true : Bool -> Prop`
 - [ ] Write multi-width as a reduction from single-width, with a variable `v` such that `v & (v - 1) = 0`.
    This makes the multi-width version reducible, with the mask being created as `v - 1`.
 - [x] Add support for a generalization mode that keeps width 1 and geneeralizes all other widths. This is useful for problems
@@ -28,7 +30,7 @@ For stable releases, please change the `rev` to the desired version tag.
 - [x] Write a tactic that takes a goal state with BVs and generalizes them to an arbitrary width. 
       Call this `bv_abstract`.
 - [x] Add evaluation from Sam Coward.
-- [ ] Add evaluation from Lean's bitvector suite.
+- [x] Add evaluation from Lean's bitvector suite.
 - [ ] Add right shift and division support by eliminating into left-shift and multiplication.
 - [ ] Model reconstruction for counterexamples.
 - [x] Add support for Nat and Int sort by adding a fresh width variable that is universally quantified, and then rewriting along this fresh variable.
