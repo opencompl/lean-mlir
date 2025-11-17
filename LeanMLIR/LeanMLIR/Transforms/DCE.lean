@@ -208,7 +208,7 @@ def Deleted.toHom (h : Deleted Γ r Γ') : Γ'.Hom Γ :=
     simp_all [Ctxt.delete]
   subst DEL'
   funext t v
-  apply Subtype.eq
+  apply Subtype.ext
   simp only [toHom, Hom.delete, Var.val_castCtxt, DeleteRange.val_start_appendInl,
     DeleteRange.val_num_appendInl, Hom.append, Var.castCtxt_rfl]
   cases v using Var.appendCases with
@@ -222,7 +222,7 @@ def Deleted.toHom (h : Deleted Γ r Γ') : Γ'.Hom Γ :=
     DEL.toHom = Hom.id.appendCodomain := by
   simp [Deleted] at DEL
   funext t v
-  apply Subtype.eq
+  apply Subtype.ext
   simp [toHom, Hom.delete, DeleteRange.full, DeleteRange.appendInr]
 
 /-! ## tryDelete? -/
@@ -251,7 +251,7 @@ def Var.tryDeleteOne? [TyDenote Ty] {Γ Γ' : Ctxt Ty} {delv : DeleteRange Γ}
       split_ifs
       · rfl
       · exfalso; omega
-      · apply Subtype.eq
+      · apply Subtype.ext
         simp
         omega
     ⟩
@@ -398,8 +398,6 @@ def dce' {Γ : Ctxt d.Ty} {t}
 
 /-- info: 'DCE.dce' depends on axioms: [propext, Classical.choice, Quot.sound] -/
 #guard_msgs in #print axioms dce
-
-#check Subtype
 
 abbrev RepeatDCEType {Γ : Ctxt d.Ty} {t} (com : Com d Γ .pure t) : Type :=
   { com' : Com d Γ .pure t //  ∀ (V : Γ.Valuation), com.denote V = com'.denote V}
