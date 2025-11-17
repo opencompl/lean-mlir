@@ -131,6 +131,53 @@ def Term.Ctx.cons {wcard : Nat} {tcard : Nat} (ctx : Term.Ctx wcard tcard)
   fun v =>
     v.cases w (fun v' => ctx v')
 
+inductive BinaryRelationKind
+| eq
+| ne
+| ule
+| slt
+| sle
+| ult -- unsigned less than.
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
+def BinaryRelationKind.toSmtLib : BinaryRelationKind → SexprPBV.BinaryRelationKind
+| .eq => .eq
+| .ne => .ne
+| .ule => .ule
+| .slt => .slt
+| .sle => .sle
+| .ult => .ult
+
+def Predicate.Env (pcard : Nat) : Type :=
+  Fin pcard → Prop
+
+def Predicate.Env.empty : Predicate.Env 0 :=
+  fun v => v.elim0
+
+def Predicate.Env.cons {pcard : Nat} (env : Predicate.Env pcard) (p : Prop) :
+  Predicate.Env (pcard + 1) :=
+  fun v => v.cases p env
+
+inductive WidthBinaryRelationKind
+| eq
+| le
+-- lt: a < b ↔ a + 1 ≤ b
+-- a ≠ b: (a < b ∨ b < a)
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
+def WidthBinaryRelationKind.toSmtLib : WidthBinaryRelationKind → SexprPBV.WidthBinaryRelationKind
+| .eq => .eq
+| .le => .le
+
+inductive BoolBinaryRelationKind
+| eq
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
+def BoolBinaryRelationKind.toSmtLib : BoolBinaryRelationKind → SexprPBV.BoolBinaryRelationKind
+| .eq => .eq
+
+
+
 inductive TermKind (wcard : Nat) : Type
 | bool
 | bv (w : WidthExpr wcard)  : TermKind wcard
@@ -165,6 +212,21 @@ inductive Term {wcard tcard : Nat} (bcard : Nat)
 -- | boolMsb (w : WidthExpr wcard) (x : Term bcard tctx (.bv w)) : Term bcard tctx .bool
 | boolConst (b : Bool) : Term bcard tctx .bool
 | boolVar (v : Fin bcard) : Term bcard tctx .bool
+| binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) :
+    Term bcard tctx .prop
+| binRel
+    (k : BinaryRelationKind)
+    (w : WidthExpr wcard)
+    (a : Term bcard tctx (.bv w))
+    (b : Term bcard tctx (.bv w)) :
+    Term bcard tctx .prop
+| and (p1 p2 : Term bcard tctx (.prop)) : Term bcard tctx (.prop)
+| or (p1 p2 : Term bcard tctx (.prop)) : Term bcard tctx (.prop)
+-- | pvar (v : Fin pcard) : Term bcard tctx (.prop) -- TODO: we need 'pvar' too.
+| boolBinRel
+  (k : BoolBinaryRelationKind)
+  (a b : Term bcard tctx .bool) :
+  Term bcard tctx (.prop)
 
 def Term.BoolEnv (bcard : Nat) : Type := Fin bcard → Bool
 
@@ -283,6 +345,25 @@ def Term.toBV {wenv : WidthExpr.Env wcard}
     let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
     a <<< k
 | .bvOfBool b => BitVec.ofBool (b.toBV benv tenv)
+-- | .pvar v => penv v
+| .binWidthRel rel wa wb =>
+  match rel with
+  | .eq => wa.toNat wenv = wb.toNat wenv
+  | .le => wa.toNat wenv ≤ wb.toNat wenv
+| .binRel rel _w a b =>
+  match rel with
+  | .eq => a.toBV benv tenv = b.toBV benv tenv
+  | .ne => a.toBV benv tenv ≠ b.toBV benv tenv
+  | .ult => (a.toBV benv tenv).ult (b.toBV benv tenv) = true
+  | .ule => (a.toBV benv tenv).ule (b.toBV benv tenv) = true
+  | .slt => (a.toBV benv tenv).slt (b.toBV benv tenv) = true
+  | .sle => (a.toBV benv tenv).sle (b.toBV benv tenv) = true
+| .and p1 p2 => p1.toBV benv tenv  ∧ p2.toBV benv tenv
+| .or p1 p2 => p1.toBV benv tenv ∨ p2.toBV benv tenv
+| .boolBinRel rel a b =>
+  match rel with
+  -- | TODO: rename 'toBV' to 'toBool'.
+  | .eq => (a.toBV benv tenv) = (b.toBV benv tenv)
 
 
 @[simp]
@@ -342,51 +423,6 @@ theorem Term.toBV_ofBool {wenv : WidthExpr.Env wcard}
     (benv : Term.BoolEnv bcard)
     (tenv : tctx.Env wenv) (b : Term bcard tctx .bool) :
   Term.toBV benv tenv (.bvOfBool b) = BitVec.ofBool (b.toBV benv tenv) := rfl
-
-inductive BinaryRelationKind
-| eq
-| ne
-| ule
-| slt
-| sle
-| ult -- unsigned less than.
-deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
-
-def BinaryRelationKind.toSmtLib : BinaryRelationKind → SexprPBV.BinaryRelationKind
-| .eq => .eq
-| .ne => .ne
-| .ule => .ule
-| .slt => .slt
-| .sle => .sle
-| .ult => .ult
-
-def Predicate.Env (pcard : Nat) : Type :=
-  Fin pcard → Prop
-
-def Predicate.Env.empty : Predicate.Env 0 :=
-  fun v => v.elim0
-
-def Predicate.Env.cons {pcard : Nat} (env : Predicate.Env pcard) (p : Prop) :
-  Predicate.Env (pcard + 1) :=
-  fun v => v.cases p env
-
-inductive WidthBinaryRelationKind
-| eq
-| le
--- lt: a < b ↔ a + 1 ≤ b
--- a ≠ b: (a < b ∨ b < a)
-deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
-
-def WidthBinaryRelationKind.toSmtLib : WidthBinaryRelationKind → SexprPBV.WidthBinaryRelationKind
-| .eq => .eq
-| .le => .le
-
-inductive BoolBinaryRelationKind
-| eq
-deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
-
-def BoolBinaryRelationKind.toSmtLib : BoolBinaryRelationKind → SexprPBV.BoolBinaryRelationKind
-| .eq => .eq
 
 inductive Predicate :
   (wcard : Nat) →
@@ -524,6 +560,14 @@ inductive Term
 | boolConst (b : Bool) : Term
 | shiftl (w : WidthExpr) (a : Term) (k : Nat) : Term
 | bvOfBool (b : Term) : Term
+| binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr) : Term
+| binRel (k : BinaryRelationKind) (w : WidthExpr)
+    (a : Term) (b : Term) : Term
+| or (p1 p2 : Term) : Term
+| and (p1 p2 : Term) : Term
+| pvar (v : Nat) : Term
+| boolBinRel (k : BoolBinaryRelationKind)
+    (a b : Term) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Term.toSmtLib : Term → SexprPBV.Term
@@ -541,6 +585,7 @@ def Term.toSmtLib : Term → SexprPBV.Term
 | .boolConst b => .boolConst b
 | .shiftl w a k => .shiftl w.toSmtLib a.toSmtLib k
 | .bvOfBool _b => .junk ("bvOfBool")
+| _ => .junk "predicate"
 
 def Term.ofDep {wcard tcard bcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -564,6 +609,12 @@ def Term.ofDep {wcard tcard bcard : Nat}
   | .shiftl (w := w) a k => .shiftl (.ofDep w) (.ofDep a) k
   | .setWidth a wnew => .setWidth (.ofDep a) (.ofDep wnew)
   | .bvOfBool b => .bvOfBool (.ofDep b)
+  | .binWidthRel k wa wb => .binWidthRel k (.ofDep wa) (.ofDep wb)
+  | .binRel k w a b => .binRel k (.ofDep w)
+      (.ofDep a) (.ofDep b)
+  | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
+  | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
+  | .boolBinRel k a b => .boolBinRel k (.ofDep a) (.ofDep b)
 
 
 @[simp]
@@ -588,6 +639,12 @@ def Term.width (t : Term) : WidthExpr :=
   | .boolConst _b => WidthExpr.const 1
   | .shiftl w _a _k => w
   | .bvOfBool _b => WidthExpr.const 1
+  | binWidthRel _k wa wb => WidthExpr.const 0
+  | binRel _k w _a _b => w
+  | or _p1 _p2 => WidthExpr.const 0
+  | and _p1 _p2 => WidthExpr.const 0
+  | pvar _v => WidthExpr.const 0
+  | boolBinRel _k _a _b => WidthExpr.const 0
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -617,6 +674,12 @@ def Term.tcard (t : Term) : Nat :=
   | .boolConst _b => 0
   | .shiftl _w a _k => (Term.tcard a)
   | bvOfBool b => b.tcard
+  | binWidthRel _k _wa _wb => 0
+  | binRel _k _w a b => max (Term.tcard a) (Term.tcard b)
+  | or p1 p2 => max (Term.tcard p1) (Term.tcard p2)
+  | and p1 p2 => max (Term.tcard p1) (Term.tcard p2)
+  | pvar _v => 0
+  | boolBinRel _k a b => max (a.tcard) (b.tcard)
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -634,7 +697,12 @@ def Term.bcard (t : Term) : Nat :=
   | .boolConst _b => 0
   | .shiftl _w a _k => (Term.bcard a)
   | bvOfBool b => b.bcard
-
+  | binWidthRel _k _wa _wb => 0
+  | binRel _k _w a b => max (Term.bcard a) (Term.bcard b)
+  | or p1 p2 => max (Term.bcard p1) (Term.bcard p2)
+  | and p1 p2 => max (Term.bcard p1) (Term.bcard p2)
+  | pvar _v => 0
+  | boolBinRel _k a b => max (a.bcard) (b.bcard)
 
 inductive Predicate
 | binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr) : Predicate
