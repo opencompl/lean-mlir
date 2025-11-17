@@ -5,6 +5,7 @@ import Blase.MultiWidth.Preprocessing
 import Blase.KInduction.KInduction
 import Blase.AutoStructs.FormulaToAuto
 import Blase.ReflectMap
+import Blase.Fast.Aiger
 
 initialize Lean.registerTraceClass `Bits.MultiWidth
 
@@ -37,6 +38,8 @@ structure Config where
   debugFillFinalReflectionProofWithSorry : Bool := false
   /-- Make the certificate proof as a 'sorry' for debugging. -/
   debugFillCertProofWithSorry : Bool := false
+  /-- Dump the FSM to an Aiger file. -/
+  debugDumpAiger: Option String := none
 deriving DecidableEq, Repr
 
 /-- Default user configuration -/
@@ -1128,6 +1131,13 @@ def solve (gorig : MVarId) : SolverM Unit := do
     debugLog m!"fsm circuit size: {fsm.toFsm.circuitSize}"
     if ! (← isDefEq pRawExpr (← mkAppM ``Predicate.toProp #[benv, tenv, penv, pExpr])) then
       throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
+
+    if let some filename := (← read).debugDumpAiger then
+      let fn := System.mkFilePath [filename]
+      let handle ← IO.FS.Handle.mk fn IO.FS.Mode.write
+      let stream := IO.FS.Stream.ofHandle handle
+      fsm.toFsm.toAiger.toAagFile stream
+
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
     match stats with
     | .safetyFailure i =>
