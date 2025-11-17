@@ -2225,7 +2225,7 @@ def mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (p : Nondep.Term) :
     let fsm := mkTermFSM wcard tcard bcard pcard p
     { toFsmZext := ~~~ fsm.toFsmZext, width := fsm.width }
 
-def mkPredicateFSMDep {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard}
+def mkPredicateFSMDep {wcard tcard bcard pcard : Nat} {tctx : Term.Ctx wcard tcard}
     (p : Term bcard pcard tctx .prop) :
     TermFSM wcard tcard bcard pcard (.ofDepPredicate p) :=
   mkPredicateFSMNondep wcard tcard bcard pcard (.ofDepPredicate p)

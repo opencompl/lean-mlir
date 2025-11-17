@@ -602,21 +602,21 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       return (t, state)
 
 /--
-info: MultiWidth.Term.var {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} (v : Fin tcard) :
-  @Term wcard tcard bcard tctx (@TermKind.bv wcard (tctx v))
+info: MultiWidth.Term.var {wcard tcard bcard pcard : Nat} {tctx : Term.Ctx wcard tcard} (v : Fin tcard) :
+  @Term wcard tcard bcard pcard tctx (@TermKind.bv wcard (tctx v))
 -/
 #guard_msgs in set_option pp.explicit true in #check MultiWidth.Term.var
 
 /--
-info: MultiWidth.Term.ofNat {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} (w : WidthExpr wcard) (n : Nat) :
-  @Term wcard tcard bcard tctx (@TermKind.bv wcard w)
+info: MultiWidth.Term.ofNat {wcard tcard bcard pcard : Nat} {tctx : Term.Ctx wcard tcard} (w : WidthExpr wcard) (n : Nat) :
+  @Term wcard tcard bcard pcard tctx (@TermKind.bv wcard w)
 -/
 #guard_msgs in set_option pp.explicit true in #check MultiWidth.Term.ofNat
 
 /--
-info: MultiWidth.Term.bvOfBool {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard}
-  (b : @Term wcard tcard bcard tctx (@TermKind.bool wcard)) :
-  @Term wcard tcard bcard tctx
+info: MultiWidth.Term.bvOfBool {wcard tcard bcard pcard : Nat} {tctx : Term.Ctx wcard tcard}
+  (b : @Term wcard tcard bcard pcard tctx (@TermKind.bool wcard)) :
+  @Term wcard tcard bcard pcard tctx
     (@TermKind.bv wcard (@WidthExpr.const wcard (@OfNat.ofNat Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
 -/
 #guard_msgs in set_option pp.explicit true in #check MultiWidth.Term.bvOfBool
@@ -723,6 +723,7 @@ def mkTermExpr (wcard tcard bcard : Nat) (tctx : Expr)
         wExpr, aExpr, nExpr]
     debugCheck out
     return out
+  | _ => throwError m!"mkTermExpr: unsupported term: {repr t}"
 
 set_option pp.explicit true in
 /--
@@ -734,12 +735,12 @@ info: ∀ {w : Nat} (a b : BitVec w), Or (@Eq (BitVec w) a b) (And (@Ne (BitVec 
 
 /-- Visit a raw BV expr, and collect information about it. -/
 def collectPredicateAtom (state : CollectState)
-  (e : Expr) : SolverM (MultiWidth.Nondep.Predicate × CollectState) := do
+  (e : Expr) : SolverM (MultiWidth.Nondep.Term × CollectState) := do
   let t ← inferType e
   if !t.isProp then
     throwError m!"expected type 'Prop', found: {t} (expression: {indentD e})"
   let (pix, pToIx) := state.pToIx.findOrInsertVal e
-  return (.var pix, { state with pToIx })
+  return (.pvar pix, { state with pToIx })
 
 /-
 Certain predicates like `ult, slt` etc return booleans, and are thus
@@ -748,7 +749,7 @@ To fix this, we have a special case in the reflection that looks for this patter
 and then reflects it into the appropriate prop.
 -/
 def collectBVBooleanEqPredicateAux (state : CollectState) (a b : Expr) :
-  Option (SolverM (MultiWidth.Nondep.Predicate × CollectState)) :=
+  Option (SolverM (MultiWidth.Nondep.Term × CollectState)) :=
   let_expr true := b | none
   let out? := match_expr a with
     | BitVec.slt w x y => some (w, MultiWidth.BinaryRelationKind.slt, x, y)
@@ -766,7 +767,7 @@ def collectBVBooleanEqPredicateAux (state : CollectState) (a b : Expr) :
 
 /-- Return a new expression that this is defeq to, along with the expression of the environment that this needs, under which it will be defeq. -/
 partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
-    SolverM (MultiWidth.Nondep.Predicate × CollectState) := do
+    SolverM (MultiWidth.Nondep.Term × CollectState) := do
   match_expr e with
   | LE.le α _inst v w =>
     match_expr α with
@@ -821,50 +822,50 @@ partial def collectBVPredicateAux (state : CollectState) (e : Expr) :
       return (t, state)
 
 /--
-info: MultiWidth.Predicate.binRel {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
-  (k : BinaryRelationKind) (w : WidthExpr wcard) (a b : @Term wcard tcard bcard tctx (@TermKind.bv wcard w)) :
-  Predicate wcard tcard bcard tctx pcard
+info: MultiWidth.Term.binRel {wcard tcard bcard pcard : Nat} {tctx : Term.Ctx wcard tcard} (k : BinaryRelationKind)
+  (w : WidthExpr wcard) (a b : @Term wcard tcard bcard pcard tctx (@TermKind.bv wcard w)) :
+  @Term wcard tcard bcard pcard tctx (@TermKind.prop wcard)
 -/
-#guard_msgs in set_option pp.explicit true in #check MultiWidth.Predicate.binRel
+#guard_msgs in set_option pp.explicit true in #check MultiWidth.Term.binRel
 
 /--
-info: MultiWidth.Predicate.or {wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ}
-  (p1 p2 : Predicate wcard tcard bcard tctx pcard) : Predicate wcard tcard bcard tctx pcard
+info: MultiWidth.Term.or {wcard tcard bcard pcard : ℕ} {tctx : Term.Ctx wcard tcard}
+  (p1 p2 : Term bcard pcard tctx TermKind.prop) : Term bcard pcard tctx TermKind.prop
 -/
-#guard_msgs in #check MultiWidth.Predicate.or
-
-
-/--
-info: MultiWidth.Predicate.var {pcard wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} (v : Fin pcard) :
-  Predicate wcard tcard bcard tctx pcard
--/
-#guard_msgs in #check MultiWidth.Predicate.var
+#guard_msgs in #check MultiWidth.Term.or
 
 
 /--
-info: MultiWidth.Predicate.binWidthRel {wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ}
-  (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) : Predicate wcard tcard bcard tctx pcard
+info: MultiWidth.Term.var {wcard tcard bcard pcard : ℕ} {tctx : Term.Ctx wcard tcard} (v : Fin tcard) :
+  Term bcard pcard tctx (TermKind.bv (tctx v))
 -/
-#guard_msgs in #check MultiWidth.Predicate.binWidthRel
+#guard_msgs in #check MultiWidth.Term.var
 
 
 /--
-info: MultiWidth.Predicate.boolBinRel {wcard tcard bcard : ℕ} {tctx : Term.Ctx wcard tcard} {pcard : ℕ}
-  (k : BoolBinaryRelationKind) (a b : Term bcard tctx TermKind.bool) : Predicate wcard tcard bcard tctx pcard
+info: MultiWidth.Term.binWidthRel {wcard tcard bcard pcard : ℕ} {tctx : Term.Ctx wcard tcard} (k : WidthBinaryRelationKind)
+  (wa wb : WidthExpr wcard) : Term bcard pcard tctx TermKind.prop
 -/
-#guard_msgs in #check MultiWidth.Predicate.boolBinRel
+#guard_msgs in #check MultiWidth.Term.binWidthRel
+
+
+/--
+info: MultiWidth.Term.boolBinRel {wcard tcard bcard pcard : ℕ} {tctx : Term.Ctx wcard tcard} (k : BoolBinaryRelationKind)
+  (a b : Term bcard pcard tctx TermKind.bool) : Term bcard pcard tctx TermKind.prop
+-/
+#guard_msgs in #check MultiWidth.Term.boolBinRel
 
 
 def Expr.mkPredicateExpr (wcard tcard bcard pcard : Nat) (tctx : Expr)
-    (p : MultiWidth.Nondep.Predicate) : SolverM Expr := do
+  (p : MultiWidth.Nondep.Term) : SolverM Expr := do
   match p with
   | .binRel k w a b =>
     let wExpr ← mkWidthExpr wcard w
     let aExpr ← mkTermExpr wcard tcard bcard tctx a
     let bExpr ← mkTermExpr wcard tcard bcard tctx b
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.binRel)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard,
-        tctx, mkNatLit pcard,
+    let out := mkAppN (mkConst ``MultiWidth.Term.binRel)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, mkNatLit pcard,
+        tctx,
         toExpr k,
         wExpr, aExpr, bExpr]
     debugCheck out
@@ -872,50 +873,46 @@ def Expr.mkPredicateExpr (wcard tcard bcard pcard : Nat) (tctx : Expr)
   | .binWidthRel k v w =>
     let vExpr ← mkWidthExpr wcard v
     let wExpr ← mkWidthExpr wcard w
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.binWidthRel)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard,
-        tctx, mkNatLit pcard,
+    let out := mkAppN (mkConst ``MultiWidth.Term.binWidthRel)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, mkNatLit pcard,
+        tctx,
         Lean.toExpr k, vExpr, wExpr]
     debugCheck out
     return out
   | .or p q =>
     let pExpr ← mkPredicateExpr wcard tcard bcard pcard tctx p
     let qExpr ← mkPredicateExpr wcard tcard bcard pcard tctx q
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.or)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, pExpr, qExpr]
+    let out := mkAppN (mkConst ``MultiWidth.Term.or)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, mkNatLit pcard, tctx, pExpr, qExpr]
     debugCheck out
     return out
   | .and p q =>
     let pExpr ← mkPredicateExpr wcard tcard bcard pcard tctx p
     let qExpr ← mkPredicateExpr wcard tcard bcard pcard tctx q
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.and)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard, pExpr, qExpr]
+    let out := mkAppN (mkConst ``MultiWidth.Term.and)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, mkNatLit pcard, tctx, pExpr, qExpr]
     debugCheck out
     return out
   | .boolBinRel k a b =>
     let aExpr ← mkTermExpr wcard tcard bcard tctx a
     let bExpr ← mkTermExpr wcard tcard bcard tctx b
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.boolBinRel)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, mkNatLit pcard,
+    let out := mkAppN (mkConst ``MultiWidth.Term.boolBinRel)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, mkNatLit pcard, tctx,
         Lean.toExpr k, aExpr, bExpr]
     debugCheck out
     return out
-  | .var v =>
-    let out := mkAppN (mkConst ``MultiWidth.Predicate.var)
-      #[mkNatLit pcard, mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, tctx, ← mkFinLit pcard v]
+  | .pvar v =>
+    let out := mkAppN (mkConst ``MultiWidth.Term.pvar)
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, mkNatLit pcard, tctx, ← mkFinLit pcard v]
     debugCheck out
     return out
-
-/--
-info: MultiWidth.Predicate.toProp {wcard tcard bcard pcard : ℕ} {wenv : WidthExpr.Env wcard} {tctx : Term.Ctx wcard tcard}
-  (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv) (penv : Predicate.Env pcard)
-  (p : Predicate wcard tcard bcard tctx pcard) : Prop
--/
+  | _ => throwError m!"unsupported predicate term: {indentD <| repr p}"
+/-- error: Unknown identifier `MultiWidth.Predicate.toProp` -/
 #guard_msgs in #check MultiWidth.Predicate.toProp
 
 def Expr.mkPredicateToPropExpr (pExpr : Expr)
   (_wcard _tcard _bcard _pcard : Nat) (_wenv : Expr) (_tctx : Expr) (tenv : Expr) (penv : Expr) : SolverM Expr := do
-  let out ← mkAppM (``MultiWidth.Predicate.toProp) #[tenv, penv, pExpr]
+  let out ← mkAppM (``MultiWidth.Term) #[tenv, penv, pExpr]
   debugCheck out
   return out
 
@@ -1058,7 +1055,7 @@ def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : SolverM Expr 
 
 /--
 info: MultiWidth.mkPredicateFSMDep {wcard tcard bcard pcard : ℕ} {tctx : Term.Ctx wcard tcard}
-  (p : Predicate wcard tcard bcard tctx pcard) : PredicateFSM wcard tcard bcard pcard (Nondep.Predicate.ofDep p)
+  (p : Term bcard pcard tctx TermKind.prop) : TermFSM wcard tcard bcard pcard (Nondep.Term.ofDepPredicate p)
 -/
 #guard_msgs in #check MultiWidth.mkPredicateFSMDep
 def Expr.mkPredicateFSMDep (_wcard _tcard _bcard _pcard : Nat) (_tctx : Expr) (p : Expr) : SolverM Expr := do
@@ -1067,8 +1064,7 @@ def Expr.mkPredicateFSMDep (_wcard _tcard _bcard _pcard : Nat) (_tctx : Expr) (p
   return out
 
 /--
-info: MultiWidth.mkPredicateFSMNondep (wcard tcard bcard pcard : ℕ) (p : Nondep.Predicate) :
-  PredicateFSM wcard tcard bcard pcard p
+info: MultiWidth.mkPredicateFSMNondep (wcard tcard bcard pcard : ℕ) (p : Nondep.Term) : TermFSM wcard tcard bcard pcard p
 -/
 #guard_msgs in #check MultiWidth.mkPredicateFSMNondep
 def Expr.mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (pNondep : Expr) : SolverM Expr := do
@@ -1076,23 +1072,17 @@ def Expr.mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (pNondep : Expr) :
   debugCheck out
   return out
 
-def Expr.mkPredicateFSMtoFSM (p : Expr) : SolverM Expr := do
-  let out ← mkAppM (``MultiWidth.PredicateFSM.toFsm) #[p]
-  debugCheck out
-  return out
-
 /--
-info: MultiWidth.Predicate.toProp_of_KInductionCircuits' {wcard tcard bcard pcard : ℕ} (P : Prop)
-  (tctx : Term.Ctx wcard tcard) (p : Predicate wcard tcard bcard tctx pcard) (pNondep : Nondep.Predicate)
-  (_hpNondep : pNondep = Nondep.Predicate.ofDep p) (fsm : PredicateFSM wcard tcard bcard pcard pNondep)
-  (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep) (n : ℕ)
-  (circs : ReflectVerif.BvDecide.KInductionCircuits fsm.toFsm n) (hCircs : circs.IsLawful)
+info: MultiWidth.Term.toBV_of_KInductionCircuits {wcard tcard bcard pcard : ℕ} (tctx : Term.Ctx wcard tcard)
+  (p : Term bcard pcard tctx TermKind.prop) (pNondep : Nondep.Term) (_hpNondep : pNondep = Nondep.Term.ofDepPredicate p)
+  (fsm : TermFSM wcard tcard bcard pcard pNondep) (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep)
+  (n : ℕ) (circs : ReflectVerif.BvDecide.KInductionCircuits fsm.toFsmZext n) (hCircs : circs.IsLawful)
   (sCert : BVDecide.Frontend.LratCert) (hs : circs.mkSafetyCircuit.verifyCircuit sCert = true)
   (indCert : BVDecide.Frontend.LratCert) (hind : circs.mkIndHypCycleBreaking.verifyCircuit indCert = true)
-  (wenv : WidthExpr.Env wcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard)
-  (hp : Predicate.toProp benv tenv penv p = P) : P
+  (wenv : WidthExpr.Env wcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard) :
+  Term.toBV benv penv tenv p
 -/
-#guard_msgs in #check MultiWidth.Predicate.toProp_of_KInductionCircuits'
+#guard_msgs in #check MultiWidth.Term.toBV_of_KInductionCircuits
 
 /--
 Revert all prop-valued hyps.
@@ -1125,10 +1115,10 @@ def solve (gorig : MVarId) : SolverM Unit := do
     let pNondepExpr := Lean.ToExpr.toExpr p
     let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard p
     debugLog m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
-    debugLog m!"fsm circuit size: {fsm.toFsm.circuitSize}"
-    if ! (← isDefEq pRawExpr (← mkAppM ``Predicate.toProp #[benv, tenv, penv, pExpr])) then
+    debugLog m!"fsm circuit size: {fsm.toFsmZext.circuitSize}"
+    if ! (← isDefEq pRawExpr (← mkAppM ``Term.toBV #[benv, penv, tenv, pExpr])) then
       throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
-    let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
+    let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
     match stats with
     | .safetyFailure i =>
       let suspiciousVars ← collect.logSuspiciousFvars
@@ -1145,10 +1135,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
         let _ ← collect.logSuspiciousFvars
       debugLog m!"PROVE: proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
-        -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
         let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
-        -- let fsmExpr ← Expr.mkPredicateFSMtoFSM predFsmExpr
-        let fsmExpr ← Expr.mkPredicateFSMtoFSM predNondepFsmExpr
+        let fsmExpr ← mkAppM (``MultiWidth.mkPredicateFSMNondep) #[predNondepFsmExpr]
         let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
         let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niters)
         debugLog "making safety certs..."
@@ -1170,7 +1158,7 @@ def solve (gorig : MVarId) : SolverM Unit := do
         debugLog m!"made induction cert = true proof..."
         let pEqVal ← mkEqRefl pRawExpr  -- mkEqReflNativeDecideProof `pReflectEq (mkConst `Prop) pToProp pRawExpr
         debugCheck pEqVal
-        let prf ← mkAppM ``MultiWidth.Predicate.toProp_of_KInductionCircuits'
+        let prf ← mkAppM ``MultiWidth.Term.toBV_of_KInductionCircuits
           #[pRawExpr,
             tctx,
             pExpr,
