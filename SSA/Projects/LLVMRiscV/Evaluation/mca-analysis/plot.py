@@ -4,13 +4,12 @@ import subprocess
 import os
 import argparse
 import shutil
-from turtle import width
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-
+from num2words import num2words
 
 matplotlib.rcParams["pdf.fonttype"] = 42
 matplotlib.rcParams["font.size"] = 20
@@ -94,14 +93,14 @@ parameters_match = {
 }
 
 parameters_labels = {
-    "tot_instructions": "#instructions",
-    "tot_cycles": "#cycles",
+    "tot_instructions": "#Instructions",
+    "tot_cycles": "#Cycles",
     "tot_uops": "#uOps",
     "similarity": "Instructions List:",
 }
 
 selector_labels = {
-    "LEANMLIR_opt": "Lean-mlir-ISel",
+    "LEANMLIR_opt": "Lean-MLIRISel",
     "LLVM_globalisel_O1": "GlobalISel (O1)",
     "LLVM_globalisel_O2": "GlobalISel (O2)",
     "LLVM_globalisel_O3": "GlobalISel (O3)",
@@ -252,7 +251,7 @@ def sorted_line_plot_all(parameter):
 
     pdf_filename = plots_dir + parameter + "_line.pdf"
     plt.savefig(pdf_filename)
-    print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
+    # print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
 
@@ -338,7 +337,7 @@ def scatter_plot(parameter, selector1, selector2):
         plots_dir + f"{parameter}_scatter_plot_{selector1}_vs_{selector2}.pdf"
     )
     plt.savefig(pdf_filename, bbox_inches='tight')
-    print(f"\nScatter plot saved to '{pdf_filename}' in the current working directory.")
+    # print(f"\nScatter plot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
 def bar_plot(parameter, selector1, selector2):
@@ -385,9 +384,9 @@ def bar_plot(parameter, selector1, selector2):
     # Ensure all classes are present for consistent coloring/order
     class_order = ["<1x", "1x", "1x-1.5x", "1.5x-2x", ">2x"]
 
-    for c in class_order:
-        if c not in group.columns:
-            group[c] = 0
+    # for c in class_order:
+    #     if c not in group.columns:
+    #         group[c] = 0
     group = group[class_order]
 
     # Colors for each class
@@ -445,9 +444,9 @@ def bar_plot(parameter, selector1, selector2):
             + f"{parameter}_stacked_bar{name_extension}{selector1}_vs_{selector2}.pdf"
         )
         plt.savefig(pdf_filename)
-        print(
-            f"\nStacked bar plot saved to '{pdf_filename}' in the current working directory."
-        )
+        # print(
+        #     f"\nStacked bar plot saved to '{pdf_filename}' in the current working directory."
+        # )
         plt.close()
 
     plot_columns()
@@ -455,47 +454,6 @@ def bar_plot(parameter, selector1, selector2):
         plot_columns(with_similarity=True)
     
     
-    latex_commands_bar_plot_percentages(group, class_order, selector1, selector2, parameter)
-
-
-
-def latex_commands_bar_plot_percentages(group, class_order, selector1, selector2, parameter):
-
-    latex_lines = []
-    for idx, row in group.iterrows():
-        idx_str = str(idx)
-        idx_str_clean = idx_str.replace("_", "")  # Remove underscores from index if any
-        # Ensure the last character is a letter by appending 'N' if it ends with a digit
-        if idx_str_clean and idx_str_clean[-1].isdigit():
-            idx_str_clean = (
-                idx_str_clean.replace("0", "zero")
-                .replace("1", "one")
-                .replace("2", "two")
-                .replace("3", "three")
-                .replace("4", "four")
-                .replace("5", "five")
-                .replace("6", "six")
-                .replace("7", "seven")
-                .replace("8", "eight")
-                .replace("9", "nine")
-                .replace("-", "dash")
-                .replace(".", "")
-            )
-            idx_str_clean += "Instr"
-        for c in class_order:
-            perc = row[c]
-            cmd = (
-                f"\\newcommand{{\\Perc"
-                f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace('-', 'dash').replace('.', ''))}"
-                f"{clean_name(parameter)}For{idx_str_clean}On{c.replace('<', 'lt').replace('>', 'gt').replace('0', 'zero').replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five').replace('-', 'dash').replace('.', '')}}}{{{perc:.1f}}}"
-            )
-            latex_lines.append(cmd)
-    latex_file = os.path.join(plots_dir, "bar_plot_percentages.tex")
-    with open(latex_file, "a") as f:
-        for line in latex_lines:
-            f.write(line + "\n")
-
-
 def violin_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + ".csv")
 
@@ -541,8 +499,8 @@ def violin_plot(parameter, selector1, selector2):
         pc.set_edgecolor(light_green)
         pc.set_alpha(1.0)
         
-    plt.axhline(1, color=dark_red, linestyle="--", linewidth=1, label="1x")
-    plt.text(positions[-1]*1.08, 1.02, "1x", color=dark_red, ha='center', fontsize=20)
+    plt.axhline(1, color=black, linestyle="--", linewidth=1, label="1x")
+    plt.text(positions[-1]*1.08, 1.02, "1x", color=black, ha='center', fontsize=20)
         
     for partname in ('cbars', 'cmins', 'cmaxes'):
         if partname in parts:
@@ -552,7 +510,8 @@ def violin_plot(parameter, selector1, selector2):
 
     plt.xlabel(f"#Instructions - LLVM IR")
     plt.ylabel(
-        f"{parameters_labels[parameter]},$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$",
+        f"$\\frac{{\\text{{{parameters_labels[parameter]}{selector_labels[selector1]}}}}}{{\\text{{{parameters_labels[parameter]}{selector_labels[selector2]}}}}}$",
+        fontsize = 26,
         rotation="horizontal", horizontalalignment="left", y=1.05
     )
     
@@ -574,7 +533,7 @@ def violin_plot(parameter, selector1, selector2):
         plots_dir + f"{parameter}_violin_{selector1}_vs_{selector2}.pdf"
     )
     plt.savefig(pdf_filename)
-    print(f"\nViolin plot saved to '{pdf_filename}' in the current working directory.")
+    # print(f"\nViolin plot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
 
@@ -613,7 +572,7 @@ def sorted_line_plot(parameter, selector1, selector2):
 
     pdf_filename = plots_dir + parameter + f"_{selector1}_vs_{selector2}_line.pdf"
     plt.savefig(pdf_filename, bbox_inches='tight')
-    print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
+    # print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
     plt.close()
 
     avg_diff = (
@@ -621,30 +580,6 @@ def sorted_line_plot(parameter, selector1, selector2):
     ).mean()
     # Clean names for LaTeX command
 
-    cmd_name = (
-        f"\\newcommand{{\\AvgDiff"
-        f"{
-            clean_name(
-                selector1.replace('1', 'one')
-                .replace('2', 'two')
-                .replace('3', 'three')
-                .replace('4', 'four')
-                .replace('5', 'five')
-            )
-        }Vs{
-            clean_name(
-                selector2.replace('1', 'one')
-                .replace('2', 'two')
-                .replace('3', 'three')
-                .replace('4', 'four')
-                .replace('5', 'five')
-            )
-        }"
-        f"{clean_name(parameter)}}}{{{avg_diff:.2f}}}"
-    )
-    latex_file = os.path.join(plots_dir, "sorted_line_plot_averages.tex")
-    with open(latex_file, "a") as f:
-        f.write(cmd_name + "\n")
 
 
 def overhead_plot(parameter, selector1, selector2):
@@ -689,14 +624,94 @@ def overhead_plot(parameter, selector1, selector2):
             plots_dir + f"{parameter}_overhead_{selector1}_vs_{selector2}.pdf"
         )
         plt.savefig(pdf_filename, bbox_inches='tight')
-        print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
+        # print(f"\nPlot saved to '{pdf_filename}' in the current working directory.")
         plt.close()
 
+def geomean_plot_tot_cycles(): 
+    parameters = ("#cycles", "#instructions")
+    # tot_cycles
+    df_cycles = pd.read_csv(data_dir + "tot_cycles.csv")
+    plt.figure(figsize=(6, 5))
+    df_cycles['ratio_gisel'] = df_cycles['LEANMLIR_opt_tot_cycles'] / df_cycles['LLVM_globalisel_tot_cycles']
+    df_cycles['ratio_sdag'] = df_cycles['LEANMLIR_opt_tot_cycles'] / df_cycles['LLVM_selectiondag_tot_cycles']
+    geomean_gisel_cycles = np.exp(np.mean(np.log(df_cycles["ratio_gisel"])))
+    geomean_sdag_cycles = np.exp(np.mean(np.log(df_cycles["ratio_sdag"])))
+    #tot_instructions 
+    df_instructions = pd.read_csv(data_dir + "tot_instructions.csv")
+    df_instructions['ratio_gisel'] = df_instructions['LEANMLIR_opt_tot_instructions'] / df_instructions['LLVM_globalisel_tot_instructions']
+    df_instructions['ratio_sdag'] = df_instructions['LEANMLIR_opt_tot_instructions'] / df_instructions['LLVM_selectiondag_tot_instructions']
+    geomean_gisel_instructions = np.exp(np.mean(np.log(df_instructions["ratio_gisel"])))
+    geomean_sdag_instructions= np.exp(np.mean(np.log(df_instructions["ratio_sdag"])))
+    geomeans_gisel = [geomean_gisel_instructions, geomean_gisel_cycles]
+    geomeans_sdag = [geomean_sdag_instructions, geomean_sdag_cycles]
 
+    x = np.arange(len(parameters))
+    width = 0.35
+    
+    plt.bar(x - width/2, geomeans_gisel, width, label=selector_labels["LLVM_globalisel"], color=light_blue)
+    plt.bar(x + width/2, geomeans_sdag, width, label=selector_labels["LLVM_selectiondag"], color=light_red)
+    plt.axhline(1, color=black, linestyle="--", linewidth=2)
+
+    plt.ylabel(
+            'Geomean Ratio',
+            rotation="horizontal",
+            horizontalalignment="left",
+            y=1,
+        )
+    plt.xticks(x, parameters)
+    plt.legend()
+    plt.tight_layout()
+    
+    pdf_filename = plots_dir + "geomean_comparison.pdf"
+    plt.savefig(pdf_filename)
+    print(f"\nGeometric mean plot saved to '{pdf_filename}' in the current working directory.")
+    plt.close()
+
+
+def equivalent_plot_perc(): 
+    df_similarity = (pd.read_csv(data_dir + "similarity.csv"))
+    
+    df_eqv_gisel = (
+        df_similarity.groupby("instructions_number")["is_eqv_LLVM_globalisel"]
+        .value_counts(normalize=True)
+        .unstack(fill_value=0)
+        * 100
+    )
+    
+    df_eqv_sdag = (
+        df_similarity.groupby("instructions_number")["is_eqv_LLVM_selectiondag"]
+        .value_counts(normalize=True)
+        .unstack(fill_value=0)
+        * 100
+    )
+    plt.figure(figsize=(7, 5))
+
+    width = 0.4
+    
+    plt.bar((df_eqv_gisel.index) - width/2, (df_eqv_gisel[True]).to_list(), width, label=selector_labels["LLVM_globalisel"], color=light_blue)
+    plt.bar((df_eqv_gisel.index) + width/2, (df_eqv_sdag[True]).to_list(), width, label=selector_labels["LLVM_selectiondag"], color=light_red)
+    
+    plt.ylabel(
+            '% Identical Outputs',
+            rotation="horizontal",
+            horizontalalignment="left",
+            y=1.05,
+        )
+    plt.xlabel("#Instructions - LLVM IR")
+    
+    plt.legend()
+    plt.tight_layout()
+    
+    pdf_filename = plots_dir + "equivalent_outputs.pdf"
+    plt.savefig(pdf_filename)
+    print(f"\nGeometric mean plot saved to '{pdf_filename}' in the current working directory.")
+    plt.close()
+    
+    
 def proportional_bar_plot(parameter, selector1, selector2):
     df = pd.read_csv(data_dir + parameter + ".csv")
 
-    plt.figure(figsize=(10, 5))
+    plt.figure(figsize=(7, 5))
 
     col1 = selector1 + "_" + parameter
     col2 = selector2 + "_" + parameter
@@ -711,34 +726,51 @@ def proportional_bar_plot(parameter, selector1, selector2):
     
     average_ratios_by_instruction = (
         df.groupby('instructions_number')['ratios']
-        .mean()
+        .apply(lambda x: np.exp(np.log(x).mean()))
         .reset_index(name='average_ratio')
     )
     
+    print(selector2)
+    print(parameter)
+    print(max(df['ratios']))
+
+
+    width = 0.8
 
     plt.bar(
         average_ratios_by_instruction["instructions_number"],
         average_ratios_by_instruction["average_ratio"],
-        color=dark_green,
+        color=light_green,
+        width=width,
         label=f"Avg. {parameters_labels[parameter]},$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$"
     )
 
-    plt.axhline(1, color=dark_red, linestyle="--", linewidth=2)
-    plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 1.05, f"{selector_labels[selector2]}", color=dark_red, ha='center', fontsize=20)
+    plt.axhline(1, color=black, linestyle="--", linewidth=2)
+
     
 
     plt.xlabel("#Instructions - LLVM IR")
     
     plt.ylabel(
-        f"$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$, {parameters_labels[parameter]}",
+        f"$\\frac{{\\text{{{parameters_labels[parameter]},{selector_labels[selector1]}}}}}{{\\text{{{parameters_labels[parameter]}{selector_labels[selector2]}}}}}$",
+        fontsize=26,
         rotation="horizontal", horizontalalignment="left", y=1.08
     )
     
-    if max(average_ratios_by_instruction["average_ratio"]) < 10:
-        plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 1))
-    else : 
-        plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 100))
+    # if max(average_ratios_by_instruction["average_ratio"]) < 10:
+    #     plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 0.5))
+    # else : 
+    #     plt.yticks(np.arange(0, math.ceil(max(average_ratios_by_instruction["average_ratio"])+1), 100))
+    if (selector2 == "LLVM_globalisel") and (parameter == "tot_instructions"): 
+        plt.yticks(np.arange(0, 2, 0.5))
+        plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 0.95, f"GISel", color=black, ha='center', fontsize=20)
+    elif (selector2 == "LLVM_selectiondag") and (parameter == "tot_instructions"): 
+        plt.yticks(np.arange(0, 3, 1))
+        plt.text((((average_ratios_by_instruction["instructions_number"]).to_list())[-1])*1.15, 0.95, f"SDAG", color=black, ha='center', fontsize=20)
         
+        
+    plt.xticks(np.arange(3, 9, 1))
+    
     plt.tight_layout()
 
     # uncomment to have numbers on top of the bars
@@ -757,62 +789,176 @@ def proportional_bar_plot(parameter, selector1, selector2):
     )
     plt.close()
     
-    latex_commands_bar_plot_proportions(average_ratios_by_instruction, selector1, selector2, parameter)
 
-
-def latex_commands_bar_plot_proportions(grouped, selector1, selector2, parameter):
-    geomean_ratio = np.exp(np.mean(np.log(grouped["average_ratio"])))
     
-    latex_lines = []
-    for idx, ratio in enumerate(grouped["average_ratio"]):
-        idx_str = str(idx)
-        idx_str_clean = idx_str.replace("_", "")  # Remove underscores from index if any
-        # Ensure the last character is a letter by appending 'N' if it ends with a digit
-        if idx_str_clean and idx_str_clean[-1].isdigit():
-            idx_str_clean = (
-                idx_str_clean.replace("0", "zero")
-                .replace("1", "one")
-                .replace("2", "two")
-                .replace("3", "three")
-                .replace("4", "four")
-                .replace("5", "five")
-                .replace("6", "six")
-                .replace("7", "seven")
-                .replace("8", "eight")
-                .replace("9", "nine")
-            )
-            idx_str_clean += "Instr"
-        cmd = (
-            f"\\newcommand{{\\Ratio"
-            f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}"
-            f"{clean_name(parameter)}For{idx_str_clean}}}{{{ratio:.2f}}}"
+
+def create_latex_command(parameters, filename):
+    f = open(filename, 'w')
+    
+    git_command = ["git", "rev-parse", "--short", "HEAD"]
+    result = subprocess.run(
+        git_command, cwd=ROOT_DIR_PATH, capture_output=True, text=True, check=True
+    )
+
+    commit_hash = result.stdout.strip()
+
+    f.write(f"% Lean-mlir commit hash: {commit_hash}\n")
+    
+    f.write(f"% In the following commands the following rules apply:\n")
+    f.write(f"% A: class  <1x\n")
+    f.write(f"% B: class 1x\n")
+    f.write(f"% C: class 1x-1.5x\n")
+    f.write(f"% D: class 1.5x-2x\n")
+    f.write(f"% E: class >2x\n")
+    f.write('\n\n')
+    
+    # print the percentage of programs in each of the above classes, for each number of instructions
+    for p in parameters:
+        df = pd.read_csv(data_dir + p + ".csv")
+        
+        df['ratios_gisel'] = df['LEANMLIR_opt_' + p] / df['LLVM_globalisel_' + p]
+        df['ratios_sdag'] = df['LEANMLIR_opt_' + p] / df['LLVM_selectiondag_' + p]
+        df['ratios_gisel_sdag'] = df['LLVM_globalisel_' + p] / df['LLVM_selectiondag_' + p]
+        df['ratios_gisel_class'] = df['ratios_gisel'].apply(lambda x: 'A' if x < 1 else 'B' if x == 1 else 'C' if x < 1.5 else 'D' if x < 2 else 'E')
+        df['ratios_sdag_class'] = df['ratios_sdag'].apply(lambda x: 'A' if x < 1 else 'B' if x == 1 else 'C' if x < 1.5 else 'D' if x < 2 else 'E')
+        df['ratios_gisel_sdag_class'] = df['ratios_gisel_sdag'].apply(lambda x: 'A' if x < 1 else 'B' if x == 1 else 'C' if x < 1.5 else 'D' if x < 2 else 'E')
+        
+        # max and min values
+        max_ratio_gisel = df["ratios_gisel"].max()
+        max_ratio_sdag = df["ratios_sdag"].max()
+        max_ratio_gisel_sdag = df["ratios_gisel_sdag"].max()
+        min_ratio_gisel = df["ratios_gisel"].min()
+        min_ratio_sdag = df["ratios_sdag"].min()
+        min_ratio_gisel_sdag = df["ratios_gisel_sdag"].min()
+        
+        if p == "tot_cycles": 
+            p = 'NumCycles'
+        else: 
+            p = 'NumInstr'
+        latex_command_max_gisel = f"\\newcommand{{\\MaxRatioLeanmlirVsGiselParam{p}}}{{{max_ratio_gisel:.2f}}}\n"
+        latex_command_max_sdag = f"\\newcommand{{\\MaxRatioLeanmlirVsSdagParam{p}}}{{{max_ratio_sdag:.2f}}}\n"
+        latex_command_max_gisel_sdag = f"\\newcommand{{\\MaxRatioGiselVsSdagParam{p}}}{{{max_ratio_gisel_sdag:.2f}}}\n"
+        latex_command_min_gisel = f"\\newcommand{{\\MinRatioLeanmlirVsGiselParam{p}}}{{{min_ratio_gisel:.2f}}}\n"
+        latex_command_min_sdag = f"\\newcommand{{\\MinRatioLeanmlirVsSdagParam{p}}}{{{min_ratio_sdag:.2f}}}\n"
+        latex_command_min_gisel_sdag = f"\\newcommand{{\\MinRatioGiselVsSdagParam{p}}}{{{min_ratio_gisel_sdag:.2f}}}\n"
+        
+        f.write(latex_command_max_gisel)
+        f.write(latex_command_max_sdag)
+        f.write(latex_command_min_gisel)
+        f.write(latex_command_min_sdag)
+        f.write(latex_command_max_gisel_sdag)
+        f.write(latex_command_min_gisel_sdag)
+        
+        
+        # calculate % of elements in each class 
+        df_grouped_gisel = df.groupby('instructions_number')['ratios_gisel_class'].value_counts(normalize=True) * 100
+        df_grouped_sdag = df.groupby('instructions_number')['ratios_sdag_class'].value_counts(normalize=True) * 100
+        df_grouped_gisel_sdag = df.groupby('instructions_number')['ratios_gisel_sdag_class'].value_counts(normalize=True) * 100
+        
+        
+        
+        # print a latex command for each percentage, specify in the name the class it belongs to 
+        # and the `instructions_number`
+        
+        df_grouped_gisel = df_grouped_gisel.reset_index()
+        df_grouped_sdag = df_grouped_sdag.reset_index()
+        df_grouped_gisel_sdag = df_grouped_gisel_sdag.reset_index()
+        
+        for _, row in df_grouped_gisel.iterrows(): 
+            c = row['ratios_gisel_class']
+            percentage = row['proportion']
+            instructions_number = num2words(row['instructions_number'])
+            latex_command = f"\\newcommand{{\\PercLeanmlirVsGiselParam{p}Class{c}Instr{instructions_number}}}{{{int(percentage)}\%}}\n"
+            f.write(latex_command)
+        for _, row in df_grouped_sdag.iterrows(): 
+            c = row['ratios_sdag_class']
+            percentage = row['proportion']
+            instructions_number = num2words(row['instructions_number'])
+            latex_command = f"\\newcommand{{\\PercLeanmlirVsSdagParam{p}Class{c}Instr{instructions_number}}}{{{int(percentage)}\%}}\n"
+            f.write(latex_command)
+            
+        for _, row in df_grouped_gisel_sdag.iterrows(): 
+            c = row['ratios_gisel_sdag_class']
+            percentage = row['proportion']
+            instructions_number = num2words(row['instructions_number'])
+            latex_command = f"\\newcommand{{\\PercGiselVsSdagParam{p}Class{c}Instr{instructions_number}}}{{{int(percentage)}\%}}\n"
+            f.write(latex_command)
+        
+        # geomean ratios and total geomeans
+        
+        geomeans_gisel = df.groupby('instructions_number')['ratios_gisel'].apply(
+            lambda x: np.exp(np.log(x).mean())
         )
-        latex_lines.append(cmd)
+        for instr_num, geomean_value in geomeans_gisel.items():
+            instructions_number = num2words(instr_num)
+            latex_command = f"\\newcommand{{\\GeomeanLeanmlirVsGiselParam{p}Instr{instructions_number}}}{{{geomean_value:.1f}}}\n"
+            f.write(latex_command)
+            
+        geomeans_sdag = df.groupby('instructions_number')['ratios_sdag'].apply(
+            lambda x: np.exp(np.log(x).mean())
+        )
+        for instr_num, geomean_value in geomeans_sdag.items():
+            instructions_number = num2words(instr_num)
+            latex_command = f"\\newcommand{{\\GeomeanLeanmlirVsSdagParam{p}Instr{instructions_number}}}{{{geomean_value:.1f}}}\n"
+            f.write(latex_command)
+        
+        # total geomeans
+        
+        geomean_gisel_tot = np.exp(np.log(df['ratios_gisel']).mean())
+        latex_command_gisel_geomean = f"\\newcommand{{\\GeomeanTotLeanmlirVsGisel{p}}}{{{geomean_gisel_tot:.1f}}}\n"
+        f.write(latex_command_gisel_geomean)
+        
+        geomean_gisel_tot_perc = (np.exp(np.log(df['ratios_gisel']).mean()) - 1) * 100
+        latex_command_gisel_geomean_perc = f"\\newcommand{{\\GeomeanTotLeanmlirVsGiselSlowDownPerc{p}}}{{{geomean_gisel_tot_perc:.1f}\%}}\n"
+        f.write(latex_command_gisel_geomean_perc)
+        
+        geomean_sdag_tot = np.exp(np.log(df['ratios_sdag']).mean())
+        latex_command_sdag_geomean = f"\\newcommand{{\\GeomeanTotLeanmlirVsSdag{p}}}{{{geomean_sdag_tot:.1f}}}\n"
+        f.write(latex_command_sdag_geomean)
+        
+        geomean_sdag_tot_perc = (np.exp(np.log(df['ratios_sdag']).mean()) - 1) * 100
+        latex_command_sdag_geomean_perc = f"\\newcommand{{\\GeomeanTotLeanmlirVsSdagSlowDownPerc{p}}}{{{geomean_sdag_tot_perc:.1f}\%}}\n"
+        f.write(latex_command_sdag_geomean_perc)
+        
+        
+    # print the percentage of programs that are identical, for each number of instructions
+    
+    df_similarity = pd.read_csv(data_dir + "similarity.csv")
+    
+    df_similarity_gisel = df_similarity.groupby('instructions_number')['is_eqv_LLVM_globalisel'].value_counts(normalize=True) * 100
+    df_similarity_sdag = df_similarity.groupby('instructions_number')['is_eqv_LLVM_selectiondag'].value_counts(normalize=True) * 100
+    
+    df_similarity_gisel = df_similarity_gisel.reset_index()
+    df_similarity_sdag = df_similarity_sdag.reset_index()
+    
+    for idx, row in df_similarity_gisel.iterrows(): 
+        if row['is_eqv_LLVM_globalisel']: 
+            percentage = row['proportion']
+            instructions_number = num2words(row['instructions_number'])
+            latex_command = f"\\newcommand{{\\PercIdenticalGiselInstr{instructions_number}}}{{{int(percentage)}\%}}\n"
+            f.write(latex_command)
+    for idx, row in df_similarity_sdag.iterrows(): 
+        if row['is_eqv_LLVM_selectiondag']: 
+            percentage = row['proportion']
+            instructions_number = num2words(row['instructions_number'])
+            latex_command = f"\\newcommand{{\\PercIdenticalSdagInstr{instructions_number}}}{{{int(percentage)}\%}}\n"
+            f.write(latex_command)
+    
+    # total similarity 
+    
+    tot_similarity_gisel_true = df_similarity['is_eqv_LLVM_globalisel'].sum()/len(df_similarity)*100
+    tot_similarity_sdag_true = df_similarity['is_eqv_LLVM_selectiondag'].sum()/len(df_similarity)*100
+    
+    latex_command_similarity_tot_gisel = f"\\newcommand{{\\PercIdenticalGiselTot}}{{{tot_similarity_gisel_true:.1f}\%}}\n"
+    f.write(latex_command_similarity_tot_gisel)
+    latex_command_similarity_tot_sdag = f"\\newcommand{{\\PercIdenticalSdagTot}}{{{tot_similarity_sdag_true:.1f}\%}}\n"
+    f.write(latex_command_similarity_tot_sdag)
+    f.close()
+    
+    
 
-    geomean_cmd = (
-        f"\\newcommand{{\\GeoMean"
-        f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}"
-        f"{clean_name(parameter)}}}{{{geomean_ratio:.2f}}}"
-    )
-    latex_lines.append(geomean_cmd)
+    
 
-    latex_file = os.path.join(plots_dir, "proportions.tex")
-    with open(latex_file, "a") as f:
-        for line in latex_lines:
-            f.write(line + "\n")
-
-def clean_name(s):
-    return ''.join([w.capitalize() for w in str(s).split('_')])
-
-def print_latex_similarity_command(selector1, selector2, parameter, percentage):
-    cmd = (
-        f"\\newcommand{{\\Similarity"
-        f"{clean_name(selector1.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}Vs{clean_name(selector2.replace('1', 'one').replace('2', 'two').replace('3', 'three').replace('4', 'four').replace('5', 'five'))}"
-        f"{clean_name(parameter)}}}{{{percentage:.2f}}}"
-    )
-    latex_file = os.path.join(plots_dir, "similarities.tex")
-    with open(latex_file, "a") as f:
-        f.write(cmd + "\n")
 
 def main():
     parser = argparse.ArgumentParser(
@@ -825,6 +971,7 @@ def main():
         "--parameters",
         nargs="+",
         choices=["tot_instructions", "tot_cycles", "tot_uops", "similarity", "all"],
+        default="all"
     )
 
     parser.add_argument(
@@ -832,13 +979,7 @@ def main():
         "--plot_type",
         nargs="+",
         choices=["scatter", "sorted", "stacked", "overhead", "violin", "all"],
-    )
-
-    parser.add_argument(
-        "-llvm",
-        "--llvm_opt",
-        help="Optimization level for LLVM.",
-        choices=["O3", "O2", "O1", "O0", "default"],
+        default="all"
     )
 
     args = parser.parse_args()
@@ -856,7 +997,6 @@ def main():
     )
 
     setup_benchmarking_directories()
-
     for parameter in params_to_evaluate:
         extract_data(LLVM_globalisel_results_DIR_PATH, "LLVM_globalisel", parameter)
         extract_data(LLVM_selectiondag_results_DIR_PATH, "LLVM_selectiondag", parameter)
@@ -895,6 +1035,9 @@ def main():
                 
                 # proportional_bar_plot(parameter, 'LLVM_globalisel', 'LLVM_selectiondag')
 
-
+    geomean_plot_tot_cycles()
+    equivalent_plot_perc()
+    create_latex_command(['tot_cycles', 'tot_instructions'], plots_dir + 'numerical_commands.tex')
+    
 if __name__ == "__main__":
     main()
