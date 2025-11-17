@@ -100,7 +100,7 @@ parameters_labels = {
 }
 
 selector_labels = {
-    "LEANMLIR_opt": "Lean-mlir-ISel",
+    "LEANMLIR_opt": "Lean-MLIRISel",
     "LLVM_globalisel_O1": "GlobalISel (O1)",
     "LLVM_globalisel_O2": "GlobalISel (O2)",
     "LLVM_globalisel_O3": "GlobalISel (O3)",
@@ -510,7 +510,8 @@ def violin_plot(parameter, selector1, selector2):
 
     plt.xlabel(f"#Instructions - LLVM IR")
     plt.ylabel(
-        f"{parameters_labels[parameter]},$\\frac{{\\text{{{selector_labels[selector1]}}}}}{{\\text{{{selector_labels[selector2]}}}}}$",
+        f"$\\frac{{\\text{{{parameters_labels[parameter]}{selector_labels[selector1]}}}}}{{\\text{{{parameters_labels[parameter]}{selector_labels[selector2]}}}}}$",
+        fontsize = 26,
         rotation="horizontal", horizontalalignment="left", y=1.05
     )
     
@@ -728,8 +729,12 @@ def proportional_bar_plot(parameter, selector1, selector2):
         .apply(lambda x: np.exp(np.log(x).mean()))
         .reset_index(name='average_ratio')
     )
+    
     print(selector2)
-    print(average_ratios_by_instruction)
+    print(parameter)
+    print(max(df['ratios']))
+
+
     width = 0.8
 
     plt.bar(
@@ -747,7 +752,8 @@ def proportional_bar_plot(parameter, selector1, selector2):
     plt.xlabel("#Instructions - LLVM IR")
     
     plt.ylabel(
-        f"$\\frac{{\\text{{{parameters_labels[parameter]},{selector_labels[selector1]}}}}}{{\\text{{{parameters_labels[parameter]},{selector_labels[selector2]}}}}}$",
+        f"$\\frac{{\\text{{{parameters_labels[parameter]},{selector_labels[selector1]}}}}}{{\\text{{{parameters_labels[parameter]}{selector_labels[selector2]}}}}}$",
+        fontsize=26,
         rotation="horizontal", horizontalalignment="left", y=1.08
     )
     
@@ -824,8 +830,6 @@ def create_latex_command(parameters, filename):
         min_ratio_gisel = df["ratios_gisel"].min()
         min_ratio_sdag = df["ratios_sdag"].min()
         min_ratio_gisel_sdag = df["ratios_gisel_sdag"].min()
-        
-        print(df[df['ratios_sdag']==df['ratios_sdag'].min()])
         
         if p == "tot_cycles": 
             p = 'NumCycles'
