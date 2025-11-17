@@ -565,7 +565,7 @@ inductive Term
     (a : Term) (b : Term) : Term
 | or (p1 p2 : Term) : Term
 | and (p1 p2 : Term) : Term
-| pvar (v : Nat) : Term
+-- | pvar (v : Nat) : Term
 | boolBinRel (k : BoolBinaryRelationKind)
     (a b : Term) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
@@ -643,7 +643,7 @@ def Term.width (t : Term) : WidthExpr :=
   | binRel _k w _a _b => w
   | or _p1 _p2 => WidthExpr.const 0
   | and _p1 _p2 => WidthExpr.const 0
-  | pvar _v => WidthExpr.const 0
+  -- | pvar _v => WidthExpr.const 0
   | boolBinRel _k _a _b => WidthExpr.const 0
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
@@ -678,7 +678,7 @@ def Term.tcard (t : Term) : Nat :=
   | binRel _k _w a b => max (Term.tcard a) (Term.tcard b)
   | or p1 p2 => max (Term.tcard p1) (Term.tcard p2)
   | and p1 p2 => max (Term.tcard p1) (Term.tcard p2)
-  | pvar _v => 0
+  -- | pvar _v => 0
   | boolBinRel _k a b => max (a.tcard) (b.tcard)
 
 def Term.bcard (t : Term) : Nat :=
@@ -701,7 +701,7 @@ def Term.bcard (t : Term) : Nat :=
   | binRel _k _w a b => max (Term.bcard a) (Term.bcard b)
   | or p1 p2 => max (Term.bcard p1) (Term.bcard p2)
   | and p1 p2 => max (Term.bcard p1) (Term.bcard p2)
-  | pvar _v => 0
+  -- | pvar _v => 0
   | boolBinRel _k a b => max (a.bcard) (b.bcard)
 
 inductive Predicate
