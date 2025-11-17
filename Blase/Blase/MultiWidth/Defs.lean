@@ -134,6 +134,7 @@ def Term.Ctx.cons {wcard : Nat} {tcard : Nat} (ctx : Term.Ctx wcard tcard)
 inductive TermKind (wcard : Nat) : Type
 | bool
 | bv (w : WidthExpr wcard)  : TermKind wcard
+| prop
 
 inductive Term {wcard tcard : Nat} (bcard : Nat)
   (tctx : Term.Ctx wcard tcard) : TermKind wcard → Type
@@ -237,6 +238,7 @@ def Term.Ctx.Env.cons_get_succ
 def TermKind.denote (wenv : WidthExpr.Env wcard) : TermKind wcard → Type
 | .bool => Bool
 | .bv w => BitVec (w.toNat wenv)
+| .prop => Prop
 
 def BoolExpr.toBool
     {tctx : Term.Ctx wcard tcard}
