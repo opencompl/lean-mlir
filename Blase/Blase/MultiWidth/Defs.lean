@@ -729,7 +729,7 @@ def Term.ofDepTerm {wcard tcard bcard : Nat}
   | .and p1 p2 => .and (Term.ofDepTerm p1) (Term.ofDepTerm p2)
   | .or p1 p2 => .or (Term.ofDepTerm p1) (Term.ofDepTerm p2)
   | .boolBinRel k a b => .boolBinRel k (Term.ofDepTerm a) (Term.ofDepTerm b)
-
+  | .pvar v => .pvar v
 
 @[simp]
 def Term.ofDep_var {wcard tcard : Nat} (bcard : Nat) (pcard : Nat)
