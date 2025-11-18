@@ -2285,4 +2285,36 @@ info: 'MultiWidth.Term.toBV_of_KInductionCircuits' depends on axioms: [propext, 
 -/
 #guard_msgs in #print axioms Term.toBV_of_KInductionCircuits
 
+-- | TODO: rename these namespaces.
+open ReflectVerif BvDecide Std Tactic BVDecide Frontend in
+theorem Term.toBV_of_KInductionCircuits'
+    {wcard tcard bcard pcard : Nat}
+    (P : Prop)
+    (tctx : Term.Ctx wcard tcard)
+    (p : MultiWidth.Term bcard pcard tctx .prop)
+    (pNondep : Nondep.Term)
+    (_hpNondep : pNondep = (.ofDepPredicate p))
+    (fsm : TermFSM wcard tcard bcard pcard pNondep)
+    (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep)
+    (n : Nat)
+    (circs : KInductionCircuits fsm.toFsmZext n)
+    (hCircs : circs.IsLawful)
+    (sCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
+    (hs : Circuit.verifyCircuit (circs.mkSafetyCircuit) sCert = true)
+    (indCert : Lean.Elab.Tactic.BVDecide.Frontend.LratCert)
+    (hind : Circuit.verifyCircuit (circs.mkIndHypCycleBreaking) indCert = true)
+    (wenv : WidthExpr.Env wcard)
+    (tenv : tctx.Env wenv)
+    (benv : Term.BoolEnv bcard)
+    (penv : Predicate.Env pcard)
+    (hp : p.toBV benv penv tenv = P) :
+    P := by
+  rw [← hp]
+  apply Term.toBV_of_KInductionCircuits <;> assumption
+
+/--
+info: 'MultiWidth.Term.toBV_of_KInductionCircuits'' depends on axioms: [propext, Classical.choice, Quot.sound]
+-/
+#guard_msgs in #print axioms Term.toBV_of_KInductionCircuits'
+
 end MultiWidth
