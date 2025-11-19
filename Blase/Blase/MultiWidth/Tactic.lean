@@ -1140,16 +1140,16 @@ def solve (gorig : MVarId) : SolverM Unit := do
 
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
     match stats with
-    | .safetyFailure i =>
+    | .safetyFailure _i =>
       let suspiciousVars ← collect.logSuspiciousFvars
       -- | Found precise counter-example to claimed predicate.
       if suspiciousVars.isEmpty then
-          throwError m!"MUSTCEX: Found exact counter-example for {pRawExpr}"
+          throwError m!"MUSTCEX: Found exact counter-example for '{pRawExpr}'"
         else
-          throwError m!"MAYCEX: Found possible counter-example for {pRawExpr}"
+          throwError m!"MAYCEX: Found possible counter-example for '{pRawExpr}'"
     | .exhaustedIterations _ =>
       let _ ← collect.logSuspiciousFvars
-      throwError m!"PROOFNOTFOUND: exhausted iterations for {pRawExpr}"
+      throwError m!"PROOFNOTFOUND: exhausted iterations for '{pRawExpr}'"
     | .provenByKIndCycleBreaking niters safetyCert indCert =>
       if (← read).verbose? then
         let _ ← collect.logSuspiciousFvars
