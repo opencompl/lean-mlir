@@ -4,6 +4,69 @@ namespace MultiWidthTests
 set_option Elab.async true
 set_option warn.sorry false
 
+namespace TestReflection
+open MultiWidth
+
+abbrev tctx1 : Term.Ctx (wcard := 2) (tcard := 2) := (Term.Ctx.empty (wcard := 2)) 
+  |>.cons (WidthExpr.var ⟨1, by omega⟩)
+  |>.cons (WidthExpr.var ⟨0, by omega⟩) 
+
+theorem tctx1_at_0 : tctx1 ⟨0, by omega⟩ = WidthExpr.var ⟨0, by omega⟩ := rfl
+theorem tctx1_at_1 : tctx1 ⟨1, by omega⟩ = WidthExpr.var ⟨1, by omega⟩ := rfl
+
+
+def xw : WidthExpr 1 := WidthExpr.var ⟨0, by omega⟩
+def xvar := @MultiWidth.Term.var (wcard := 2) (bcard := 0) (pcard := 0) (tcard := 2) (tctx := tctx1) (v := ⟨0, by omega⟩)
+
+def xw' := MultiWidth.Nondep.WidthExpr.var 0 
+def xvar' := MultiWidth.Nondep.Term.var 0 xw'
+
+/--
+info: MultiWidthTests.TestReflection.xvar : MultiWidth.Term 0 0 tctx1 (TermKind.bv (tctx1 ⟨0, ⋯⟩))
+-/
+#guard_msgs in #check xvar
+
+theorem xvar'_eq_ofDepTerm_xvar : xvar' = MultiWidth.Nondep.Term.ofDepTerm xvar := rfl
+
+def yvar := @MultiWidth.Term.var (wcard := 2) (bcard := 0) (pcard := 0) (tcard := 2) (tctx := tctx1) (v := ⟨1, by omega⟩)
+
+def yw : WidthExpr 1 := WidthExpr.var ⟨0, by omega⟩
+def yw' := MultiWidth.Nondep.WidthExpr.var 1 
+def yvar' := MultiWidth.Nondep.Term.var 1 yw'
+
+theorem yvar'_eq_ofDepTerm_yvar : yvar' = MultiWidth.Nondep.Term.ofDepTerm yvar := rfl
+
+
+def prop_xw_eq_xw := @MultiWidth.Term.binRel
+  (wcard := 2)
+  (bcard := 0)
+  (pcard := 0)
+  (tcard := 2)
+  (tctx := tctx1)
+  (k := MultiWidth.BinaryRelationKind.eq)
+  (w := _)
+  (a := xvar)
+  (b := xvar)
+
+theorem prop_eq (w : Nat) (x : BitVec w) : prop_xw_eq_xw.toBV
+  (benv := fun x => x.elim0)
+  (penv := fun x => x.elim0)
+  (wenv := fun x => w)
+  sorry = (x = x) := sorry
+
+/--
+info: MultiWidthTests.TestReflection.yvar : MultiWidth.Term 0 0 tctx1 (TermKind.bv (tctx1 ⟨1, ⋯⟩))
+-/
+#guard_msgs in #check yvar
+
+
+
+-- def yv : Term (wcard := 2) (tcard := 2) (bcard := 0) (pcard := 0) (tctx := tctx1) (.bv (WidthExpr.var ⟨1, by omega⟩)) := 
+--   MultiWidth.Term.var ⟨1, by omega⟩
+
+end TestReflection
+
+
 theorem add_eq_xor_add_mul_and_zext (x y : BitVec w) :
     x.zeroExtend (w + 1) + y.zeroExtend (w + 1) =
       (x ^^^ y).zeroExtend (w + 1) + (x &&& y).zeroExtend (w + 1) <<< 1 := by

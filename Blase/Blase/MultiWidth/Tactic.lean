@@ -1136,10 +1136,11 @@ def solve (gorig : MVarId) : SolverM Unit := do
       debugLog m!"PROVE: proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
         let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
+        debugCheck predNondepFsmExpr
         -- let fsmExpr := predNondepFsmExpr
         -- | TODO: refactor into fn.
         let fsmExpr ← mkAppM (``MultiWidth.TermFSM.toFsmZext) #[predNondepFsmExpr]
-        check fsmExpr
+        debugCheck fsmExpr
 
         let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
         let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niters)
@@ -1160,16 +1161,14 @@ def solve (gorig : MVarId) : SolverM Unit := do
         let indCertProof ←
           mkEqReflBoolNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
         debugLog m!"made induction cert = true proof..."
-        let pEqVal ← mkEqRefl pRawExpr  -- mkEqReflNativeDecideProof `pReflectEq (mkConst `Prop) pToProp pRawExpr
-        debugCheck pEqVal
         let prf ← mkAppM ``MultiWidth.Term.toBV_of_KInductionCircuits'
-          #[pRawExpr,
+          #[pRawExpr, -- P : Prop
             tctx,
-            pExpr,
-            pNondepExpr,
-            ← mkEqRefl pNondepExpr,
-            predNondepFsmExpr,
-            ← mkEqRefl predNondepFsmExpr,
+            pExpr, -- p
+            pNondepExpr, -- pNondep
+            ← mkEqRefl pNondepExpr, -- pNondep = .ofDepPredicate p
+            fsmExpr, -- TermFSM ...
+            ← mkEqRefl fsmExpr,
             toExpr niters,
             circsExpr,
             circsLawfulExpr,
@@ -1181,7 +1180,7 @@ def solve (gorig : MVarId) : SolverM Unit := do
             tenv,
             benv,
             penv,
-            pEqVal]
+            ← mkEqRefl pRawExpr]
         debugCheck prf
         let prf ←
           if (← read).debugFillFinalReflectionProofWithSorry then
