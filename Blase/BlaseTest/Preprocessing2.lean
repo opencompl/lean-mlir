@@ -43,17 +43,7 @@ info: fsm from MultiWidth.mkPredicateFSMNondep 2 2 MultiWidth.Nondep.Predicate.o
 ---
 info: fsm circuit size: 133
 ---
-error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.or
-  (MultiWidth.Nondep.Predicate.binRel
-    (MultiWidth.BinaryRelationKind.eq)
-    (MultiWidth.Nondep.WidthExpr.var 0)
-    (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
-    (MultiWidth.Nondep.Term.ofNat (MultiWidth.Nondep.WidthExpr.var 0) 42))
-  (MultiWidth.Nondep.Predicate.binRel
-    (MultiWidth.BinaryRelationKind.eq)
-    (MultiWidth.Nondep.WidthExpr.var 1)
-    (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 1))
-    (MultiWidth.Nondep.Term.ofNat (MultiWidth.Nondep.WidthExpr.var 1) 43))
+error: MUSTCEX: Found exact counter-example for 'x_1✝ = 42#v✝ ∨ x_2✝ = 43#w✝'
 -/
 #guard_msgs in theorem minimized :
     ∀ (v w : Nat) (x_1 : BitVec v) (x_2 : BitVec w), x_1 = 42#v ∨ x_2 = 43#w := by
