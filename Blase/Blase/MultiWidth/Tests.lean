@@ -98,7 +98,7 @@ def prop_xw_eq_xw := @MultiWidth.Term.binRel
   (a := xvar)
   (b := yvar)
 
-theorem ofDep_prop_eq : MultiWidth.Nondep.Term.ofDepPredicate prop_xw_eq_xw =
+theorem ofDep_prop_eq : MultiWidth.Nondep.Term.ofDepTerm prop_xw_eq_xw =
   MultiWidth.Nondep.Term.binRel .eq xw' xvar' yvar' := rfl
 
 theorem prop_eq (w : Nat) (x y: BitVec w) :

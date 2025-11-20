@@ -1136,9 +1136,9 @@ def solve (gorig : MVarId) : SolverM Unit := do
       let prf ← g.withContext <| do
         let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
         debugCheck predNondepFsmExpr
-        -- let fsmExpr := predNondepFsmExpr
+        let fsmExpr := predNondepFsmExpr
         -- | TODO: refactor into fn.
-        let fsmExpr ← mkAppM (``MultiWidth.TermFSM.toFsmZext) #[predNondepFsmExpr]
+        -- let fsmExpr ← mkAppM (``MultiWidth.TermFSM.toFsmZext) #[predNondepFsmExpr]
         debugCheck fsmExpr
 
         let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
