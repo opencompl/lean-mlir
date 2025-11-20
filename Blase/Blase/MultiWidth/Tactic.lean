@@ -35,6 +35,8 @@ structure Config where
   widthAbstraction : WidthAbstractionKind := .generalizeGeq 2
   /-- Make the final reflection proof as a 'sorry' for debugging. -/
   debugFillFinalReflectionProofWithSorry : Bool := false
+  /-- Debug print the SMT-LIB version -/
+  debugPrintSmtLib : Bool := false
 
 deriving DecidableEq, Repr
 
@@ -1063,18 +1065,18 @@ def Expr.mkPredicateFSMDep (_wcard _tcard _bcard _pcard : Nat) (_tctx : Expr) (p
   return out
 
 /--
-info: MultiWidth.mkPredicateFSMNondep (wcard tcard bcard pcard : ℕ) (p : Nondep.Term) : TermFSM wcard tcard bcard pcard p
+info: MultiWidth.mkTermFsmNondep (wcard tcard bcard pcard : ℕ) (p : Nondep.Term) : TermFSM wcard tcard bcard pcard p
 -/
-#guard_msgs in #check MultiWidth.mkPredicateFSMNondep
-def Expr.mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (pNondep : Expr) : SolverM Expr := do
-  let out ← mkAppM (``MultiWidth.mkPredicateFSMNondep) #[toExpr wcard, toExpr tcard, toExpr bcard, toExpr pcard, pNondep]
+#guard_msgs in #check mkTermFsmNondep
+def Expr.mkTermFsmNondep (wcard tcard bcard pcard : Nat) (pNondep : Expr) : SolverM Expr := do
+  let out ← mkAppM (``mkTermFsmNondep) #[toExpr wcard, toExpr tcard, toExpr bcard, toExpr pcard, pNondep]
   debugCheck out
   return out
 
 /--
 info: MultiWidth.Term.toBV_of_KInductionCircuits {wcard tcard bcard pcard : ℕ} (tctx : Term.Ctx wcard tcard)
   (p : Term bcard pcard tctx TermKind.prop) (pNondep : Nondep.Term) (_hpNondep : pNondep = Nondep.Term.ofDepTerm p)
-  (fsm : TermFSM wcard tcard bcard pcard pNondep) (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep)
+  (fsm : TermFSM wcard tcard bcard pcard pNondep) (_hfsm : fsm = mkTermFsmNondep wcard tcard bcard pcard pNondep)
   (n : ℕ) (circs : ReflectVerif.BvDecide.KInductionCircuits fsm.toFsmZext n) (hCircs : circs.IsLawful)
   (sCert : BVDecide.Frontend.LratCert) (hs : circs.mkSafetyCircuit.verifyCircuit sCert = true)
   (indCert : BVDecide.Frontend.LratCert) (hind : circs.mkIndHypCycleBreaking.verifyCircuit indCert = true)
@@ -1110,14 +1112,16 @@ def solve (gorig : MVarId) : SolverM Unit := do
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
     let benv ← collect.mkBenvExpr
     let penv ← collect.mkPenvExpr
+    if (← read).debugPrintSmtLib then
+      throwError (p.toSmtLib |>.toSexpr |> format)
     let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard collect.bcard collect.pcard tctx p
     let pNondepExpr := Lean.ToExpr.toExpr p
-    let fsm := MultiWidth.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard p
-    debugLog m!"fsm from MultiWidth.mkPredicateFSMNondep {collect.wcard} {collect.tcard} {repr p}."
-    debugLog m!"fsm circuit size: {fsm.toFsmZext.circuitSize}"
+    let termFsmNondep := mkTermFsmNondep collect.wcard collect.tcard collect.bcard collect.pcard p
+    debugLog m!"fsm from MultiWidth.mkTermFsmNondep {collect.wcard} {collect.tcard} {repr p}."
+    debugLog m!"fsm circuit size: {termFsmNondep.toFsmZext.circuitSize}"
     if ! (← isDefEq pRawExpr (← mkAppM ``Term.toBV #[benv, penv, tenv, pExpr])) then
       throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
-    let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
+    let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
     match stats with
     | .safetyFailure i =>
       let suspiciousVars ← collect.logSuspiciousFvars
@@ -1134,13 +1138,12 @@ def solve (gorig : MVarId) : SolverM Unit := do
         let _ ← collect.logSuspiciousFvars
       debugLog m!"PROVE: proven by KInduction with {niters} iterations"
       let prf ← g.withContext <| do
-        let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
-        debugCheck predNondepFsmExpr
-        let fsmExpr := predNondepFsmExpr
+        let termNondepFsmExpr ← Expr.mkTermFsmNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
+        debugCheck termNondepFsmExpr
+        -- let fsmExpr := termNondepFsmExpr
         -- | TODO: refactor into fn.
-        -- let fsmExpr ← mkAppM (``MultiWidth.TermFSM.toFsmZext) #[predNondepFsmExpr]
-        debugCheck fsmExpr
-
+        let fsmExpr ← mkAppM (``MultiWidth.TermFSM.toFsmZext) #[termNondepFsmExpr]
+        -- debugCheck fsmExpr
         let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
         let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niters)
         debugLog "making safety certs..."
@@ -1166,8 +1169,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
             pExpr, -- p
             pNondepExpr, -- pNondep
             ← mkEqRefl pNondepExpr, -- pNondep = .ofDepTerm p
-            fsmExpr, -- TermFSM ...
-            ← mkEqRefl fsmExpr,
+            termNondepFsmExpr, -- TermFSM ...
+            ← mkEqRefl termNondepFsmExpr,
             toExpr niters,
             circsExpr,
             circsLawfulExpr,
@@ -1233,6 +1236,10 @@ def evalBvMultiWidth : Tactic := fun
     g.withContext do
       solveEntrypoint g cfg
 | _ => throwUnsupportedSyntax
+
+
+macro "bv_multi_width_print_smt_lib" : tactic =>
+  `(tactic| bv_multi_width (config := cfg.getD { debugPrintSmtLib := true }))
 
 
 end Tactic

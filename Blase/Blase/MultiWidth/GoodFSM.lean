@@ -2220,7 +2220,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard pcard : Nat}
       exact hp
 
 /-- Negate the FSM so we can decide if zeroes. -/
-def mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (p : Nondep.Term) :
+def mkTermFsmNondep (wcard tcard bcard pcard : Nat) (p : Nondep.Term) :
   (TermFSM wcard tcard bcard pcard p) :=
     let fsm := mkTermFSM wcard tcard bcard pcard p
     { toFsmZext := ~~~ fsm.toFsmZext, width := fsm.width }
@@ -2228,7 +2228,7 @@ def mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (p : Nondep.Term) :
 def mkPredicateFSMDep {wcard tcard bcard pcard : Nat} {tctx : Term.Ctx wcard tcard}
     (p : Term bcard pcard tctx .prop) :
     TermFSM wcard tcard bcard pcard (.ofDepTerm p) :=
-  mkPredicateFSMNondep wcard tcard bcard pcard (.ofDepTerm p)
+  mkTermFsmNondep wcard tcard bcard pcard (.ofDepTerm p)
 
 -- section BitStream2BV
 
@@ -2253,7 +2253,7 @@ theorem Term.toBV_of_KInductionCircuits
     (pNondep : Nondep.Term)
     (_hpNondep : pNondep = (.ofDepTerm p))
     (fsm : TermFSM wcard tcard bcard pcard pNondep)
-    (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep)
+    (_hfsm : fsm = mkTermFsmNondep wcard tcard bcard pcard pNondep)
     (n : Nat)
     (circs : KInductionCircuits fsm.toFsmZext n)
     (hCircs : circs.IsLawful)
@@ -2272,7 +2272,7 @@ theorem Term.toBV_of_KInductionCircuits
     (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv benv penv)]
     -- (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv benv penv)]
   · subst _hpNondep _hfsm
-    simp [mkPredicateFSMNondep] at circs
+    simp [mkTermFsmNondep] at circs
     rw [ReflectVerif.BvDecide.KInductionCircuits.eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false'
         (circs := circs) (hCircs := hCircs) (envBitstream := (HTermEnv.mkFsmEnvOfTenv tenv benv penv))
         (hSafety := Circuit.eval_eq_false_of_verifyCircuit hs)
@@ -2297,7 +2297,7 @@ theorem Term.toBV_of_KInductionCircuits'
     (pNondep : Nondep.Term)
     (_hpNondep : pNondep = (.ofDepTerm p))
     (fsm : TermFSM wcard tcard bcard pcard pNondep)
-    (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep)
+    (_hfsm : fsm = mkTermFsmNondep wcard tcard bcard pcard pNondep)
     (n : Nat)
     (circs : KInductionCircuits fsm.toFsmZext n)
     (hCircs : circs.IsLawful)
