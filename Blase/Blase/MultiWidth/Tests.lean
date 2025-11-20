@@ -7,18 +7,19 @@ set_option warn.sorry false
 namespace TestReflection
 open MultiWidth
 
-abbrev tctx1 : Term.Ctx (wcard := 2) (tcard := 2) := (Term.Ctx.empty (wcard := 2)) 
-  |>.cons (WidthExpr.var ⟨1, by omega⟩)
-  |>.cons (WidthExpr.var ⟨0, by omega⟩) 
+abbrev tctx1 : Term.Ctx (wcard := 1) (tcard := 1) := (Term.Ctx.empty (wcard := 1))
+  -- |>.cons (WidthExpr.var ⟨1, by omega⟩)
+  |>.cons (WidthExpr.var ⟨0, by omega⟩)
 
 theorem tctx1_at_0 : tctx1 ⟨0, by omega⟩ = WidthExpr.var ⟨0, by omega⟩ := rfl
-theorem tctx1_at_1 : tctx1 ⟨1, by omega⟩ = WidthExpr.var ⟨1, by omega⟩ := rfl
+-- theorem tctx1_at_1 : tctx1 ⟨1, by omega⟩ = WidthExpr.var ⟨1, by omega⟩ := rfl
 
 
 def xw : WidthExpr 1 := WidthExpr.var ⟨0, by omega⟩
-def xvar := @MultiWidth.Term.var (wcard := 2) (bcard := 0) (pcard := 0) (tcard := 2) (tctx := tctx1) (v := ⟨0, by omega⟩)
+def xvar := @MultiWidth.Term.var (wcard := 1) (bcard := 0) (pcard := 0) (tcard := 1)
+  (tctx := tctx1) (v := ⟨0, by omega⟩)
 
-def xw' := MultiWidth.Nondep.WidthExpr.var 0 
+def xw' := MultiWidth.Nondep.WidthExpr.var 0
 def xvar' := MultiWidth.Nondep.Term.var 0 xw'
 
 /--
@@ -28,40 +29,31 @@ info: MultiWidthTests.TestReflection.xvar : MultiWidth.Term 0 0 tctx1 (TermKind.
 
 theorem xvar'_eq_ofDepTerm_xvar : xvar' = MultiWidth.Nondep.Term.ofDepTerm xvar := rfl
 
-def yvar := @MultiWidth.Term.var (wcard := 2) (bcard := 0) (pcard := 0) (tcard := 2) (tctx := tctx1) (v := ⟨1, by omega⟩)
-
-def yw : WidthExpr 1 := WidthExpr.var ⟨0, by omega⟩
-def yw' := MultiWidth.Nondep.WidthExpr.var 1 
-def yvar' := MultiWidth.Nondep.Term.var 1 yw'
-
-theorem yvar'_eq_ofDepTerm_yvar : yvar' = MultiWidth.Nondep.Term.ofDepTerm yvar := rfl
-
 
 def prop_xw_eq_xw := @MultiWidth.Term.binRel
-  (wcard := 2)
+  (wcard := 1)
   (bcard := 0)
   (pcard := 0)
-  (tcard := 2)
+  (tcard := 1)
   (tctx := tctx1)
   (k := MultiWidth.BinaryRelationKind.eq)
   (w := _)
   (a := xvar)
   (b := xvar)
 
-theorem prop_eq (w : Nat) (x : BitVec w) : prop_xw_eq_xw.toBV
-  (benv := fun x => x.elim0)
-  (penv := fun x => x.elim0)
-  (wenv := fun x => w)
-  sorry = (x = x) := sorry
+theorem prop_eq (w : Nat) (x : BitVec w) :
+  let wenv := WidthExpr.Env.empty |>.cons w
+  (prop_xw_eq_xw.toBV
+  (benv := fun v => v.elim0)
+  (penv := fun v => v.elim0)
+  (wenv := wenv)
+  (tctx := tctx1)
+  (tenv := Term.Ctx.Env.empty wenv (Term.Ctx.empty _)
+    |> Term.Ctx.Env.cons (wexpr := WidthExpr.var 0) (bv := x) (hw := rfl)
+  )) = (x = x) := rfl
 
-/--
-info: MultiWidthTests.TestReflection.yvar : MultiWidth.Term 0 0 tctx1 (TermKind.bv (tctx1 ⟨1, ⋯⟩))
--/
-#guard_msgs in #check yvar
 
-
-
--- def yv : Term (wcard := 2) (tcard := 2) (bcard := 0) (pcard := 0) (tctx := tctx1) (.bv (WidthExpr.var ⟨1, by omega⟩)) := 
+-- def yv : Term (wcard := 2) (tcard := 2) (bcard := 0) (pcard := 0) (tctx := tctx1) (.bv (WidthExpr.var ⟨1, by omega⟩)) :=
 --   MultiWidth.Term.var ⟨1, by omega⟩
 
 end TestReflection
@@ -425,4 +417,3 @@ theorem e_1 (x y : BitVec w) :
 theorem egZextMin (u v : Nat) (x : BitVec w) :
     u ≤ v → (x.zeroExtend v).zeroExtend u = x.zeroExtend u := by
   bv_multi_width (config := { widthAbstraction := .never })
-
