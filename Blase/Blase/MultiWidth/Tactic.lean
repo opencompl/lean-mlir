@@ -1140,20 +1140,20 @@ def solve (gorig : MVarId) : SolverM Unit := do
 
     let (stats, _log) ← FSM.decideIfZerosVerified fsm.toFsm (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
     match stats with
-    | .safetyFailure i =>
+    | .safetyFailure _i =>
       let suspiciousVars ← collect.logSuspiciousFvars
       -- | Found precise counter-example to claimed predicate.
       if suspiciousVars.isEmpty then
-          throwError m!"CEX: Found exact counter-example at iteration {i} for predicate {repr p}"
+          throwError m!"MUSTCEX: Found exact counter-example for '{pRawExpr}'"
         else
-          throwError m!"MAYCEX: Found possible counter-example at iteration {i} for predicate {repr p}"
+          throwError m!"MAYCEX: Found possible counter-example for '{pRawExpr}'"
     | .exhaustedIterations _ =>
       let _ ← collect.logSuspiciousFvars
-      throwError m!"PROOFNOTFOUND: exhausted iterations for predicate {repr p}"
+      throwError m!"PROOFNOTFOUND: exhausted iterations for '{pRawExpr}'"
     | .provenByKIndCycleBreaking niters safetyCert indCert =>
       if (← read).verbose? then
         let _ ← collect.logSuspiciousFvars
-      debugLog m!"PROVE: proven by KInduction with {niters} iterations"
+      debugLog m!"PROVE: proven {pRawExpr}"
       let prf ← g.withContext <| do
         -- let predFsmExpr ← Expr.mkPredicateFSMDep collect.wcard collect.tcard tctx pExpr
         let predNondepFsmExpr ← Expr.mkPredicateFSMNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
