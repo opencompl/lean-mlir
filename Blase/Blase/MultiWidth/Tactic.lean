@@ -35,8 +35,7 @@ structure Config where
   widthAbstraction : WidthAbstractionKind := .generalizeGeq 2
   /-- Make the final reflection proof as a 'sorry' for debugging. -/
   debugFillFinalReflectionProofWithSorry : Bool := false
-  /-- Make the certificate proof as a 'sorry' for debugging. -/
-  debugFillCertProofWithSorry : Bool := false
+
 deriving DecidableEq, Repr
 
 /-- Default user configuration -/
@@ -1055,7 +1054,7 @@ def Expr.KInductionCircuits.mkIndHypCycleBreaking (circs : Expr) : SolverM Expr 
 
 /--
 info: MultiWidth.mkPredicateFSMDep {wcard tcard bcard pcard : ℕ} {tctx : Term.Ctx wcard tcard}
-  (p : Term bcard pcard tctx TermKind.prop) : TermFSM wcard tcard bcard pcard (Nondep.Term.ofDepPredicate p)
+  (p : Term bcard pcard tctx TermKind.prop) : TermFSM wcard tcard bcard pcard (Nondep.Term.ofDepTerm p)
 -/
 #guard_msgs in #check MultiWidth.mkPredicateFSMDep
 def Expr.mkPredicateFSMDep (_wcard _tcard _bcard _pcard : Nat) (_tctx : Expr) (p : Expr) : SolverM Expr := do
@@ -1074,7 +1073,7 @@ def Expr.mkPredicateFSMNondep (wcard tcard bcard pcard : Nat) (pNondep : Expr) :
 
 /--
 info: MultiWidth.Term.toBV_of_KInductionCircuits {wcard tcard bcard pcard : ℕ} (tctx : Term.Ctx wcard tcard)
-  (p : Term bcard pcard tctx TermKind.prop) (pNondep : Nondep.Term) (_hpNondep : pNondep = Nondep.Term.ofDepPredicate p)
+  (p : Term bcard pcard tctx TermKind.prop) (pNondep : Nondep.Term) (_hpNondep : pNondep = Nondep.Term.ofDepTerm p)
   (fsm : TermFSM wcard tcard bcard pcard pNondep) (_hfsm : fsm = mkPredicateFSMNondep wcard tcard bcard pcard pNondep)
   (n : ℕ) (circs : ReflectVerif.BvDecide.KInductionCircuits fsm.toFsmZext n) (hCircs : circs.IsLawful)
   (sCert : BVDecide.Frontend.LratCert) (hs : circs.mkSafetyCircuit.verifyCircuit sCert = true)
@@ -1166,7 +1165,7 @@ def solve (gorig : MVarId) : SolverM Unit := do
             tctx,
             pExpr, -- p
             pNondepExpr, -- pNondep
-            ← mkEqRefl pNondepExpr, -- pNondep = .ofDepPredicate p
+            ← mkEqRefl pNondepExpr, -- pNondep = .ofDepTerm p
             fsmExpr, -- TermFSM ...
             ← mkEqRefl fsmExpr,
             toExpr niters,

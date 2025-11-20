@@ -819,23 +819,6 @@ def Term.bcard (t : Term) : Nat :=
   | pvar _v => 0
   | boolBinRel _k a b => max (a.bcard) (b.bcard)
 
-def Term.ofDepPredicate {wcard tcard bcard : Nat}
-    {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Term bcard pcard tctx .prop) : Term :=
-  match p with
-  | .pvar v => .pvar v
-  | .binWidthRel .eq wa wb => .binWidthRel .eq (.ofDep wa) (.ofDep wb)
-  | .binWidthRel .le wa wb => .binWidthRel .le (.ofDep wa) (.ofDep wb)
-  | .binRel .eq w a b => .binRel .eq (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
-  | .binRel .ne w a b => .binRel .ne (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
-  | .binRel .ult w a b => .binRel .ult (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
-  | .binRel .ule w a b => .binRel .ule (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
-  | .binRel .slt w a b => .binRel .slt (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
-  | .binRel .sle w a b => .binRel .sle (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
-  | .or p1 p2 => .or (.ofDepPredicate p1) (.ofDepPredicate p2)
-  | .and p1 p2 => .and (.ofDepPredicate p1) (.ofDepPredicate p2)
-  | .boolBinRel .eq a b => .boolBinRel .eq (Term.ofDepTerm a) (Term.ofDepTerm b)
-
-
 end Nondep
 
 section ToFSM
@@ -975,7 +958,7 @@ structure HPredFSMToBitStream {pcard : Nat}
   {tctx : Term.Ctx wcard tcard}
   {p : Term bcard pcard tctx .prop}
   (fsm : TermFSM wcard tcard bcard pcard
-    (.ofDepPredicate p)) : Prop where
+    (.ofDepTerm p)) : Prop where
   heq :
     ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
