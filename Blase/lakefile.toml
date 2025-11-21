@@ -13,7 +13,7 @@ name = "Blase"
 [[require]]
 name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4-nightly-testing"
-rev = "nightly-testing-2025-11-18"
+rev = "nightly-testing-2025-11-21"
 
 [[lean_lib]]
 name = "BlaseTest"
