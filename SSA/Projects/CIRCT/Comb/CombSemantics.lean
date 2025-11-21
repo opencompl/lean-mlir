@@ -76,7 +76,7 @@ def mux (x : BitVec w) (y : BitVec w) (cond : BitVec 1) : BitVec w :=
 
 /-- Variadic `or` operation with a list of bitvectors with width `w` as input -/
 def or {w : Nat} (l : List (BitVec w)) : BitVec w :=
-  List.foldr BitVec.or (0#w) l
+  List.foldr BitVec.or (BitVec.zero w) l
 
 /-- Returns boolean parity value of BitVec `x` -/
 def parity (x : BitVec w) : BitVec 1 :=

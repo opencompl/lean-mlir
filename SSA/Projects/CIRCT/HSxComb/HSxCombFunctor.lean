@@ -342,7 +342,7 @@ def mkReturn (Γ : Ctxt HSxComb.Ty) (opStx : MLIR.AST.Op 0) :
   else
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]
-    return ⟨.pure, [ty], Com.ret v⟩
+    return ⟨.pure, ty, Com.ret v⟩
 
 instance : MLIR.AST.TransformExpr (HSxComb) 0 where
   mkExpr := mkExpr
