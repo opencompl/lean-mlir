@@ -95,6 +95,42 @@ def register_wrapper
 /-- We define the module as a function with inputs and outputs.
   we use `Stream'` type, which does not contain `Option` values, because at this level
   of abstractions the content of streams has been concretized
+
+  Initial handshake program:
+
+    handshake.func @test_fork(%arg0: none, %arg1: none, ...) -> (none, none, none) {
+      %0:2 = fork [2] %arg0 : none
+      return %0#0, %0#1, %arg1 : none, none, none
+    }
+
+  Lowered program
+  (https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/28ef888954a8726d4858bed925ad067729207655)
+
+    module {
+    hw.module @test_fork(in %arg0 : i0, in %arg0_valid : i1, in %arg1 : i0, in %arg1_valid : i1, in %clk : !seq.clock, in %rst : i1, in %out0_ready : i1, in %out1_ready : i1, in %out2_ready : i1, out arg0_ready : i1, out arg1_ready : i1, out out0 : i0, out out0_valid : i1, out out1 : i0, out out1_valid : i1, out out2 : i0, out out2_valid : i1) {
+      %c0_i0 = hw.constant 0 : i0
+      %c0_i0_0 = hw.constant 0 : i0
+      %false = hw.constant false
+      %true = hw.constant true
+      %0 = comb.xor %12, %true : i1
+      %1 = comb.and %5, %0 : i1
+      %emitted_0 = seq.compreg sym @emitted_0 %1, %clk reset %rst, %false : i1
+      %2 = comb.xor %emitted_0, %true : i1
+      %3 = comb.and %2, %arg0_valid : i1
+      %4 = comb.and %out0_ready, %3 : i1
+      %5 = comb.or %4, %emitted_0 {sv.namehint = "done0"} : i1
+      %6 = comb.xor %12, %true : i1
+      %7 = comb.and %11, %6 : i1
+      %emitted_1 = seq.compreg sym @emitted_1 %7, %clk reset %rst, %false : i1
+      %8 = comb.xor %emitted_1, %true : i1
+      %9 = comb.and %8, %arg0_valid : i1
+      %10 = comb.and %out1_ready, %9 : i1
+      %11 = comb.or %10, %emitted_1 {sv.namehint = "done1"} : i1
+      %12 = comb.and %5, %11 {sv.namehint = "allDone"} : i1
+      hw.output %12, %out2_ready, %c0_i0, %3, %c0_i0_0, %9, %arg1, %arg1_valid : i1, i1, i0, i1, i0, i1, i0, i1
+      }
+    }
+
 -/
 def module
     (arg0 : Stream' (BitVec 1))
@@ -109,38 +145,15 @@ def module
   let c_0_i0_0 : Stream' (BitVec 0) := Stream'.const 0#0
   let False : Stream' (BitVec 1) := Stream'.const 0#1
   let True : Stream' (BitVec 1) := Stream'.const 1#1
-  --
-  let ssa0 : Stream' (BitVec 1) :=
-    Stream.corec
+
   sorry
 
 
--- handshake.func @test_fork(%arg0: none, %arg1: none, ...) -> (none, none, none) {
---   %0:2 = fork [2] %arg0 : none
---   return %0#0, %0#1, %arg1 : none, none, none
--- }
-
--- module {
---   hw.module @test_fork(in %arg0 : i0, in %arg0_valid : i1, in %arg1 : i0, in %arg1_valid : i1, in %clk : !seq.clock, in %rst : i1, in %out0_ready : i1, in %out1_ready : i1, in %out2_ready : i1, out arg0_ready : i1, out arg1_ready : i1, out out0 : i0, out out0_valid : i1, out out1 : i0, out out1_valid : i1, out out2 : i0, out out2_valid : i1) {
---     %c0_i0 = hw.constant 0 : i0
---     %c0_i0_0 = hw.constant 0 : i0
---     %false = hw.constant false
---     %true = hw.constant true
---     %0 = comb.xor %12, %true : i1
---     %1 = comb.and %5, %0 : i1
---     %emitted_0 = seq.compreg sym @emitted_0 %1, %clk reset %rst, %false : i1
---     %2 = comb.xor %emitted_0, %true : i1
---     %3 = comb.and %2, %arg0_valid : i1
---     %4 = comb.and %out0_ready, %3 : i1
---     %5 = comb.or %4, %emitted_0 {sv.namehint = "done0"} : i1
---     %6 = comb.xor %12, %true : i1
---     %7 = comb.and %11, %6 : i1
---     %emitted_1 = seq.compreg sym @emitted_1 %7, %clk reset %rst, %false : i1
---     %8 = comb.xor %emitted_1, %true : i1
---     %9 = comb.and %8, %arg0_valid : i1
---     %10 = comb.and %out1_ready, %9 : i1
---     %11 = comb.or %10, %emitted_1 {sv.namehint = "done1"} : i1
---     %12 = comb.and %5, %11 {sv.namehint = "allDone"} : i1
---     hw.output %12, %out2_ready, %c0_i0, %3, %c0_i0_0, %9, %arg1, %arg1_valid : i1, i1, i0, i1, i0, i1, i0, i1
---   }
--- }
+-- def register_wrapper
+--     (inputs : Stream' (Vector α m))
+--     -- we set the `init_regs` to `none` after using the values for the first iteration
+--     (init_regs : Vector α nfeed)
+--     -- inputs- and outputs- that are feedback-looped are canceled
+--     (update_fun : (Vector α m × Vector α nfeed) → (Vector α r × Vector α nfeed))
+--       : Stream' (Vector α r) :=
+--   /-
