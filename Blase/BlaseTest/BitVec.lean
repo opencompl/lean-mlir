@@ -15,20 +15,7 @@ theorem width1_understood (x y : BitVec 1) : x + y = x ^^^ y := by
 
 
 /--
-error: CEX: Found exact counter-example at iteration 5 for predicate MultiWidth.Nondep.Predicate.binRel
-  (MultiWidth.BinaryRelationKind.eq)
-  (MultiWidth.Nondep.WidthExpr.var 0)
-  (MultiWidth.Nondep.Term.shiftl
-    (MultiWidth.Nondep.WidthExpr.var 0)
-    (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
-    5)
-  (MultiWidth.Nondep.Term.shiftl
-    (MultiWidth.Nondep.WidthExpr.var 0)
-    (MultiWidth.Nondep.Term.shiftl
-      (MultiWidth.Nondep.WidthExpr.var 0)
-      (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
-      3)
-    3)
+error: CEX: Found exact counter-example at iteration 5 for predicate 'x <<< 5 = x <<< 3 <<< 3'
 -/
 #guard_msgs in theorem shiftl2 {v : Nat} (x : BitVec v) :
     x <<< 5 = x <<< 3 <<< 3 := by
