@@ -1127,12 +1127,12 @@ def solve (gorig : MVarId) : SolverM Unit := do
       let suspiciousVars ← collect.logSuspiciousFvars
       -- | Found precise counter-example to claimed predicate.
       if suspiciousVars.isEmpty then
-          throwError m!"CEX: Found exact counter-example at iteration {i} for predicate {repr p}"
+          throwError m!"CEX: Found exact counter-example at iteration {i} for predicate '{pRawExpr}'"
         else
-          throwError m!"MAYCEX: Found possible counter-example at iteration {i} for predicate {repr p}"
+          throwError m!"MAYCEX: Found possible counter-example at iteration {i} for predicate '{pRawExpr}'"
     | .exhaustedIterations _ =>
       let _ ← collect.logSuspiciousFvars
-      throwError m!"PROOFNOTFOUND: exhausted iterations for predicate {repr p}"
+      throwError m!"PROOFNOTFOUND: exhausted iterations for predicate '{pRawExpr}'"
     | .provenByKIndCycleBreaking niters safetyCert indCert =>
       if (← read).verbose? then
         let _ ← collect.logSuspiciousFvars
