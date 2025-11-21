@@ -21,7 +21,6 @@ and x-many outputs that are re-fed as inputs to the function (inputs, inputs fro
 outputs to be fed-back)
 -/
 
-
 /--
   We define a register wrapper to describe the behaviour of components with feedback loops.
   We expect the feedback loop to satisfy some laws that will be helpful in proofs.
@@ -93,7 +92,10 @@ def register_wrapper
   Stream'.corec f g (inputs, init_regs, none)
 
 
-/-- We define the module as a function with inputs and outputs -/
+/-- We define the module as a function with inputs and outputs.
+  we use `Stream'` type, which does not contain `Option` values, because at this level
+  of abstractions the content of streams has been concretized
+-/
 def module
     (arg0 : Stream' (BitVec 1))
     (arg0_valid : Stream' (BitVec 1))
@@ -103,8 +105,6 @@ def module
     (out0_ready : Stream' (BitVec 1))
     (out1_ready : Stream' (BitVec 1))
     (out2_ready : Stream' (BitVec 1)) : out_struct :=
-  -- we use `Stream'`, which does not contain `Option` values, because at this level
-  -- of abstractions the content of streams has been concretized
   let c_0_i0 : Stream' (BitVec 0) := Stream'.const 0#0
   let c_0_i0_0 : Stream' (BitVec 0) := Stream'.const 0#0
   let False : Stream' (BitVec 1) := Stream'.const 0#1
