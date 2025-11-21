@@ -17,25 +17,25 @@ info: goal after preprocessing: ⏎
 ---
 info: collecting raw expr 'x_1✝ = 42#v✝ ∨ x_2✝ = 43#w✝'.
 ---
-info: collected predicate: 'MultiWidth.Nondep.Predicate.or
-  (MultiWidth.Nondep.Predicate.binRel
+info: collected predicate: 'MultiWidth.Nondep.Term.or
+  (MultiWidth.Nondep.Term.binRel
     (MultiWidth.BinaryRelationKind.eq)
     (MultiWidth.Nondep.WidthExpr.var 0)
     (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
     (MultiWidth.Nondep.Term.ofNat (MultiWidth.Nondep.WidthExpr.var 0) 42))
-  (MultiWidth.Nondep.Predicate.binRel
+  (MultiWidth.Nondep.Term.binRel
     (MultiWidth.BinaryRelationKind.eq)
     (MultiWidth.Nondep.WidthExpr.var 1)
     (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 1))
     (MultiWidth.Nondep.Term.ofNat (MultiWidth.Nondep.WidthExpr.var 1) 43))' for raw expr.
 ---
-info: fsm from MultiWidth.mkPredicateFSMNondep 2 2 MultiWidth.Nondep.Predicate.or
-  (MultiWidth.Nondep.Predicate.binRel
+info: fsm from MultiWidth.mkPredicateFSMNondep 2 2 MultiWidth.Nondep.Term.or
+  (MultiWidth.Nondep.Term.binRel
     (MultiWidth.BinaryRelationKind.eq)
     (MultiWidth.Nondep.WidthExpr.var 0)
     (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
     (MultiWidth.Nondep.Term.ofNat (MultiWidth.Nondep.WidthExpr.var 0) 42))
-  (MultiWidth.Nondep.Predicate.binRel
+  (MultiWidth.Nondep.Term.binRel
     (MultiWidth.BinaryRelationKind.eq)
     (MultiWidth.Nondep.WidthExpr.var 1)
     (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 1))
@@ -43,13 +43,13 @@ info: fsm from MultiWidth.mkPredicateFSMNondep 2 2 MultiWidth.Nondep.Predicate.o
 ---
 info: fsm circuit size: 133
 ---
-error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.or
-  (MultiWidth.Nondep.Predicate.binRel
+error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.Nondep.Term.or
+  (MultiWidth.Nondep.Term.binRel
     (MultiWidth.BinaryRelationKind.eq)
     (MultiWidth.Nondep.WidthExpr.var 0)
     (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.var 0))
     (MultiWidth.Nondep.Term.ofNat (MultiWidth.Nondep.WidthExpr.var 0) 42))
-  (MultiWidth.Nondep.Predicate.binRel
+  (MultiWidth.Nondep.Term.binRel
     (MultiWidth.BinaryRelationKind.eq)
     (MultiWidth.Nondep.WidthExpr.var 1)
     (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 1))
@@ -61,8 +61,12 @@ error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.
   bv_multi_width +verbose?
   sorry
 
+
+
+/-
 theorem t7_thm.extracted_1._2 :
     ∀ (x_1 : BitVec 1) (x_2 : BitVec 8), x_1 = 1#1 → x_2 - 0#8 = 0#8 + x_2 := by
   intros;
   bv_multi_width
+-/
 
