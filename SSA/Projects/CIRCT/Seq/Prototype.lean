@@ -15,8 +15,6 @@ def compRegTok (input : Stream (BitVec 1)) (initialValue: BitVec 1) : Stream (Bi
   match init with
   | some initVal  => (initVal, input.tail, input.head, none)
   | _ => (store, input.tail, input.head, none)
-
-
 def compRegBv64 (input : Stream (BitVec 64)) (initialValue: BitVec 64) : Stream (BitVec 64) :=
   Stream.corec (β := Stream (BitVec 64) × Option (BitVec 64) × Option (BitVec 64))
     (input, none,  some initialValue) fun (input, store, init) =>
