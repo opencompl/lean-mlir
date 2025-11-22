@@ -92,6 +92,15 @@ def register_wrapper
   Stream'.corec f g (inputs, init_regs, none)
 
 
+/--
+  We define an isomorphism from two streams `a`, `b` to a stream of their product BitVec 1 × BitVec 1.
+  With this isomorphism we map the single streams that define the inputs of the hardware module to
+  a unique streams, where each element is composed by the single streams.
+-/
+def iso (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
+    fun n =>
+      {toArray := [a n, b n].toArray, size_toArray := by simp}
+
 /-- We define the module as a function with inputs and outputs.
   we use `Stream'` type, which does not contain `Option` values, because at this level
   of abstractions the content of streams has been concretized
@@ -145,7 +154,11 @@ def module
   let c_0_i0_0 : Stream' (BitVec 0) := Stream'.const 0#0
   let False : Stream' (BitVec 1) := Stream'.const 0#1
   let True : Stream' (BitVec 1) := Stream'.const 1#1
-
+  let inputs := iso arg0 True
+  let xor := register_wrapper
+                (inputs := inputs)
+                (init_regs := sorry)
+                (update_fun := BitVec.xor)
   sorry
 
 
