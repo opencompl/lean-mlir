@@ -5,6 +5,7 @@ import Blase.MultiWidth.Preprocessing
 import Blase.KInduction.KInduction
 import Blase.AutoStructs.FormulaToAuto
 import Blase.ReflectMap
+import Blase.Fast.Aiger
 
 initialize Lean.registerTraceClass `Bits.MultiWidth
 
@@ -37,7 +38,8 @@ structure Config where
   debugFillFinalReflectionProofWithSorry : Bool := false
   /-- Debug print the SMT-LIB version -/
   debugPrintSmtLib : Bool := false
-
+  /-- Dump the FSM to an Aiger file. -/
+  debugDumpAiger: Option String := none
 deriving DecidableEq, Repr
 
 /-- Default user configuration -/
@@ -1122,6 +1124,13 @@ def solve (gorig : MVarId) : SolverM Unit := do
     if ! (← isDefEq pRawExpr (← mkAppM ``Term.toBV #[benv, penv, tenv, pExpr])) then
       throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
     let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
+    if let some filename := (← read).debugDumpAiger then
+      let fn := System.mkFilePath [filename]
+      let handle ← IO.FS.Handle.mk fn IO.FS.Mode.write
+      let stream := IO.FS.Stream.ofHandle handle
+      termFsmNondep.toFsmZext.toAiger.toAagFile stream
+
+    let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
     match stats with
     | .safetyFailure i =>
       let suspiciousVars ← collect.logSuspiciousFvars
@@ -1136,7 +1145,7 @@ def solve (gorig : MVarId) : SolverM Unit := do
     | .provenByKIndCycleBreaking niters safetyCert indCert =>
       if (← read).verbose? then
         let _ ← collect.logSuspiciousFvars
-      debugLog m!"PROVE: proven by KInduction with {niters} iterations"
+      debugLog m!"PROVE: proven {pRawExpr}"
       let prf ← g.withContext <| do
         let termNondepFsmExpr ← Expr.mkTermFsmNondep collect.wcard collect.tcard collect.bcard collect.pcard pNondepExpr
         debugCheck termNondepFsmExpr

@@ -147,6 +147,7 @@ theorem abstract_prop {w : Nat} (p : Prop) (x : BitVec w) : p ∨ (x = x) := by
   -- | check that prop is abstracted.
   bv_multi_width
 
+
 /-- error: CEX: Found exact counter-example at iteration 0 for predicate 'x✝ = x✝ + 1#w' -/
 #guard_msgs in theorem fail_prop_check_warn : ∀ (x : BitVec w), x = x + 1  := by
   -- | check that prop is abstracted.

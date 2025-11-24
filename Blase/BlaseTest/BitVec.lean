@@ -2,7 +2,7 @@ import Blase
 open BitVec
 set_option warn.sorry false
 
-theorem setWidth_eq_zext (x : BitVec v) : x.zeroExtend w = x.setWidth w := by 
+theorem setWidth_eq_zext (x : BitVec v) : x.zeroExtend w = x.setWidth w := by
   bv_multi_width
 
 theorem shiftl1 {v : Nat} (x : BitVec v) :
