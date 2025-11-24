@@ -14,7 +14,9 @@ theorem width1_understood (x y : BitVec 1) : x + y = x ^^^ y := by
   bv_multi_width
 
 
-/-- error: MUSTCEX: Found exact counter-example for 'x <<< 5 = x <<< 3 <<< 3' -/
+/--
+error: CEX: Found exact counter-example at iteration 5 for predicate 'x <<< 5 = x <<< 3 <<< 3'
+-/
 #guard_msgs in theorem shiftl2 {v : Nat} (x : BitVec v) :
     x <<< 5 = x <<< 3 <<< 3 := by
   bv_multi_width
