@@ -182,9 +182,17 @@ inductive TermKind (wcard : Nat) : Type
 | bool
 | bv (w : WidthExpr wcard)  : TermKind wcard
 | prop
+| nat
+| int
 
 inductive Term {wcard tcard : Nat} (bcard : Nat) (pcard : Nat)
   (tctx : Term.Ctx wcard tcard) : TermKind wcard → Type
+-- | varNat (v : Fin tcard) : Term bcard pcard tctx .nat
+-- | varInt (v : Fin tcard) : Term bcard pcard tctx .int
+-- | ofNat (n : Term bcard pcard tctx .nat) (w : WidthExpr wcard) : Term bcard pcard tctx (.bv w)
+-- | ofInt (n : Term bcard pcard tctx .int) (w : WidthExpr wcard) : Term bcard pcard tctx (.bv w)
+-- | toNat (w : WidthExpr wcard) (bv : Term bcard pcard tctx (.bv w)) : Term bcard pcard tctx .nat
+-- | toInt (w : WidthExpr wcard) (bv : Term bcard pcard tctx (.bv w)) : Term bcard pcard tctx .int
 /-- A bitvector built from a natural number. -/
 | ofNat (w : WidthExpr wcard) (n : Nat) : Term bcard pcard tctx (.bv w)
 /-- a variable of a given width -/
@@ -223,6 +231,12 @@ inductive Term {wcard tcard : Nat} (bcard : Nat) (pcard : Nat)
 | and (p1 p2 : Term bcard pcard tctx (.prop)) : Term bcard pcard tctx (.prop)
 | or (p1 p2 : Term bcard pcard tctx (.prop)) : Term bcard pcard tctx (.prop)
 | pvar (v : Fin pcard) : Term bcard pcard tctx (.prop) -- TODO: we need 'pvar' too.
+| cast (heq : Term bcard pcard tctx (.bv w1)) -- a cast 
+       (w1 w2 : WidthExpr wcard)
+       (bv : Term bcard pcard tctx (.bv w1)) :
+       Term bcard pcard tctx (.bv w2)
+| propOfBool (b : Term bcard pcard tctx .bool) : Term bcard pcard tctx (.prop)
+| boolOfPropDecide (p : Term bcard pcard tctx (.prop)) : Term bcard pcard tctx .bool
 | boolBinRel
   (k : BoolBinaryRelationKind)
   (a b : Term bcard pcard tctx .bool) :
