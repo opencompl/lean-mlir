@@ -1502,7 +1502,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     obtain htenv_term := htenv.heq_term
     obtain htenv_width := htenv.heq_width
     have hwgood :=
-      IsGoodNatFSM_mkWidthFSM (wcard := wcard) (tcard := tcard) (bcard := bcard) (pcard := pcard) wold
+      IsGoodNatFSM_mkWidthFSM (wcard := wcard) (tcard := tcard) (bcard := bcard) (ncard := ncard) (icard := icard) (pcard := pcard) wold
     simp [mkTermFSM, Nondep.Term.ofDepTerm]
     rw [hwgood.heq (henv := htenv.toHWidthEnv)]
     ext i
@@ -1554,11 +1554,11 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
       omega
   case zext wold' a  =>
     constructor
-    intros wenv benv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv
     simp only [Nondep.Term.ofDepTerm, mkTermFSM, Term.toBV_zext, BitVec.truncate_eq_setWidth]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
-    let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold'
-    let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold
+    let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold'
+    let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold
     rw [fsmZext_eval_eq (htenv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (tenv := tenv)
       (wnew := wold) (ht := ha) (hwnew := hwold)]
     simp
@@ -1566,11 +1566,11 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     simp
   case setWidth wold' a  =>
     constructor
-    intros wenv benv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv
     simp only [Nondep.Term.ofDepTerm, mkTermFSM, Term.toBV_setWidth, BitVec.truncate_eq_setWidth]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
-    let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold'
-    let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold
+    let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold'
+    let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold
     rw [fsmZext_eval_eq (htenv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (tenv := tenv)
       (wnew := wold) (ht := ha) (hwnew := hwold)]
     simp
@@ -1582,9 +1582,9 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
   -- Maybe rename to wout / win.
   case sext wold' a =>
     constructor
-    intros wenv benv penv tenv fsmEnv htenv
-    let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold
-    let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold'
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv
+    let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold
+    let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold'
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     -- | TODO: why does this not unify?
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
@@ -1595,7 +1595,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     simp
   case band a b  =>
     constructor
-    intros wenv benv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
@@ -1605,7 +1605,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     rcases i with rfl | i <;> simp
   case bor a b =>
     constructor
-    intros wenv benv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
@@ -1615,7 +1615,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     rcases i with rfl | i <;> simp
   case bxor a b =>
     constructor
-    intros wenv benv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
@@ -1624,20 +1624,20 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     ext i
     rcases i with rfl | i <;> simp
   case bnot a =>
-    let hw := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold
+    let hw := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     constructor
-    intros wenv benv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
     ext i
     simp [Term.toBV]
     rw [hw.heq (henv := htenv.toHWidthEnv)]
   case shiftl k a =>
-    let hw := IsGoodNatFSM_mkWidthFSM tcard bcard (pcard := pcard) wold
+    let hw := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     constructor
-    intros wenv benv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
     rw [hw.heq (henv := htenv.toHWidthEnv)]
@@ -1654,10 +1654,10 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     · simp [hk]
   case bvOfBool b =>
     constructor
-    intros wenv benv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have hb := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
-    have hw := IsGoodNatFSM_mkWidthFSM tcard bcard (wcard := wcard) (pcard := pcard) (.const 1)
+    have hw := IsGoodNatFSM_mkWidthFSM (wcard := wcard) tcard bcard ncard icard (pcard := pcard) (.const 1)
     simp at hw
     ext i
     simp
@@ -1809,7 +1809,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
   cases p
   case pvar v =>
     constructor
-    intros wenv benv penv tenv fsmEnv htenv hpenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
     rw [Nondep.Term.ofDepTerm]
     simp [mkTermFSM, Term.toBV]
     obtain ⟨hpenv⟩ := hpenv
@@ -1820,7 +1820,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
     case eq =>
       -- | TODO: refactor into separate toplevel lemma
       constructor
-      intros wenv benv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
       rw [Nondep.Term.ofDepTerm]
       simp
       rw [mkTermFSM]
@@ -1848,7 +1848,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
     case le =>
       -- | TODO: refactor into separate toplevel lemma
       constructor
-      intros wenv benv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
       rw [Nondep.Term.ofDepTerm]
       simp [mkTermFSM]
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
@@ -1877,7 +1877,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
     case eq =>
       -- | TODO: refactor into separate toplevel lemma
       constructor
-      intros wenv benv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
       rw [Nondep.Term.ofDepTerm]
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       -- fsmTermEqProof starts here.
@@ -1908,7 +1908,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
     case ne =>
       -- | TODO: extract proof.
       constructor
-      intros wenv benv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
       rw [Nondep.Term.ofDepTerm]
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       -- fsmTermEqProof starts here.
@@ -1948,7 +1948,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
         contradiction
     case ult =>
       constructor
-      intros wenv benv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
       rw [Nondep.Term.ofDepTerm]
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       have hw := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard pcard w
@@ -2003,7 +2003,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
         exact h
     case ule =>
       constructor
-      intros wenv benv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
       rw [Nondep.Term.ofDepTerm]
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       have hw := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard pcard w
@@ -2048,7 +2048,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
         exact h
     case slt =>
       constructor
-      intros wenv benv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       rw [Nondep.Term.ofDepTerm]
       have hwfsm := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard pcard w
@@ -2095,7 +2095,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
         exact h
     case sle =>
       constructor
-      intros wenv benv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       rw [Nondep.Term.ofDepTerm]
       have hwfsm := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard pcard w
@@ -2141,7 +2141,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
         exact h
   case or p q =>
     constructor
-    intros wenv benv penv tenv fsmEnv htenv hpenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
     -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
     -- simp [Term.toBV]
     rw [Nondep.Term.ofDepTerm]
@@ -2196,7 +2196,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
     have hq := isGoodPredicateFSM_mkPredicateFSMAux (pcard := pcard) (tctx := tctx) q
     -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
     rw [Nondep.Term.ofDepTerm]
-    intros wenv benv penv tenv fsmEnv htenv hpenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
     simp [Term.toBV]
     simp [mkTermFSM]
     rw [hp.heq (htenv := htenv) (hpenv := hpenv)]
@@ -2219,7 +2219,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
 
   case boolBinRel k a b =>
     constructor
-    intros wenv benv penv tenv fsmEnv htenv hpenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
     rw [Nondep.Term.ofDepTerm]
     have ha := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     have hb := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
@@ -2281,16 +2281,18 @@ theorem Term.toBV_of_KInductionCircuits
     (penv : Predicate.Env pcard)
     (tenv : tctx.Env wenv)
     (benv : Term.BoolEnv bcard)
+    (nenv : Term.NatEnv ncard)
+    (ienv : Term.IntEnv icard)
     :
     p.toBV benv nenv ienv penv tenv  := by
   have hGoodPredicateFSM := isGoodPredicateFSM_mkPredicateFSMAux p
   rw [hGoodPredicateFSM.heq (tenv := tenv)
-    (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv benv penv)]
+    (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv benv nenv ienv penv)]
     -- (fsmEnv := HTermEnv.mkFsmEnvOfTenv tenv benv penv)]
   · subst _hpNondep _hfsm
     simp [mkTermFsmNondep] at circs
     rw [ReflectVerif.BvDecide.KInductionCircuits.eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false'
-        (circs := circs) (hCircs := hCircs) (envBitstream := (HTermEnv.mkFsmEnvOfTenv tenv benv penv))
+        (circs := circs) (hCircs := hCircs) (envBitstream := (HTermEnv.mkFsmEnvOfTenv tenv benv nenv ienv penv))
         (hSafety := Circuit.eval_eq_false_of_verifyCircuit hs)
         (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind)]
   · simp
@@ -2324,6 +2326,8 @@ theorem Term.toBV_of_KInductionCircuits'
     (wenv : WidthExpr.Env wcard)
     (tenv : tctx.Env wenv)
     (benv : Term.BoolEnv bcard)
+    (nenv : Term.NatEnv ncard)
+    (ienv : Term.IntEnv icard)
     (penv : Predicate.Env pcard)
     (hp : p.toBV benv nenv ienv penv tenv = P) :
     P := by

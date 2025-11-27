@@ -233,7 +233,7 @@ inductive Term {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pc
 | and (p1 p2 : Term bcard ncard icard pcard tctx (.prop)) : Term bcard ncard icard pcard tctx (.prop)
 | or (p1 p2 : Term bcard ncard icard pcard tctx (.prop)) : Term bcard ncard icard pcard tctx (.prop)
 | pvar (v : Fin pcard) : Term bcard ncard icard pcard tctx (.prop) -- TODO: we need 'pvar' too.
--- | cast (heq : Term bcard ncard icard pcard tctx (.bv w1)) -- a cast 
+-- | cast (heq : Term bcard ncard icard pcard tctx (.bv w1)) -- a cast
 --        (w1 w2 : WidthExpr wcard)
 --        (bv : Term bcard ncard icard pcard tctx (.bv w1)) :
 --        Term bcard ncard icard pcard tctx (.bv w2)
@@ -987,7 +987,11 @@ structure HTermFSMToBitStream {w : WidthExpr wcard}
   {t : Term bcard ncard icard pcard tctx (.bv w)}
   (fsm : TermFSM wcard tcard bcard ncard icard pcard (.ofDepTerm t)) : Prop where
   heq :
-    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
+    ∀ {wenv : WidthExpr.Env wcard}
+      (benv : Term.BoolEnv bcard)
+      (nenv : Term.NatEnv ncard)
+      (ienv : Term.IntEnv icard)
+      (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard ncard icard pcard → BitStream),
       (henv : HTermEnv fsmEnv tenv benv) →
         fsm.toFsmZext.eval fsmEnv =
