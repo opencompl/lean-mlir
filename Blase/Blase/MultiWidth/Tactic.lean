@@ -489,6 +489,36 @@ def CollectState.mkBenvExpr (reader : CollectState) : SolverM Expr := do
     (mkBoolEnvEmpty)
     (mkBoolEnvCons) (reader.boolToIx.toArrayAsc.reverse)
 
+def CollectState.mkNatEnvEmpty : SolverM Expr := do
+  let out := mkAppN (mkConst ``MultiWidth.Term.NatEnv.empty) #[]
+  debugCheck out
+  return out
+
+def CollectState.mkNatEnvCons (nenv : Expr) (n : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.Term.NatEnv.cons) #[nenv, n]
+  debugCheck out
+  return out
+
+def CollectState.mkNenvExpr (reader : CollectState) : SolverM Expr := do
+  CollectState.mkEnvExpr
+    (mkNatEnvEmpty)
+    (mkNatEnvCons) (reader.boolToIx.toArrayAsc.reverse)
+
+def CollectState.mkIntEnvEmpty : SolverM Expr := do
+  let out := mkAppN (mkConst ``MultiWidth.Term.IntEnv.empty) #[]
+  debugCheck out
+  return out
+
+def CollectState.mkIntEnvCons (ienv : Expr) (i : Expr) : SolverM Expr := do
+  let out ← mkAppM (``MultiWidth.Term.IntEnv.cons) #[ienv, i]
+  debugCheck out
+  return out
+
+def CollectState.mkIenvExpr (reader : CollectState) : SolverM Expr := do
+  CollectState.mkEnvExpr
+    (mkIntEnvEmpty)
+    (mkIntEnvCons) (reader.iToIx.toArrayAsc.reverse)
+
 /-- Visit a raw BV expr, and collect information about it. -/
 def collectBoolAtom (state : CollectState)
   (e : Expr) : SolverM (MultiWidth.Nondep.Term × CollectState) := do
@@ -1083,7 +1113,7 @@ info: MultiWidth.mkTermFsmNondep (wcard tcard bcard ncard icard pcard : ℕ) (p 
 -/
 #guard_msgs in #check mkTermFsmNondep
 def Expr.mkTermFsmNondep (wcard tcard bcard ncard icard pcard : Nat) (pNondep : Expr) : SolverM Expr := do
-  let out ← mkAppM (``mkTermFsmNondep) #[toExpr wcard, toExpr tcard, toExpr bcard, toExpr pcard, pNondep]
+  let out ← mkAppM (``mkTermFsmNondep) #[toExpr wcard, toExpr tcard, toExpr bcard, toExpr ncard, toExpr icard, toExpr pcard, pNondep]
   debugCheck out
   return out
 
@@ -1126,6 +1156,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
     let benv ← collect.mkBenvExpr
+    let nenv ← collect.mkNenvExpr
+    let ienv ← collect.mkIenvExpr
     let penv ← collect.mkPenvExpr
     if (← read).debugPrintSmtLib then
       throwError (p.toSmtLib |>.toSexpr |> format)
@@ -1134,7 +1166,7 @@ def solve (gorig : MVarId) : SolverM Unit := do
     let termFsmNondep := mkTermFsmNondep collect.wcard collect.tcard collect.bcard collect.ncard collect.icard collect.pcard p
     debugLog m!"fsm from MultiWidth.mkTermFsmNondep {collect.wcard} {collect.tcard} {repr p}."
     debugLog m!"fsm circuit size: {termFsmNondep.toFsmZext.circuitSize}"
-    if ! (← isDefEq pRawExpr (← mkAppM ``Term.toBV #[benv, penv, tenv, pExpr])) then
+    if ! (← isDefEq pRawExpr (← mkAppM ``Term.toBV #[benv, nenv, ienv, penv, tenv, pExpr])) then
       throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
     let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
     if let some filename := (← read).debugDumpAiger then
@@ -1203,6 +1235,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
             wenv,
             tenv,
             benv,
+            nenv,
+            ienv,
             penv,
             ← mkEqRefl pRawExpr]
         debugCheck prf
