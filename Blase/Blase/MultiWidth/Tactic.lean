@@ -502,7 +502,7 @@ def CollectState.mkNatEnvCons (nenv : Expr) (n : Expr) : SolverM Expr := do
 def CollectState.mkNenvExpr (reader : CollectState) : SolverM Expr := do
   CollectState.mkEnvExpr
     (mkNatEnvEmpty)
-    (mkNatEnvCons) (reader.boolToIx.toArrayAsc.reverse)
+    (mkNatEnvCons) (reader.nToIx.toArrayAsc.reverse)
 
 def CollectState.mkIntEnvEmpty : SolverM Expr := do
   let out := mkAppN (mkConst ``MultiWidth.Term.IntEnv.empty) #[]
@@ -917,7 +917,7 @@ def Expr.mkPredicateExpr (wcard tcard bcard ncard icard pcard : Nat) (tctx : Exp
     let vExpr ← mkWidthExpr wcard v
     let wExpr ← mkWidthExpr wcard w
     let out := mkAppN (mkConst ``MultiWidth.Term.binWidthRel)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, mkNatLit pcard,
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, mkNatLit ncard, mkNatLit icard, mkNatLit pcard,
         tctx,
         Lean.toExpr k, vExpr, wExpr]
     debugCheck out
@@ -940,7 +940,7 @@ def Expr.mkPredicateExpr (wcard tcard bcard ncard icard pcard : Nat) (tctx : Exp
     let aExpr ← mkTermExpr wcard tcard bcard ncard icard pcard tctx a
     let bExpr ← mkTermExpr wcard tcard bcard ncard icard pcard tctx b
     let out := mkAppN (mkConst ``MultiWidth.Term.boolBinRel)
-      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, mkNatLit pcard, tctx,
+      #[mkNatLit wcard, mkNatLit tcard, mkNatLit bcard, mkNatLit ncard, mkNatLit icard, mkNatLit pcard, tctx,
         Lean.toExpr k, aExpr, bExpr]
     debugCheck out
     return out
