@@ -92,7 +92,7 @@ theorem AvoidCollision_setWidth_append_of_eq {x : BitVec v} {y : BitVec w} (h : 
     setWidth (v' + w') (x ++ y) = setWidth v' x ++ setWidth w' y  := sorry
 -- TODO HIGH: cast [DONE]
 theorem AvoidCollision_setWidth_cast {x : BitVec w} {h : w = v} : (x.cast h).setWidth k = x.setWidth k  := by bv_multi_width
--- TODO HIGH: cons
+-- TODO IMPOSSIBLE?: cons | actually, maybe not, because we have the width variable, so we can use the width variable to mask the cons? oh no, we can't?
 theorem AvoidCollision_setWidth_cons {x : BitVec w} : (cons a x).setWidth w = x  := by sorry
 -- DONE
 theorem AvoidCollision_setWidth_eq (x : BitVec n) : setWidth n x = x  := sorry
@@ -110,9 +110,10 @@ theorem AvoidCollision_setWidth_ofNat_one_eq_ofNat_one_of_lt {v w : Nat} (hv : 0
 -- TODO LOW: getLsbD
 theorem AvoidCollision_setWidth_one {x : BitVec w} :
     x.setWidth 1 = ofBool (x.getLsbD 0)  := sorry
--- TODO LOW: getLsbD
+-- TODO LOW: getLsbD (constant index)
 theorem AvoidCollision_setWidth_one_eq_ofBool_getLsb_zero (x : BitVec w) :
     x.setWidth 1 = BitVec.ofBool (x.getLsbD 0)  := sorry
+-- DONE
 theorem AvoidCollision_setWidth_or {x y : BitVec w} :
     (x ||| y).setWidth k = x.setWidth k ||| y.setWidth k  := sorry
 theorem AvoidCollision_setWidth_setWidth {x : BitVec u} {w v : Nat} (h : ¬ (v < u ∧ v < w)) :
@@ -123,7 +124,7 @@ theorem AvoidCollision_setWidth_setWidth {x : BitVec u} {w v : Nat} (h : ¬ (v <
 -- DONE
 theorem AvoidCollision_setWidth_setWidth_of_le (x : BitVec w) (h : k ≤ l) :
     (x.setWidth l).setWidth k = x.setWidth k  := sorry
--- TODO LOW: getLsbD, twoPow
+-- TODO LOW: getLsbD (symbolic, not possible?), twoPow
 theorem AvoidCollision_setWidth_setWidth_succ_eq_setWidth_setWidth_of_getLsbD_false {x : BitVec w} {i : Nat} (hx : x.getLsbD i = false) :
     setWidth w (x.setWidth (i + 1)) =
       setWidth w (x.setWidth i)  := sorry
@@ -186,32 +187,32 @@ theorem AvoidCollision_signExtend_or {x y : BitVec w} :
 -- DONE
 theorem AvoidCollision_signExtend_xor {x y : BitVec w} :
     (x ^^^ y).signExtend v = (x.signExtend v) ^^^ (y.signExtend v)  := sorry
--- TODO LOW: Fin
+-- TODO LOW: Fin.ofNat, Fin.toNat, BitVec.toFin
 theorem AvoidCollision_toFin_setWidth {x : BitVec w} :
     (x.setWidth v).toFin = Fin.ofNat (2^v) x.toNat  := sorry
--- TODO LOW: Fin
+-- TODO LOW: Fin.ofNat, BitVec.toFin
 theorem AvoidCollision_toFin_signExtend (x : BitVec w) :
     (x.signExtend v).toFin = Fin.ofNat (2 ^ v) (x.toNat + if x.msb = true then 2 ^ v - 2 ^ w else 0) := sorry
--- TODO LOW: Fin
+-- TODO LOW: Fin.ofNat, BitVec.toFin
 theorem AvoidCollision_toFin_signExtend_of_le {x : BitVec w} (hv : v ≤ w):
     (x.signExtend v).toFin = Fin.ofNat (2 ^ v) x.toNat  := sorry
 -- IMOSSIBLE: mult
 theorem AvoidCollision_toInt_mul_toInt_lt_neg_two_pow_iff {x y : BitVec w} :
     x.toInt * y.toInt < - 2 ^ (w - 1) ↔
       (signExtend (w * 2) x * signExtend (w * 2) y).slt (signExtend (w * 2) (intMin w))  := sorry
--- TODO HIGH: Int.bmod of (twoPow)
+-- TODO HIGH: Int.bmod of (twoPow), BitVec.toInt
 theorem AvoidCollision_toInt_setWidth (x : BitVec w) :
     (x.setWidth v).toInt = Int.bmod x.toNat (2^v)  := sorry
--- TODO HIGH: Int.bmod of (twoPow)
+-- TODO HIGH: Int.bmod of (twoPow), BitVec.toInt
 theorem AvoidCollision_toInt_signExtend (x : BitVec w) :
     (x.signExtend v).toInt = x.toInt.bmod (2 ^ min v w)  := sorry
--- TODO HIGH: Int.bmod of (twoPow)
+-- TODO HIGH: Int.bmod of (twoPow), BitVec.toInt
 theorem AvoidCollision_toInt_signExtend_eq_toInt_bmod_of_le (x : BitVec w) (h : v ≤ w) :
     (x.signExtend v).toInt = x.toInt.bmod (2 ^ v)  := sorry
--- TODO HIGH: Int.bmod of (twoPow)
+-- TODO HIGH: Int.bmod of (twoPow), BitVec.toInt
 theorem AvoidCollision_toInt_signExtend_eq_toNat_bmod (x : BitVec w) :
     (x.signExtend v).toInt = Int.bmod x.toNat (2 ^ min v w)  := sorry
--- TODO HIGH: Int.bmod of (twoPow)
+-- TODO HIGH: Int.bmod of (twoPow), BitVec.toInt
 theorem AvoidCollision_toInt_signExtend_eq_toNat_bmod_of_le {x : BitVec w} (hv : v ≤ w) :
     (x.signExtend v).toInt = Int.bmod x.toNat (2^v)  := by sorry
 -- TODO LOW: reflection bug

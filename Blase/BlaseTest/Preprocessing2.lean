@@ -59,4 +59,3 @@ theorem t7_thm.extracted_1._2 :
   intros;
   bv_multi_width
 -/
-
