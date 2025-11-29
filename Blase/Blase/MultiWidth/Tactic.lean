@@ -38,8 +38,8 @@ structure Config where
   debugFillFinalReflectionProofWithSorry : Bool := false
   /-- Debug print the SMT-LIB version -/
   debugPrintSmtLib : Bool := false
-  /-- Dump the FSM to an Aiger file. -/
-  debugDumpAiger: Option String := none
+  /-- Solve using the external rIC3 solver. -/
+  solveRIC3: Bool := false
 deriving DecidableEq, Repr
 
 /-- Default user configuration -/
@@ -1123,12 +1123,19 @@ def solve (gorig : MVarId) : SolverM Unit := do
     debugLog m!"fsm circuit size: {termFsmNondep.toFsmZext.circuitSize}"
     if ! (← isDefEq pRawExpr (← mkAppM ``Term.toBV #[benv, penv, tenv, pExpr])) then
       throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
-    let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
-    if let some filename := (← read).debugDumpAiger then
-      let fn := System.mkFilePath [filename]
-      let handle ← IO.FS.Handle.mk fn IO.FS.Mode.write
-      let stream := IO.FS.Stream.ofHandle handle
-      termFsmNondep.toFsmZext.toAiger.toAagFile stream
+
+    if (← read).solveRIC3 then
+      let aig := termFsmNondep.toFsmZext.toValaig
+      let ric3 : Valaig.External.rIC3 := {}
+      let res ← Valaig.External.checkSafety ric3 aig
+
+      match res with
+      | .counterexample => throwError "CEX: rIC3 found a counter-example"
+      | .unknown => throwError "UNKNOWN: rIC3 returned unknown status code"
+      | .proof =>
+        let prf ← mkSorry (synthetic := true) (← g.getType)
+        let _ ← g.apply prf
+        return
 
     let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
     match stats with
