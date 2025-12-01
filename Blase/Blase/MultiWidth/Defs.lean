@@ -131,39 +131,102 @@ def Term.Ctx.cons {wcard : Nat} {tcard : Nat} (ctx : Term.Ctx wcard tcard)
   fun v =>
     v.cases w (fun v' => ctx v')
 
+inductive BinaryRelationKind
+| eq
+| ne
+| ule
+| slt
+| sle
+| ult -- unsigned less than.
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
+def BinaryRelationKind.toSmtLib : BinaryRelationKind → SexprPBV.BinaryRelationKind
+| .eq => .eq
+| .ne => .ne
+| .ule => .ule
+| .slt => .slt
+| .sle => .sle
+| .ult => .ult
+
+def Predicate.Env (pcard : Nat) : Type :=
+  Fin pcard → Prop
+
+def Predicate.Env.empty : Predicate.Env 0 :=
+  fun v => v.elim0
+
+def Predicate.Env.cons {pcard : Nat} (env : Predicate.Env pcard) (p : Prop) :
+  Predicate.Env (pcard + 1) :=
+  fun v => v.cases p env
+
+inductive WidthBinaryRelationKind
+| eq
+| le
+-- lt: a < b ↔ a + 1 ≤ b
+-- a ≠ b: (a < b ∨ b < a)
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
+def WidthBinaryRelationKind.toSmtLib : WidthBinaryRelationKind → SexprPBV.WidthBinaryRelationKind
+| .eq => .eq
+| .le => .le
+
+inductive BoolBinaryRelationKind
+| eq
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
+def BoolBinaryRelationKind.toSmtLib : BoolBinaryRelationKind → SexprPBV.BoolBinaryRelationKind
+| .eq => .eq
+
+
+
 inductive TermKind (wcard : Nat) : Type
 | bool
 | bv (w : WidthExpr wcard)  : TermKind wcard
+| prop
 
-inductive Term {wcard tcard : Nat} (bcard : Nat)
+inductive Term {wcard tcard : Nat} (bcard : Nat) (pcard : Nat)
   (tctx : Term.Ctx wcard tcard) : TermKind wcard → Type
 /-- A bitvector built from a natural number. -/
-| ofNat (w : WidthExpr wcard) (n : Nat) : Term bcard tctx (.bv w)
+| ofNat (w : WidthExpr wcard) (n : Nat) : Term bcard pcard tctx (.bv w)
 /-- a variable of a given width -/
-| var (v : Fin tcard) : Term bcard tctx (.bv (tctx v))
+| var (v : Fin tcard) : Term bcard pcard tctx (.bv (tctx v))
 /-- addition of two terms of the same width -/
-| add (a : Term bcard tctx (.bv w)) (b : Term bcard tctx (.bv w)) : Term bcard tctx (.bv w)
+| add (a : Term bcard pcard tctx (.bv w)) (b : Term bcard pcard tctx (.bv w)) : Term bcard pcard tctx (.bv w)
 /-- shift left by a known constant --/
-| shiftl (a : Term bcard tctx (.bv w)) (k : Nat) : Term bcard tctx (.bv w)
+| shiftl (a : Term bcard pcard tctx (.bv w)) (k : Nat) : Term bcard pcard tctx (.bv w)
 /-- bitwise or -/
-| bor (a b : Term bcard tctx (.bv w)) : Term bcard tctx (.bv w)
+| bor (a b : Term bcard pcard tctx (.bv w)) : Term bcard pcard tctx (.bv w)
 /-- bitwise and -/
-| band (a b : Term bcard tctx (.bv w)) : Term bcard tctx (.bv w)
+| band (a b : Term bcard pcard tctx (.bv w)) : Term bcard pcard tctx (.bv w)
 /-- bitwise xor -/
-| bxor (a b : Term bcard tctx (.bv w)) : Term bcard tctx (.bv w)
+| bxor (a b : Term bcard pcard tctx (.bv w)) : Term bcard pcard tctx (.bv w)
 /-- bitwise not -/
-| bnot (a : Term bcard tctx (.bv w)) : Term bcard tctx (.bv w)
+| bnot (a : Term bcard pcard tctx (.bv w)) : Term bcard pcard tctx (.bv w)
 /-- zero extend a term to a given width -/
-| zext (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard tctx (.bv v)
+| zext (a : Term bcard pcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard pcard tctx (.bv v)
 /-- setWidth a term to a given width, which is literally the same as zeroExtend. -/
-| setWidth (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard tctx (.bv v)
+| setWidth (a : Term bcard pcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard pcard tctx (.bv v)
 /-- sign extend a term to a given width -/
-| sext (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard tctx (.bv v)
+| sext (a : Term bcard pcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard pcard tctx (.bv v)
 /-- convert a bool to a bitvector of width 1 -/
-| bvOfBool (b : Term bcard tctx .bool) : Term bcard tctx (.bv (.const 1))
--- | boolMsb (w : WidthExpr wcard) (x : Term bcard tctx (.bv w)) : Term bcard tctx .bool
-| boolConst (b : Bool) : Term bcard tctx .bool
-| boolVar (v : Fin bcard) : Term bcard tctx .bool
+| bvOfBool (b : Term bcard pcard tctx .bool) : Term bcard pcard tctx (.bv (.const 1))
+-- | boolMsb (w : WidthExpr wcard) (x : Term bcard pcard tctx (.bv w)) : Term bcard pcard tctx .bool
+| boolConst (b : Bool) : Term bcard pcard tctx .bool
+| boolVar (v : Fin bcard) : Term bcard pcard tctx .bool
+| binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) :
+    Term bcard pcard tctx .prop
+| binRel
+    (k : BinaryRelationKind)
+    (w : WidthExpr wcard)
+    (a : Term bcard pcard tctx (.bv w))
+    (b : Term bcard pcard tctx (.bv w)) :
+    Term bcard pcard tctx .prop
+| and (p1 p2 : Term bcard pcard tctx (.prop)) : Term bcard pcard tctx (.prop)
+| or (p1 p2 : Term bcard pcard tctx (.prop)) : Term bcard pcard tctx (.prop)
+| pvar (v : Fin pcard) : Term bcard pcard tctx (.prop) -- TODO: we need 'pvar' too.
+| boolBinRel
+  (k : BoolBinaryRelationKind)
+  (a b : Term bcard pcard tctx .bool) :
+  Term bcard pcard tctx (.prop)
 
 def Term.BoolEnv (bcard : Nat) : Type := Fin bcard → Bool
 
@@ -237,11 +300,12 @@ def Term.Ctx.Env.cons_get_succ
 def TermKind.denote (wenv : WidthExpr.Env wcard) : TermKind wcard → Type
 | .bool => Bool
 | .bv w => BitVec (w.toNat wenv)
+| .prop => Prop
 
 def BoolExpr.toBool
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)  :
-  Term bcard tctx .bool → Bool
+  Term bcard pcard tctx .bool → Bool
 | .boolVar v => benv v
 | .boolConst b => b
 
@@ -249,39 +313,63 @@ def BoolExpr.toBool
 def Term.toBV {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
-    (tenv : tctx.Env wenv) :
-  Term bcard tctx k → k.denote wenv
+    (penv : Predicate.Env pcard)
+    (tenv : tctx.Env wenv)
+    (t : Term bcard pcard tctx k) : k.denote wenv :=
+match t with
 | .ofNat w n => BitVec.ofNat (w.toNat wenv) n
 | .boolConst b => b
 | .var v => tenv.get v.1 v.2
 | .add (w := w) a b =>
-    let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
-    let b : BitVec (w.toNat wenv) := (b.toBV benv tenv)
+    let a : BitVec (w.toNat wenv) := (a.toBV benv penv tenv)
+    let b : BitVec (w.toNat wenv) := (b.toBV benv penv tenv)
     a + b
-| .zext a v => (a.toBV benv tenv).zeroExtend (v.toNat wenv)
-| .setWidth a v => (a.toBV benv tenv).zeroExtend (v.toNat wenv)
-| .sext a v => (a.toBV benv tenv).signExtend (v.toNat wenv)
+| .zext a v => (a.toBV benv penv tenv).zeroExtend (v.toNat wenv)
+| .setWidth a v => (a.toBV benv penv tenv).zeroExtend (v.toNat wenv)
+| .sext a v => (a.toBV benv penv tenv).signExtend (v.toNat wenv)
 | .bor a b (w := w) =>
-    let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
-    let b : BitVec (w.toNat wenv) := (b.toBV benv tenv)
+    let a : BitVec (w.toNat wenv) := (a.toBV benv penv tenv)
+    let b : BitVec (w.toNat wenv) := (b.toBV benv penv tenv)
     a ||| b
 | .band (w := w) a b =>
-    let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
-    let b : BitVec (w.toNat wenv) := (b.toBV benv tenv)
+    let a : BitVec (w.toNat wenv) := (a.toBV benv penv tenv)
+    let b : BitVec (w.toNat wenv) := (b.toBV benv penv tenv)
     a &&& b
 | .bxor (w := w) a b =>
-    let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
-    let b : BitVec (w.toNat wenv) := (b.toBV benv tenv)
+    let a : BitVec (w.toNat wenv) := (a.toBV benv penv tenv)
+    let b : BitVec (w.toNat wenv) := (b.toBV benv penv tenv)
     a ^^^ b
 | .bnot (w := w) a =>
-    let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
+    let a : BitVec (w.toNat wenv) := (a.toBV benv penv tenv)
     ~~~ a
 | .boolVar v => benv v
 | .shiftl (w := w) a k =>
-    let a : BitVec (w.toNat wenv) := (a.toBV benv tenv)
+    let a : BitVec (w.toNat wenv) := (a.toBV benv penv tenv)
     a <<< k
-| .bvOfBool b => BitVec.ofBool (b.toBV benv tenv)
+| .bvOfBool b => BitVec.ofBool (b.toBV benv penv tenv)
+-- | .pvar v => penv v
+| .binWidthRel rel wa wb =>
+  match rel with
+  | .eq => wa.toNat wenv = wb.toNat wenv
+  | .le => wa.toNat wenv ≤ wb.toNat wenv
+| .binRel rel _w a b =>
+  match rel with
+  | .eq => a.toBV benv penv tenv = b.toBV benv penv tenv
+  | .ne => a.toBV benv penv tenv ≠ b.toBV benv penv tenv
+  | .ult => (a.toBV benv penv tenv).ult (b.toBV benv penv tenv) = true
+  | .ule => (a.toBV benv penv tenv).ule (b.toBV benv penv tenv) = true
+  | .slt => (a.toBV benv penv tenv).slt (b.toBV benv penv tenv) = true
+  | .sle => (a.toBV benv penv tenv).sle (b.toBV benv penv tenv) = true
+| .and p1 p2 => p1.toBV benv penv tenv  ∧ p2.toBV benv penv tenv
+| .or p1 p2 => p1.toBV benv penv tenv ∨ p2.toBV benv penv tenv
+| .boolBinRel rel a b =>
+  match rel with
+  -- | TODO: rename 'toBV' to 'toBool'.
+  | .eq => (a.toBV benv penv tenv) = (b.toBV benv penv tenv)
+| .pvar v => penv v
+-- | Term.and p1 p2 => p1.toBV benv penv tenv ∧ p2.toBV benv penv tenv
 
+#print Term.toBV
 
 @[simp]
 theorem Term.toBV_ofNat
@@ -289,154 +377,218 @@ theorem Term.toBV_ofNat
     (tenv : tctx.Env wenv)
     (benv : Term.BoolEnv bcard)
     (w : WidthExpr wcard) (n : Nat) :
-  Term.toBV benv tenv (.ofNat w n) = BitVec.ofNat (w.toNat wenv) n := rfl
+  Term.toBV benv penv tenv (.ofNat w n) = BitVec.ofNat (w.toNat wenv) n := rfl
 
 @[simp]
 theorem Term.toBV_var {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
     (tenv : tctx.Env wenv) :
-  Term.toBV benv tenv (.var v) = tenv v := rfl
+  Term.toBV benv penv tenv (.var v) = tenv v := rfl
 
 @[simp]
 theorem Term.toBV_zext {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
-    (tenv : tctx.Env wenv) (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) :
-  Term.toBV benv tenv (.zext a v) = (a.toBV benv tenv).zeroExtend (v.toNat wenv) := rfl
+    (tenv : tctx.Env wenv) (a : Term bcard pcard tctx (.bv w)) (v : WidthExpr wcard) :
+  Term.toBV benv penv tenv (.zext a v) = (a.toBV benv penv tenv).zeroExtend (v.toNat wenv) := rfl
 
 @[simp]
 theorem Term.toBV_setWidth {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
-    (tenv : tctx.Env wenv) (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) :
-  Term.toBV benv tenv (.setWidth a v) = (a.toBV benv tenv).zeroExtend (v.toNat wenv) := rfl
+    (tenv : tctx.Env wenv) (a : Term bcard pcard tctx (.bv w)) (v : WidthExpr wcard) :
+  Term.toBV benv penv tenv (.setWidth a v) = (a.toBV benv penv tenv).zeroExtend (v.toNat wenv) := rfl
 
 @[simp]
 theorem Term.toBV_sext {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
-    (tenv : tctx.Env wenv) (a : Term bcard tctx (.bv w)) (v : WidthExpr wcard) :
-  Term.toBV benv tenv (.sext a v) =
-    (a.toBV benv tenv).signExtend (v.toNat wenv) := rfl
+    (tenv : tctx.Env wenv) (a : Term bcard pcard tctx (.bv w)) (v : WidthExpr wcard) :
+  Term.toBV benv penv tenv (.sext a v) =
+    (a.toBV benv penv tenv).signExtend (v.toNat wenv) := rfl
 
 @[simp]
 theorem Term.toBV_shiftl {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
-    (tenv : tctx.Env wenv) (a : Term bcard tctx (.bv w)) (k : Nat):
-  Term.toBV benv tenv (.shiftl a k) = (a.toBV benv tenv) <<< k := rfl
+    (tenv : tctx.Env wenv) (a : Term bcard pcard tctx (.bv w)) (k : Nat):
+  Term.toBV benv penv tenv (.shiftl a k) = (a.toBV benv penv tenv) <<< k := rfl
 
 @[simp]
 theorem Term.toBV_add {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
-    (tenv : tctx.Env wenv) (a b : Term bcard tctx (.bv w)) :
-  Term.toBV benv tenv (.add a b) = a.toBV benv tenv + b.toBV benv tenv := rfl
+    (tenv : tctx.Env wenv) (a b : Term bcard pcard tctx (.bv w)) :
+  Term.toBV benv penv tenv (.add a b) = a.toBV benv penv tenv + b.toBV benv penv tenv := rfl
 
 @[simp]
 theorem Term.toBV_ofBool {wenv : WidthExpr.Env wcard}
     {tctx : Term.Ctx wcard tcard}
     (benv : Term.BoolEnv bcard)
-    (tenv : tctx.Env wenv) (b : Term bcard tctx .bool) :
-  Term.toBV benv tenv (.bvOfBool b) = BitVec.ofBool (b.toBV benv tenv) := rfl
+    (tenv : tctx.Env wenv) (b : Term bcard pcard tctx .bool) :
+  Term.toBV benv penv tenv (.bvOfBool b) = BitVec.ofBool (b.toBV benv penv tenv) := rfl
 
-inductive BinaryRelationKind
-| eq
-| ne
-| ule
-| slt
-| sle
-| ult -- unsigned less than.
-deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+@[simp]
+theorem Term.toBV_pvar {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (v : Fin pcard) :
+  Term.toBV benv penv tenv (.pvar v) = penv v := rfl
 
-def BinaryRelationKind.toSmtLib : BinaryRelationKind → SexprPBV.BinaryRelationKind
-| .eq => .eq
-| .ne => .ne
-| .ule => .ule
-| .slt => .slt
-| .sle => .sle
-| .ult => .ult
 
-def Predicate.Env (pcard : Nat) : Type :=
-  Fin pcard → Prop
+@[simp]
+theorem Term.toBV_boolVar {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (v : Fin bcard) :
+  Term.toBV benv penv tenv (.boolVar v) = benv v := rfl
 
-def Predicate.Env.empty : Predicate.Env 0 :=
-  fun v => v.elim0
+@[simp]
+theorem Term.toBV_boolConst {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (b : Bool) :
+  Term.toBV benv penv tenv (.boolConst b) = b := rfl
 
-def Predicate.Env.cons {pcard : Nat} (env : Predicate.Env pcard) (p : Prop) :
-  Predicate.Env (pcard + 1) :=
-  fun v => v.cases p env
+@[simp]
+theorem Term.toBV_bor {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a b : Term bcard pcard tctx (.bv w)) :
+  Term.toBV benv penv tenv (.bor a b) = a.toBV benv penv tenv ||| b.toBV benv penv tenv := rfl
 
-inductive WidthBinaryRelationKind
-| eq
-| le
--- lt: a < b ↔ a + 1 ≤ b
--- a ≠ b: (a < b ∨ b < a)
-deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+@[simp]
+theorem Term.toBV_band {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a b : Term bcard pcard tctx (.bv w)) :
+  Term.toBV benv penv tenv (.band a b) = a.toBV benv penv tenv &&& b.toBV benv penv tenv := rfl
 
-def WidthBinaryRelationKind.toSmtLib : WidthBinaryRelationKind → SexprPBV.WidthBinaryRelationKind
-| .eq => .eq
-| .le => .le
+@[simp]
+theorem Term.toBV_bxor {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a b : Term bcard pcard tctx (.bv w)) :
+  Term.toBV benv penv tenv (.bxor a b) = a.toBV benv penv tenv ^^^ b.toBV benv penv tenv := rfl
 
-inductive BoolBinaryRelationKind
-| eq
-deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+@[simp]
+theorem Term.toBV_bnot {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a : Term bcard pcard tctx (.bv w)) :
+  Term.toBV benv penv tenv (.bnot a) = ~~~ (a.toBV benv penv tenv) := rfl
 
-def BoolBinaryRelationKind.toSmtLib : BoolBinaryRelationKind → SexprPBV.BoolBinaryRelationKind
-| .eq => .eq
 
-inductive Predicate :
-  (wcard : Nat) →
-  (tcard : Nat) →
-  (bcard : Nat) →
-  (tctx : Term.Ctx wcard tcard) →
-  (pcard : Nat) → Type
-| binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) :
-    Predicate wcard tcard bcard tctx pcard
-| binRel {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
+@[simp]
+theorem Term.toBV_boolBinRel {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv)
+    (k : BoolBinaryRelationKind)
+    (a b : Term bcard pcard tctx .bool) :
+  Term.toBV benv penv tenv (.boolBinRel k a b) =
+    match k with
+    | .eq => (a.toBV benv penv tenv) = (b.toBV benv penv tenv) := rfl
+
+@[simp]
+theorem Term.toBV_binWidthRel {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv)
+    (k : WidthBinaryRelationKind)
+    (wa wb : WidthExpr wcard) :
+  Term.toBV benv penv tenv (.binWidthRel k wa wb) =
+    match k with
+    | .eq => wa.toNat wenv = wb.toNat wenv
+    | .le => wa.toNat wenv ≤ wb.toNat wenv := rfl
+
+@[simp]
+theorem Term.toBV_binRel {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv)
     (k : BinaryRelationKind)
     (w : WidthExpr wcard)
-    (a : Term bcard tctx (.bv w))
-    (b : Term bcard tctx (.bv w)) :
-    Predicate wcard tcard bcard tctx pcard
-| and (p1 p2 : Predicate wcard tcard bcard tctx pcard) : Predicate wcard tcard bcard tctx pcard
-| or (p1 p2 : Predicate wcard tcard bcard tctx pcard) : Predicate wcard tcard bcard tctx pcard
-| var (v : Fin pcard) : Predicate wcard tcard bcard tctx pcard
-| boolBinRel  {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
-  (k : BoolBinaryRelationKind)
-  (a b : Term bcard tctx .bool) :
-  Predicate wcard tcard bcard tctx pcard
+    (a b : Term bcard pcard tctx (.bv w)) :
+  Term.toBV benv penv tenv (.binRel k w a b) =
+    match k with
+    | .eq => a.toBV benv penv tenv = b.toBV benv penv tenv
+    | .ne => a.toBV benv penv tenv ≠ b.toBV benv penv tenv
+    | .ult => (a.toBV benv penv tenv).ult (b.toBV benv penv tenv) = true
+    | .ule => (a.toBV benv penv tenv).ule (b.toBV benv penv tenv) = true
+    | .slt => (a.toBV benv penv tenv).slt (b.toBV benv penv tenv) = true
+    | .sle => (a.toBV benv penv tenv).sle (b.toBV benv penv tenv) = true := rfl
+
+@[simp]
+theorem Term.toBV_and {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv)
+    (p1 p2 : Term bcard pcard tctx (.prop)) :
+  Term.toBV benv penv tenv (.and p1 p2) = (p1.toBV benv penv tenv ∧ p2.toBV benv penv tenv) := rfl
+
+@[simp]
+theorem Term.toBV_or {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv)
+    (p1 p2 : Term bcard pcard tctx (.prop)) :
+  Term.toBV benv penv tenv (.or p1 p2) = (p1.toBV benv penv tenv ∨ p2.toBV benv penv tenv) := rfl
+
+
+-- inductive Predicate :
+--   (wcard : Nat) →
+--   (tcard : Nat) →
+--   (bcard : Nat) →
+--   (tctx : Term.Ctx wcard tcard) →
+--   (pcard : Nat) → Type
+-- | binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) :
+--     Predicate wcard tcard bcard pcard tctx pcard
+-- | binRel {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
+--     (k : BinaryRelationKind)
+--     (w : WidthExpr wcard)
+--     (a : Term bcard pcard tctx (.bv w))
+--     (b : Term bcard pcard tctx (.bv w)) :
+--     Predicate wcard tcard bcard pcard tctx pcard
+-- | and (p1 p2 : Predicate wcard tcard bcard pcard tctx pcard) : Predicate wcard tcard bcard pcard tctx pcard
+-- | or (p1 p2 : Predicate wcard tcard bcard pcard tctx pcard) : Predicate wcard tcard bcard pcard tctx pcard
+-- | var (v : Fin pcard) : Predicate wcard tcard bcard pcard tctx pcard
+-- | boolBinRel  {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
+--   (k : BoolBinaryRelationKind)
+--   (a b : Term bcard pcard tctx .bool) :
+--   Predicate wcard tcard bcard pcard tctx pcard
 
 -- add predicate NOT, <= for bitvectors, < for bitvectors, <=
 -- for widths, =, not equals for widths.
 
-def Predicate.toProp {wcard tcard bcard pcard : Nat} {wenv : WidthExpr.Env wcard}
-    {tctx : Term.Ctx wcard tcard}
-    (benv : Term.BoolEnv bcard)
-    (tenv : tctx.Env wenv)
-    (penv : Predicate.Env pcard)
-    (p : Predicate wcard tcard bcard tctx pcard) : Prop :=
-  match p with
-  | .var v => penv v
-  | .binWidthRel rel wa wb =>
-    match rel with
-    | .eq => wa.toNat wenv = wb.toNat wenv
-    | .le => wa.toNat wenv ≤ wb.toNat wenv
-  | .binRel rel _w a b =>
-    match rel with
-    | .eq => a.toBV benv tenv = b.toBV benv tenv
-    | .ne => a.toBV benv tenv ≠ b.toBV benv tenv
-    | .ult => (a.toBV benv tenv).ult (b.toBV benv tenv) = true
-    | .ule => (a.toBV benv tenv).ule (b.toBV benv tenv) = true
-    | .slt => (a.toBV benv tenv).slt (b.toBV benv tenv) = true
-    | .sle => (a.toBV benv tenv).sle (b.toBV benv tenv) = true
-  | .and p1 p2 => p1.toProp benv tenv penv ∧ p2.toProp benv tenv penv
-  | .or p1 p2 => p1.toProp benv tenv penv ∨ p2.toProp benv tenv penv
-  | .boolBinRel rel a b =>
-    match rel with
-    -- | TODO: rename 'toBV' to 'toBool'.
-    | .eq => (a.toBV benv tenv) = (b.toBV benv tenv)
+-- def Predicate.toProp {wcard tcard bcard pcard : Nat} {wenv : WidthExpr.Env wcard}
+--     {tctx : Term.Ctx wcard tcard}
+--     (benv : Term.BoolEnv bcard)
+--     (tenv : tctx.Env wenv)
+--     (penv : Predicate.Env pcard)
+--     (p : Predicate wcard tcard bcard pcard tctx pcard) : Prop :=
+--   match p with
+--   | .var v => penv v
+--   | .binWidthRel rel wa wb =>
+--     match rel with
+--     | .eq => wa.toNat wenv = wb.toNat wenv
+--     | .le => wa.toNat wenv ≤ wb.toNat wenv
+--   | .binRel rel _w a b =>
+--     match rel with
+--     | .eq => a.toBV benv penv tenv = b.toBV benv penv tenv
+--     | .ne => a.toBV benv penv tenv ≠ b.toBV benv penv tenv
+--     | .ult => (a.toBV benv penv tenv).ult (b.toBV benv penv tenv) = true
+--     | .ule => (a.toBV benv penv tenv).ule (b.toBV benv penv tenv) = true
+--     | .slt => (a.toBV benv penv tenv).slt (b.toBV benv penv tenv) = true
+--     | .sle => (a.toBV benv penv tenv).sle (b.toBV benv penv tenv) = true
+--   | .and p1 p2 => p1.toProp benv penv tenv penv ∧ p2.toProp benv penv tenv penv
+--   | .or p1 p2 => p1.toProp benv penv tenv penv ∨ p2.toProp benv penv tenv penv
+--   | .boolBinRel rel a b =>
+--     match rel with
+--     -- | TODO: rename 'toBV' to 'toBool'.
+--     | .eq => (a.toBV benv penv tenv) = (b.toBV benv penv tenv)
+
 namespace Nondep
 
 inductive WidthExpr where
@@ -522,6 +674,14 @@ inductive Term
 | boolConst (b : Bool) : Term
 | shiftl (w : WidthExpr) (a : Term) (k : Nat) : Term
 | bvOfBool (b : Term) : Term
+| binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr) : Term
+| binRel (k : BinaryRelationKind) (w : WidthExpr)
+    (a : Term) (b : Term) : Term
+| or (p1 p2 : Term) : Term
+| and (p1 p2 : Term) : Term
+| pvar (v : Nat) : Term
+| boolBinRel (k : BoolBinaryRelationKind)
+    (a b : Term) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Term.toSmtLib : Term → SexprPBV.Term
@@ -539,35 +699,43 @@ def Term.toSmtLib : Term → SexprPBV.Term
 | .boolConst b => .boolConst b
 | .shiftl w a k => .shiftl w.toSmtLib a.toSmtLib k
 | .bvOfBool _b => .junk ("bvOfBool")
+| _ => .junk "predicate"
 
-def Term.ofDep {wcard tcard bcard : Nat}
+def Term.ofDepTerm {wcard tcard bcard : Nat}
     {tctx : Term.Ctx wcard tcard}
     {k : MultiWidth.TermKind wcard}
-    (t : MultiWidth.Term bcard tctx k) : Term :=
+    (t : MultiWidth.Term bcard pcard tctx k) : Term :=
   match ht : t with
   | .ofNat w n => .ofNat (.ofDep w) n
   | .var v =>
      match hk : k with
      | .bv w => .var v (.ofDep w)
      | .bool => by contradiction
-  | .add (w := w) a b => .add (.ofDep w) (.ofDep a) (.ofDep b)
-  | .zext a wnew => .zext (.ofDep a) (.ofDep wnew)
-  | .sext a wnew => .sext (.ofDep a) (.ofDep wnew)
-  | .bor (w := w) a b => .bor (.ofDep w) (.ofDep a) (.ofDep b)
-  | .band (w := w) a b => .band (.ofDep w) (.ofDep a) (.ofDep b)
-  | .bxor (w := w) a b => .bxor (.ofDep w) (.ofDep a) (.ofDep b)
-  | .bnot (w := w) a => .bnot (.ofDep w) (.ofDep a)
+  | .add (w := w) a b => .add (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
+  | .zext a wnew => .zext (Term.ofDepTerm a) (.ofDep wnew)
+  | .sext a wnew => .sext (Term.ofDepTerm a) (.ofDep wnew)
+  | .bor (w := w) a b => .bor (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
+  | .band (w := w) a b => .band (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
+  | .bxor (w := w) a b => .bxor (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
+  | .bnot (w := w) a => .bnot (.ofDep w) (Term.ofDepTerm a)
   | .boolVar v => .boolVar v
   | .boolConst b => .boolConst b
-  | .shiftl (w := w) a k => .shiftl (.ofDep w) (.ofDep a) k
-  | .setWidth a wnew => .setWidth (.ofDep a) (.ofDep wnew)
-  | .bvOfBool b => .bvOfBool (.ofDep b)
-
+  | .shiftl (w := w) a k => .shiftl (.ofDep w) (Term.ofDepTerm a) k
+  | .setWidth a wnew => .setWidth (Term.ofDepTerm a) (.ofDep wnew)
+  | .bvOfBool b => .bvOfBool (Term.ofDepTerm b)
+  | .binWidthRel k wa wb => .binWidthRel k (.ofDep wa) (.ofDep wb)
+  | .binRel k w a b => .binRel k (.ofDep w)
+      (Term.ofDepTerm a) (Term.ofDepTerm b)
+  | .and p1 p2 => .and (Term.ofDepTerm p1) (Term.ofDepTerm p2)
+  | .or p1 p2 => .or (Term.ofDepTerm p1) (Term.ofDepTerm p2)
+  | .boolBinRel k a b => .boolBinRel k (Term.ofDepTerm a) (Term.ofDepTerm b)
+  | .pvar v => .pvar v
 
 @[simp]
-def Term.ofDep_var {wcard tcard : Nat} (bcard : Nat)
+def Term.ofDep_var {wcard tcard : Nat} (bcard : Nat) (pcard : Nat)
     {v : Fin tcard} {tctx : Term.Ctx wcard tcard} :
-    Term.ofDep (wcard := wcard) (tcard := tcard) (bcard := bcard) (tctx := tctx) (MultiWidth.Term.var v) = Term.var v (.ofDep (tctx v)) := rfl
+    Term.ofDepTerm (wcard := wcard) (tcard := tcard) (bcard := bcard) (pcard := pcard) (tctx := tctx)
+    (MultiWidth.Term.var v) = Term.var v (.ofDep (tctx v)) := rfl
 
 def Term.width (t : Term) : WidthExpr :=
   match t with
@@ -586,6 +754,12 @@ def Term.width (t : Term) : WidthExpr :=
   | .boolConst _b => WidthExpr.const 1
   | .shiftl w _a _k => w
   | .bvOfBool _b => WidthExpr.const 1
+  | binWidthRel _k wa wb => WidthExpr.const 0
+  | binRel _k w _a _b => w
+  | or _p1 _p2 => WidthExpr.const 0
+  | and _p1 _p2 => WidthExpr.const 0
+  | pvar _v => WidthExpr.const 0
+  | boolBinRel _k _a _b => WidthExpr.const 0
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -593,9 +767,9 @@ converting into the non-dependent version. -/
 theorem Term.width_ofDep_eq_ofDep {wcard tcard : Nat} (bcard : Nat)
     {w : MultiWidth.WidthExpr wcard}
     {tctx : Term.Ctx wcard tcard}
-    (t : MultiWidth.Term bcard tctx (.bv w))
-    : (Term.ofDep t).width = (.ofDep w) := by
-  cases t <;> simp [Term.ofDep, Term.width]
+    (t : MultiWidth.Term bcard pcard tctx (.bv w))
+    : (Term.ofDepTerm t).width = (.ofDep w) := by
+  cases t <;> simp [Term.ofDepTerm, Term.width]
 
 def Term.wcard (t : Term) : Nat := t.width.wcard
 
@@ -615,6 +789,12 @@ def Term.tcard (t : Term) : Nat :=
   | .boolConst _b => 0
   | .shiftl _w a _k => (Term.tcard a)
   | bvOfBool b => b.tcard
+  | binWidthRel _k _wa _wb => 0
+  | binRel _k _w a b => max (Term.tcard a) (Term.tcard b)
+  | or p1 p2 => max (Term.tcard p1) (Term.tcard p2)
+  | and p1 p2 => max (Term.tcard p1) (Term.tcard p2)
+  | pvar _v => 0
+  | boolBinRel _k a b => max (a.tcard) (b.tcard)
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -632,82 +812,12 @@ def Term.bcard (t : Term) : Nat :=
   | .boolConst _b => 0
   | .shiftl _w a _k => (Term.bcard a)
   | bvOfBool b => b.bcard
-
-
-inductive Predicate
-| binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr) : Predicate
-| binRel (k : BinaryRelationKind) (w : WidthExpr)
-    (a : Term) (b : Term) : Predicate
-| or (p1 p2 : Predicate) : Predicate
-| and (p1 p2 : Predicate) : Predicate
-| var (v : Nat) : Predicate
-| boolBinRel (k : BoolBinaryRelationKind)
-    (a b : Term) : Predicate
-deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
-
-
-def Predicate.toSmtLib : Predicate → SexprPBV.Predicate
-| .binWidthRel k wa wb =>
-  .binWidthRel k.toSmtLib wa.toSmtLib wb.toSmtLib
-| .binRel k w a b =>
-  .binRel k.toSmtLib w.toSmtLib a.toSmtLib b.toSmtLib
-| .or p1 p2 => .or p1.toSmtLib p2.toSmtLib
-| .and p1 p2 => .and p1.toSmtLib p2.toSmtLib
-| .var v => .var v
-| .boolBinRel k a b => .boolBinRel k.toSmtLib a.toSmtLib b.toSmtLib
-
-def Predicate.wcard (p : Predicate) : Nat :=
-  match p with
-  | .var _ => 0
-  | .binWidthRel _k wa wb => Nat.max wa.wcard wb.wcard
-  | .binRel .eq w _a _b => w.wcard
-  | .binRel .ne w _a _b => w.wcard
-  | .binRel .ult _w a _b => a.wcard
-  | .binRel .ule w _a _b => w.wcard
-  | .binRel .sle w _a _b => w.wcard
-  | .binRel .slt w _a _b => w.wcard
-  | .or p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
-  | .and p1 p2 => max (Predicate.wcard p1) (Predicate.wcard p2)
-  | .boolBinRel .eq a b => max (a.wcard) (b.wcard)
-def Predicate.tcard (p : Predicate) : Nat :=
-  match p with
-  | .var _ => 0
-  | .binWidthRel _k _wa _wb => 0
-  | .binRel .eq _w a b => max a.tcard b.tcard
-  | .binRel .ne _w a b => max a.tcard b.tcard
-  | .binRel .ult _w a b => max a.tcard b.tcard
-  | .binRel .ule w _a _b => w.wcard
-  | .binRel .sle w _a _b => w.wcard
-  | .binRel .slt w _a _b => w.wcard
-  | .or p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
-  | .and p1 p2 => max (Predicate.tcard p1) (Predicate.tcard p2)
-  | .boolBinRel .eq a b => max (a.tcard) (b.tcard)
-
-def Predicate.pcard (p : Predicate) : Nat :=
-  match p with
-  | .var v => v + 1
-  | .binWidthRel .. => 0
-  | .binRel .. => 0
-  | .or p1 p2 => max (Predicate.pcard p1) (Predicate.pcard p2)
-  | .and p1 p2 => max (Predicate.pcard p1) (Predicate.pcard p2)
-  | .boolBinRel .. => 0
-
-
-def Predicate.ofDep {wcard tcard pcard : Nat}
-    {tctx : Term.Ctx wcard tcard} (p : MultiWidth.Predicate wcard tcard bcard tctx pcard) : Predicate :=
-  match p with
-  | .var v => .var v
-  | .binWidthRel .eq wa wb => .binWidthRel .eq (.ofDep wa) (.ofDep wb)
-  | .binWidthRel .le wa wb => .binWidthRel .le (.ofDep wa) (.ofDep wb)
-  | .binRel .eq w a b => .binRel .eq (.ofDep w) (.ofDep a) (.ofDep b)
-  | .binRel .ne w a b => .binRel .ne (.ofDep w) (.ofDep a) (.ofDep b)
-  | .binRel .ult w a b => .binRel .ult (.ofDep w) (.ofDep a) (.ofDep b)
-  | .binRel .ule w a b => .binRel .ule (.ofDep w) (.ofDep a) (.ofDep b)
-  | .binRel .slt w a b => .binRel .slt (.ofDep w) (.ofDep a) (.ofDep b)
-  | .binRel .sle w a b => .binRel .sle (.ofDep w) (.ofDep a) (.ofDep b)
-  | .or p1 p2 => .or (.ofDep p1) (.ofDep p2)
-  | .and p1 p2 => .and (.ofDep p1) (.ofDep p2)
-  | .boolBinRel .eq a b => .boolBinRel .eq (.ofDep a) (.ofDep b)
+  | binWidthRel _k _wa _wb => 0
+  | binRel _k _w a b => max (Term.bcard a) (Term.bcard b)
+  | or p1 p2 => max (Term.bcard p1) (Term.bcard p2)
+  | and p1 p2 => max (Term.bcard p1) (Term.bcard p2)
+  | pvar _v => 0
+  | boolBinRel _k a b => max (a.bcard) (b.bcard)
 
 end Nondep
 
@@ -722,8 +832,6 @@ structure TermFSM (wcard tcard bcard pcard : Nat) (t : Nondep.Term) where
   toFsmZext : FSM (StateSpace wcard tcard bcard pcard)
   width : NatFSM wcard tcard bcard pcard t.width
 
-structure PredicateFSM (wcard tcard bcard pcard : Nat) (p : Nondep.Predicate) where
-  toFsm : FSM (StateSpace wcard tcard bcard pcard)
 
 /--
 Preconditions on the environments: 1. The widths are encoded in unary.
@@ -807,8 +915,6 @@ theorem HPredicateEnv.of_mkFsmEnvOfTenv {wcard tcard bcard pcard : Nat}
   intros p
   simp [HTermEnv.mkFsmEnvOfTenv]
 
-
-
 structure HNatFSMToBitstream {wcard : Nat} {v : WidthExpr wcard} {tcard : Nat} {bcard : Nat} {pcard : Nat}
    (fsm : NatFSM wcard tcard bcard pcard (.ofDep v)) : Prop where
   heq :
@@ -827,37 +933,38 @@ followed by the output at a width 'i'.
 -/
 structure HTermFSMToBitStream {w : WidthExpr wcard}
   {tctx : Term.Ctx wcard tcard}
-  {t : Term bcard tctx (.bv w)}
-  (fsm : TermFSM wcard tcard bcard pcard (.ofDep t)) : Prop where
+  {t : Term bcard pcard tctx (.bv w)}
+  (fsm : TermFSM wcard tcard bcard pcard (.ofDepTerm t)) : Prop where
   heq :
-    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv)
+    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
       (henv : HTermEnv fsmEnv tenv benv) →
         fsm.toFsmZext.eval fsmEnv =
-        BitStream.ofBitVecZext (t.toBV benv tenv)
+        BitStream.ofBitVecZext (t.toBV benv penv tenv)
 
 structure HTermBoolFSMToBitStream
   {tctx : Term.Ctx wcard tcard}
-  {t : Term bcard tctx .bool}
-  (fsm : TermFSM wcard tcard bcard pcard (.ofDep t)) : Prop where
+  {t : Term bcard pcard tctx .bool}
+  (fsm : TermFSM wcard tcard bcard pcard (.ofDepTerm t)) : Prop where
   heq :
-    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv)
+    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
       (henv : HTermEnv fsmEnv tenv benv) →
         fsm.toFsmZext.eval fsmEnv =
-        BitStream.ofBool (t.toBV benv tenv) -- TODO: make this exactly the same as predicate?
+        BitStream.ofBool (t.toBV benv penv tenv) -- TODO: make this exactly the same as predicate?
 
 
 structure HPredFSMToBitStream {pcard : Nat}
   {tctx : Term.Ctx wcard tcard}
-  {p : Predicate wcard tcard bcard tctx pcard} (fsm : PredicateFSM wcard tcard bcard pcard (.ofDep p)) : Prop where
+  {p : Term bcard pcard tctx .prop}
+  (fsm : TermFSM wcard tcard bcard pcard
+    (.ofDepTerm p)) : Prop where
   heq :
-    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (tenv : tctx.Env wenv)
-      (penv : Predicate.Env pcard)
+    ∀ {wenv : WidthExpr.Env wcard} (benv : Term.BoolEnv bcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard pcard → BitStream),
       (htenv : HTermEnv fsmEnv tenv benv) →
       (hpenv : HPredicateEnv fsmEnv penv) →
-        p.toProp benv tenv penv ↔ (fsm.toFsm.eval fsmEnv = .negOne)
+        p.toBV benv penv tenv  ↔ (fsm.toFsmZext.eval fsmEnv = .negOne)
 
 end ToFSM
 end MultiWidth

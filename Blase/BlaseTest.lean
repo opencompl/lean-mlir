@@ -10,4 +10,5 @@ import BlaseTest.PrintSmtLib
 import BlaseTest.Width
 import BlaseTest.BitVec
 import BlaseTest.Rover
+import BlaseTest.QualitativeExamples
 import BlaseEval

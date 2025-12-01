@@ -23,27 +23,12 @@ open Lean Meta Elab Tactic
 
 -- | TODO: go into every 'ofBool', and call 'generalize' on the argument.
 /--
-error: CEX: Found exact counter-example at iteration 0 for predicate MultiWidth.Nondep.Predicate.binRel
-  (MultiWidth.BinaryRelationKind.eq)
-  (MultiWidth.Nondep.WidthExpr.var 0)
-  (MultiWidth.Nondep.Term.add
-    (MultiWidth.Nondep.WidthExpr.var 0)
-    (MultiWidth.Nondep.Term.band
-      (MultiWidth.Nondep.WidthExpr.var 0)
-      (MultiWidth.Nondep.Term.sext
-        (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.const 1))
-        (MultiWidth.Nondep.WidthExpr.var 0))
-      (MultiWidth.Nondep.Term.var 1 (MultiWidth.Nondep.WidthExpr.var 0)))
-    (MultiWidth.Nondep.Term.band
-      (MultiWidth.Nondep.WidthExpr.var 0)
-      (MultiWidth.Nondep.Term.sext
-        (MultiWidth.Nondep.Term.var 0 (MultiWidth.Nondep.WidthExpr.const 1))
-        (MultiWidth.Nondep.WidthExpr.var 0))
-      (MultiWidth.Nondep.Term.var 2 (MultiWidth.Nondep.WidthExpr.var 0))))
-  (MultiWidth.Nondep.Term.ofNat (MultiWidth.Nondep.WidthExpr.var 0) 0)
+warning: abstracted boolean: ⏎
+  → 'x_2✝ <ₛ x_3✝'
 ---
-info: found occurrence: BitVec.ofBool (BitVec.slt (OfNat.ofNat.{0} Nat 32 (instOfNatNat 32)) _uniq.13556 _uniq.13557)
-found occurrence: BitVec.ofBool (BitVec.slt (OfNat.ofNat.{0} Nat 32 (instOfNatNat 32)) _uniq.13556 _uniq.13557)
+error: MAYCEX: Found possible counter-example at iteration 1 for predicate '(x_2✝ <ₛ x_3✝) = true ∨
+  ofBool (x_2✝ <ₛ x_3✝) ≠ b_ofBool✝¹ ∨
+    ofBool (x_2✝ <ₛ x_3✝) ≠ b_ofBool✝ ∨ (signExtend w✝ b_ofBool✝ &&& x_1✝) + (signExtend w✝ b_ofBool✝ &&& x✝) = 0#w✝'
 -/
 #guard_msgs in theorem and_sext_multiuse_thm.extracted_1._2 : ∀ (x x_1 x_2 x_3 : BitVec 32),
   ¬ofBool (x_2 <ₛ x_3) = 1#1 →
