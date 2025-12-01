@@ -93,13 +93,74 @@ def register_wrapper
 
 
 /--
+  We define an isomorphism from a streams `a` to a stream of their product BitVec 1.
+  With this isomorphism we map the single streams that define the inputs of the hardware module to
+  a unique streams, where each element is composed by the single streams.
+-/
+def iso_unary (a : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 1) :=
+    fun n =>
+      {toArray := [a n].toArray, size_toArray := by simp}
+
+/--
   We define an isomorphism from two streams `a`, `b` to a stream of their product BitVec 1 × BitVec 1.
   With this isomorphism we map the single streams that define the inputs of the hardware module to
   a unique streams, where each element is composed by the single streams.
 -/
-def iso (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
+def iso_binary (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
     fun n =>
       {toArray := [a n, b n].toArray, size_toArray := by simp}
+
+
+
+/--
+  loop in:
+  https://docs.google.com/drawings/d/1ymKZgQxT9D3O9SNsK_9duNYM88miSwUYrdpusvCB2hE/edit
+-/
+def loop
+  (arg_0_valid_input out0_ready_input out0_valid_input feedback_12_input feedback_11_input feedback_5_input reg_0_input reg_1_input : Stream' (BitVec 1))
+  (init_reg_0 init_reg_1 : BitVec 1) : Stream' (BitVec 1) :=
+  /- state space-/
+  let β := Stream' (BitVec 1) × Stream' (BitVec 1) × Stream' (BitVec 1) × Stream' (BitVec 1) × Stream' (BitVec 1) ×
+            Stream' (BitVec 1) × Stream' (BitVec 1) × Stream' (BitVec 1) × Bool
+  /- compute the output -/
+  let f : β → (BitVec 1) :=
+    fun (arg_0_valid, out0_ready, _, _, _, _, emitted_0, emitted_1, is_init) =>
+    match is_init with
+    | true =>
+      /- at the very first iteration we compute the output only using the initial value for the reg -/
+      let or_5 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 init_reg_0) arg_0_valid.head) out0_ready.head) init_reg_0
+      let or_11 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 init_reg_1) arg_0_valid.head) out0_ready.head) init_reg_1
+      let and_12 := BitVec.and or_5 or_11
+      and_12
+    | false =>
+      /- starting from the second iteration, we have the value stored in the register,
+        which we can use for computation -/
+      let or_5 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 emitted_0.head) arg_0_valid.head) out0_ready.head) emitted_0.head
+      let or_11 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 emitted_1.head) arg_0_valid.head) out0_ready.head) emitted_1.head
+      let and_12 := BitVec.and or_5 or_11
+      and_12
+  /- compute the next state -/
+  let g : β → β :=
+    fun (arg_0_valid, out0_ready, out0_valid, feedback_12, feedback_11, feedback_5, emitted_0, emitted_1, _) =>
+    let and_1 := BitVec.and (BitVec.xor 1#1 feedback_12.head) feedback_5.head
+    let and_7 := BitVec.and (BitVec.xor 1#1 feedback_12.head) feedback_11.head
+    let or_5 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 emitted_0.head) arg_0_valid.head) out0_ready.head) emitted_0.head
+    let or_11 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 emitted_1.head) arg_0_valid.head) out0_ready.head) emitted_1.head
+    let and_12 := BitVec.and or_5 or_11
+    /- new inputs are just the tails  -/
+    let updated_arg0_valid := arg_0_valid.tail
+    let updated_out0_ready := out0_ready.tail
+    let updated_out0_valid := out0_valid.tail
+    /- new feedback loops are updated according to the comb operations in the circuit -/
+    let updated_feedback_12 := Stream'.cons and_12 feedback_12
+    let updated_feedback_11 := Stream'.cons or_11 feedback_11
+    let updated_feedback_5 := Stream'.cons or_5 feedback_5
+    /- update the values in the registers-/
+    let updated_emitted_0 := Stream'.cons and_1 emitted_0
+    let updated_emitted_1 := Stream'.cons and_7 emitted_1
+    (updated_arg0_valid, updated_out0_ready, updated_out0_valid, updated_feedback_12, updated_feedback_11, updated_feedback_5, updated_emitted_0, updated_emitted_1, false)
+  Stream'.corec f g (arg_0_valid_input, out0_ready_input, out0_valid_input, feedback_12_input, feedback_11_input, feedback_5_input, reg_0_input, reg_1_input, true)
+
 
 /-- We define the module as a function with inputs and outputs.
   we use `Stream'` type, which does not contain `Option` values, because at this level
@@ -154,19 +215,4 @@ def module
   let c_0_i0_0 : Stream' (BitVec 0) := Stream'.const 0#0
   let False : Stream' (BitVec 1) := Stream'.const 0#1
   let True : Stream' (BitVec 1) := Stream'.const 1#1
-  let inputs := iso arg0 True
-  let xor := register_wrapper
-                (inputs := inputs)
-                (init_regs := sorry)
-                (update_fun := BitVec.xor)
   sorry
-
-
--- def register_wrapper
---     (inputs : Stream' (Vector α m))
---     -- we set the `init_regs` to `none` after using the values for the first iteration
---     (init_regs : Vector α nfeed)
---     -- inputs- and outputs- that are feedback-looped are canceled
---     (update_fun : (Vector α m × Vector α nfeed) → (Vector α r × Vector α nfeed))
---       : Stream' (Vector α r) :=
---   /-
