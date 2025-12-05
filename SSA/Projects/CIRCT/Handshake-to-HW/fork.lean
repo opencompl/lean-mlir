@@ -3,17 +3,6 @@ import SSA.Projects.CIRCT.Stream.WeakBisim
 
 namespace CIRCTStream
 
-/-- We pack all the outputs in the module in a structure -/
-structure out_struct where
-  (arg0_ready : Stream' (BitVec 1))
-  (arg1_ready : Stream' (BitVec 1))
-  (out0_valid : Stream' (BitVec 1))
-  (out1_valid : Stream' (BitVec 1))
-  (out2_valid : Stream' (BitVec 1))
-  (out0 : Stream' (BitVec 1))
-  (out1 : Stream' (BitVec 1))
-  (out2 : Stream' (BitVec 1))
-
 /-!
 Trace monoidal categories:
 we model a feedback loop as a function with a-many inputs and x-many inputs, producing b-many outputs
@@ -110,58 +99,6 @@ def iso_binary (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
     fun n =>
       {toArray := [a n, b n].toArray, size_toArray := by simp}
 
-
-
-/--
-  loop in:
-  https://docs.google.com/drawings/d/1ymKZgQxT9D3O9SNsK_9duNYM88miSwUYrdpusvCB2hE/edit
--/
-def loop
-  (arg_0_valid_input out0_ready_input out0_valid_input feedback_12_input feedback_11_input feedback_5_input reg_0_input reg_1_input : Stream' (BitVec 1))
-  (init_reg_0 init_reg_1 : BitVec 1) : Stream' (BitVec 1) :=
-  /- state space-/
-  let β := Stream' (BitVec 1) × Stream' (BitVec 1) × Stream' (BitVec 1) × Stream' (BitVec 1) × Stream' (BitVec 1) ×
-            Stream' (BitVec 1) × Stream' (BitVec 1) × Stream' (BitVec 1) × Bool
-  /- compute the output -/
-  let f : β → (BitVec 1) :=
-    fun (arg_0_valid, out0_ready, _, _, _, _, emitted_0, emitted_1, is_init) =>
-    match is_init with
-    | true =>
-      /- at the very first iteration we compute the output only using the initial value for the reg -/
-      let or_5 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 init_reg_0) arg_0_valid.head) out0_ready.head) init_reg_0
-      let or_11 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 init_reg_1) arg_0_valid.head) out0_ready.head) init_reg_1
-      let and_12 := BitVec.and or_5 or_11
-      and_12
-    | false =>
-      /- starting from the second iteration, we have the value stored in the register,
-        which we can use for computation -/
-      let or_5 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 emitted_0.head) arg_0_valid.head) out0_ready.head) emitted_0.head
-      let or_11 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 emitted_1.head) arg_0_valid.head) out0_ready.head) emitted_1.head
-      let and_12 := BitVec.and or_5 or_11
-      and_12
-  /- compute the next state -/
-  let g : β → β :=
-    fun (arg_0_valid, out0_ready, out0_valid, feedback_12, feedback_11, feedback_5, emitted_0, emitted_1, _) =>
-    let and_1 := BitVec.and (BitVec.xor 1#1 feedback_12.head) feedback_5.head
-    let and_7 := BitVec.and (BitVec.xor 1#1 feedback_12.head) feedback_11.head
-    let or_5 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 emitted_0.head) arg_0_valid.head) out0_ready.head) emitted_0.head
-    let or_11 := BitVec.or (BitVec.and (BitVec.and (BitVec.xor 1#1 emitted_1.head) arg_0_valid.head) out0_ready.head) emitted_1.head
-    let and_12 := BitVec.and or_5 or_11
-    /- new inputs are just the tails  -/
-    let updated_arg0_valid := arg_0_valid.tail
-    let updated_out0_ready := out0_ready.tail
-    let updated_out0_valid := out0_valid.tail
-    /- new feedback loops are updated according to the comb operations in the circuit -/
-    let updated_feedback_12 := Stream'.cons and_12 feedback_12
-    let updated_feedback_11 := Stream'.cons or_11 feedback_11
-    let updated_feedback_5 := Stream'.cons or_5 feedback_5
-    /- update the values in the registers-/
-    let updated_emitted_0 := Stream'.cons and_1 emitted_0
-    let updated_emitted_1 := Stream'.cons and_7 emitted_1
-    (updated_arg0_valid, updated_out0_ready, updated_out0_valid, updated_feedback_12, updated_feedback_11, updated_feedback_5, updated_emitted_0, updated_emitted_1, false)
-  Stream'.corec f g (arg_0_valid_input, out0_ready_input, out0_valid_input, feedback_12_input, feedback_11_input, feedback_5_input, reg_0_input, reg_1_input, true)
-
-
 /-- We define the module as a function with inputs and outputs.
   we use `Stream'` type, which does not contain `Option` values, because at this level
   of abstractions the content of streams has been concretized
@@ -177,7 +114,8 @@ def loop
   (https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/28ef888954a8726d4858bed925ad067729207655)
 
     module {
-    hw.module @test_fork(in %arg0 : i0, in %arg0_valid : i1, in %arg1 : i0, in %arg1_valid : i1, in %clk : !seq.clock, in %rst : i1, in %out0_ready : i1, in %out1_ready : i1, in %out2_ready : i1, out arg0_ready : i1, out arg1_ready : i1, out out0 : i0, out out0_valid : i1, out out1 : i0, out out1_valid : i1, out out2 : i0, out out2_valid : i1) {
+    hw.module @test_fork(in %arg0 : i0, in %arg0_valid : i1, in %arg1 : i0, in %arg1_valid : i1, in %clk : !seq.clock, in %rst : i1, in %out0_ready : i1, in %out1_ready : i1, in %out2_ready : i1,
+    ) {
       %c0_i0 = hw.constant 0 : i0
       %c0_i0_0 = hw.constant 0 : i0
       %false = hw.constant false
@@ -202,17 +140,42 @@ def loop
     }
 
 -/
+
+
+def streams_to_vec (xv : Vector (Stream' α) n) : Stream' (Vector α n) := sorry
+
+def vec_to_streams (xv : Stream' (Vector α n) ) : Vector (Stream' α) n := sorry
+
 def module
-    (arg0 : Stream' (BitVec 1))
-    (arg0_valid : Stream' (BitVec 1))
-    (arg1 : Stream' (BitVec 1))
-    (arg1_valid : Stream' (BitVec 1))
-    (rst : Stream' (BitVec 1))
-    (out0_ready : Stream' (BitVec 1))
-    (out1_ready : Stream' (BitVec 1))
-    (out2_ready : Stream' (BitVec 1)) : out_struct :=
-  let c_0_i0 : Stream' (BitVec 0) := Stream'.const 0#0
-  let c_0_i0_0 : Stream' (BitVec 0) := Stream'.const 0#0
-  let False : Stream' (BitVec 1) := Stream'.const 0#1
-  let True : Stream' (BitVec 1) := Stream'.const 1#1
-  sorry
+      (arg_0 : Stream' (BitVec 1))
+      (arg_0_valid : Stream' (BitVec 1))
+      (arg_1 : Stream' (BitVec 1))
+      (arg_1_valid : Stream' (BitVec 1))
+      (out0_ready : Stream' (BitVec 1))
+      (out1_ready : Stream' (BitVec 1))
+      (out2_ready : Stream' (BitVec 1))
+  : Vector (Stream' (BitVec 1)) 8 :=
+    let vec_streams := streams_to_vec
+                        (#v[arg_0, arg_0_valid, arg_1, arg_1_valid, out0_ready, out1_ready, out2_ready])
+    vec_to_streams <| register_wrapper
+      (inputs := vec_streams)
+      (init_regs := #v[0#1, 0#1])
+      (update_fun := -- (Vector (BitVec 1) 7 × Vector (BitVec 1) 2) → (Vector α 9 × Vector α 2)
+        fun (inp, regs) =>
+          let v2 := BitVec.xor regs[0] 1#1
+          let v3 := BitVec.and v2 inp[1]
+          let v4 := BitVec.and inp[4] v3
+          let v5 := BitVec.or v4 regs[0]
+          let v8 := BitVec.xor regs[1] 1#1
+          let v9 := BitVec.and v8 inp[1]
+          let v10 := BitVec.and inp[5] v9
+          let v11 := BitVec.or v10 regs[1]
+          let v12 := BitVec.and v5 v11
+          let v6 := BitVec.xor v12 1#1
+          let v7 := BitVec.and v11 v6
+          let v0 := BitVec.xor v12 1#1
+          let v1 := BitVec.and v5 v0
+          let updated_reg0 := v1
+          let updated_reg1 := v7
+          (#v[v12, inp[6], 0#1, v3, 0#1, v9, inp[2], inp[3]], #v[updated_reg0, updated_reg1])
+      )
