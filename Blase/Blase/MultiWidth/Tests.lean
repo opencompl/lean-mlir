@@ -16,7 +16,7 @@ theorem tctx_at_0 : tctx ⟨0, by omega⟩ = WidthExpr.var ⟨0, by omega⟩ := 
 
 
 def xw : WidthExpr 1 := WidthExpr.var ⟨0, by omega⟩
-def xvar := @MultiWidth.Term.var (wcard := 1) (bcard := 0) (pcard := 0) (tcard := 1)
+def xvar := @MultiWidth.Term.var (wcard := 1) (bcard := 0) (ncard := 0) (icard := 0) (pcard := 0) (tcard := 1) 
   (tctx := tctx) (v := ⟨0, by omega⟩)
 
 def xw' : MultiWidth.Nondep.WidthExpr := .var 0
@@ -44,6 +44,8 @@ theorem prop_eq (w : Nat) (x : BitVec w) :
   (prop_xw_eq_xw.toBV
   (benv := fun v => v.elim0)
   (penv := fun v => v.elim0)
+  (ienv := fun v => v.elim0)
+  (nenv := fun v => v.elim0)
   (wenv := wenv)
   (tctx := tctx)
   (tenv := Term.Ctx.Env.empty wenv (Term.Ctx.empty _)
@@ -69,7 +71,7 @@ theorem tctx_at_1 : tctx ⟨1, by omega⟩ = WidthExpr.var ⟨0, by omega⟩ := 
 
 
 def xw : WidthExpr 1 := WidthExpr.var ⟨0, by omega⟩
-def xvar := @MultiWidth.Term.var (wcard := 1) (bcard := 0) (pcard := 0) (tcard := 2)
+def xvar := @MultiWidth.Term.var (wcard := 1) (bcard := 0) (ncard := 0) (icard := 0) (pcard := 0) (tcard := 2)
   (tctx := tctx) (v := ⟨0, by omega⟩)
 
 def xw' : MultiWidth.Nondep.WidthExpr := .var 0
@@ -78,7 +80,7 @@ def xvar' : MultiWidth.Nondep.Term := MultiWidth.Nondep.Term.var 0 xw'
 theorem ofDep_xvar_eq_xvar' : MultiWidth.Nondep.Term.ofDepTerm xvar = xvar' := rfl
 
 def yw : WidthExpr 1 := WidthExpr.var ⟨0, by omega⟩
-def yvar := @MultiWidth.Term.var (wcard := 1) (bcard := 0) (pcard := 0) (tcard := 2)
+def yvar := @MultiWidth.Term.var (wcard := 1) (bcard := 0) (pcard := 0) (ncard := 0) (icard := 0) (tcard := 2)
   (tctx := tctx) (v := ⟨1, by omega⟩)
 
 def yw' : MultiWidth.Nondep.WidthExpr := .var 0
@@ -106,6 +108,8 @@ theorem prop_eq (w : Nat) (x y: BitVec w) :
   (prop_xw_eq_xw.toBV
   (benv := fun v => v.elim0)
   (penv := fun v => v.elim0)
+  (ienv := fun v => v.elim0)
+  (nenv := fun v => v.elim0)
   (wenv := wenv)
   (tctx := tctx)
   (tenv := Term.Ctx.Env.empty wenv (Term.Ctx.empty _)
