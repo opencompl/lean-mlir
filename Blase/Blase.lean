@@ -3,4 +3,6 @@
 import Blase.Fast
 import Blase.SingleWidth.Tactic
 import Blase.MultiWidth.Tactic
+import Blase.MultiWidth.Preprocessing
+import Blase.WidthGeneralize.Tactic
 -- Jiggle.

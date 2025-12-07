@@ -22,6 +22,8 @@ import SSA.Projects.LLVMRiscV.Pipeline.select
 import SSA.Projects.LLVMRiscV.Pipeline.pseudo
 import SSA.Projects.LLVMRiscV.Pipeline.freeze
 import SSA.Projects.LLVMRiscV.Pipeline.Combiners
+import SSA.Projects.LLVMRiscV.Pipeline.ConstantMatching
+import SSA.Projects.LLVMRiscV.Pipeline.SelectionDAG
 
 import LeanMLIR.Transforms.DCE
 import LeanMLIR.Transforms.CSE
@@ -130,7 +132,7 @@ def selectionPipeFuelSafe {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : Com
 -/
 def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : Com LLVMPlusRiscV
   (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) (pseudo : Bool):=
-  let rmInitialDeadCode :=  (DCE.dce' prog).val;
+  let rmInitialDeadCode :=  (DCE.repeatDce prog).val;
   let rmInitialDeadCode :=
   if pseudo then
     multiRewritePeephole fuel pseudo_match rmInitialDeadCode
@@ -142,14 +144,12 @@ def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : 
     rewritingPatterns1  loweredConst;
   let lowerPart2 := multiRewritePeephole fuel
     rewritingPatterns0 lowerPart1;
-  let postLoweringDCE := (DCE.dce' lowerPart2).val;
-  let postReconcileCast := multiRewritePeephole fuel (reconcile_cast_pass) postLoweringDCE;
-  let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
-  let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val;
-  let optimize_eq_cast := (CSE.cse' remove_dead_Cast2).val;
-  let out := (DCE.dce' optimize_eq_cast).val;
-  let out2 := (DCE.dce' out).val;
-  out2
+  let postLoweringDCE := (DCE.repeatDce lowerPart2).val;
+  let postReconcileCast := multiRewritePeephole fuel reconcile_cast_pass postLoweringDCE;
+  let remove_dead_cast := (DCE.repeatDce postReconcileCast).val;
+  let optimize_eq_cast := (CSE.cse' remove_dead_cast).val;
+  let out := (DCE.repeatDce optimize_eq_cast).val;
+  out
 
 /--
   Run the instruction selector pipeline with optimizations, resulting in the following pipeline:
@@ -167,7 +167,7 @@ def selectionPipeFuelWithCSE {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : 
 -/
 def selectionPipeFuelWithCSEWithOpt {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : Com LLVMPlusRiscV
     (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) (pseudo : Bool):=
-  let rmInitialDeadCode :=  (DCE.dce' prog).val;
+  let rmInitialDeadCode :=  (DCE.repeatDce prog).val;
   let rmInitialDeadCode :=
     if pseudo then
       multiRewritePeephole fuel pseudo_match rmInitialDeadCode
@@ -183,15 +183,101 @@ def selectionPipeFuelWithCSEWithOpt {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (
     rewritingPatterns1  loweredConst;
   let lowerPart2 := multiRewritePeephole fuel
     rewritingPatterns0 lowerPart1;
-  let postLoweringDCE := (DCE.dce' lowerPart2).val;
+  let postLoweringDCE := (DCE.repeatDce lowerPart2).val;
   let postReconcileCast := multiRewritePeephole fuel (reconcile_cast_pass) postLoweringDCE;
-  let remove_dead_Cast1 := (DCE.dce' postReconcileCast).val;
-  let remove_dead_Cast2 := (DCE.dce' remove_dead_Cast1).val;
+  let remove_dead_cast := (DCE.repeatDce postReconcileCast).val;
+  let optimize_eq_cast := (CSE.cse' remove_dead_cast).val;
+  let out := (DCE.repeatDce optimize_eq_cast).val;
+  let optimize_final_1 := multiRewritePeephole 100
+    GLobalISelO0PreLegalizerCombiner out;
+  let optimize_final_2 := multiRewritePeephole 100
+    GLobalISelPostLegalizerCombiner optimize_final_1;
+  let dce_final := (DCE.repeatDce optimize_final_2).val
+  dce_final
+
+/--
+  Run the instruction selector pipeline including optimizations requiring constant matching, resulting in the following pipeline:
+  - DCE
+  - pre-legalization `O0` optimizations from globalISel (on LLVM)
+  - pre-legalication optimizations with constant matching from globalISel (on LLVM)
+  - post-legalization `O0` optimizations from globalISel (on LLVM)
+  - lowering instructions in `rewritingPatterns1`
+  - lowering instructions in `rewritingPatterns0`
+  - DCE (to remove LLVM instructions)
+  - remove casting operations (`reconcile_casts`)
+  - DCE (dead code due to casting removal)
+  - CSE
+  - pre-legalization `O0` optimizations from globalISel (on RISCV assembly)
+  - post-legalization `O0` optimizations from globalISel (on RISCV assembly)
+-/
+def selectionPipeFuelWithCSEWithOptConst {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : Com LLVMPlusRiscV
+    (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) (pseudo : Bool):=
+  let rmInitialDeadCode :=  (DCE.repeatDce  prog).val;
+  let rmInitialDeadCode :=
+    if pseudo then
+      multiRewritePeephole fuel pseudo_match rmInitialDeadCode
+    else
+      rmInitialDeadCode
+  let optimize_initial_1_const := multiRewritePeephole fuel
+    GlobalISelPostLegalizerCombinerConstantFolding rmInitialDeadCode;
+  let optimize_initial_1 := multiRewritePeephole fuel
+    GLobalISelO0PreLegalizerCombiner optimize_initial_1_const;
+  let optimize_initial_2 := multiRewritePeephole fuel
+    GLobalISelPostLegalizerCombiner optimize_initial_1;
+  let loweredConst := multiRewritePeephole fuel
+    const_match optimize_initial_2;
+  let lowerPart1 := multiRewritePeephole fuel
+    rewritingPatterns1  loweredConst;
+  let lowerPart2 := multiRewritePeephole fuel
+    rewritingPatterns0 lowerPart1;
+  let postLoweringDCE := (DCE.repeatDce  lowerPart2).val;
+  let postReconcileCast := multiRewritePeephole fuel (reconcile_cast_pass) postLoweringDCE;
+  let remove_dead_Cast1 := (DCE.repeatDce  postReconcileCast).val;
+  let remove_dead_Cast2 := (DCE.repeatDce  remove_dead_Cast1).val;
   let optimize_eq_cast := (CSE.cse' remove_dead_Cast2).val;
-  let out := (DCE.dce' optimize_eq_cast).val;
-  let out2 := (DCE.dce' out).val;
+  let out := (DCE.repeatDce  optimize_eq_cast).val;
+  let out2 := (DCE.repeatDce  out).val;
   let optimize_final_1 := multiRewritePeephole 100
     GLobalISelO0PreLegalizerCombiner out2;
   let optimize_final_2 := multiRewritePeephole 100
     GLobalISelPostLegalizerCombiner optimize_final_1;
-  optimize_final_2
+  let dce_final := (DCE.repeatDce optimize_final_2).val
+  dce_final
+
+/--
+  Run the instruction selector pipeline with optimizations, resulting in the following pipeline:
+  - DCE
+  - Optimizations from SelectionDAG (on LLVM)
+  - lowering instructions in `rewritingPatterns1`
+  - lowering instructions in `rewritingPatterns0`
+  - DCE (to remove LLVM instructions)
+  - remove casting operations (`reconcile_casts`)
+  - DCE (dead code due to casting removal)
+  - CSE
+  - Optimizations from SelectionDAG (on RISCV assembly)
+-/
+def selectionPipeWithSelectionDAG {Γl : List LLVMPlusRiscV.Ty} (fuel : Nat) (prog : Com LLVMPlusRiscV
+    (Ctxt.ofList Γl) .pure (.llvm (.bitvec w))) (pseudo : Bool):=
+  let rmInitialDeadCode :=  (DCE.repeatDce prog).val;
+  let rmInitialDeadCode :=
+    if pseudo then
+      multiRewritePeephole fuel pseudo_match rmInitialDeadCode
+    else
+      rmInitialDeadCode
+  let optimize_initial := multiRewritePeephole fuel
+    SelectionDAGCombiner rmInitialDeadCode;
+  let loweredConst := multiRewritePeephole fuel
+    const_match optimize_initial;
+  let lowerPart1 := multiRewritePeephole fuel
+    rewritingPatterns1  loweredConst;
+  let lowerPart2 := multiRewritePeephole fuel
+    rewritingPatterns0 lowerPart1;
+  let postLoweringDCE := (DCE.repeatDce lowerPart2).val;
+  let postReconcileCast := multiRewritePeephole fuel (reconcile_cast_pass) postLoweringDCE;
+  let remove_dead_cast := (DCE.repeatDce postReconcileCast).val;
+  let optimize_eq_cast := (CSE.cse' remove_dead_cast).val;
+  let out := (DCE.repeatDce optimize_eq_cast).val;
+  let optimize_final := multiRewritePeephole 100
+    SelectionDAGCombiner out;
+  let dce_final := (DCE.repeatDce optimize_final).val
+  dce_final

@@ -13,7 +13,8 @@ open Std.Sat
 open Std.Tactic.BVDecide
 open Tactic
 
-def defaultParsedExprState : ParsedInputState := { maxFreeVarId := 0
+def defaultParsedExprState : ParsedInputState := { maxFreeVarId := 0, maxWidthId := 1, widthIdToVariable := {},
+                                                                 widthValToVar := {}
                                                                  , numSymVars := 0, originalWidth := 32
                                                                 , inputVarIdToVariable := {}, symVarToVal := {}
                                                                 , symVarIdToVariable := {}, displayNameToVariable := {}, valToSymVar:= {}}
@@ -97,14 +98,18 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (BVExprWrap
     | BitVec.signExtend _ vExpr xExpr =>
         let some v ← getNatValue? vExpr | return none
         let some x ← go xExpr | return none
+
+        storeWidth v
         return some {bvExpr := GenBVExpr.signExtend v x.bvExpr, width := v}
     | BitVec.zeroExtend _ vExpr xExpr =>
         let some v ← getNatValue? vExpr | return none
         let some x ← go xExpr | return none
+        storeWidth v
         return some {bvExpr := GenBVExpr.zeroExtend v x.bvExpr, width := v}
     | BitVec.truncate _ vExpr xExpr =>
       let some v ← getNatValue? vExpr | return none
       let some x ← go xExpr | return none
+      storeWidth v
       return some {bvExpr := GenBVExpr.truncate v x.bvExpr, width := _}
     | Neg.neg _ _ a =>
           let some (bvProd) ← getBitVecValue? a| return none
@@ -157,14 +162,24 @@ partial def toBVExpr (expr : Expr) (width: Nat) : ParseExprM (Option (BVExprWrap
                 let newExpr : GenBVExpr w :=  GenBVExpr.var newId
 
                 let var : HydraVariable := {name := userFacingName, id := newId, width := w}
-
                 let updatedState : ParsedInputState :=  { currState with
                                                          maxFreeVarId := newId
                                                          , displayNameToVariable := currState.displayNameToVariable.insert userFacingName var
                                                          , inputVarIdToVariable := currState.inputVarIdToVariable.insert newId var
                                                          }
                 set updatedState
+                storeWidth w
                 return some {bvExpr := newExpr, width := w}
+
+  storeWidth (v: Nat) : ParseExprM Unit := do
+    let currState ← get
+
+    if !currState.widthValToVar.contains v then
+      let newWidthId := currState.maxWidthId + 1
+      let userFacingName := Lean.Name.mkSimple s!"w{currState.widthIdToVariable.size + 1}"
+      let var : HydraVariable := {name := userFacingName, id := newWidthId, width := v}
+      let updatedState : ParsedInputState := { currState with maxWidthId := newWidthId, widthIdToVariable := currState.widthIdToVariable.insert newWidthId var, widthValToVar := currState.widthValToVar.insert v var}
+      set updatedState
 
   rotateReflection (innerExpr distanceExpr resType: Expr) (rotateOp: Nat → BVUnOp)
           : ParseExprM (Option (BVExprWrapper)) := do

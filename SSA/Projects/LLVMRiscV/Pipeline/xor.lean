@@ -7,8 +7,32 @@ open LLVMRiscV
 open LeanMLIR.SingleReturnCompat
 
 /-!
-  This file implements the lowering for the `llvm.xor` instruction for type i64.
+  This file implements the lowering for the `llvm.xor` instruction for type i32, i64.
 -/
+
+/-! ### i32 -/
+
+@[simp_denote]
+def llvm_xor_32: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
+  .pure (.llvm (.bitvec 32)) := [LV| {
+  ^entry (%x: i32, %y: i32):
+    %0 = llvm.xor    %x, %y : i32
+    llvm.return %0 : i32
+  }]
+
+@[simp_denote]
+def xor_riscv_32: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 32), .llvm (.bitvec 32)]⟩
+  .pure (.llvm (.bitvec 32)) := [LV| {
+  ^entry (%x: i32, %y: i32):
+    %x1 = "builtin.unrealized_conversion_cast"(%x) : (i32) -> (!i64)
+    %x2 = "builtin.unrealized_conversion_cast"(%y) : (i32) -> (!i64)
+    %1 = xor %x1, %x2 : !i64
+    %2 = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i32)
+    llvm.return %2 : i32
+  }]
+
+def llvm_xor_lower_riscv_32: LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] :=
+  {lhs := llvm_xor_32, rhs := xor_riscv_32}
 
 /-! ### i64 -/
 
@@ -31,9 +55,10 @@ def xor_riscv_64: Com  LLVMPlusRiscV ⟨[.llvm (.bitvec 64), .llvm (.bitvec 64)]
     llvm.return %2 : i64
   }]
 
-def llvm_xor_lower_riscv: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
+def llvm_xor_lower_riscv_64: LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] :=
   {lhs := llvm_xor_64, rhs := xor_riscv_64}
 
 def xor_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
-  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_xor_lower_riscv)
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_xor_lower_riscv_32),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_xor_lower_riscv_64)
 ]

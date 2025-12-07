@@ -19,9 +19,14 @@ path = "Blase"
 rev = "main"
 
 [[require]]
+name = "SexprPBV"
+path = "SexprPBV"
+rev = "main"
+
+[[require]]
 name = "Cli"
 git = "https://github.com/mhuisi/lean4-cli.git"
-rev = "main"
+rev = "nightly-testing"
 
 [[require]]
 name = "leanwuzla"
@@ -71,3 +76,8 @@ roots = ["SSA.Projects.CIRCT.CIRCT"]
 [[lean_lib]]
 name = "ISL"
 roots = ["SSA.Projects.ISL.ISL"]
+
+[[require]]
+name = "SailRV64"
+git = "https://github.com/opencompl/riscv-lean.git"
+rev = "main"
