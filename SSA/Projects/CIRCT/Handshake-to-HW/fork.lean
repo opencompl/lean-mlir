@@ -99,6 +99,25 @@ def iso_binary (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
     fun n =>
       {toArray := [a n, b n].toArray, size_toArray := by simp}
 
+
+/--
+  Map the `i`-th element of stream `s` in `xv` to the output vector.
+-/
+def streams_to_vec {α : Type u} {n : Nat} (xv : Vector (Stream' α) n) : Stream' (Vector α n) :=
+  /- `map` applies `fun (s : Stream' α) => s i` to every element in `xv` -/
+  fun (i : Nat) => xv.map (fun (s : Stream' α) => s i)
+
+/--
+  Map each element at the `k`-th position of `xv` to the `k`-th stream of the output.
+-/
+def vec_to_streams {α : Type u} {n : Nat} (xv : Stream' (Vector α n)) : Vector (Stream' α) n :=
+  /- `.ofFn` creates a vector with `n` elements (for each `k` from `0` to `n - 1`),
+      where each element is a stream `fun (i : Nat) => ...` containing the `k`-th element of the
+      `i`-th element of stream `xv`.
+  -/
+  Vector.ofFn (fun (k : Fin n) => fun (i : Nat) => (xv i).get k)
+
+
 /-- We define the module as a function with inputs and outputs.
   we use `Stream'` type, which does not contain `Option` values, because at this level
   of abstractions the content of streams has been concretized
@@ -110,8 +129,7 @@ def iso_binary (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
       return %0#0, %0#1, %arg1 : none, none, none
     }
 
-  Lowered program
-  (https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/28ef888954a8726d4858bed925ad067729207655)
+  Lowered program (https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/28ef888954a8726d4858bed925ad067729207655)
 
     module {
     hw.module @test_fork(in %arg0 : i0, in %arg0_valid : i1, in %arg1 : i0, in %arg1_valid : i1, in %clk : !seq.clock, in %rst : i1, in %out0_ready : i1, in %out1_ready : i1, in %out2_ready : i1,
@@ -138,14 +156,7 @@ def iso_binary (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
       hw.output %12, %out2_ready, %c0_i0, %3, %c0_i0_0, %9, %arg1, %arg1_valid : i1, i1, i0, i1, i0, i1, i0, i1
       }
     }
-
 -/
-
-
-def streams_to_vec (xv : Vector (Stream' α) n) : Stream' (Vector α n) := sorry
-
-def vec_to_streams (xv : Stream' (Vector α n) ) : Vector (Stream' α) n := sorry
-
 def module
       (arg_0 : Stream' (BitVec 1))
       (arg_0_valid : Stream' (BitVec 1))
