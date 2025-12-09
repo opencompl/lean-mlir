@@ -1,9 +1,20 @@
 import SSA.Projects.CIRCT.Stream.Basic
 import SSA.Projects.CIRCT.Stream.Lemmas
 
+<<<<<<< HEAD:SSA/Projects/CIRCT/Register/Basic.lean
 /-! We model a register storing a value for one cycle -/
 
 namespace HandshakeStream
+=======
+namespace CIRCTStream
+
+/-!
+Trace monoidal categories:
+we model a feedback loop as a function with a-many inputs and x-many inputs, producing b-many outputs
+and x-many outputs that are re-fed as inputs to the function (inputs, inputs from feedback, outputs,
+outputs to be fed-back)
+-/
+>>>>>>> 6701d2b8a (chore: proof statement):SSA/Projects/CIRCT/Handshake-to-HW/fork.lean
 
 /--
   The sequential logics defining the behaviour of a register, assuming it operates on a stream
@@ -102,6 +113,10 @@ def register_wrapper
 def iso_unary (a : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 1) :=
     fun n =>
       {toArray := [a n].toArray, size_toArray := by simp}
+
+/-- Convert a `Stream'` to `Stream` -/
+def iso_unary' (a : Stream' (BitVec 1)) : Stream (BitVec 1) :=
+    fun i => a.get i
 
 /--
   We define an isomorphism from two streams `a`, `b` to a stream of their product BitVec 1 × BitVec 1.
