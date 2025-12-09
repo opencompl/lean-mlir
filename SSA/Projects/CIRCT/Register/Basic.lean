@@ -128,16 +128,16 @@ def iso_binary (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
       {toArray := [a n, b n].toArray, size_toArray := by simp}
 
 /--
-  Map the `i`-th element of stream `s` in `xv` to the output vector.
+  Map the `i`-th element of stream `s` in `xv` to the output vector, using `Stream'`.
 -/
-def streams_to_vec {α : Type u} {n : Nat} (xv : Vector (Stream' α) n) : Stream' (Vector α n) :=
+def streams_to_vec' {α : Type u} {n : Nat} (xv : Vector (Stream' α) n) : Stream' (Vector α n) :=
   /- `map` applies `fun (s : Stream' α) => s i` to every element in `xv` -/
   fun (i : Nat) => xv.map (fun (s : Stream' α) => s i)
 
 /--
-  Map each element at the `k`-th position of `xv` to the `k`-th stream of the output.
+  Map each element at the `k`-th position of `xv` to the `k`-th stream of the output, using `Stream'`.
 -/
-def vec_to_streams {α : Type u} {n : Nat} (xv : Stream' (Vector α n)) : Vector (Stream' α) n :=
+def vec_to_streams' {α : Type u} {n : Nat} (xv : Stream' (Vector α n)) : Vector (Stream' α) n :=
   /- `.ofFn` creates a vector with `n` elements (for each `k` from `0` to `n - 1`),
       where each element is a stream `fun (i : Nat) => ...` containing the `k`-th element of the
       `i`-th element of stream `xv`.
