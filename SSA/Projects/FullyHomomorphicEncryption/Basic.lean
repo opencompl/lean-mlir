@@ -418,7 +418,12 @@ theorem R.repLength_lt_n_plus_1 [Fact (q > 1)]: forall a : R q n, a.repLength < 
   rcases H : degree (R.representative' q n a %ₘ f q n) <;> simp
   case some val' =>
     rw [H] at this
-    simp only [LT.lt] at this
+    rw [WithBot.lt_def] at this
+    simp at this
+    obtain ⟨val'', twon, hval', heq1, heq2⟩ := this
+    rw [Option.some_inj.mp heq1]
+    have := Option.some_inj.mp heq2
+    subst this
     simp_all
 
 section Coeff
@@ -637,10 +642,13 @@ theorem R.coeff_fromTensor (tensor : List Int)
     generalize htensor_degree : degree (fromTensorFinsupp q tensor) = tensor_degree
     rw [f_deg_eq]
     cases tensor_degree
-    case bot => norm_cast
+    case bot =>
+      rw [WithBot.lt_def]
+      simp
+      exists 2^n
+    norm_cast
     case coe tensor_degree =>
       /- I hate this coercion stuff -/
-      norm_cast
       apply WithBot.coe_strictMono
       norm_cast
       have htrans : tensor_degree  ≤ List.length tensor := by

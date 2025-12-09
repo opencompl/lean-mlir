@@ -4,7 +4,7 @@ import Mathlib.Data.Nat.Bits
 import Mathlib.Algebra.Group.Nat.Defs
 import Lean
 
-open Lean
+open Lean Meta Elab Tactic
 open Std
 
 set_option grind.warning false
@@ -24,6 +24,35 @@ instance : IdempotentOp (min : ℕ → ℕ → ℕ) where
 
 
 namespace Normalize
+
+@[bv_multi_width_normalize]
+theorem eq_true_iff_eq_true_iff_eq (b c : Bool) : (b = true ↔ c = true) = (b = c) := by
+    rcases b <;> rcases c <;> simp
+
+
+
+attribute [bv_multi_width_normalize] BitVec.truncate_eq_setWidth
+
+attribute [bv_multi_width_normalize] Bool.xor_true Bool.xor_false Bool.true_xor Bool.false_xor
+attribute [bv_multi_width_normalize] Bool.or_true Bool.or_false  Bool.false_or Bool.true_or
+attribute [bv_multi_width_normalize] Bool.and_true Bool.and_false  Bool.false_and Bool.true_and
+attribute [bv_multi_width_normalize] Bool.not_true not_false
+
+
+/-!
+Canonicalize cast by rfl
+-/
+attribute [bv_multi_width_normalize] BitVec.cast_eq
+
+/-!
+Caonicalize allOnes into -1
+-/
+@[bv_multi_width_normalize]
+theorem allOnes_eq_minus_one : BitVec.allOnes w = -1#w := by simp [BitVec.neg_one_eq_allOnes]
+
+@[bv_multi_width_normalize]
+theorem iff_iff_and_or_not_and_not {P Q : Prop} : (P ↔ Q) ↔ ((P ∧ Q) ∨  (¬ P ∧ ¬ Q)) := by
+  by_cases hp : P <;> by_cases hq : Q <;> simp [*]
 
 /-!
 Canonicalize `OfNat.ofNat`, `BitVec.ofNat` and `Nat` multiplication to become
@@ -262,11 +291,10 @@ attribute [bv_multi_width_normalize] ite_true ite_false
 
 -- Forall
 @[bv_multi_width_normalize↓] theorem not_forall (p : α → Prop) : (¬∀ x, p x) = ∃ x, ¬p x := by simp
-attribute [bv_multi_width_normalize] forall_and
 
 -- Exists
 @[bv_multi_width_normalize↓] theorem not_exists (p : α → Prop) : (¬∃ x, p x) = ∀ x, ¬p x := by simp
-attribute [bv_multi_width_normalize] exists_const exists_or exists_prop exists_and_left exists_and_right
+attribute [bv_multi_width_normalize] exists_const exists_prop 
 
 -- Bool cond
 @[bv_multi_width_normalize] theorem cond_eq_ite (c : Bool) (a b : α) : cond c a b = ite c a b := by
@@ -418,6 +446,37 @@ Boolean normalization:
 @[bv_multi_width_normalize] theorem not_eq_iff_ne {α : Sort u} (x y : α) :
   ¬ (x = y) ↔ x ≠ y := by simp
 
+-- | Write twoPow in terms of existing constructs.
+@[bv_multi_width_normalize]
+theorem BitVec.twoPow_eq_minusOne_zext_plus_one : BitVec.twoPow w i = (-(1#i)).zeroExtend w + 1 := by
+  apply BitVec.eq_of_toNat_eq
+  simp
+  have : 2^i > 0 := by exact Nat.two_pow_pos i
+  rcases i with rfl | i
+  · simp
+  · simp
+    have : (2 : Nat) ^(i + 1) - 1 + 1 = 2^(i + 1) := by  omega
+    rw [this]
+
+-- Write msb in terms of twoPow, ule, and zeroExtend.
+-- TODO: we need to move 'ule' and add twoPow support.
+@[bv_multi_width_normalize]
+theorem BitVec.msb_eq_twoPow_ule_two_mul_zext (x : BitVec w) :
+  x.msb = (BitVec.twoPow (w + 1) w).ule (2 * x.zeroExtend (w + 1))  := by
+  rw [BitVec.msb_eq_toNat]
+  simp [BitVec.ule_eq_decide]
+  have : 2^w < 2^(w + 1) := by
+    apply Nat.pow_lt_pow_succ
+    omega
+  rw [Nat.mod_eq_of_lt (by omega)]
+  rw [Nat.mod_eq_of_lt (by omega)]
+  rcases w with rfl | w
+  · simp;
+    omega
+  · simp
+    rw [Nat.pow_succ]
+    omega
+
 open Lean in
 simproc [bv_multi_width_normalize] boolEqIff (@Eq Bool _ _) := fun e => do
   match_expr e with
@@ -440,6 +499,7 @@ simproc [bv_multi_width_normalize] boolEqIff (@Eq Bool _ _) := fun e => do
 
 
 
+
 open Lean Elab Meta
 def getSimpData (simpsetName : Name) : MetaM (SimpTheorems × Simprocs) := do
   let some ext ← (getSimpExtension? simpsetName)
@@ -450,50 +510,100 @@ def getSimpData (simpsetName : Name) : MetaM (SimpTheorems × Simprocs) := do
   let simprocs ← ext.getSimprocs
   return (theorems, simprocs)
 
+
+-- subst bitvector equalities so we don't build large problems.
+def substBvEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
+  let gs ← g.casesRec fun localDecl => do
+    let some (ty, _lhs, _rhs) := localDecl.type.eq?
+      | return false
+    return ty.isConstOf ``BitVec
+  ensureAtMostOne gs
+
+def substBvEqualitiesTac : TacticM Unit := do
+  liftMetaTactic1 substBvEqualities
+
+-- subst equalities so we don't build large problems.
+def substNatEqualities (g : MVarId) : MetaM (Option MVarId) := g.withContext do
+  let gs ← g.casesRec fun localDecl => do
+    let some (ty, _lhs, _rhs) := localDecl.type.eq?
+      | return false
+    return ty == mkConst ``Nat
+  ensureAtMostOne gs
+
+def substNatEqualitiesTac : TacticM Unit := do
+  liftMetaTactic1 substNatEqualities
+
+partial def scanOfBool (t : Expr) (acc : Array Expr := #[]) : MetaM (Array Expr) := do
+  match t.getAppFn with
+  | .const ``BitVec.ofBool _ =>
+      pure (acc.push t)
+  | _ =>
+      t.getAppArgs.foldlM (init := acc) fun a e => scanOfBool e a
+
+def generalizeOfBool (g : MVarId) : MetaM MVarId := do
+  let t ← g.getType
+  g.withContext do
+    let occs ← scanOfBool t
+    -- for occ in occs do
+    --   dbg_trace s!"found occurrence: {occ}"
+    let genArgs : Array GeneralizeArg := occs.map (fun occ => {
+      expr := occ -- mkAppN (mkConst ``BitVec.ofBool) #[occ]
+      xName? := Name.mkSimple "b_ofBool"
+      hName? := Name.mkSimple "h_ofBool"
+     
+    })
+    let (_, g) ← g.generalize genArgs 
+    return g
+
+def generalizeOfBoolTac : TacticM Unit := do
+  let g ← getMainGoal
+  let g ← generalizeOfBool g
+  replaceMainGoal [g]
+
+elab "generalize_all_bitvec_ofbool" : tactic => do
+  generalizeOfBoolTac
+
+
 open Lean Elab Meta
-def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := g.withContext do
-  let mut theorems : Array SimpTheorems := #[]
-  let mut simprocs : Array Simprocs := #[]
+def runPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
+  -- let some g ← g.withContext <| substNatEqualities g
+  --   | return none
+  -- let some g ← g.withContext <| substBvEqualities g
+  --   | return none
+  g.withContext do
+    let mut theorems : Array SimpTheorems := #[]
+    let mut simprocs : Array Simprocs := #[]
 
-  for name in [`seval, `bv_multi_width_normalize] do
-    let res ← getSimpData name
-    theorems := theorems.push res.1
-    simprocs := simprocs.push res.2
+    for name in [`seval, `bv_multi_width_normalize] do
+      let res ← getSimpData name
+      theorems := theorems.push res.1
+      simprocs := simprocs.push res.2
 
-  let config : Simp.Config := { }
-  let config := { config with failIfUnchanged := false }
-  let ctx ← Simp.mkContext (config := config)
-    (simpTheorems := theorems)
-    (congrTheorems := ← Meta.getSimpCongrTheorems)
-  let lctx ← getLCtx
-  let fvars := lctx.getFVarIds
-  match ← simpGoal g ctx (simprocs := simprocs) (fvarIdsToSimp := fvars) with
-  | (.none, _stats) => return none
-  | (.some (_fs, g), _stats) => return some g
+    let config : Simp.Config := { }
+    let config := { config with failIfUnchanged := false }
+    let ctx ← Simp.mkContext (config := config)
+      (simpTheorems := theorems)
+      (congrTheorems := ← Meta.getSimpCongrTheorems)
+    -- let lctx ← getLCtx
+    -- let fvars := lctx.getFVarIds
+    match ← simpTargetStar g ctx (simprocs := simprocs) /- (fvarIdsToSimp := fvars) -/ with
+    | (.closed, _stats) => return none
+    | (.noChange , _stats) => return some g
+    | (.modified gnew , _stats) => return some gnew
 
 open Lean Elab Meta
 open Lean Elab Meta Tactic in
 /-- Convert the goal into negation normal form. -/
 elab "bv_multi_width_normalize" : tactic => do
-  liftMetaTactic fun g => do
-    match ← runPreprocessing g with
-    | none => return []
-    | some g => do
-      -- revert after running the simp-set, so that we don't transform
-      -- with `forall_and : (∀ x, p x ∧ q x) ↔ (∀ x, p x) ∧ (∀ x, q x)`.
-      -- TODO(@bollu): This opens up an interesting possibility, where we can handle smaller problems
-      -- by just working on disjunctions.
-      -- let g ← g.revertAll
-      return [g]
-  Lean.Meta.AC.acNfTargetTactic
-  (← (← getMainGoal).getNondepPropHyps).forM Lean.Meta.AC.acNfHypTactic
+  liftMetaTactic1 runPreprocessing
+  -- allGoals do
+  --   -- | add more sharing.
+  --   Lean.Meta.AC.acNfTargetTactic
+  --   (← (← getMainGoal).getNondepPropHyps).forM Lean.Meta.AC.acNfHypTactic
 
 /--
 trace: w : ℕ
-_example :
-  (∀ (x : ℕ) (x_1 x_2 : BitVec x), x_1.ule x_2 = true ∨ x_2.ult x_1 = true ∨ x_1 ≠ x_2) ∧
-    ∀ (x : ℕ) (x_1 x_2 : BitVec x), x_2.ule x_1 = true
-⊢ (∀ (x x_1 : BitVec w), x.ule x_1 = true ∨ x_1.ult x = true ∨ x ≠ x_1) ∧ ∀ (x x_1 : BitVec w), x_1.ule x = true
+⊢ ∀ (a b : BitVec w), b.ule a = true ∧ (a.ule b = true ∨ b.ult a = true ∨ a.ule b = true ∨ a ≠ b)
 ---
 warning: declaration uses 'sorry'
 -/
@@ -503,8 +613,7 @@ warning: declaration uses 'sorry'
 
 /--
 trace: w : ℕ
-_example : ∀ {w : ℕ} (a b : BitVec w), a = b ∨ a &&& b ≠ 0#w
-⊢ ∀ (a b : BitVec w), a = b ∨ a &&& b ≠ 0#w
+⊢ ∀ (a b : BitVec w), a &&& b ≠ 0#w ∨ a = b
 ---
 warning: declaration uses 'sorry'
 -/

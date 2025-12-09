@@ -10,6 +10,7 @@ set_option trace.Generalize true
 
 variable {x y : BitVec 32}
 
+
 #generalize (x &&& 32#32) + 145#32 ^^^ 153#32 = x &&& 32#32 ||| 8#32 -- gxor2_proof#test2_thm
 #generalize (x * 65537#32) >>> 16#32 = x -- glshr_proof#mul_splat_fold_thm
 #generalize 1#32 <<< (31#32 - x) = BitVec.ofInt 32 (-2147483648) >>> x -- gshlhsub_proof#shl_sub_i32_thm

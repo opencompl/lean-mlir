@@ -138,12 +138,15 @@ instance : ToString HydraVariable where
 
 structure ParsedInputState where
   maxFreeVarId : Nat
+  maxWidthId: Nat
   numSymVars :  Nat
   displayNameToVariable : Std.HashMap Name HydraVariable
   inputVarIdToVariable : Std.HashMap Nat HydraVariable
   originalWidth : Nat
   symVarToVal : Std.HashMap Nat BVExpr.PackedBitVec
   symVarIdToVariable : Std.HashMap Nat HydraVariable
+  widthIdToVariable: Std.HashMap Nat HydraVariable
+  widthValToVar : Std.HashMap Nat HydraVariable
   valToSymVar : Std.HashMap BVExpr.PackedBitVec Nat
 
 class HydrableInitialParserState
@@ -446,7 +449,7 @@ partial def countModel
                   return count
                 pure (← go (count + 1) (BoolExpr.gate .and expr constrainedBVExpr))
 
-def generateCombinations (num: Nat) (values: List α) : List (List α) :=
+def generateCombinations {α} (num: Nat) (values: List α) : List (List α) :=
     match num, values with
     | 0, _ => [[]]
     | _, [] => []
@@ -464,7 +467,7 @@ class HydrableGetNegativeExamples (parsedExpr : Type) (genLogicalExpr : outParam
   HydrableGenExpr genExpr
   -- HydrableAddConstraints genLogicalExpr genExpr
 
-def getNegativeExamples [H : HydrableGetNegativeExamples parsedExpr genPred genExpr] (bvExpr: BoolExpr genPred) (consts: List Nat) (numEx: Nat) :
+def getNegativeExamples [H : HydrableGetNegativeExamples parsedExpr genPred genExpr] (bvExpr: BoolExpr genPred) (numEx: Nat) :
               GeneralizerStateM parsedExpr genPred (List (Std.HashMap Nat BVExpr.PackedBitVec)) := do
   let targetExpr := BoolExpr.not bvExpr
   return (← helper targetExpr numEx)
@@ -479,11 +482,9 @@ def getNegativeExamples [H : HydrableGetNegativeExamples parsedExpr genPred genE
               match solution with
               | none => return []
               | some assignment =>
-                   let constVals := assignment.filter fun c _ => consts.contains c
-                   if constVals.isEmpty then return [{}]
-                   let newConstraints := constVals.toList.map (fun c => BoolExpr.not (H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv)))
+                   let newConstraints := assignment.toList.map (fun c => BoolExpr.not (H.eq (H.genExprVar c.fst) (H.genExprConst c.snd.bv)))
                    let res ← helper (bigAnd <| expr::newConstraints) n
-                   return [constVals] ++ res
+                   return [assignment] ++ res
 
 
 class HydrableCheckTimeout (genPred : Type) extends
@@ -569,6 +570,8 @@ class HydrableGeneralize (parsedExpr : Type) (genPred : outParam Type) (genExpr 
   HydrableCheckForPreconditions parsedExpr genPred genExpr
   where
 
+
+
 def generalize [H : HydrableGeneralize parsedExpr genPred genExpr]
                   : GeneralizerStateM parsedExpr genPred (Option (BoolExpr genPred)) := do
     let state ← get
@@ -580,7 +583,7 @@ def generalize [H : HydrableGeneralize parsedExpr genPred genExpr]
 
     let mut constantAssignments := [parsedLogicalExprState.symVarToVal]
 
-    if originalWidth > targetWidth then
+    if originalWidth > targetWidth then --&& parsedLogicalExprState.symVarIdToVariable.size > 1 then -- second condition accounts for the weight variable
       let newAssignments ← reduceWidth originalWidth targetWidth 1
 
       if !newAssignments.isEmpty then
@@ -617,15 +620,15 @@ inductive GeneralizeContext where
 Convert a generalization to a printable string, with variable IDs replaced with proper display names.
 -/
 class HydrablePrettify (genLogicalExpr : Type) where
-  prettify : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
-  prettifyAsSexpr : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat HydraVariable) → SexprPBV.Sexpr
+  prettify : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat HydraVariable) → (widthVals : Std.HashMap Nat HydraVariable) -> String
+  prettifyAsSexpr : (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat HydraVariable) -> (widthVals : Std.HashMap Nat HydraVariable) → SexprPBV.Sexpr
 
 
 /--
 Convert a generalization to a theorem, with variable IDs replaced with proper display names. For use in a Tactic context.
 -/
 class HydrablePrettifyAsTheorem (genLogicalExpr : Type) where
-  prettifyAsTheorem : (name : Name) → (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat Name) → String
+  prettifyAsTheorem : (name : Name) → (generalization : BoolExpr genLogicalExpr) → (displayNames : Std.HashMap Nat HydraVariable) → (widthVals : Std.HashMap Nat HydraVariable) -> String
 
 class HydrableGetInputWidth where
   getWidth : Expr → MetaM (Option Nat)
@@ -639,7 +642,7 @@ class HydrableParseAndGeneralize (parsedExpr : Type) (genPred : Type) (genExpr :
   HydrableGetInputWidth
   where
 
-inductive MedusaSynthGeneralizeConfig.Output 
+inductive MedusaSynthGeneralizeConfig.Output
   | thmStmt
   | sexpr
 
@@ -655,9 +658,9 @@ declare_config_elab elabMedusaSynthGeneralizeConfig MedusaSynthGeneralizeConfig
 /--
 Process the input `Expr` and print the generalization result.
 -/
-def parseAndGeneralize 
+def parseAndGeneralize
   [H : HydrableParseAndGeneralize parsedExpr genPred genExpr]
-  (cfg : MedusaSynthGeneralizeConfig) 
+  (cfg : MedusaSynthGeneralizeConfig)
   (hExpr : Expr) (context: GeneralizeContext): TermElabM MessageData := do
     let targetWidth := 8
     let timeoutMs := 300000
@@ -677,35 +680,36 @@ def parseAndGeneralize
           initialState := { initialState with
                           symVarIdToVariable := initialState.symVarIdToVariable.insert widthId widthVariable
                           , displayNameToVariable := initialState.displayNameToVariable.insert widthName widthVariable
+                          , widthIdToVariable := initialState.widthIdToVariable.insert widthId widthVariable
+                          , widthValToVar := initialState.widthValToVar.insert width widthVariable
+                          , maxWidthId := widthId
                           , originalWidth := width}
 
           let some parsedLogicalExpr ← (H.parseExprs lhsExpr rhsExpr width).run' initialState
             | throwError "Unsupported expression provided"
 
           let bvLogicalExpr := parsedLogicalExpr.logicalExpr
-          let parsedBVState := parsedLogicalExpr.state
 
           let mut initialGeneralizerState := H.initializeGeneralizerState startTime timeoutMs widthId targetWidth parsedLogicalExpr
 
-          let generalizeRes ← generalize.run' initialGeneralizerState
-          let allVariables := Std.HashMap.union parsedBVState.inputVarIdToVariable parsedBVState.symVarIdToVariable
+          let (generalizeRes, latestState) ←  generalize.run initialGeneralizerState
 
-          let mut variableDisplayNames : Std.HashMap Nat Name := Std.HashMap.emptyWithCapacity
-          for (id, var) in allVariables.toList do
-            variableDisplayNames := variableDisplayNames.insert id var.name
+          let updatedState := latestState.parsedLogicalExpr.state
+          let allVariables := Std.HashMap.union updatedState.inputVarIdToVariable (Std.HashMap.union updatedState.widthIdToVariable updatedState.symVarIdToVariable)
 
-          trace[Generalize] m! "All vars: {variableDisplayNames}"
+          let widthVals := updatedState.widthValToVar
+          trace[Generalize] m! "All vars: {allVariables}"
           match generalizeRes with
             | some res => match context with
-                          | GeneralizeContext.Command => let pretty := HydrablePrettify.prettify res variableDisplayNames
+                          | GeneralizeContext.Command => let pretty := HydrablePrettify.prettify res allVariables widthVals
                                                          pure m! "Raw generalization result: {res} \n Input expression: {hExpr} has generalization: {pretty}"
                           | GeneralizeContext.Tactic _name =>
                             match cfg.output with
                             | .thmStmt =>
                               let name := Name.mkSimple "foo"
-                              pure m! "{H.prettifyAsTheorem name res variableDisplayNames}"
+                              pure m! "{H.prettifyAsTheorem name res allVariables widthVals}"
                             | .sexpr =>
-                              throwError (H.prettifyAsSexpr res allVariables) |> format
+                              throwError (H.prettifyAsSexpr res allVariables) widthVals|> format
             | none => throwError m! "Could not generalize {bvLogicalExpr}"
     | _ => throwError m!"The top level constructor is not an equality predicate in {hExpr}"
 
