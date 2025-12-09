@@ -131,31 +131,34 @@ def vec_to_streams {α : Type u} {n : Nat} (xv : Stream' (Vector α n)) : Vector
 
   Lowered program (https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/28ef888954a8726d4858bed925ad067729207655)
 
-    module {
-    hw.module @test_fork(in %arg0 : i0, in %arg0_valid : i1, in %arg1 : i0, in %arg1_valid : i1, in %clk : !seq.clock, in %rst : i1, in %out0_ready : i1, in %out1_ready : i1, in %out2_ready : i1,
-    ) {
+  module {
+    hw.module @test_fork(in %arg0 : !esi.channel<i0>, in %arg1 : !esi.channel<i0>, in %clk : !seq.clock {dc.clock}, in %rst : i1 {dc.reset}, out out0 : !esi.channel<i0>, out out1 : !esi.channel<i0>, out out2 : !esi.channel<i0>) {
+      %rawOutput, %valid = esi.unwrap.vr %arg0, %12 : i0
       %c0_i0 = hw.constant 0 : i0
+      %chanOutput, %ready = esi.wrap.vr %c0_i0, %3 : i0
       %c0_i0_0 = hw.constant 0 : i0
+      %chanOutput_1, %ready_2 = esi.wrap.vr %c0_i0_0, %9 : i0
       %false = hw.constant false
       %true = hw.constant true
       %0 = comb.xor %12, %true : i1
       %1 = comb.and %5, %0 : i1
       %emitted_0 = seq.compreg sym @emitted_0 %1, %clk reset %rst, %false : i1
       %2 = comb.xor %emitted_0, %true : i1
-      %3 = comb.and %2, %arg0_valid : i1
-      %4 = comb.and %out0_ready, %3 : i1
+      %3 = comb.and %2, %valid : i1
+      %4 = comb.and %ready, %3 : i1
       %5 = comb.or %4, %emitted_0 {sv.namehint = "done0"} : i1
       %6 = comb.xor %12, %true : i1
       %7 = comb.and %11, %6 : i1
       %emitted_1 = seq.compreg sym @emitted_1 %7, %clk reset %rst, %false : i1
       %8 = comb.xor %emitted_1, %true : i1
-      %9 = comb.and %8, %arg0_valid : i1
-      %10 = comb.and %out1_ready, %9 : i1
+      %9 = comb.and %8, %valid : i1
+      %10 = comb.and %ready_2, %9 : i1
       %11 = comb.or %10, %emitted_1 {sv.namehint = "done1"} : i1
       %12 = comb.and %5, %11 {sv.namehint = "allDone"} : i1
-      hw.output %12, %out2_ready, %c0_i0, %3, %c0_i0_0, %9, %arg1, %arg1_valid : i1, i1, i0, i1, i0, i1, i0, i1
-      }
+      hw.output %chanOutput, %chanOutput_1, %arg1 : !esi.channel<i0>, !esi.channel<i0>, !esi.channel<i0>
     }
+  }
+
 -/
 def module
       (arg_0 : Stream' (BitVec 1))
