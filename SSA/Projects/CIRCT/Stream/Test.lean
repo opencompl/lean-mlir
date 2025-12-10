@@ -1,20 +1,7 @@
 import SSA.Projects.CIRCT.Stream.Basic
 import SSA.Projects.CIRCT.Stream.Lemmas
 
-
-
-
-
-
-
-namespace Examples
-
--- def circuit_add_with_pack : Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) :=
-def add₂: Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) :=
-  syncMap₂ (· + ·)
-
-def add₃ : Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) :=
-  syncMap₃ (· + · + ·)
+namespace HandshakeStream
 
 
 example (xs ys zs : Stream (BitVec 8)) : add₂ (add₂ xs ys) zs = add₃ xs ys zs := by

@@ -93,6 +93,11 @@ def transpose {A} {as : List α} (xs : HVector A as)
     Stream (HVector B as) :=
   transpose' <| xs.castFun h
 
+/-- `stuck` is the stream with only `none`s -/
+-- had to give stuck a type too otherwise all the other defs would break, is this correct?
+-- stuck still contains `none` elements only
+def stuck (α : Type) : Stream α := Stream'.const none
+
 /-!
   # Weak Bisimulation
   We establish a notion of equivalence that allows us to remove any finite sequence of
@@ -127,13 +132,9 @@ theorem rfl {a : Stream α} : a ~ a := by
     grind
   · exact hb
 
-
 theorem trans {a b : Stream α} : a ~ b → b ~ c → a ~ c := by
   intros hab hbc
-  apply Bisim.coinduct (fun x z => ∃ y, x ~ y ∧ y ~ z)
-  · sorry
-  · exact ⟨b, hab, hbc⟩
-
+  sorry
 
 def StreamWithoutNones' (α : Type) : Type :=
   Quot (Bisim : Stream α → Stream α → Prop)
@@ -207,3 +208,9 @@ def syncMap₃ (f : α → β → γ → δ) (xs : Stream α) (ys : Stream β) (
       let ys := if (ys 0).isNone then ys.tail else ys
       let zs := if (zs 0).isNone then zs.tail else zs
       ⟨none, xs, ys, zs⟩
+
+def add₂: Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) :=
+  syncMap₂ (· + ·)
+
+def add₃ : Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) → Stream (BitVec w) :=
+  syncMap₃ (· + · + ·)
