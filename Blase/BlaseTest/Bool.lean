@@ -7,4 +7,4 @@ theorem bool2 (x y : Bool) (h : x = y) : y = x := by
   bv_multi_width
 
 theorem bool3 (x y : Bool) : BitVec.ofBool x = BitVec.ofBool y ↔ x = y := by
-  bv_multi_width
+  bv_multi_width +verbose?

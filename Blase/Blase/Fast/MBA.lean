@@ -728,7 +728,7 @@ theorem BitVec.sub_distrib_add (x y z : BitVec w) :
   omega
 
 
-attribute [bv_mba_preprocess] BitVec.sub_toAdd
+attribute [bv_mba_preprocess] BitVec.sub_eq_add_neg
 
 @[bv_mba_preprocess]
 theorem BitVec.ofNat_eq_ofInt (n w : Nat) :

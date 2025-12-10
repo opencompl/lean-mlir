@@ -439,7 +439,7 @@ section Lemmas
     (var e body : Com d Γ eff t).outContextHom
     = e.contextHom.comp body.outContextHom := by
   funext t v
-  apply Subtype.eq
+  apply Subtype.ext
   simp [outContextHom, outContextDiff, Expr.contextHom, Ctxt.Hom.comp, Expr.bvars,
     e.ty_eq]
   omega
@@ -1016,7 +1016,7 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
   simp only [Expr.changeVars_changeVars, Function.comp]
   congr 3
   funext _ v'
-  apply Subtype.eq
+  apply Subtype.ext
   have := v.val_lt
   simp; grind
 
@@ -1046,7 +1046,7 @@ def Lets.getPureExpr {Γ₁ Γ₂ : Ctxt d.Ty} (lets : Lets d Γ₁ eff Γ₂) {
   simp only [Function.comp_apply, Expr.changeVars_changeVars, Sigma.mk.injEq, heq_eq_eq, true_and]
   congr 2
   funext t v
-  apply Subtype.eq
+  apply Subtype.ext
   simp [Hom.castCodomain]
   grind
 
