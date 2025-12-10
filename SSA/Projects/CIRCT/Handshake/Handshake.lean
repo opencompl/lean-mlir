@@ -1,10 +1,9 @@
 import LeanMLIR
 
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
+import SSA.Projects.CIRCT.Stream.Basic
 import Init.Data.String.Basic
 
-open MLIR AST Ctxt
+open MLIR AST Ctxt HandshakeStream
 
 /-!
 
@@ -12,7 +11,6 @@ open MLIR AST Ctxt
 This file is still in a **highly experimental** state
 
 -/
-namespace CIRCTStream
 namespace HandshakeOp
 
 /-!
@@ -31,7 +29,7 @@ Note that consuming `none`s is still allowed (and in fact neccessary to make pro
 -/
 
 def branch (x : Stream α) (c : Stream (BitVec 1)) : Stream α × Stream α :=
-  Stream.corec₂ (β := Stream α × Stream (BitVec 1)) (x, c)
+  corec_prod (β := Stream α × Stream (BitVec 1)) (x, c)
     fun ⟨x, c⟩ => Id.run <| do
       let c₀ := c 0
       let c' := c.tail
@@ -53,7 +51,7 @@ in which case it tries to dequeue from the right stream.  The only case when no 
 is a token in both streams, because only the left one is left through and the right one is saved.
 -/
 def merge (x y : Stream α) : Stream α :=
-  Stream.corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
+  corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some x', some _ => (some x', (x.tail, y))
     | some x', none => (some x', (x.tail, y.tail))
@@ -97,7 +95,7 @@ which it will output and then it switches to dequeing messages from the right st
 until it encounters a `some _` again.
 -/
 def altMerge (x y : Stream α) : Stream α :=
-  Stream.corec (β := Stream α × Stream α × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
+  corec (β := Stream α × Stream α × ConsumeFrom) (x, y, .left) fun ⟨x, y, consume⟩ =>
     match consume with
       | .left  =>
         let x0 := x.head
@@ -116,7 +114,7 @@ def altMerge (x y : Stream α) : Stream α :=
 
 -- this is basically the same as the fork in DC
 def fork (x : Stream α) : Stream α × Stream α :=
-  Stream.corec₂ (β := Stream α) x
+  corec_prod (β := Stream α) x
     fun x => Id.run <| do
       let x0 := x 0
       let x' := x.tail
@@ -124,7 +122,7 @@ def fork (x : Stream α) : Stream α × Stream α :=
 
 -- not entirely nondeterministic (still picks left first)
 def controlMerge (x y : Stream α) : Stream α × Stream (BitVec 1) :=
-  Stream.corec₂ (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
+  corec_prod (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some x', some _ => (some x', some 1, (x.tail, y))
     | some x', none => (some x', some 1, (x.tail, y.tail))
@@ -133,7 +131,7 @@ def controlMerge (x y : Stream α) : Stream α × Stream (BitVec 1) :=
 
 
 def join (x y : Stream α) : Stream (BitVec 1) :=
-  Stream.corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
+  corec (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some _, some _ => (some 1, (x.tail, y.tail))
     | some _, none   => (none, (x, y.tail))
@@ -142,7 +140,7 @@ def join (x y : Stream α) : Stream (BitVec 1) :=
 
 -- select stream and two inputs (deterministic mergs)
 def mux (x y : Stream α) (c : Stream (BitVec 1)) : Stream α :=
-  Stream.corec (β := Stream α × Stream α × Stream (BitVec 1)) (x, y, c) fun ⟨x, y, c⟩ => Id.run <| do
+  corec (β := Stream α × Stream α × Stream (BitVec 1)) (x, y, c) fun ⟨x, y, c⟩ => Id.run <| do
     match x 0, y 0, c 0 with
       | none, _, some 1 => (none, (x.tail, y, c)) -- could not pop anything
       | some _, _, some 1 => (x 0, (x.tail, y, c.tail)) -- pop from x
@@ -152,17 +150,17 @@ def mux (x y : Stream α) (c : Stream (BitVec 1)) : Stream α :=
 
 -- discards any data: actually this should not return anything
 def sink (x : Stream α) : Stream (BitVec 1) :=
-  Stream.corec (β := Stream α) (x) fun (x) => (none, x.tail)
+  corec (β := Stream α) (x) fun (x) => (none, x.tail)
 
 -- The source operation represents continuous token source.
 -- The source continously sets a ‘valid’ signal which the successor can consume at any point in time.
 def source (a: α) : Stream α :=
-  Stream.corec (a) fun (a) => (some a, (a))
+  corec (a) fun (a) => (some a, (a))
 
 -- Synchronizes an arbitrary set of inputs.
 -- Synchronization implies applying join semantics in between all in- and output ports.
 def sync (x y : Stream α) : Stream α × Stream α :=
-  Stream.corec₂ (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
+  corec_prod (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some x', some y' => (some x', some y', (x.tail, y.tail))
     | some _, none => (none, none, (x, y.tail))
@@ -170,7 +168,7 @@ def sync (x y : Stream α) : Stream α × Stream α :=
     | none, none => (none, none, (x.tail, y.tail))
 
 def not (x : Stream (BitVec 1)) : Stream (BitVec 1) :=
-  Stream.corec (β := Stream (BitVec 1)) x fun x =>
+  corec (β := Stream (BitVec 1)) x fun x =>
     match x 0 with
     | some 1 => (some 0, (x.tail))
     | some 0 => (some 0,  (x.tail))
@@ -248,9 +246,9 @@ def_signature for Handshake where
 
 instance instHandshakeTyDenote : TyDenote Ty where
 toType := fun
-| Ty.stream ty2 => CIRCTStream.Stream (TyDenote.toType ty2)
-| Ty.stream2 ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType ty2)
-| Ty.stream2token ty2 => CIRCTStream.Stream (TyDenote.toType ty2) × CIRCTStream.Stream (TyDenote.toType (Ty2.bitvec 1))
+| Ty.stream ty2 => Stream (TyDenote.toType ty2)
+| Ty.stream2 ty2 => Stream (TyDenote.toType ty2) × Stream (TyDenote.toType ty2)
+| Ty.stream2token ty2 => Stream (TyDenote.toType ty2) × Stream (TyDenote.toType (Ty2.bitvec 1))
 
 def_denote for Handshake where
 | .fst _ => fun s => [s.fst]ₕ

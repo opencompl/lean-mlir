@@ -1,7 +1,4 @@
-import LeanMLIR.Framework
-import LeanMLIR.Framework.Macro
-import LeanMLIR.MLIRSyntax.GenericParser
-import LeanMLIR.MLIRSyntax.EDSL2
+import LeanMLIR
 
 namespace CombOp
 

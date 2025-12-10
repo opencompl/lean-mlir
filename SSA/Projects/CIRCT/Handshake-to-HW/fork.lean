@@ -1,4 +1,5 @@
-import SSA.Projects.CIRCT.Stream.WeakBisim
+import SSA.Projects.CIRCT.Stream.Basic
+import SSA.Projects.CIRCT.Stream.Lemmas
 
 
 namespace CIRCTStream

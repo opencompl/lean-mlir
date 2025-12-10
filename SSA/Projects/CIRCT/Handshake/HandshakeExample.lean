@@ -1,20 +1,17 @@
-import SSA.Projects.CIRCT.Handshake.Handshake
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
-import LeanMLIR.Tactic
-import LeanMLIR.ErasedContext
-import LeanMLIR.HVector
-import LeanMLIR.EffectKind
-import LeanMLIR.Util
+import LeanMLIR
 
-namespace CIRCTStream
+import SSA.Projects.CIRCT.Stream.Basic
+import SSA.Projects.CIRCT.Handshake.Handshake
+import Init.Data.String.Basic
+
+open HandshakeStream
 
 
 open MLIR AST in
 
 instance : ToString (Stream (BitVec w)) where
   toString s :=
-    let l := Stream.toList 100 s
+    let l := toList 100 s
     toString l
 
 namespace HandshakeExample
@@ -85,7 +82,7 @@ theorem determinate :
       BranchEg1.denote (Ctxt.Valuation.ofPair s1 s2) |>.getN 0) (s1', s2')
     ) := by
   intro x Hx y  Hy
-  simp [Stream.nondeterminify2, Stream.StreamWithoutNones.hasStream] at *
+  simp [HandshakeStream.nondeterminify2, HandshakeStream.StreamWithoutNones.hasStream] at *
   rcases Hx with ⟨ x1Stream, x1, x2Stream, x2, rfl ⟩
   rcases Hy with ⟨ y1Stream, y1, y2Stream, y2, rfl ⟩
   apply Quotient.sound
@@ -96,7 +93,7 @@ theorem determinate :
   have y2' := Quotient.exact y2
   clear y1; clear y2
   trans x1Stream
-  apply (equiv_arg1 _ _).symm
+  apply HandshakeStream.symm (equiv_arg1 _ _)
   trans y1Stream
   · assumption
   · apply equiv_arg1

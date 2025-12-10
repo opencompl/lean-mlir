@@ -1,17 +1,14 @@
-import Mathlib.Logic.Function.Iterate
-import Mathlib.Tactic.Linarith
-import LeanMLIR.Framework
-import LeanMLIR.Tactic
-import LeanMLIR.ErasedContext
-import LeanMLIR.Util
+import LeanMLIR
+
+import SSA.Projects.CIRCT.Stream.Basic
 import SSA.Projects.CIRCT.Handshake.Handshake
 import SSA.Projects.CIRCT.Comb.Comb
-import SSA.Projects.CIRCT.Stream.Stream
+import Init.Data.String.Basic
 
 open Ctxt(Var)
 
 namespace HSxCombFunctor
-open CIRCTStream
+open HandshakeStream
 
 open MLIR2Comb MLIR2Handshake
 
@@ -53,12 +50,14 @@ abbrev HSxComb : Dialect where
 def liftTy : MLIR2Comb.Ty → MLIR2Handshake.Ty
 | .bitvec w => .stream (.bitvec w)
 
+def listLiftTy (l : List MLIR2Comb.Ty) : List MLIR2Handshake.Ty :=
+  l.map fun e => liftTy e
+
 -- TODO(yann): Currently we use a small hack to use a default void type for types that have no equivalent going from
 -- Comb to DC.  This default value should be a stream to make denotation easier.
 def liftSig (sig : Signature MLIR2Comb.Ty) : Signature MLIR2Handshake.Ty :=
-  Signature.mk (sig.sig.map liftTy) [] (liftTy sig.outTy)
+  Signature.mk (sig.sig.map liftTy) [] (listLiftTy sig.returnTypes)
 -- map bitvecs from comb to streams in dc
-
 
 instance : DialectSignature HSxComb where
   signature := fun op =>
@@ -72,7 +71,7 @@ instance : DialectSignature HSxComb where
 -- have e.g. in a variadic input into a single stream, where each element of the stream is an HVector
 -- representing the entry at that point for
 -- HVector (fun i => Stream (BitVec i)) l = "map each i in l to construct a Stream BitVec"
-def hv_cast_gen' {l : List Nat} (h : HVector (fun i => Stream (BitVec i)) l) :
+def hv_cast_gen' {l : List Nat} (h : HVector (fun i => HandshakeStream.Stream (BitVec i)) l) :
     Stream' (HVector (fun i => Option (BitVec i)) l) :=
   fun n =>
     match h with
@@ -116,6 +115,9 @@ example : toType (liftTy (Ty.bitvec 64 : Comb.Ty)) = Stream' (Option <| BitVec 6
 open MLIR2Comb in
 variable {m} [Pure m] in
 
+def castArgs (l : Option (HVector B (liftTy <$> argTys))) : HVector toType argTys :=
+  sorry
+
 def liftComb {argTys : List Comb.Ty} {outTy : Comb.Ty}
     (f : HVector toType argTys → ⟦outTy⟧) :
     HVector toType (liftTy <$> argTys) → ⟦liftTy outTy⟧ := fun args =>
@@ -126,9 +128,9 @@ def liftComb {argTys : List Comb.Ty} {outTy : Comb.Ty}
     intro i
     simp [Fin.instGetElemFinVal, liftTy]
     rfl
-  Stream.transpose (B := B) args h
+  transpose (B := B) args h
     |>.map fun args =>
-      f (args.cast (by simp) (by intros; simp[B, liftTy]; rfl))
+      f (castArgs args)
 
 /-- Given a stream of values α, Peel off the heads of all the streams. -/
 -- def heads {l : List Nat}
@@ -156,12 +158,7 @@ def vecCast (h : as = bs) : HVector A as → HVector A bs := (h ▸ ·)
 
 -- semantics is defined already here, no need to redefine it later
 def_denote for HSxComb where
-  | .comb op =>
-      let opDenote :=
-        (DialectDenote.denote op · (vecCast (by cases op <;> rfl) HVector.nil))
-      let opDenote : HVector _ _ → ⟦_⟧ :=
-        EffectKind.coe_toMonad ∘ opDenote
-      liftComb opDenote
+  | .comb op => sorry
   | .hs op => MLIR2Handshake.instDialectDenoteHandshake.denote op
 
 -- we want to have a latency-sensitive semantics for pack and unpack to eat/produce sync tokens
@@ -342,7 +339,7 @@ def mkReturn (Γ : Ctxt HSxComb.Ty) (opStx : MLIR.AST.Op 0) :
   else
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]
-    return ⟨.pure, ty, Com.ret v⟩
+    return ⟨.pure, [ty], Com.ret v⟩
 
 instance : MLIR.AST.TransformExpr (HSxComb) 0 where
   mkExpr := mkExpr
