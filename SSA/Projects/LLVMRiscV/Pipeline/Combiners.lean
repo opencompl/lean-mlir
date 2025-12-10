@@ -2236,7 +2236,8 @@ def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 
   hoist_logic_op_with_same_opcode_hands_32 ++
   cast_of_cast_combines_32 ++
   sext_trunc_fold_32 ++
-  LLVMIR_identity_combines_32
+  LLVMIR_identity_combines_32 ++
+  cast_combines_narrow_binops
 
 /-- We group all the rewrites that form the pre-legalization optimizations in GlobalISel-/
 def GLobalISelO0PreLegalizerCombiner :
