@@ -1,13 +1,9 @@
-import SSA.Projects.CIRCT.HSxComb.HSxCombFunctor
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
-import LeanMLIR.Tactic
-import LeanMLIR.ErasedContext
-import LeanMLIR.HVector
-import LeanMLIR.EffectKind
-import LeanMLIR.Util
 
-namespace CIRCTStream
+import SSA.Projects.CIRCT.HSxComb.HSxCombFunctor
+import SSA.Projects.CIRCT.Comb.Comb
+
+
+open HandshakeStream
 
 open MLIR AST in
 
@@ -26,7 +22,7 @@ instance [ToString w] : ToString (Option w) where
     | none   => "(none)"
 
 instance [ToString w] : ToString (Stream w) where
-  toString s := toString (Stream.toList 10 s)
+  toString s := toString (toList 10 s)
 
 -- unseal String.splitOnAux in
 def exampleMerge := [HSxComb_com| {
@@ -41,10 +37,10 @@ def ofList (vals : List (Option α)) : Stream α :=
 def input1 : Stream (BitVec 8) := ofList [some 1, none, some 17, some 42, none]
 def input2 : Stream (BitVec 8) := ofList [none, some 3, some 17, some 42, none]
 
-def testExampleMerge : Stream (BitVec 8) :=
-  exampleMerge.denote (Ctxt.Valuation.ofHVector (.cons input2 <| .cons input1 <| .nil))
+-- def testExampleMerge : Stream (BitVec 8) :=
+--   exampleMerge.denote (Ctxt.Valuation.ofHVector (.cons input2 <| .cons input1 <| .nil))
 
-#eval testExampleMerge
+-- #eval testExampleMerge
 
 -- unseal String.splitOnAux in
 def exampleMergeAdd := [HSxComb_com| {
@@ -57,7 +53,7 @@ def exampleMergeAdd := [HSxComb_com| {
 
 def input3 : Stream (BitVec 8) := ofList [none, some 1, some 9, some 13, none]
 
-def testExampleMergeAdd : Stream (BitVec 8) :=
-  exampleMergeAdd.denote (Ctxt.Valuation.ofHVector (.cons input3 <| .cons input2 <| .cons input1 <| .nil))
+-- def testExampleMergeAdd : Stream (BitVec 8) :=
+--   exampleMergeAdd.denote (Ctxt.Valuation.ofHVector (.cons input3 <| .cons input2 <| .cons input1 <| .nil))
 
-#eval testExampleMergeAdd
+-- #eval testExampleMergeAdd

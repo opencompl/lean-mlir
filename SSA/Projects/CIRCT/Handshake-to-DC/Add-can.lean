@@ -1,25 +1,19 @@
-import SSA.Projects.CIRCT.DCxComb.DCxCombFunctor
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
-import LeanMLIR.Tactic
-import LeanMLIR.ErasedContext
-import LeanMLIR.HVector
-import LeanMLIR.EffectKind
-import LeanMLIR.Util
-import SSA.Projects.CIRCT.Handshake.Handshake
-import SSA.Projects.CIRCT.HSxComb.HSxCombFunctor
-import SSA.Projects.CIRCT.Comb.Comb
+import LeanMLIR
 
+import SSA.Projects.CIRCT.Stream.Basic
+import SSA.Projects.CIRCT.DC.DC
+import SSA.Projects.CIRCT.HSxComb.HSxComb
+import Init.Data.String.Basic
 
-namespace CIRCTStream
+namespace HandshakeStream
 
 open MLIR AST in
 
 instance : ToString DCOp.TokenStream where
-  toString s := toString (Stream.toList 10 s)
+  toString s := toString (toList 10 s)
 
-instance : ToString (CIRCTStream.Stream (BitVec w))where
-  toString s := toString (Stream.toList 10 s)
+instance : ToString (Stream (BitVec w))where
+  toString s := toString (toList 10 s)
 
 instance [ToString w] : ToString (Option w) where
   toString
@@ -27,10 +21,8 @@ instance [ToString w] : ToString (Option w) where
     | none   => "(none)"
 
 instance [ToString w] : ToString (DCOp.ValueStream w) where
-  toString s := toString (Stream.toList 10 s)
+  toString s := toString (toList 10 s)
 
-def ofList (vals : List (Option α)) : Stream α :=
-  fun i => (vals[i]?).join
 
 /--
 We start from the Handshake circuit:

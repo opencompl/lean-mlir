@@ -1,11 +1,6 @@
+import LeanMLIR
+
 import SSA.Projects.CIRCT.Comb.Comb
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
-import LeanMLIR.Tactic
-import LeanMLIR.ErasedContext
-import LeanMLIR.HVector
-import LeanMLIR.EffectKind
-import LeanMLIR.Util
 
 open MLIR AST in
 
@@ -16,7 +11,6 @@ def CombEg1 := [Comb_com| {
   }]
 
 #check CombEg1
-#eval CombEg1
 #reduce CombEg1
 #check CombEg1.denote
 #print axioms CombEg1
@@ -28,7 +22,6 @@ def CombEg2 := [Comb_com| {
     }]
 
 #print CombEg2
-#eval CombEg2
 #reduce CombEg2
 #check CombEg2
 #print axioms CombEg2
@@ -37,10 +30,7 @@ def bv1 : BitVec 4 := BitVec.ofNat 4 5 -- 0010
 def bv2 : BitVec 4 := BitVec.ofNat 4 1 -- 0011
 def bv3 : BitVec 4 := BitVec.ofNat 4 2 -- 0011
 
-def test2 : BitVec 4 :=
-  CombEg2.denote (Ctxt.Valuation.ofHVector (.cons bv1 <| .cons bv2 <| .cons bv3 <| .nil))
 
-#eval test2 -- 8#4
 
 def CombEg3 := [Comb_com| {
   ^entry(%0: i4, %1 : i4):
@@ -49,7 +39,6 @@ def CombEg3 := [Comb_com| {
   }]
 
 #check CombEg3
-#eval CombEg3
 #reduce CombEg3
 #check CombEg3.denote
 #print axioms CombEg3
@@ -57,10 +46,6 @@ def CombEg3 := [Comb_com| {
 def bv1' : BitVec 4 := BitVec.ofNat 4 1
 def bv2' : BitVec 4 := BitVec.ofNat 4 6
 
-def test3 : BitVec 1 :=
-  CombEg3.denote (Ctxt.Valuation.ofPair bv2' bv1')
-
-#eval test3
 
 def CombEg4 := [Comb_com| {
   ^entry(%0: i4, %1 : i4):
@@ -69,7 +54,6 @@ def CombEg4 := [Comb_com| {
   }]
 
 #check CombEg4
-#eval CombEg4
 #reduce CombEg4
 #check CombEg4.denote
 #print axioms CombEg4
@@ -77,10 +61,6 @@ def CombEg4 := [Comb_com| {
 def bv1'' : BitVec 4 := BitVec.ofNat 4 3
 def bv2'' : BitVec 4 := BitVec.ofNat 4 3
 
-def test4 : BitVec 1 :=
-  CombEg4.denote (Ctxt.Valuation.ofPair bv2'' bv1'')
-
-#eval test4
 
 def CombEg5 := [Comb_com| {
   ^entry(%0: i1, %1: i1):
@@ -89,17 +69,12 @@ def CombEg5 := [Comb_com| {
 }]
 
 #check CombEg5
-#eval CombEg5
 #reduce CombEg5
 #check CombEg5.denote
 #print axioms CombEg5
 
 def bv0 : BitVec 1 := BitVec.ofNat 1 1
 
-def test5 : BitVec 3 :=
-  CombEg5.denote (Ctxt.Valuation.ofPair bv0 bv0)
-
-#eval test5
 
 def CombEg6 := [Comb_com| {
     ^entry (%0 : i4, %1 : i4, %2 : i1):
@@ -108,7 +83,6 @@ def CombEg6 := [Comb_com| {
 }]
 
 #check CombEg6
-#eval CombEg6
 #reduce CombEg6
 #check CombEg6.denote
 #print axioms CombEg6
@@ -116,6 +90,3 @@ def CombEg6 := [Comb_com| {
 def bv6₁ : BitVec 4 := BitVec.ofNat 4 1
 def bv6₂ : BitVec 4 := BitVec.ofNat 4 3
 def bv6c : BitVec 1 := BitVec.ofNat 1 1
-
-def test6 : BitVec 4 :=
-  CombEg6.denote (Ctxt.Valuation.ofHVector (.cons bv6c <| .cons bv6₂ <| .cons bv6₁ <| .nil))
