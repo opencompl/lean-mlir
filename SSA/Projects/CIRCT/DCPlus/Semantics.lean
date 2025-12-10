@@ -1,32 +1,29 @@
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.Framework
-import SSA.Core.Framework.Macro
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.EDSL2
-import SSA.Core.Tactic.SimpSet
+import LeanMLIR
 
-namespace CIRCTStream
+import SSA.Projects.CIRCT.Stream.Basic
+
+namespace HandshakeStream
+
 namespace DCPlusOp
 
 def ValueStream := Stream
 
 def TokenStream := Stream Unit
 
-def VariadicValueStream (w : Nat) := CIRCTStream.Stream (List (BitVec w))
+def VariadicValueStream (w : Nat) := HandshakeStream.Stream (List (BitVec w))
 
 def fork (x : TokenStream) : TokenStream × TokenStream  :=
-  Stream.corec₂ (β := TokenStream) x
+  corec_prod (β := TokenStream) x
     fun x => Id.run <| do
       (x 0, x 0, x.tail)
 
 def forkVal (x : ValueStream (BitVec 1)) : ValueStream (BitVec 1) × ValueStream (BitVec 1)  :=
-  Stream.corec₂ (β := ValueStream (BitVec 1)) x
+  corec_prod (β := ValueStream (BitVec 1)) x
     fun x => Id.run <| do
       (x 0, x 0, x.tail)
 
 def join (x y : TokenStream) : TokenStream  :=
-  Stream.corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
+  corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some _, some _ => (some (), (x.tail, y.tail))
     | some _, none => (none, (x, y.tail))
@@ -34,7 +31,7 @@ def join (x y : TokenStream) : TokenStream  :=
     | none, none => (none, (x.tail, y.tail))
 
 def merge (x y : TokenStream) : ValueStream (BitVec 1) :=
-  Stream.corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
+  corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some _, some _ => (some 1, (x.tail, y))
     | some _, none => (some 1, (x.tail, y.tail))
@@ -42,7 +39,7 @@ def merge (x y : TokenStream) : ValueStream (BitVec 1) :=
     | none, none => (none, (x.tail, y.tail))
 
 def mux (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
-  Stream.corec (β := TokenStream × TokenStream × ValueStream (BitVec 1)) (x, y, c)
+  corec (β := TokenStream × TokenStream × ValueStream (BitVec 1)) (x, y, c)
   fun ⟨x, y, c⟩ =>
     match (c 0) with
     | none => (none, x, y, c.tail) -- wait on 'c'.
@@ -56,7 +53,7 @@ def mux (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
       | some _ => (some (), x, y.tail, c.tail) -- consume 'c' and 'y'.
 
 def muxVal (x y c : ValueStream (BitVec 1)): ValueStream (BitVec 1) :=
-  Stream.corec (β := ValueStream (BitVec 1) × ValueStream (BitVec 1) × ValueStream (BitVec 1)) (x, y, c)
+  corec (β := ValueStream (BitVec 1) × ValueStream (BitVec 1) × ValueStream (BitVec 1)) (x, y, c)
   fun ⟨x, y, c⟩ =>
     match (c 0) with
     | none => (none, x, y, c.tail) -- wait on 'c'.
@@ -70,7 +67,7 @@ def muxVal (x y c : ValueStream (BitVec 1)): ValueStream (BitVec 1) :=
       | some e => (some e, x, y.tail, c.tail) -- consume 'c' and 'y'.
 
 def cMerge (x y : TokenStream) : ValueStream (BitVec 1) × TokenStream :=
-  Stream.corec₂ (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
+  corec_prod (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some x', some _ => (some 1, some x', (x.tail, y))
     | some x', none => (some 1, some x', (x.tail, y.tail))
@@ -78,7 +75,7 @@ def cMerge (x y : TokenStream) : ValueStream (BitVec 1) × TokenStream :=
     | none, none => (none, none, (x.tail, y.tail))
 
 def branch (c : ValueStream (BitVec 1)) (x : TokenStream) : TokenStream × TokenStream  :=
-  Stream.corec₂ (β := ValueStream (BitVec 1) × TokenStream) (c, x) fun ⟨c, x⟩ =>
+  corec_prod (β := ValueStream (BitVec 1) × TokenStream) (c, x) fun ⟨c, x⟩ =>
     Id.run <| do
       match c 0 with
         | none => (none, none, (c.tail, x))
@@ -89,24 +86,22 @@ def branch (c : ValueStream (BitVec 1)) (x : TokenStream) : TokenStream × Token
             (none, some (), (c.tail, x.tail))
 
 def source : TokenStream :=
-  Stream.corec () fun () => (some (), ())
+  corec () fun () => (some (), ())
 
 def sourceOnes : ValueStream (BitVec 1) :=
-  Stream.corec () fun () => (1#1, ())
+  corec () fun () => (1#1, ())
 
 
 def sink (x : TokenStream) : TokenStream :=
-  Stream.corec (β := TokenStream) x fun x => (none, x.tail)
+  corec (β := TokenStream) x fun x => (none, x.tail)
 
 def supp (c : ValueStream (BitVec 1)) (x : TokenStream) : TokenStream := (branch c x).snd
 
 def not (c : ValueStream (BitVec 1)) : (ValueStream (BitVec 1)) :=
-  Stream.corec (β := ValueStream (BitVec 1)) c fun c =>
+  corec (β := ValueStream (BitVec 1)) c fun c =>
   match c 0 with
   | some 1 => (some 0, c.tail)
   | some 0 => (some 1, c.tail)
   | _ => (none, c.tail)
 
 end DCPlusOp
-
-end CIRCTStream

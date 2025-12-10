@@ -1,10 +1,9 @@
-import SSA.Core
-import SSA.Projects.CIRCT.DCPlus.DCPlus
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.Tactic
+import LeanMLIR
 
-open CIRCTStream
+import SSA.Projects.CIRCT.Stream.Basic
+import SSA.Projects.CIRCT.DCPlus.DCPlus
+
+open HandshakeStream
 
 open MLIR2DCPlus
 
@@ -231,5 +230,3 @@ def example_program := [DCPlus_com| {
     %fst = "DCPlus.fst" (%branch) :  (!TokenStream2) -> (!TokenStream)
     "return" (%fst) : (!TokenStream) -> ()
   }]
-
-#eval! apply_patterns 10 example_program

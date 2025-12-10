@@ -6,7 +6,7 @@ import SSA.Projects.CIRCT.Stream.Basic
 namespace HandshakeStream
 
 instance : ToString DCOp.TokenStream where
-  toString s := toString (HandshakeStream.toList 100 s)
+  toString s := toString (toList 100 s)
 
 namespace DCExample
 

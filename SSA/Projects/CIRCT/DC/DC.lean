@@ -15,7 +15,7 @@ def TokenStream := HandshakeStream.Stream Unit
 def VariadicValueStream (w : Nat) := HandshakeStream.Stream (List (BitVec w))
 
 def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream :=
-  HandshakeStream.corec_prod (β := Stream (BitVec w)) (x)
+  corec_prod (β := Stream (BitVec w)) (x)
     fun x => Id.run <| do
       match x 0 with
       | some _ => return (x 0, some (), x.tail)
@@ -24,7 +24,7 @@ def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream 
 -- ifeally we spit out a tuple of bitvec, but it's less usable
 -- the output of this is synced
 def unpack2 (x : ValueStream (BitVec w)) (y : ValueStream (BitVec w)) : VariadicValueStream w × TokenStream :=
-  HandshakeStream.corec_prod (β := ValueStream (BitVec w) × ValueStream (BitVec w)) (x, y)
+  corec_prod (β := ValueStream (BitVec w) × ValueStream (BitVec w)) (x, y)
     fun (x, y) => Id.run <| do
       match x 0, y 0 with
       | some x', some y' => return (some [x', y'], some .unit, (x.tail, y.tail))
@@ -33,7 +33,7 @@ def unpack2 (x : ValueStream (BitVec w)) (y : ValueStream (BitVec w)) : Variadic
       | none, none => return (none, none, (x.tail, y.tail))
 
 def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
-  HandshakeStream.corec (β := ValueStream α × TokenStream) (x, y) fun ⟨x, y⟩ =>
+  corec (β := ValueStream α × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some x₀, some _ => (x₀, (x.tail, y.tail))
     | some _, none => (none, (x, y.tail)) -- wait to sync with the token stream
@@ -41,7 +41,7 @@ def pack (x : ValueStream α) (y : TokenStream) : ValueStream α :=
     | none, none => (none, (x.tail, y.tail))
 
 def pack2 (x : VariadicValueStream α × TokenStream) : (ValueStream (BitVec α)) × (ValueStream (BitVec α))  :=
-  HandshakeStream.corec_prod (β := VariadicValueStream α × TokenStream) (x) fun ⟨x, y⟩ =>
+  corec_prod (β := VariadicValueStream α × TokenStream) (x) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some x', some _ => (x'[0]?, x'[1]?, (x.tail, y.tail))
     | some _, none => (none, none, (x, y.tail))
@@ -49,7 +49,7 @@ def pack2 (x : VariadicValueStream α × TokenStream) : (ValueStream (BitVec α)
     | none, none => (none, none, (x.tail, y.tail)) -- wait to sync with the value stream
 
 def branch (x : ValueStream (BitVec 1)): TokenStream × TokenStream  :=
-  HandshakeStream.corec_prod (β := ValueStream (BitVec 1)) x fun x =>
+  corec_prod (β := ValueStream (BitVec 1)) x fun x =>
     Id.run <| do
       match x 0 with
         | none => (none, none, (x.tail))
@@ -60,12 +60,12 @@ def branch (x : ValueStream (BitVec 1)): TokenStream × TokenStream  :=
             (none, some (), (x.tail))
 
 def fork (x : TokenStream) : TokenStream × TokenStream  :=
-  HandshakeStream.corec_prod (β := TokenStream) x
+  corec_prod (β := TokenStream) x
     fun x => Id.run <| do
       (x 0, x 0, x.tail)
 
 def join (x y : TokenStream) : TokenStream  :=
-  HandshakeStream.corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
+  corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some _, some _ => (some (), (x.tail, y.tail))
     | some _, none => (none, (x, y.tail))
@@ -73,7 +73,7 @@ def join (x y : TokenStream) : TokenStream  :=
     | none, none => (none, (x.tail, y.tail))
 
 def merge (x y : TokenStream) : ValueStream (BitVec 1) :=
-  HandshakeStream.corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
+  corec (β := TokenStream × TokenStream) (x, y) fun ⟨x, y⟩ =>
     match x 0, y 0 with
     | some _, some _ => (some 1, (x.tail, y))
     | some _, none => (some 1, (x.tail, y.tail))
@@ -92,7 +92,7 @@ Informally, the semantics are as follows:
 
 -/
 def select (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
-  HandshakeStream.corec (β := TokenStream × TokenStream × Stream (BitVec 1)) (x, y, c)
+  corec (β := TokenStream × TokenStream × Stream (BitVec 1)) (x, y, c)
   fun ⟨x, y, c⟩ =>
     match (c 0) with
     | none => (none, x, y, c.tail) -- wait on 'c'.
@@ -106,10 +106,10 @@ def select (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
       | some _ => (some (), x, y.tail, c.tail) -- consume 'c' and 'y'.
 
 def sink (x : TokenStream) : TokenStream :=
-  HandshakeStream.corec (β := TokenStream) x fun x => (none, x.tail)
+  corec (β := TokenStream) x fun x => (none, x.tail)
 
 def source : TokenStream :=
-  HandshakeStream.corec () fun () => (some (), ())
+  corec () fun () => (some (), ())
 
 end DCOp
 
@@ -190,11 +190,11 @@ toType := fun
 def_denote for DC where
   | .fst => fun s => [s.fst]ₕ
   | .fstVal _ => fun s => [s.fst]ₕ
-  | .fstVal' _ => fun s => [HandshakeStream.mapOpt s.fst (·[0]?)]ₕ
+  | .fstVal' _ => fun s => [mapOpt s.fst (·[0]?)]ₕ
   | .snd => fun s => [s.snd]ₕ
   | .pair _ => fun s₁ s₂ => [(s₁, s₂)]ₕ
   | .sndVal _ => fun s => [s.snd]ₕ
-  | .sndVal' _ => fun s => [HandshakeStream.mapOpt s.fst (·[1]?)]ₕ
+  | .sndVal' _ => fun s => [mapOpt s.fst (·[1]?)]ₕ
   | .tokVal' _ => fun s => [s.snd]ₕ
   | .merge => fun s₁ s₂ => [DCOp.merge s₁ s₂]ₕ
   | .branch => fun s => [DCOp.branch s]ₕ

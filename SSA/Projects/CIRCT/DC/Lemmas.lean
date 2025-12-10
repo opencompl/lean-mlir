@@ -4,7 +4,7 @@ import SSA.Projects.CIRCT.Stream.Basic
 open HandshakeStream
 
 instance : ToString DCOp.TokenStream where
-  toString s := toString (HandshakeStream.toList 100 s)
+  toString s := toString (toList 100 s)
 
 
 
