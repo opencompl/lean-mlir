@@ -1,13 +1,10 @@
-import SSA.Core
-
 import SSA.Projects.CIRCT.DC.DC
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
+import SSA.Projects.CIRCT.Stream.Basic
 
-namespace CIRCTStream
+open HandshakeStream
 
 instance : ToString DCOp.TokenStream where
-  toString s := toString (Stream.toList 100 s)
+  toString s := toString (HandshakeStream.toList 100 s)
 
 
 
@@ -16,9 +13,6 @@ theorem rewrite_n (stream_d : DCOp.TokenStream) :
   simp [DCOp.sink, DCOp.fork]
   exact rfl
 
-
-
-theorem
 
 
 -- unseal String.splitOnAux in
