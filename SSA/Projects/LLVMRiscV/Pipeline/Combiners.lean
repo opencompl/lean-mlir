@@ -625,6 +625,152 @@ def hoist_logic_op_with_same_opcode_hands_64 : List (Σ Γ, LLVMPeepholeRewriteR
   ⟨_, OrAndAnd⟩,
   ⟨_, XorAndAnd⟩]
 
+
+/-! ### select_to_iminmax -/
+
+/-
+Test the rewrite:
+ (icmp X, Y) ? X : Y -> integer minmax.
+-/
+def select_to_iminmax_ugt : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.ugt %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  maxu %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_uge : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.uge %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  maxu %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_sgt : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.sgt %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  max %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_sge : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.sgt %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  max %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_ult : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.ult %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  minu %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_ule : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.ule %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  minu %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_slt : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.slt %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  min %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_sle : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.sle %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  min %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, select_to_iminmax_ugt⟩,
+  ⟨_, select_to_iminmax_uge⟩,
+  ⟨_, select_to_iminmax_sgt⟩,
+  ⟨_, select_to_iminmax_sge⟩,
+  ⟨_, select_to_iminmax_ult⟩,
+  ⟨_, select_to_iminmax_ule⟩,
+  ⟨_, select_to_iminmax_slt⟩,
+  ⟨_, select_to_iminmax_sle⟩
+  ]
+
 /-- ### binop_same_val
   (x op x) → x
 -/
@@ -1952,7 +2098,8 @@ def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 
   LLVMIR_identity_combines_32 ++
   LLVMIR_cast_combines_32 ++
   hoist_logic_op_with_same_opcode_hands_32 ++
-  LLVMIR_identity_combines_32
+  LLVMIR_identity_combines_32 ++
+  cast_combines_narrow_binops
 
 /-- We group all the rewrites that form the pre-legalization optimizations in GlobalISel-/
 def GLobalISelO0PreLegalizerCombiner :
@@ -1992,3 +2139,6 @@ def GLobalISelPostLegalizerCombiner :
   ++
   List.map (fun ⟨_,y⟩ => mkRewrite (RISCVPeepholeRewriteToRiscvPeephole y))
   PostLegalizerCombiner_RISCV
+  ++
+  List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  select_to_iminmax
