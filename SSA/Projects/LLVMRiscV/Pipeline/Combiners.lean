@@ -14,20 +14,6 @@ open LLVMRiscV
   while some are target-dependent.
 -/
 
-@[simp_riscv] lemma toType_bv : TyDenote.toType (Ty.riscv (.bv)) = BitVec 64 := rfl
-@[simp_riscv] lemma id_eq1 {α : Type} (x y : α) :  @Eq (Id α) x y = (x = y):= by simp only
-
-structure RISCVPeepholeRewrite (Γ : List Ty) where
-  lhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
-  rhs : Com LLVMPlusRiscV Γ .pure [Ty.riscv .bv]
-  correct : lhs.denote = rhs.denote := by simp_lowering <;> bv_decide
-
-def RISCVPeepholeRewriteToRiscvPeephole (self : RISCVPeepholeRewrite Γ) :
-    PeepholeRewrite LLVMPlusRiscV Γ [Ty.riscv .bv] where
-  lhs := self.lhs
-  rhs := self.rhs
-  correct := self.correct
-
 /-!
   # Post-legalization optimizations
 
@@ -638,6 +624,152 @@ def hoist_logic_op_with_same_opcode_hands_64 : List (Σ Γ, LLVMPeepholeRewriteR
   ⟨_, AndAndAnd⟩,
   ⟨_, OrAndAnd⟩,
   ⟨_, XorAndAnd⟩]
+
+
+/-! ### select_to_iminmax -/
+
+/-
+Test the rewrite:
+ (icmp X, Y) ? X : Y -> integer minmax.
+-/
+def select_to_iminmax_ugt : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.ugt %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  maxu %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_uge : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.uge %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  maxu %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_sgt : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.sgt %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  max %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_sge : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.sgt %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  max %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_ult : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.ult %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  minu %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_ule : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.ule %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  minu %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_slt : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.slt %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  min %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax_sle : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = llvm.icmp.sle %x, %y : i64
+      %1 = llvm.select %0, %x, %y : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %2 =  min %0, %1 : !i64
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      llvm.return %3 : i64
+  }]
+
+def select_to_iminmax: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, select_to_iminmax_ugt⟩,
+  ⟨_, select_to_iminmax_uge⟩,
+  ⟨_, select_to_iminmax_sgt⟩,
+  ⟨_, select_to_iminmax_sge⟩,
+  ⟨_, select_to_iminmax_ult⟩,
+  ⟨_, select_to_iminmax_ule⟩,
+  ⟨_, select_to_iminmax_slt⟩,
+  ⟨_, select_to_iminmax_sle⟩
+  ]
 
 /-- ### binop_same_val
   (x op x) → x
@@ -1944,7 +2076,8 @@ def LLVMIR_cast_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) := s
 def PostLegalizerCombiner_RISCV: List (Σ Γ,RISCVPeepholeRewrite  Γ) :=
     RISCV_identity_combines ++
     commute_int_constant_to_rhs ++
-    simplify_neg
+    simplify_neg ++
+    mulh_to_lshr
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
@@ -1984,6 +2117,9 @@ def GLobalISelO0PreLegalizerCombiner :
   ++
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   mul_to_shl)
+  ++
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  udiv_pow2)
 
 /-- We group all the rewrites that form the post-legalization optimizations in GlobalISel-/
 def GLobalISelPostLegalizerCombiner :
@@ -2002,3 +2138,6 @@ def GLobalISelPostLegalizerCombiner :
   ++
   List.map (fun ⟨_,y⟩ => mkRewrite (RISCVPeepholeRewriteToRiscvPeephole y))
   PostLegalizerCombiner_RISCV
+  ++
+  List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  select_to_iminmax

@@ -107,7 +107,7 @@ def llvm_zext_lower_riscv_1_to_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitv
 def zext_riscv_8_to_16 := [LV| {
   ^entry (%arg: i8):
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (i8) -> (!i64)
-    %1 = andi %0, 255 : !i64
+    %1 = zext.b %0 : !i64
     %res = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i16)
     llvm.return %res : i16
   }]
@@ -128,7 +128,7 @@ def llvm_zext_lower_riscv_8_to_16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitv
 def zext_riscv_8_to_32 := [LV| {
   ^entry (%arg: i8):
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (i8) -> (!i64)
-    %1 = andi %0, 255 : !i64
+    %1 = zext.b %0 : !i64
     %res = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i32)
     llvm.return %res : i32
   }]
@@ -149,7 +149,7 @@ def llvm_zext_lower_riscv_8_to_32 : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitv
 def zext_riscv_8_to_64 := [LV| {
   ^entry (%arg: i8):
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (i8) -> (!i64)
-    %1 = andi %0, 255 : !i64
+    %1 = zext.b %0 : !i64
     %res = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i64)
     llvm.return %res : i64
   }]
@@ -208,6 +208,27 @@ def zext_llvm_16_to_64 := [LV| {
 def llvm_zext_lower_riscv_16_to_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 16)] :=
   {lhs:= zext_llvm_16_to_64, rhs:= zext_riscv_16_to_64}
 
+/-! ### i32 to i64 -/
+
+@[simp_denote]
+def zext_riscv_32_to_64 := [LV| {
+  ^entry (%arg: i32):
+    %0 = "builtin.unrealized_conversion_cast"(%arg) : (i32) -> (!i64)
+    %1 = zext.w %0 : !i64
+    %res = "builtin.unrealized_conversion_cast"(%1) : (!i64) -> (i64)
+    llvm.return %res : i64
+  }]
+
+@[simp_denote]
+def zext_llvm_32_to_64 := [LV| {
+  ^entry (%arg: i32):
+    %0 = llvm.zext %arg: i32 to i64
+    llvm.return %0: i64
+  }]
+
+def llvm_zext_lower_riscv_32_to_64 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32)] :=
+  {lhs:= zext_llvm_32_to_64, rhs:= zext_riscv_32_to_64}
+
 def zext_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_1_to_8),
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_1_to_16),
@@ -218,4 +239,5 @@ def zext_match : List (Σ Γ, Σ ty, PeepholeRewrite LLVMPlusRiscV Γ ty) := [
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_8_to_32),
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_16_to_32),
   mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_16_to_64),
+  mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND llvm_zext_lower_riscv_32_to_64)
 ]

@@ -306,7 +306,7 @@ macro_rules
   | `([mlir_type| $x:ident ]) => do
         let (.ident _ xstr _ _) := x.raw | Macro.throwUnsupported
         -- ^^ We use `rawVal` rather than `val`, so that we're not affected by hygiene
-        if xstr == "index"
+        if xstr.toString == "index"
         then
           `(MLIRType.index)
         else if xstr.front == 'i' || xstr.front == 'f'

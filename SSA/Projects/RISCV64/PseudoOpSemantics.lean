@@ -1,4 +1,5 @@
-import SSA.Projects.RISCV64.Semantics
+import SSA.Projects.RISCV64.Tactic.SimpRiscVAttr
+import RISCV.Instructions
 
 open BitVec
 
@@ -6,7 +7,7 @@ open BitVec
   ## Dialect Pseudo-operation semantics
   This file contains the semantics for each modeled `RISCV-64` standard pseudo-instruction
   as defined by: https://github.com/riscv-non-isa/riscv-asm-manual/blob/main/src/asm-manual.adoc.
-  Unlike `Semantics.lean` these semantics are not derived from the Sail semantics, as Sail does not
+   These semantics are not derived from the Sail semantics, as Sail does not
   model all pseudo-instructions. In particular, Sail only models pseudo-instructions if they are
   actually native instructions when certain extensions are enabled.
   If an instruction can be an architectural instruction in certain processor configurations and a
@@ -15,46 +16,48 @@ open BitVec
   The semantic of pseudo-instructions reuse the semantics of their underlying base instructions.
 -/
 
-namespace RV64PseudoOpSemantics
+namespace RV64
 
 @[simp_riscv]
-def MV_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.ITYPE_pure64_RISCV_ADDI 0 rs1_val
+def mv_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.addi 0 rs1_val
 
 @[simp_riscv]
-def NOT_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.ITYPE_pure64_RISCV_XORI (-1) rs1_val
+def not_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.xori (-1) rs1_val
 
 @[simp_riscv]
-def NEG_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.RTYPE_pure64_RISCV_SUB rs1_val 0
+def neg_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.sub rs1_val 0
 
 @[simp_riscv]
-def NEGW_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.RTYPEW_pure64_RISCV_SUBW rs1_val 0
+def negw_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.subw rs1_val 0
 
 @[simp_riscv]
-def SEXTW_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.pure64_RISCV_ADDIW 0 rs1_val
+def sextw_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.addiw 0 rs1_val
 
 @[simp_riscv]
-def ZEXTB_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.ITYPE_pure64_RISCV_ANDI 255 rs1_val
+def zextb_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.andi 255 rs1_val
 
 @[simp_riscv]
-def SEQZ_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.ITYPE_pure64_RISCV_SLTIU 1 rs1_val
+def zextw_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.adduw 0 rs1_val
 
 @[simp_riscv]
-def SNEZ_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.RTYPE_pure64_RISCV_SLTU rs1_val 0
+def seqz_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.sltiu 1 rs1_val
 
 @[simp_riscv]
-def SLTZ_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.RTYPE_pure64_RISCV_SLT 0 rs1_val
+def snez_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.sltu rs1_val 0
 
 @[simp_riscv]
-def SGZT_pure64_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
-  RV64Semantics.RTYPE_pure64_RISCV_SLT rs1_val 0
+def sltz_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.slt 0 rs1_val
 
-end RV64PseudoOpSemantics
+@[simp_riscv]
+def sgtz_pseudo (rs1_val : BitVec 64) : BitVec 64 :=
+  RV64.slt rs1_val 0

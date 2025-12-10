@@ -108,6 +108,9 @@ def mul_llvm_flags_16 := [LV| {
 def llvm_mul_lower_riscv_noflag_16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16)] where
   lhs := mul_llvm_noflag_16
   rhs := mul_riscv_16
+  correct := by
+    simp_lowering
+    bv_decide
 
 def llvm_mul_lower_riscv_flags_16 : LLVMPeepholeRewriteRefine 16 [Ty.llvm (.bitvec 16), Ty.llvm (.bitvec 16)] where
   lhs := mul_llvm_flags_16
