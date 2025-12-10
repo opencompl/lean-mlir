@@ -47,7 +47,7 @@ attribute [simp_denote]
   Expr.op_castPureToEff Expr.args_castPureToEff
   /- Effect massaging -/
   EffectKind.liftEffect_rfl
-  Id.pure_eq Id.bind_eq id_eq
+  Id.pure_eq' Id.bind_eq' id_eq
   pure_bind
   cast_eq
   -- Valuation append & accesses

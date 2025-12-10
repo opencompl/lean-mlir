@@ -53,7 +53,3 @@ This directory structure is heavily inspired by the [Research Codebase Manifesto
 >   - No cross-project dependencies. If you need code from a different project,
 >     either go through the effort of polishing the code into core, or clone
 >     the code.
-
-##### `artifact-evaluation/`:
-
-> Docker container build for the current version of the library.

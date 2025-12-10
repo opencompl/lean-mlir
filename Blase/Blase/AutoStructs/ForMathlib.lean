@@ -634,7 +634,7 @@ lemma proj_eval (M : NFA (BitVec m) σ) (f : Fin n → Fin m) :
       · simp_all
       have hdl := List.dropLast_concat_getLast hemp
       rw [←hdl] at heq he
-      simp at heq
+      simp only [List.map_append, List.map_dropLast, List.map_cons, List.map_nil] at heq
       use List.getLast wa' hemp; constructor
       · apply List.append_inj_right' at heq; simp_all
       · obtain rfl := List.append_inj_left' heq (by simp)

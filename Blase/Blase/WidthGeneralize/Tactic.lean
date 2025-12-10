@@ -47,28 +47,6 @@ def State.add? (e : Expr) : GenM Expr := do
     modify fun s => { s with invMapping := s.invMapping.insert x e }
     pure x
 
-/--
-This table determines which arguments of important functions are bitwidths and
-should be generalized and which ones are normal parameters which should be
-recursively visited.
--/
-def genTableHardcoded : Std.HashMap Name (Array Bool) := Id.run do
-  let mut table := .emptyWithCapacity 16
-  table := table.insert ``BitVec #[true]
-  -- table := table.insert ``BitVec.zeroExtend #[true, true, false]
-  -- table := table.insert ``BitVec.signExtend #[true, true, false]
-  -- table := table.insert ``BitVec.truncate #[true, true, false]
-  -- table := table.insert ``BitVec.instOfNat #[true, false, false]
-  -- -- table := table.insert ``instHAndOfAndOp #[true, false, false]
-  -- table := table.insert ``BitVec.instAndOp #[true]
-  -- table := table.insert ``BitVec.instAdd #[true]
-  -- table := table.insert ``BitVec.instSub #[true]
-  -- table := table.insert ``BitVec.instMul #[true]
-  -- table := table.insert ``BitVec.instDiv #[true]
-  -- table := table.insert ``BitVec.instOfNat #[true, false]
-  -- table := table.insert ``BitVec.ofNat #[true, false]
-  table
-
 -- Invariant: returns values in WHNF.
 def getBitVecTypeWidth? (t : Expr) : MetaM (Option Expr) := do
   let t ← instantiateMVars t
@@ -77,6 +55,7 @@ def getBitVecTypeWidth? (t : Expr) : MetaM (Option Expr) := do
   | BitVec w => return some (← whnf w)
   | _ => return none
 
+-- In the expr, return widths.
 partial def getBitVecTypeWidths (t : Expr) (out : Std.HashSet Expr) :
     MetaM (Std.HashSet Expr) := do
   if let some w ← getBitVecTypeWidth? t then do
@@ -98,7 +77,7 @@ def genTable.getGenTable (n : Name) (args : Array Expr) : GenM (Option (Array Bo
   -- | Only special case, as it is a type constructor.
   -- All other constants are theorems, defs, etc.
   if n == ``BitVec then
-    if hx : args.size ≠ 1 then 
+    if hx : args.size ≠ 1 then
       throwError "BitVec expected 1 argument, got {args.size}"
     else
       -- BitVec 1 is isomorphic to Bool, so we don't generalize it.
@@ -106,6 +85,8 @@ def genTable.getGenTable (n : Name) (args : Array Expr) : GenM (Option (Array Bo
         return some #[false]
       -- Otherwise, generalize the width.
       return some #[true]
+  -- TODO: make this better. Right now, we only disable 'BitVec 1'.
+  -- But in general, we should disable any occurrence of 'BitVec 1'
 
   let constInfo ← getConstInfo n
   let ty := constInfo.type
@@ -129,7 +110,12 @@ def genTable.getGenTable (n : Name) (args : Array Expr) : GenM (Option (Array Bo
         widths ← getBitVecTypeWidths ret widths
         trace[WidthGeneralize] m!"found concrete widths: {widths.toArray}"
         let mut out := #[]
-        for x in xs do
+        for (x, arg) in xs.zip args do
+          -- | guard against BitVec.ofBool b -> BitVec 1
+          if let some 1 ← getNatValue? arg then
+            trace[WidthGeneralize] m!"arg {arg} is BitVec 1, skipping width generalization"
+            out := out.push false
+            continue
           let x ← whnf x
           let isWidth := widths.contains x
           trace[WidthGeneralize] m!"inspecting concrete arg {x} isWidth: {isWidth}"
