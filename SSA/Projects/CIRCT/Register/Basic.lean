@@ -145,7 +145,7 @@ def drop_from_bitvecs (x : Vector (Stream' (BitVec 1)) 3) (n : Nat) : Vector (St
   data, ready and valid signals, and a `Stream (BitVec 1)` containing the same information
   at handshake level.
   `a[0]` contains the data, `a[1]` contains the `ready` signal, `a[2]` contains the `valid` signal.
-  This relation is useful to prove the equivalence between streams at handshake and hardware levels.
+  This relation is useful to prove the bisimilarity between streams at handshake and hardware levels.
 -/
 def ReadyValid  (a : Vector (Stream' (BitVec 1)) 3) (b : Stream (BitVec 1)) :=
   ∀ (n : Nat),
