@@ -5,7 +5,7 @@ import SSA.Projects.CIRCT.Register.Lemmas
 
 namespace HandshakeStream
 
-/--
+/-!
   Handshake program:
 
     handshake.func @test_fork(%arg0: none, %arg1: none, ...) -> (none, none, none) {
