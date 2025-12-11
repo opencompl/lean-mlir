@@ -5,11 +5,8 @@ import SSA.Projects.CIRCT.Register.Lemmas
 
 namespace HandshakeStream
 
-/-- We define the module as a function with inputs and outputs.
-  we use `Stream'` type, which does not contain `Option` values, because at this level
-  of abstractions the content of streams has been concretized
-
-  Initial handshake program:
+/--
+  Handshake program:
 
     handshake.func @test_fork(%arg0: none, %arg1: none, ...) -> (none, none, none) {
       %0:2 = fork [2] %arg0 : none
@@ -45,7 +42,14 @@ namespace HandshakeStream
       hw.output %chanOutput, %chanOutput_1, %arg1 : !esi.channel<i0>, !esi.channel<i0>, !esi.channel<i0>
     }
   }
+-/
 
+/--
+  `fork` replicates the content of an input stream and dispatches it to two channels.
+
+  The hardware (lowered) module is a function over the `Stream'` type,
+  which does not contain `Option` values, because at this level
+  of abstractions the content of streams has been concretized.
 -/
 def fork
       (arg_0 : Stream' (BitVec 1))

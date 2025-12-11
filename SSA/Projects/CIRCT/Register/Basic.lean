@@ -96,6 +96,63 @@ def register_wrapper
   Stream'.corec f g (inputs, init_regs, none)
 
 /--
+  To avoid using heterogeneous bitvectors without compromising on a faithful representation,
+  we introduce an ad-hoc structure for the input and output of the circuit in case it contains both
+  signals (`BitVec 1`) and data (`BitVec 32`).
+-/
+structure wiresStruc {nops nsig : Nat} where
+  result : Stream' (Vector (BitVec 32) nops)
+  signals : Stream' (Vector (BitVec 1) nsig)
+
+
+/-- We define a more general `register_wrapper` that operates on both streams of signals (`BitVec 1`)
+  as well as streams of operands (`BitVec 32`) -/
+def register_wrapper_generalized
+    (inputs_ops : Stream' (Vector (BitVec 32) nop))
+    (inputs_sig : Stream' (Vector (BitVec 1) nsig))
+    -- the generalized wrapper supports registers for both operands and signals
+    (init_regs_ops : Vector (BitVec 32) nregop)
+    (init_regs_sig : Vector (BitVec 1) nregsig)
+    (update_fun : (Vector (BitVec 32) nop × Vector (BitVec 1) nsig × Vector (BitVec 32) nregop × Vector (BitVec 1) nregsig) →
+                  (Vector (BitVec 32) noutop × Vector (BitVec 1) noutsig × Vector (BitVec 32) nregop × Vector (BitVec 1) nregsig))
+      : Vector (BitVec 32) noutop × Vector (BitVec 1) noutsig :=
+  let β := (Stream' (Vector (BitVec 32) nop)) × (Stream' (Vector (BitVec 1) nsig)) ×
+            (Vector (BitVec 32) nregop) × Vector (BitVec 1) nregsig ×
+            Option (Vector (BitVec 32) nregop) × Option (Vector (BitVec 1) nregsig)
+  let f : β → Vector (BitVec 32) noutop × Vector (BitVec 1) noutsig :=
+    fun (input_stream_ops, input_stresm_sig, current_regs_ops, current_regs_sig,
+          init_regs_ops, init_regs_sig) =>
+      match init_regs_ops with
+      | some ivop => match init_regs_sig with
+                | some ivsig => let ⟨outputop, outputsig, _, _⟩  := update_fun
+                                    (input_stream_ops.head, input_stresm_sig.head, ivop, ivsig)
+                  ⟨outputop, outputsig⟩
+                | none => sorry
+      | _ =>  match init_regs_sig with
+                | some ivsig => sorry
+                | none => let ⟨outputop, outputsig, _, _⟩  := update_fun
+                                    (input_stream_ops.head, input_stresm_sig.head, current_regs_ops, current_regs_sig)
+                          ⟨outputop, outputsig⟩
+  let g : β → β :=
+    fun (input_stream_ops, input_stresm_sig, current_regs_ops, current_regs_sig,
+          init_regs_ops, init_regs_sig) =>
+      match init_regs_ops with
+      | some ivops =>
+                  match init_regs_sig with
+                  | some ivsig => sorry
+                    -- let (_, _, output_feedback_op, output_feedback_sig) :=
+                    --                   update_fun (input_stream_ops.head, input_stresm_sig.head, current_regs_ops, current_regs_sig)
+                    --   ⟨input_stream_ops.tail, input_stresm_sig.tail, output_feedbackop, output_feedback_sig, none, none⟩
+                    -- sorry
+                  | none => sorry
+      | none =>
+                match init_regs_sig with
+                | some ivsig => sorry
+                | none => sorry
+  Stream'.corec (β := β) (f := f) (g := g) -- (inputs_ops, inputs_sig, init_regs_ops, init_regs_sig, none, none)
+
+
+/--
   We define an isomorphism from a streams `a` to a stream of their product BitVec 1.
   With this isomorphism we map the single streams that define the inputs of the hardware module to
   a unique streams, where each element is composed by the single streams.
