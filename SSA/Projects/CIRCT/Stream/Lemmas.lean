@@ -332,8 +332,3 @@ theorem syncMap2_syncMap2_eq_syncMap3 (f : α → β → γ) (g : γ → ε → 
     syncMap₂ g (syncMap₂ f as bs) es = syncMap₃ (fun a b e => g (f a b) e) as bs es := by
   -- I believe this is equal, but it might only be bisim (~)
   sorry
-
--- theorem syncMap₃_eq_syncMap₃_iff {f g : α → β → γ}
---     (h : ∀ a b c, f a b c = g a b c) :
---     syncMap₂ f xs ys = syncMap₂ g xs ys := by
---   sorry
