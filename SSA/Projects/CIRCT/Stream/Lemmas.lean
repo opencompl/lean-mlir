@@ -262,7 +262,7 @@ theorem corec_eq_corec_of
   case zero       => exact hR
   case succ i ih  => exact (h _ _ (ih hR)).right
 
-theorem corec₂_eq_corec₂_of
+theorem corec_prod_eq_corec_prod_of
     (R : β₁ → β₂→ Prop)
     (f₁ : β₁ → (Option α₁ × Option α₂ × β₁) )
     (f₂ : β₂ → (Option α₁ × Option α₂ × β₂))
