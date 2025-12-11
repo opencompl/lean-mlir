@@ -1,12 +1,17 @@
 import SSA.Projects.CIRCT.Stream.Basic
 import SSA.Projects.CIRCT.Stream.Lemmas
+import SSA.Projects.CIRCT.Handshake.Handshake
 
+<<<<<<< HEAD:SSA/Projects/CIRCT/Register/Basic.lean
 <<<<<<< HEAD:SSA/Projects/CIRCT/Register/Basic.lean
 /-! We model a register storing a value for one cycle -/
 
 namespace HandshakeStream
 =======
 namespace CIRCTStream
+=======
+open HandshakeStream
+>>>>>>> 3410b43d9 (chore: fix fork and add to ci):SSA/Projects/CIRCT/Handshake-to-HW/fork.lean
 
 /-!
 Trace monoidal categories:
