@@ -134,18 +134,19 @@ def vec_to_streams' {α : Type u} {n : Nat} (xv : Stream' (Vector α n)) : Vecto
   -/
   Vector.ofFn (fun (k : Fin n) => fun (i : Nat) => (xv i).get k)
 
-/-! # Prove equivalence with handhshake circuit-/
-
-
+/--
+  Drop the first `n` elements of all the three streams in `x`.
+-/
 def drop_from_bitvecs (x : Vector (Stream' (BitVec 1)) 3) (n : Nat) : Vector (Stream' (BitVec 1)) 3 :=
-  x.map (fun (s : Stream' (BitVec 1)) => s.drop (n + 1))
+  x.map (fun (s : Stream' (BitVec 1)) => s.drop n)
 
-
-/-- We define the relation between a vector `Vector (Stream' (BitVec 1)) 3` containing the
+/--
+  We define the relation between a vector `Vector (Stream' (BitVec 1)) 3` containing the
   data, ready and valid signals, and a `Stream (BitVec 1)` containing the same information
   at handshake level.
   `a[0]` contains the data, `a[1]` contains the `ready` signal, `a[2]` contains the `valid` signal.
-  -/
+  This relation is useful to prove the equivalence between streams at handshake and hardware levels.
+-/
 def ReadyValid  (a : Vector (Stream' (BitVec 1)) 3) (b : Stream (BitVec 1)) :=
   ∀ (n : Nat),
       ((a[1] n = 1#1) ∧ (a[2] n = 1#1) ∧ (some (a[0] n) = b.get n))
