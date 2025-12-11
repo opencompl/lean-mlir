@@ -47,7 +47,7 @@ namespace HandshakeStream
   }
 
 -/
-def module
+def fork
       (arg_0 : Stream' (BitVec 1))
       (arg_0_valid : Stream' (BitVec 1))
       (arg_1 : Stream' (BitVec 1))
@@ -56,9 +56,9 @@ def module
       (out1_ready : Stream' (BitVec 1))
       (out2_ready : Stream' (BitVec 1))
   : Vector (Stream' (BitVec 1)) 8 :=
-    let vec_streams := HandshakeStream.streams_to_vec
+    let vec_streams := streams_to_vec'
                         (#v[arg_0, arg_0_valid, arg_1, arg_1_valid, out0_ready, out1_ready, out2_ready])
-    vec_to_streams <| register_wrapper
+    vec_to_streams' <| register_wrapper
       (inputs := vec_streams)
       (init_regs := #v[0#1, 0#1])
       (update_fun := -- (Vector (BitVec 1) 7 × Vector (BitVec 1) 2) → (Vector α 9 × Vector α 2)
@@ -80,3 +80,19 @@ def module
           let updated_reg1 := v7
           (#v[v12, inp[6], 0#1, v3, 0#1, v9, inp[2], inp[3]], #v[updated_reg0, updated_reg1])
       )
+
+/-- We prove that the description at handshake level and the description at lower (RTL) level are bisimilar. -/
+theorem fork_bisim
+    (arg0_data arg0_valid arg1_data arg1_valid out0_ready out1_ready out2_ready : Stream' (BitVec 1))
+    (arg0 arg1 out0 out1 out2 : Stream (BitVec 1)) :
+    let := ReadyValid #v[arg0_data, arg0_valid, arg0_ready] arg0
+    let := ReadyValid #v[arg1_data, arg1_valid, arg1_ready] arg1
+    let := ReadyValid #v[out0_data, out0_valid, out0_ready] out0
+    let := ReadyValid #v[out1_data, out1_valid, out1_ready] out1
+    let := ReadyValid #v[out2_data, out2_valid, out2_ready] out2
+    Bisim (iso_unary' ((fork arg0_data arg0_valid arg1_data arg1_valid out0_ready oue1_ready out2_ready).get 0))  (HandshakeOp.fork arg0).fst := by
+  unfold iso_unary' HandshakeOp.fork
+  unfold Bisim
+  simp
+
+  sorry

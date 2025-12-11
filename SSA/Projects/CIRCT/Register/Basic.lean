@@ -2,24 +2,9 @@ import SSA.Projects.CIRCT.Stream.Basic
 import SSA.Projects.CIRCT.Stream.Lemmas
 import SSA.Projects.CIRCT.Handshake.Handshake
 
-<<<<<<< HEAD:SSA/Projects/CIRCT/Register/Basic.lean
-<<<<<<< HEAD:SSA/Projects/CIRCT/Register/Basic.lean
 /-! We model a register storing a value for one cycle -/
 
 namespace HandshakeStream
-=======
-namespace CIRCTStream
-=======
-open HandshakeStream
->>>>>>> 3410b43d9 (chore: fix fork and add to ci):SSA/Projects/CIRCT/Handshake-to-HW/fork.lean
-
-/-!
-Trace monoidal categories:
-we model a feedback loop as a function with a-many inputs and x-many inputs, producing b-many outputs
-and x-many outputs that are re-fed as inputs to the function (inputs, inputs from feedback, outputs,
-outputs to be fed-back)
--/
->>>>>>> 6701d2b8a (chore: proof statement):SSA/Projects/CIRCT/Handshake-to-HW/fork.lean
 
 /--
   The sequential logics defining the behaviour of a register, assuming it operates on a stream
@@ -148,3 +133,20 @@ def vec_to_streams' {α : Type u} {n : Nat} (xv : Stream' (Vector α n)) : Vecto
       `i`-th element of stream `xv`.
   -/
   Vector.ofFn (fun (k : Fin n) => fun (i : Nat) => (xv i).get k)
+
+/-! # Prove equivalence with handhshake circuit-/
+
+
+def drop_from_bitvecs (x : Vector (Stream' (BitVec 1)) 3) (n : Nat) : Vector (Stream' (BitVec 1)) 3 :=
+  x.map (fun (s : Stream' (BitVec 1)) => s.drop (n + 1))
+
+
+/-- We define the relation between a vector `Vector (Stream' (BitVec 1)) 3` containing the
+  data, ready and valid signals, and a `Stream (BitVec 1)` containing the same information
+  at handshake level.
+  `a[0]` contains the data, `a[1]` contains the `ready` signal, `a[2]` contains the `valid` signal.
+  -/
+def ReadyValid  (a : Vector (Stream' (BitVec 1)) 3) (b : Stream (BitVec 1)) :=
+  ∀ (n : Nat),
+      ((a[1] n = 1#1) ∧ (a[2] n = 1#1) ∧ (some (a[0] n) = b.get n))
+      ∨ ((a[1] n = 0#1) ∨ (a[2] n = 0#1) ∧ (none = b.get n))
