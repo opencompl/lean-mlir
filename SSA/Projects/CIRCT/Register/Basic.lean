@@ -104,6 +104,7 @@ structure wiresStruc (nops nsig : Nat) where
   result : Vector (BitVec 32) nops
   signals : Vector (BitVec 1) nsig
 
+
 /-- We define a more general `register_wrapper` that operates on both streams of signals (`BitVec 1`)
   as well as streams of operands (`BitVec 32`) -/
 def register_wrapper_generalized
