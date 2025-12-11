@@ -4,6 +4,8 @@ import SSA.Projects.CIRCT.DC.DC
 import SSA.Projects.CIRCT.DCxComb.DCxCombFunctor
 import SSA.Projects.CIRCT.DCPlus.DCPlus
 import SSA.Projects.CIRCT.Comb.Comb
-import SSA.Projects.CIRCT.Seq.Prototype
+import SSA.Projects.CIRCT.Register.Basic
+import SSA.Projects.CIRCT.Register.Lemmas
+import SSA.Projects.CIRCT.HandshakeToHW.fork
 import SSA.Projects.CIRCT.Stream.Basic
 import SSA.Projects.CIRCT.Stream.Lemmas

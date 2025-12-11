@@ -1,25 +1,20 @@
+import LeanMLIR
+
+import SSA.Projects.CIRCT.Stream.Basic
+import SSA.Projects.CIRCT.DC.DC
 import SSA.Projects.CIRCT.DCxComb.DCxCombFunctor
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
-import LeanMLIR.Tactic
-import LeanMLIR.ErasedContext
-import LeanMLIR.HVector
-import LeanMLIR.EffectKind
-import LeanMLIR.Util
-import SSA.Projects.CIRCT.Handshake.Handshake
 import SSA.Projects.CIRCT.HSxComb.HSxCombFunctor
-import SSA.Projects.CIRCT.Comb.Comb
+import Init.Data.String.Basic
 
-
-namespace CIRCTStream
+namespace HandshakeStream
 
 open MLIR AST in
 
 instance : ToString DCOp.TokenStream where
-  toString s := toString (Stream.toList 10 s)
+  toString s := toString (toList 10 s)
 
-instance : ToString (CIRCTStream.Stream (BitVec w))where
-  toString s := toString (Stream.toList 10 s)
+instance : ToString (Stream (BitVec w))where
+  toString s := toString (toList 10 s)
 
 instance [ToString w] : ToString (Option w) where
   toString
@@ -27,9 +22,9 @@ instance [ToString w] : ToString (Option w) where
     | none   => "(none)"
 
 instance [ToString w] : ToString (DCOp.ValueStream w) where
-  toString s := toString (Stream.toList 10 s)
+  toString s := toString (toList 10 s)
 
-def ofList (vals : List (Option α)) : Stream α :=
+def ofList' (vals : List (Option α)) : Stream α :=
   fun i => (vals[i]?).join
 
 
@@ -52,18 +47,17 @@ def handshakeAdd := [HSxComb_com| {
   }]
 
 #check handshakeAdd
-#eval handshakeAdd
 #reduce handshakeAdd
 #check handshakeAdd.denote
 #print axioms handshakeAdd
 
-def a : Stream (BitVec 32) := ofList [1#32, none, 2#32, 5#32, none]
-def b : Stream (BitVec 32) := ofList [none, 1#32, none, 2#32, 5#32]
+def a : Stream (BitVec 32) := ofList' [1#32, none, 2#32, 5#32, none]
+def b : Stream (BitVec 32) := ofList' [none, 1#32, none, 2#32, 5#32]
 
-def testHandshake : Stream (BitVec 32) :=
-  handshakeAdd.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
+-- def testHandshake : Stream (BitVec 32) :=
+--   handshakeAdd.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
 
-#eval testHandshake
+-- #eval testHandshake
 
 
 /--
@@ -123,18 +117,17 @@ def dcAdd := [DCxComb_com| {
   }]
 
 #check dcAdd
-#eval dcAdd
 #reduce dcAdd
 #check dcAdd.denote
 #print axioms dcAdd
 
-def aVal : DCOp.ValueStream (BitVec 32) := ofList [some 1#32, none, some 2#32, some 5#32, none]
-def bVal : DCOp.ValueStream (BitVec 32) := ofList [none, some 1#32, none, some 2#32, some 5#32]
+-- def aVal : DCOp.ValueStream (BitVec 32) := ofList [some 1#32, none, some 2#32, some 5#32, none]
+-- def bVal : DCOp.ValueStream (BitVec 32) := ofList [none, some 1#32, none, some 2#32, some 5#32]
 
-def testDC : DCOp.ValueStream (BitVec 32)  :=
-  dcAdd.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
+-- def testDC : DCOp.ValueStream (BitVec 32)  :=
+--   dcAdd.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
 
-#eval testHandshake
+-- #eval testHandshake
 
 
 /--
@@ -201,7 +194,6 @@ def dcAdd4 := [DCxComb_com| {
     "return" (%5) : (!ValueStream_32) -> ()
 }]
 #check dcAdd2
-#eval dcAdd2
 #reduce dcAdd2
 #check dcAdd2.denote
 #print axioms dcAdd2
@@ -226,14 +218,14 @@ def dcShl := [DCxComb_com| {
     "return" (%5) : (!ValueStream_32) -> ()
 }]
 
-def testDCAdd2 : DCOp.ValueStream (BitVec 32)  :=
-  dcAdd2.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
+-- def testDCAdd2 : DCOp.ValueStream (BitVec 32)  :=
+--   dcAdd2.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
 
-def testDCShl2 : DCOp.ValueStream (BitVec 32)  :=
-  dcShl.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
+-- def testDCShl2 : DCOp.ValueStream (BitVec 32)  :=
+--   dcShl.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons b <| .nil))
 
-#eval testDCAdd2
-#eval testDCShl2
+-- #eval testDCAdd2
+-- #eval testDCShl2
 
 theorem equiv_add_shl (a : DCOp.ValueStream (BitVec 32)) :
     (dcAdd2.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons a <| .nil))) = (dcShl.denote (Ctxt.Valuation.ofHVector (.cons a <| .cons a <| .nil))) := by

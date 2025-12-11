@@ -2,7 +2,8 @@ import LeanMLIR
 
 import SSA.Projects.CIRCT.Stream.Basic
 import SSA.Projects.CIRCT.DC.DC
-import SSA.Projects.CIRCT.HSxComb.HSxComb
+import SSA.Projects.CIRCT.HSxComb.HSxCombFunctor
+import SSA.Projects.CIRCT.DCxComb.DCxCombFunctor
 import Init.Data.String.Basic
 
 namespace HandshakeStream

@@ -1,22 +1,35 @@
 import SSA.Projects.CIRCT.Stream.Basic
 import SSA.Projects.CIRCT.Stream.Lemmas
 
+/-! We model a register storing a value for one cycle -/
 
-namespace CIRCTStream
-
-/-!
-Trace monoidal categories:
-we model a feedback loop as a function with a-many inputs and x-many inputs, producing b-many outputs
-and x-many outputs that are re-fed as inputs to the function (inputs, inputs from feedback, outputs,
-outputs to be fed-back)
--/
+namespace HandshakeStream
 
 /--
-  We define a register wrapper to describe the behaviour of components with feedback loops.
+  The sequential logics defining the behaviour of a register, assuming it operates on a stream
+  of optional values `HandshakeStream.Stream`.
+  We ignore the `clk` operand under the assumption that one clock cycle corresponds to one step
+  in the `Stream`.
+-/
+def compReg (input : Stream α) (initialValue : α) : Stream α :=
+  corec (β := Stream α × Option α × Option α)
+    (input, none,  some initialValue) fun (input, store, init) =>
+  match init with
+  | some initVal  => (initVal, input.tail, input.head, none)
+  | _ => (store, input.tail, input.head, none)
+
+
+/--
+  A register wrapper enabling the description of components with feedback loops.
   We expect the feedback loop to satisfy some laws that will be helpful in proofs.
   · `input` is the the stream of inputs
   · `init_regs` contains the initial values of inputs obtained from the feedback loop
   · `update_fun` is the function computing the output of the component, given all the inputs
+
+  In this model, we are inspired by trace monoidal category theory, by which
+  we model a feedback loop as a function with a-many inputs and x-many inputs,
+  producing b-many outputs and x-many outputs that are re-fed as inputs to the function
+  (inputs, inputs from feedback, outputs, outputs to be fed-back)
 -/
 def register_wrapper
     (inputs : Stream' (Vector α m))
@@ -81,7 +94,6 @@ def register_wrapper
             (input_stream.tail, output_feedback, none)
   Stream'.corec f g (inputs, init_regs, none)
 
-
 /--
   We define an isomorphism from a streams `a` to a stream of their product BitVec 1.
   With this isomorphism we map the single streams that define the inputs of the hardware module to
@@ -100,7 +112,6 @@ def iso_binary (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
     fun n =>
       {toArray := [a n, b n].toArray, size_toArray := by simp}
 
-
 /--
   Map the `i`-th element of stream `s` in `xv` to the output vector.
 -/
@@ -117,80 +128,3 @@ def vec_to_streams {α : Type u} {n : Nat} (xv : Stream' (Vector α n)) : Vector
       `i`-th element of stream `xv`.
   -/
   Vector.ofFn (fun (k : Fin n) => fun (i : Nat) => (xv i).get k)
-
-
-/-- We define the module as a function with inputs and outputs.
-  we use `Stream'` type, which does not contain `Option` values, because at this level
-  of abstractions the content of streams has been concretized
-
-  Initial handshake program:
-
-    handshake.func @test_fork(%arg0: none, %arg1: none, ...) -> (none, none, none) {
-      %0:2 = fork [2] %arg0 : none
-      return %0#0, %0#1, %arg1 : none, none, none
-    }
-
-  Lowered program (https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/28ef888954a8726d4858bed925ad067729207655)
-
-  module {
-    hw.module @test_fork(in %arg0 : !esi.channel<i0>, in %arg1 : !esi.channel<i0>, in %clk : !seq.clock {dc.clock}, in %rst : i1 {dc.reset}, out out0 : !esi.channel<i0>, out out1 : !esi.channel<i0>, out out2 : !esi.channel<i0>) {
-      %rawOutput, %valid = esi.unwrap.vr %arg0, %12 : i0
-      %c0_i0 = hw.constant 0 : i0
-      %chanOutput, %ready = esi.wrap.vr %c0_i0, %3 : i0
-      %c0_i0_0 = hw.constant 0 : i0
-      %chanOutput_1, %ready_2 = esi.wrap.vr %c0_i0_0, %9 : i0
-      %false = hw.constant false
-      %true = hw.constant true
-      %0 = comb.xor %12, %true : i1
-      %1 = comb.and %5, %0 : i1
-      %emitted_0 = seq.compreg sym @emitted_0 %1, %clk reset %rst, %false : i1
-      %2 = comb.xor %emitted_0, %true : i1
-      %3 = comb.and %2, %valid : i1
-      %4 = comb.and %ready, %3 : i1
-      %5 = comb.or %4, %emitted_0 {sv.namehint = "done0"} : i1
-      %6 = comb.xor %12, %true : i1
-      %7 = comb.and %11, %6 : i1
-      %emitted_1 = seq.compreg sym @emitted_1 %7, %clk reset %rst, %false : i1
-      %8 = comb.xor %emitted_1, %true : i1
-      %9 = comb.and %8, %valid : i1
-      %10 = comb.and %ready_2, %9 : i1
-      %11 = comb.or %10, %emitted_1 {sv.namehint = "done1"} : i1
-      %12 = comb.and %5, %11 {sv.namehint = "allDone"} : i1
-      hw.output %chanOutput, %chanOutput_1, %arg1 : !esi.channel<i0>, !esi.channel<i0>, !esi.channel<i0>
-    }
-  }
-
--/
-def module
-      (arg_0 : Stream' (BitVec 1))
-      (arg_0_valid : Stream' (BitVec 1))
-      (arg_1 : Stream' (BitVec 1))
-      (arg_1_valid : Stream' (BitVec 1))
-      (out0_ready : Stream' (BitVec 1))
-      (out1_ready : Stream' (BitVec 1))
-      (out2_ready : Stream' (BitVec 1))
-  : Vector (Stream' (BitVec 1)) 8 :=
-    let vec_streams := streams_to_vec
-                        (#v[arg_0, arg_0_valid, arg_1, arg_1_valid, out0_ready, out1_ready, out2_ready])
-    vec_to_streams <| register_wrapper
-      (inputs := vec_streams)
-      (init_regs := #v[0#1, 0#1])
-      (update_fun := -- (Vector (BitVec 1) 7 × Vector (BitVec 1) 2) → (Vector α 9 × Vector α 2)
-        fun (inp, regs) =>
-          let v2 := BitVec.xor regs[0] 1#1
-          let v3 := BitVec.and v2 inp[1]
-          let v4 := BitVec.and inp[4] v3
-          let v5 := BitVec.or v4 regs[0]
-          let v8 := BitVec.xor regs[1] 1#1
-          let v9 := BitVec.and v8 inp[1]
-          let v10 := BitVec.and inp[5] v9
-          let v11 := BitVec.or v10 regs[1]
-          let v12 := BitVec.and v5 v11
-          let v6 := BitVec.xor v12 1#1
-          let v7 := BitVec.and v11 v6
-          let v0 := BitVec.xor v12 1#1
-          let v1 := BitVec.and v5 v0
-          let updated_reg0 := v1
-          let updated_reg1 := v7
-          (#v[v12, inp[6], 0#1, v3, 0#1, v9, inp[2], inp[3]], #v[updated_reg0, updated_reg1])
-      )
