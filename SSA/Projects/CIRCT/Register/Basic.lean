@@ -1,5 +1,6 @@
 import SSA.Projects.CIRCT.Stream.Basic
 import SSA.Projects.CIRCT.Stream.Lemmas
+import SSA.Projects.CIRCT.Handshake.Handshake
 
 /-! We model a register storing a value for one cycle -/
 
@@ -103,6 +104,10 @@ def iso_unary (a : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 1) :=
     fun n =>
       {toArray := [a n].toArray, size_toArray := by simp}
 
+/-- Convert a `Stream'` to `Stream` -/
+def iso_unary' (a : Stream' (BitVec 1)) : Stream (BitVec 1) :=
+    fun i => a.get i
+
 /--
   We define an isomorphism from two streams `a`, `b` to a stream of their product BitVec 1 × BitVec 1.
   With this isomorphism we map the single streams that define the inputs of the hardware module to
@@ -113,18 +118,36 @@ def iso_binary (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
       {toArray := [a n, b n].toArray, size_toArray := by simp}
 
 /--
-  Map the `i`-th element of stream `s` in `xv` to the output vector.
+  Map the `i`-th element of stream `s` in `xv` to the output vector, using `Stream'`.
 -/
-def streams_to_vec {α : Type u} {n : Nat} (xv : Vector (Stream' α) n) : Stream' (Vector α n) :=
+def streams_to_vec' {α : Type u} {n : Nat} (xv : Vector (Stream' α) n) : Stream' (Vector α n) :=
   /- `map` applies `fun (s : Stream' α) => s i` to every element in `xv` -/
   fun (i : Nat) => xv.map (fun (s : Stream' α) => s i)
 
 /--
-  Map each element at the `k`-th position of `xv` to the `k`-th stream of the output.
+  Map each element at the `k`-th position of `xv` to the `k`-th stream of the output, using `Stream'`.
 -/
-def vec_to_streams {α : Type u} {n : Nat} (xv : Stream' (Vector α n)) : Vector (Stream' α) n :=
+def vec_to_streams' {α : Type u} {n : Nat} (xv : Stream' (Vector α n)) : Vector (Stream' α) n :=
   /- `.ofFn` creates a vector with `n` elements (for each `k` from `0` to `n - 1`),
       where each element is a stream `fun (i : Nat) => ...` containing the `k`-th element of the
       `i`-th element of stream `xv`.
   -/
   Vector.ofFn (fun (k : Fin n) => fun (i : Nat) => (xv i).get k)
+
+/--
+  Drop the first `n` elements of all the three streams in `x`.
+-/
+def drop_from_bitvecs (x : Vector (Stream' (BitVec 1)) 3) (n : Nat) : Vector (Stream' (BitVec 1)) 3 :=
+  x.map (fun (s : Stream' (BitVec 1)) => s.drop n)
+
+/--
+  We define the relation between a vector `Vector (Stream' (BitVec 1)) 3` containing the
+  data, ready and valid signals, and a `Stream (BitVec 1)` containing the same information
+  at handshake level.
+  `a[0]` contains the data, `a[1]` contains the `ready` signal, `a[2]` contains the `valid` signal.
+  This relation is useful to prove the bisimilarity between streams at handshake and hardware levels.
+-/
+def ReadyValid  (a : Vector (Stream' (BitVec 1)) 3) (b : Stream (BitVec 1)) :=
+  ∀ (n : Nat),
+      ((a[1] n = 1#1) ∧ (a[2] n = 1#1) ∧ (some (a[0] n) = b.get n))
+      ∨ ((a[1] n = 0#1) ∨ (a[2] n = 0#1) ∧ (none = b.get n))
