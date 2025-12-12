@@ -15,6 +15,7 @@ inductive RiscVKind
 | k64
 deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
+@[reducible]
 def RiscVKind.denoteWidth : RiscVKind → Nat
   | k32 => 32
   | k64 => 64
@@ -587,7 +588,11 @@ abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
     -- provide type hint to nudge unification.
     let x1 : BitVec k.denoteWidth := regs.getN 1
     let x0 : BitVec k.denoteWidth := regs.getN 0
-    x0 ||| x1
+    -- let x1 := regs.getN 1
+    -- let x0 := regs.getN 0
+    -- sorry
+    -- sorry
+    ((x0 ||| x1))
   | .lidep k imm, _ =>
     match hk : k with
     | .k32 => imm.zeroExtend _ -- 12 → 64
