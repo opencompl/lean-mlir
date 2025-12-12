@@ -9,6 +9,25 @@ open LeanMLIR
 
 /-! ## The `RISCV64` dialect -/
 
+/-- Risc-V instruction kind. -/
+inductive RiscVKind
+| k32
+| k64
+deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
+
+def RiscVKind.denoteWidth : RiscVKind → Nat
+  | k32 => 32
+  | k64 => 64
+
+def RiscVKind.denoteLogWidth : RiscVKind → Nat
+  | k32 => 5
+  | k64 => 6
+
+def RiscVKind.denoteImmWidth : RiscVKind → Nat
+  | k32 => 12
+  | k64 => 20
+
+
 /-! ## Dialect operation definitions -/
 
 -- Options needed for `Deriving DecidableEQ` on large inductives:
@@ -30,6 +49,9 @@ However, any other attributes (e.g., flags or immediate values) are still encode
 inductive Op
   /- # RV64I Base Integer Instruction Set -/
   | li : (val : BitVec 64) → Op
+  | lidep (k : RiscVKind) (imm : BitVec k.denoteImmWidth) : Op
+  | li32 (imm : BitVec RiscVKind.k32.denoteImmWidth) : Op
+  | li64 (imm : BitVec RiscVKind.k64.denoteImmWidth) : Op
   | lui (imm : BitVec 20)
   | auipc (imm : BitVec 20)
   | addi (imm : BitVec 12)
@@ -173,6 +195,9 @@ encounters a `sig` it can replace it by its definition.
 @[simp, reducible]
 def Op.sig : Op → List Ty
   | .li _ => []
+  | .lidep _ _ => []
+  | .li32 _ => []
+  | .li64 _ => []
   | .mulh  => [Ty.bv, Ty.bv]
   | .mulhu  => [Ty.bv, Ty.bv]
   | .mulhsu  => [Ty.bv, Ty.bv]
@@ -273,6 +298,9 @@ def Op.sig : Op → List Ty
 @[simp, reducible]
 def Op.outTy : Op  → Ty
   | .li _ => Ty.bv
+  | .lidep _ _ => Ty.bv
+  | .li32 _ => Ty.bv
+  | .li64 _ => Ty.bv
   | .mulh => Ty.bv
   | .mulhu => Ty.bv
   | .mulhsu => Ty.bv
@@ -392,6 +420,9 @@ open RISCV64.Op in
 def opName (op : RISCV64.Op) : String :=
   let op  : String := match op with
   | .li _ => "li"
+  | .lidep _ _ => "lidep"
+  | .li32 _ => "li32"
+  | .li64 _ => "li64"
   | .mulh => "mulh"
   | .mulhu => "mulhu"
   | .mulhsu => "mulhsu"
@@ -539,6 +570,12 @@ Therefore we first pass `.get 1` then `.get 0` into the functions that define ou
 @[simp, simp_denote]
 abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
   | .li imm, _  => imm
+  | .lidep k imm, _ =>
+    match hk : k with
+    | .k32 => imm.zeroExtend _ -- 12 → 64
+    | .k64 => imm.zeroExtend _ -- 20 → 64
+  | .li32 imm, _ => imm.zeroExtend _ -- 12 → 64
+  | .li64 imm, _ => imm.zeroExtend _ -- 20 → 64
   | .addiw imm, regs => RV64.addiw imm (regs.getN 0)
   | .lui imm, regs  => RV64.lui imm
   | .auipc imm, regs => RV64.auipc imm (regs.getN 0)
