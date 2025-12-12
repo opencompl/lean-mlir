@@ -96,6 +96,44 @@ def register_wrapper
   Stream'.corec f g (inputs, init_regs, none)
 
 /--
+  To avoid using heterogeneous bitvectors without compromising on a faithful representation,
+  we introduce an ad-hoc structure for the input and output of the circuit in case it contains both
+  signals (`BitVec 1`) and data (`BitVec 32`).
+-/
+structure wiresStruc (nops nsig : Nat) where
+  result : Vector (BitVec 32) nops
+  signals : Vector (BitVec 1) nsig
+
+
+/-- We define a more general `register_wrapper` that operates on both streams of signals (`BitVec 1`)
+  as well as streams of operands (`BitVec 32`) -/
+def register_wrapper_generalized
+    (inputs : Stream' (wiresStruc inops insigs))
+    (init_regs : wiresStruc regops regsigs)
+    -- the generalized wrapper supports registers for both operands and signals
+    (update_fun : (wiresStruc inops insigs × wiresStruc regops regsigs) →
+                  (wiresStruc outops outsigs × wiresStruc regops regsigs))
+      : Stream' (wiresStruc outops outsigs) :=
+  let β := Stream' (wiresStruc inops insigs) × -- inputs
+            wiresStruc regops regsigs × -- feedback signals
+            Option (wiresStruc regops regsigs) -- registers' initial value
+  let f : β → wiresStruc outops outsigs :=
+    fun (inputs, regs, init_regs) =>
+      match init_regs with
+      | some init => let ⟨out, _⟩ := update_fun (inputs.head, init)
+                    out
+      | none => let ⟨out, _⟩  := update_fun  (inputs.head, regs)
+                out
+  let g : β → β :=
+    fun (inputs, regs, init_regs) =>
+      match init_regs with
+      | some init => let ⟨_, regs_out⟩ := update_fun (inputs.head, init)
+                    ⟨inputs.tail, regs_out, none⟩
+      | none =>  let ⟨_, regs_out⟩  := update_fun (inputs.head, regs)
+              ⟨inputs.tail, regs_out, none⟩
+  Stream'.corec f g  (inputs, init_regs, none)
+
+/--
   We define an isomorphism from a streams `a` to a stream of their product BitVec 1.
   With this isomorphism we map the single streams that define the inputs of the hardware module to
   a unique streams, where each element is composed by the single streams.
