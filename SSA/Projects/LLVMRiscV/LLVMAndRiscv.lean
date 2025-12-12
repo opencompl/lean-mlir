@@ -64,9 +64,9 @@ instance LLVMPlusRiscVSignature : DialectSignature LLVMPlusRiscV where
   | .llvm llvmOp => .llvm <$> DialectSignature.signature llvmOp
   | .riscv riscvOp => .riscv <$> DialectSignature.signature riscvOp
   | .castRiscv w =>
-      {sig := [Ty.riscv .bv], returnTypes := [Ty.llvm (.bitvec w)], regSig := []}
+      {sig := [Ty.riscv bv64], returnTypes := [Ty.llvm (.bitvec w)], regSig := []}
   | .castLLVM w =>
-      {sig := [Ty.llvm (.bitvec w)], returnTypes := [Ty.riscv .bv], regSig := []}
+      {sig := [Ty.llvm (.bitvec w)], returnTypes := [Ty.riscv bv64], regSig := []}
 
 /-! ### Printing -/
 
@@ -149,7 +149,7 @@ def ctxtTransformToRiscV (Γ : Ctxt LLVMPlusRiscV.Ty) :=
   Ctxt.map  (fun ty  =>
     match ty with
     | .riscv someRiscVTy => someRiscVTy
-    | _  => .bv
+    | _  => bv64
   ) Γ
 
 /-- Projection of `outTy` commutes with `Signature.map`. -/
@@ -254,7 +254,7 @@ def mkExpr (Γ : Ctxt _) (opStx : MLIR.AST.Op 0) :
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]
     match ty with
-      | .riscv (.bv) =>
+      | .riscv (bv64) =>
          match opStx.res with
         | res::[] =>
            match res.2 with

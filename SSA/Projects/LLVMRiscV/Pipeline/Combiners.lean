@@ -13,16 +13,16 @@ open LLVMRiscV
   Because `GlobalIsel` is hybrid, some of these patterns regard generic IR,
   while some are target-dependent.
 -/
-
+bv64
 /-!
   # Post-legalization optimizations
 
-  We implement post-legalization optimizations from LLVM's `GlobalISel` instructor selector.
-  Our naming conventions are consistent with the RISC-V backend.
+  We implement post-legalization optimizatiobv64from LLVM's `GlobalISel` instructor selector.
+  Our naming conventions are consistent withbv64e RISC-V backend.
 
   We do not support known-bits analysis nor matching on values, and therefore do not implement the
   patterns relying on this infrastructure (e.g., `shift_immed_chain`).
--/
+-/bv64
 
 /-- ### select_same_val
   (cond ? x : x) → x
@@ -138,7 +138,7 @@ def right_identity_zero_shl : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
     ^entry (%x: !riscv.reg):
       ret %x : !riscv.reg
   }]
-
+bv64
 def right_identity_zero_ashr : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
     ^entry (%x: !riscv.reg):
@@ -150,7 +150,7 @@ def right_identity_zero_ashr : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
     ^entry (%x: !riscv.reg):
       ret %x : !riscv.reg
   }]
-
+bv64
 def right_identity_zero_lshr : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
     ^entry (%x: !riscv.reg):
@@ -162,7 +162,7 @@ def right_identity_zero_lshr : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
     ^entry (%x: !riscv.reg):
       ret %x : !riscv.reg
   }]
-
+bv64
 def right_identity_zero_rol : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
     ^entry (%x: !riscv.reg):
@@ -174,7 +174,7 @@ def right_identity_zero_rol : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
     ^entry (%x: !riscv.reg):
       ret %x : !riscv.reg
   }]
-
+bv64
 def right_identity_zero_ror : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
     ^entry (%x: !riscv.reg):
@@ -186,7 +186,7 @@ def right_identity_zero_ror : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
     ^entry (%x: !riscv.reg):
       ret %x : !riscv.reg
   }]
-
+bv64
 /-- the whole `right_identity_zero` comprises the patterns for all the operations. -/
 def right_identity_zero : List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
   [⟨_, right_identity_zero_sub⟩,
@@ -198,7 +198,7 @@ def right_identity_zero : List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
   ⟨_, right_identity_zero_lshr⟩,
   ⟨_, right_identity_zero_rol⟩,
   ⟨_, right_identity_zero_ror ⟩]
-
+bv64
 /-! ### hoist_logic_op_with_same_opcode_hands -/
 
 /-
@@ -210,7 +210,7 @@ def AndSextSext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.
     ^entry (%x: i32, %y: i32):
       %0 = llvm.sext %x : i32 to i64
       %1 = llvm.sext %y : i32 to i64
-      %2 = llvm.and %0, %1 : i64
+      %2 = llvm.and %0, %1 : i64bv64
       llvm.return %2 : i64
   }]
   rhs := [LV| {
@@ -222,7 +222,7 @@ def AndSextSext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.
 
 /-
 Test the rewrite:
- fold (sext(X) | sext(Y)) -> sext(X | Y)
+ fold (sext(X) | sext(Y)) -> sext(X | Y)bv64
 -/
 def OrSextSext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
   lhs := [LV| {
@@ -248,7 +248,7 @@ def XorSextSext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.
     ^entry (%x: i32, %y: i32):
       %0 = llvm.sext %x : i32 to i64
       %1 = llvm.sext %y : i32 to i64
-      %2 = llvm.xor %0, %1 : i64
+      %2 = llvm.xor %0, %1 : i64bv64
       llvm.return %2 : i64
   }]
   rhs := [LV| {
@@ -259,7 +259,7 @@ def XorSextSext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.
   }]
 
 /-
-Test the rewrite:
+Test the rewrite:bv64
  fold (zext(X) & zext(Y)) -> zext(X & Y)
 -/
 def AndZextZext : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 32)] where
@@ -445,7 +445,7 @@ def AndLshrLshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.
     ^entry (%x: i64, %y: i64, %z: i64):
       %0 = llvm.and %x, %y : i64
       %1 = llvm.lshr %0, %z : i64
-      llvm.return %1 : i64
+      llvm.return %1 : i64bv64
   }]
 
 /-
@@ -464,7 +464,7 @@ def OrLshrLshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.b
     ^entry (%x: i64, %y: i64, %z: i64):
       %0 = llvm.or %x, %y : i64
       %1 = llvm.lshr %0, %z : i64
-      llvm.return %1 : i64
+      llvm.return %1 : i64bv64bv64
   }]
 
 /-
@@ -476,7 +476,7 @@ def XorLshrLshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.
     ^entry (%x: i64, %y: i64, %z: i64):
       %0 = llvm.lshr %x, %z : i64
       %1 = llvm.lshr %y, %z : i64
-      %2 = llvm.xor %0, %1 : i64
+      %2 = llvm.xor %0, %1 : i64bv64bv64
       llvm.return %2 : i64
   }]
   rhs := [LV| {
@@ -496,7 +496,7 @@ def AndAshrAshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.
       %0 = llvm.ashr %x, %z : i64
       %1 = llvm.ashr %y, %z : i64
       %2 = llvm.and %0, %1 : i64
-      llvm.return %2 : i64
+      llvm.return %2 : i64bv64
   }]
   rhs := [LV| {
     ^entry (%x: i64, %y: i64, %z: i64):
@@ -512,7 +512,7 @@ Test the rewrite:
 def OrAshrAshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64, %z: i64):
-      %0 = llvm.ashr %x, %z : i64
+      %0 = llvm.ashr %x, %z : i64bv64
       %1 = llvm.ashr %y, %z : i64
       %2 = llvm.or %0, %1 : i64
       llvm.return %2 : i64
@@ -698,7 +698,7 @@ def select_to_iminmax_sge : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), 
 
 def select_to_iminmax_ult : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
-    ^entry (%x: i64, %y: i64):
+    ^entry (%x: i64, %y: i64):bv64
       %0 = llvm.icmp.ult %x, %y : i64
       %1 = llvm.select %0, %x, %y : i64
       llvm.return %1 : i64
@@ -712,7 +712,7 @@ def select_to_iminmax_ult : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), 
       llvm.return %3 : i64
   }]
 
-def select_to_iminmax_ule : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+def select_to_iminmax_ule : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bbv64 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = llvm.icmp.ule %x, %y : i64
@@ -726,7 +726,7 @@ def select_to_iminmax_ule : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), 
       %2 =  minu %0, %1 : !i64
       %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
       llvm.return %3 : i64
-  }]
+  }]bv64
 
 def select_to_iminmax_slt : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
@@ -740,7 +740,7 @@ def select_to_iminmax_slt : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), 
       %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
       %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
       %2 =  min %0, %1 : !i64
-      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
+      %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i6bv64
       llvm.return %3 : i64
   }]
 
@@ -754,7 +754,7 @@ def select_to_iminmax_sle : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), 
   rhs := [LV| {
     ^entry (%x: i64, %y: i64):
       %0 = "builtin.unrealized_conversion_cast" (%x) : (i64) -> (!i64)
-      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i64)
+      %1 = "builtin.unrealized_conversion_cast" (%y) : (i64) -> (!i6bv64
       %2 =  min %0, %1 : !i64
       %3 = "builtin.unrealized_conversion_cast" (%2) : (!i64) -> (i64)
       llvm.return %3 : i64
@@ -768,7 +768,7 @@ def select_to_iminmax: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   ⟨_, select_to_iminmax_ult⟩,
   ⟨_, select_to_iminmax_ule⟩,
   ⟨_, select_to_iminmax_slt⟩,
-  ⟨_, select_to_iminmax_sle⟩
+  ⟨_, select_to_iminmax_sle⟩bv64
   ]
 
 /-- ### binop_same_val

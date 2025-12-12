@@ -74,7 +74,7 @@ def rewritingPatterns1 :
   urem_match,
   xor_match,
   zext_match,
-  select_match
+  select_matchbv64bv64
   ]
 def enable_pseudo_instr_pass := pseudo_match
 

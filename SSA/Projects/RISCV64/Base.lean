@@ -52,6 +52,7 @@ inductive Op
   | lidep (k : RiscVKind) (imm : BitVec k.denoteImmWidth) : Op
   | li32 (imm : BitVec RiscVKind.k32.denoteImmWidth) : Op
   | li64 (imm : BitVec RiscVKind.k64.denoteImmWidth) : Op
+  | ordep (k : RiscVKind) : Op
   | lui (imm : BitVec 20)
   | auipc (imm : BitVec 20)
   | addi (imm : BitVec 12)
@@ -168,7 +169,9 @@ trigger the stack overflow)!
 The `RISCV64` dialect only uses `bv` type (bitvector).
 -/
 inductive Ty
-  | bv : Ty
+  | bv64 : Ty
+  | bv32 : Ty
+  | bvk (k : RiscVKind) : Ty
   deriving DecidableEq, Repr, Inhabited, Lean.ToExpr
 
 /--
@@ -177,12 +180,17 @@ The `TyDenote` instance specifies how the `RISCV64` types transalate into actual
 -/
 instance : TyDenote Ty where
   toType
-  | Ty.bv => BitVec 64
+  | .bv64 => BitVec 64
+  | .bv32 => BitVec 32
+  | .bvk k => BitVec k.denoteWidth
 
 instance (ty : Ty) : Inhabited (TyDenote.toType ty) where
   default := match ty with
-  | .bv  => 0#64
+  | .bv64  => 0#64
+  | .bv32  => 0#32
+  | .bvk k => BitVec.ofNat (k.denoteWidth) 0
 
+open Ty
 /-! ## Dialect operation definitions -/
 
 
@@ -198,202 +206,204 @@ def Op.sig : Op → List Ty
   | .lidep _ _ => []
   | .li32 _ => []
   | .li64 _ => []
-  | .mulh  => [Ty.bv, Ty.bv]
-  | .mulhu  => [Ty.bv, Ty.bv]
-  | .mulhsu  => [Ty.bv, Ty.bv]
-  | .divu =>  [Ty.bv, Ty.bv]
-  | .remuw  => [Ty.bv, Ty.bv]
-  | .remu  =>  [Ty.bv, Ty.bv]
-  | .addiw (_imm : BitVec 12) => [Ty.bv]
-  | .lui (_imm : BitVec 20) => [Ty.bv]
-  | .auipc (_imm : BitVec 20)  => [Ty.bv]
-  | .slliw (_shamt : BitVec 5)  => [Ty.bv]
-  | .srliw (_shamt : BitVec 5) => [Ty.bv]
-  | .sraiw (_shamt : BitVec 5) => [Ty.bv]
-  | .slli (_shamt : BitVec 6) => [Ty.bv]
-  | .srli (_shamt : BitVec 6) => [Ty.bv]
-  | .srai (_shamt : BitVec 6) => [Ty.bv]
-  | .addw => [Ty.bv, Ty.bv]
-  | .subw => [Ty.bv, Ty.bv]
-  | .sllw => [Ty.bv, Ty.bv]
-  | .srlw => [Ty.bv, Ty.bv]
-  | .sraw => [Ty.bv, Ty.bv]
-  | .add => [Ty.bv, Ty.bv]
-  | .slt => [Ty.bv, Ty.bv]
-  | .sltu => [Ty.bv, Ty.bv]
-  | .and => [Ty.bv, Ty.bv]
-  | .or => [Ty.bv, Ty.bv]
-  | .xor => [Ty.bv, Ty.bv]
-  | .sll => [Ty.bv, Ty.bv]
-  | .srl => [Ty.bv, Ty.bv]
-  | .sub => [Ty.bv, Ty.bv]
-  | .sra => [Ty.bv, Ty.bv]
-  | .remw  => [Ty.bv, Ty.bv]
-  | .rem  =>  [Ty.bv, Ty.bv]
-  | .mul => [Ty.bv, Ty.bv]
-  | .mulw => [Ty.bv, Ty.bv]
-  | .div  =>  [Ty.bv, Ty.bv]
-  | .divw  =>  [Ty.bv, Ty.bv]
-  | .divuw  =>  [Ty.bv, Ty.bv]
-  | .addi (_imm : BitVec 12) => [Ty.bv]
-  | .slti (_imm : BitVec 12) => [Ty.bv]
-  | .sltiu (_imm : BitVec 12) => [Ty.bv]
-  | .andi (_imm : BitVec 12) => [Ty.bv]
-  | .ori (_imm : BitVec 12) => [Ty.bv]
-  | .xori (_imm : BitVec 12) => [Ty.bv]
-  | .bclr => [Ty.bv, Ty.bv]
-  | .bext => [Ty.bv, Ty.bv]
-  | .binv => [Ty.bv, Ty.bv]
-  | .bset  => [Ty.bv, Ty.bv]
-  | .bclri (_shamt : BitVec 6) => [Ty.bv]
-  | .bexti (_shamt : BitVec 6) => [Ty.bv]
-  | .binvi (_shamt : BitVec 6) => [Ty.bv]
-  | .bseti (_shamt : BitVec 6) => [Ty.bv]
-  | .adduw => [Ty.bv, Ty.bv]
-  | .sh1adduw => [Ty.bv, Ty.bv]
-  | .sh2adduw => [Ty.bv, Ty.bv]
-  | .sh3adduw => [Ty.bv, Ty.bv]
-  | .sh1add => [Ty.bv, Ty.bv]
-  | .sh2add => [Ty.bv, Ty.bv]
-  | .sh3add => [Ty.bv, Ty.bv]
-  | .slliuw (_shamt : BitVec 6) => [Ty.bv]
-  | .andn => [Ty.bv, Ty.bv]
-  | .orn => [Ty.bv, Ty.bv]
-  | .xnor => [Ty.bv, Ty.bv]
+  | .ordep k => [.bvk k, .bvk k]
+  | .mulh  => [bv64, bv64]
+  | .mulhu  => [bv64, bv64]
+  | .mulhsu  => [bv64, bv64]
+  | .divu =>  [bv64, bv64]
+  | .remuw  => [bv64, bv64]
+  | .remu  =>  [bv64, bv64]
+  | .addiw (_imm : BitVec 12) => [bv64]
+  | .lui (_imm : BitVec 20) => [bv64]
+  | .auipc (_imm : BitVec 20)  => [bv64]
+  | .slliw (_shamt : BitVec 5)  => [bv64]
+  | .srliw (_shamt : BitVec 5) => [bv64]
+  | .sraiw (_shamt : BitVec 5) => [bv64]
+  | .slli (_shamt : BitVec 6) => [bv64]
+  | .srli (_shamt : BitVec 6) => [bv64]
+  | .srai (_shamt : BitVec 6) => [bv64]
+  | .addw => [bv64, bv64]
+  | .subw => [bv64, bv64]
+  | .sllw => [bv64, bv64]
+  | .srlw => [bv64, bv64]
+  | .sraw => [bv64, bv64]
+  | .add => [bv64, bv64]
+  | .slt => [bv64, bv64]
+  | .sltu => [bv64, bv64]
+  | .and => [bv64, bv64]
+  | .or => [bv64, bv64]
+  | .xor => [bv64, bv64]
+  | .sll => [bv64, bv64]
+  | .srl => [bv64, bv64]
+  | .sub => [bv64, bv64]
+  | .sra => [bv64, bv64]
+  | .remw  => [bv64, bv64]
+  | .rem  =>  [bv64, bv64]
+  | .mul => [bv64, bv64]
+  | .mulw => [bv64, bv64]
+  | .div  =>  [bv64, bv64]
+  | .divw  =>  [bv64, bv64]
+  | .divuw  =>  [bv64, bv64]
+  | .addi (_imm : BitVec 12) => [bv64]
+  | .slti (_imm : BitVec 12) => [bv64]
+  | .sltiu (_imm : BitVec 12) => [bv64]
+  | .andi (_imm : BitVec 12) => [bv64]
+  | .ori (_imm : BitVec 12) => [bv64]
+  | .xori (_imm : BitVec 12) => [bv64]
+  | .bclr => [bv64, bv64]
+  | .bext => [bv64, bv64]
+  | .binv => [bv64, bv64]
+  | .bset  => [bv64, bv64]
+  | .bclri (_shamt : BitVec 6) => [bv64]
+  | .bexti (_shamt : BitVec 6) => [bv64]
+  | .binvi (_shamt : BitVec 6) => [bv64]
+  | .bseti (_shamt : BitVec 6) => [bv64]
+  | .adduw => [bv64, bv64]
+  | .sh1adduw => [bv64, bv64]
+  | .sh2adduw => [bv64, bv64]
+  | .sh3adduw => [bv64, bv64]
+  | .sh1add => [bv64, bv64]
+  | .sh2add => [bv64, bv64]
+  | .sh3add => [bv64, bv64]
+  | .slliuw (_shamt : BitVec 6) => [bv64]
+  | .andn => [bv64, bv64]
+  | .orn => [bv64, bv64]
+  | .xnor => [bv64, bv64]
   | .clz
   | .clzw
   | .ctz
   | .ctzw
-  | .max => [Ty.bv, Ty.bv]
-  | .maxu => [Ty.bv, Ty.bv]
-  | .min  => [Ty.bv, Ty.bv]
-  | .minu  => [Ty.bv, Ty.bv]
-  | .sextb => [Ty.bv]
-  | .sexth => [Ty.bv]
-  | .zexth => [Ty.bv]
-  | .rol => [Ty.bv, Ty.bv]
-  | .rolw => [Ty.bv, Ty.bv]
-  | .ror => [Ty.bv, Ty.bv]
-  | .rori (_shamt : BitVec 6) =>[Ty.bv]
-  | .roriw (_shamt : BitVec 5) =>[Ty.bv]
-  | .rorw => [Ty.bv, Ty.bv]
-  | .pack => [Ty.bv, Ty.bv]
-  | .packh => [Ty.bv, Ty.bv]
-  | .packw => [Ty.bv, Ty.bv]
-  | .mv => [Ty.bv]
-  | .not => [Ty.bv]
-  | .neg => [Ty.bv]
-  | .negw => [Ty.bv]
-  | .sextw => [Ty.bv]
-  | .zextb => [Ty.bv]
-  | .zextw => [Ty.bv]
-  | .seqz => [Ty.bv]
-  | .snez => [Ty.bv]
-  | .sltz => [Ty.bv]
-  | .sgtz => [Ty.bv]
+  | .max => [bv64, bv64]
+  | .maxu => [bv64, bv64]
+  | .min  => [bv64, bv64]
+  | .minu  => [bv64, bv64]
+  | .sextb => [bv64]
+  | .sexth => [bv64]
+  | .zexth => [bv64]
+  | .rol => [bv64, bv64]
+  | .rolw => [bv64, bv64]
+  | .ror => [bv64, bv64]
+  | .rori (_shamt : BitVec 6) =>[bv64]
+  | .roriw (_shamt : BitVec 5) =>[bv64]
+  | .rorw => [bv64, bv64]
+  | .pack => [bv64, bv64]
+  | .packh => [bv64, bv64]
+  | .packw => [bv64, bv64]
+  | .mv => [bv64]
+  | .not => [bv64]
+  | .neg => [bv64]
+  | .negw => [bv64]
+  | .sextw => [bv64]
+  | .zextb => [bv64]
+  | .zextw => [bv64]
+  | .seqz => [bv64]
+  | .snez => [bv64]
+  | .sltz => [bv64]
+  | .sgtz => [bv64]
 
 /--
 `Op.outTy` specifies the output type of each `RISCV64` operation.
 -/
 @[simp, reducible]
 def Op.outTy : Op  → Ty
-  | .li _ => Ty.bv
-  | .lidep _ _ => Ty.bv
-  | .li32 _ => Ty.bv
-  | .li64 _ => Ty.bv
-  | .mulh => Ty.bv
-  | .mulhu => Ty.bv
-  | .mulhsu => Ty.bv
-  | .divu => Ty.bv
-  | .remuw => Ty.bv
-  | .remu =>  Ty.bv
-  | .addiw (_imm : BitVec 12) => Ty.bv
-  | .lui (_imm : BitVec 20) => Ty.bv
-  | .auipc (_imm : BitVec 20) => Ty.bv
-  | .slliw (_shamt : BitVec 5) => Ty.bv
-  | .srliw (_shamt : BitVec 5) => Ty.bv
-  | .sraiw (_shamt : BitVec 5) => Ty.bv
-  | .slli (_shamt : BitVec 6) => Ty.bv
-  | .srli (_shamt : BitVec 6) => Ty.bv
-  | .srai (_shamt : BitVec 6) => Ty.bv
-  | .addw => Ty.bv
-  | .subw => Ty.bv
-  | .sllw => Ty.bv
-  | .srlw => Ty.bv
-  | .sraw => Ty.bv
-  | .add => Ty.bv
-  | .slt => Ty.bv
-  | .sltu => Ty.bv
-  | .and => Ty.bv
-  | .or => Ty.bv
-  | .xor => Ty.bv
-  | .sll => Ty.bv
-  | .srl => Ty.bv
-  | .sub => Ty.bv
-  | .sra => Ty.bv
-  | .remw  => Ty.bv
-  | .rem => Ty.bv
-  | .mul => Ty.bv
-  | .mulw => Ty.bv
-  | .div => Ty.bv
-  | .divw => Ty.bv
-  | .divuw => Ty.bv
-  | .addi (_imm : BitVec 12) => Ty.bv
-  | .slti (_imm : BitVec 12) => Ty.bv
-  | .sltiu (_imm : BitVec 12) => Ty.bv
-  | .andi (_imm : BitVec 12) => Ty.bv
-  | .ori (_imm : BitVec 12) => Ty.bv
-  | .xori (_imm : BitVec 12) => Ty.bv
-  | .bclr => Ty.bv
-  | .bext => Ty.bv
-  | .binv => Ty.bv
-  | .bset => Ty.bv
-  | .bclri (_shamt : BitVec 6) => Ty.bv
-  | .bexti (_shamt : BitVec 6) => Ty.bv
-  | .binvi (_shamt : BitVec 6) => Ty.bv
-  | .bseti (_shamt : BitVec 6) => Ty.bv
-  | adduw => Ty.bv
-  | .sh1adduw => Ty.bv
-  | .sh2adduw => Ty.bv
-  | .sh3adduw => Ty.bv
-  | .sh1add => Ty.bv
-  | .sh2add => Ty.bv
-  | .sh3add => Ty.bv
-  | .slliuw (_shamt : BitVec 6) => Ty.bv
-  | .andn =>  Ty.bv
-  | .orn =>  Ty.bv
-  | .xnor =>  Ty.bv
-  | .clz => Ty.bv
-  | .clzw => Ty.bv
-  | .ctz => Ty.bv
-  | .ctzw => Ty.bv
-  | .max =>  Ty.bv
-  | .maxu =>  Ty.bv
-  | .min  =>  Ty.bv
-  | .minu  =>  Ty.bv
-  | .sextb => Ty.bv
-  | .sexth => Ty.bv
-  | .zexth => Ty.bv
-  | .rol => Ty.bv
-  | .rolw => Ty.bv
-  | .ror => Ty.bv
-  | .rori (_shamt : BitVec 6) => Ty.bv
-  | .roriw (_shamt : BitVec 5) => Ty.bv
-  | .rorw => Ty.bv
-  | .pack => Ty.bv
-  | .packh => Ty.bv
-  | .packw => Ty.bv
-  | .mv => Ty.bv
-  | .not => Ty.bv
-  | .neg => Ty.bv
-  | .negw => Ty.bv
-  | .sextw => Ty.bv
-  | .zextb => Ty.bv
-  | .zextw => Ty.bv
-  | .seqz => Ty.bv
-  | .snez => Ty.bv
-  | .sltz => Ty.bv
-  | .sgtz => Ty.bv
+  | .li _ => bv64
+  | .ordep k => bvk k
+  | .lidep k _ => if k = .k64 then bv64 else bv32
+  | .li32 _ => bv32
+  | .li64 _ => bv64
+  | .mulh => bv64
+  | .mulhu => bv64
+  | .mulhsu => bv64
+  | .divu => bv64
+  | .remuw => bv64
+  | .remu =>  bv64
+  | .addiw (_imm : BitVec 12) => bv64
+  | .lui (_imm : BitVec 20) => bv64
+  | .auipc (_imm : BitVec 20) => bv64
+  | .slliw (_shamt : BitVec 5) => bv64
+  | .srliw (_shamt : BitVec 5) => bv64
+  | .sraiw (_shamt : BitVec 5) => bv64
+  | .slli (_shamt : BitVec 6) => bv64
+  | .srli (_shamt : BitVec 6) => bv64
+  | .srai (_shamt : BitVec 6) => bv64
+  | .addw => bv64
+  | .subw => bv64
+  | .sllw => bv64
+  | .srlw => bv64
+  | .sraw => bv64
+  | .add => bv64
+  | .slt => bv64
+  | .sltu => bv64
+  | .and => bv64
+  | .or => bv64
+  | .xor => bv64
+  | .sll => bv64
+  | .srl => bv64
+  | .sub => bv64
+  | .sra => bv64
+  | .remw  => bv64
+  | .rem => bv64
+  | .mul => bv64
+  | .mulw => bv64
+  | .div => bv64
+  | .divw => bv64
+  | .divuw => bv64
+  | .addi (_imm : BitVec 12) => bv64
+  | .slti (_imm : BitVec 12) => bv64
+  | .sltiu (_imm : BitVec 12) => bv64
+  | .andi (_imm : BitVec 12) => bv64
+  | .ori (_imm : BitVec 12) => bv64
+  | .xori (_imm : BitVec 12) => bv64
+  | .bclr => bv64
+  | .bext => bv64
+  | .binv => bv64
+  | .bset => bv64
+  | .bclri (_shamt : BitVec 6) => bv64
+  | .bexti (_shamt : BitVec 6) => bv64
+  | .binvi (_shamt : BitVec 6) => bv64
+  | .bseti (_shamt : BitVec 6) => bv64
+  | adduw => bv64
+  | .sh1adduw => bv64
+  | .sh2adduw => bv64
+  | .sh3adduw => bv64
+  | .sh1add => bv64
+  | .sh2add => bv64
+  | .sh3add => bv64
+  | .slliuw (_shamt : BitVec 6) => bv64
+  | .andn =>  bv64
+  | .orn =>  bv64
+  | .xnor =>  bv64
+  | .clz => bv64
+  | .clzw => bv64
+  | .ctz => bv64
+  | .ctzw => bv64
+  | .max =>  bv64
+  | .maxu =>  bv64
+  | .min  =>  bv64
+  | .minu  =>  bv64
+  | .sextb => bv64
+  | .sexth => bv64
+  | .zexth => bv64
+  | .rol => bv64
+  | .rolw => bv64
+  | .ror => bv64
+  | .rori (_shamt : BitVec 6) => bv64
+  | .roriw (_shamt : BitVec 5) => bv64
+  | .rorw => bv64
+  | .pack => bv64
+  | .packh => bv64
+  | .packw => bv64
+  | .mv => bv64
+  | .not => bv64
+  | .neg => bv64
+  | .negw => bv64
+  | .sextw => bv64
+  | .zextb => bv64
+  | .zextw => bv64
+  | .seqz => bv64
+  | .snez => bv64
+  | .sltz => bv64
+  | .sgtz => bv64
 
 /--
 `Dialect` bundles `RISCV64.Op` and `RISCV64.Ty` into a dialect named `RV64`.
@@ -413,7 +423,9 @@ instance : DialectSignature RV64 where
 
 instance : ToString Ty where
   toString
-  | Ty.bv => "!riscv.reg"
+  | .bv64 => "!riscv.reg"
+  | .bv32 => "!riscv.reg32"
+  | .bvk k => s!"!riscv.reg{ k.denoteWidth }"
 
 
 open RISCV64.Op in
@@ -421,6 +433,7 @@ def opName (op : RISCV64.Op) : String :=
   let op  : String := match op with
   | .li _ => "li"
   | .lidep _ _ => "lidep"
+  | .ordep _ => "ordep"
   | .li32 _ => "li32"
   | .li64 _ => "li64"
   | .mulh => "mulh"
@@ -570,6 +583,11 @@ Therefore we first pass `.get 1` then `.get 0` into the functions that define ou
 @[simp, simp_denote]
 abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
   | .li imm, _  => imm
+  | .ordep k, regs =>
+    -- provide type hint to nudge unification.
+    let x1 : BitVec k.denoteWidth := regs.getN 1
+    let x0 : BitVec k.denoteWidth := regs.getN 0
+    x0 ||| x1
   | .lidep k imm, _ =>
     match hk : k with
     | .k32 => imm.zeroExtend _ -- 12 → 64

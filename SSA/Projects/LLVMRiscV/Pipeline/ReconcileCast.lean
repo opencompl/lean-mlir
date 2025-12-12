@@ -15,7 +15,7 @@ open LLVMRiscV
 -/
 
 @[simp_denote]
-def cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.riscv (.bv)] [Ty.riscv (.bv)] where
+def cast_eliminiation_riscv : PeepholeRewrite LLVMPlusRiscV [Ty.riscv bv64] [Ty.riscv bv64] where
   lhs := [LV| {
     ^entry (%arg: !i64):
     %0 = "builtin.unrealized_conversion_cast"(%arg) : (!i64) -> (i64)
