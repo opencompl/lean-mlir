@@ -29,7 +29,7 @@ However, any other attributes (e.g., flags or immediate values) are still encode
 -/
 inductive Op
   /- # RV64I Base Integer Instruction Set -/
-  | li : (val : BitVec 64) → Op
+  | li : (val : BitVec 20) → Op
   | lui (imm : BitVec 20)
   | auipc (imm : BitVec 20)
   | addi (imm : BitVec 12)
@@ -538,7 +538,7 @@ Therefore we first pass `.get 1` then `.get 0` into the functions that define ou
 -/
 @[simp, simp_denote]
 abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
-  | .li imm, _  => imm
+  | .li imm, _  => imm.zeroExtend _
   | .addiw imm, regs => RV64.addiw imm (regs.getN 0)
   | .lui imm, regs  => RV64.lui imm
   | .auipc imm, regs => RV64.auipc imm (regs.getN 0)
