@@ -44,6 +44,14 @@ namespace HandshakeStream
   }
 -/
 
+
+def fork_handshake (arg : Stream (BitVec 1)) :=
+  corec_prod (β := Stream (BitVec 1)) arg
+    fun x => Id.run <| do
+      let x0 := x 0
+      let x' := x.tail
+      (x0, x0, x')
+
 /--
   `fork` replicates the content of an input stream and dispatches it to two channels.
 
@@ -51,7 +59,7 @@ namespace HandshakeStream
   which does not contain `Option` values, because at this level
   of abstractions the content of streams has been concretized.
 -/
-def fork
+def fork_seq
       (arg_0 : Stream' (BitVec 1))
       (arg_0_valid : Stream' (BitVec 1))
       (arg_1 : Stream' (BitVec 1))
@@ -94,8 +102,8 @@ theorem fork_bisim
     let := ReadyValid #v[out0_data, out0_valid, out0_ready] out0
     let := ReadyValid #v[out1_data, out1_valid, out1_ready] out1
     let := ReadyValid #v[out2_data, out2_valid, out2_ready] out2
-    Bisim (iso_unary' ((fork arg0_data arg0_valid arg1_data arg1_valid out0_ready oue1_ready out2_ready).get 0))  (HandshakeOp.fork arg0).fst := by
-  unfold iso_unary' HandshakeOp.fork
+    Bisim (iso_unary' ((fork_seq arg0_data arg0_valid arg1_data arg1_valid out0_ready oue1_ready out2_ready).get 0))  (fork_handshake arg0).fst := by
+  unfold iso_unary'
   unfold Bisim
   simp
 
