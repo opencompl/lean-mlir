@@ -1,101 +1,62 @@
 import Mathlib.Data.Fintype.Defs
 import Blase.Fast.FiniteStateMachine
+import Valaig.Aig.FromStd
+import Valaig.External
 
 import Lean
-open Std Sat AIG
-
-variable {α : Type} [Hashable α] [DecidableEq α]
-
-private structure Latch (aig : AIG α) where
-  init : Bool
-  state : aig.Ref
-  next : aig.Ref
-
--- Note that this currently does not require much in the way of wellformedness,
--- it could specify multiple references as the same latch/input etc
-structure Aiger (α : Type) [Hashable α] [DecidableEq α] where
-  aig : AIG α
-  latches : Array (Latch aig)
-  inputs : Array aig.Ref
-  bad : aig.Ref
+open Std Sat AIG Valaig
 
 def _root_.FSM.toAiger {arity : Type}
     [Hashable arity] [Fintype arity] [DecidableEq arity]
-    (fsm : FSM arity) : Aiger (fsm.α ⊕ arity) :=
-  let aig := .empty
+    (fsm : FSM arity) : Aiger :=
+  -- First we build a Std.Sat.AIG using toAIGAux by iterating the latches
+  -- and bad, adding them to the new AIG. As we go, we take note of what these
+  -- next state variables map to
+  let res : (aig : AIG _) × Std.HashMap fsm.α aig.Ref :=
+    fsm.i.toList.foldl
+      (fun ⟨aig, map⟩ var =>
+        let res := fsm.nextStateCirc var |>.toAIGAux aig
+        let map := map.map fun _ r => r.cast res.le_size
+        let map := map.insert var res.ref
+        ⟨res.out, map⟩)
+      ⟨.empty, .emptyWithCapacity⟩
 
-  let ⟨aig, inputs⟩ : (aig : AIG _) × Array aig.Ref :=
-    (@Fintype.elems arity).val.liftOn
-      (fun elems => elems.foldl (init := ⟨aig, .empty⟩)
-        (fun ⟨aig, vec⟩ s =>
-          let ⟨aig, ref⟩ := aig.mkAtomCached (.inr s)
-          let vec := vec.map (.cast . sorry)
-          ⟨aig, vec.push ref⟩))
-      -- Functions that operate on a quotient should be provably indistinguishable
-      -- up to the quotienting however in this case we will not be equivalent
-      -- because the aiger we produce will depend on the ordering of elements
-      -- however the actual solvability of the system does not depend on the
-      -- ordering of elements therefore this sorry is in fact benign
-      sorry
+  let stdAig := res.fst
+  let nextMap := res.snd
 
-  -- Array of next state variables with their function
-  let ⟨aig, latches⟩ : (aig : AIG _) × Array (Latch aig) := fsm.i.toList.foldl
-    (fun ⟨aig, vec⟩ var =>
-      let res := fsm.nextStateCirc var |>.toAIGAux aig
-      let aig := res.out
-      let next := res.ref
+  have hmapmem {a : fsm.α} : a ∈ nextMap := by
+    have : ∀ {a} (_ : a ∈ fsm.i.toList), a ∈ nextMap := by
+      let motive idx (state : (aig : AIG (fsm.α ⊕ arity)) × Std.HashMap _ aig.Ref) : Prop :=
+        ∀ {i : Nat} {_ : idx ≤ fsm.i.toList.length} (_ : i < idx), fsm.i.toList[i]'(by grind) ∈ state.snd
+      subst nextMap res
+      simp only [←List.mem_toArray, ←Array.forall_getElem]
+      rw [←List.foldl_toArray]
+      intro i
+      apply Array.foldl_induction motive
+      · unfold motive; omega
+      · unfold motive; grind
+      · trivial
+    exact this (FinEnum.mem_toList a)
 
-      let ⟨aig, state⟩ := aig.mkAtomCached (.inl var)
-      let init := fsm.initCarry var
-      let vec := vec.map (fun l => { l with state := l.state.cast sorry, next := l.next.cast sorry })
-      ⟨aig, vec.push {init, state, next := next.cast sorry}⟩)
-    ⟨aig, .empty⟩
-
-  let res := fsm.outputCirc.toAIGAux aig
-  let aig := res.out
+  let res := fsm.outputCirc.toAIGAux stdAig
+  let stdAig := res.out
   let bad := res.ref
+  let nextMap := nextMap.map fun _ r => r.cast res.le_size
+  have hmapmem : ∀ {a : fsm.α}, a ∈ nextMap := by grind only [HashMap.mem_map]
 
-  let inputs := inputs.map (.cast . sorry)
-  let latches := latches.map
-    (fun l => { l with state := l.state.cast sorry, next := l.next.cast sorry })
+  let res := Valaig.Aig.fromStdAIG stdAig fun atom =>
+    match atom with
+    | .inl latch =>
+      let next := nextMap[latch]'hmapmem
+      let reset := .inl (fsm.initCarry latch)
+      .latch next reset
+    | .inr input => .input
 
-  { aig, latches, inputs, bad }
-
-namespace Aiger
-
-private def toVarFalseLit (lit : Nat) : Nat := lit * 2
-private def toVarFalse {aig : AIG α} (ref : aig.Ref) : Nat := toVarFalseLit ref.gate
-
-private def toVar {aig : AIG α} (ref : aig.Ref) : Nat := (toVarFalse ref) + ref.invert.toNat
-private def toVarFanin (fanin : Fanin) : Nat := toVarFalseLit fanin.gate + fanin.invert.toNat
-
-def toAagFile (aig : Aiger α) (file : IO.FS.Stream) : IO Unit := do
-  let maxVar := aig.aig.decls.size
-  let numInputs := aig.inputs.size
-  let numLatches := aig.latches.size
-  let ⟨numAnds, body, _⟩ : _ × _ × _ := aig.aig.decls.foldl
-      (fun ⟨numAnds, s, idx⟩ term =>
-        match term with
-        | Decl.gate l r => ⟨numAnds + 1, s ++ s!"{toVarFalseLit idx} {toVarFanin l} {toVarFanin r}\n", idx + 1⟩
-        | _ => ⟨numAnds, s, idx + 1⟩)
-      ⟨0, "", 0⟩
-
-  -- Aiger 1.9 Header M I L O A B C J F
-  file.putStrLn s!"aag {maxVar} {numInputs} {numLatches} 0 {numAnds} 1 0 0 0"
-
-  -- Input lines
-  for input in aig.inputs do
-    assert! !input.invert
-    file.putStrLn s!"{toVarFalse input}"
-
-  -- Latch lines
-  for l in aig.latches do
-    assert! !l.state.invert
-    file.putStrLn s!"{toVarFalse l.state} {toVar l.next} {l.init.toNat}"
-
-  file.putStrLn s!"{toVar aig.bad}"
-
-  file.putStr body
-
-end Aiger
+  let bad := res.refMap bad
+  {
+    aig := res.aig,
+    bads := #[.mk bad],
+    hwf := res.hwf
+    hbads := by simp; exact res.hrefvalid
+  }
 

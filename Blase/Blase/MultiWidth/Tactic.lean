@@ -38,9 +38,10 @@ structure Config where
   debugFillFinalReflectionProofWithSorry : Bool := false
   /-- Debug print the SMT-LIB version -/
   debugPrintSmtLib : Bool := false
-  /-- Dump the FSM to an Aiger file. -/
-  debugDumpAiger: Option String := none
-deriving DecidableEq, Repr
+  /-- Solve using an external like rIC3. -/
+  externalSolver : Bool := false
+  /-- The config for the external solver when externalSolver is set. -/
+  externalSolverConfig : Valaig.External.SafetyAigerMC := Valaig.External.rIC3 (timeoutMs := some 5000)
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -1168,92 +1169,98 @@ def solve (gorig : MVarId) : SolverM Unit := do
     debugLog m!"fsm circuit size: {termFsmNondep.toFsmZext.circuitSize}"
     if ! (← isDefEq pRawExpr (← mkAppM ``Term.toBV #[benv, nenv, ienv, penv, tenv, pExpr])) then
       throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
-    let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
-    if let some filename := (← read).debugDumpAiger then
-      let fn := System.mkFilePath [filename]
-      let handle ← IO.FS.Handle.mk fn IO.FS.Mode.write
-      let stream := IO.FS.Stream.ofHandle handle
-      termFsmNondep.toFsmZext.toAiger.toAagFile stream
 
-    let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
-    match stats with
-    | .safetyFailure i =>
-      let suspiciousVars ← collect.logSuspiciousFvars
-      -- | Found precise counter-example to claimed predicate.
-      if suspiciousVars.isEmpty then
-          throwError m!"CEX: Found exact counter-example at iteration {i} for predicate '{pRawExpr}'"
-        else
-          throwError m!"MAYCEX: Found possible counter-example at iteration {i} for predicate '{pRawExpr}'"
-    | .exhaustedIterations _ =>
-      let _ ← collect.logSuspiciousFvars
-      throwError m!"PROOFNOTFOUND: exhausted iterations for predicate '{pRawExpr}'"
-    | .provenByKIndCycleBreaking niters safetyCert indCert =>
-      if (← read).verbose? then
-        let _ ← collect.logSuspiciousFvars
-      debugLog m!"PROVE: proven {pRawExpr}"
-      let prf ← g.withContext <| do
-        let termNondepFsmExpr ← Expr.mkTermFsmNondep collect.wcard collect.tcard collect.bcard collect.ncard collect.icard collect.pcard pNondepExpr
-        debugCheck termNondepFsmExpr
-        -- let fsmExpr := termNondepFsmExpr
-        -- | TODO: refactor into fn.
-        let fsmExpr ← mkAppM (``MultiWidth.TermFSM.toFsmZext) #[termNondepFsmExpr]
-        -- debugCheck fsmExpr
-        let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
-        let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niters)
-        debugLog "making safety certs..."
-        -- | verifyCircuit (mkSafetyCircuit circs)
-        let verifyCircuitMkSafetyCircuitExpr ← Expr.mkVerifyCircuit
-          (← Expr.KInductionCircuits.mkMkSafetyCircuit circsExpr)
-          (toExpr safetyCert)
-        -- debugLog m!"made safety cert expr: {verifyCircuitMkSafetyCircuitExpr}"
-        debugLog "making safety cert = true proof..."
-        let safetyCertProof ←
-          mkEqReflBoolNativeDecideProof `safetyCert verifyCircuitMkSafetyCircuitExpr true
-        -- debugLog m!"made safety cert proof: {safetyCertProof}"
-        let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
-            (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
-            (toExpr indCert)
-        -- debugLog m!"made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
-        let indCertProof ←
-          mkEqReflBoolNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
-        debugLog m!"made induction cert = true proof..."
-        let prf ← mkAppM ``MultiWidth.Term.toBV_of_KInductionCircuits'
-          #[pRawExpr, -- P : Prop
-            tctx,
-            pExpr, -- p
-            pNondepExpr, -- pNondep
-            ← mkEqRefl pNondepExpr, -- pNondep = .ofDepTerm p
-            termNondepFsmExpr, -- TermFSM ...
-            ← mkEqRefl termNondepFsmExpr,
-            toExpr niters,
-            circsExpr,
-            circsLawfulExpr,
-            toExpr safetyCert,
-            safetyCertProof,
-            toExpr indCert,
-            indCertProof,
-            wenv,
-            tenv,
-            benv,
-            nenv,
-            ienv,
-            penv,
-            ← mkEqRefl pRawExpr]
-        debugCheck prf
-        let prf ←
-          if (← read).debugFillFinalReflectionProofWithSorry then
-            mkSorry (synthetic := true) (← g.getType)
+    if (← read).externalSolver then
+      let aig := termFsmNondep.toFsmZext.toAiger
+      let res ← Valaig.External.checkSafety (← read).externalSolverConfig aig
+
+      match res with
+      | .error err => throwError s!"UNKNOWN: {err}"
+      | .ok .counterexample=> throwError "CEX: rIC3 found a counter-example"
+      | .ok .proof =>
+        let prf ← mkSorry (synthetic := true) (← g.getType)
+        let _ ← g.apply prf
+        return
+    else
+      let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
+      match stats with
+      | .safetyFailure i =>
+        let suspiciousVars ← collect.logSuspiciousFvars
+        -- | Found precise counter-example to claimed predicate.
+        if suspiciousVars.isEmpty then
+            throwError m!"CEX: Found exact counter-example at iteration {i} for predicate '{pRawExpr}'"
           else
-            instantiateMVars prf
-        pure prf
-      let gs ← g.apply prf
-      if gs.isEmpty then
-        debugLog m!"unified goal with proof."
-      else
-        let mut msg := m!"Expected proof cerificate to close goal, but failed. Leftover goals:"
-        for g in gs do
-          msg := msg ++ m!"{indentD g}"
-        throwError msg
+            throwError m!"MAYCEX: Found possible counter-example at iteration {i} for predicate '{pRawExpr}'"
+      | .exhaustedIterations _ =>
+        let _ ← collect.logSuspiciousFvars
+        throwError m!"PROOFNOTFOUND: exhausted iterations for predicate '{pRawExpr}'"
+      | .provenByKIndCycleBreaking niters safetyCert indCert =>
+        if (← read).verbose? then
+          let _ ← collect.logSuspiciousFvars
+        debugLog m!"PROVE: proven {pRawExpr}"
+        let prf ← g.withContext <| do
+          let termNondepFsmExpr ← Expr.mkTermFsmNondep collect.wcard collect.tcard collect.bcard collect.ncard collect.icard collect.pcard pNondepExpr
+          debugCheck termNondepFsmExpr
+          -- let fsmExpr := termNondepFsmExpr
+          -- | TODO: refactor into fn.
+          let fsmExpr ← mkAppM (``MultiWidth.TermFSM.toFsmZext) #[termNondepFsmExpr]
+          -- debugCheck fsmExpr
+          let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
+          let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niters)
+          debugLog "making safety certs..."
+          -- | verifyCircuit (mkSafetyCircuit circs)
+          let verifyCircuitMkSafetyCircuitExpr ← Expr.mkVerifyCircuit
+            (← Expr.KInductionCircuits.mkMkSafetyCircuit circsExpr)
+            (toExpr safetyCert)
+          -- debugLog m!"made safety cert expr: {verifyCircuitMkSafetyCircuitExpr}"
+          debugLog "making safety cert = true proof..."
+          let safetyCertProof ←
+            mkEqReflBoolNativeDecideProof `safetyCert verifyCircuitMkSafetyCircuitExpr true
+          -- debugLog m!"made safety cert proof: {safetyCertProof}"
+          let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
+              (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
+              (toExpr indCert)
+          -- debugLog m!"made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
+          let indCertProof ←
+            mkEqReflBoolNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
+          debugLog m!"made induction cert = true proof..."
+          let prf ← mkAppM ``MultiWidth.Term.toBV_of_KInductionCircuits'
+            #[pRawExpr, -- P : Prop
+              tctx,
+              pExpr, -- p
+              pNondepExpr, -- pNondep
+              ← mkEqRefl pNondepExpr, -- pNondep = .ofDepTerm p
+              termNondepFsmExpr, -- TermFSM ...
+              ← mkEqRefl termNondepFsmExpr,
+              toExpr niters,
+              circsExpr,
+              circsLawfulExpr,
+              toExpr safetyCert,
+              safetyCertProof,
+              toExpr indCert,
+              indCertProof,
+              wenv,
+              tenv,
+              benv,
+              nenv,
+              ienv,
+              penv,
+              ← mkEqRefl pRawExpr]
+          debugCheck prf
+          let prf ←
+            if (← read).debugFillFinalReflectionProofWithSorry then
+              mkSorry (synthetic := true) (← g.getType)
+            else
+              instantiateMVars prf
+          pure prf
+        let gs ← g.apply prf
+        if gs.isEmpty then
+          debugLog m!"unified goal with proof."
+        else
+          let mut msg := m!"Expected proof cerificate to close goal, but failed. Leftover goals:"
+          for g in gs do
+            msg := msg ++ m!"{indentD g}"
+          throwError msg
 
 def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM Unit :=
   let ctx := { toConfig := cfg}
