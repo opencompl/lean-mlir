@@ -1,14 +1,12 @@
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.DCPlus.Semantics
-import SSA.Projects.CIRCT.Stream.WeakBisim
-import SSA.Core.Framework
-import SSA.Core.Framework.Macro
-import SSA.Core.MLIRSyntax.GenericParser
-import SSA.Core.MLIRSyntax.EDSL2
-import SSA.Core.Tactic.SimpSet
+import LeanMLIR
 
+import SSA.Projects.CIRCT.Stream.Basic
+import SSA.Projects.CIRCT.DCPlus.Semantics
+
+open HandshakeStream
 
 namespace MLIR2DCPlus
+
 section Dialect
 
 inductive Ty
@@ -49,6 +47,8 @@ inductive Op
 | not
 deriving Inhabited, DecidableEq, Repr, Lean.ToExpr
 
+
+
 abbrev DCPlus : Dialect where
   Op := Op
   Ty := Ty
@@ -80,38 +80,38 @@ def_signature for DCPlus where
 
 instance instDCTyDenote : TyDenote Ty where
 toType := fun
-| Ty.tokenstream => CIRCTStream.DCPlusOp.TokenStream
-| Ty.tokenstream2 => CIRCTStream.DCPlusOp.TokenStream × CIRCTStream.DCPlusOp.TokenStream
-| Ty.valuestream w => CIRCTStream.DCPlusOp.ValueStream (BitVec w)
-| Ty.valuestream2 w => CIRCTStream.DCPlusOp.ValueStream (BitVec w) × CIRCTStream.DCPlusOp.ValueStream (BitVec w)
-| Ty.valuetokenstream w => CIRCTStream.DCPlusOp.ValueStream (BitVec w) × CIRCTStream.DCPlusOp.TokenStream
-| Ty.variadicvaluetokenstream w => CIRCTStream.DCPlusOp.VariadicValueStream w × CIRCTStream.DCPlusOp.TokenStream
+| Ty.tokenstream => DCPlusOp.TokenStream
+| Ty.tokenstream2 => DCPlusOp.TokenStream × DCPlusOp.TokenStream
+| Ty.valuestream w => DCPlusOp.ValueStream (BitVec w)
+| Ty.valuestream2 w => DCPlusOp.ValueStream (BitVec w) × DCPlusOp.ValueStream (BitVec w)
+| Ty.valuetokenstream w => DCPlusOp.ValueStream (BitVec w) × DCPlusOp.TokenStream
+| Ty.variadicvaluetokenstream w => DCPlusOp.VariadicValueStream w × DCPlusOp.TokenStream
 
 
 def_denote for DCPlus where
   | .fst => fun s => [s.fst]ₕ
   | .fstVal _ => fun s => [s.fst]ₕ
   | .fstValPure _ => fun s => [s.fst]ₕ
-  | .fstVal' _ => fun s => [s.fst.mapOpt (·[0]?)]ₕ
+  | .fstVal' _ => fun s => [mapOpt s.fst (·[0]?)]ₕ
   | .snd => fun s => [s.snd]ₕ
   | .sndValPure _ => fun s => [s.snd]ₕ
   | .pair _ => fun s₁ s₂ => [(s₁, s₂)]ₕ
   | .sndVal _ => fun s => [s.snd]ₕ
-  | .sndVal' _ => fun s => [s.fst.mapOpt (·[0]?)]ₕ
+  | .sndVal' _ => fun s => [mapOpt s.fst (·[1]?)]ₕ
   | .tokVal' _ => fun s => [s.snd]ₕ
-  | .merge => fun s₁ s₂ => [CIRCTStream.DCPlusOp.merge s₁ s₂]ₕ
-  | .branch => fun s₁ s₂ => [CIRCTStream.DCPlusOp.branch s₁ s₂]ₕ
-  | .fork => fun s => [CIRCTStream.DCPlusOp.fork s]ₕ
-  | .forkVal => fun s => [CIRCTStream.DCPlusOp.forkVal s]ₕ
-  | .join => fun s₁ s₂ => [CIRCTStream.DCPlusOp.join s₁ s₂]ₕ
-  | .mux => fun s₁ s₂ c => [CIRCTStream.DCPlusOp.mux s₁ s₂ c]ₕ
-  | .muxVal => fun s₁ s₂ c => [CIRCTStream.DCPlusOp.muxVal s₁ s₂ c]ₕ
-  | .sink => fun s => [CIRCTStream.DCPlusOp.sink s]ₕ
-  | .source => [CIRCTStream.DCPlusOp.source]ₕ
-  | .sourceOnes => [CIRCTStream.DCPlusOp.sourceOnes]ₕ
-  | .cMerge => fun s₁ s₂ => [CIRCTStream.DCPlusOp.cMerge s₁ s₂]ₕ
-  | .supp => fun s₁ s₂ => [CIRCTStream.DCPlusOp.supp s₁ s₂]ₕ
-  | .not => fun s₁ => [CIRCTStream.DCPlusOp.not s₁]ₕ
+  | .merge => fun s₁ s₂ => [DCPlusOp.merge s₁ s₂]ₕ
+  | .branch => fun s₁ s₂ => [DCPlusOp.branch s₁ s₂]ₕ
+  | .fork => fun s => [DCPlusOp.fork s]ₕ
+  | .forkVal => fun s => [DCPlusOp.forkVal s]ₕ
+  | .join => fun s₁ s₂ => [DCPlusOp.join s₁ s₂]ₕ
+  | .mux => fun s₁ s₂ c => [DCPlusOp.mux s₁ s₂ c]ₕ
+  | .muxVal => fun s₁ s₂ c => [DCPlusOp.muxVal s₁ s₂ c]ₕ
+  | .sink => fun s => [DCPlusOp.sink s]ₕ
+  | .source => [DCPlusOp.source]ₕ
+  | .sourceOnes => [DCPlusOp.sourceOnes]ₕ
+  | .cMerge => fun s₁ s₂ => [DCPlusOp.cMerge s₁ s₂]ₕ
+  | .supp => fun s₁ s₂ => [DCPlusOp.supp s₁ s₂]ₕ
+  | .not => fun s₁ => [DCPlusOp.not s₁]ₕ
 
 
 def mkTy : MLIR.AST.MLIRType φ → MLIR.AST.ExceptM DCPlus DCPlus.Ty

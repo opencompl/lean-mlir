@@ -1,13 +1,7 @@
-import Qq
-import LeanMLIR.Framework
-import LeanMLIR.Framework.Macro
-import LeanMLIR.MLIRSyntax.GenericParser
-import LeanMLIR.MLIRSyntax.EDSL2
-import LeanMLIR.Tactic.SimpSet
-import SSA.Projects.CIRCT.Comb.CombSemantics
-import LeanMLIR.Dialects.LLVM.Basic
-import LeanMLIR.MLIRSyntax.Transform.Utils
-import SSA.Projects.InstCombine.LLVM.CLITests
+import LeanMLIR
+
+import SSA.Projects.CIRCT.Comb.Semantics
+
 
 open Qq Lean Meta Elab.Term Elab Command
 open MLIR
@@ -95,27 +89,29 @@ def ofString? (s : String) : Option CombOp.IcmpPredicate :=
   | "uge" => some .uge
   | _     => none
 
+#check CombOp.mux
+
 def_denote for Comb where
-  | .add _ _ => fun xs => CombOp.add (HVector.replicateToList (f := TyDenote.toType) xs)
-  | .and _ _ => fun xs => CombOp.and (HVector.replicateToList (f := TyDenote.toType) xs)
+  | .add _ _ => fun xs => HVector.cons (CombOp.add (HVector.replicateToList (f := TyDenote.toType) xs)) .nil
+  | .and _ _ => fun xs => HVector.cons (CombOp.and (HVector.replicateToList (f := TyDenote.toType) xs)) .nil
   -- | .concat _ => fun xs => CombOp.concat xs
-  | .divs _ => BitVec.sdiv
-  | .divu _ => BitVec.udiv
-  | .extract _ _ => fun x => CombOp.extract x _
-  | .icmp p _ => fun x y => CombOp.icmp (Option.get! (ofString? p)) x y
-  | .mods _ => BitVec.smod
-  | .modu _ => BitVec.umod
-  | .mul _ _ => fun xs => CombOp.mul (HVector.replicateToList (f := TyDenote.toType) xs)
-  | .mux _ => fun x y => CombOp.mux x y
-  | .or _ _ => fun xs => CombOp.or (HVector.replicateToList (f := TyDenote.toType) xs)
-  | .parity _ => fun x => CombOp.parity x
-  | .replicate _ n => fun xs => CombOp.replicate xs n
-  | .shl _ => fun x y => CombOp.shl x y
-  | .shlPar _ n => fun x => CombOp.shl x n
-  | .shrs _ => BitVec.sshiftRight'
-  | .shru _ => fun x y => CombOp.shru x y
-  | .sub _ => BitVec.sub
-  | .xor _ _ => fun xs => CombOp.xor (HVector.replicateToList (f := TyDenote.toType) xs)
+  | .divs _ => fun x y => HVector.cons (BitVec.sdiv x y) .nil
+  | .divu _ => fun x y => HVector.cons (BitVec.udiv x y) .nil
+  | .extract _ _ => fun x => HVector.cons (CombOp.extract x _) .nil
+  | .icmp p _ => fun x y => HVector.cons (CombOp.icmp (Option.get! (ofString? p)) x y) .nil
+  | .mods _ => fun x y => HVector.cons (BitVec.smod x y) .nil
+  | .modu _ => fun x y => HVector.cons (BitVec.smod x y) .nil
+  | .mul _ _ => fun xs => HVector.cons (CombOp.mul (HVector.replicateToList (f := TyDenote.toType) xs)) .nil
+  | .mux w => fun x y c  => sorry
+  | .or _ _ => fun xs => HVector.cons (CombOp.or (HVector.replicateToList (f := TyDenote.toType) xs)) .nil
+  | .parity _ => fun x => HVector.cons (CombOp.parity x) .nil
+  | .replicate _ n => fun xs => HVector.cons (CombOp.replicate xs n) .nil
+  | .shl _ => fun x y => HVector.cons (CombOp.shl x y) .nil
+  | .shlPar _ n => fun x => HVector.cons (CombOp.shl x n) .nil
+  | .shrs _ => fun x y => HVector.cons (BitVec.sshiftRight' x y) .nil
+  | .shru _ => fun x y => HVector.cons (CombOp.shru x y) .nil
+  | .sub _ => fun x y =>  HVector.cons (BitVec.sub x y) .nil
+  | .xor _ _ => fun xs => HVector.cons (CombOp.xor (HVector.replicateToList (f := TyDenote.toType) xs)) .nil
 
 end Dialect
 
@@ -212,7 +208,7 @@ def mkReturn (Γ : Ctxt Comb.Ty) (opStx : MLIR.AST.Op 0) :
   else
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]
-    return ⟨.pure, ty, Com.ret v⟩
+    return ⟨.pure, [ty], Com.ret v⟩
 
 instance : MLIR.AST.TransformExpr (Comb) 0 where
   mkExpr := mkExpr

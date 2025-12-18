@@ -1,12 +1,8 @@
-import Mathlib.Logic.Function.Iterate
-import Mathlib.Tactic.Linarith
-import LeanMLIR.Framework
-import LeanMLIR.Tactic
-import LeanMLIR.ErasedContext
-import LeanMLIR.Util
+import LeanMLIR
+
 import SSA.Projects.CIRCT.DC.DC
 import SSA.Projects.CIRCT.Comb.Comb
-import SSA.Projects.CIRCT.Stream.Stream
+import SSA.Projects.CIRCT.Stream.Basic
 
 open Ctxt(Var)
 
@@ -14,7 +10,7 @@ namespace DCxCombFunctor
 
 open MLIR2Comb MLIR2DC
 
-open CIRCTStream
+open HandshakeStream
 
 open TyDenote
 
@@ -52,12 +48,15 @@ abbrev DCxComb : Dialect where
   Ty := MLIR2DC.DC.Ty
 
 def liftTy : MLIR2Comb.Ty → MLIR2DC.Ty
-| .bitvec w => .valuestream w
+  | .bitvec w => .valuestream w
+
+def listLiftTy (l : List MLIR2Comb.Ty) : List MLIR2DC.Ty :=
+  l.map fun e => liftTy e
 
 -- TODO(yann): Currently we use a small hack to use a default void type for types that have no equivalent going from
 -- Comb to DC.  This default value should be a stream to make denotation easier.
 def liftSig (sig : Signature MLIR2Comb.Ty) : Signature MLIR2DC.Ty :=
-  Signature.mk (sig.sig.map liftTy) [] (liftTy sig.outTy)
+  Signature.mk (sig.sig.map liftTy) [] (listLiftTy sig.returnTypes)
 -- map bitvecs from comb to streams in dc
 
 
@@ -117,6 +116,9 @@ example : toType (liftTy (Ty.bitvec 64 : Comb.Ty)) = Stream' (Option <| BitVec 6
 open MLIR2Comb in
 variable {m} [Pure m] in
 
+def castArgs (l : Option (HVector B (liftTy <$> argTys))) : HVector toType argTys :=
+  sorry
+
 def liftComb {argTys : List Comb.Ty} {outTy : Comb.Ty}
     (f : HVector toType argTys → ⟦outTy⟧) :
     HVector toType (liftTy <$> argTys) → ⟦liftTy outTy⟧ := fun args =>
@@ -127,9 +129,10 @@ def liftComb {argTys : List Comb.Ty} {outTy : Comb.Ty}
     intro i
     simp [Fin.instGetElemFinVal, liftTy]
     rfl
-  Stream.transpose (B := B) args h
+  transpose (B := B) args h
     |>.map fun args =>
-      f (args.cast (by simp) (by intros; simp[B, liftTy]; rfl))
+      f (castArgs args)
+
 
 /-- Given a stream of values α, Peel off the heads of all the streams. -/
 -- def heads {l : List Nat}
@@ -160,9 +163,7 @@ def_denote for DCxComb where
   | .comb op =>
       let opDenote :=
         (DialectDenote.denote op · (vecCast (by cases op <;> rfl) HVector.nil))
-      let opDenote : HVector _ _ → ⟦_⟧ :=
-        EffectKind.coe_toMonad ∘ opDenote
-      liftComb opDenote
+      sorry
   | .dc op => MLIR2DC.instDialectDenoteDC.denote op
 
 -- we want to have a latency-sensitive semantics for pack and unpack to eat/produce sync tokens
@@ -369,7 +370,7 @@ def mkReturn (Γ : Ctxt DCxComb.Ty) (opStx : MLIR.AST.Op 0) :
   else
     let args ← (← opStx.parseArgs Γ).assumeArity 1
     let ⟨ty, v⟩ := args[0]
-    return ⟨.pure, ty, Com.ret v⟩
+    return ⟨.pure, [ty], Com.ret v⟩
 
 instance : MLIR.AST.TransformExpr (DCxComb) 0 where
   mkExpr := mkExpr

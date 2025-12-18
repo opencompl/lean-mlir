@@ -755,6 +755,65 @@ info: {
 
 /--
 info: {
+  ^bb0(%0 : i32):
+    "llvm.return"(%0) : (i32) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner trunc_of_zext.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    %1 = "llvm.zext"(%0) : (i32) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner trunc_of_zext_zext.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    %1 = "llvm.zext"(%0) : (i32) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner zext_of_zext.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    %1 = "llvm.zext"(%0) : (i32) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner sext_of_zext.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    %1 = "llvm.sext"(%0) : (i32) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner sext_of_sext.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i32):
+    %1 = "llvm.sext"(%0) : (i32) -> (i64)
+    "llvm.return"(%1) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner zext_of_sext.lhs)).val
+
+/--
+info: {
   riscv_func.func @f(%0 : !riscv.reg):
     %1 = "riscv.li"(){immediate = 63 : i64 } : () -> (!riscv.reg)
     %2 = "riscv.sra"(%0, %1) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
@@ -796,3 +855,107 @@ info: {
 -/
 #guard_msgs in
 #eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner mulh_to_lshr_16.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+    %3 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+    %4 = "riscv.maxu"(%2, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    %5 = "builtin.unrealized_conversion_cast"(%4) : (!riscv.reg) -> (i64)
+    "llvm.return"(%5) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_to_iminmax_ugt.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+    %3 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+    %4 = "riscv.maxu"(%2, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    %5 = "builtin.unrealized_conversion_cast"(%4) : (!riscv.reg) -> (i64)
+    "llvm.return"(%5) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_to_iminmax_uge.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+    %3 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+    %4 = "riscv.max"(%2, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    %5 = "builtin.unrealized_conversion_cast"(%4) : (!riscv.reg) -> (i64)
+    "llvm.return"(%5) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_to_iminmax_sgt.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+    %3 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+    %4 = "riscv.max"(%2, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    %5 = "builtin.unrealized_conversion_cast"(%4) : (!riscv.reg) -> (i64)
+    "llvm.return"(%5) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_to_iminmax_sge.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+    %3 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+    %4 = "riscv.minu"(%2, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    %5 = "builtin.unrealized_conversion_cast"(%4) : (!riscv.reg) -> (i64)
+    "llvm.return"(%5) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_to_iminmax_ult.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+    %3 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+    %4 = "riscv.minu"(%2, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    %5 = "builtin.unrealized_conversion_cast"(%4) : (!riscv.reg) -> (i64)
+    "llvm.return"(%5) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_to_iminmax_ule.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+    %3 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+    %4 = "riscv.min"(%2, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    %5 = "builtin.unrealized_conversion_cast"(%4) : (!riscv.reg) -> (i64)
+    "llvm.return"(%5) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_to_iminmax_slt.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64):
+    %2 = "builtin.unrealized_conversion_cast"(%0) : (i64) -> (!riscv.reg)
+    %3 = "builtin.unrealized_conversion_cast"(%1) : (i64) -> (!riscv.reg)
+    %4 = "riscv.min"(%2, %3) : (!riscv.reg, !riscv.reg) -> (!riscv.reg)
+    %5 = "builtin.unrealized_conversion_cast"(%4) : (!riscv.reg) -> (i64)
+    "llvm.return"(%5) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_to_iminmax_sle.lhs)).val

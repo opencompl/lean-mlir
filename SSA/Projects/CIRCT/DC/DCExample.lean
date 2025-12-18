@@ -1,13 +1,12 @@
 import LeanMLIR
 
 import SSA.Projects.CIRCT.DC.DC
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.WeakBisim
+import SSA.Projects.CIRCT.Stream.Basic
 
-namespace CIRCTStream
+namespace HandshakeStream
 
 instance : ToString DCOp.TokenStream where
-  toString s := toString (Stream.toList 100 s)
+  toString s := toString (toList 100 s)
 
 namespace DCExample
 

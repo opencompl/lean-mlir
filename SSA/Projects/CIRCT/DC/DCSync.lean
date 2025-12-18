@@ -1,27 +1,35 @@
-import SSA.Projects.CIRCT.Stream.Stream
-import SSA.Projects.CIRCT.Stream.SyncMap
-import SSA.Projects.CIRCT.Stream.WeakBisim
+import SSA.Projects.CIRCT.Stream.Basic
+import SSA.Projects.CIRCT.Stream.Lemmas
 import LeanMLIR.Framework
 import LeanMLIR.Framework.Macro
 import LeanMLIR.MLIRSyntax.GenericParser
 import LeanMLIR.MLIRSyntax.EDSL2
 import LeanMLIR.Tactic.SimpSet
 
-namespace CIRCTStream
-namespace DCOp
+open HandshakeStream
+namespace DCOpSync
 
-def ValueStream := Stream
+def ValueStream := HandshakeStream.Stream
 
-def TokenStream := Stream Unit
+def TokenStream := HandshakeStream.Stream Unit
 
-def VariadicValueStream (w : Nat) := CIRCTStream.Stream (List (BitVec w))
+def VariadicValueStream (w : Nat) := HandshakeStream.Stream (List (BitVec w))
 
 def unpack (x : ValueStream (BitVec w)) : ValueStream (BitVec w) × TokenStream :=
-  Stream.corec₂ (β := Stream (BitVec w)) (x)
+  corec_prod (β := Stream (BitVec w)) (x)
     fun x => Id.run <| do
       match x 0 with
       | some _ => return (x 0, some (), x.tail)
       | none => return (none, none, x.tail)
+
+def unpack2 (x : ValueStream (BitVec w)) (y : ValueStream (BitVec w)) : VariadicValueStream w × TokenStream :=
+  corec_prod (β := ValueStream (BitVec w) × ValueStream (BitVec w)) (x, y)
+    fun (x, y) => Id.run <| do
+      match x 0, y 0 with
+      | some x', some y' => return (some [x', y'], some .unit, (x.tail, y.tail))
+      | some _, none => return (none, none, (x, y.tail))
+      | none, some _ => return (none, none, (x.tail, y)) -- the mid return is the one that returns some if we have a sync
+      | none, none => return (none, none, (x.tail, y.tail))
 
 def wrapReadyValue (value : α) (_ : Unit) := value
 def sendReadySignal (_ : Unit) (tok : Unit) : Unit := tok
@@ -29,8 +37,16 @@ def sendReadySignal (_ : Unit) (tok : Unit) : Unit := tok
 def pack (x : Stream α) (y : Stream Unit) : Stream α :=
   syncMap₂ (xs := x) (ys := y) (f := wrapReadyValue)
 
+def pack2 (x : VariadicValueStream α × TokenStream) : (ValueStream (BitVec α)) × (ValueStream (BitVec α))  :=
+  corec_prod (β := VariadicValueStream α × TokenStream) (x) fun ⟨x, y⟩ =>
+    match x 0, y 0 with
+    | some x', some _ => (x'[0]?, x'[1]?, (x.tail, y.tail))
+    | some _, none => (none, none, (x, y.tail))
+    | none, some _ => (none, none, (x.tail, y)) -- wait to sync with the value stream
+    | none, none => (none, none, (x.tail, y.tail)) -- wait to sync with the value stream
+
 def branch (x : ValueStream (BitVec 1)): TokenStream × TokenStream  :=
-  Stream.corec₂ (β := ValueStream (BitVec 1)) x fun x =>
+  corec_prod (β := ValueStream (BitVec 1)) x fun x =>
     Id.run <| do
       match x 0 with
         | none => (none, none, (x.tail))
@@ -41,7 +57,7 @@ def branch (x : ValueStream (BitVec 1)): TokenStream × TokenStream  :=
             (none, some (), (x.tail))
 
 def fork (x : TokenStream) : TokenStream × TokenStream  :=
-  Stream.corec₂ (β := TokenStream) x
+  corec_prod (β := TokenStream) x
     fun x => Id.run <| do
       (x 0, x 0, x.tail)
 
@@ -66,7 +82,7 @@ Informally, the semantics are as follows:
 
 -/
 def select (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
-  Stream.corec (β := TokenStream × TokenStream × Stream (BitVec 1)) (x, y, c)
+  corec (β := TokenStream × TokenStream × Stream (BitVec 1)) (x, y, c)
   fun ⟨x, y, c⟩ =>
     match (c 0) with
     | none => (none, x, y, c.tail) -- wait on 'c'.
@@ -80,19 +96,16 @@ def select (x y : TokenStream) (c : ValueStream (BitVec 1)): TokenStream :=
       | some _ => (some (), x, y.tail, c.tail) -- consume 'c' and 'y'.
 
 def sink (x : TokenStream) : TokenStream :=
-  Stream.corec (β := TokenStream) x fun x => (none, x.tail)
+  corec (β := TokenStream) x fun x => (none, x.tail)
 
 def source : TokenStream :=
-  Stream.corec () fun () => (some (), ())
+  corec () fun () => (some (), ())
 
-end DCOp
-
-end CIRCTStream
+end DCOpSync
 
 namespace MLIR2DC
 
 section Dialect
-
 
 inductive Ty
 | tokenstream : Ty
@@ -155,34 +168,34 @@ def_signature for DC where
 
 instance instDCTyDenote : TyDenote Ty where
 toType := fun
-| Ty.tokenstream => CIRCTStream.DCOp.TokenStream
-| Ty.tokenstream2 => CIRCTStream.DCOp.TokenStream × CIRCTStream.DCOp.TokenStream
-| Ty.valuestream w => CIRCTStream.DCOp.ValueStream (BitVec w)
-| Ty.valuestream2 w => CIRCTStream.DCOp.ValueStream (BitVec w) × CIRCTStream.DCOp.ValueStream (BitVec w)
-| Ty.valuetokenstream w => CIRCTStream.DCOp.ValueStream (BitVec w) × CIRCTStream.DCOp.TokenStream
-| Ty.variadicvaluetokenstream w => CIRCTStream.DCOp.VariadicValueStream w × CIRCTStream.DCOp.TokenStream
+| Ty.tokenstream => DCOpSync.TokenStream
+| Ty.tokenstream2 => DCOpSync.TokenStream × DCOpSync.TokenStream
+| Ty.valuestream w => DCOpSync.ValueStream (BitVec w)
+| Ty.valuestream2 w => DCOpSync.ValueStream (BitVec w) × DCOpSync.ValueStream (BitVec w)
+| Ty.valuetokenstream w => DCOpSync.ValueStream (BitVec w) × DCOpSync.TokenStream
+| Ty.variadicvaluetokenstream w => DCOpSync.VariadicValueStream w × DCOpSync.TokenStream
 
 
 def_denote for DC where
   | .fst => fun s => [s.fst]ₕ
   | .fstVal _ => fun s => [s.fst]ₕ
-  | .fstVal' _ => fun s => [s.fst.mapOpt (·[0]?)]ₕ
+  | .fstVal' _ => fun s => [mapOpt s.fst (·[0]?)]ₕ
   | .snd => fun s => [s.snd]ₕ
   | .pair _ => fun s₁ s₂ => [(s₁, s₂)]ₕ
   | .sndVal _ => fun s => [s.snd]ₕ
-  | .sndVal' _ => fun s => [s.fst.mapOpt (·[0]?)]ₕ
+  | .sndVal' _ => fun s => [mapOpt s.fst (·[1]?)]ₕ
   | .tokVal' _ => fun s => [s.snd]ₕ
-  | .merge => fun s₁ s₂ => [CIRCTStream.DCOp.merge s₁ s₂]ₕ
-  | .branch => fun s => [CIRCTStream.DCOp.branch s]ₕ
-  | .fork => fun s => [CIRCTStream.DCOp.fork s]ₕ
-  | .join => fun s₁ s₂ => [CIRCTStream.DCOp.join s₁ s₂]ₕ
-  | .select => fun s₁ s₂ c => [CIRCTStream.DCOp.select s₁ s₂ c]ₕ
-  | .sink => fun s => [CIRCTStream.DCOp.sink s]ₕ
-  | .source => [CIRCTStream.DCOp.source]ₕ
-  | .pack _ => fun s₁ s₂ => [CIRCTStream.DCOp.pack s₁ s₂]ₕ
-  | .pack2 _ => fun s₁ => [CIRCTStream.DCOp.pack2 s₁]ₕ
-  | .unpack _ => fun s => [CIRCTStream.DCOp.unpack s]ₕ
-  | .unpack2 _ => fun s₁ s₂ => [CIRCTStream.DCOp.unpack2 s₁ s₂]ₕ
+  | .merge => fun s₁ s₂ => [DCOpSync.merge s₁ s₂]ₕ
+  | .branch => fun s => [DCOpSync.branch s]ₕ
+  | .fork => fun s => [DCOpSync.fork s]ₕ
+  | .join => fun s₁ s₂ => [DCOpSync.join s₁ s₂]ₕ
+  | .select => fun s₁ s₂ c => [DCOpSync.select s₁ s₂ c]ₕ
+  | .sink => fun s => [DCOpSync.sink s]ₕ
+  | .source => [DCOpSync.source]ₕ
+  | .pack _ => fun s₁ s₂ => [DCOpSync.pack s₁ s₂]ₕ
+  | .pack2 _ => fun s₁ => [DCOpSync.pack2 s₁]ₕ
+  | .unpack _ => fun s => [DCOpSync.unpack s]ₕ
+  | .unpack2 _ => fun s₁ s₂ => [DCOpSync.unpack2 s₁ s₂]ₕ
 
 end Dialect
 
