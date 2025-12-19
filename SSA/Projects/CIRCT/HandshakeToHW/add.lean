@@ -10,12 +10,10 @@ namespace HandshakeStream
 
   We add a circuit that given two inputs `a` and `b` performs two additions: `(a + a) + b`.
 
-  We insert buffers in the handshake program and lower it to rtl level, considering all the
-  buffer configurations CIRCT inserts.
-
   The hardware (lowered) module is a function over the `Stream'` type,
   which does not contain `Option` values, because at this level
   of abstractions the content of streams has been concretized.
+  We ignore buffers.
 
   See: https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/bf86f7247a767d97516a05a29e313634e5172398
 
@@ -24,13 +22,10 @@ namespace HandshakeStream
 /--
   Handshake program after buffers' insertion::
 
-  handshake.func @add(%arg0: index, %arg1: index, %arg2: none, ...) -> (index, none) attributes {argNames = ["arg0", "arg1", "arg2"], resNames = ["out0", "out1"]} {
-    %0 = buffer [2] seq %arg2 : none
-    %1 = arith.addi %arg0, %arg0 : index
-    %2 = buffer [2] seq %1 : index
-    %3 = arith.addi %2, %arg1 : index
-    %4 = buffer [2] seq %3 : index
-    return %4, %0 : index, none
+  handshake.func @add(%arg0: index, %arg1: index, %arg2: none, ...) -> (index, none) {
+      %0 = arith.addi %arg0, %arg0 : index
+      %1 = arith.addi %0, %arg1 : index
+      handshake.return %1, %arg2 : index, none
   }
 
 -/
@@ -44,7 +39,7 @@ def add_handshake (a b : Stream (BitVec 64)) :=
     | none, none => (none, x.tail, y.tail)
 
 /-
-  RTL program, config. 1:
+  RTL program:
 
 module {
   hw.module @add(in %a : i32, in %a_valid : i1, in %b : i32, in %b_valid : i1, in %clk : !seq.clock, in %rst : i1, in %out0_ready : i1, out a_ready : i1, out b_ready : i1, out out0 : i32, out out0_valid : i1) {

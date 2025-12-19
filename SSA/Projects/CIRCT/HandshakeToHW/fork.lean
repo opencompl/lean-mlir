@@ -11,11 +11,10 @@ namespace HandshakeStream
   `fork` replicates the content of an input stream and dispatches it to two channels.
   At the handshake level, `fork` operates on the `Stream' (Option α)` type (i.e., `Stream`).
 
-  We insert buffers in the handshake program and lower it to rtl level, without considering buffers.
-
   The hardware (lowered) module is a function over the `Stream'` type,
   which does not contain `Option` values, because at this level
   of abstractions the content of streams has been concretized.
+  We ignore buffers.
 
   See: https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/bf86f7247a767d97516a05a29e313634e5172398
 
@@ -37,7 +36,7 @@ def fork_handshake (arg : Stream (BitVec 1)) :=
       (x0, x0, x')
 
 /--
-  RTL program:
+  First RTL module:
 
   hw.module @handshake_fork_1ins_2outs_ctrl(in %in0 : i0, in %in0_valid : i1, in %clock : !seq.clock, in %reset : i1, in %out0_ready : i1, in %out1_ready : i1, out in0_ready : i1, out out0 : i0, out out0_valid : i1, out out1 : i0, out out1_valid : i1) {
     %true = hw.constant true
@@ -90,3 +89,28 @@ def handshake_fork_1ins_2outs_ctrl
           let updated_reg1 := v7
           (#v[v12, inp[0], v3, inp[0], v9], #v[updated_reg0, updated_reg1])
       )
+
+/--
+  Secon RTL module:
+
+  hw.module @fork(in %arg0 : i0, in %arg0_valid : i1, in %arg1 : i0, in %arg1_valid : i1, in %clock : !seq.clock, in %reset : i1, in %out0_ready : i1, in %out1_ready : i1, in %out2_ready : i1, out arg0_ready : i1, out arg1_ready : i1, out out0 : i0, out out0_valid : i1, out out1 : i0, out out1_valid : i1, out out2 : i0, out out2_valid : i1) {
+    %handshake_fork0.in0_ready, %handshake_fork0.out0, %handshake_fork0.out0_valid, %handshake_fork0.out1, %handshake_fork0.out1_valid = hw.instance "handshake_fork0" @handshake_fork_1ins_2outs_ctrl(in0: %arg0: i0, in0_valid: %arg0_valid: i1, clock: %clock: !seq.clock, reset: %reset: i1, out0_ready: %out0_ready: i1, out1_ready: %out1_ready: i1) -> (in0_ready: i1, out0: i0, out0_valid: i1, out1: i0, out1_valid: i1)
+    hw.output %handshake_fork0.in0_ready, %out2_ready, %handshake_fork0.out0, %handshake_fork0.out0_valid, %handshake_fork0.out1, %handshake_fork0.out1_valid, %arg1, %arg1_valid : i1, i1, i0, i1, i0, i1, i0, i1
+  }
+-/
+def fork
+      (arg0 : Stream' (BitVec 1))
+      (arg0_valid : Stream' (BitVec 1))
+      (arg1 : Stream' (BitVec 1))
+      (arg1_valid : Stream' (BitVec 1))
+      (out0_ready : Stream' (BitVec 1))
+      (out1_ready : Stream' (BitVec 1))
+      (out2_ready : Stream' (BitVec 1))
+  : Vector (Stream' (BitVec 1)) 8 :=
+  let tmp := handshake_fork_1ins_2outs_ctrl arg0 arg0_valid out0_ready out1_ready
+  let in0_ready := tmp[0]
+  let out0 := tmp[1]
+  let out0_valid := tmp[2]
+  let out1 := tmp[3]
+  let out1_valid := tmp[4]
+  #v[in0_ready, out2_ready, out0, out0_valid, out1, out1_valid, arg1, arg1_valid]
