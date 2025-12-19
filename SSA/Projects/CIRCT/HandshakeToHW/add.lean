@@ -123,9 +123,18 @@ def arith_addi_in_ui64_ui64_out_ui64
   Third RTL module:
 
     hw.module @add(in %arg0 : i64, in %arg0_valid : i1, in %arg1 : i64, in %arg1_valid : i1, in %arg2 : i0, in %arg2_valid : i1, in %clock : !seq.clock, in %reset : i1, in %out0_ready : i1, in %out1_ready : i1, out arg0_ready : i1, out arg1_ready : i1, out arg2_ready : i1, out out0 : i64, out out0_valid : i1, out out1 : i0, out out1_valid : i1) {
-      %handshake_fork0.in0_ready, %handshake_fork0.out0, %handshake_fork0.out0_valid, %handshake_fork0.out1, %handshake_fork0.out1_valid = hw.instance "handshake_fork0" @handshake_fork_in_ui64_out_ui64_ui64(in0: %arg0: i64, in0_valid: %arg0_valid: i1, clock: %clock: !seq.clock, reset: %reset: i1, out0_ready: %arith_addi0.in0_ready: i1, out1_ready: %arith_addi0.in1_ready: i1) -> (in0_ready: i1, out0: i64, out0_valid: i1, out1: i64, out1_valid: i1)
-      %arith_addi0.in0_ready, %arith_addi0.in1_ready, %arith_addi0.out0, %arith_addi0.out0_valid = hw.instance "arith_addi0" @arith_addi_in_ui64_ui64_out_ui64(in0: %handshake_fork0.out0: i64, in0_valid: %handshake_fork0.out0_valid: i1, in1: %handshake_fork0.out1: i64, in1_valid: %handshake_fork0.out1_valid: i1, out0_ready: %arith_addi1.in0_ready: i1) -> (in0_ready: i1, in1_ready: i1, out0: i64, out0_valid: i1)
-      %arith_addi1.in0_ready, %arith_addi1.in1_ready, %arith_addi1.out0, %arith_addi1.out0_valid = hw.instance "arith_addi1" @arith_addi_in_ui64_ui64_out_ui64(in0: %arith_addi0.out0: i64, in0_valid: %arith_addi0.out0_valid: i1, in1: %arg1: i64, in1_valid: %arg1_valid: i1, out0_ready: %out0_ready: i1) -> (in0_ready: i1, in1_ready: i1, out0: i64, out0_valid: i1)
+      %handshake_fork0.in0_ready, %handshake_fork0.out0, %handshake_fork0.out0_valid, %handshake_fork0.out1, %handshake_fork0.out1_valid =
+          hw.instance "handshake_fork0" @handshake_fork_in_ui64_out_ui64_ui64
+              (in0: %arg0: i64, in0_valid: %arg0_valid: i1, clock: %clock: !seq.clock, reset: %reset: i1, out0_ready: %arith_addi0.in0_ready: i1, out1_ready: %arith_addi0.in1_ready: i1) ->
+              (in0_ready: i1, out0: i64, out0_valid: i1, out1: i64, out1_valid: i1)
+      %arith_addi0.in0_ready, %arith_addi0.in1_ready, %arith_addi0.out0, %arith_addi0.out0_valid =
+          hw.instance "arith_addi0" @arith_addi_in_ui64_ui64_out_ui64
+            (in0: %handshake_fork0.out0: i64, in0_valid: %handshake_fork0.out0_valid: i1, in1: %handshake_fork0.out1: i64, in1_valid: %handshake_fork0.out1_valid: i1, out0_ready: %arith_addi1.in0_ready: i1) ->
+            (in0_ready: i1, in1_ready: i1, out0: i64, out0_valid: i1)
+      %arith_addi1.in0_ready, %arith_addi1.in1_ready, %arith_addi1.out0, %arith_addi1.out0_valid =
+          hw.instance "arith_addi1" @arith_addi_in_ui64_ui64_out_ui64
+            (in0: %arith_addi0.out0: i64, in0_valid: %arith_addi0.out0_valid: i1, in1: %arg1: i64, in1_valid: %arg1_valid: i1, out0_ready: %out0_ready: i1) ->
+            (in0_ready: i1, in1_ready: i1, out0: i64, out0_valid: i1)
       hw.output %handshake_fork0.in0_ready, %arith_addi1.in1_ready, %out1_ready, %arith_addi1.out0, %arith_addi1.out0_valid, %arg2, %arg2_valid : i1, i1, i1, i64, i1, i0, i1
     }
 -/
@@ -149,5 +158,14 @@ def add
       (outsigs := 6)
       (update_fun :=
         fun (inp, regs) =>
-
+        -- %handshake_fork0.in0_ready, %handshake_fork0.out0, %handshake_fork0.out0_valid, %handshake_fork0.out1, %handshake_fork0.out1_valid =
+        --   hw.instance "handshake_fork0" @handshake_fork_in_ui64_out_ui64_ui64
+        --       (in0: %arg0: i64, in0_valid: %arg0_valid: i1, clock: %clock: !seq.clock, reset: %reset: i1, out0_ready: %arith_addi0.in0_ready: i1, out1_ready: %arith_addi0.in1_ready: i1) ->
+        --       (in0_ready: i1, out0: i64, out0_valid: i1, out1: i64, out1_valid: i1)
+        let tmp : wiresStruc 2 3 := sorry -- TODO: conversion Stream' (wiresStruc) → wiresStrucStream
+        let in0_ready := tmp.signals[0]
+        let out0 := tmp.result[0]
+        let out0_valid := tmp.signals[1]
+        let out1 := tmp.result[1]
+        let out1_valid := tmp.signals[2]
         sorry)
