@@ -5,16 +5,46 @@ import SSA.Projects.CIRCT.Register.Lemmas
 
 namespace HandshakeStream
 
+/-!
+  # Add
+
+  We add a circuit that given two inputs `a` and `b` performs two additions: `(a + a) + b`.
+
+  We insert buffers in the handshake program and lower it to rtl level, considering all the
+  buffer configurations CIRCT inserts.
+
+  The hardware (lowered) module is a function over the `Stream'` type,
+  which does not contain `Option` values, because at this level
+  of abstractions the content of streams has been concretized.
+
+  See: https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/bf86f7247a767d97516a05a29e313634e5172398
+
+-/
+
+/--
+  Handshake program after buffers' insertion::
+
+  handshake.func @add(%arg0: index, %arg1: index, %arg2: none, ...) -> (index, none) attributes {argNames = ["arg0", "arg1", "arg2"], resNames = ["out0", "out1"]} {
+    %0 = buffer [2] seq %arg2 : none
+    %1 = arith.addi %arg0, %arg0 : index
+    %2 = buffer [2] seq %1 : index
+    %3 = arith.addi %2, %arg1 : index
+    %4 = buffer [2] seq %3 : index
+    return %4, %0 : index, none
+  }
+
+-/
+def add_handshake (a b : Stream (BitVec 64)) :=
+  corec (a, b) fun
+    (x, y) =>
+    match x 0, y 0 with
+    | some x0, some y0 => (some (x0 + y0), x.tail, y.tail)
+    | some _, none => (none, x, y.tail)
+    | none, some _ => (none, x.tail, y)
+    | none, none => (none, x.tail, y.tail)
+
 /-
-Handshake program (https://github.com/opencompl/DC-semantics-simulation-evaluation/blob/main/benchmarks/add_naive/handshake.mlir) :
-
-handshake.func @add(%a : i32, %b : i32) -> i32{
-    %add1 = comb.add %a, %a : i32
-    %add2 = comb.add %add1, %b : i32
-    return %add2: i32
-}
-
-Lowered program (https://github.com/opencompl/DC-semantics-simulation-evaluation/blob/main/benchmarks/add_naive/hw-esi-hw.mlir):
+  RTL program, config. 1:
 
 module {
   hw.module @add(in %a : i32, in %a_valid : i1, in %b : i32, in %b_valid : i1, in %clk : !seq.clock, in %rst : i1, in %out0_ready : i1, out a_ready : i1, out b_ready : i1, out out0 : i32, out out0_valid : i1) {
@@ -49,11 +79,7 @@ module {
     hw.output %12, %16, %17, %15 : i1, i1, i32, i1
   }
 }
--/
 
-
-
-/--
   `add` performs two additions given inputs `a` and `b`: (a + a) + b
 
   The hardware (lowered) module is a function over the `Stream'` type,
