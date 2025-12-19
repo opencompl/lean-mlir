@@ -23,8 +23,14 @@ inductive WidthAbstractionKind
 | never
 deriving DecidableEq, Repr
 
+open Valaig.External in
+inductive SolverKind
+| kinduction
+| external (solver : SafetyAigerMC := rIC3 (timeoutMs := some 5000))
+
 /-- Tactic options for bv_automata_circuit -/
 structure Config where
+  solver : SolverKind := .kinduction
   check? : Bool := true
   -- number of k-induction iterations.
   niter : Nat := 30
@@ -38,10 +44,6 @@ structure Config where
   debugFillFinalReflectionProofWithSorry : Bool := false
   /-- Debug print the SMT-LIB version -/
   debugPrintSmtLib : Bool := false
-  /-- Solve using an external like rIC3. -/
-  externalSolver : Bool := false
-  /-- The config for the external solver when externalSolver is set. -/
-  externalSolverConfig : Valaig.External.SafetyAigerMC := Valaig.External.rIC3 (timeoutMs := some 5000)
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -1170,18 +1172,19 @@ def solve (gorig : MVarId) : SolverM Unit := do
     if ! (← isDefEq pRawExpr (← mkAppM ``Term.toBV #[benv, nenv, ienv, penv, tenv, pExpr])) then
       throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
 
-    if (← read).externalSolver then
+    match (← read).solver with
+    | .external config =>
       let aig := termFsmNondep.toFsmZext.toAiger
-      let res ← Valaig.External.checkSafety (← read).externalSolverConfig aig
+      let res ← Valaig.External.checkSafety config aig
 
       match res with
       | .error err => throwError s!"UNKNOWN: {err}"
-      | .ok .counterexample=> throwError "CEX: rIC3 found a counter-example"
+      | .ok .counterexample=> throwError "CEX: external solver found a counter-example"
       | .ok .proof =>
         let prf ← mkSorry (synthetic := true) (← g.getType)
         let _ ← g.apply prf
         return
-    else
+    | .kinduction =>
       let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
       match stats with
       | .safetyFailure i =>
