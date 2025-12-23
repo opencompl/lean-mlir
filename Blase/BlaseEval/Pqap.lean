@@ -164,8 +164,11 @@ def v2 (alo : BitVec 1) (ahi : BitVec w2) (a : BitVec (1 + w2))
 def bvOnes (n : Nat) : BitVec w :=
     ((1#1).signExtend n).zeroExtend w
 
-theorem shiftRight_eq_shiftLeft (x : BitVec w) (n : Nat) (y : BitVec w) :
-      ((x >>> n) = y) ↔ ((y <<< n = (x &&& (~~~(bvOnes n)))) ∧ (y &&& ~~~ bvOnes n = 0#w)) := by
+/--
+Reduction from shift right to shift left.
+-/
+theorem shiftRight_iff_shiftLeft (x : BitVec w) (n : Nat) (y : BitVec w) :
+      ((x >>> n) = y) ↔ ((y <<< n = (x &&& (~~~(bvOnes n)))) ∧ (y &&& bvOnes (w - n) = y)) := by
   constructor
   · intros h 
     subst h 
@@ -193,11 +196,14 @@ theorem shiftRight_eq_shiftLeft (x : BitVec w) (n : Nat) (y : BitVec w) :
     · ext i 
       simp 
       rw [BitVec.getLsbD_signExtend]
-      by_cases hi : i < n 
+      by_cases hi : i < w - n 
       · simp [hi]
       · simp [hi]
+        rw [BitVec.getLsbD_of_ge]
+        omega
   · intros h 
     ext i 
+    obtain ⟨h, h2⟩ := h
     have := congrFun (congrArg BitVec.getLsbD h) i
     simp [BitVec.getLsbD_signExtend] at this
     simp 
@@ -206,17 +212,45 @@ theorem shiftRight_eq_shiftLeft (x : BitVec w) (n : Nat) (y : BitVec w) :
       by_cases hn1 : i < n 
       · simp [hn1] at this ⊢
         have := congrFun (congrArg BitVec.getLsbD h) (n + i)
-        simp [BitVec.getLsbD_signExtend, hi1, hn1] at this
+        simp [hi1] at this
         by_cases hin : n + i < w 
         · simp [hin] at this ⊢
           exact this.symm
         · simp [hin] at this
+          simp at hin
+          rw [BitVec.getLsbD_of_ge]
+          · rw [← h2]
+            simp [BitVec.getLsbD_signExtend]
+            omega
+          · omega
+      · rw [← h2]
+        simp [BitVec.getLsbD_signExtend]
+        by_cases hi2 : i < w - n 
+        · simp [hi2]
+          have := congrFun (congrArg BitVec.getLsbD h) (n + i)
+          simp at this
+          simp [show n + i < w by omega] at this
+          rw [BitVec.getLsbD_eq_getElem] at this
+          · rw [this]
+            rfl
+          · omega
+        · simp [hi2]
+          rw [BitVec.getLsbD_of_ge]
           omega
-      sorry
     · simp [hi1] at this ⊢
-      sorry
+      simp at hi1
+      rw [BitVec.getLsbD_of_ge]
+      · rw [← h2]
+        simp [BitVec.getLsbD_signExtend]
+        omega
+      · omega
         
 
+theorem shiftRight_elim (x : BitVec w) (n : Nat) :
+    ∃ (y : BitVec w), (x >>> n) = y ∧ (y <<< n = (x &&& (~~~(bvOnes n)))) ∧ (y &&& bvOnes (w - n) = y) := by
+  use (x >>> n)
+  simp
+  sorry
 
 theorem v0_eq_v2 (alo : BitVec 1) (ahi : BitVec w2) (a : BitVec (1 + w2))
   (hw2 : w2 > 1)
@@ -224,6 +258,12 @@ theorem v0_eq_v2 (alo : BitVec 1) (ahi : BitVec w2) (a : BitVec (1 + w2))
   v0 alo ahi a hw2 ha = v2 alo ahi a hw2 ha := by
     simp only [v0, v2]
     simp [topBits, show 1 + w2 - w2 = 1 by omega]
-    bv_multi_width -- TODO: need to add right shift by constant support via quantifiers.
+    obtain ⟨ar, har1, har2⟩ := shiftRight_elim (a + 1#_) 1
+    rw [har1]
+    clear har1
+    obtain ⟨hleft, hright⟩ := har2
+    simp [bvOnes] at hright
+    bv_multi_width_normalize -- TODO: need to add right shift by constant support via quantifiers.
+    bv_multi_width
 
-end UnsignedRounding
+end UnsignedRoundin
