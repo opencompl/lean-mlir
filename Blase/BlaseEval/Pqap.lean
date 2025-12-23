@@ -285,3 +285,15 @@ theorem v0_eq_v2 (alo : BitVec 1) (ahi : BitVec w2) (a : BitVec (1 + w2))
 
 
 end UnsignedRounding
+
+namespace RoundToNearestEvenFromName
+/-
+input v_int : w_int
+input v_frac : w_frac
+s : 1 <- v_int[1:].concat(v_frac) == (1 << (w_frac - 1))
+rounded_v <- v_int + v_frac[:1]
+output r : w_int <- s.select(v_int, rounded_v)
+-/
+
+
+end RoundToNearestEvenFromName
