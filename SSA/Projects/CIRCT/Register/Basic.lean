@@ -104,6 +104,9 @@ structure wiresStruc (nops nsig : Nat) where
   result : Vector (BitVec 32) nops
   signals : Vector (BitVec 1) nsig
 
+structure wiresStructStream (nops nsig : Nat) where
+  result : Vector (Stream' (BitVec 32)) nops
+  signals : Vector (Stream' (BitVec 1)) nsig
 
 /-- We define a more general `register_wrapper` that operates on both streams of signals (`BitVec 1`)
   as well as streams of operands (`BitVec 32`) -/
@@ -189,3 +192,15 @@ def ReadyValid  (a : Vector (Stream' (BitVec 1)) 3) (b : Stream (BitVec 1)) :=
   ∀ (n : Nat),
       ((a[1] n = 1#1) ∧ (a[2] n = 1#1) ∧ (some (a[0] n) = b.get n))
       ∨ ((a[1] n = 0#1) ∨ (a[2] n = 0#1) ∧ (none = b.get n))
+
+/-- Map each element at the k-th position of each element of `Stream' (wiresStruc nops nsig)`
+  to a stream of its own. -/
+def wires_to_streams (ws : Stream' (wiresStruc nops nsig)) : wiresStructStream nops nsig :=
+  { result := Vector.ofFn (fun k => fun i => (ws i).result.get k),
+    signals := Vector.ofFn (fun k => fun i => (ws i).signals.get k) }
+
+/-- Map each element in each stream of `ws` to an element in a `Stream' (wiresStruc nops nsig)` object. -/
+def streams_to_wires {nops nsig : Nat} (ws : wiresStructStream nops nsig) : Stream' (wiresStruc nops nsig) :=
+  fun (i : Nat) =>
+    { result := ws.result.map (fun s => s i),
+      signals := ws.signals.map (fun s => s i) }
