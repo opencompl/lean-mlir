@@ -42,7 +42,7 @@ def bug : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 1)] where
 
 def fix : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 1)] where
   lhs:= original
-  rhs:= optimized_incorrect
+  rhs:= optimized_correct
   correct := by
     simp_lowering
     bv_decide

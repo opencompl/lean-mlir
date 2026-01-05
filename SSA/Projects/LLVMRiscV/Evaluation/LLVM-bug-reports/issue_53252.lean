@@ -45,26 +45,3 @@ def bug : LLVMPeepholeRewriteRefine 32 [Ty.llvm (.bitvec 32), Ty.llvm (.bitvec 3
   correct := by
     simp_lowering
     <;> sorry
-
-def unopt := [LV| {
-  ^entry (%x : i1):
-    %0 = llvm.mlir.constant (1) : i1
-    %1 = llvm.mul %x, %0 : i1
-    llvm.return %1 : i1
-}]
-
-def opt := [LV| {
-  ^entry (%x : i1):
-  %0 = llvm.mlir.constant (0) : i1
-  llvm.return %0 : i1
-}]
-
-def bug' : LLVMPeepholeRewriteRefine 1 [Ty.llvm (.bitvec 1)] where
-  lhs := unopt
-  rhs := opt
-  correct := by
-    simp_lowering
-    · apply LLVM.IntW.isRefinedBy_iff
-      sorry
-    · apply LLVM.IntW.isRefinedBy_iff
-      sorry
