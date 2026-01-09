@@ -98,7 +98,7 @@ def handshake_fork_1ins_2outs_ctrl
     hw.output %handshake_fork0.in0_ready, %out2_ready, %handshake_fork0.out0, %handshake_fork0.out0_valid, %handshake_fork0.out1, %handshake_fork0.out1_valid, %arg1, %arg1_valid : i1, i1, i0, i1, i0, i1, i0, i1
   }
 -/
-def fork
+def fork_rtl
       (arg0 : Stream' (BitVec 1))
       (arg0_valid : Stream' (BitVec 1))
       (arg1 : Stream' (BitVec 1))
@@ -114,3 +114,14 @@ def fork
   let out1 := tmp[3]
   let out1_valid := tmp[4]
   #v[in0_ready, out2_ready, out0, out0_valid, out1, out1_valid, arg1, arg1_valid]
+
+theorem lowering_correctness
+  (arg0 arg1 : Stream (BitVec 1))
+  (arg0_readyvalid arg1_readyvalid : Vector (Stream' (BitVec 1)) 3)
+  (harg0 : ReadyValid arg0_readyvalid arg0)
+  (harg1 : ReadyValid arg1_readyvalid arg1)
+  (arg2_ready : Stream' (BitVec 1)) :
+    let fork_rtl' : Vector (Stream' (BitVec 1)) 8 :=
+      fork_rtl arg0_readyvalid[0] arg0_readyvalid[2] arg1_readyvalid[0] arg1_readyvalid[2]
+        arg0_readyvalid[1] arg1_readyvalid[1] sig
+    Bisim' (fork_handshake arg0).fst fork_rtl'[2] := by sorry
