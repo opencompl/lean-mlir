@@ -105,6 +105,7 @@ def handshake_buffer_2slots_seq_1ins_1outs_ctrl
     let data1_reg := regs.signals[5]
     let ready1_reg := regs.signals[6]
     let ctrl_data1_reg := regs.signals[7]
+    -- circuit
     let v20 := ready1_reg ^^^ 1#1
     let v15 := valid1_reg ^^^ 1#1
     let v16 := v15 ||| v20
@@ -143,7 +144,7 @@ def handshake_buffer_2slots_seq_1ins_1outs_ctrl
     let data1_reg := v18
     let ready1_reg := v26
     let ctrl_data1_reg := v29
-    {result := #v[v1], signals := #v[v27, v19,
+    {result := #v[v27], signals := #v[v1, v19,
                                   valid0_reg, data0_reg, ready0_reg, ctrl_data0_reg,
                                   valid1_reg, data1_reg, ready1_reg, ctrl_data1_reg]}
 
@@ -183,6 +184,7 @@ def handshake_fork_1ins_2outs_ctrl
     -- regs
     let reg_0 := regs.signals[0]
     let reg_1 := regs.signals[1]
+    -- circuit
     let v2 := BitVec.xor reg_0 1#1
     let v3 := BitVec.and v2 in0_valid
     let v4 := BitVec.and out0_ready v3
@@ -198,7 +200,7 @@ def handshake_fork_1ins_2outs_ctrl
     let v7 := BitVec.and v11 v6
     let reg0 := v1
     let reg1 := v7
-    {result := #v[v12, v3], signals := #v[inp.result[0], inp.result[0], v9, reg_0, reg_1]}
+    {result := #v[in0, in0], signals := #v[v12, v3, v9, reg_0, reg_1]}
 
 
 set_option maxHeartbeats 0
@@ -270,6 +272,7 @@ def fork_buffer_rtl
           let buffer3_reg_data1 := regs.signals[34]
           let buffer3_reg_ready1 := regs.signals[35]
           let buffer3_reg_ctrl_data1 := regs.signals[36]
+          -- circuit
           -- buffer0
           let inp_buffer0 : wiresStruc 1 2 1 := {result := #v[arg1], signals := #v[arg1_valid, out2_ready]}
 
