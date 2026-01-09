@@ -128,7 +128,7 @@ def fork_rtl (inp : Stream' (wiresStruc 2 5 1)) : Stream' (wiresStruc 3 5 1) :=
         let reg_0 := fork0_out.signals[3]
         let reg_1 := fork0_out.signals[4]
         let updatedRegs := {result := #v[], signals := #v[reg_0, reg_1]}
-        let out := {result := #v[fork0_out0, fork0_out1, arg1], signals := #v[fork0_in0_ready, out2_ready, fork0_out0_valid, fork0_out1_valid]}
+        let out := {result := #v[fork0_out0, fork0_out1, arg1], signals := #v[fork0_in0_ready, out2_ready, fork0_out0_valid, fork0_out1_valid, arg1_valid]}
         ⟨out, updatedRegs⟩
     )
 
