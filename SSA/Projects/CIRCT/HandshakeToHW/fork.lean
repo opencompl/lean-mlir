@@ -135,13 +135,25 @@ def fork_rtl (inp : Stream' (wiresStruc 2 5 1)) : Stream' (wiresStruc 3 5 1) :=
 
 
 
-theorem lowering_correctness
-  (arg0 arg1 : Stream (BitVec 1))
-  (arg0_readyvalid arg1_readyvalid : Vector (Stream' (BitVec 1)) 3)
-  (harg0 : ReadyValid arg0_readyvalid arg0)
-  (harg1 : ReadyValid arg1_readyvalid arg1)
-  (arg2_ready : Stream' (BitVec 1)) :
-    let fork_rtl' : Vector (Stream' (BitVec 1)) 8 :=
-      fork_rtl arg0_readyvalid[0] arg0_readyvalid[2] arg1_readyvalid[0] arg1_readyvalid[2]
-        arg0_readyvalid[1] arg1_readyvalid[1] sig
-    Bisim' (fork_handshake arg0).fst fork_rtl'[2] := by sorry
+-- theorem lowering_correctness
+--   (arg0 arg1 : Stream (BitVec 1))
+--   (arg0_readyvalid arg1_readyvalid : wiresStructStream 1 2 1)
+--   (harg0 : ReadyValidStruc arg0_readyvalid arg0)
+--   (harg1 : ReadyValidStruc arg1_readyvalid arg1)
+--   (out2_ready : Stream' (BitVec 1)) :
+
+
+        --   let arg0 := inp.result[0]
+        -- let arg1 := inp.result[1]
+        -- let arg0_valid := inp.signals[0]
+        -- let arg1_valid := inp.signals[1]
+        -- let out0_ready := inp.signals[2]
+        -- let out1_ready := inp.signals[3]
+        -- let out2_ready := inp.signals[4]
+
+    -- let input_fork_rtl' := {
+    --   result := #v[arg0_readyvalid.result[0], arg1_readyvalid.result[0]],
+    --   signals := #v[arg0_readyvalid.signals[0], arg1_readyvalid.signals[0],
+    --                 arg0_readyvalid.signals[1], arg1_readyvalid.signals[1], ]
+    -- }
+    -- Bisim' (fork_handshake arg0).fst fork_rtl'[2] := by sorry

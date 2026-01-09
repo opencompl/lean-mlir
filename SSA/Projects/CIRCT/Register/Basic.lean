@@ -185,13 +185,13 @@ def drop_from_bitvecs (x : Vector (Stream' (BitVec 1)) 3) (n : Nat) : Vector (St
   We define the relation between a vector `Vector (Stream' (BitVec 1)) 3` containing the
   data, ready and valid signals, and a `Stream (BitVec 1)` containing the same information
   at handshake level.
-  `a[0]` contains the data, `a[1]` contains the `ready` signal, `a[2]` contains the `valid` signal.
+  `a[0]` contains the data, `a[2]` contains the `ready` signal, `a[1]` contains the `valid` signal.
   This relation is useful to prove the bisimilarity between streams at handshake and hardware levels.
 -/
 def ReadyValid  (a : Vector (Stream' (BitVec 1)) 3) (b : Stream (BitVec 1)) :=
   ∀ (n : Nat),
-      ((a[1] n = 1#1) ∧ (a[2] n = 1#1) ∧ (some (a[0] n) = b.get n))
-      ∨ ((a[1] n = 0#1) ∨ (a[2] n = 0#1) ∧ (none = b.get n))
+      ((a[2] n = 1#1) ∧ (a[1] n = 1#1) ∧ (some (a[0] n) = b.get n))
+      ∨ ((a[2] n = 0#1) ∨ (a[1] n = 0#1) ∧ (none = b.get n))
 
 /--
   We generalize the `ReadyValid` definition for a `wiresStruc`, to avoid implementing
@@ -201,8 +201,8 @@ def ReadyValid  (a : Vector (Stream' (BitVec 1)) 3) (b : Stream (BitVec 1)) :=
 -/
 def ReadyValidStruc (a : wiresStructStream 1 2 w) (b : Stream (BitVec w)) :=
   ∀ (n : Nat),
-    ((a.signals[0] n = 1#1) ∧ (a.signals[1] n = 1#1) ∧ (some (a.result[0] n) = b.get n))
-    ∨ ((a.signals[0] n = 0#1) ∨ (a.signals[1] n = 0#1) ∧ (none = b.get n))
+    ((a.signals[1] n = 1#1) ∧ (a.signals[0] n = 1#1) ∧ (some (a.result[0] n) = b.get n))
+    ∨ ((a.signals[1] n = 0#1) ∨ (a.signals[0] n = 0#1) ∧ (none = b.get n))
 
 /-- Map each element at the k-th position of each element of `Stream' (wiresStruc nops nsig)`
   to a stream of its own. -/
