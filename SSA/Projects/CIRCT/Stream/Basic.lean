@@ -113,6 +113,14 @@ coinductive Bisim : Stream α → Stream α → Prop where
     → (∀ j < m, b.get j = none)
     → Bisim a b
 
+/-- A stream and a stream' are bisimilar if they contain the same `some _` messages,
+  in the same order. That is, any finite sequence of `none`s may be ignored. -/
+coinductive Bisim' : Stream α → Stream' α → Prop where
+| step {a : Stream α} {b : Stream' α} {n m : Nat} : Bisim' (a.drop (n + 1)) (b.drop (m + 1))
+    → a.get n = b.get m
+    → (∀ i < n, a.get i = none)
+    → Bisim' a b
+
 /-- Set up scoped notation `x ~ y` for equivalence -/
 scoped infix:50 " ~ " => Bisim
 
