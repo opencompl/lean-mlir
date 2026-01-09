@@ -16,7 +16,7 @@ namespace HandshakeStream
   of abstractions the content of streams has been concretized.
   We ignore buffers.
 
-  See: https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/bf86f7247a767d97516a05a29e313634e5172398
+  See: https://github.com/opencompl/DC-semantics-simulation-evaluation/tree/95684e396cffaaae0aa31e57c6d1d056305195ea/benchmarks/fork
 
 -/
 
@@ -60,34 +60,39 @@ def fork_handshake (arg : Stream (BitVec 1)) :=
   }
 -/
 def handshake_fork_1ins_2outs_ctrl
-      (in0 : Stream' (BitVec 1))
-      (in0_valid : Stream' (BitVec 1))
-      (out0_ready : Stream' (BitVec 1))
-      (out1_ready : Stream' (BitVec 1))
-  : Vector (Stream' (BitVec 1)) 5 :=
-    let vec_streams := streams_to_vec'
-                        (#v[in0, in0_valid, out0_ready, out1_ready])
-    vec_to_streams' <| register_wrapper
-      (inputs := vec_streams)
-      (init_regs := #v[0#1, 0#1])
+      (inp : Stream' (wiresStruc 1 3 1))
+  : wiresStruc 3 2 1 :=
+
+    register_wrapper_generalized
+      (inputs := inp)
+      (init_regs := {result := #v[], signals := Vector.replicate 2 (0#1)})
+      (outops := 3)
+      (outsigs := 1)
       (update_fun :=
         fun (inp, regs) =>
-          let v2 := BitVec.xor regs[0] 1#1
-          let v3 := BitVec.and v2 inp[1]
-          let v4 := BitVec.and inp[2] v3
-          let v5 := BitVec.or regs[0] v4
-          let v8 := BitVec.xor regs[1] 1#1
-          let v9 := BitVec.and v8 inp[1]
-          let v10 := BitVec.and inp[3] v9
-          let v11 := BitVec.or v10 regs[1]
-          let v12 := BitVec.and v5 v11
-          let v0 := BitVec.xor v12 1#1
-          let v1 := BitVec.and v5 v0
-          let updated_reg0 := v1
-          let v6 := BitVec.xor v12 1#1
-          let v7 := BitVec.and v11 v6
-          let updated_reg1 := v7
-          (#v[v12, inp[0], v3, inp[0], v9], #v[updated_reg0, updated_reg1])
+            let in0 := inp.result[0]
+            let in0_valid := inp.signals[0]
+            let out0_ready := inp.signals[1]
+            let out1_ready := inp.signals[2]
+            let reg_0 := regs.signals[0]
+            let reg_1 := regs.signals[1]
+            let v2 := BitVec.xor reg_0 1#1
+            let v3 := BitVec.and v2 in0_valid
+            let v4 := BitVec.and out0_ready v3
+            let v5 := BitVec.or reg_0 v4
+            let v8 := BitVec.xor reg_1 1#1
+            let v9 := BitVec.and v8 in0_valid
+            let v10 := BitVec.and out1_ready v9
+            let v11 := BitVec.or v10 reg_1
+            let v12 := BitVec.and v5 v11
+            let v0 := BitVec.xor v12 1#1
+            let v1 := BitVec.and v5 v0
+            let v6 := BitVec.xor v12 1#1
+            let v7 := BitVec.and v11 v6
+            let reg0 := v1
+            let reg1 := v7
+            (#v[v12, inp[0], v3, inp[0], v9], #v[updated_reg0, updated_reg1])
+        )
       )
 
 /--
