@@ -18,7 +18,7 @@ namespace HandshakeStream
   which does not contain `Option` values, because at this level
   of abstractions the content of streams has been concretized.
 
-  See: https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/bf86f7247a767d97516a05a29e313634e5172398
+  See: https://github.com/opencompl/DC-semantics-simulation-evaluation/tree/bf86f7247a767d97516a05a29e313634e5172398/benchmarks/fork
 
 -/
 
@@ -42,62 +42,7 @@ def fork_handshake (arg : Stream (BitVec 1)) :=
       (x0, x0, x')
 
 /--
-  RTL program, config. 1:
-
-  hw.module @handshake_fork_1ins_2outs_ctrl(in %in0 : i0, in %in0_valid : i1, in %clock : !seq.clock, in %reset : i1, in %out0_ready : i1, in %out1_ready : i1, out in0_ready : i1, out out0 : i0, out out0_valid : i1, out out1 : i0, out out1_valid : i1) {
-    %true = hw.constant true
-    %false = hw.constant false
-    %0 = comb.xor %12, %true : i1
-    %1 = comb.and %5, %0 : i1
-    %emitted_0 = seq.compreg sym @emitted_0 %1, %clock reset %reset, %false : i1
-    %2 = comb.xor %emitted_0, %true : i1
-    %3 = comb.and %2, %in0_valid : i1
-    %4 = comb.and %out0_ready, %3 : i1
-    %5 = comb.or %4, %emitted_0 {sv.namehint = "done0"} : i1
-    %6 = comb.xor %12, %true : i1
-    %7 = comb.and %11, %6 : i1
-    %emitted_1 = seq.compreg sym @emitted_1 %7, %clock reset %reset, %false : i1
-    %8 = comb.xor %emitted_1, %true : i1
-    %9 = comb.and %8, %in0_valid : i1
-    %10 = comb.and %out1_ready, %9 : i1
-    %11 = comb.or %10, %emitted_1 {sv.namehint = "done1"} : i1
-    %12 = comb.and %5, %11 {sv.namehint = "allDone"} : i1
-    hw.output %12, %in0, %3, %in0, %9 : i1, i0, i1, i0, i1
-  }
--/
-def handshake_fork_1ins_2outs_ctrl
-      (in0 : Stream' (BitVec 1))
-      (in0_valid : Stream' (BitVec 1))
-      (out0_ready : Stream' (BitVec 1))
-      (out1_ready : Stream' (BitVec 1))
-  : Vector (Stream' (BitVec 1)) 5 :=
-    let vec_streams := streams_to_vec'
-                        (#v[in0, in0_valid, out0_ready, out1_ready])
-    vec_to_streams' <| register_wrapper
-      (inputs := vec_streams)
-      (init_regs := #v[0#1, 0#1])
-      (update_fun :=
-        fun (inp, regs) =>
-          let v2 := BitVec.xor regs[0] 1#1
-          let v3 := BitVec.and v2 inp[1]
-          let v4 := BitVec.and inp[2] v3
-          let v5 := BitVec.or regs[0] v4
-          let v8 := BitVec.xor regs[1] 1#1
-          let v9 := BitVec.and v8 inp[1]
-          let v10 := BitVec.and inp[3] v9
-          let v11 := BitVec.or v10 regs[1]
-          let v12 := BitVec.and v5 v11
-          let v0 := BitVec.xor v12 1#1
-          let v1 := BitVec.and v5 v0
-          let updated_reg0 := v1
-          let v6 := BitVec.xor v12 1#1
-          let v7 := BitVec.and v11 v6
-          let updated_reg1 := v7
-          (#v[v12, inp[0], v3, inp[0], v9], #v[updated_reg0, updated_reg1])
-      )
-
-/--
-  RTL program, config. 2:
+  First RTL Program
 
   hw.module @handshake_buffer_2slots_seq_1ins_1outs_ctrl(in %in0 : i0, in %in0_valid : i1, in %clock : !seq.clock, in %reset : i1, in %out0_ready : i1, out in0_ready : i1, out out0 : i0, out out0_valid : i1) {
     %true = hw.constant true
@@ -144,64 +89,287 @@ def handshake_fork_1ins_2outs_ctrl
     hw.output %1, %27, %19 : i1, i0, i1
 -/
 def handshake_buffer_2slots_seq_1ins_1outs_ctrl
-      (in0 : Stream' (BitVec 1))
-      (in0_valid : Stream' (BitVec 1))
-      (out0_ready : Stream' (BitVec 1))
-  : Vector (Stream' (BitVec 1)) 3 :=
-    let vec_streams := streams_to_vec'
-                        (#v[in0, in0_valid, out0_ready])
-    vec_to_streams' <| register_wrapper
-      (inputs := vec_streams) (r := 3)
-      (init_regs := #v[0#1, 0#1, 0#1, 0#1, 0#1, 0#1, 0#1, 0#1])
+      (inp : wiresStruc 1 2 1)
+      (regs : wiresStruc 0 8 1)
+      -- (in0 : Stream' (BitVec 1))
+      -- (in0_valid : Stream' (BitVec 1))
+      -- (out0_ready : Stream' (BitVec 1))
+  : wiresStruc 1 10 1 :=
+  /- order of registers:
+    valid0 = regs[0],
+    data0 = regs[1],
+    ready0 = regs[2],
+    ctrl_data0 = regs[3],
+    valid1 = regs[4],
+    data1 = regs[5],
+    ready1 = regs[6],
+    ctrl_data1 = regs[7] -/
+    let v20 := regs.signals[6] ^^^ 1#1
+    let v15 := regs.signals[4] ^^^ 1#1
+    let v16 := v15 ||| v20
+    let v5 := regs.signals[2] ^^^ 1#1
+    let v0 := regs.signals[0] ^^^ 1#1
+    let v1 := v0 ||| v5
+    let v2 := if v1.msb then inp.signals[1] else regs.signals[0]
+    let v3 := if v1.msb then inp.result[0] else regs.signals[1]
+    let v4 := if regs.signals[2].msb then regs.signals[2] else regs.signals[0]
+    let v6 := v16 ^^^ 1#1
+    let v7 := v6 &&& v5
+    let v8 := if v7.msb then regs.signals[0] else regs.signals[2]
+    let v9 := v16 &&& regs.signals[2]
+    let v10 := v9 ^^^ 1#1
+    let v11 := v10 &&& v8
+    let v12 := if regs.signals[2].msb then regs.signals[3] else regs.signals[1]
+    let v13 := if v7.msb then regs.signals[1] else regs.signals[3]
+    let v14 := if v9.msb then 0#1 else v13
+    let v17 := if v16.msb then v4 else regs.signals[4]
+    let v18 := if v16.msb then v12 else regs.signals[5]
+    let v19 := if regs.signals[6].msb then regs.signals[6] else regs.signals[4]
+    let v21 := inp.signals[1] ^^^ 1#1
+    let v22 := v21 &&& v20
+    let v23 := if v22.msb then regs.signals[4] else regs.signals[6]
+    let v24 := inp.signals[1] &&& regs.signals[6]
+    let v25 := v24 ^^^ 1#1
+    let v26 := v25 &&& v23
+    let v27 := if regs.signals[6].msb then regs.signals[7] else regs.signals[5]
+    let v28 := if v22.msb then regs.signals[5] else regs.signals[7]
+    let v29 := if v24.msb then 0#1 else v28
+    let updated_valid0 := v2
+    let updated_valid1 := v17
+    let updated_ctrl_data0 := v14
+    let updated_data0 := v3
+    let updated_ready0 := v11
+    let updated_ctrl_data1 := v29
+    let updated_data1 := v18
+    let updated_ready1 := v26
+    {result := #v[v1], signals := #v[v27, v19, updated_valid0, updated_data0, updated_ready0, updated_ctrl_data0,
+                                  updated_valid1, updated_data1, updated_ready1, updated_ctrl_data1]}
+
+/--
+  Second RTL Program
+
+  hw.module @handshake_fork_1ins_2outs_ctrl(in %in0 : i0, in %in0_valid : i1, in %clock : !seq.clock, in %reset : i1, in %out0_ready : i1, in %out1_ready : i1, out in0_ready : i1, out out0 : i0, out out0_valid : i1, out out1 : i0, out out1_valid : i1) {
+    %true = hw.constant true
+    %false = hw.constant false
+    %0 = comb.xor %12, %true : i1
+    %1 = comb.and %5, %0 : i1
+    %emitted_0 = seq.compreg sym @emitted_0 %1, %clock reset %reset, %false : i1
+    %2 = comb.xor %emitted_0, %true : i1
+    %3 = comb.and %2, %in0_valid : i1
+    %4 = comb.and %out0_ready, %3 : i1
+    %5 = comb.or %4, %emitted_0 {sv.namehint = "done0"} : i1
+    %6 = comb.xor %12, %true : i1
+    %7 = comb.and %11, %6 : i1
+    %emitted_1 = seq.compreg sym @emitted_1 %7, %clock reset %reset, %false : i1
+    %8 = comb.xor %emitted_1, %true : i1
+    %9 = comb.and %8, %in0_valid : i1
+    %10 = comb.and %out1_ready, %9 : i1
+    %11 = comb.or %10, %emitted_1 {sv.namehint = "done1"} : i1
+    %12 = comb.and %5, %11 {sv.namehint = "allDone"} : i1
+    hw.output %12, %in0, %3, %in0, %9 : i1, i0, i1, i0, i1
+  }
+-/
+def handshake_fork_1ins_2outs_ctrl
+    (inp : wiresStruc 1 3 1)
+    (regs : wiresStruc 0 2 1)
+  : wiresStruc 2 5 1 :=
+    let v2 := BitVec.xor regs.signals[0] 1#1
+    let v3 := BitVec.and v2 inp.signals[1]
+    let v4 := BitVec.and inp.signals[0] v3
+    let v5 := BitVec.or regs.signals[0] v4
+    let v8 := BitVec.xor regs.signals[1] 1#1
+    let v9 := BitVec.and v8 inp.signals[1]
+    let v10 := BitVec.and inp.signals[2] v9
+    let v11 := BitVec.or v10 regs.signals[1]
+    let v12 := BitVec.and v5 v11
+    let v0 := BitVec.xor v12 1#1
+    let v1 := BitVec.and v5 v0
+    let updated_reg0 := v1
+    let v6 := BitVec.xor v12 1#1
+    let v7 := BitVec.and v11 v6
+    let updated_reg1 := v7
+    {result := #v[v12, v3], signals := #v[inp.result[0], inp.result[0], v9, updated_reg0, updated_reg1]}
+
+
+set_option maxHeartbeats 0
+/--
+  Third RTL program:
+
+  hw.module @test_fork(in %arg0 : i0, in %arg0_valid : i1, in %arg1 : i0, in %arg1_valid : i1, in %clock : !seq.clock, in %reset : i1, in %out0_ready : i1, in %out1_ready : i1, in %out2_ready : i1, out arg0_ready : i1, out arg1_ready : i1, out out0 : i0, out out0_valid : i1, out out1 : i0, out out1_valid : i1, out out2 : i0, out out2_valid : i1) {
+    %handshake_buffer0.in0_ready, %handshake_buffer0.out0, %handshake_buffer0.out0_valid = hw.instance "handshake_buffer0" @handshake_buffer_2slots_seq_1ins_1outs_ctrl(in0: %arg1: i0, in0_valid: %arg1_valid: i1, clock: %clock: !seq.clock, reset: %reset: i1, out0_ready: %out2_ready: i1) -> (in0_ready: i1, out0: i0, out0_valid: i1)
+    %handshake_buffer1.in0_ready, %handshake_buffer1.out0, %handshake_buffer1.out0_valid = hw.instance "handshake_buffer1" @handshake_buffer_2slots_seq_1ins_1outs_ctrl(in0: %arg0: i0, in0_valid: %arg0_valid: i1, clock: %clock: !seq.clock, reset: %reset: i1, out0_ready: %handshake_fork0.in0_ready: i1) -> (in0_ready: i1, out0: i0, out0_valid: i1)
+    %handshake_fork0.in0_ready, %handshake_fork0.out0, %handshake_fork0.out0_valid, %handshake_fork0.out1, %handshake_fork0.out1_valid = hw.instance "handshake_fork0" @handshake_fork_1ins_2outs_ctrl(in0: %handshake_buffer1.out0: i0, in0_valid: %handshake_buffer1.out0_valid: i1, clock: %clock: !seq.clock, reset: %reset: i1, out0_ready: %handshake_buffer3.in0_ready: i1, out1_ready: %handshake_buffer2.in0_ready: i1) -> (in0_ready: i1, out0: i0, out0_valid: i1, out1: i0, out1_valid: i1)
+    %handshake_buffer2.in0_ready, %handshake_buffer2.out0, %handshake_buffer2.out0_valid = hw.instance "handshake_buffer2" @handshake_buffer_2slots_seq_1ins_1outs_ctrl(in0: %handshake_fork0.out1: i0, in0_valid: %handshake_fork0.out1_valid: i1, clock: %clock: !seq.clock, reset: %reset: i1, out0_ready: %out1_ready: i1) -> (in0_ready: i1, out0: i0, out0_valid: i1)
+    %handshake_buffer3.in0_ready, %handshake_buffer3.out0, %handshake_buffer3.out0_valid = hw.instance "handshake_buffer3" @handshake_buffer_2slots_seq_1ins_1outs_ctrl(in0: %handshake_fork0.out0: i0, in0_valid: %handshake_fork0.out0_valid: i1, clock: %clock: !seq.clock, reset: %reset: i1, out0_ready: %out0_ready: i1) -> (in0_ready: i1, out0: i0, out0_valid: i1)
+    hw.output %handshake_buffer1.in0_ready, %handshake_buffer0.in0_ready, %handshake_buffer3.out0, %handshake_buffer3.out0_valid, %handshake_buffer2.out0, %handshake_buffer2.out0_valid, %handshake_buffer0.out0, %handshake_buffer0.out0_valid : i1, i1, i0, i1, i0, i1, i0, i1
+  }
+-/
+def fork_buffer_rtl
+  (inp : Stream' (wiresStruc 2 5 1)) :
+    Stream' (wiresStruc 3 5 1) :=
+  register_wrapper_generalized
+      (inputs := inp)
+      (init_regs := {result := #v[], signals := Vector.replicate 37 (0#1)})
+      (outops := 2)
+      (outsigs := 6)
       (update_fun :=
         fun (inp, regs) =>
-          /- order of registers:
-            valid0 = regs[0],
-            data0 = regs[1],
-            ready0 = regs[2],
-            ctrl_data0 = regs[3],
-            valid1 = regs[4],
-            data1 = regs[5],
-            ready1 = regs[6],
-            ctrl_data1 = regs[7] -/
-          let v20 := regs[6] ^^^ 1#1
-          let v15 := regs[4] ^^^ 1#1
-          let v16 := v15 ||| v20
-          let v5 := regs[2] ^^^ 1#1
-          let v0 := regs[0] ^^^ 1#1
-          let v1 := v0 ||| v5
-          let v2 := if v1.msb then inp[1] else regs[0]
-          let v3 := if v1.msb then inp[0] else regs[1]
-          let v4 := if regs[2].msb then regs[2] else regs[0]
-          let v6 := v16 ^^^ 1#1
-          let v7 := v6 &&& v5
-          let v8 := if v7.msb then regs[0] else regs[2]
-          let v9 := v16 &&& regs[2]
-          let v10 := v9 ^^^ 1#1
-          let v11 := v10 &&& v8
-          let v12 := if regs[2].msb then regs[3] else regs[1]
-          let v13 := if v7.msb then regs[1] else regs[3]
-          let v14 := if v9.msb then 0#1 else v13
-          let v17 := if v16.msb then v4 else regs[4]
-          let v18 := if v16.msb then v12 else regs[5]
-          let v19 := if regs[6].msb then regs[6] else regs[4]
-          let v21 := inp[2] ^^^ 1#1
-          let v22 := v21 &&& v20
-          let v23 := if v22.msb then regs[4] else regs[6]
-          let v24 := inp[2] &&& regs[6]
-          let v25 := v24 ^^^ 1#1
-          let v26 := v25 &&& v23
-          let v27 := if regs[6].msb then regs[7] else regs[5]
-          let v28 := if v22.msb then regs[5] else regs[7]
-          let v29 := if v24.msb then 0#1 else v28
-          let updated_valid0 := v2
-          let updated_valid1 := v17
-          let updated_ctrl_data0 := v14
-          let updated_data0 := v3
-          let updated_ready0 := v11
-          let updated_ctrl_data1 := v29
-          let updated_data1 := v18
-          let updated_ready1 := v26
-          ⟨#v[v1, v27, v19], #v[updated_valid0, updated_data0, updated_ready0, updated_ctrl_data0,
-                                  updated_valid1, updated_data1, updated_ready1, updated_ctrl_data1]⟩
+          let arg0 := inp.result[0]
+          let arg1 := inp.result[1]
+          let out0_ready := inp.signals[0]
+          let out1_ready := inp.signals[1]
+          let arg0_valid := inp.signals[2]
+          let arg1_valid := inp.signals[3]
+          let out2_ready := inp.signals[4]
+          let fork0_in0_ready := regs.signals[0]
+          let buffer2_in0_ready := regs.signals[1]
+          let buffer3_in0_ready := regs.signals[2]
+          -- buffer0
+          let inp_buffer0 : wiresStruc 1 2 1 := {result := #v[arg1], signals := #v[arg1_valid, out2_ready]}
+          let buffer0_reg_valid0 := regs.signals[3]
+          let buffer0_reg_data0 := regs.signals[4]
+          let buffer0_reg_ready0 := regs.signals[5]
+          let buffer0_reg_ctrl_data0 := regs.signals[6]
+          let buffer0_reg_valid1 := regs.signals[7]
+          let buffer0_reg_data1 := regs.signals[8]
+          let buffer0_reg_ready1 := regs.signals[9]
+          let buffer0_reg_ctrl_data1 := regs.signals[10]
+          let regs_buffer0 := {result := #v[],
+                                signals := #v[buffer0_reg_valid0, buffer0_reg_data0, buffer0_reg_ready0,
+                                              buffer0_reg_ctrl_data0, buffer0_reg_valid1, buffer0_reg_data1,
+                                              buffer0_reg_ready1, buffer0_reg_ctrl_data1]}
+          let out_buffer0 := handshake_buffer_2slots_seq_1ins_1outs_ctrl inp_buffer0 regs_buffer0
+          let buffer0_out0 := out_buffer0.result[0]
+          let buffer0_in0_ready := out_buffer0.signals[0]
+          let buffer0_out0_valid := out_buffer0.signals[1]
+          let buffer0_reg_valid0 :=out_buffer0.signals[2]
+          let buffer0_reg_data0 := out_buffer0.signals[3]
+          let buffer0_reg_ready0 := out_buffer0.signals[4]
+          let buffer0_reg_ctrl_data0 := out_buffer0.signals[5]
+          let buffer0_reg_valid1 := out_buffer0.signals[6]
+          let buffer0_reg_data1 := out_buffer0.signals[7]
+          let buffer0_reg_ready1 := out_buffer0.signals[8]
+          let buffer0_reg_ctrl_data1 := out_buffer0.signals[9]
+          -- buffer1
+          let inp_buffer1 : wiresStruc 1 2 1 := {result := #v[arg0], signals := #v[arg0_valid, fork0_in0_ready]}
+          let buffer1_reg_valid0 := regs.signals[11]
+          let buffer1_reg_data0 := regs.signals[12]
+          let buffer1_reg_ready0 := regs.signals[13]
+          let buffer1_reg_ctrl_data0 := regs.signals[14]
+          let buffer1_reg_valid1 := regs.signals[15]
+          let buffer1_reg_data1 := regs.signals[16]
+          let buffer1_reg_ready1 := regs.signals[17]
+          let buffer1_reg_ctrl_data1 := regs.signals[18]
+          let regs_buffer1 := {result := #v[],
+                                signals := #v[buffer1_reg_valid0, buffer1_reg_data0, buffer1_reg_ready0,
+                                              buffer1_reg_ctrl_data0, buffer1_reg_valid1, buffer1_reg_data1,
+                                              buffer1_reg_ready1, buffer1_reg_ctrl_data1]}
+          let out_buffer1 := handshake_buffer_2slots_seq_1ins_1outs_ctrl inp_buffer1 regs_buffer1
+          let buffer1_out0 := out_buffer1.result[0]
+          let buffer1_in0_ready := out_buffer1.signals[0]
+          let buffer1_out0_valid := out_buffer1.signals[1]
+          let buffer1_reg_valid0 :=out_buffer1.signals[2]
+          let buffer1_reg_data0 := out_buffer1.signals[3]
+          let buffer1_reg_ready0 := out_buffer1.signals[4]
+          let buffer1_reg_ctrl_data0 := out_buffer1.signals[5]
+          let buffer1_reg_valid1 := out_buffer1.signals[6]
+          let buffer1_reg_data1 := out_buffer1.signals[7]
+          let buffer1_reg_ready1 := out_buffer1.signals[8]
+          let buffer1_reg_ctrl_data1 := out_buffer1.signals[9]
+          -- fork
+          let reg_0 := regs.signals[19]
+          let reg_1 := regs.signals[20]
+          let fork0_inp : wiresStruc 1 3 1 := {result := #v[buffer1_out0], signals := #v[buffer1_out0_valid, buffer3_in0_ready, buffer2_in0_ready]}
+          let fork0_regs : wiresStruc 0 2 1 := {result := #v[], signals := #v[reg_0, reg_1]}
+          let fork_out := handshake_fork_1ins_2outs_ctrl fork0_inp fork0_regs
+          let fork0_out0 := fork_out.result[0]
+          let fork0_out1 := fork_out.result[1]
+          let fork0_in0_ready := fork_out.signals[0]
+          let fork0_out0_valid := fork_out.signals[1]
+          let fork0_out1_valid := fork_out.signals[2]
+          let updated_reg0 := fork_out.signals[3]
+          let updated_reg1 := fork_out.signals[4]
+          -- buffer2
+          let inp_buffer2 : wiresStruc 1 2 1 := {result := #v[fork0_out1], signals := #v[fork0_out1_valid, out1_ready]}
+          let buffer2_reg_valid0 := regs.signals[21]
+          let buffer2_reg_data0 := regs.signals[22]
+          let buffer2_reg_ready0 := regs.signals[23]
+          let buffer2_reg_ctrl_data0 := regs.signals[24]
+          let buffer2_reg_valid1 := regs.signals[25]
+          let buffer2_reg_data1 := regs.signals[26]
+          let buffer2_reg_ready1 := regs.signals[27]
+          let buffer2_reg_ctrl_data1 := regs.signals[28]
+          let regs_buffer2 := {result := #v[],
+                                signals := #v[buffer2_reg_valid0, buffer2_reg_data0, buffer2_reg_ready0,
+                                              buffer2_reg_ctrl_data0, buffer2_reg_valid1, buffer2_reg_data1,
+                                              buffer2_reg_ready1, buffer2_reg_ctrl_data1]}
+          let out_buffer2 := handshake_buffer_2slots_seq_1ins_1outs_ctrl inp_buffer2 regs_buffer2
+          let buffer2_out0 := out_buffer2.result[0]
+          let buffer2_in0_ready := out_buffer2.signals[0]
+          let buffer2_out0_valid := out_buffer2.signals[1]
+          let buffer2_reg_valid0 :=out_buffer2.signals[2]
+          let buffer2_reg_data0 := out_buffer2.signals[3]
+          let buffer2_reg_ready0 := out_buffer2.signals[4]
+          let buffer2_reg_ctrl_data0 := out_buffer2.signals[5]
+          let buffer2_reg_valid1 := out_buffer2.signals[6]
+          let buffer2_reg_data1 := out_buffer2.signals[7]
+          let buffer2_reg_ready1 := out_buffer2.signals[8]
+          let buffer2_reg_ctrl_data1 := out_buffer2.signals[9]
+          -- buffer3
+          let inp_buffer3 : wiresStruc 1 2 1 := {result := #v[fork0_out0], signals := #v[fork0_out0_valid, out0_ready]}
+          let buffer3_reg_valid0 := regs.signals[29]
+          let buffer3_reg_data0 := regs.signals[30]
+          let buffer3_reg_ready0 := regs.signals[31]
+          let buffer3_reg_ctrl_data0 := regs.signals[32]
+          let buffer3_reg_valid1 := regs.signals[33]
+          let buffer3_reg_data1 := regs.signals[34]
+          let buffer3_reg_ready1 := regs.signals[35]
+          let buffer3_reg_ctrl_data1 := regs.signals[36]
+          let regs_buffer3 := {result := #v[],
+                                signals := #v[buffer3_reg_valid0, buffer3_reg_data0, buffer3_reg_ready0,
+                                              buffer3_reg_ctrl_data0, buffer3_reg_valid1, buffer3_reg_data1,
+                                              buffer3_reg_ready1, buffer3_reg_ctrl_data1]}
+          let out_buffer3 := handshake_buffer_2slots_seq_1ins_1outs_ctrl inp_buffer3 regs_buffer3
+          let buffer3_out0 := out_buffer3.result[0]
+          let buffer3_in0_ready := out_buffer3.signals[0]
+          let buffer3_out0_valid := out_buffer3.signals[1]
+          let buffer3_reg_valid0 :=out_buffer3.signals[2]
+          let buffer3_reg_data0 := out_buffer3.signals[3]
+          let buffer3_reg_ready0 := out_buffer3.signals[4]
+          let buffer3_reg_ctrl_data0 := out_buffer3.signals[5]
+          let buffer3_reg_valid1 := out_buffer3.signals[6]
+          let buffer3_reg_data1 := out_buffer3.signals[7]
+          let buffer3_reg_ready1 := out_buffer3.signals[8]
+          let buffer3_reg_ctrl_data1 := out_buffer3.signals[9]
+          let out := {
+            result := #v[buffer3_out0, buffer2_out0, buffer0_out],
+            signals := #v[buffer1_in0_ready, buffer0_in0_ready, buffer3_out0_valid, buffer2_out0_valid, buffer0_out0_valid ]}
+          let updatedregs := {
+                                result := #v[],
+                                signals := #v[fork0_in0_ready, buffer2_in0_ready, buffer3_in0_ready,
+                                  buffer0_reg_valid0, buffer0_reg_data0,buffer0_reg_ready0, buffer0_reg_ctrl_data0,
+                                  buffer0_reg_valid1, buffer0_reg_data1, buffer0_reg_ready1, buffer0_reg_ctrl_data1,
+                                  buffer1_reg_valid0, buffer1_reg_data0, buffer1_reg_ready0, buffer1_reg_ctrl_data0,
+                                  buffer1_reg_valid1, buffer1_reg_data1, buffer1_reg_ready1, buffer1_reg_ctrl_data1,
+                                  reg_0, reg_1,
+                                  buffer2_reg_valid0, buffer2_reg_data0, buffer2_reg_ready0, buffer2_reg_ctrl_data0,
+                                  buffer2_reg_valid1, buffer2_reg_data1, buffer2_reg_ready1, buffer2_reg_ctrl_data1,
+                                  buffer3_reg_valid0, buffer3_reg_data0, buffer3_reg_ready0, buffer3_reg_ctrl_data0,
+                                  buffer3_reg_valid1, buffer3_reg_data1, buffer3_reg_ready1, buffer3_reg_ctrl_data1]
+                              }
+          ⟨out, updatedregs⟩
       )
+
+
+
+
+-- theorem lowering_correctness
+--   (arg0 arg1 : Stream (BitVec 1))
+--   (arg0_readyvalid arg1_readyvalid : Vector (Stream' (BitVec 1)) 3)
+--   (harg0 : ReadyValid arg0_readyvalid arg0)
+--   (harg1 : ReadyValid arg1_readyvalid arg1)
+--   (arg2_ready : Stream' (BitVec 1)) :
+--     let fork_rtl' : Vector (Stream' (BitVec 1)) 8 :=
+--       fork_rtl arg0_readyvalid[0] arg0_readyvalid[2] arg1_readyvalid[0] arg1_readyvalid[2]
+--         arg0_readyvalid[1] arg1_readyvalid[1] sig
+--     Bisim' (fork_handshake arg0).fst fork_rtl'[2] := by sorry
