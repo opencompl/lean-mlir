@@ -98,29 +98,29 @@ def register_wrapper
 /--
   To avoid using heterogeneous bitvectors without compromising on a faithful representation,
   we introduce an ad-hoc structure for the input and output of the circuit in case it contains both
-  signals (`BitVec 1`) and data (`BitVec 32`).
+  signals (`BitVec 1`) and data (`BitVec w`).
 -/
-structure wiresStruc (nops nsig : Nat) where
-  result : Vector (BitVec 32) nops
+structure wiresStruc (nops nsig w: Nat) where
+  result : Vector (BitVec w) nops
   signals : Vector (BitVec 1) nsig
 
-structure wiresStructStream (nops nsig : Nat) where
-  result : Vector (Stream' (BitVec 32)) nops
+structure wiresStructStream (nops nsig w : Nat) where
+  result : Vector (Stream' (BitVec w)) nops
   signals : Vector (Stream' (BitVec 1)) nsig
 
 /-- We define a more general `register_wrapper` that operates on both streams of signals (`BitVec 1`)
   as well as streams of operands (`BitVec 32`) -/
 def register_wrapper_generalized
-    (inputs : Stream' (wiresStruc inops insigs))
-    (init_regs : wiresStruc regops regsigs)
+    (inputs : Stream' (wiresStruc inops insigs w))
+    (init_regs : wiresStruc regops regsigs w)
     -- the generalized wrapper supports registers for both operands and signals
-    (update_fun : (wiresStruc inops insigs × wiresStruc regops regsigs) →
-                  (wiresStruc outops outsigs × wiresStruc regops regsigs))
-      : Stream' (wiresStruc outops outsigs) :=
-  let β := Stream' (wiresStruc inops insigs) × -- inputs
-            wiresStruc regops regsigs × -- feedback signals
-            Option (wiresStruc regops regsigs) -- registers' initial value
-  let f : β → wiresStruc outops outsigs :=
+    (update_fun : (wiresStruc inops insigs w × wiresStruc regops regsigs w) →
+                  (wiresStruc outops outsigs w × wiresStruc regops regsigs w))
+      : Stream' (wiresStruc outops outsigs w) :=
+  let β := Stream' (wiresStruc inops insigs w) × -- inputs
+            wiresStruc regops regsigs w × -- feedback signals
+            Option (wiresStruc regops regsigs w) -- registers' initial value
+  let f : β → wiresStruc outops outsigs w :=
     fun (inputs, regs, init_regs) =>
       match init_regs with
       | some init => let ⟨out, _⟩ := update_fun (inputs.head, init)
@@ -193,14 +193,25 @@ def ReadyValid  (a : Vector (Stream' (BitVec 1)) 3) (b : Stream (BitVec 1)) :=
       ((a[1] n = 1#1) ∧ (a[2] n = 1#1) ∧ (some (a[0] n) = b.get n))
       ∨ ((a[1] n = 0#1) ∨ (a[2] n = 0#1) ∧ (none = b.get n))
 
+/--
+  We generalize the `ReadyValid` definition for a `wiresStruc`, to avoid implementing
+  heterogeneous vectors.
+  The `result` field of the structure will contain the data, while the two signals contain
+  the `ready` and `valid` signal, respectively.
+-/
+def ReadyValidStruc (a : wiresStructStream 1 2 w) (b : Stream (BitVec w)) :=
+  ∀ (n : Nat),
+    ((a.signals[0] n = 1#1) ∧ (a.signals[1] n = 1#1) ∧ (some (a.result[0] n) = b.get n))
+    ∨ ((a.signals[0] n = 0#1) ∨ (a.signals[1] n = 0#1) ∧ (none = b.get n))
+
 /-- Map each element at the k-th position of each element of `Stream' (wiresStruc nops nsig)`
   to a stream of its own. -/
-def wires_to_streams (ws : Stream' (wiresStruc nops nsig)) : wiresStructStream nops nsig :=
+def wires_to_streams (ws : Stream' (wiresStruc nops nsig w)) : wiresStructStream nops nsig w :=
   { result := Vector.ofFn (fun k => fun i => (ws i).result.get k),
     signals := Vector.ofFn (fun k => fun i => (ws i).signals.get k) }
 
 /-- Map each element in each stream of `ws` to an element in a `Stream' (wiresStruc nops nsig)` object. -/
-def streams_to_wires {nops nsig : Nat} (ws : wiresStructStream nops nsig) : Stream' (wiresStruc nops nsig) :=
+def streams_to_wires {nops nsig : Nat} (ws : wiresStructStream nops nsig w) : Stream' (wiresStruc nops nsig w) :=
   fun (i : Nat) =>
     { result := ws.result.map (fun s => s i),
       signals := ws.signals.map (fun s => s i) }
