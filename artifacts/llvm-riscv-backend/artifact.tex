@@ -1,0 +1,199 @@
+%
+% Prepared by Grigori Fursin with contributions from Bruce Childers,
+%   Michael Heroux, Michela Taufer and other colleagues.
+%
+% See examples of this Artifact Appendix in
+%  * SC'17 paper: https://dl.acm.org/citation.cfm?id=3126948
+%  * CGO'17 paper: https://www.cl.cam.ac.uk/~sa614/papers/Software-Prefetching-CGO2017.pdf
+%  * ACM ReQuEST-ASPLOS'18 paper: https://dl.acm.org/citation.cfm?doid=3229762.3229763
+%
+% (C)opyright 2014-2022
+%
+% CC BY 4.0 license
+%
+
+\documentclass[acmlarge, nonacm]{acmart}
+
+% \documentclass[onecolumn]{sigplanconf}
+
+\usepackage{hyperref}
+\usepackage{minted}
+
+\newminted[script]{bash}{style=bw, bgcolor=blue!5!white, breaklines, fontsize=\footnotesize}
+
+\usepackage[verbose]{newunicodechar}
+\newunicodechar{Γ}{\ensuremath{\Gamma}}
+\newunicodechar{⊢}{\ensuremath{\vdash}}
+\newunicodechar{▸}{\ensuremath{\blacktriangleright}}
+\newunicodechar{∅}{\ensuremath{\emptyset}}
+\newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{β}{\ensuremath{\beta}}
+\newunicodechar{δ}{\ensuremath{\delta}}
+\newunicodechar{Δ}{\ensuremath{\Delta}}
+\newunicodechar{ϵ}{\ensuremath{\epsilon}}
+\newunicodechar{τ}{\ensuremath{\tau}}
+\newunicodechar{ε}{\ensuremath{\epsilon}}
+\newunicodechar{σ}{\ensuremath{\sigma}}
+\newunicodechar{Σ}{\ensuremath{\Sigma}}
+% \newunicodechar{α}{\ensuremath{\alpha}}
+\newunicodechar{∈}{\ensuremath{\in}}
+\newunicodechar{∧}{\ensuremath{\land}}
+
+\newunicodechar{₀}{\textsubscript{0}}
+\newunicodechar{₁}{\textsubscript{1}}
+\newunicodechar{₂}{\textsubscript{2}}
+\newunicodechar{₃}{\textsubscript{3}}
+\newunicodechar{ₙ}{\textsubscript{n}}
+\newunicodechar{ₘ}{\textsubscript{m}}
+\newunicodechar{ₕ}{\textsubscript{h}}
+\newunicodechar{⊕}{\ensuremath{\oplus}}
+\newunicodechar{∀}{\ensuremath{\forall}}
+\newunicodechar{∃}{\ensuremath{\exists}}
+\newunicodechar{∘}{\ensuremath{\circ}}
+\newunicodechar{⟦}{\ensuremath{\llbracket}}
+\newunicodechar{⟧}{\ensuremath{\rrbracket}}
+\newunicodechar{ℕ}{\ensuremath{\mathbb{N}}}
+\newunicodechar{ℤ}{\ensuremath{\mathbb{Z}}}
+
+% https://tex.stackexchange.com/questions/100966/defining-scalable-white-curly-brackets-and-and
+% TODO FIXME: we gotta fix these parens!
+\newunicodechar{⦃}{\ensuremath{\{\{}}
+\newunicodechar{⦄}{\ensuremath{\}\}}}
+\newunicodechar{⧸}{\ensuremath{/}}
+\newunicodechar{⊑}{\ensuremath{\sqsubseteq}}
+
+\begin{document}
+
+
+\special{papersize=8.5in,11in}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% When adding this appendix to your paper, 
+% please remove above part
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+\title[Artifact]{Artifact for Interactive Bit Vector Reasoning using Verified Bitblasting}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% \subsection{Abstract}
+
+% {\em Obligatory}
+
+\subsection{Artifact check-list (meta-information)}
+
+% {\em Obligatory. Use just a few informal keywords in all fields applicable to your artifacts
+% and remove the rest. This information is needed to find appropriate reviewers and gradually 
+% unify artifact meta information in Digital Libraries.}
+
+\section{Introduction}
+
+This artifact contains the infrastructure and tooling necessary to display the performance of the 
+verified instruction selector for all the benchmarks presented.
+
+{\small
+\begin{itemize}
+  \item {\bf Program: } The code repository for our framework along with the test suite. Note that this is already setup in the docker image.
+  \item {\bf Compilation: } The Lean4 toolchain, downloaded via \texttt{elan}. Note that this is already setup in the docker image.
+  \item {\bf Run-time environment: } Any operating system that supports Docker.
+  \item {\bf Hardware: } Any x86-64 machine (16 physical cores and 128GB of RAM recommended).
+  \item {\bf Output: } Key theorems of the paper will be built and shown to have no unsound axioms.
+  \item {\bf How much disk space required (approximately)?: } 80GB
+  \item {\bf How much time is needed to prepare workflow (approximately)?: } 1hr
+  \item {\bf How much time is needed to complete experiments (approximately)?: } 8hr (on recommended hardware)
+  \item {\bf Publicly available?: } Yes
+  \item {\bf Code licenses (if publicly available)?: } Apache License 2.0
+  \item {\bf Archived (provide DOI)?: } 10.5281/zenodo.15755236
+\end{itemize}
+}
+
+
+\subsection{Performance}
+
+We test the performance of the verified instruction selector against a set of synthetically-generated programs. 
+
+\section{Hardware Dependencies}
+
+Podman or Docker are necessary to run our artifact.
+The container image has all dependencies needed to compile our framework with Lean4.
+
+\section{Versioning}
+
+All of our infrastructure is based on Lean version XYZ, commit ABC. 
+
+\section{Results Reproduction}
+
+\subsection{Benchmarks Generation}
+
+The generation of our benchmarks depends on \href{mlir-fuzz}{https://github.com/opencompl/mlir-fuzz} to produce the initial synthetic programs. 
+
+
+To generate the initial fuzzed programs, run: 
+\begin{script}
+$ cd /home/user/lean-mlir/SSA/LLVMRiscV/Evaluation/benchmarks/
+$ python3 generate_multi.py --num --max_size --min_size
+\end{script}
+
+For the paper, we used \texttt{num = 200}, \texttt{max\_size = 8}, \texttt{min\_size = 3}. 
+
+We then need to lower all the synthesized benchmarks using both \texttt{llc} and the verified instruction selector. 
+
+To generate the remaining benchmarks, run: 
+
+\begin{script}
+$ cd /home/user/lean-mlir/SSA/LLVMRiscV/Evaluation/benchmarks/
+$ uv run generate.py --num --jobs --llvm\_opt
+\end{script}
+
+The script \texttt{generate.py} populates the folders in \texttt{benchmarks} by running the following: 
+\begin{itemize}
+  \item For each file in \texttt{MLIR\_multi}, extract \texttt{num} single MLIR modules and save them in \texttt{benchmarks/MLIR\_single}. In the naming convention we adopt, each file containing a single module will have two numbers that remain consistent throughout the lowering (e.g. \texttt{size\_function\_num}, where \texttt{size} is the initial program size specified in \texttt{generate_multi.py}). 
+  \item using \texttt{mlir-opt}, convert each of these files containing a single module to the LLVM dialect, save the result in \texttt{benchmarks/LLVM/*.ll}
+\end{itemize}
+Then, the scripts lowers all the files using both LLVM and Lean-MLIR, to enable the comparison of the lowered RISCV assembly output. 
+
+\subsubsection{LLVM Toolchain}
+\begin{itemize}
+  \item using \texttt{mlir-translate}, convert the \texttt{*.ll} files in LLVMIR, and save the result in \texttt{benchmarks/LLVMIR/*.mlir}
+  \item using \texttt{llc} with \texttt{selectionDAG}, compile the LLVMIR files to the \texttt{riscv} backend and save the result in \texttt{benchmarks/LLC\_ASM\_selectiondag/*.s}
+  \item using \texttt{llc} with \texttt{globalISel}, compile the LLVMIR files to the \texttt{riscv} backend and save the result in \texttt{benchmarks/LLC\_ASM\_globalisel/*.s}
+\end{itemize}
+
+\subsubsection{Lean-MLIR Toolchain}
+\begin{itemize}
+  \item extract the first block \texttt{bb0} from the \texttt{*.ll} files and save the result in \texttt{benchmarks/MLIR_bb0/*.mlir}
+  \item run the Lean-MLIR lowering to RiscV and save the result in \texttt{benchmarks/LEANMLIR_ASM/*.mlir}, potentially in parallel by setting the \texttt{jobs} input argument (the default number is 1).
+  \item remove \texttt{builtin.unrealized\_conversion\_cast} operations from the assembly file using XDSL, save the result in \texttt{benchmarks/XDSL\_no\_casts/*.mlir}
+  \item perform register allocation using XDSL, save the result in \texttt{benchmarks/XDSL\_reg\_alloc/*.mlir}
+  \item lower to RISCV assembly using XDSL, save the result in \texttt{benchmarks/XDSL\_ASM/*.mlir}
+\end{itemize}
+
+Each step in \texttt{generate.py} produces a log file, which one can retrieve in \texttt{logs/}. The names in the log file contain the function and the pass that outputted that file.
+
+\subsection{MCA Analysis}
+
+This evaluation requires \texttt{llvm-mca}, which we install in the Docker. 
+To make sure that \texttt{evallib} is correctly imported, run: 
+
+\begin{script}
+$ export PYTHONPATH=$PYTHONPATH:~/lean-mlir
+\end{script}
+
+To reproduce the mca analysis results, run:
+\begin{script}
+$ cd /home/user/lean-mlir/SSA/LLVMRiscV/Evaluation/mca-analysis/
+$ python3 run_mca.py 
+\end{script}
+
+This file will run LLVM's \texttt{llvm-mca} tool on the RISCV assembly files produced by LLVM with \texttt{globalISel}, LLVM with \texttt{selectionDAG}, Lean-MLIR + XDSL and Lean-MLIR with optimizations + XDSL (\texttt{llvm-mca -mtriple=riscv64 -mcpu=sifive-u74 -mattr=+m,+zba,+zbb,+zbs $input\_file}) 
+
+The results of the analysis and the log of the tool are available in \texttt{/lean-mlir/SSA/LLVMRiscV/Evaluation/mca-analysis/results/}
+
+To reproduce the plots, run 
+\begin{script}
+$ cd /home/user/lean-mlir/SSA/LLVMRiscV/Evaluation/mca-analysis/results/
+$ python3 plot.py 
+\end{script}
