@@ -32,3 +32,6 @@ x : BitVec v
   trace_state
   sorry
 
+theorem signextend_zeroextend (x : BitVec w1) (w2 w3 : Nat) (h1 : w2 > w1) (h2: w3 >= w2) :
+    BitVec.signExtend w3 (BitVec.zeroExtend w2 x) = BitVec.zeroExtend w3 x := by
+  bv_multi_width

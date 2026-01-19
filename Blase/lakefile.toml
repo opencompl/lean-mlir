@@ -26,3 +26,8 @@ name = "BlaseEval"
 name = "SexprPBV"
 path = "../SexprPBV"
 rev = "main"
+
+[[require]]
+name = "valaig"
+git = "https://github.com/opencompl/valaig"
+rev = "7bcb9df848cc53100152ebfb7f94458a056a553a"
