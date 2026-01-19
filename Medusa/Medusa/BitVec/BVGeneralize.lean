@@ -60,6 +60,16 @@ instance : HydrableInitialParserState where
 
 instance :  HydrableCheckTimeout GenBVPred where
 
+def getNewWidth(currWidth overallWidth targetWidth: Nat) : Nat :=
+  if currWidth == 1 then currWidth
+  else
+    let res := (Int.ofNat targetWidth) +  ((Int.ofNat currWidth) - Int.ofNat overallWidth)
+    if (overallWidth % currWidth == 0) || res <= 0 then
+       (currWidth * targetWidth) / overallWidth
+    else -- Different widths might end up with the same value in the target width if we only rely on maintaining the ratio,
+        --so we want to account for where the constraint might be that the widths differ 
+        res.toNat
+
 def shrinkParsedBVExpr (expr : ParsedBVExpr) (targetWidth : Nat) : MetaM ParsedBVExpr := do
   let bvExpr ← shrinkBVExpr expr.bvExpr targetWidth
   return {expr with bvExpr := bvExpr, width := targetWidth}
@@ -79,9 +89,7 @@ def shrinkParsedBVExpr (expr : ParsedBVExpr) (targetWidth : Nat) : MetaM ParsedB
       | .truncate (w := w) _ expr => return GenBVExpr.truncate result (← shrinkBVExpr expr (reduce w))
       | _ => throwError m! "Unsupported input type: {bvExpr}"
 
-    reduce (instWidth : Nat) : Nat :=
-      if instWidth == 1 then instWidth
-      else (instWidth  * targetWidth) / expr.width
+    reduce (instWidth : Nat) : Nat := getNewWidth instWidth expr.width targetWidth
 
 def shrink (origExpr : ParsedBVLogicalExpr) (targetWidth : Nat) : MetaM ParsedBVLogicalExpr := do
   let lhs ← shrinkParsedBVExpr origExpr.lhs targetWidth
@@ -95,10 +103,7 @@ def shrink (origExpr : ParsedBVLogicalExpr) (targetWidth : Nat) : MetaM ParsedBV
     let mut symVarIdToShrinkedVar : Std.HashMap Nat HydraVariable := Std.HashMap.emptyWithCapacity
 
     for (name, var) in origExpr.state.displayNameToVariable do
-      let mut resultWidth := 1
-
-      if var.width != 1 then
-        resultWidth := (var.width * targetWidth) / origExpr.lhs.width
+      let mut resultWidth := getNewWidth var.width  origExpr.lhs.width targetWidth
 
       let var := {name := name, width := resultWidth, id := var.id}
       displayNameToShrinkedVar := displayNameToShrinkedVar.insert name var
@@ -113,10 +118,7 @@ def shrink (origExpr : ParsedBVLogicalExpr) (targetWidth : Nat) : MetaM ParsedBV
     let mut widthValToVar : Std.HashMap Nat HydraVariable := Std.HashMap.emptyWithCapacity
 
     for (widthId, var) in origExpr.state.widthIdToVariable do
-      let mut resultWidth := 1
-
-      if var.width != 1 then
-        resultWidth := (var.width * targetWidth) / origExpr.lhs.width
+      let mut resultWidth := getNewWidth var.width origExpr.lhs.width targetWidth
 
       let newVar : HydraVariable := {name := var.name, id := widthId, width := resultWidth}
       widthIdToVar := widthIdToVar.insert widthId newVar
@@ -235,8 +237,15 @@ def updateConstantValues (bvExpr: ParsedBVExpr) (assignments: Std.HashMap Nat BV
 
 def wrap (bvExpr : GenBVExpr w) : BVExprWrapper := { bvExpr := bvExpr, width := w}
 
+def getWidthRelations : GeneralizerStateM ParsedBVExpr GenBVPred (Option (BoolExpr GenBVPred)) := do
+    let state ← get
+    let parsedLogicalExprState :=  state.parsedLogicalExpr.state
 
-def findRelationsBetweenWidths(widths: Std.HashMap Nat HydraVariable) (width: Nat) : BoolExpr GenBVPred := Id.run do
+    if parsedLogicalExprState.widthIdToVariable.size <= 1 then
+      return none
+
+    let processingWidth := state.processingWidth
+    let widths := parsedLogicalExprState.widthIdToVariable
     let combinations := generateCombinations 2 widths.keys
 
     let mut res : List (BoolExpr GenBVPred) := []
@@ -244,8 +253,8 @@ def findRelationsBetweenWidths(widths: Std.HashMap Nat HydraVariable) (width: Na
       let x := widths[combo[0]!]!
       let y := widths[combo[1]!]!
 
-      let xVar : GenBVExpr width := GenBVExpr.var x.id
-      let yVar : GenBVExpr width := GenBVExpr.var y.id
+      let xVar : GenBVExpr processingWidth := GenBVExpr.var x.id
+      let yVar : GenBVExpr processingWidth := GenBVExpr.var y.id
 
       if x.width < y.width then
         res := (BoolExpr.literal (GenBVPred.bin xVar BVBinPred.ult yVar)) :: res
@@ -254,20 +263,8 @@ def findRelationsBetweenWidths(widths: Std.HashMap Nat HydraVariable) (width: Na
       else
         res := (BoolExpr.literal (GenBVPred.bin yVar BVBinPred.ult xVar)) :: res
 
-    return bigAnd res
+    return some (bigAnd res)
 
-
-def getWidthRelations : GeneralizerStateM ParsedBVExpr GenBVPred (Option (BoolExpr GenBVPred)) := do
-    let state ← get
-    let parsedLogicalExprState :=  state.parsedLogicalExpr.state
-
-    let processingWidth := state.processingWidth
-
-    if parsedLogicalExprState.widthIdToVariable.size <= 1 then
-      return none
-
-    let relations := findRelationsBetweenWidths parsedLogicalExprState.widthIdToVariable processingWidth
-    return some relations
 
 
 def filterCandidatePredicates  (bvLogicalExpr: BoolExpr GenBVPred) (preconditionCandidates visited: Std.HashSet (BoolExpr GenBVPred))
@@ -780,6 +777,10 @@ def synthesizeWithNoPrecondition (constantAssignments : List (Std.HashMap Nat BV
 instance :  HydrableSynthesizeWithNoPrecondition ParsedBVExpr GenBVPred GenBVExpr where
  synthesizeWithNoPrecondition := synthesizeWithNoPrecondition
 
+instance :  HydrableGetWidthRelations ParsedBVExpr GenBVPred GenBVExpr where
+  getWidthRelations := getWidthRelations
+
+
 def checkForPreconditions (constantAssignments : List (Std.HashMap Nat BVExpr.PackedBitVec)) (maxConjunctions: Nat)
                                                 : GeneralizerStateM ParsedBVExpr GenBVPred (Option (BoolExpr GenBVPred)) := do
   let state ← get
@@ -847,9 +848,9 @@ def prettifyBVExpr (bvExpr : GenBVExpr w) (displayNames: Std.HashMap Nat HydraVa
         s! "({prettifyBVExpr lhs displayNames widthVals} >>> {prettifyBVExpr rhs displayNames widthVals})"
     | .arithShiftRight lhs rhs =>
         s! "({prettifyBVExpr lhs displayNames widthVals} >>>a {prettifyBVExpr rhs displayNames widthVals})"
-    | .signExtend v expr => s! "BitVec.signExtend {widthVals[v]!.name.toString} {prettifyBVExpr expr displayNames widthVals}"
-    | .zeroExtend v expr => s! "BitVec.zeroExtend {widthVals[v]!.name.toString} {prettifyBVExpr expr displayNames widthVals}"
-    | .truncate v expr =>   s! "BitVec.truncate {widthVals[v]!.name.toString} {prettifyBVExpr expr displayNames widthVals}"
+    | .signExtend v expr => s! "BitVec.signExtend {widthVals[v]!.name.toString} ({prettifyBVExpr expr displayNames widthVals})"
+    | .zeroExtend v expr => s! "BitVec.zeroExtend {widthVals[v]!.name.toString} ({prettifyBVExpr expr displayNames widthVals})"
+    | .truncate v expr =>   s! "BitVec.truncate {widthVals[v]!.name.toString} ({prettifyBVExpr expr displayNames widthVals})"
     | _ => bvExpr.toString
 
 partial def GenBVExpr.toSmtLib (bvExpr : GenBVExpr w)
@@ -919,9 +920,11 @@ def isGteZeroCheck (expr : BoolExpr GenBVPred) : Bool :=
 def prettifyComparison (bvLogicalExpr : BoolExpr GenBVPred) (displayNames: Std.HashMap Nat HydraVariable) (widthVals: Std.HashMap Nat HydraVariable)  : Option String := Id.run do
   let mut res : Option String := none
   match bvLogicalExpr with
-  | .literal (GenBVPred.bin lhs BVBinPred.ult _) =>
+  | .literal (GenBVPred.bin lhs BVBinPred.ult rhs) =>
     if isGteZeroCheck bvLogicalExpr then
       res := some s! "{prettifyBVExpr lhs displayNames widthVals} >= 0"
+    else
+      res := some s! "{prettifyBVExpr rhs displayNames widthVals} > {prettifyBVExpr lhs displayNames widthVals}"
   | .gate Gate.and (BoolExpr.literal (GenBVPred.bin (GenBVExpr.const bv) BVBinPred.ult expr)) rhs =>
     if bv.toInt == 0 && isGteZeroCheck rhs then
       res := some s! "{prettifyBVExpr expr displayNames widthVals} > 0"
@@ -1072,6 +1075,33 @@ def evalBvGeneralize : Tactic
 
 section Examples
 set_option warn.sorry false
+
+/--
+info: theorem foo (x : BitVec w2) (w w3 : Nat) (h : (((w > w2)) && (w > w3)) && (w3 > w2)) : (BitVec.signExtend w (BitVec.zeroExtend w3 (x)) = BitVec.zeroExtend w (x)) := by sorry
+---
+error: unsolved goals
+x y : BitVec 32
+⊢ BitVec.signExtend 34 (BitVec.zeroExtend 33 x) = BitVec.zeroExtend 34 x
+-/
+#guard_msgs in
+theorem validEx (x y : BitVec 32) :
+    BitVec.signExtend 34 (BitVec.zeroExtend 33 x) = BitVec.zeroExtend 34 x := by
+  md_synth_generalize
+
+
+/--
+info: theorem foo (x_1 : BitVec w) (x : BitVec w2) (C1 : BitVec w) (h : (w > w2)) : (((x_1 - BitVec.zeroExtend w (x)) &&& C1) = BitVec.zeroExtend w ((BitVec.truncate w2 (x_1) - x))) := by sorry
+---
+error: unsolved goals
+x : BitVec 5
+x_1 : BitVec 17
+⊢ x_1 - BitVec.zeroExtend 17 x &&& 31#17 = BitVec.zeroExtend 17 (BitVec.truncate 5 x_1 - x)
+-/
+#guard_msgs in
+theorem invalidEx (x : BitVec 5) (x_1 : BitVec 17) :
+    x_1 - BitVec.zeroExtend 17 x &&& 31#17 = BitVec.zeroExtend 17 (BitVec.truncate 5 x_1 - x) := by
+  md_synth_generalize
+
 /--
 info: theorem foo (x : BitVec w) (y : BitVec w) (C1 : BitVec w) : (((C1 - x) ||| y) + y) = ((y ||| (C1 - x)) + y) := by sorry
 ---
@@ -1092,13 +1122,11 @@ theorem demo (x y : BitVec 8) : (0#8 - x ||| y) + y = (y ||| 0#8 - x) + y := by
 --   md_synth_generalize
 
 /--
-error: (bveq (wconst 8) (zext (bvvar 9481 (wvar 8)) (wvar 8)) (band (wvar 8) (bvvar 1 (wvar 8)) (zext (bvvar 9481 (wvar 8)) (wvar 8))))
+error: (pite (pand (pBoolConst true) (bvult (wconst 8) (bvvar 9482 (wvar 4)) (bvvar 9481 (wvar 8)))) (bveq (wconst 8) (zext (bvvar 9481 (wvar 8)) (wvar 8)) (band (wvar 8) (bvvar 1 (wvar 8)) (zext (bvvar 9481 (wvar 8)) (wvar 8)))) (pBoolConst false))
 -/
 #guard_msgs in
 theorem demo2 (x : BitVec 64) : BitVec.zeroExtend 64 (BitVec.truncate 32 x) = x &&& 4294967295#64 := by
   md_synth_generalize (output := .sexpr)
-
-
 
 
 /--
