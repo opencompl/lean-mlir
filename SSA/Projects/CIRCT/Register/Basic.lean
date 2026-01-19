@@ -109,7 +109,7 @@ structure wiresStructStream (nops nsig w : Nat) where
   signals : Vector (Stream' (BitVec 1)) nsig
 
 /-- We define a more general `register_wrapper` that operates on both streams of signals (`BitVec 1`)
-  as well as streams of operands (`BitVec 32`) -/
+  as well as streams of operands (`BitVec w`) -/
 def register_wrapper_generalized
     (inputs : Stream' (wiresStruc inops insigs w))
     (init_regs : wiresStruc regops regsigs w)
@@ -135,6 +135,35 @@ def register_wrapper_generalized
       | none =>  let ⟨_, regs_out⟩  := update_fun (inputs.head, regs)
               ⟨inputs.tail, regs_out, none⟩
   Stream'.corec f g  (inputs, init_regs, none)
+
+def register_wrapper_forwarding
+    (inputs : Stream' (wiresStruc inops insigs w))
+    (init_regs : wiresStruc regops regsigs w)
+    -- the generalized wrapper supports registers for both operands and signals
+    (update_fun : (wiresStruc inops insigs w × wiresStruc regops regsigs w) →
+                  (wiresStruc outops outsigs w × wiresStruc regops regsigs w))
+      : Stream' (wiresStruc outops outsigs w) :=
+  let β := Stream' (wiresStruc inops insigs w) × -- inputs
+            wiresStruc regops regsigs w × -- feedback signals
+            Option (wiresStruc regops regsigs w) -- registers' initial value
+  let f : β → wiresStruc outops outsigs w :=
+    fun (inputs, regs, init_regs) =>
+      match init_regs with
+      | some init => let ⟨out, _⟩ := update_fun (inputs.head, init)
+                    out
+      | none => let ⟨out, _⟩  := update_fun  (inputs.head, regs)
+                out
+  let g : β → β :=
+    fun (inputs, regs, init_regs) =>
+      match init_regs with
+      | some init => let ⟨_, regs_out⟩ := update_fun (inputs.head, init)
+                    ⟨inputs.tail, regs_out, none⟩
+      | none =>  let ⟨_, regs_out⟩  := update_fun (inputs.head, regs)
+              ⟨inputs.tail, regs_out, none⟩
+  Stream'.corec f g  (inputs, init_regs, none)
+
+
+
 
 /--
   We define an isomorphism from a streams `a` to a stream of their product BitVec 1.
@@ -215,3 +244,60 @@ def streams_to_wires {nops nsig : Nat} (ws : wiresStructStream nops nsig w) : St
   fun (i : Nat) =>
     { result := ws.result.map (fun s => s i),
       signals := ws.signals.map (fun s => s i) }
+
+/--
+  Executes `f` until all the register values `reg` are defined.
+  reg : initial set of registers
+  f : function to find fp over, takes registers and returns register
+  FP of a function `BitVec w → BitVec w` is easy (?).
+-/
+-- suggestion: use `partial_fixpoint`
+-- parameterized fixed point operator
+def calc_fix (fuel : Nat) (reg : Vector (Option α) n) (f : Vector (Option α) n → Vector (Option α) n) : Option (Vector α n) :=
+  match fuel with
+  | 0 => .none
+  | n+1 =>
+    -- here we need to check if all elements in the vector is reg are some, then return else recurse
+    calc_fix n (f reg) f
+
+axiom fix_wrapper (s : Vector (Option α) n) (f : Vector (Option α) n → Vector (Option α) n) : Vector (Stream α) n
+
+/- 0 = fork(1)
+1 = add(0) -/
+
+/--
+
+  fix_wrapper takes:
+  · initial state: (#v[.none, .none])
+  · connections are defined iteratively
+-/
+def protocol (fork add : Stream' (BitVec 1) → Stream' (BitVec 1)) (x y : Stream' (BitVec 1)) : BitVec 1 :=
+  fix_wrapper (α := BitVec 1) (#v[.none, .none]) (fun vals =>
+      let v_0 : Option (BitVec 1) := do
+        --try to get a value if possible
+        let v_1' ← vals[1]
+        return fork(v_1')
+      let v_1 : Option (BitVec 1) := do
+        let v_0' ← vals[0]
+        return add(v_0')
+      #v[v_0, v_1]
+    )
+
+/-
+  Fork
+  | ^
+  | |
+  x y
+  | |
+  v |
+  Add
+-/
+def protocol (fork add : Stream' (BitVec 1) → Stream' (BitVec 1)) (x y : Stream' (BitVec 1)) : BitVec 1 :=
+  let state_space := (Stream' (BitVec 1) → Stream' (BitVec 1)) × (Stream' (BitVec 1) → Stream' (BitVec 1))
+  let output_fun : state_space → BitVec 1 :=
+      fun (fork, add) =>
+        (add x).head
+  let update_fun : state_space → state_space :=
+
+    sorry
+  Stream'.corec state_space output_fun update_state

@@ -100,18 +100,22 @@ def arith_addi_in_ui64_ui64_out_ui64
   Third RTL module:
 
     hw.module @add(in %arg0 : i64, in %arg0_valid : i1, in %arg1 : i64, in %arg1_valid : i1, in %arg2 : i0, in %arg2_valid : i1, in %clock : !seq.clock, in %reset : i1, in %out0_ready : i1, in %out1_ready : i1, out arg0_ready : i1, out arg1_ready : i1, out arg2_ready : i1, out out0 : i64, out out0_valid : i1, out out1 : i0, out out1_valid : i1) {
+
       %handshake_fork0.in0_ready, %handshake_fork0.out0, %handshake_fork0.out0_valid, %handshake_fork0.out1, %handshake_fork0.out1_valid =
           hw.instance "handshake_fork0" @handshake_fork_in_ui64_out_ui64_ui64
               (in0: %arg0: i64, in0_valid: %arg0_valid: i1, clock: %clock: !seq.clock, reset: %reset: i1, out0_ready: %arith_addi0.in0_ready: i1, out1_ready: %arith_addi0.in1_ready: i1) ->
               (in0_ready: i1, out0: i64, out0_valid: i1, out1: i64, out1_valid: i1)
+
       %arith_addi0.in0_ready, %arith_addi0.in1_ready, %arith_addi0.out0, %arith_addi0.out0_valid =
           hw.instance "arith_addi0" @arith_addi_in_ui64_ui64_out_ui64
             (in0: %handshake_fork0.out0: i64, in0_valid: %handshake_fork0.out0_valid: i1, in1: %handshake_fork0.out1: i64, in1_valid: %handshake_fork0.out1_valid: i1, out0_ready: %arith_addi1.in0_ready: i1) ->
             (in0_ready: i1, in1_ready: i1, out0: i64, out0_valid: i1)
+
       %arith_addi1.in0_ready, %arith_addi1.in1_ready, %arith_addi1.out0, %arith_addi1.out0_valid =
           hw.instance "arith_addi1" @arith_addi_in_ui64_ui64_out_ui64
             (in0: %arith_addi0.out0: i64, in0_valid: %arith_addi0.out0_valid: i1, in1: %arg1: i64, in1_valid: %arg1_valid: i1, out0_ready: %out0_ready: i1) ->
             (in0_ready: i1, in1_ready: i1, out0: i64, out0_valid: i1)
+
       hw.output %handshake_fork0.in0_ready, %arith_addi1.in1_ready, %out1_ready, %arith_addi1.out0, %arith_addi1.out0_valid, %arg2, %arg2_valid : i1, i1, i1, i64, i1, i0, i1
     }
 -/
@@ -134,53 +138,53 @@ def add_rtl
       (outsigs := 6)
       (update_fun :=
         fun (inp, regs) =>
-        let addi0_in0_ready := regs.signals[2]
-        let addi0_in1_ready := regs.signals[3]
-        let arg0 := inp.result[0]
-        let arg1 := inp.result[1]
-        let arg0_valid := inp.signals[0]
-        let arg1_valid := inp.signals[1]
-        let arg2 := inp.signals[2]
-        let arg2_valid := inp.signals[3]
-        let out0_ready := inp.signals[4]
-        let out1_ready := inp.signals[5]
-        -- fork
-        let fork_inp :=
-          {result := #v[arg0],
-            signals := #v[arg0_valid, addi0_in0_ready, addi0_in1_ready]}
-        let fork_regs :=
-          {result := #v[],
-            signals := #v[regs.signals[0], regs.signals[1]]}
-        -- fork
-        let fork_out := handshake_fork_in_ui64_out_ui64_ui64 fork_inp fork_regs
-        let fork_in0_ready := fork_out.signals[0]
-        let fork_out0_valid := fork_out.signals[1]
-        let fork_out1_valid := fork_out.signals[2]
-        let fork_out0 := fork_out.result[0]
-        let fork_out1 := fork_out.result[1]
-        let updated_reg0 := fork_out.signals[3]
-        let updated_reg1 := fork_out.signals[4]
-        -- addi0
-        let addi0_inp :=
-          {result := #v[fork_out0, fork_out1],
-            signals := #v[fork_out0_valid, fork_out1_valid, fork_in0_ready]}
-        let addi0_out := arith_addi_in_ui64_ui64_out_ui64 addi0_inp
-        let addi0_in0_ready := addi0_out.signals[0]
-        let addi0_in1_ready := addi0_out.signals[1]
-        let addi0_out0_valid := addi0_out.signals[2]
-        let addi0_out0 := addi0_out.result[0]
-        -- addi1
-        let addi1_inp : wiresStruc 2 3 64 :=
-          {result := #v[addi0_out0, inp.result[1]],
-            signals := #v[addi0_out0_valid, inp.signals[1], inp.signals[4]]}
-        let addi1_out := arith_addi_in_ui64_ui64_out_ui64 addi1_inp
-        let addi1_in0_ready := addi1_out.signals[0]
-        let addi1_in1_ready := addi1_out.signals[1]
-        let addi1_out0_valid := addi1_out.signals[2]
-        let addi1_out0 := addi1_out.result[0]
-        ⟨{result := #v[addi1_out0],
-          signals := #v[fork_in0_ready, addi1_in1_ready, out1_ready, addi1_out0_valid, arg2, arg2_valid]},
-          {result := #v[], signals := #v[updated_reg0, updated_reg1, addi0_in0_ready, addi0_in1_ready]}⟩
+          let addi0_in0_ready := regs.signals[2]
+          let addi0_in1_ready := regs.signals[3]
+          let arg0 := inp.result[0]
+          let arg1 := inp.result[1]
+          let arg0_valid := inp.signals[0]
+          let arg1_valid := inp.signals[1]
+          let arg2 := inp.signals[2]
+          let arg2_valid := inp.signals[3]
+          let out0_ready := inp.signals[4]
+          let out1_ready := inp.signals[5]
+          -- fork
+          let fork_inp :=
+            {result := #v[arg0],
+              signals := #v[arg0_valid, addi0_in0_ready, addi0_in1_ready]}
+          let fork_regs :=
+            {result := #v[],
+              signals := #v[regs.signals[0], regs.signals[1]]}
+          -- fork
+          let fork_out := handshake_fork_in_ui64_out_ui64_ui64 fork_inp fork_regs
+          let fork_in0_ready := fork_out.signals[0]
+          let fork_out0_valid := fork_out.signals[1]
+          let fork_out1_valid := fork_out.signals[2]
+          let fork_out0 := fork_out.result[0]
+          let fork_out1 := fork_out.result[1]
+          let updated_reg0 := fork_out.signals[3]
+          let updated_reg1 := fork_out.signals[4]
+          -- addi0
+          let addi0_inp :=
+            {result := #v[fork_out0, fork_out1],
+              signals := #v[fork_out0_valid, fork_out1_valid, fork_in0_ready]}
+          let addi0_out := arith_addi_in_ui64_ui64_out_ui64 addi0_inp
+          let addi0_in0_ready := addi0_out.signals[0]
+          let addi0_in1_ready := addi0_out.signals[1]
+          let addi0_out0_valid := addi0_out.signals[2]
+          let addi0_out0 := addi0_out.result[0]
+          -- addi1
+          let addi1_inp : wiresStruc 2 3 64 :=
+            {result := #v[addi0_out0, inp.result[1]],
+              signals := #v[addi0_out0_valid, inp.signals[1], inp.signals[4]]}
+          let addi1_out := arith_addi_in_ui64_ui64_out_ui64 addi1_inp
+          let addi1_in0_ready := addi1_out.signals[0]
+          let addi1_in1_ready := addi1_out.signals[1]
+          let addi1_out0_valid := addi1_out.signals[2]
+          let addi1_out0 := addi1_out.result[0]
+          ⟨{result := #v[addi1_out0],
+            signals := #v[fork_in0_ready, addi1_in1_ready, out1_ready, addi1_out0_valid, arg2, arg2_valid]},
+            {result := #v[], signals := #v[updated_reg0, updated_reg1, addi0_in0_ready, addi0_in1_ready]}⟩
       )
 
 theorem lowering_correctness
