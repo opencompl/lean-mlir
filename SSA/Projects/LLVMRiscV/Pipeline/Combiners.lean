@@ -2007,6 +2007,48 @@ def integer_reassoc_combines : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   ⟨_, APlusBMinusAPlusC⟩,
   ⟨_, APlusBMinusCPlusA⟩]
 
+/-! ### add_shift -/
+
+/-
+Test the rewrite:
+  fold (A+shl(0-B, C)) -> (A-shl(B, C))
+-/
+def add_shift : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%a: i64, %b: i64, %c: i64):
+      %zero = llvm.mlir.constant (0) : i64
+      %neg_b = llvm.sub %zero, %b : i64
+      %shl_neg = llvm.shl %neg_b, %c : i64
+      %result = llvm.add %a, %shl_neg : i64
+      llvm.return %result : i64
+  }]
+  rhs := [LV| {
+    ^entry (%a: i64, %b: i64, %c: i64):
+      %new_shl = llvm.shl %b, %c : i64
+      %result = llvm.sub %a, %new_shl : i64
+      llvm.return %result : i64
+  }]
+
+def add_shift_commute : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%a: i64, %b: i64, %c: i64):
+      %zero = llvm.mlir.constant (0) : i64
+      %neg_b = llvm.sub %zero, %b : i64
+      %shl_neg = llvm.shl %neg_b, %c : i64
+      %result = llvm.add %shl_neg, %a : i64
+      llvm.return %result : i64
+  }]
+  rhs := [LV| {
+    ^entry (%a: i64, %b: i64, %c: i64):
+      %new_shl = llvm.shl %b, %c : i64
+      %result = llvm.sub %a, %new_shl : i64
+      llvm.return %result : i64
+  }]
+
+def add_shift_rw : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, add_shift⟩,
+   ⟨_, add_shift_commute⟩]
+
 /- ### not_cmp_fold
   (a op b) ^^^ (-1) → (a op' b) where op' is the inverse of op
 -/
@@ -2280,3 +2322,6 @@ def GLobalISelPostLegalizerCombiner :
   ++
   List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   select_to_iminmax
+  ++
+  List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  add_shift_rw
