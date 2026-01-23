@@ -30,4 +30,4 @@ rev = "main"
 [[require]]
 name = "valaig"
 git = "https://github.com/opencompl/valaig"
-rev = "7bcb9df848cc53100152ebfb7f94458a056a553a"
+rev = "97fc5d8872fdd4ccb4655a7ad97df5852670c1e7"
