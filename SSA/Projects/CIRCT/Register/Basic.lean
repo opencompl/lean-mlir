@@ -136,34 +136,31 @@ def register_wrapper_generalized
               ⟨inputs.tail, regs_out, none⟩
   Stream'.corec f g  (inputs, init_regs, none)
 
-def register_wrapper_forwarding
-    (inputs : Stream' (wiresStruc inops insigs w))
-    (init_regs : wiresStruc regops regsigs w)
-    -- the generalized wrapper supports registers for both operands and signals
-    (update_fun : (wiresStruc inops insigs w × wiresStruc regops regsigs w) →
-                  (wiresStruc outops outsigs w × wiresStruc regops regsigs w))
-      : Stream' (wiresStruc outops outsigs w) :=
-  let β := Stream' (wiresStruc inops insigs w) × -- inputs
-            wiresStruc regops regsigs w × -- feedback signals
-            Option (wiresStruc regops regsigs w) -- registers' initial value
-  let f : β → wiresStruc outops outsigs w :=
-    fun (inputs, regs, init_regs) =>
-      match init_regs with
-      | some init => let ⟨out, _⟩ := update_fun (inputs.head, init)
-                    out
-      | none => let ⟨out, _⟩  := update_fun  (inputs.head, regs)
-                out
+/-- We define a weaker `register_wrapper` that operates with `Option` values. -/
+def het_register_wrapper
+    (inputs : Stream' (HVector f lin))
+    (init_regs : HVector f ls)
+    (update_fun : (HVector f lin × HVector f ls) →
+                  (HVector f ls × HVector f lout))
+      : Stream' (HVector f lout) :=
+  let β := Stream' (HVector f lin) × -- inputs
+            HVector f ls × -- feedback signals
+            Bool -- first iteration flag
+  let f : β → HVector f lout :=
+    fun (inputs, regs, start) =>
+      match start with
+      | true => let ⟨_, lout'⟩ := update_fun (inputs.head, init_regs)
+                lout'
+      | false => let ⟨_, lout'⟩  := update_fun (inputs.head, regs)
+                lout'
   let g : β → β :=
-    fun (inputs, regs, init_regs) =>
-      match init_regs with
-      | some init => let ⟨_, regs_out⟩ := update_fun (inputs.head, init)
-                    ⟨inputs.tail, regs_out, none⟩
-      | none =>  let ⟨_, regs_out⟩  := update_fun (inputs.head, regs)
-              ⟨inputs.tail, regs_out, none⟩
-  Stream'.corec f g  (inputs, init_regs, none)
-
-
-
+    fun (inputs, regs, start) =>
+      match start with
+      | true => let ⟨ls', _⟩ := update_fun (inputs.head, init_regs)
+                ⟨inputs.tail, ls', false⟩
+      | false =>  let ⟨ls', _⟩  := update_fun (inputs.head, regs)
+                ⟨inputs.tail, ls', false⟩
+  Stream'.corec f g  (inputs, init_regs, true)
 
 /--
   We define an isomorphism from a streams `a` to a stream of their product BitVec 1.
@@ -253,51 +250,54 @@ def streams_to_wires {nops nsig : Nat} (ws : wiresStructStream nops nsig w) : St
 -/
 -- suggestion: use `partial_fixpoint`
 -- parameterized fixed point operator
-def calc_fix (fuel : Nat) (reg : Vector (Option α) n) (f : Vector (Option α) n → Vector (Option α) n) : Option (Vector α n) :=
+def calc_fix {f} (fuel : Nat) (reg : HVector f l) (f : HVector f l → HVector f l) : Option (HVector f l) :=
   match fuel with
   | 0 => .none
   | n+1 =>
-    -- here we need to check if all elements in the vector is reg are some, then return else recurse
-    calc_fix n (f reg) f
+    let freg := f reg
+    if freg == reg then
+      return freg
+    else
+      calc_fix n (f reg) f
 
-axiom fix_wrapper (s : Vector (Option α) n) (f : Vector (Option α) n → Vector (Option α) n) : Vector (Stream α) n
+def fix_wrapper (s : Vector (Stream' (Option α)) n) (f : Vector (Option α) n → Vector (Option α) n) : Option (Vector (Stream' α) n) := sorry
 
-/- 0 = fork(1)
-1 = add(0) -/
+-- /- 0 = fork(1)
+-- 1 = add(0) -/
 
-/--
+-- /--
 
-  fix_wrapper takes:
-  · initial state: (#v[.none, .none])
-  · connections are defined iteratively
--/
-def protocol (fork add : Stream' (BitVec 1) → Stream' (BitVec 1)) (x y : Stream' (BitVec 1)) : BitVec 1 :=
-  fix_wrapper (α := BitVec 1) (#v[.none, .none]) (fun vals =>
-      let v_0 : Option (BitVec 1) := do
-        --try to get a value if possible
-        let v_1' ← vals[1]
-        return fork(v_1')
-      let v_1 : Option (BitVec 1) := do
-        let v_0' ← vals[0]
-        return add(v_0')
-      #v[v_0, v_1]
-    )
+--   fix_wrapper takes:
+--   · initial state: (#v[.none, .none])
+--   · connections are defined iteratively
+-- -/
+-- -- def protocol (fork add : Stream' (BitVec 1) → Stream' (BitVec 1)) (x y : Stream' (BitVec 1)) : BitVec 1 :=
+-- --   fix_wrapper (α := BitVec 1) (#v[.none, .none]) (fun vals =>
+-- --       let v_0 : Option (BitVec 1) := do
+-- --         --try to get a value if possible
+-- --         let v_1' ← vals[1]
+-- --         return fork(v_1')
+-- --       let v_1 : Option (BitVec 1) := do
+-- --         let v_0' ← vals[0]
+-- --         return add(v_0')
+-- --       #v[v_0, v_1]
+-- --     )
 
-/-
-  Fork
-  | ^
-  | |
-  x y
-  | |
-  v |
-  Add
--/
-def protocol (fork add : Stream' (BitVec 1) → Stream' (BitVec 1)) (x y : Stream' (BitVec 1)) : BitVec 1 :=
-  let state_space := (Stream' (BitVec 1) → Stream' (BitVec 1)) × (Stream' (BitVec 1) → Stream' (BitVec 1))
-  let output_fun : state_space → BitVec 1 :=
-      fun (fork, add) =>
-        (add x).head
-  let update_fun : state_space → state_space :=
+-- /-
+--   Fork
+--   | ^
+--   | |
+--   x y
+--   | |
+--   v |
+--   Add
+-- -/
+-- -- def protocol (fork add : Stream' (BitVec 1) → Stream' (BitVec 1)) (x y : Stream' (BitVec 1)) : BitVec 1 :=
+-- --   let state_space := (Stream' (BitVec 1) → Stream' (BitVec 1)) × (Stream' (BitVec 1) → Stream' (BitVec 1))
+-- --   let output_fun : state_space → BitVec 1 :=
+-- --       fun (fork, add) =>
+-- --         (add x).head
+-- --   let update_fun : state_space → state_space :=
 
-    sorry
-  Stream'.corec state_space output_fun update_state
+-- --     sorry
+-- --   Stream'.corec state_space output_fun update_state

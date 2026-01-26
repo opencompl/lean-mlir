@@ -2,7 +2,7 @@ import SSA.Projects.CIRCT.Stream.Basic
 import SSA.Projects.CIRCT.Stream.Lemmas
 import SSA.Projects.CIRCT.Register.Basic
 import SSA.Projects.CIRCT.Register.Lemmas
-
+import SSA.Projects.CIRCT.Handshake.Handshake
 namespace HandshakeStream
 
 /-!
@@ -20,18 +20,30 @@ namespace HandshakeStream
 -/
 
 /--
-  Handshake program after buffers' insertion::
+  Handshake program after buffers' insertion and materialization:
 
-  handshake.func @add(%arg0: index, %arg1: index, %arg2: none, ...) -> (index, none) {
-      %0 = arith.addi %arg0, %arg0 : index
-      %1 = arith.addi %0, %arg1 : index
-      handshake.return %1, %arg2 : index, none
+  module {
+    handshake.func @add(%arg0: index, %arg1: index, %arg2: none, ...) -> (index, none) attributes {argNames = ["arg0", "arg1", "arg2"], resNames = ["out0", "out1"]} {
+      %0:2 = fork [2] %arg0 : index
+      %1 = buffer [2] seq %arg2 : none
+      %2 = arith.addi %0#0, %0#1 : index
+      %3 = buffer [2] seq %2 : index
+      %4 = arith.addi %3, %arg1 : index
+      %5 = buffer [2] seq %4 : index
+      return %5, %1 : index, none
+    }
   }
 
   We define it based on a synchroniing wrapper, that first synchronizes the input streams and
   then applies the operation.
+
+  We ignore the semantics of buffers.
 -/
-def add_handshake (a b : Stream' (Option (BitVec 64))) := syncMap₂ BitVec.add a b
+def add_handshake (a b : Stream' (Option (BitVec 64))) :=
+  let ⟨fork_0, fork_1⟩ := HandshakeOp.fork a
+  let addi_1 := syncMap₂ BitVec.add fork_0 fork_1
+  let addi_2 := syncMap₂ BitVec.add addi_1 b
+  addi_2
 
 /--
   First RTL module:
@@ -58,25 +70,33 @@ def add_handshake (a b : Stream' (Option (BitVec 64))) := syncMap₂ BitVec.add 
   }
 -/
 def handshake_fork_in_ui64_out_ui64_ui64
-    (inp : wiresStruc 1 3 64)
-    (regs : wiresStruc 0 2 64) :
-     (wiresStruc 2 5 64)  :=
-      let v2 := regs.signals[0] ^^^ 1#1 -- emitted_0
-      let v3 := v2 &&& inp.signals[0] -- in0_valid
-      let v4 := inp.signals[1] &&& v3 -- out0_ready
-      let v5 := v4 ||| regs.signals[0]
-      let v8 := regs.signals[1] ^^^ 1#1 -- emitted_1
-      let v9 := v8 &&& inp.signals[0] -- in0_valid
-      let v10 := inp.signals[2] &&& v9 -- out1_ready
-      let v11 := v10 ||| regs.signals[1]
-      let v12 := v5 &&& v11
-      let v0 := v12 ^^^ 1#1
-      let v1 := v5 &&& v0
-      let v6 := v12 ^^^ 1#1
-      let v7 := v11 &&& v6
-      let updated_reg0 := v1
-      let updated_reg1 := v7
-      {result := #v[inp.result[0], inp.result[0]], signals := #v[v12, v3, v9, updated_reg0, updated_reg1]}
+    (instruc : Stream' (wiresStruc 1 3 64)) :
+    Stream' (wiresStruc 2 3 64)  :=
+  register_wrapper_generalized
+    (inputs := instruc)
+    (init_regs := {result := #v[], signals := #v[0#1, 0#1]})
+    (outops := 2)
+    (outsigs := 3)
+    (update_fun :=
+      fun (inp, regs) =>
+        let v2 := regs.signals[0] ^^^ 1#1 -- emitted_0
+        let v3 := v2 &&& inp.signals[0] -- in0_valid
+        let v4 := inp.signals[1] &&& v3 -- out0_ready
+        let v5 := v4 ||| regs.signals[0]
+        let v8 := regs.signals[1] ^^^ 1#1 -- emitted_1
+        let v9 := v8 &&& inp.signals[0] -- in0_valid
+        let v10 := inp.signals[2] &&& v9 -- out1_ready
+        let v11 := v10 ||| regs.signals[1]
+        let v12 := v5 &&& v11
+        let v0 := v12 ^^^ 1#1
+        let v1 := v5 &&& v0
+        let v6 := v12 ^^^ 1#1
+        let v7 := v11 &&& v6
+        let updated_reg0 := v1
+        let updated_reg1 := v7
+        ⟨{result := #v[inp.result[0], inp.result[0]], signals := #v[v12, v3, v9]},
+                            {result := #v[], signals := #v[updated_reg0, updated_reg1]}⟩
+        )
 
 /--
   Second RTL module:
@@ -90,11 +110,21 @@ def handshake_fork_in_ui64_out_ui64_ui64
 
 -/
 def arith_addi_in_ui64_ui64_out_ui64
-  (inp : (wiresStruc 2 3 64)) : (wiresStruc 1 3 64) :=
-    let v0 := inp.signals[0] &&& inp.signals[1] -- in0_valid &&& in1_valid
-    let v1 := inp.signals[2] &&& v0 -- out0_ready
-    let v2 := inp.result[0] + inp.result[1]
-    {result := #v[v2], signals := #v[v1, v1, v0]}
+  (xst : Stream' (wiresStruc 2 3 64)) :
+    Stream' (wiresStruc 1 3 64) :=
+  register_wrapper_generalized
+              (inputs := xst)
+              (init_regs := {result := #v[], signals := #v[]})
+              (outops := 1)
+              (outsigs := 3)
+              (update_fun :=
+                        fun (inp, regs) =>
+                            let v0 := inp.signals[0] &&& inp.signals[1] -- in0_valid &&& in1_valid
+                            let v1 := inp.signals[2] &&& v0 -- out0_ready
+                            let v2 := inp.result[0] + inp.result[1]
+                           ⟨{result := #v[v2], signals := #v[v1, v1, v0]},
+                            {result := #v[], signals := #v[]}⟩
+                )
 
 /--
   Third RTL module:
@@ -119,7 +149,7 @@ def arith_addi_in_ui64_ui64_out_ui64
       hw.output %handshake_fork0.in0_ready, %arith_addi1.in1_ready, %out1_ready, %arith_addi1.out0, %arith_addi1.out0_valid, %arg2, %arg2_valid : i1, i1, i1, i64, i1, i0, i1
     }
 -/
-def add_rtl
+-- def add_rtl
   /-
     xst.result[0] = arg0
     xst.result[1] = arg1
@@ -130,62 +160,23 @@ def add_rtl
     xst.signals[4] = out0_ready
     xst.signals[5] = out1_ready
   -/
-  (inp : Stream' (wiresStruc 2 6 64)) : Stream' (wiresStruc 1 6 64) :=
-    register_wrapper_generalized
-      (inputs := inp)
-      (init_regs := {result := #v[], signals := #v[0#1, 0#1, 0#1, 0#1]})
-      (outops := 1)
-      (outsigs := 6)
-      (update_fun :=
-        fun (inp, regs) =>
-          let addi0_in0_ready := regs.signals[2]
-          let addi0_in1_ready := regs.signals[3]
-          let arg0 := inp.result[0]
-          let arg1 := inp.result[1]
-          let arg0_valid := inp.signals[0]
-          let arg1_valid := inp.signals[1]
-          let arg2 := inp.signals[2]
-          let arg2_valid := inp.signals[3]
-          let out0_ready := inp.signals[4]
-          let out1_ready := inp.signals[5]
-          -- fork
-          let fork_inp :=
-            {result := #v[arg0],
-              signals := #v[arg0_valid, addi0_in0_ready, addi0_in1_ready]}
-          let fork_regs :=
-            {result := #v[],
-              signals := #v[regs.signals[0], regs.signals[1]]}
-          -- fork
-          let fork_out := handshake_fork_in_ui64_out_ui64_ui64 fork_inp fork_regs
-          let fork_in0_ready := fork_out.signals[0]
-          let fork_out0_valid := fork_out.signals[1]
-          let fork_out1_valid := fork_out.signals[2]
-          let fork_out0 := fork_out.result[0]
-          let fork_out1 := fork_out.result[1]
-          let updated_reg0 := fork_out.signals[3]
-          let updated_reg1 := fork_out.signals[4]
-          -- addi0
-          let addi0_inp :=
-            {result := #v[fork_out0, fork_out1],
-              signals := #v[fork_out0_valid, fork_out1_valid, fork_in0_ready]}
-          let addi0_out := arith_addi_in_ui64_ui64_out_ui64 addi0_inp
-          let addi0_in0_ready := addi0_out.signals[0]
-          let addi0_in1_ready := addi0_out.signals[1]
-          let addi0_out0_valid := addi0_out.signals[2]
-          let addi0_out0 := addi0_out.result[0]
-          -- addi1
-          let addi1_inp : wiresStruc 2 3 64 :=
-            {result := #v[addi0_out0, inp.result[1]],
-              signals := #v[addi0_out0_valid, inp.signals[1], inp.signals[4]]}
-          let addi1_out := arith_addi_in_ui64_ui64_out_ui64 addi1_inp
-          let addi1_in0_ready := addi1_out.signals[0]
-          let addi1_in1_ready := addi1_out.signals[1]
-          let addi1_out0_valid := addi1_out.signals[2]
-          let addi1_out0 := addi1_out.result[0]
-          ⟨{result := #v[addi1_out0],
-            signals := #v[fork_in0_ready, addi1_in1_ready, out1_ready, addi1_out0_valid, arg2, arg2_valid]},
-            {result := #v[], signals := #v[updated_reg0, updated_reg1, addi0_in0_ready, addi0_in1_ready]}⟩
-      )
+  -- (inp : Stream' (wiresStruc 2 6 64)) : Stream' (wiresStruc 1 6 64) :=
+    -- let arg0 := inp.resul[0]
+    -- let arg1 := inp.resut[1]
+    -- let arg0_valid := inp.signal[0]
+    -- let arg1_valid := inp.signal[1]
+    -- let arg2 := inp.signal[2]
+    -- let arg2_valid := inp.signal[3]
+    -- let out0_ready := inp.signal[4]
+    -- let out1_ready := inp.signal[5]
+    -- let fork_in : wiresStruc 1 3 64 :=
+    --         {result := #v[arg0],
+    --           /- `out0_ready` and `out1_ready` are incorrect (see above).
+    --             we need to iteratively compute all the values in the current state of the circuit
+    --             (until fixed point). -/
+    --           signals := #v[arg0_valid, out0_ready, out1_ready]}
+    -- sorry
+
 
 theorem lowering_correctness
   (a b : Stream (BitVec 64)) -- handshake level
