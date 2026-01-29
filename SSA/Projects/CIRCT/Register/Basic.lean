@@ -191,6 +191,13 @@ def streams_to_vec' {α : Type u} {n : Nat} (xv : Vector (Stream' α) n) : Strea
   /- `map` applies `fun (s : Stream' α) => s i` to every element in `xv` -/
   fun (i : Nat) => xv.map (fun (s : Stream' α) => s i)
 
+-- /--
+--   Map the `i`-th element of stream `s` in `xv` to the output heterogeneous vector, using `Stream'`.
+-- -/
+-- def streams'_to_hvec {α : Type u} {n : Nat} (xv : HVector f lin) : Stream' (HVector f lin) :=
+--   /- `map` applies `fun (s : Stream' α) => s i` to every element in `xv` -/
+--   fun (f, lin) => xv.map (fun (s : Stream' α) => s i)
+
 /--
   Map each element at the `k`-th position of `xv` to the `k`-th stream of the output, using `Stream'`.
 -/
@@ -250,15 +257,15 @@ def streams_to_wires {nops nsig : Nat} (ws : wiresStructStream nops nsig w) : St
 -/
 -- suggestion: use `partial_fixpoint`
 -- parameterized fixed point operator
-def calc_fix {f} (fuel : Nat) (reg : HVector f l) (f : HVector f l → HVector f l) : Option (HVector f l) :=
-  match fuel with
-  | 0 => .none
-  | n+1 =>
-    let freg := f reg
-    if freg == reg then
-      return freg
-    else
-      calc_fix n (f reg) f
+-- def calc_fix {f} (fuel : Nat) (reg : HVector f l) (f : HVector f l → HVector f l) : Option (HVector f l) :=
+--   match fuel with
+--   | 0 => .none
+--   | n+1 =>
+--     let freg := f reg
+--     if freg == reg then
+--       return freg
+--     else
+--       calc_fix n (f reg) f
 
 def fix_wrapper (s : Vector (Stream' (Option α)) n) (f : Vector (Option α) n → Vector (Option α) n) : Option (Vector (Stream' α) n) := sorry
 
