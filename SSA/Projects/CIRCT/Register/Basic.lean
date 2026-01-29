@@ -270,9 +270,6 @@ def streams_to_wires {nops nsig : Nat} (ws : wiresStructStream nops nsig w) : St
 def fix_wrapper (s : Vector (Stream' (Option α)) n) (f : Vector (Option α) n → Vector (Option α) n) : Option (Vector (Stream' α) n) := sorry
 
 
-def het_fix_wrapper (s : HVector (Stream' (Option α)) n) (f : Vector (Option α) n → Vector (Option α) n) : Option (Vector (Stream' α) n) := sorry
-
-
 -- /- 0 = fork(1)
 -- 1 = add(0) -/
 

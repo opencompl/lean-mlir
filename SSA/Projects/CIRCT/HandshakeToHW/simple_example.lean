@@ -70,7 +70,11 @@ def sink (input : HVector n_type [1, 1]) : HVector n_type [1] :=
                     ⟨updatedreg, output⟩)
     convertStreamToVec hv
 
+def het_fix_wrapper (s : HVector n_type l) (f : HVector opt_type l → HVector opt_type l) :
+    Option (HVector n_type l) := sorry
 
--- def complete_module := sorry -- implemented with `fix_wrapper`
 
--- Lift fix_wrapper to HVector
+def complete_module (input : HVector n_type [1]) :=
+  let const_module := output_const input
+  let sink_module := sink const_module
+  het_fix_wrapper sink_module id
