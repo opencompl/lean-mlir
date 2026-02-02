@@ -22,33 +22,33 @@ BUILTIN_OPS = {'GIReplaceReg', 'GIEraseRoot', 'COPY'}
 
 @dataclass
 class Operand:
-    name: str
-    ty: Optional[str] = None
-    is_imm: bool = False
-    imm_val: Optional[int] = None
+    name: str                   # e.g. "$dst", "$zero"
+    ty: Optional[str] = None    # e.g. "root" from root:$dst
+    is_imm: bool = False   # is immediate
+    imm_val: Optional[int] = None  # immediate value
 
 
 @dataclass
 class Inst:
-    op: str
+    op: str                        # e.g. "G_ADD", "GIReplaceReg"
     operands: List[Operand] = field(default_factory=list)
-    name: Optional[str] = None
+    name: Optional[str] = None     # optional inst name like :$mi
 
 
 @dataclass
 class PatFrag:
-    name: str
-    outs: List[Tuple[str, str]]
+    name: str                          # e.g. "binop_left_to_zero_frags"
+    outs: List[Tuple[str, str]]        # (type, name) pairs
     ins: List[Tuple[str, str]]
-    alts: List[List[Inst]] = field(default_factory=list)
+    alts: List[List[Inst]] = field(default_factory=list)   # possible expansions
 
 
 @dataclass 
 class Rule:
     name: str
     defs: List[str]
-    match: List[Inst] = field(default_factory=list)
-    apply: List[Inst] = field(default_factory=list)
+    match: List[Inst] = field(default_factory=list)     # pattern to match
+    apply: List[Inst] = field(default_factory=list)     # replacement
     has_cpp: bool = False
     has_cpp_match: bool = False
     has_wip_match: bool = False
@@ -62,8 +62,8 @@ class Parser:
         self.rules: Dict[str, Rule] = {}
     
     def parse(self):
-        self._parse_frags()
-        self._parse_rules()
+        self._parse_frags()  # parse GICombinePatFrags
+        self._parse_rules()  # parse GICombineRules
     
     def _extract_body(self, start: int, open_ch: str, close_ch: str) -> Optional[str]:
         depth, i = 1, start
@@ -237,10 +237,10 @@ class Parser:
 
 class Emitter:
     def __init__(self, bw=64):
-        self.bw = bw
-        self.idx = 0
-        self.vars = {}
-        self.lines = []
+        self.bw = bw        # bitwidth
+        self.idx = 0        # next variable number
+        self.vars = {}      # map from TableGen names ("$zero") to SSA names ("%1")
+        self.lines = []     # accumulated output lines
     
     def reset(self, inputs: List[str]):
         self.idx, self.vars, self.lines = 0, {}, []
@@ -262,9 +262,15 @@ class Emitter:
         if not llvm_op or not inst.operands:
             return None
         
-        result = self._next()
-        self.vars[inst.operands[0].name] = result
+        # Handle G_CONSTANT specially: just create the constant directly
+        # instead of emitting a redundant intermediate instruction
+        if inst.op == 'G_CONSTANT' and len(inst.operands) > 1 and inst.operands[1].is_imm:
+            result = self.const(inst.operands[1].imm_val)
+            self.vars[inst.operands[0].name] = result
+            return result
         
+        # Process arguments FIRST to ensure sequential variable numbering.
+        # Any const() calls here allocate %N before the result gets %N+1.
         args = []
         for op in inst.operands[1:]:
             if op.is_imm and not op.name:
@@ -276,6 +282,10 @@ class Emitter:
                 args.append(self.vars[op.name])
             else:
                 args.append(f"%{op.name[1:]}")
+        
+        # Allocate result AFTER operands so numbering is sequential
+        result = self._next()
+        self.vars[inst.operands[0].name] = result
         
         self.lines.append(f"      {result} = {llvm_op} {', '.join(args)} : i{self.bw}")
         return result
@@ -451,6 +461,7 @@ class Generator:
         
         return "\n".join(lines)
     
+    
     def _topo_sort(self, insts: List[Inst]) -> List[Inst]:
         if not insts:
             return insts
@@ -512,8 +523,10 @@ class Generator:
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: tablegen_to_lean.py <Combine.td>")
+        print("Usage: auto_mir_rewrites.py <Combine.td> [--verbose]")
         sys.exit(1)
+    
+    verbose = "--verbose" in sys.argv
     
     with open(sys.argv[1]) as f:
         src = f.read()
@@ -527,15 +540,15 @@ def main():
     
     with open("../mir_combines.lean", 'w') as f:
         f.write(output)
-    print("Output: mir_combines.lean")
     
-    print(f"\nTranslated: {len(gen.generated)} | Skipped: {len(gen.skipped)}")
+    print(f"Translated: {len(gen.generated)} | Skipped: {len(gen.skipped)}")
     
-    by_reason = {}
-    for name, reason in gen.skipped.items():
-        by_reason.setdefault(reason, []).append(name)
-    for reason, names in sorted(by_reason.items(), key=lambda x: -len(x[1])):
-        print(f"  [{reason}] {len(names)}")
+    if verbose:
+        by_reason = {}
+        for name, reason in gen.skipped.items():
+            by_reason.setdefault(reason, []).append(name)
+        for reason, names in sorted(by_reason.items(), key=lambda x: -len(x[1])):
+            print(f"  [{reason}] {len(names)}")
 
 
 if __name__ == "__main__":

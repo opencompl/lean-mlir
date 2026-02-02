@@ -24,9 +24,9 @@ def idempotent_prop : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
 def right_identity_zero_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64):
-      %2 = llvm.mlir.constant (0) : i64
-      %1 = llvm.sub %0, %2 : i64
-      llvm.return %1 : i64
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.sub %0, %1 : i64
+      llvm.return %2 : i64
   }]
   rhs := [LV| {
     ^entry (%0: i64):
@@ -37,9 +37,9 @@ def right_identity_zero_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] 
 def right_identity_zero_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64):
-      %2 = llvm.mlir.constant (0) : i64
-      %1 = llvm.add %0, %2 : i64
-      llvm.return %1 : i64
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.add %0, %1 : i64
+      llvm.return %2 : i64
   }]
   rhs := [LV| {
     ^entry (%0: i64):
@@ -50,9 +50,9 @@ def right_identity_zero_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] 
 def right_identity_zero_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64):
-      %2 = llvm.mlir.constant (0) : i64
-      %1 = llvm.or %0, %2 : i64
-      llvm.return %1 : i64
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.or %0, %1 : i64
+      llvm.return %2 : i64
   }]
   rhs := [LV| {
     ^entry (%0: i64):
@@ -63,9 +63,9 @@ def right_identity_zero_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] 
 def right_identity_zero_3 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64):
-      %2 = llvm.mlir.constant (0) : i64
-      %1 = llvm.xor %0, %2 : i64
-      llvm.return %1 : i64
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.xor %0, %1 : i64
+      llvm.return %2 : i64
   }]
   rhs := [LV| {
     ^entry (%0: i64):
@@ -76,9 +76,9 @@ def right_identity_zero_3 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] 
 def right_identity_zero_4 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64):
-      %2 = llvm.mlir.constant (0) : i64
-      %1 = llvm.shl %0, %2 : i64
-      llvm.return %1 : i64
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.shl %0, %1 : i64
+      llvm.return %2 : i64
   }]
   rhs := [LV| {
     ^entry (%0: i64):
@@ -89,9 +89,9 @@ def right_identity_zero_4 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] 
 def right_identity_zero_5 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64):
-      %2 = llvm.mlir.constant (0) : i64
-      %1 = llvm.ashr %0, %2 : i64
-      llvm.return %1 : i64
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.ashr %0, %1 : i64
+      llvm.return %2 : i64
   }]
   rhs := [LV| {
     ^entry (%0: i64):
@@ -102,9 +102,9 @@ def right_identity_zero_5 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] 
 def right_identity_zero_6 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64):
-      %2 = llvm.mlir.constant (0) : i64
-      %1 = llvm.lshr %0, %2 : i64
-      llvm.return %1 : i64
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.lshr %0, %1 : i64
+      llvm.return %2 : i64
   }]
   rhs := [LV| {
     ^entry (%0: i64):
@@ -115,9 +115,9 @@ def right_identity_zero_6 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] 
 def right_identity_one_int : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64):
-      %2 = llvm.mlir.constant (1) : i64
-      %1 = llvm.mul %0, %2 : i64
-      llvm.return %1 : i64
+      %1 = llvm.mlir.constant (1) : i64
+      %2 = llvm.mul %0, %1 : i64
+      llvm.return %2 : i64
   }]
   rhs := [LV| {
     ^entry (%0: i64):
@@ -148,6 +148,118 @@ def binop_same_val_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
       llvm.return %0 : i64
   }]
 
+/-- ### binop_left_to_zero_0 -/
+def binop_left_to_zero_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.shl %1, %0 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      llvm.return %1 : i64
+  }]
+
+/-- ### binop_left_to_zero_1 -/
+def binop_left_to_zero_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.lshr %1, %0 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      llvm.return %1 : i64
+  }]
+
+/-- ### binop_left_to_zero_2 -/
+def binop_left_to_zero_2 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.ashr %1, %0 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      llvm.return %1 : i64
+  }]
+
+/-- ### binop_left_to_zero_3 -/
+def binop_left_to_zero_3 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.sdiv %1, %0 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      llvm.return %1 : i64
+  }]
+
+/-- ### binop_left_to_zero_4 -/
+def binop_left_to_zero_4 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.udiv %1, %0 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      llvm.return %1 : i64
+  }]
+
+/-- ### binop_left_to_zero_5 -/
+def binop_left_to_zero_5 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.srem %1, %0 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      llvm.return %1 : i64
+  }]
+
+/-- ### binop_left_to_zero_6 -/
+def binop_left_to_zero_6 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.urem %1, %0 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      llvm.return %1 : i64
+  }]
+
+/-- ### binop_left_to_zero_7 -/
+def binop_left_to_zero_7 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.mul %1, %0 : i64
+      llvm.return %2 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      llvm.return %1 : i64
+  }]
+
 /-- ### binop_right_to_zero -/
 def binop_right_to_zero : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
@@ -166,15 +278,15 @@ def binop_right_to_zero : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] wh
 def mul_by_neg_one : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64):
-      %2 = llvm.mlir.constant (-1) : i64
-      %1 = llvm.mul %0, %2 : i64
-      llvm.return %1 : i64
+      %1 = llvm.mlir.constant (-1) : i64
+      %2 = llvm.mul %0, %1 : i64
+      llvm.return %2 : i64
   }]
   rhs := [LV| {
     ^entry (%0: i64):
-      %2 = llvm.mlir.constant (0) : i64
-      %1 = llvm.sub %2, %0 : i64
-      llvm.return %1 : i64
+      %1 = llvm.mlir.constant (0) : i64
+      %2 = llvm.sub %1, %0 : i64
+      llvm.return %2 : i64
   }]
 
 /-- ### add_sub_reg_0 -/
@@ -237,9 +349,9 @@ def AMinusBMinusCMinusC : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty
 def ZeroMinusAPlusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64, %1: i64):
-      %3 = llvm.mlir.constant (0) : i64
-      %2 = llvm.sub %3, %0 : i64
-      %4 = llvm.add %2, %1 : i64
+      %2 = llvm.mlir.constant (0) : i64
+      %3 = llvm.sub %2, %0 : i64
+      %4 = llvm.add %3, %1 : i64
       llvm.return %4 : i64
   }]
   rhs := [LV| {
@@ -252,9 +364,9 @@ def ZeroMinusAPlusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llv
 def APlusZeroMinusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
     ^entry (%0: i64, %1: i64):
-      %3 = llvm.mlir.constant (0) : i64
-      %2 = llvm.sub %3, %1 : i64
-      %4 = llvm.add %0, %2 : i64
+      %2 = llvm.mlir.constant (0) : i64
+      %3 = llvm.sub %2, %1 : i64
+      %4 = llvm.add %0, %3 : i64
       llvm.return %4 : i64
   }]
   rhs := [LV| {
@@ -362,6 +474,14 @@ def mir_pattern_combines : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
    ⟨_, right_identity_one_int⟩,
    ⟨_, binop_same_val_0⟩,
    ⟨_, binop_same_val_1⟩,
+   ⟨_, binop_left_to_zero_0⟩,
+   ⟨_, binop_left_to_zero_1⟩,
+   ⟨_, binop_left_to_zero_2⟩,
+   ⟨_, binop_left_to_zero_3⟩,
+   ⟨_, binop_left_to_zero_4⟩,
+   ⟨_, binop_left_to_zero_5⟩,
+   ⟨_, binop_left_to_zero_6⟩,
+   ⟨_, binop_left_to_zero_7⟩,
    ⟨_, binop_right_to_zero⟩,
    ⟨_, mul_by_neg_one⟩,
    ⟨_, add_sub_reg_0⟩,
