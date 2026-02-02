@@ -123,3 +123,18 @@ def compute_module' (input : Stream' (HVector opt_type [1])) : Stream' (HVector 
 
 def complete_module :=
   het_fix_wrapper 10 (fun _ => .cons .none <| .nil) compute_module'
+
+
+instance : ToString (Stream' (HVector opt_type [1])) where
+  toString s :=
+    Id.run do
+      let mut result := ""
+      for i in [0:4] do
+        let elm := s.get i
+        let elm' := elm.get ⟨0, by simp⟩
+        let l := elm'.toList
+        for j in [0:l.length] do
+          result := result ++ toString l[j]! ++ "\n"
+      return result
+
+#eval complete_module
