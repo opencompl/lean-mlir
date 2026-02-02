@@ -3,6 +3,7 @@ import SSA.Projects.LLVMRiscV.Simpproc
 import SSA.Projects.RISCV64.Tactic.SimpRiscV
 import SSA.Projects.LLVMRiscV.Pipeline.mkRewrite
 import SSA.Projects.LLVMRiscV.Pipeline.ConstantMatching
+import SSA.Projects.LLVMRiscV.Pipeline.MIRCombines
 
 open LLVMRiscV
 
@@ -79,89 +80,6 @@ def select_constant_cmp : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
 /-- ### right_identity_zero
   (x op 0) → x
 -/
-def right_identity_zero_sub : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = sub %x, %c : !riscv.reg
-      ret %0 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      ret %x : !riscv.reg
-  }]
-
-def right_identity_zero_add : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = add %x, %c : !riscv.reg
-      ret %0 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      ret %x : !riscv.reg
-  }]
-
-def right_identity_zero_or : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = or %x, %c : !riscv.reg
-      ret %0 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      ret %x : !riscv.reg
-  }]
-
-def right_identity_zero_xor : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = xor %x, %c : !riscv.reg
-      ret %0 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      ret %x : !riscv.reg
-  }]
-
-def right_identity_zero_shl : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = sll %x, %c : !riscv.reg
-      ret %0 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      ret %x : !riscv.reg
-  }]
-
-def right_identity_zero_ashr : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = sra %x, %c : !riscv.reg
-      ret %0 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      ret %x : !riscv.reg
-  }]
-
-def right_identity_zero_lshr : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (0) : !riscv.reg
-      %0 = srl %x, %c : !riscv.reg
-      ret %0 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      ret %x : !riscv.reg
-  }]
 
 def right_identity_zero_rol : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
   lhs := [LV| {
@@ -189,14 +107,7 @@ def right_identity_zero_ror : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
 
 /-- the whole `right_identity_zero` comprises the patterns for all the operations. -/
 def right_identity_zero : List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
-  [⟨_, right_identity_zero_sub⟩,
-  ⟨_, right_identity_zero_add⟩,
-  ⟨_, right_identity_zero_or⟩,
-  ⟨_, right_identity_zero_xor⟩,
-  ⟨_, right_identity_zero_shl⟩,
-  ⟨_, right_identity_zero_ashr⟩,
-  ⟨_, right_identity_zero_lshr⟩,
-  ⟨_, right_identity_zero_rol⟩,
+  [⟨_, right_identity_zero_rol⟩,
   ⟨_, right_identity_zero_ror ⟩]
 
 /-! ### hoist_logic_op_with_same_opcode_hands -/
@@ -771,152 +682,6 @@ def select_to_iminmax: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
   ⟨_, select_to_iminmax_sle⟩
   ]
 
-/-- ### binop_same_val
-  (x op x) → x
--/
-def binop_same_val_and : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %0 = and %x, %x : !riscv.reg
-      ret %0 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      ret %x : !riscv.reg
-  }]
-
-def binop_same_val_or : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %0 = or %x, %x : !riscv.reg
-      ret %0 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      ret %x : !riscv.reg
-  }]
-
-def binop_same_val : List (Σ Γ, RISCVPeepholeRewrite  Γ) :=
-    [⟨_, binop_same_val_and⟩,
-    ⟨_, binop_same_val_or⟩]
-
-/-- ### binop_left_to_zero
-  (0 op x) → 0
--/
-def binop_left_to_zero_shl : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.shl %c, %x : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
-  }]
-
-def binop_left_to_zero_lshr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.lshr %c, %x : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
-  }]
-
-def binop_left_to_zero_ashr : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.ashr %c, %x : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
-  }]
-
-def binop_left_to_zero_sdiv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.sdiv %c, %x : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
-  }]
-
-def binop_left_to_zero_udiv : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.udiv %c, %x : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
-  }]
-
-def binop_left_to_zero_srem : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.srem %c, %x : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
-  }]
-
-def binop_left_to_zero_urem : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.urem %c, %x : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
-  }]
-
-def binop_left_to_zero_mul : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.mul%c, %x : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
-  }]
-
-def binop_left_to_zero: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  [⟨_, binop_left_to_zero_shl⟩,
-  ⟨_, binop_left_to_zero_lshr⟩,
-  ⟨_, binop_left_to_zero_ashr⟩,
-  ⟨_, binop_left_to_zero_sdiv⟩,
-  ⟨_, binop_left_to_zero_udiv⟩,
-  ⟨_, binop_left_to_zero_srem⟩,
-  ⟨_, binop_left_to_zero_urem⟩,
-  ⟨_, binop_left_to_zero_mul⟩]
-
 /-! ### cast_of_cast_combines -/
 
 /-
@@ -1103,56 +868,6 @@ def anyext_trunc_fold: List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) :=
   [⟨_, anyext_trunc_fold_sext_32⟩,
   ⟨_, anyext_trunc_fold_zext_32⟩]
 
-/-- ### right_identity_one
-  (x op 1) → x
--/
-def right_identity_one_mul : RISCVPeepholeRewrite [Ty.riscv (.bv)] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      %c = li (1) : !riscv.reg
-      %0 = mul %c, %x : !riscv.reg
-      ret %0 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg):
-      ret %x : !riscv.reg
-  }]
-
-def right_identity_one : List (Σ Γ, RISCVPeepholeRewrite Γ) :=
-  [⟨_, right_identity_one_mul⟩]
-
-/-- ### add_sub_reg_frags
-  (add x, (sub y, x)) → y
-  (add (sub y, x), x) → y
--/
-def add_sub_reg_frags_left : RISCVPeepholeRewrite [Ty.riscv (.bv), Ty.riscv (.bv) ] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg, %y: !riscv.reg ):
-      %0 = sub %y, %x : !riscv.reg
-      %1 = add %x, %0 : !riscv.reg
-      ret %1 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg, %y: !riscv.reg ):
-      ret %y : !riscv.reg
-  }]
-
-def add_sub_reg_frags_right : RISCVPeepholeRewrite [Ty.riscv (.bv), Ty.riscv (.bv) ] where
-  lhs := [LV| {
-    ^entry (%x: !riscv.reg, %y: !riscv.reg ):
-      %0 = sub %y, %x : !riscv.reg
-      %1 = add %0, %x : !riscv.reg
-      ret %1 : !riscv.reg
-  }]
-  rhs := [LV| {
-    ^entry (%x: !riscv.reg, %y: !riscv.reg ):
-      ret %y : !riscv.reg
-  }]
-
-def add_sub_reg_frags : List (Σ Γ, RISCVPeepholeRewrite Γ) :=
-  [⟨_, add_sub_reg_frags_left⟩,
-  ⟨_, add_sub_reg_frags_right⟩]
-
 /-- ### simplify_neg_minmax
   (neg (min x (neg x))) → (max x (neg x))
   (neg (max x (neg x))) → (min x (neg x))
@@ -1190,27 +905,6 @@ def simplify_neg_maxmin : RISCVPeepholeRewrite [Ty.riscv (.bv) ] where
 def simplify_neg : List (Σ Γ, RISCVPeepholeRewrite Γ) :=
   [⟨_, simplify_neg_minmax⟩,
   ⟨_, simplify_neg_maxmin⟩]
-
-
-/-- ### mul_by_neg_one
-  (mul x -1) → (sub 0 x)
--/
-def mul_by_neg_one_const : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (-1) : i64
-      %0 = llvm.mul %x, %c : i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.sub %c, %x : i64
-      llvm.return %0 : i64
-  }]
-
-def mul_by_neg_one : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  [⟨_, mul_by_neg_one_const⟩]
 
 /-! ### select_of_zext -/
 
@@ -1855,158 +1549,6 @@ def match_selects : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
   ⟨_, select_t_1⟩,
   ⟨_, select_0_f⟩]
 
-/-! ### integer_reassoc_combines -/
-
-/-
-Test the rewrite:
-  fold ((0-A)+B) -> B-A
--/
-def ZeroMinusAPlusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%a: i64, %b: i64):
-      %0 = llvm.mlir.constant (0) : i64
-      %1 = llvm.sub %0, %a : i64
-      %2 = llvm.add %1, %b : i64
-      llvm.return %2 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%a: i64, %b: i64):
-      %0 = llvm.sub %b, %a : i64
-      llvm.return %0 : i64
-  }]
-
-/-
-Test the rewrite:
-  fold (A+(0-B)) -> A-B
--/
-def APlusZeroMinusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%a: i64, %b: i64):
-      %0 = llvm.mlir.constant (0) : i64
-      %1 = llvm.sub %0, %b : i64
-      %2 = llvm.add %a, %1 : i64
-      llvm.return %2 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%a: i64, %b: i64):
-      %0 = llvm.sub %a, %b : i64
-      llvm.return %0 : i64
-  }]
-
-/-
-Test the rewrite:
- fold (A+(B-A)) -> B
--/
-def APlusBMinusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%a: i64, %b: i64):
-      %0 = llvm.sub %b, %a : i64
-      %1 = llvm.add %a, %0 : i64
-      llvm.return %1 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%a: i64, %b: i64):
-      llvm.return %b : i64
-  }]
-
-/-
-Test the rewrite:
- fold ((B-A)+A) -> B
--/
-def BMinusAPlusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%a: i64, %b: i64):
-      %0 = llvm.sub %b, %a : i64
-      %1 = llvm.add %0, %a : i64
-      llvm.return %1 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%a: i64, %b: i64):
-      llvm.return %b : i64
-  }]
-
-/-
-Test the rewrite:
- fold ((A-B)+(C-A)) -> (C-B)
--/
-def AMinusBPlusCMinusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%a: i64, %b: i64, %c: i64):
-      %0 = llvm.sub %a, %b : i64
-      %1 = llvm.sub %c, %a : i64
-      %2 = llvm.add %0, %1 : i64
-      llvm.return %2 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%a: i64, %b: i64, %c: i64):
-      %0 = llvm.sub %c, %b : i64
-      llvm.return %0 : i64
-  }]
-
-/-
-Test the rewrite:
- fold ((A-B)+(B-C)) -> (A-C)
--/
-def AMinusBPlusBMinusC : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%a: i64, %b: i64, %c: i64):
-      %0 = llvm.sub %a, %b : i64
-      %1 = llvm.sub %b, %c : i64
-      %2 = llvm.add %0, %1 : i64
-      llvm.return %2 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%a: i64, %b: i64, %c: i64):
-      %0 = llvm.sub %a, %c : i64
-      llvm.return %0 : i64
-  }]
-
-/-
-Test the rewrite:
- fold (A+(B-(A+C))) -> (B-C)
--/
-def APlusBMinusAPlusC : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%a: i64, %b: i64, %c: i64):
-      %0 = llvm.add %a, %c : i64
-      %1 = llvm.sub %b, %0 : i64
-      %2 = llvm.add %a, %1 : i64
-      llvm.return %2 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%a: i64, %b: i64, %c: i64):
-      %0 = llvm.sub %b, %c : i64
-      llvm.return %0 : i64
-  }]
-
-/-
-Test the rewrite:
- fold (A+(B-(C+A))) -> (B-C)
--/
-def APlusBMinusCPlusA : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%a: i64, %b: i64, %c: i64):
-      %0 = llvm.add %c, %a : i64
-      %1 = llvm.sub %b, %0 : i64
-      %2 = llvm.add %a, %1 : i64
-      llvm.return %2 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%a: i64, %b: i64, %c: i64):
-      %0 = llvm.sub %b, %c : i64
-      llvm.return %0 : i64
-  }]
-
-def integer_reassoc_combines : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  [⟨_, ZeroMinusAPlusB⟩,
-  ⟨_, APlusZeroMinusB⟩,
-  ⟨_, APlusBMinusA⟩,
-  ⟨_, BMinusAPlusA⟩,
-  ⟨_, AMinusBPlusCMinusA⟩,
-  ⟨_, AMinusBPlusBMinusC⟩,
-  ⟨_, APlusBMinusAPlusC⟩,
-  ⟨_, APlusBMinusCPlusA⟩]
-
 /-! ### add_shift -/
 
 /-
@@ -2209,37 +1751,15 @@ def double_icmp_zero_combine : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
   [⟨_, double_icmp_zero_and_combine⟩,
   ⟨_, double_icmp_zero_or_combine⟩]
 
-/-! ### idempotent_prop -/
-
-/-
-Test the rewrite:
-  Fold (freeze (freeze x)) -> (freeze x)
--/
-def idempotent_prop_freeze : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %0 = llvm.freeze %x : i64
-      %1 = llvm.freeze %0 : i64
-      llvm.return %1 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %0 = llvm.freeze %x : i64
-      llvm.return %0 : i64
-  }]
-
-def idempotent_prop : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  [⟨_, idempotent_prop_freeze⟩]
-
  /-! ### Grouped patterns -/
 
 /-- We assemble the `identity_combines` patterns for RISCV as in GlobalISel -/
 def RISCV_identity_combines: List (Σ Γ, RISCVPeepholeRewrite Γ) :=
-  right_identity_zero ++ binop_same_val ++ right_identity_one ++ add_sub_reg_frags
+  right_identity_zero
 
 /-- We assemble the `identity_combines` patterns for LLVM as in GlobalISel -/
 def LLVMIR_identity_combines_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  select_same_val ++ binop_left_to_zero ++ binop_right_to_zero ++
+  select_same_val ++ binop_right_to_zero ++
   select_constant_cmp ++ urem_pow2_to_mask
 
 def LLVMIR_identity_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) := anyext_trunc_fold
@@ -2260,7 +1780,6 @@ def PostLegalizerCombiner_RISCV: List (Σ Γ,RISCVPeepholeRewrite  Γ) :=
 def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64  Γ) :=
   hoist_logic_op_with_same_opcode_hands_64 ++
   sub_add_reg ++
-  integer_reassoc_combines ++
   sub_to_add ++
   select_same_val ++
   matchMulO ++
@@ -2268,8 +1787,7 @@ def PostLegalizerCombiner_LLVMIR_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 
   xor_of_and_with_same_reg_list ++
   LLVMIR_identity_combines_64 ++
   match_selects ++
-  cast_of_cast_combines_64 ++
-  idempotent_prop
+  cast_of_cast_combines_64
 
 /-- Post-legalization combine pass for LLVM specialized for i64 type -/
 def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32  Γ) :=
@@ -2279,7 +1797,8 @@ def PostLegalizerCombiner_LLVMIR_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 
   cast_of_cast_combines_32 ++
   sext_trunc_fold_32 ++
   LLVMIR_identity_combines_32 ++
-  cast_combines_narrow_binops
+  cast_combines_narrow_binops ++
+  mir_pattern_combines
 
 /-- We group all the rewrites that form the pre-legalization optimizations in GlobalISel-/
 def GLobalISelO0PreLegalizerCombiner :
@@ -2289,9 +1808,6 @@ def GLobalISelO0PreLegalizerCombiner :
   ++
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   double_icmp_zero_combine)
-  ++
-  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
-   mul_by_neg_one)
   ++
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
     sub_to_add)
@@ -2325,3 +1841,6 @@ def GLobalISelPostLegalizerCombiner :
   ++
   List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   add_shift_rw
+  ++
+  List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  mir_pattern_combines
