@@ -817,25 +817,6 @@ def sext_trunc_fold_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) :=
   [⟨_, sext_trunc⟩,
   ⟨_, zext_trunc⟩]
 
-/-- ### binop_right_to_zero
-  (x op 0) → 0
--/
-def binop_right_to_zero_mul : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
-  lhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      %0 = llvm.mul %x, %c: i64
-      llvm.return %0 : i64
-  }]
-  rhs := [LV| {
-    ^entry (%x: i64):
-      %c = llvm.mlir.constant (0) : i64
-      llvm.return %c : i64
-  }]
-
-def binop_right_to_zero: List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  [⟨_, binop_right_to_zero_mul⟩]
-
 /-- ### anyext_trunc_fold
   (anyext (trunc x)) → x
 -/
@@ -1759,7 +1740,7 @@ def RISCV_identity_combines: List (Σ Γ, RISCVPeepholeRewrite Γ) :=
 
 /-- We assemble the `identity_combines` patterns for LLVM as in GlobalISel -/
 def LLVMIR_identity_combines_64 : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
-  select_same_val ++ binop_right_to_zero ++
+  select_same_val ++
   select_constant_cmp ++ urem_pow2_to_mask
 
 def LLVMIR_identity_combines_32 : List (Σ Γ, LLVMPeepholeRewriteRefine 32 Γ) := anyext_trunc_fold
