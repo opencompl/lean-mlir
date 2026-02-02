@@ -162,6 +162,40 @@ def het_register_wrapper
                 ⟨inputs.tail, ls', false⟩
   Stream'.corec f g  (inputs, init_regs, true)
 
+/-- We define a weaker `register_wrapper` that operates with `Option` values. -/
+def het_register_wrapper'
+    (inputs : Stream' (HVector f lin))
+    (init_regs : HVector f ls)
+    (update_fun : (HVector f lin × HVector f ls) →
+                  Option (HVector f ls × HVector f lout))
+      : Stream' (Option (HVector f lout)) :=
+  let β := Stream' (HVector f lin) × -- inputs
+            HVector f ls × -- feedback signals
+            Bool -- first iteration flag
+  let f : β → Option (HVector f lout) :=
+    fun (inputs, regs, start) =>
+      match start with
+      | true => 
+        match update_fun (inputs.head, init_regs) with
+        | .none => .none
+        | .some ⟨_, lout'⟩ => .some lout'
+      | false =>
+        match update_fun (inputs.head, regs) with
+        | .none => .none
+        | .some ⟨_, lout'⟩ => .some lout'
+  let g : β → β :=
+    fun (inputs, regs, start) =>
+      match start with
+      | true => 
+        match update_fun (inputs.head, init_regs) with
+        | .none => (inputs, regs, start)
+        | .some ⟨ls', _⟩ => ⟨inputs.tail, ls', false⟩
+      | false =>
+        match update_fun (inputs.head, regs) with
+        | .none => (inputs, regs, start)
+        | .some ⟨ls', _⟩ => ⟨inputs.tail, ls', false⟩
+  Stream'.corec f g  (inputs, init_regs, true)
+
 /--
   We define an isomorphism from a streams `a` to a stream of their product BitVec 1.
   With this isomorphism we map the single streams that define the inputs of the hardware module to
