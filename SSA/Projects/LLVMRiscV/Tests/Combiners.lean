@@ -76,7 +76,7 @@ info: {
 }
 -/
 #guard_msgs in
-#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusA.lhs)).val
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusB.lhs)).val
 
 /--
 info: {
@@ -115,7 +115,7 @@ info: {
 }
 -/
 #guard_msgs in
-#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusAPlusC.lhs)).val
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusAplusC.lhs)).val
 
 /--
 info: {
@@ -751,7 +751,7 @@ info: {
 }
 -/
 #guard_msgs in
-#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner idempotent_prop_freeze.lhs)).val
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner idempotent_prop.lhs)).val
 
 /--
 info: {
