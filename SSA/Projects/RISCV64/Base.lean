@@ -235,10 +235,10 @@ def Op.sig : Op → List Ty
   | .andn => [Ty.bv, Ty.bv]
   | .orn => [Ty.bv, Ty.bv]
   | .xnor => [Ty.bv, Ty.bv]
-  | .clz
-  | .clzw
-  | .ctz
-  | .ctzw
+  | .clz => [Ty.bv]
+  | .clzw => [Ty.bv]
+  | .ctz => [Ty.bv]
+  | .ctzw => [Ty.bv]
   | .max => [Ty.bv, Ty.bv]
   | .maxu => [Ty.bv, Ty.bv]
   | .min  => [Ty.bv, Ty.bv]
@@ -601,10 +601,10 @@ abbrev Op.denote : (o : RV64.Op) → HVector toType o.sig → ⟦o.outTy⟧
   | .andn, regs => RV64.andn (regs.getN 1) (regs.getN 0)
   | .orn, regs => RV64.orn (regs.getN 1) (regs.getN 0)
   | .xnor, regs => RV64.xnor (regs.getN 1) (regs.getN 0)
-  | .clz, regs => RV64.clz (regs.getN 1)
-  | .clzw, regs => RV64.clzw (regs.getN 1)
-  | .ctz, regs => RV64.ctz (regs.getN 1)
-  | .ctzw, regs => RV64.ctzw (regs.getN 1)
+  | .clz, regs => RV64.clz (regs.getN 0)
+  | .clzw, regs => RV64.clzw (regs.getN 0)
+  | .ctz, regs => RV64.ctz (regs.getN 0)
+  | .ctzw, regs => RV64.ctzw (regs.getN 0)
   | .max, regs => RV64.max (regs.getN 1) (regs.getN 0)
   | .maxu, regs => RV64.maxu (regs.getN 1) (regs.getN 0)
   | .min, regs => RV64.min (regs.getN 1) (regs.getN 0)
