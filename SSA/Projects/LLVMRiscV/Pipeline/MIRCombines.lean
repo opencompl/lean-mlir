@@ -317,6 +317,36 @@ def add_sub_reg_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm 
       llvm.return %0 : i64
   }]
 
+/-- ### APlusBMinusCMinusB -/
+def APlusBMinusCMinusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64, %1: i64, %2: i64):
+      %3 = llvm.sub %1, %2 : i64
+      %4 = llvm.add %0, %3 : i64
+      %5 = llvm.sub %4, %1 : i64
+      llvm.return %5 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64, %1: i64, %2: i64):
+      %3 = llvm.sub %0, %2 : i64
+      llvm.return %3 : i64
+  }]
+
+/-- ### AMinusBMinusCMinusC -/
+def AMinusBMinusCMinusC : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64, %1: i64, %2: i64):
+      %3 = llvm.sub %1, %2 : i64
+      %4 = llvm.sub %0, %3 : i64
+      %5 = llvm.sub %4, %2 : i64
+      llvm.return %5 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64, %1: i64, %2: i64):
+      %3 = llvm.sub %0, %1 : i64
+      llvm.return %3 : i64
+  }]
+
 /-- ### ZeroMinusAPlusB -/
 def ZeroMinusAPlusB : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
@@ -458,6 +488,8 @@ def mir_pattern_combines : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
    ⟨_, mul_by_neg_one⟩,
    ⟨_, add_sub_reg_0⟩,
    ⟨_, add_sub_reg_1⟩,
+   ⟨_, APlusBMinusCMinusB⟩,
+   ⟨_, AMinusBMinusCMinusC⟩,
    ⟨_, ZeroMinusAPlusB⟩,
    ⟨_, APlusZeroMinusB⟩,
    ⟨_, APlusBMinusB⟩,
