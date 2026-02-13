@@ -220,6 +220,8 @@ class Parser:
     def _parse_operand(self, t: str) -> Optional[Operand]:
         t = t.strip()
         
+        if m := re.match(r'\(GITypeOf<"\$\w+">\s+(-?\d+)\)', t):
+            return Operand(name="", is_imm=True, imm_val=int(m.group(1)))
         if m := re.match(r'\((\w+)\s+(-?\d+)\)', t):
             return Operand(name="", ty=m.group(1), is_imm=True, imm_val=int(m.group(2)))
         if re.match(r'^-?\d+$', t):
@@ -448,6 +450,12 @@ class Generator:
                 if inst.op == 'GIReplaceReg' and len(inst.operands) >= 2:
                     op = inst.operands[1]
                     rhs_var = self.emitter.vars.get(op.name)
+                elif inst.op == 'COPY' and len(inst.operands) >= 2:
+                    src = inst.operands[1]
+                    if src.is_imm:
+                        rhs_var = self.emitter.const(src.imm_val)
+                    elif src.name in self.emitter.vars:
+                        rhs_var = self.emitter.vars[src.name]
                 elif inst.op not in BUILTIN_OPS:
                     rhs_var = self.emitter.emit(inst, consts)
         
