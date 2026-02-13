@@ -23,7 +23,7 @@ axiom esi_wrap_vr : Stream (BitVec 32) → BitVec 1 → Stream (BitVec 32) × Bi
 /-
    This first implementation with all the "correct" types does not work because of the feedback between ready, valid and
    ESI stream construction.
-  
+
    Instead, ESI streams need to be reasoned about at the meta-level.
  -/
 
@@ -59,7 +59,7 @@ namespace TRY2
    Criteria: we assume that there are infinite buffers at the input and output.
    + This implies that ready == 1.
    + This also implies that the input stream can be delayed infinitely long.
-   
+
    Under this assumption, we do not really need the registers, because we will instantly emit a value, and the registers
    will be constant true.
  -/
@@ -76,13 +76,13 @@ namespace TRY3
    booleans.
    If ready signals have to obey a property, it might be that once they are set, they cannot be unset.  This is until a
    value is emitted.
-   
+
    Now registers are meaningful, however, the question becomes:
    1. How do we compose two of these functions. (...some time later: I guess we can)
    2. How do we model the nondeterministic signals (...some time later: we don't have to, we just expose them as streams)
  -/
 
-def hw_fork (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec 32)) 
+def hw_fork (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec 32))
     : Stream' ( BitVec 1  -- ready (_12)
               × BitVec 1  -- valid_0 (_3)
               × BitVec 1  -- valid_1 (_9)
@@ -110,20 +110,20 @@ def hw_fork (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVe
     ((_12, _3, _9, _rawOutput, _rawOutput), (i+1, _1, _7))
   ) (0, 0#1, 0#1)
 
-/- 
+/-
  - %0 = comb.and %in0_valid, %in1_valid : i1
  - %1 = comb.and %out0_ready, %0 : i1
  - %2 = comb.add %in0, %in1 : i64
- - hw.output %1, %1, %2, %0 : i1, i1, i64, i1 
+ - hw.output %1, %1, %2, %0 : i1, i1, i64, i1
  -/
-def hw_add 
+def hw_add
     (_in0_valid _in1_valid _out0_ready : Stream' (BitVec 1))
     (_in0 _in1 : Stream' (BitVec 32))
     : Stream' ( BitVec 1  -- %in0_ready
               × BitVec 1  -- %in1_ready
               × BitVec 1  -- %out0_valid
               × BitVec 32 -- %out0
-      ) 
+      )
   :=
   Stream'.corec' (α := Nat) (fun i =>
     let _0 := comb_and (_in0_valid i) (_in1_valid i)
@@ -169,7 +169,7 @@ def hw_add_fork_fix af_a_valid af_b_valid af_a af_b af_o_rdy af_p_rdy :=
 
 def cyc {α} (l : List α) (h := by simp) := Stream'.cycle l h
 
-/- 
+/-
 We can stabilise with two iterations:
 
 + We set `add_out_rdy` to some arbitrary value.
@@ -184,5 +184,56 @@ We can stabilise with two iterations:
  - #eval Stream'.take 1 <| hw_add_fork_fix (cyc [1]) (cyc [1]) (cyc [10]) (cyc [20]) (cyc [1]) (cyc [1]) -/
 
 end TRY3
-  
+
+/-! We need two proofs:
+  · handshake fork ~ delayed fork (for some non deterministic delay)
+  · delayed fork ~ normal fork
+-/
+
+/-- At the handshake level: (manual) delayed fork ~ normal fork: the outputs of the fork are bisimilar
+  for any delay (up to any numbers of `none` inserted, anywhere). -/
+theorem fork_refines {a x y x' y'} :
+  (x, y) = TRY2.hw_fork a →
+  x ~ x' →
+  y ~ y' →
+  x ~ x' ∧ y ~ y' := by grind
+
+def toStream {α} (rdy : Stream' (BitVec 1)) (vld : Stream' (BitVec 1)) (data : Stream' α) : Stream α := fun i =>
+  if rdy i == 1#1 && vld i == 1#1 then
+    .some (data i)
+  else
+    .none
+
+/-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`)
+-/
+theorem hw_fork_refines:
+    /- Given a handshake fork taking `a` as input and returning `(a, a)`, we take
+      its lowering (with input a bisimilar ready-valid wrapped stream) -/
+    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld i) →
+    /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork (`a ~ rdy vld i`), meaning that the two outputs are also bisimilar by transitivity-/
+    /- we want to prove that the outputs of the handshake fork are respectively
+      bisimilar to the ready-valid wrapping of the output of the hardware fork -/
+    (toStream rd1 vld1 o1) ~ (toStream rd2 vld2 o2) := by
+  intros hardware_hw
+  unfold Bisim
+  sorry
+
+/-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`)
+  -/
+theorem hw_fork_refines':
+    /- Given a handshake fork -/
+    (x, y) = TRY2.hw_fork a →
+    /- we get the output of the corresponding lowered fork -/
+    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld i) →
+    /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork -/
+    a ~ (toStream rdy vld i) →
+    /- we want to prove that the outputs of the handshake fork are respectively
+      bisimilar to the ready-valid wrapping of the output of the hardware fork -/
+    x ~ (toStream rd1 vld1 o1) ∧ y ~ (toStream rd2 vld2 o2) := by
+  intros handshake_fork hardware_fork inputs_bisim
+  and_intros
+  · unfold TRY2.hw_fork at handshake_fork
+    sorry
+  · sorry
+
 end HWComponents
