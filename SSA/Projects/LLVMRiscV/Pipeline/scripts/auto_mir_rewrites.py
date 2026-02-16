@@ -396,12 +396,13 @@ class Generator:
     def _gen_single(self, name: str, match: List[Inst], apply: List[Inst]) -> Optional[str]:
         consts = {op.name: op.imm_val for inst in match for op in inst.operands if op.is_imm and op.name}
         defined = {inst.operands[0].name for inst in match if inst.operands}
-        
+        defined_in_apply = {inst.operands[0].name for inst in apply if inst.operands and inst.op not in BUILTIN_OPS}
+
         inputs = []
         seen = set()
         for inst in match + apply:
             for op in inst.operands:
-                if op.name and op.name not in defined and op.name not in consts and not op.is_imm and op.name not in seen:
+                if op.name and op.name not in defined and op.name not in defined_in_apply and op.name not in consts and not op.is_imm and op.name not in seen:
                     inputs.append(op.name)
                     seen.add(op.name)
         inputs.sort()
