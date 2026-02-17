@@ -44,6 +44,8 @@ structure Config where
   debugFillFinalReflectionProofWithSorry : Bool := false
   /-- Debug print the SMT-LIB version -/
   debugPrintSmtLib : Bool := false
+  /-- Fail if reflection needs to abstract a non-variable -/
+  failIfSuspectAbstraction := false
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -552,6 +554,9 @@ def collectBoolTerm (state : CollectState)
     let (t, state) ← collectBoolAtom state e
     return (t, state)
 
+def maybeFailIfSuspectAbstraction (e : Expr) : SolverM Unit := do
+  if (← read).failIfSuspectAbstraction ∧ ¬ e.isFVar then
+    throwError m!"SUSPECT ABSTRACTION: tried to abstract {e}"
 
 /-- Visit a raw BV expr, and collect information about it. -/
 def collectBVAtom (state : CollectState)
@@ -560,6 +565,7 @@ def collectBVAtom (state : CollectState)
   let_expr BitVec w := t
     | throwError m!"expected type 'BitVec w', found: {indentD t} (expression: {indentD e})"
   let (wexpr, state) ← collectWidthExpr state w
+  maybeFailIfSuspectAbstraction e
   let (bvix, bvToIx) := state.bvToIx.findOrInsertVal (e, wexpr)
   return (.var bvix wexpr, { state with bvToIx })
 
