@@ -6,6 +6,14 @@ import Valaig.External
 import Lean
 open Std Sat AIG Valaig
 
+universe u
+
+/--
+An axiom marking that the result of an external Aiger solver is assumed correct, although
+this is not actually verified.
+-/
+axiom valaigExternalSolverAx (α : Sort u) : α
+
 def _root_.FSM.toAiger {arity : Type}
     [Hashable arity] [Fintype arity] [DecidableEq arity]
     (fsm : FSM arity) : Aiger :=

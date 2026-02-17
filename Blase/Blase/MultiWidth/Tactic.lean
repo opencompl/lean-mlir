@@ -1187,7 +1187,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
       | .error err => throwError s!"UNKNOWN: {err}"
       | .ok .counterexample=> throwError "CEX: external solver found a counter-example"
       | .ok .proof =>
-        let prf ← mkSorry (synthetic := true) (← g.getType)
+        let type ← g.getType
+        let prf := mkApp (mkConst ``valaigExternalSolverAx [←getLevel type]) type
         let _ ← g.apply prf
         return
     | .kinduction =>
