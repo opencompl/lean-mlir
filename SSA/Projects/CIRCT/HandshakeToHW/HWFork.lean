@@ -141,6 +141,7 @@ def split_stream2 : Stream' (a × b × c × d × e) → Stream' a × Stream' b �
 def combine_stream : Stream' a × Stream' b × Stream' c × Stream' d × Stream' e × Stream' f × Stream' g → Stream' (a × b × c × d × e × f × g) := fun gr i =>
   (gr.1 i, gr.2.1 i, gr.2.2.1 i, gr.2.2.2.1 i, gr.2.2.2.2.1 i, gr.2.2.2.2.2.1 i, gr.2.2.2.2.2.2 i)
 
+
 /--
 We have a working circuit, except that we took out the feedback into and output and an input.
 
@@ -224,16 +225,42 @@ theorem hw_fork_refines':
     /- Given a handshake fork -/
     (x, y) = TRY2.hw_fork a →
     /- we get the output of the corresponding lowered fork -/
-    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld i) →
+    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld data) →
     /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork -/
-    a ~ (toStream rdy vld i) →
+    a ~ (toStream rdy vld data) →
     /- we want to prove that the outputs of the handshake fork are respectively
       bisimilar to the ready-valid wrapping of the output of the hardware fork -/
     x ~ (toStream rd1 vld1 o1) ∧ y ~ (toStream rd2 vld2 o2) := by
   intros handshake_fork hardware_fork inputs_bisim
   and_intros
   · unfold TRY2.hw_fork at handshake_fork
-    sorry
+    have heq : x = a := by
+      simp at handshake_fork
+      exact handshake_fork.1
+    rw [heq]
+    have := symm inputs_bisim
+    apply HandshakeStream.trans inputs_bisim
+    apply Bisim.coinduct (pred := Eq)
+    · intros s1 s2 hs1
+      rw [Bisim] at this inputs_bisim
+      obtain ⟨n, m, h1, h2, h3⟩ := this
+      -- obtain ⟨n',m',h'⟩ := inputs_bisim
+      exists n
+      exists m
+      simp [hs1]
+      suffices hsuff : s2 = (toStream rdy vld data) by
+        simp [hsuff, h2]
+        rw [← hsuff] at h1
+
+        sorry
+
+
+
+
+
+
+      sorry
+    · sorry
   · sorry
 
 end HWComponents
