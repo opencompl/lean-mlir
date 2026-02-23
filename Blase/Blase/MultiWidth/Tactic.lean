@@ -589,6 +589,14 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       let (tb, state) ← collectTerm state b
       return (.add w ta tb, state)
     | _ => mkAtom
+  | HMul.hMul _bv _bv _bv _inst a b =>
+    match_expr _bv with
+    | BitVec w =>
+      let (w, state) ← collectWidthExpr state w
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.mul w ta tb, state)
+    | _ => mkAtom
   | BitVec.zeroExtend _w v x =>
       let (v, state) ← collectWidthExpr state v
       let (x, state) ← collectTerm state x
@@ -1195,6 +1203,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
     debugLog m!"collecting raw expr '{pRawExpr}'."
     let (p, collect) ← collectBVPredicateAux collect pRawExpr
     debugLog m!"collected predicate: '{repr p}' for raw expr."
+    if !p.isAutomtaDecidable then
+      throwError m!"bv_automata does not know how to decide this formula: it contains operations (such as 'mul') that are not automata-decidable. Reflected formula: {repr p}"
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
