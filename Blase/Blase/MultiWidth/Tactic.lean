@@ -1127,6 +1127,18 @@ def Expr.mkTermFsmNondep (wcard tcard bcard ncard icard pcard : Nat) (pNondep : 
   return out
 
 /--
+info: MultiWidth.Term.isAutomtaDecidable {bcard ncard icard pcard wcard✝ tcard✝ : ℕ} {tctx : Term.Ctx wcard✝ tcard✝}
+  {k : TermKind wcard✝} : Term bcard ncard icard pcard tctx k → Bool
+-/
+#guard_msgs in #check MultiWidth.Term.isAutomtaDecidable
+
+def Expr.mkIsAutomataDecidable
+  (bcard ncard icard pcard wcard tcard : Nat) (tctx : Expr) (k : Expr) (p : Expr) : SolverM Expr := do
+  let out := mkAppN (mkConst ``MultiWidth.Term.isAutomtaDecidable) #[toExpr bcard, toExpr ncard, toExpr icard, toExpr pcard, toExpr wcard, toExpr tcard, tctx, k, p]
+  debugCheck out
+  return out
+
+/--
 info: MultiWidth.Term.toBV_of_KInductionCircuits {wcard tcard bcard ncard icard pcard : ℕ} (tctx : Term.Ctx wcard tcard)
   (p : Term bcard ncard icard pcard tctx TermKind.prop) (pNondep : Nondep.Term)
   (_hpNondep : pNondep = Nondep.Term.ofDepTerm p) (fsm : TermFSM wcard tcard bcard ncard icard pcard pNondep)
@@ -1135,9 +1147,16 @@ info: MultiWidth.Term.toBV_of_KInductionCircuits {wcard tcard bcard ncard icard 
   (sCert : BVDecide.Frontend.LratCert) (hs : circs.mkSafetyCircuit.verifyCircuit sCert = true)
   (indCert : BVDecide.Frontend.LratCert) (hind : circs.mkIndHypCycleBreaking.verifyCircuit indCert = true)
   (wenv : WidthExpr.Env wcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard)
-  (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) : Term.toBV benv nenv ienv penv tenv p
+  (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (hautomata : p.isAutomtaDecidable = true) :
+  Term.toBV benv nenv ienv penv tenv p
 -/
 #guard_msgs in #check MultiWidth.Term.toBV_of_KInductionCircuits
+
+/-- info: MultiWidth.TermKind.prop {wcard : ℕ} : TermKind wcard -/
+#guard_msgs in #check MultiWidth.TermKind.prop
+
+def mkTermKindProp (wcard : Nat) : Expr := mkApp
+  (mkConst ``MultiWidth.TermKind.prop) (mkNatLit wcard)
 
 /--
 Revert all prop-valued hyps.
@@ -1234,6 +1253,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
           let indCertProof ←
             mkEqReflBoolNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
           debugLog m!"made induction cert = true proof..."
+          let termKindProp := mkTermKindProp collect.wcard
+          let pIsAutomataDecidableExpr ← Expr.mkIsAutomataDecidable collect.bcard collect.ncard collect.icard collect.pcard collect.wcard collect.tcard tctx termKindProp pExpr
           let prf ← mkAppM ``MultiWidth.Term.toBV_of_KInductionCircuits'
             #[pRawExpr, -- P : Prop
               tctx,
@@ -1255,7 +1276,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
               nenv,
               ienv,
               penv,
-              ← mkEqRefl pRawExpr]
+              ← mkEqRefl pRawExpr,
+              ← mkEqRefl pIsAutomataDecidableExpr]
           debugCheck prf
           let prf ←
             if (← read).debugFillFinalReflectionProofWithSorry then

@@ -250,7 +250,8 @@ inductive Term {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pc
 
 /-- Record whether the term is a linear-bitwise term,
 which can be encoded using automata. -/
-def Term.isAutomtaDecidable : Term bcard ncard icard pcard tctx k → Bool
+def Term.isAutomtaDecidable  :
+    Term bcard ncard icard pcard tctx k → Bool
 | .ofNat _ _ => true
 | .boolConst _ => true
 | .var _ => true
