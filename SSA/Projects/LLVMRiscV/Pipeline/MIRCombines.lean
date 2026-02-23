@@ -150,6 +150,32 @@ def binop_same_val_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
       llvm.return %0 : i64
   }]
 
+/-- ### same_val_zero_0 -/
+def same_val_zero_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.sub %0, %0 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      llvm.return %1 : i64
+  }]
+
+/-- ### same_val_zero_1 -/
+def same_val_zero_1 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.xor %0, %0 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%0: i64):
+      %1 = llvm.mlir.constant (0) : i64
+      llvm.return %1 : i64
+  }]
+
 /-- ### binop_left_to_zero_0 -/
 def binop_left_to_zero_0 : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
   lhs := [LV| {
@@ -476,6 +502,8 @@ def mir_pattern_combines : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
    ⟨_, right_identity_one_int⟩,
    ⟨_, binop_same_val_0⟩,
    ⟨_, binop_same_val_1⟩,
+   ⟨_, same_val_zero_0⟩,
+   ⟨_, same_val_zero_1⟩,
    ⟨_, binop_left_to_zero_0⟩,
    ⟨_, binop_left_to_zero_1⟩,
    ⟨_, binop_left_to_zero_2⟩,
