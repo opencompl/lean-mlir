@@ -261,6 +261,8 @@ def Term.isAutomtaDecidable  :
 | .boolVar _ => true
 | .binRel _kind _w a b =>
   Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .boolBinRel _kind a b =>
+  Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
 | .add a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
 | .zext a _ => Term.isAutomtaDecidable a
 | .sext a _ => Term.isAutomtaDecidable a

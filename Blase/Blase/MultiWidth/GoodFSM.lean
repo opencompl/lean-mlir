@@ -2353,7 +2353,7 @@ theorem Term.toBV_of_KInductionCircuits
         (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind)]
   · simp
   · simp
-  · grind only
+  · simp [hautomata]
 
 /--
 info: 'MultiWidth.Term.toBV_of_KInductionCircuits' depends on axioms: [propext, Classical.choice, Quot.sound]
