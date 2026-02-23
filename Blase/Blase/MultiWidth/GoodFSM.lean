@@ -636,7 +636,7 @@ theorem fsmSext_eval_eq
     (nenv : Term.NatEnv ncard)
     (ienv : Term.IntEnv icard)
     (t : Term bcard ncard icard pcard tctx (.bv wold))
-    (htautomata : t.isAutomtaDecidable)
+    (hautomata : t.isAutomtaDecidable)
     (tFsm : TermFSM wcard tcard bcard ncard icard pcard (.ofDepTerm t))
     (htfsm : HTermFSMToBitStream tFsm)
     (htenv : HTermEnv fsmEnv tenv benv) :
@@ -648,7 +648,7 @@ theorem fsmSext_eval_eq
   rw [hwnew.heq (henv := htenv.toHWidthEnv)]
   rw [eval_fsmMsb_eq
         (xfsm := tFsm) (wfsm := woldFsm) (htenv := htenv)
-        (hxfsm := htfsm) (hwfsm := hwold) (hautomata := htautomata)]
+        (hxfsm := htfsm) (hwfsm := hwold) (hautomata := hautomata)]
   simp
   by_cases hwold : i < wold.toNat wenv
   · simp [hwold]
@@ -1584,7 +1584,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold'
     let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold
     rw [fsmZext_eval_eq (htenv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (tenv := tenv)
-      (wnew := wold) (ht := ha) (hwnew := hwold)]
+      (wnew := wold) (ht := ha) (hwnew := hwold) (hautomata := by grind)]
     simp
     ext i
     simp
@@ -1596,7 +1596,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold'
     let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold
     rw [fsmZext_eval_eq (htenv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (tenv := tenv)
-      (wnew := wold) (ht := ha) (hwnew := hwold)]
+      (wnew := wold) (ht := ha) (hwnew := hwold) (hautomata := by grind)]
     simp
     ext i
     simp
@@ -1606,7 +1606,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
   -- Maybe rename to wout / win.
   case sext wold' a =>
     constructor
-    intros wenv benv nenv ienv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hautomata
     let hwold := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold
     let hwold' := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold'
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
@@ -1615,56 +1615,65 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     rw [MultiWidth.Nondep.Term.width_ofDep_eq_ofDep]
     rw [fsmSext_eval_eq (htenv := htenv) (tenv := tenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)
       (wold := wold') (wnew := wold) (t := a) (htfsm := ha)
-      (hwnew := hwold) (hwold := hwold')]
+      (hwnew := hwold) (hwold := hwold') (hautomata := by grind [Term.isAutomtaDecidable])]
     simp
   case band a b  =>
     constructor
-    intros wenv benv nenv ienv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hautomata
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
-    rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
-    rw [hb.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
+    rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)
+      (hautomata := by grind [Term.isAutomtaDecidable])]
+    rw [hb.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)
+      (hautomata := by grind [Term.isAutomtaDecidable])]
     ext i
     rcases i with rfl | i <;> simp
   case bor a b =>
     constructor
-    intros wenv benv nenv ienv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hautomata
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
-    rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
-    rw [hb.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
+    rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)
+      (hautomata := by grind [Term.isAutomtaDecidable])]
+    rw [hb.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)
+      (hautomata := by grind [Term.isAutomtaDecidable])]
     ext i
     rcases i with rfl | i <;> simp
   case bxor a b =>
     constructor
-    intros wenv benv nenv ienv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hautomata
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
-    rw [ha.heq (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (henv := htenv)]
-    rw [hb.heq (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (henv := htenv)]
+    rw [ha.heq (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (henv := htenv)
+      (hautomata := by grind [Term.isAutomtaDecidable])]
+    rw [hb.heq (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (henv := htenv)
+      (hautomata := by grind [Term.isAutomtaDecidable])]
     ext i
     rcases i with rfl | i <;> simp
   case bnot a =>
     let hw := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     constructor
-    intros wenv benv nenv ienv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hautomata
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
-    rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
+    rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)
+      (hautomata := by grind [Term.isAutomtaDecidable])]
     ext i
-    simp [Term.toBV]
+    simp only [BitStream.and_eq, BitStream.not_eq, BitStream.ofBitVecZext_eq_getLsbD,
+      BitVec.getLsbD_not]
     rw [hw.heq (henv := htenv.toHWidthEnv)]
   case shiftl k a =>
     let hw := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard (pcard := pcard) wold
     have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     constructor
-    intros wenv benv nenv ienv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hautomata
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
-    rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
-    rw [hw.heq (henv := htenv.toHWidthEnv)]
+    rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)
+      (hautomata := by grind [Term.isAutomtaDecidable])]
+    rw [hw.heq (henv := htenv.toHWidthEnv) ]
     ext i
     simp
     by_cases hk : k ≤ i
@@ -1678,20 +1687,24 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     · simp [hk]
   case bvOfBool b =>
     constructor
-    intros wenv benv nenv ienv penv tenv fsmEnv htenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hautomata
     simp [Nondep.Term.ofDepTerm, mkTermFSM]
     have hb := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
     have hw := IsGoodNatFSM_mkWidthFSM (wcard := wcard) tcard bcard ncard icard (pcard := pcard) (.const 1)
     simp at hw
     ext i
     simp
-    rw [hb.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
+    rw [hb.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)
+      (hautomata := by grind [Term.isAutomtaDecidable])]
     rw [hw.heq (henv := htenv.toHWidthEnv)]
     simp
     by_cases hi0 : i = 0
     · simp [hi0]
     · simp [hi0]
-
+  case mul a b =>
+    constructor
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hautomata
+    grind only [Term.isLinearBitwise_mul_eq_false]
 
 /--
 info: 'MultiWidth.IsGoodTermFSM_mkTermFSM' depends on axioms:

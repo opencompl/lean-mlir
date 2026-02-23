@@ -254,9 +254,18 @@ def Term.isAutomtaDecidable : Term bcard ncard icard pcard tctx k → Bool
 | .ofNat _ _ => true
 | .boolConst _ => true
 | .var _ => true
+| .bvOfBool x => x.isAutomtaDecidable
 | .boolVar _ => true
 | .binRel _ _ _ _ => true
 | .add a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .zext a _ => Term.isAutomtaDecidable a
+| .sext a _ => Term.isAutomtaDecidable a
+| .setWidth a _ => Term.isAutomtaDecidable a
+| .band a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .bor a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .bxor a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .bnot a => Term.isAutomtaDecidable a
+| .shiftl a _ => Term.isAutomtaDecidable a
 | .mul _ _ => false
 | _ => false
 
@@ -266,6 +275,49 @@ theorem Term.isAutomataDecidable_add_iff (a b : Term bcard ncard icard pcard tct
     Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
   grind [Term.isAutomtaDecidable]
 
+@[simp, grind .]
+theorem Term.isAutomataDecidable_zext_iff
+    (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (Term.zext a v) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_setWidth_iff
+    (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (Term.setWidth a v) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_band_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.band a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_bor_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.bor a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_bxor_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.bxor a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_bnot_iff (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.bnot a) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_shiftl_iff (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.shiftl a k) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
 
 @[simp, grind .]
 theorem Term.isLinearBitwise_mul_eq_false
