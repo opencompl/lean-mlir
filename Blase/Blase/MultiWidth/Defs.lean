@@ -271,7 +271,8 @@ def Term.isAutomtaDecidable  :
 | .bnot a => Term.isAutomtaDecidable a
 | .shiftl a _ => Term.isAutomtaDecidable a
 | .mul _ _ => false
-| _ => false
+| _ => true
+
 
 @[simp, grind .]
 theorem Term.isAutomataDecidable_add_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :

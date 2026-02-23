@@ -1009,13 +1009,18 @@ def mkEqReflBoolNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) (d
   let proof := mkApp3 (mkConst ``Lean.ofReduceBool []) lhsDef (toExpr rhs) rflProof
   return if debugSorry? then sorryProof else proof
 
-def mkEqReflNativeDecideProof (name : Name) (tyExpr : Expr)
+/--
+Make an equality proof for an equality of the form `a = b` of type `sortExpr`,
+where `a` and `b` are
+expressions that can be decided by `native_decide`.
+-/
+def mkEqReflNativeDecideProof (name : Name) (sortExpr : Expr)
     (lhsSmallExpr : Expr) (rhsLargeExpr : Expr)
     (debugSorry? : Bool := false) : SolverM Expr := do
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
   let name := name ++ `eqProof
   let auxDeclName ← Term.mkAuxName name
-  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) tyExpr lhsSmallExpr rhsLargeExpr
+  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) sortExpr lhsSmallExpr rhsLargeExpr
   let rflProof ← mkEqRefl rhsLargeExpr
   let sorryProof ← mkSorry (type := rflTy) (synthetic := true)
   let proof := if debugSorry? then sorryProof else rflProof
@@ -1029,6 +1034,16 @@ def mkEqReflNativeDecideProof (name : Name) (tyExpr : Expr)
   }
   addAndCompile decl
   return (mkConst auxDeclName)
+/--
+Make a proof for an equality of the form `a = true` where `a` is a small boolean expression.
+-/
+def mkEqReflBoolTrueNativeDecideProof (name : Name)
+    (lhsSmallExpr : Expr)
+    (debugSorry? : Bool := false) : SolverM Expr := do
+    -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
+  let boolTy := mkConst ``Bool
+  let trueExpr := mkConst ``Bool.true
+  mkEqReflNativeDecideProof name boolTy lhsSmallExpr trueExpr debugSorry?
 
 def mkDecideTy : SolverM Expr := do
   let ty ← mkEq (mkNatLit 1) (mkNatLit 1)
@@ -1277,7 +1292,7 @@ def solve (gorig : MVarId) : SolverM Unit := do
               ienv,
               penv,
               ← mkEqRefl pRawExpr,
-              ← mkEqRefl pIsAutomataDecidableExpr]
+              ← mkEqReflBoolTrueNativeDecideProof `isAutomataDecidable pIsAutomataDecidableExpr]
           debugCheck prf
           let prf ←
             if (← read).debugFillFinalReflectionProofWithSorry then
