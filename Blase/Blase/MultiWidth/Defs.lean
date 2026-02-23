@@ -255,8 +255,11 @@ def Term.isAutomtaDecidable : Term bcard ncard icard pcard tctx k → Bool
 | .boolConst _ => true
 | .var _ => true
 | .bvOfBool x => x.isAutomtaDecidable
+| .or p q => p.isAutomtaDecidable && q.isAutomtaDecidable
+| .and p q => p.isAutomtaDecidable && q.isAutomtaDecidable
 | .boolVar _ => true
-| .binRel _ _ _ _ => true
+| .binRel _kind _w a b =>
+  Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
 | .add a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
 | .zext a _ => Term.isAutomtaDecidable a
 | .sext a _ => Term.isAutomtaDecidable a

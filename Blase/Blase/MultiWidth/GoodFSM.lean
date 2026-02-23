@@ -1857,7 +1857,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
     case eq =>
       -- | TODO: refactor into separate toplevel lemma
       constructor
-      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
       rw [Nondep.Term.ofDepTerm]
       simp
       rw [mkTermFSM]
@@ -1885,7 +1885,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
     case le =>
       -- | TODO: refactor into separate toplevel lemma
       constructor
-      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
       rw [Nondep.Term.ofDepTerm]
       simp [mkTermFSM]
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
@@ -1914,7 +1914,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
     case eq =>
       -- | TODO: refactor into separate toplevel lemma
       constructor
-      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
       rw [Nondep.Term.ofDepTerm]
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       -- fsmTermEqProof starts here.
@@ -1922,8 +1922,8 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
       have ha := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
       have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
       have hw := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard pcard w
-      rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
-      rw [hb.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
+      rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (hautomata := by grind [Term.isAutomtaDecidable])]
+      rw [hb.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (hautomata := by grind [Term.isAutomtaDecidable])]
       rw [hw.heq (henv := htenv.toHWidthEnv)]
       constructor
       · intros h
@@ -1945,7 +1945,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
     case ne =>
       -- | TODO: extract proof.
       constructor
-      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
       rw [Nondep.Term.ofDepTerm]
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       -- fsmTermEqProof starts here.
@@ -1953,8 +1953,8 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
       have hb := IsGoodTermFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
       have hw := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard pcard w
       simp [mkTermFSM, fsmTermNe]
-      rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
-      rw [hb.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv)]
+      rw [ha.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (hautomata := by grind [Term.isAutomtaDecidable])]
+      rw [hb.heq (henv := htenv) (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (hautomata := by grind [Term.isAutomtaDecidable]) ]
       rw [hw.heq (henv := htenv.toHWidthEnv)]
       constructor
       · intros h
@@ -1985,7 +1985,7 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
         contradiction
     case ult =>
       constructor
-      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
       rw [Nondep.Term.ofDepTerm]
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       have hw := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard pcard w
@@ -2019,6 +2019,8 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
               (b := b)
               (tenv := tenv)
               (henv := htenv)
+              (haautomata := by grind [Term.isAutomtaDecidable])
+              (hbautomata := by grind [Term.isAutomtaDecidable])
           ]
           simp only [decide_eq_true_eq]
           apply BitVec.setWidth_lt_setWidth_of_lt
@@ -2034,13 +2036,15 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
             (b := b)
             (tenv := tenv)
             (henv := htenv)
+            (haautomata := by grind [Term.isAutomtaDecidable])
+            (hbautomata := by grind [Term.isAutomtaDecidable])
         ] at h
         simp at h
         rw [← BitVec.ult_iff_lt] at h
         exact h
     case ule =>
       constructor
-      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
       rw [Nondep.Term.ofDepTerm]
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       have hw := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard pcard w
@@ -2064,6 +2068,8 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
               (b := b)
               (tenv := tenv)
               (henv := htenv)
+              (haautomata := by grind [Term.isAutomtaDecidable])
+              (hbautomata := by grind [Term.isAutomtaDecidable])
           ]
           simp only [decide_eq_true_eq]
           apply BitVec.setWidth_le_setWidth_of_le
@@ -2079,13 +2085,15 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
             (b := b)
             (tenv := tenv)
             (henv := htenv)
+            (haautomata := by grind [Term.isAutomtaDecidable])
+            (hbautomata := by grind [Term.isAutomtaDecidable])
         ] at h
         simp at h
         rw [← BitVec.ule_iff_le] at h
         exact h
     case slt =>
       constructor
-      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       rw [Nondep.Term.ofDepTerm]
       have hwfsm := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard pcard w
@@ -2111,6 +2119,8 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
               (hwfsm := hwfsm)
               (tenv := tenv)
               (henv := htenv)
+              (haautomata := by grind [Term.isAutomtaDecidable])
+              (hbautomata := by grind [Term.isAutomtaDecidable])
           ]
           simp only [decide_eq_true_eq]
           apply BitVec.signExtend_slt_signExtend_of_slt
@@ -2127,12 +2137,14 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
             (b := b)
             (tenv := tenv)
             (henv := htenv)
+            (haautomata := by grind [Term.isAutomtaDecidable])
+            (hbautomata := by grind [Term.isAutomtaDecidable])
         ] at h
         simp at h
         exact h
     case sle =>
       constructor
-      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+      intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
       -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
       rw [Nondep.Term.ofDepTerm]
       have hwfsm := IsGoodNatFSM_mkWidthFSM tcard bcard ncard icard pcard w
@@ -2157,6 +2169,8 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
               (hwfsm := hwfsm)
               (tenv := tenv)
               (henv := htenv)
+              (haautomata := by grind [Term.isAutomtaDecidable])
+              (hbautomata := by grind [Term.isAutomtaDecidable])
           ]
           simp only [decide_eq_true_eq]
           apply BitVec.signExtend_sle_signExtend_of_sle
@@ -2173,20 +2187,22 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
             (b := b)
             (tenv := tenv)
             (henv := htenv)
+            (haautomata := by grind [Term.isAutomtaDecidable])
+            (hbautomata := by grind [Term.isAutomtaDecidable])
         ] at h
         simp at h
         exact h
   case or p q =>
     constructor
-    intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
     -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
     -- simp [Term.toBV]
     rw [Nondep.Term.ofDepTerm]
     have hp := isGoodPredicateFSM_mkPredicateFSMAux (pcard := pcard) (tctx := tctx) p
     have hq := isGoodPredicateFSM_mkPredicateFSMAux (pcard := pcard) (tctx := tctx) q
     simp [mkTermFSM]
-    rw [hp.heq (htenv := htenv) (hpenv := hpenv)]
-    rw [hq.heq (htenv := htenv) (hpenv := hpenv)]
+    rw [hp.heq (htenv := htenv) (hpenv := hpenv) (hautomata := by grind [Term.isAutomtaDecidable])]
+    rw [hq.heq (htenv := htenv) (hpenv := hpenv) (hautomata := by grind [Term.isAutomtaDecidable])]
     constructor
     · intros h
       ext i
@@ -2233,11 +2249,11 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
     have hq := isGoodPredicateFSM_mkPredicateFSMAux (pcard := pcard) (tctx := tctx) q
     -- simp [mkPredicateFSMAux, Nondep.Predicate.ofDep]
     rw [Nondep.Term.ofDepTerm]
-    intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
     simp [Term.toBV]
     simp [mkTermFSM]
-    rw [hp.heq (htenv := htenv) (hpenv := hpenv)]
-    rw [hq.heq (htenv := htenv) (hpenv := hpenv)]
+    rw [hp.heq (htenv := htenv) (hpenv := hpenv) (hautomata := by grind [Term.isAutomtaDecidable])]
+    rw [hq.heq (htenv := htenv) (hpenv := hpenv) (hautomata := by grind [Term.isAutomtaDecidable])]
     constructor
     · intros h
       obtain ⟨hpfsm, hqfsm⟩ := h
@@ -2256,13 +2272,15 @@ def isGoodPredicateFSM_mkPredicateFSMAux {wcard tcard bcard ncard icard pcard : 
 
   case boolBinRel k a b =>
     constructor
-    intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv
+    intros wenv benv nenv ienv penv tenv fsmEnv htenv hpenv hautomata
     rw [Nondep.Term.ofDepTerm]
     have ha := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard ncard icard pcard a
     have hb := IsGoodTermBoolFSM_mkTermFSM wcard tcard bcard ncard icard pcard b
     simp [mkTermFSM]
-    rw [ha.heq (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (tenv := tenv) (henv := htenv)]
-    rw [hb.heq (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (tenv := tenv) (henv := htenv)]
+    rw [ha.heq (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (tenv := tenv) (henv := htenv)
+        (hautomata := by grind [Term.isAutomtaDecidable])]
+    rw [hb.heq (benv := benv) (nenv := nenv) (ienv := ienv) (penv := penv) (tenv := tenv) (henv := htenv)
+        (hautomata := by grind [Term.isAutomtaDecidable])]
     rw [BitStream.ext_iff]
     simp [BitStream.scanAnd_eq_decide] -- TODO: mark this a simp lemma.
     constructor
@@ -2320,6 +2338,7 @@ theorem Term.toBV_of_KInductionCircuits
     (benv : Term.BoolEnv bcard)
     (nenv : Term.NatEnv ncard)
     (ienv : Term.IntEnv icard)
+    (hautomata : p.isAutomtaDecidable)
     :
     p.toBV benv nenv ienv penv tenv  := by
   have hGoodPredicateFSM := isGoodPredicateFSM_mkPredicateFSMAux p
@@ -2334,6 +2353,7 @@ theorem Term.toBV_of_KInductionCircuits
         (hIndHyp := Circuit.eval_eq_false_of_verifyCircuit hind)]
   · simp
   · simp
+  · grind only
 
 /--
 info: 'MultiWidth.Term.toBV_of_KInductionCircuits' depends on axioms: [propext, Classical.choice, Quot.sound]
@@ -2366,7 +2386,8 @@ theorem Term.toBV_of_KInductionCircuits'
     (nenv : Term.NatEnv ncard)
     (ienv : Term.IntEnv icard)
     (penv : Predicate.Env pcard)
-    (hp : p.toBV benv nenv ienv penv tenv = P) :
+    (hp : p.toBV benv nenv ienv penv tenv = P)
+    (hautomata : p.isAutomtaDecidable) :
     P := by
   rw [← hp]
   apply Term.toBV_of_KInductionCircuits <;> assumption
