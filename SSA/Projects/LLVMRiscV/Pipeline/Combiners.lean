@@ -1732,6 +1732,51 @@ def double_icmp_zero_combine : List (Σ Γ, LLVMPeepholeRewriteRefine 1 Γ) :=
   [⟨_, double_icmp_zero_and_combine⟩,
   ⟨_, double_icmp_zero_or_combine⟩]
 
+/-
+Test the rewrite:
+  fold (not (add X, -1)) -> (sub 0, X)
+-/
+def NotAPlusNegOne_rw : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (-1) : i64
+      %0 = llvm.add %x, %c : i64
+      %1 = llvm.not %0 : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64):
+      %c = llvm.mlir.constant (0) : i64
+      %0 = llvm.sub %c, %x : i64
+      llvm.return %0 : i64
+  }]
+
+def NotAPlusNegOne : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, NotAPlusNegOne_rw⟩]
+
+/-
+Test the rewrite:
+  fold (A - B) - 1  ->  add (xor B, -1), A
+-/
+def sub_one_from_sub_rw : LLVMPeepholeRewriteRefine 64 [Ty.llvm (.bitvec 64), Ty.llvm (.bitvec 64)] where
+  lhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %c = llvm.mlir.constant (1) : i64
+      %0 = llvm.sub %x, %y : i64
+      %1 = llvm.sub %0, %c : i64
+      llvm.return %1 : i64
+  }]
+  rhs := [LV| {
+    ^entry (%x: i64, %y: i64):
+      %c = llvm.mlir.constant (-1) : i64
+      %0 = llvm.xor %y, %c : i64
+      %1 = llvm.add %0, %x : i64
+      llvm.return %1 : i64
+  }]
+
+def sub_one_from_sub : List (Σ Γ, LLVMPeepholeRewriteRefine 64 Γ) :=
+  [⟨_, sub_one_from_sub_rw⟩]
+
  /-! ### Grouped patterns -/
 
 /-- We assemble the `identity_combines` patterns for RISCV as in GlobalISel -/
@@ -1797,6 +1842,12 @@ def GLobalISelO0PreLegalizerCombiner :
   ++
   (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
   udiv_pow2)
+  ++
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  NotAPlusNegOne)
+  ++
+  (List.map (fun ⟨_,y⟩ => mkRewrite (LLVMToRiscvPeepholeRewriteRefine.toPeepholeUNSOUND y))
+  sub_one_from_sub)
 
 /-- We group all the rewrites that form the post-legalization optimizations in GlobalISel-/
 def GLobalISelPostLegalizerCombiner :
