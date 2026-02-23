@@ -251,10 +251,23 @@ inductive Term {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pc
 /-- Record whether the term is a linear-bitwise term,
 which can be encoded using automata. -/
 def Term.isAutomtaDecidable : Term bcard ncard icard pcard tctx k → Bool
+| .ofNat _ _ => true
+| .boolConst _ => true
+| .var _ => true
+| .boolVar _ => true
+| .binRel _ _ _ _ => true
+| .add a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
 | .mul _ _ => false
-| _ => true
+| _ => false
 
-@[simp]
+@[simp, grind .]
+theorem Term.isAutomataDecidable_add_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.add a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+
+@[simp, grind .]
 theorem Term.isLinearBitwise_mul_eq_false
   (a b : Term bcard ncard icard pcard tctx (.bv w)) :
     Term.isAutomtaDecidable (.mul a b) = false := rfl
