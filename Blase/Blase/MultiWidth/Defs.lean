@@ -1183,16 +1183,47 @@ inductive SingleWidthTerm (wcard tcard : Nat) : SingleWidthTermKind → Type whe
 | bvsext (a : SingleWidthTerm wcard tcard .bv) (wnew : SingleWidthTerm wcard tcard .bv) :
     SingleWidthTerm wcard tcard .bv
 | bvule (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| bvult (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| bveq (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| bvne (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
 | unknown : SingleWidthTerm wcard tcard k
 deriving Repr, Hashable, DecidableEq, Lean.ToExpr
-namespace Nondep
 
+
+
+/--
+Environment for single-width terms, mapping width variables to their corresponding width bitvectors.
+-/
+def SingleWidthTerm.WidthEnv (wcard : Nat) (wout : Nat) : Type :=
+  Fin wcard → BitVec wout
+
+/--
+Environment for single-width terms, mapping term variables to bitvectors.
+-/
+def SingleWidthTerm.BVEnv (tcard : Nat) (wout : Nat) : Type :=
+  Fin tcard → BitVec wout
+
+
+def SingleWidthTerm.toBV
+  {wcard tcard : Nat}
+  (t : SingleWidthTerm wcard tcard .bv)
+  (wenv : SingleWidthTerm.WidthEnv wcard o)
+  (bvenv : SingleWidthTerm.BVEnv tcard o)
+  (o : Nat) : BitVec o := sorry
+
+def SingleWidthTerm.toProp
+  {wcard tcard : Nat}
+  (t : SingleWidthTerm wcard tcard .prop)
+  (wenv : SingleWidthTerm.WidthEnv wcard o)
+  (bvenv : SingleWidthTerm.BVEnv tcard o) (o : Nat) : Prop := sorry
+
+namespace Nondep
 
 /--
 Convert a width expression to its corresponding single-width term.
 This is used to convert the width expressions with multiple widths into a single-width expression.
 -/
-def WidthExpr.monoToTerm (wcard tcard : Nat) (w : WidthExpr) : SingleWidthTerm wcard tcard .bv :=
+def WidthExpr.toSingleWidthTerm (wcard tcard : Nat) (w : WidthExpr) : SingleWidthTerm wcard tcard .bv :=
   match w with
   | .const c => .wconst c
   | .var v => .wvar (v + tcard)
@@ -1201,37 +1232,75 @@ def WidthExpr.monoToTerm (wcard tcard : Nat) (w : WidthExpr) : SingleWidthTerm w
 /--
 Convert a term to its corresponding single-width term.
 -/
-def Term.monoToTerm (wcard tcard : Nat)  (t : Term) : SingleWidthTerm wcard tcard .bv :=
+def Term.toSingleWidthTerm (wcard tcard : Nat)  (t : Term) : SingleWidthTerm wcard tcard .bv :=
   match t with
   | .var v _w => .bvvar v
   | .add w a b =>
-    let aMono := a.monoToTerm wcard tcard
-    let bMono := b.monoToTerm wcard tcard
-    let wMono := w.monoToTerm wcard tcard
-    .bvand (.bvadd aMono bMono)
+    let aMono := a.toSingleWidthTerm wcard tcard
+    let bMono := b.toSingleWidthTerm wcard tcard
+    let wMono := w.toSingleWidthTerm wcard tcard
+    .bvand (.bvadd aMono bMono) wMono
   | _ => .unknown
+end Nondep
+
 
 -- v & (v - 1) = 0
-def Term.monoIsPotPred (wcard tcard : Nat) (w : Nat) : Term :=
-  let var := Term.monoPotVar wcard tcard w
-  (.band .monoWidth var (Term.potToMask var))
+def SingleWidthTerm.monoIsPotPred (wcard tcard : Nat) (w : Nat) : SingleWidthTerm wcard tcard .prop :=
+  sorry
+  -- let var := Term.monoPotVar wcard tcard w
+  -- (.band .monoWidth var (Term.potToMask var))
 
-def Term.monoMkPreconditions (wcard tcard : Nat) (t : Term) : Term :=
-  match wcard with
-  | 0 => .pTrue
-  | wcard' + 1 =>
-    Term.and (.monoIsPotPred wcard tcard wcard) (Term.monoMkPreconditions wcard' tcard t)
+-- def SingleWidthTerm.monoMkPreconditions (wcard tcard : Nat) (t : Term) : Term :=
+--   sorry
+  -- match wcard with
+  -- | 0 => .pTrue
+  -- | wcard' + 1 =>
+  --   Term.and (.monoIsPotPred wcard tcard wcard) (Term.monoMkPreconditions wcard' tcard t)
 
 -- !p || q
-def Term.implies (p1 p2 : Term) : Term :=
-  .or p1.monoToPred p2.monoToPred
+def Term.implies {wcard tcard : Nat}
+    (p1 p2 : SingleWidthTerm wcard tcard .prop) : SingleWidthTerm wcard tcard .prop := sorry
+  -- .or p1.monoToPred p2.monoToPred
 
-def Term.monoToToplevelTerm (wcard tcard : Nat) (t : Term) : Term :=
-  let preconditions := Term.monoMkPreconditions wcard tcard t
-  let monoTerm := Term.monoToTerm wcard tcard t
-  Term.implies preconditions monoTerm
+def Nondep.Term.toSingleWidthProp (wcard tcard : Nat) (t : Nondep.Term) : SingleWidthTerm wcard tcard .prop := sorry
+  -- let preconditions := Term.monoMkPreconditions wcard tcard t
+  -- let monoTerm := Term.toSingleWidthTerm wcard tcard t
+  -- Term.implies preconditions monoTerm
 
-end Nondep
+def SingleWidthTerm.isTranslated {wcard tcard : Nat} (t : SingleWidthTerm wcard tcard k) : Bool :=
+  match t with
+  | .unknown => false
+  | _ => true
+
+theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV
+  {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
+  {w : MultiWidth.WidthExpr wcard}
+  (t : MultiWidth.Term bcard ncard icard pcard tctx (.bv w)) :
+  let monoTerm := (Nondep.Term.ofDepTerm t).toSingleWidthTerm wcard tcard
+  monoTerm.isTranslated →
+  (∀ (wenv : WidthExpr.Env wcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard)
+    (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (penv : Predicate.Env pcard)
+    (wenv' : SingleWidthTerm.WidthEnv wcard tcard)
+    (bvenv': SingleWidthTerm.BVEnv tcard tcard)
+    -- TODO: have hyp about environments.
+    (o : Nat) (i : Nat) (hi : i < o),
+    (t.toBV benv nenv ienv penv tenv).getLsbD i =
+    (monoTerm.toBV wenv' bvenv' o).getLsbD i) := by sorry
+
+theorem SingleWidthTerm.iff
+  {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
+  {w : MultiWidth.WidthExpr wcard}
+  (t : MultiWidth.Term bcard ncard icard pcard tctx .prop) :
+  let monoTerm := (Nondep.Term.ofDepTerm t).toSingleWidthProp wcard tcard
+  monoTerm.isTranslated →
+  (∀ (wenv : WidthExpr.Env wcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard)
+    (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (penv : Predicate.Env pcard)
+    (wenv' : SingleWidthTerm.WidthEnv wcard tcard)
+    (bvenv': SingleWidthTerm.BVEnv tcard tcard),
+    -- TODO: have hyp about environments.
+    (t.toBV benv nenv ienv penv tenv) ↔
+    (monoTerm.toProp wenv' bvenv' o)) := by sorry
+
 
 end ToSingleWidth
 
