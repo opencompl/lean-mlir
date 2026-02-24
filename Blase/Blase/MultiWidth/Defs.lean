@@ -982,6 +982,31 @@ def Term.isAutomtaDecidable : Term → Bool
 | .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
 | .pTrue => true
 
+/-- Returns true if the term can be decided by the automata-based procedure.
+Multiplication is NOT automata decidable. -/
+def Term.isAutomtaDecidable : Term → Bool
+| .ofNat _ _ => true
+| .var _ _ => true
+| .add _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .mul _ _ _ => false
+| .zext a _ => a.isAutomtaDecidable
+| .setWidth a _ => a.isAutomtaDecidable
+| .sext a _ => a.isAutomtaDecidable
+| .bor _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .band _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .bxor _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .bnot _ a => a.isAutomtaDecidable
+| .boolVar _ => true
+| .boolConst _ => true
+| .shiftl _ a _ => a.isAutomtaDecidable
+| .bvOfBool b => b.isAutomtaDecidable
+| .binWidthRel _ _ _ => true
+| .binRel _ _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .or p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
+| .and p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
+| .pvar _ => true
+| .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+
 end Nondep
 
 section ToFSM
