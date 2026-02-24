@@ -1161,108 +1161,55 @@ end ToFSM
 
 section ToSingleWidth
 
+inductive SingleWidthTermKind
+| prop
+| bv
+deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
+
+
+inductive SingleWidthTerm (wcard tcard : Nat) : SingleWidthTermKind → Type where
+| wvar : Nat → SingleWidthTerm wcard tcard .bv
+| wconst : Nat → SingleWidthTerm wcard tcard .bv
+-- | wadd (a b : SingleWidthTerm wcard tcard .width) : SingleWidthTerm wcard tcard .width
+| bvvar : Nat → SingleWidthTerm wcard tcard .bv
+| bvconst : Nat → SingleWidthTerm wcard tcard .bv
+| bvmul (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+| bvadd (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+| bvand (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+-- | bvshrConst (a : SingleWidthTerm wcard tcard .bv) (k : Nat) : SingleWidthTerm wcard tcard .bv
+-- | bvshlConst (a : SingleWidthTerm wcard tcard .bv) (k : Nat) : SingleWidthTerm wcard tcard .bv
+| bvzext (a : SingleWidthTerm wcard tcard .bv) (wnew : SingleWidthTerm wcard tcard .bv) :
+    SingleWidthTerm wcard tcard .bv
+| bvsext (a : SingleWidthTerm wcard tcard .bv) (wnew : SingleWidthTerm wcard tcard .bv) :
+    SingleWidthTerm wcard tcard .bv
+| bvule (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| unknown : SingleWidthTerm wcard tcard k
+deriving Repr, Hashable, DecidableEq, Lean.ToExpr
 namespace Nondep
 
-def WidthExpr.monoWidth : WidthExpr := .var 0
-
-def Term.monoConstOne : Term :=
-  .ofNat (.var 0) 1
-
-def Term.maskToPot (t : Term) : Term :=
-  .add .monoWidth t Term.monoConstOne
-
-def Term.monoPotVar (_wcard tcard : Nat) (w : Nat) : Term :=
-  .var (tcard + w) .monoWidth
-
-def Term.monoSub (w1 w2 : Term) : Term :=
-  .add .monoWidth w1 (.bnot .monoWidth w2)
-
--- -b = !b + 1
-def Term.potToMask (t : Term) : Term :=
-  .monoSub t (.monoConstOne)
 
 /--
 Convert a width expression to its corresponding single-width term.
 This is used to convert the width expressions with multiple widths into a single-width expression.
 -/
-def WidthExpr.monoToTerm (wcard tcard : Nat) (w : WidthExpr) : Term :=
+def WidthExpr.monoToTerm (wcard tcard : Nat) (w : WidthExpr) : SingleWidthTerm wcard tcard .bv :=
   match w with
-  | .const c => .ofNat (.var 0) (1 <<< c)
-  | .var v => .var (v + tcard) .monoWidth
-  | .addK w k =>
-    let wPot := w.monoToTerm wcard tcard
-    .shiftl .monoWidth wPot k
-  | .kadd k w =>
-    let wPot := w.monoToTerm wcard tcard
-    .shiftl .monoWidth wPot k
-  | .max w1 w2 =>
-    let w1Pot := w1.monoToTerm wcard tcard |>.potToMask
-    let w2Pot := w2.monoToTerm wcard tcard |>.potToMask
-    let outPot := .bor .monoWidth w1Pot w2Pot
-    let out := Term.maskToPot outPot
-    out
-  | .min w1 w2 =>
-    let w1Pot := w1.monoToTerm wcard tcard |>.potToMask
-    let w2Pot := w2.monoToTerm wcard tcard |>.potToMask
-    let outPot := .band .monoWidth w1Pot w2Pot
-    let out := Term.maskToPot outPot
-    out
-
-
-/--
-Returns whether the term can be converted to a mono term.
--/
-def Term.mono? (wcard tcard : Nat) (t : Term) : Bool :=
-  match t with
-  | .ofNat w _ => w.wcard ≤ wcard
-  | .var _ w => w.wcard ≤ wcard
-  | .add w a b =>
-    w.wcard ≤ wcard &&
-    Term.mono? wcard tcard a &&
-    Term.mono? wcard tcard b
-  | .mul w a b =>
-    w.wcard ≤ wcard &&
-    Term.mono? wcard tcard a &&
-    Term.mono? wcard tcard b
-  | .zext a wnew =>
-    Term.mono? wcard tcard a &&
-    wnew.wcard ≤ wcard
-  | .sext a wnew =>
-    Term.mono? wcard tcard a &&
-    wnew.wcard ≤ wcard
-  | _ => false
+  | .const c => .wconst c
+  | .var v => .wvar (v + tcard)
+  | _ => .unknown
 
 /--
 Convert a term to its corresponding single-width term.
 -/
-def Term.monoToTerm (wcard tcard : Nat)  (t : Term) : Term :=
+def Term.monoToTerm (wcard tcard : Nat)  (t : Term) : SingleWidthTerm wcard tcard .bv :=
   match t with
-  | .ofNat _w n => .ofNat (.var 0) n
-  | .var v _w => .var v (.var 0)
-  | .boolConst b => .boolConst b
-  | .boolVar v => .boolVar v
+  | .var v _w => .bvvar v
   | .add w a b =>
-    let outRaw := (.add (.var 0) (Term.monoToTerm wcard tcard a) (Term.monoToTerm wcard tcard b))
-    let wPot := w.monoToTerm wcard tcard
-    let wMask := Term.potToMask wPot
-    .band .monoWidth wMask outRaw
-  | .mul w a b =>
-    let outRaw := (.mul (.var 0) (Term.monoToTerm wcard tcard a) (Term.monoToTerm wcard tcard b))
-    let wPot := w.monoToTerm wcard tcard
-    let wMask := Term.potToMask wPot
-    .band .monoWidth wMask outRaw
-  | .zext a wnew =>
-    let outRaw := Term.monoToTerm wcard tcard a
-    let wnewPot := wnew.monoToTerm wcard tcard
-    let wnewMask := Term.potToMask wnewPot
-    .band .monoWidth wnewMask outRaw
-  | .sext a wnew =>
-    let outRaw := Term.monoToTerm wcard tcard a
-    let wnewPot := wnew.monoToTerm wcard tcard
-    let wnewMask := Term.potToMask wnewPot
-    -- | this is wrong, we need some kind of if-then-else
-    .band .monoWidth wnewMask outRaw
-  | _ => .var 0 .monoWidth -- dummy value, since these terms should not be used in the width-0 case.
+    let aMono := a.monoToTerm wcard tcard
+    let bMono := b.monoToTerm wcard tcard
+    let wMono := w.monoToTerm wcard tcard
+    .bvand (.bvadd aMono bMono)
+  | _ => .unknown
 
 -- v & (v - 1) = 0
 def Term.monoIsPotPred (wcard tcard : Nat) (w : Nat) : Term :=
@@ -1277,7 +1224,7 @@ def Term.monoMkPreconditions (wcard tcard : Nat) (t : Term) : Term :=
 
 -- !p || q
 def Term.implies (p1 p2 : Term) : Term :=
-  .or (Term.not p1) p2
+  .or p1.monoToPred p2.monoToPred
 
 def Term.monoToToplevelTerm (wcard tcard : Nat) (t : Term) : Term :=
   let preconditions := Term.monoMkPreconditions wcard tcard t
