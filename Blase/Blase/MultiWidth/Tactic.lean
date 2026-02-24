@@ -589,6 +589,14 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       let (tb, state) ← collectTerm state b
       return (.add w ta tb, state)
     | _ => mkAtom
+  | HMul.hMul _bv _bv _bv _inst a b =>
+    match_expr _bv with
+    | BitVec w =>
+      let (w, state) ← collectWidthExpr state w
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.mul w ta tb, state)
+    | _ => mkAtom
   | BitVec.zeroExtend _w v x =>
       let (v, state) ← collectWidthExpr state v
       let (x, state) ← collectTerm state x
@@ -1009,13 +1017,18 @@ def mkEqReflBoolNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) (d
   let proof := mkApp3 (mkConst ``Lean.ofReduceBool []) lhsDef (toExpr rhs) rflProof
   return if debugSorry? then sorryProof else proof
 
-def mkEqReflNativeDecideProof (name : Name) (tyExpr : Expr)
+/--
+Make an equality proof for an equality of the form `a = b` of type `sortExpr`,
+where `a` and `b` are
+expressions that can be decided by `native_decide`.
+-/
+def mkEqReflNativeDecideProof (name : Name) (sortExpr : Expr)
     (lhsSmallExpr : Expr) (rhsLargeExpr : Expr)
     (debugSorry? : Bool := false) : SolverM Expr := do
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
   let name := name ++ `eqProof
   let auxDeclName ← Term.mkAuxName name
-  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) tyExpr lhsSmallExpr rhsLargeExpr
+  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) sortExpr lhsSmallExpr rhsLargeExpr
   let rflProof ← mkEqRefl rhsLargeExpr
   let sorryProof ← mkSorry (type := rflTy) (synthetic := true)
   let proof := if debugSorry? then sorryProof else rflProof
@@ -1029,6 +1042,16 @@ def mkEqReflNativeDecideProof (name : Name) (tyExpr : Expr)
   }
   addAndCompile decl
   return (mkConst auxDeclName)
+/--
+Make a proof for an equality of the form `a = true` where `a` is a small boolean expression.
+-/
+def mkEqReflBoolTrueNativeDecideProof (name : Name)
+    (lhsSmallExpr : Expr)
+    (debugSorry? : Bool := false) : SolverM Expr := do
+    -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
+  let boolTy := mkConst ``Bool
+  let trueExpr := mkConst ``Bool.true
+  mkEqReflNativeDecideProof name boolTy lhsSmallExpr trueExpr debugSorry?
 
 def mkDecideTy : SolverM Expr := do
   let ty ← mkEq (mkNatLit 1) (mkNatLit 1)
@@ -1127,6 +1150,18 @@ def Expr.mkTermFsmNondep (wcard tcard bcard ncard icard pcard : Nat) (pNondep : 
   return out
 
 /--
+info: MultiWidth.Term.isAutomtaDecidable {bcard ncard icard pcard wcard✝ tcard✝ : ℕ} {tctx : Term.Ctx wcard✝ tcard✝}
+  {k : TermKind wcard✝} : Term bcard ncard icard pcard tctx k → Bool
+-/
+#guard_msgs in #check MultiWidth.Term.isAutomtaDecidable
+
+def Expr.mkIsAutomataDecidable
+  (bcard ncard icard pcard wcard tcard : Nat) (tctx : Expr) (k : Expr) (p : Expr) : SolverM Expr := do
+  let out := mkAppN (mkConst ``MultiWidth.Term.isAutomtaDecidable) #[toExpr bcard, toExpr ncard, toExpr icard, toExpr pcard, toExpr wcard, toExpr tcard, tctx, k, p]
+  debugCheck out
+  return out
+
+/--
 info: MultiWidth.Term.toBV_of_KInductionCircuits {wcard tcard bcard ncard icard pcard : ℕ} (tctx : Term.Ctx wcard tcard)
   (p : Term bcard ncard icard pcard tctx TermKind.prop) (pNondep : Nondep.Term)
   (_hpNondep : pNondep = Nondep.Term.ofDepTerm p) (fsm : TermFSM wcard tcard bcard ncard icard pcard pNondep)
@@ -1135,9 +1170,16 @@ info: MultiWidth.Term.toBV_of_KInductionCircuits {wcard tcard bcard ncard icard 
   (sCert : BVDecide.Frontend.LratCert) (hs : circs.mkSafetyCircuit.verifyCircuit sCert = true)
   (indCert : BVDecide.Frontend.LratCert) (hind : circs.mkIndHypCycleBreaking.verifyCircuit indCert = true)
   (wenv : WidthExpr.Env wcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard)
-  (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) : Term.toBV benv nenv ienv penv tenv p
+  (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (hautomata : p.isAutomtaDecidable = true) :
+  Term.toBV benv nenv ienv penv tenv p
 -/
 #guard_msgs in #check MultiWidth.Term.toBV_of_KInductionCircuits
+
+/-- info: MultiWidth.TermKind.prop {wcard : ℕ} : TermKind wcard -/
+#guard_msgs in #check MultiWidth.TermKind.prop
+
+def mkTermKindProp (wcard : Nat) : Expr := mkApp
+  (mkConst ``MultiWidth.TermKind.prop) (mkNatLit wcard)
 
 /--
 Revert all prop-valued hyps.
@@ -1161,6 +1203,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
     debugLog m!"collecting raw expr '{pRawExpr}'."
     let (p, collect) ← collectBVPredicateAux collect pRawExpr
     debugLog m!"collected predicate: '{repr p}' for raw expr."
+    if !p.isAutomtaDecidable then
+      throwError m!"bv_automata does not know how to decide this formula: it contains operations (such as 'mul') that are not automata-decidable. Reflected formula: {repr p}"
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
@@ -1234,6 +1278,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
           let indCertProof ←
             mkEqReflBoolNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
           debugLog m!"made induction cert = true proof..."
+          let termKindProp := mkTermKindProp collect.wcard
+          let pIsAutomataDecidableExpr ← Expr.mkIsAutomataDecidable collect.bcard collect.ncard collect.icard collect.pcard collect.wcard collect.tcard tctx termKindProp pExpr
           let prf ← mkAppM ``MultiWidth.Term.toBV_of_KInductionCircuits'
             #[pRawExpr, -- P : Prop
               tctx,
@@ -1255,7 +1301,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
               nenv,
               ienv,
               penv,
-              ← mkEqRefl pRawExpr]
+              ← mkEqRefl pRawExpr,
+              ← mkEqReflBoolTrueNativeDecideProof `isAutomataDecidable pIsAutomataDecidableExpr]
           debugCheck prf
           let prf ←
             if (← read).debugFillFinalReflectionProofWithSorry then

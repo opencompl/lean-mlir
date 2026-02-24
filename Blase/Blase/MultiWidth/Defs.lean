@@ -198,6 +198,9 @@ inductive Term {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pc
 | ofNat (w : WidthExpr wcard) (n : Nat) : Term bcard ncard icard pcard tctx (.bv w)
 /-- a variable of a given width -/
 | var (v : Fin tcard) : Term bcard ncard icard pcard tctx (.bv (tctx v))
+/-- multiplication of two terms of the same width -/
+| mul (a : Term bcard ncard icard pcard tctx (.bv w))
+  (b : Term bcard ncard icard pcard tctx (.bv w)) : Term bcard ncard icard pcard tctx (.bv w)
 /-- addition of two terms of the same width -/
 | add (a : Term bcard ncard icard pcard tctx (.bv w))
   (b : Term bcard ncard icard pcard tctx (.bv w)) : Term bcard ncard icard pcard tctx (.bv w)
@@ -243,6 +246,90 @@ inductive Term {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pc
   (k : BoolBinaryRelationKind)
   (a b : Term bcard ncard icard pcard tctx .bool) :
   Term bcard ncard icard pcard tctx (.prop)
+
+
+/-- Record whether the term is a linear-bitwise term,
+which can be encoded using automata. -/
+def Term.isAutomtaDecidable  :
+    Term bcard ncard icard pcard tctx k → Bool
+| .ofNat _ _ => true
+| .boolConst _ => true
+| .var _ => true
+| .bvOfBool x => x.isAutomtaDecidable
+| .or p q => p.isAutomtaDecidable && q.isAutomtaDecidable
+| .and p q => p.isAutomtaDecidable && q.isAutomtaDecidable
+| .boolVar _ => true
+| .binRel _kind _w a b =>
+  Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .boolBinRel _kind a b =>
+  Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .add a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .zext a _ => Term.isAutomtaDecidable a
+| .sext a _ => Term.isAutomtaDecidable a
+| .setWidth a _ => Term.isAutomtaDecidable a
+| .band a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .bor a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .bxor a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .bnot a => Term.isAutomtaDecidable a
+| .shiftl a _ => Term.isAutomtaDecidable a
+| .mul _ _ => false
+| _ => true
+
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_add_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.add a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_zext_iff
+    (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (Term.zext a v) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_setWidth_iff
+    (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (Term.setWidth a v) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_band_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.band a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_bor_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.bor a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_bxor_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.bxor a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_bnot_iff (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.bnot a) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_shiftl_iff (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.shiftl a k) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isLinearBitwise_mul_eq_false
+  (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.mul a b) = false := rfl
 
 
 def Term.BoolEnv (bcard : Nat) : Type := Fin bcard → Bool
@@ -356,6 +443,10 @@ match t with
 | .ofNat w n => BitVec.ofNat (w.toNat wenv) n
 | .boolConst b => b
 | .var v => tenv.get v.1 v.2
+| .mul (w := w) a b =>
+    let a : BitVec (w.toNat wenv) := (a.toBV benv nenv ienv penv tenv)
+    let b : BitVec (w.toNat wenv) := (b.toBV benv nenv ienv penv tenv)
+    a * b
 | .add (w := w) a b =>
     let a : BitVec (w.toNat wenv) := (a.toBV benv nenv ienv penv tenv)
     let b : BitVec (w.toNat wenv) := (b.toBV benv nenv ienv penv tenv)
@@ -701,6 +792,7 @@ inductive Term
 | ofNat (w : WidthExpr) (n : Nat) : Term
 | var (v : Nat) (w : WidthExpr) : Term
 | add (w : WidthExpr) (a b : Term) : Term
+| mul (w : WidthExpr) (a b : Term) : Term
 | zext (a : Term) (wnew : WidthExpr) : Term
 | setWidth (a : Term) (wnew : WidthExpr) : Term
 | sext (a : Term) (wnew : WidthExpr) : Term
@@ -749,6 +841,7 @@ def Term.ofDepTerm {wcard tcard bcard : Nat}
      match hk : k with
      | .bv w => .var v (.ofDep w)
      | .bool => by contradiction
+  | .mul (w := w) a b => .mul (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
   | .add (w := w) a b => .add (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
   | .zext a wnew => .zext (Term.ofDepTerm a) (.ofDep wnew)
   | .sext a wnew => .sext (Term.ofDepTerm a) (.ofDep wnew)
@@ -781,6 +874,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .ofNat w _n => w
   | .var _v w => w
   | .add w _a _b => w
+  | .mul w _a _b => w
   | .zext _a wnew => wnew
   | .setWidth _a wnew => wnew
   | .sext _a wnew => wnew
@@ -816,6 +910,7 @@ def Term.tcard (t : Term) : Nat :=
   | .ofNat _w _n => 0
   | .var v _w => v + 1
   | .add _w a b => max (Term.tcard a) (Term.tcard b)
+  | .mul _w a b => max (Term.tcard a) (Term.tcard b)
   | .zext a _wnew => (Term.tcard a)
   | .sext a _wnew => (Term.tcard a)
   | .setWidth a _wnew => (Term.tcard a)
@@ -839,6 +934,7 @@ def Term.bcard (t : Term) : Nat :=
   | .ofNat _w _n => 0
   | .var _v _w => 0
   | .add _w a b => max (Term.bcard a) (Term.bcard b)
+  | .mul _w a b => max (Term.bcard a) (Term.bcard b)
   | .zext a _wnew => (Term.bcard a)
   | .sext a _wnew => (Term.bcard a)
   | .setWidth a _wnew => (Term.bcard a)
@@ -856,6 +952,31 @@ def Term.bcard (t : Term) : Nat :=
   | and p1 p2 => max (Term.bcard p1) (Term.bcard p2)
   | pvar _v => 0
   | boolBinRel _k a b => max (a.bcard) (b.bcard)
+
+/-- Returns true if the term can be decided by the automata-based procedure.
+Multiplication is NOT automata decidable. -/
+def Term.isAutomtaDecidable : Term → Bool
+| .ofNat _ _ => true
+| .var _ _ => true
+| .add _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .mul _ _ _ => false
+| .zext a _ => a.isAutomtaDecidable
+| .setWidth a _ => a.isAutomtaDecidable
+| .sext a _ => a.isAutomtaDecidable
+| .bor _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .band _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .bxor _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .bnot _ a => a.isAutomtaDecidable
+| .boolVar _ => true
+| .boolConst _ => true
+| .shiftl _ a _ => a.isAutomtaDecidable
+| .bvOfBool b => b.isAutomtaDecidable
+| .binWidthRel _ _ _ => true
+| .binRel _ _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .or p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
+| .and p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
+| .pvar _ => true
+| .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
 
 end Nondep
 
@@ -994,6 +1115,7 @@ structure HTermFSMToBitStream {w : WidthExpr wcard}
       (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard ncard icard pcard → BitStream),
       (henv : HTermEnv fsmEnv tenv benv) →
+      (hautomata : t.isAutomtaDecidable) →
         fsm.toFsmZext.eval fsmEnv =
         BitStream.ofBitVecZext (t.toBV benv nenv ienv penv tenv)
 
@@ -1009,6 +1131,7 @@ structure HTermBoolFSMToBitStream
       (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard ncard icard pcard → BitStream),
       (henv : HTermEnv fsmEnv tenv benv) →
+      (hautomata : t.isAutomtaDecidable) →
         fsm.toFsmZext.eval fsmEnv =
         BitStream.ofBool (t.toBV benv nenv ienv penv tenv) -- TODO: make this exactly the same as predicate?
 
@@ -1027,6 +1150,7 @@ structure HPredFSMToBitStream {pcard : Nat}
       (fsmEnv : StateSpace wcard tcard bcard ncard icard pcard → BitStream),
       (htenv : HTermEnv fsmEnv tenv benv) →
       (hpenv : HPredicateEnv fsmEnv penv) →
+      (hautomata : p.isAutomtaDecidable) →
         p.toBV benv nenv ienv penv tenv  ↔ (fsm.toFsmZext.eval fsmEnv = .negOne)
 
 end ToFSM

@@ -1802,6 +1802,13 @@ theorem eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit
   simpa using this
 
 /--
+info: 'ReflectVerif.BvDecide.KInductionCircuits.eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false'' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+-/
+#guard_msgs in #print axioms eval_eq_negOne_of_mkIndHypCycleBreaking_eval_eq_false_of_mkSafetyCircuit_eval_eq_false'
+
+/--
 The predicate `p` holds for all variables `vars`
 if we can verify the safety circuit and the inductive hypothesis cycle breaking circuit.
 -/
