@@ -982,31 +982,6 @@ def Term.isAutomtaDecidable : Term → Bool
 | .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
 | .pTrue => true
 
-/-- Returns true if the term can be decided by the automata-based procedure.
-Multiplication is NOT automata decidable. -/
-def Term.isAutomtaDecidable : Term → Bool
-| .ofNat _ _ => true
-| .var _ _ => true
-| .add _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
-| .mul _ _ _ => false
-| .zext a _ => a.isAutomtaDecidable
-| .setWidth a _ => a.isAutomtaDecidable
-| .sext a _ => a.isAutomtaDecidable
-| .bor _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
-| .band _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
-| .bxor _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
-| .bnot _ a => a.isAutomtaDecidable
-| .boolVar _ => true
-| .boolConst _ => true
-| .shiftl _ a _ => a.isAutomtaDecidable
-| .bvOfBool b => b.isAutomtaDecidable
-| .binWidthRel _ _ _ => true
-| .binRel _ _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
-| .or p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
-| .and p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
-| .pvar _ => true
-| .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
-
 end Nondep
 
 section ToFSM
@@ -1198,19 +1173,22 @@ inductive SingleWidthTerm (wcard tcard : Nat) : SingleWidthTermKind → Type whe
 -- | wadd (a b : SingleWidthTerm wcard tcard .width) : SingleWidthTerm wcard tcard .width
 | bvvar : Nat → SingleWidthTerm wcard tcard .bv
 | bvconst : Nat → SingleWidthTerm wcard tcard .bv
-| bvmul (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+| bvmul (a b : SingleWidthTerm wcard tcard .bv)  : SingleWidthTerm wcard tcard .bv
 | bvadd (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
 | bvand (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+| bvnot (a : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
 -- | bvshrConst (a : SingleWidthTerm wcard tcard .bv) (k : Nat) : SingleWidthTerm wcard tcard .bv
 -- | bvshlConst (a : SingleWidthTerm wcard tcard .bv) (k : Nat) : SingleWidthTerm wcard tcard .bv
-| bvzext (a : SingleWidthTerm wcard tcard .bv) (wnew : SingleWidthTerm wcard tcard .bv) :
-    SingleWidthTerm wcard tcard .bv
-| bvsext (a : SingleWidthTerm wcard tcard .bv) (wnew : SingleWidthTerm wcard tcard .bv) :
-    SingleWidthTerm wcard tcard .bv
+-- | bvzext (wold a : SingleWidthTerm wcard tcard .bv) (wnew : SingleWidthTerm wcard tcard .bv) :
+--     SingleWidthTerm wcard tcard .bv
+-- | bvsext (wold a : SingleWidthTerm wcard tcard .bv) (wnew : SingleWidthTerm wcard tcard .bv) :
+--     SingleWidthTerm wcard tcard .bv
 | bvule (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
 | bvult (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
 | bveq (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
 | bvne (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| propimp (a b : SingleWidthTerm wcard tcard .prop) : SingleWidthTerm wcard tcard .prop
+| proptrue : SingleWidthTerm wcard tcard .prop
 | unknown : SingleWidthTerm wcard tcard k
 deriving Repr, Hashable, DecidableEq, Lean.ToExpr
 
@@ -1231,16 +1209,43 @@ def SingleWidthTerm.BVEnv (tcard : Nat) (wout : Nat) : Type :=
 
 def SingleWidthTerm.toBV
   {wcard tcard : Nat}
+  (o : Nat)
   (t : SingleWidthTerm wcard tcard .bv)
   (wenv : SingleWidthTerm.WidthEnv wcard o)
   (bvenv : SingleWidthTerm.BVEnv tcard o)
-  (o : Nat) : BitVec o := sorry
+  : BitVec o :=
+  match t with
+  | .wvar v =>
+    if hv : v < wcard
+    then wenv ⟨v, hv⟩
+    else 0#o -- dummy value
+  | .wconst c => BitVec.ofNat o c
+  | .bvvar v =>
+    if hv : v < tcard
+    then bvenv ⟨v, hv⟩
+    else 0#o -- dummy value
+  | .bvconst c => BitVec.ofNat o c
+  | .bvnot a => ~~~(a.toBV o wenv bvenv)
+  | .bvmul a b =>
+    (a.toBV o wenv bvenv) * (b.toBV o wenv bvenv)
+  | .bvadd a b => (a.toBV o wenv bvenv) + (b.toBV o wenv bvenv)
+  | .bvand a b => (a.toBV o wenv bvenv) &&& (b.toBV o wenv bvenv)
+  | .unknown => 0#o-- dummy value
 
 def SingleWidthTerm.toProp
   {wcard tcard : Nat}
+  (o : Nat)
   (t : SingleWidthTerm wcard tcard .prop)
   (wenv : SingleWidthTerm.WidthEnv wcard o)
-  (bvenv : SingleWidthTerm.BVEnv tcard o) (o : Nat) : Prop := sorry
+  (bvenv : SingleWidthTerm.BVEnv tcard o) : Prop :=
+  match t with
+  | .bvule a b => (a.toBV o wenv bvenv).ule (b.toBV o wenv bvenv)
+  | .bvult a b => (a.toBV o wenv bvenv).ult (b.toBV o wenv bvenv)
+  | .bveq a b => (a.toBV o wenv bvenv) = (b.toBV o wenv bvenv)
+  | .bvne a b => (a.toBV o wenv bvenv) ≠ (b.toBV o wenv bvenv)
+  | .propimp a b => (a.toProp o wenv bvenv) → (b.toProp o wenv bvenv)
+  | .proptrue => True
+  | .unknown => False
 
 namespace Nondep
 
@@ -1269,29 +1274,47 @@ def Term.toSingleWidthTerm (wcard tcard : Nat)  (t : Term) : SingleWidthTerm wca
 end Nondep
 
 
+
+/-- -x = !x + 1 -/
+def SingleWidthTerm.neg {wcard tcard : Nat} (t : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd (.bvnot t) (.bvconst 1)
+
+-- x - y = x + (-y)
+def SingleWidthTerm.sub {wcard tcard : Nat} (t1 t2 : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd t1 (SingleWidthTerm.neg t2)
+
+
 -- v & (v - 1) = 0
-def SingleWidthTerm.monoIsPotPred (wcard tcard : Nat) (w : Nat) : SingleWidthTerm wcard tcard .prop :=
-  sorry
+def SingleWidthTerm.monoIsPotPred (wcard tcard : Nat) (w : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop :=
+  .bveq (.bvand w (SingleWidthTerm.sub w (.bvconst 1))) (.bvconst 0)
+
   -- let var := Term.monoPotVar wcard tcard w
   -- (.band .monoWidth var (Term.potToMask var))
 
--- def SingleWidthTerm.monoMkPreconditions (wcard tcard : Nat) (t : Term) : Term :=
---   sorry
-  -- match wcard with
-  -- | 0 => .pTrue
-  -- | wcard' + 1 =>
-  --   Term.and (.monoIsPotPred wcard tcard wcard) (Term.monoMkPreconditions wcard' tcard t)
+def SingleWidthTerm.mkPotPreconditions (wcard tcard : Nat) (w : Nat) :
+    SingleWidthTerm wcard tcard .prop :=
+  match w with
+  | 0 => .proptrue
+  | w' + 1 =>
+    .propimp (SingleWidthTerm.monoIsPotPred wcard tcard (.bvconst w)) (SingleWidthTerm.mkPotPreconditions wcard tcard w')
 
--- !p || q
-def Term.implies {wcard tcard : Nat}
-    (p1 p2 : SingleWidthTerm wcard tcard .prop) : SingleWidthTerm wcard tcard .prop := sorry
-  -- .or p1.monoToPred p2.monoToPred
 
-def Nondep.Term.toSingleWidthProp (wcard tcard : Nat) (t : Nondep.Term) : SingleWidthTerm wcard tcard .prop := sorry
-  -- let preconditions := Term.monoMkPreconditions wcard tcard t
-  -- let monoTerm := Term.toSingleWidthTerm wcard tcard t
-  -- Term.implies preconditions monoTerm
+namespace Nondep
+def Term.toSingleWidthProp (wcard tcard : Nat) (t : Term) : SingleWidthTerm wcard tcard .prop :=
+  match t with
+  | .boolConst b => if b then .proptrue else .unknown
+  | .binRel k _w a b => -- these are guaranteed to be masked correctly.
+    let aMono := a.toSingleWidthTerm wcard tcard
+    let bMono := b.toSingleWidthTerm wcard tcard
+    match k with
+    | .ule => .bvule aMono bMono
+    | .ult => .bvult aMono bMono
+    | .eq => .bveq aMono bMono
+    | .ne => .bvne aMono bMono
+    | _ => .unknown
+  | _ => .unknown
 
+end Nondep
 def SingleWidthTerm.isTranslated {wcard tcard : Nat} (t : SingleWidthTerm wcard tcard k) : Bool :=
   match t with
   | .unknown => false
@@ -1305,12 +1328,13 @@ theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV
   monoTerm.isTranslated →
   (∀ (wenv : WidthExpr.Env wcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard)
     (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (penv : Predicate.Env pcard)
-    (wenv' : SingleWidthTerm.WidthEnv wcard tcard)
-    (bvenv': SingleWidthTerm.BVEnv tcard tcard)
+    (o : Nat)
+    (wenv' : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv': SingleWidthTerm.BVEnv tcard o)
     -- TODO: have hyp about environments.
-    (o : Nat) (i : Nat) (hi : i < o),
+    (i : Nat) (hi : i < o),
     (t.toBV benv nenv ienv penv tenv).getLsbD i =
-    (monoTerm.toBV wenv' bvenv' o).getLsbD i) := by sorry
+    (monoTerm.toBV o wenv' bvenv').getLsbD i) := by sorry
 
 theorem SingleWidthTerm.iff
   {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
@@ -1320,11 +1344,12 @@ theorem SingleWidthTerm.iff
   monoTerm.isTranslated →
   (∀ (wenv : WidthExpr.Env wcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard)
     (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (penv : Predicate.Env pcard)
-    (wenv' : SingleWidthTerm.WidthEnv wcard tcard)
-    (bvenv': SingleWidthTerm.BVEnv tcard tcard),
+    (o : Nat)
+    (wenv' : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv': SingleWidthTerm.BVEnv tcard o),
     -- TODO: have hyp about environments.
     (t.toBV benv nenv ienv penv tenv) ↔
-    (monoTerm.toProp wenv' bvenv' o)) := by sorry
+    (SingleWidthTerm.propimp (SingleWidthTerm.mkPotPreconditions wcard tcard wcard) monoTerm).toProp o wenv' bvenv') := by sorry
 
 
 end ToSingleWidth
