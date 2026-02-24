@@ -496,7 +496,6 @@ match t with
 | .pvar v => penv v
 -- | Term.and p1 p2 => p1.toBV benv nenv ienv penv tenv ∧ p2.toBV benv nenv ienv penv tenv
 
-#print Term.toBV
 
 @[simp]
 theorem Term.toBV_ofNat
@@ -810,6 +809,7 @@ inductive Term
 | or (p1 p2 : Term) : Term
 | and (p1 p2 : Term) : Term
 | pvar (v : Nat) : Term
+| pTrue : Term
 | boolBinRel (k : BoolBinaryRelationKind)
     (a b : Term) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
@@ -892,6 +892,7 @@ def Term.width (t : Term) : WidthExpr :=
   | and _p1 _p2 => WidthExpr.const 0
   | pvar _v => WidthExpr.const 0
   | boolBinRel _k _a _b => WidthExpr.const 0
+  | pTrue => WidthExpr.const 0
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -928,6 +929,7 @@ def Term.tcard (t : Term) : Nat :=
   | and p1 p2 => max (Term.tcard p1) (Term.tcard p2)
   | pvar _v => 0
   | boolBinRel _k a b => max (a.tcard) (b.tcard)
+  | pTrue => 0
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -952,6 +954,7 @@ def Term.bcard (t : Term) : Nat :=
   | and p1 p2 => max (Term.bcard p1) (Term.bcard p2)
   | pvar _v => 0
   | boolBinRel _k a b => max (a.bcard) (b.bcard)
+  | pTrue => 0
 
 /-- Returns true if the term can be decided by the automata-based procedure.
 Multiplication is NOT automata decidable. -/
@@ -977,6 +980,7 @@ def Term.isAutomtaDecidable : Term → Bool
 | .and p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
 | .pvar _ => true
 | .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .pTrue => true
 
 end Nondep
 
@@ -1154,4 +1158,134 @@ structure HPredFSMToBitStream {pcard : Nat}
         p.toBV benv nenv ienv penv tenv  ↔ (fsm.toFsmZext.eval fsmEnv = .negOne)
 
 end ToFSM
+
+section ToSingleWidth
+
+namespace Nondep
+
+def WidthExpr.monoWidth : WidthExpr := .var 0
+
+def Term.monoConstOne : Term :=
+  .ofNat (.var 0) 1
+
+def Term.maskToPot (t : Term) : Term :=
+  .add .monoWidth t Term.monoConstOne
+
+def Term.monoPotVar (_wcard tcard : Nat) (w : Nat) : Term :=
+  .var (tcard + w) .monoWidth
+
+def Term.monoSub (w1 w2 : Term) : Term :=
+  .add .monoWidth w1 (.bnot .monoWidth w2)
+
+-- -b = !b + 1
+def Term.potToMask (t : Term) : Term :=
+  .monoSub t (.monoConstOne)
+
+/--
+Convert a width expression to its corresponding single-width term.
+This is used to convert the width expressions with multiple widths into a single-width expression.
+-/
+def WidthExpr.monoToTerm (wcard tcard : Nat) (w : WidthExpr) : Term :=
+  match w with
+  | .const c => .ofNat (.var 0) (1 <<< c)
+  | .var v => .var (v + tcard) .monoWidth
+  | .addK w k =>
+    let wPot := w.monoToTerm wcard tcard
+    .shiftl .monoWidth wPot k
+  | .kadd k w =>
+    let wPot := w.monoToTerm wcard tcard
+    .shiftl .monoWidth wPot k
+  | .max w1 w2 =>
+    let w1Pot := w1.monoToTerm wcard tcard |>.potToMask
+    let w2Pot := w2.monoToTerm wcard tcard |>.potToMask
+    let outPot := .bor .monoWidth w1Pot w2Pot
+    let out := Term.maskToPot outPot
+    out
+  | .min w1 w2 =>
+    let w1Pot := w1.monoToTerm wcard tcard |>.potToMask
+    let w2Pot := w2.monoToTerm wcard tcard |>.potToMask
+    let outPot := .band .monoWidth w1Pot w2Pot
+    let out := Term.maskToPot outPot
+    out
+
+
+/--
+Returns whether the term can be converted to a mono term.
+-/
+def Term.mono? (wcard tcard : Nat) (t : Term) : Bool :=
+  match t with
+  | .ofNat w _ => w.wcard ≤ wcard
+  | .var _ w => w.wcard ≤ wcard
+  | .add w a b =>
+    w.wcard ≤ wcard &&
+    Term.mono? wcard tcard a &&
+    Term.mono? wcard tcard b
+  | .mul w a b =>
+    w.wcard ≤ wcard &&
+    Term.mono? wcard tcard a &&
+    Term.mono? wcard tcard b
+  | .zext a wnew =>
+    Term.mono? wcard tcard a &&
+    wnew.wcard ≤ wcard
+  | .sext a wnew =>
+    Term.mono? wcard tcard a &&
+    wnew.wcard ≤ wcard
+  | _ => false
+
+/--
+Convert a term to its corresponding single-width term.
+-/
+def Term.monoToTerm (wcard tcard : Nat)  (t : Term) : Term :=
+  match t with
+  | .ofNat _w n => .ofNat (.var 0) n
+  | .var v _w => .var v (.var 0)
+  | .boolConst b => .boolConst b
+  | .boolVar v => .boolVar v
+  | .add w a b =>
+    let outRaw := (.add (.var 0) (Term.monoToTerm wcard tcard a) (Term.monoToTerm wcard tcard b))
+    let wPot := w.monoToTerm wcard tcard
+    let wMask := Term.potToMask wPot
+    .band .monoWidth wMask outRaw
+  | .mul w a b =>
+    let outRaw := (.mul (.var 0) (Term.monoToTerm wcard tcard a) (Term.monoToTerm wcard tcard b))
+    let wPot := w.monoToTerm wcard tcard
+    let wMask := Term.potToMask wPot
+    .band .monoWidth wMask outRaw
+  | .zext a wnew =>
+    let outRaw := Term.monoToTerm wcard tcard a
+    let wnewPot := wnew.monoToTerm wcard tcard
+    let wnewMask := Term.potToMask wnewPot
+    .band .monoWidth wnewMask outRaw
+  | .sext a wnew =>
+    let outRaw := Term.monoToTerm wcard tcard a
+    let wnewPot := wnew.monoToTerm wcard tcard
+    let wnewMask := Term.potToMask wnewPot
+    -- | this is wrong, we need some kind of if-then-else
+    .band .monoWidth wnewMask outRaw
+  | _ => .var 0 .monoWidth -- dummy value, since these terms should not be used in the width-0 case.
+
+-- v & (v - 1) = 0
+def Term.monoIsPotPred (wcard tcard : Nat) (w : Nat) : Term :=
+  let var := Term.monoPotVar wcard tcard w
+  (.band .monoWidth var (Term.potToMask var))
+
+def Term.monoMkPreconditions (wcard tcard : Nat) (t : Term) : Term :=
+  match wcard with
+  | 0 => .pTrue
+  | wcard' + 1 =>
+    Term.and (.monoIsPotPred wcard tcard wcard) (Term.monoMkPreconditions wcard' tcard t)
+
+-- !p || q
+def Term.implies (p1 p2 : Term) : Term :=
+  .or (Term.not p1) p2
+
+def Term.monoToToplevelTerm (wcard tcard : Nat) (t : Term) : Term :=
+  let preconditions := Term.monoMkPreconditions wcard tcard t
+  let monoTerm := Term.monoToTerm wcard tcard t
+  Term.implies preconditions monoTerm
+
+end Nondep
+
+end ToSingleWidth
+
 end MultiWidth
