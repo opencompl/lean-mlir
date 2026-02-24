@@ -1334,7 +1334,43 @@ theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV
     -- TODO: have hyp about environments.
     (i : Nat) (hi : i < o),
     (t.toBV benv nenv ienv penv tenv).getLsbD i =
-    (monoTerm.toBV o wenv' bvenv').getLsbD i) := by sorry
+    (monoTerm.toBV o wenv' bvenv').getLsbD i) := by
+    cases t <;> try grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    case var =>
+      sorry
+    case add =>
+      sorry
+  /-
+    match t with
+    | .var _ => by
+      sorry
+      -- grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .add a b => by
+      sorry
+      -- grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .mul a b => by
+      grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .zext a wnew => by
+      grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .sext a wnew => by
+      grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .bor a b => by
+      grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .band a b => by
+      grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .bxor a b => by
+      grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .bnot a => by
+      grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .shiftl a k => by
+      grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .setWidth a wnew => by
+      grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .ofNat w n => by
+      grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+    | .bvOfBool b => by
+        grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+-/
 
 theorem SingleWidthTerm.iff
   {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
@@ -1349,8 +1385,14 @@ theorem SingleWidthTerm.iff
     (bvenv': SingleWidthTerm.BVEnv tcard o),
     -- TODO: have hyp about environments.
     (t.toBV benv nenv ienv penv tenv) ↔
-    (SingleWidthTerm.propimp (SingleWidthTerm.mkPotPreconditions wcard tcard wcard) monoTerm).toProp o wenv' bvenv') := by sorry
-
+    (SingleWidthTerm.propimp (SingleWidthTerm.mkPotPreconditions wcard tcard wcard) monoTerm).toProp o wenv' bvenv') := by
+  cases t <;> try grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthProp, Nondep.Term.ofDepTerm]
+  case binRel k w a b =>
+    cases k <;> try grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthProp, Nondep.Term.ofDepTerm]
+    case eq => sorry
+    case ne => sorry
+    case ule => sorry
+    case ult => sorry
 
 end ToSingleWidth
 
