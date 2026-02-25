@@ -251,7 +251,13 @@ theorem globallyValidUntilReady_toStream
     (globallyValidUntilReady vld rdy ∧ toStream vld rdy data) → 
       _ := by 
   sorry 
--/ 
+-/
+
+def relation (x y : Stream (BitVec w)) :=
+    x = toStream rdy val data ∧ 
+    globallyValidUntilReady rdy val ∧ 
+    globallyValidAndData val data
+    
 
 theorem hw_fork_refines':
     /- Given a handshake fork -/
@@ -279,7 +285,9 @@ theorem hw_fork_refines':
     apply HandshakeStream.trans inputs_bisim
     /- we need to replace `Eq` with something that includes `globallyValidAndData`, 
       could also be `Eq ∩ globallyValidAndData`. -/
-    apply Bisim.coinduct (pred := Eq)
+
+    have p1 := relation a rd1 vld o1 
+    apply Bisim.coinduct (pred := p1)
     · intros s1 s2 hs1
       rw [Bisim] at this inputs_bisim
       obtain ⟨n, m, h1, h2, h3⟩ := this
