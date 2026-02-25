@@ -199,14 +199,14 @@ theorem fork_refines {a x y x' y'} :
   y ~ y' →
   x ~ x' ∧ y ~ y' := by grind
 
+/-- Stream := Stream' (Option α) -/ 
 def toStream {α} (rdy : Stream' (BitVec 1)) (vld : Stream' (BitVec 1)) (data : Stream' α) : Stream α := fun i =>
   if rdy i == 1#1 && vld i == 1#1 then
     .some (data i)
   else
     .none
 
-/-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`)
--/
+/-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
 theorem hw_fork_refines:
     /- Given a handshake fork taking `a` as input and returning `(a, a)`, we take
       its lowering (with input a bisimilar ready-valid wrapped stream) -/
@@ -219,19 +219,56 @@ theorem hw_fork_refines:
   unfold Bisim
   sorry
 
-/-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`)
-  -/
+/- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
+
+/-- weaker def where we do not assume that rdy is by default 0#1 -/ 
+def globallyValidUntilReady (vld rdy : Stream' (BitVec 1)) : Prop :=
+    ∀ (i : Nat),
+        (vld i = 1#1) →
+      ∃ (k : Nat), 
+        rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧ 
+        ∀ (j : Nat) (_hj : j < k),
+          vld (i + j) = 1#1 
+
+/-- This def is stronger than the one above -/ 
+def globallyValidUntilReady' (vld rdy : Stream' (BitVec 1)) : Prop := 
+    ∀ (i : Nat), 
+        (vld i = 1#1) → 
+      ∃ (k : Nat), 
+        rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧ 
+        ∀ (j : Nat) (_hj : j < k), 
+          vld (i + j) = 1#1 ∧ rdy (i + j) = 0#1
+          -- we should add sth like vld (i + k + 1) = 0#1?
+
+def globallyValidAndData (vld : Stream' (BitVec 1)) (data : Stream' (BitVec w)) : Prop := 
+    ∀ (i : Nat), 
+        (vld i = 1#1 ∧ vld (i + 1) = 1#1) → 
+        data i = data (i + 1)
+
+/-
+theorem globallyValidUntilReady_toStream 
+    (vld rdy : Stream' (BitVec 1)) (data : Stream' (BitVec w)) : 
+    (globallyValidUntilReady vld rdy ∧ toStream vld rdy data) → 
+      _ := by 
+  sorry 
+-/ 
+
 theorem hw_fork_refines':
     /- Given a handshake fork -/
     (x, y) = TRY2.hw_fork a →
     /- we get the output of the corresponding lowered fork -/
-    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld data) →
+    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (a := BitVec 1) (TRY3.hw_fork rd1 rd2 vld data) →
     /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork -/
     a ~ (toStream rdy vld data) →
+    /- we want to make sure that stalling is correctly modeled -/ 
+    globallyValidUntilReady vld2 rd2 → 
+    globallyValidAndData vld2 o2 → 
+    globallyValidUntilReady vld1 rd1 →
+    globallyValidAndData vld1 o1 →
     /- we want to prove that the outputs of the handshake fork are respectively
       bisimilar to the ready-valid wrapping of the output of the hardware fork -/
     x ~ (toStream rd1 vld1 o1) ∧ y ~ (toStream rd2 vld2 o2) := by
-  intros handshake_fork hardware_fork inputs_bisim
+  intros handshake_fork hardware_fork inputs_bisim valready2 valdata2 valready1 valdata1
   and_intros
   · unfold TRY2.hw_fork at handshake_fork
     have heq : x = a := by
@@ -240,26 +277,29 @@ theorem hw_fork_refines':
     rw [heq]
     have := symm inputs_bisim
     apply HandshakeStream.trans inputs_bisim
+    /- we need to replace `Eq` with something that includes `globallyValidAndData`, 
+      could also be `Eq ∩ globallyValidAndData`. -/
     apply Bisim.coinduct (pred := Eq)
     · intros s1 s2 hs1
       rw [Bisim] at this inputs_bisim
       obtain ⟨n, m, h1, h2, h3⟩ := this
-      -- obtain ⟨n',m',h'⟩ := inputs_bisim
-      exists n
-      exists m
-      simp [hs1]
-      suffices hsuff : s2 = (toStream rdy vld data) by
-        simp [hsuff, h2]
-        rw [← hsuff] at h1
-
-        sorry
-
-
-
-
-
-
-      sorry
+      unfold globallyValidUntilReady at valready1 valready2
+      unfold globallyValidAndData at valdata1 valdata2
+      have valready1n := valready1 n 
+      have valready2m := valready2 m
+      have valdata1n := valdata1 n 
+      have valdata2m := valdata2 m
+      exists n 
+      exists m 
+      and_intros 
+      · /- s1 and s2 `none` until a given point -/ 
+        sorry 
+      · /- the first not-none elements in s1 and s2 are equal-/
+        sorry 
+      · /- until that element s1 is none -/
+        sorry 
+      · /- until that element s2 is none -/ 
+        sorry 
     · sorry
   · sorry
 
