@@ -4,12 +4,12 @@
 # Tests under unknown/ expect the solver to output "unknown".
 #
 # Usage: ./run_tests.sh [--verbose]
-#   Run from the Blase/ directory (the lake project root).
+#   Can be run from any directory inside the repository.
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BLASE_DIR="$(cd "$SCRIPT_DIR/../.." && pwd)"  # lean-mlir/Blase
+BLASE_DIR="$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)/Blase"
 
 BINARY="$BLASE_DIR/.lake/build/bin/blasewuzla"
 
