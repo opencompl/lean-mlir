@@ -50,17 +50,27 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     let aig := fsm.toAiger
     let res ← Valaig.External.checkSafety (Valaig.External.rIC3 (timeoutMs := none)) aig
     match res with
-    | .error err =>
-      IO.eprintln s!"rIC3 error: {err}"
-      return 1
+    | .error (.timeout _ _) =>
+      if verbose then IO.eprintln "rIC3: timed out"
+      IO.println "unknown"
+      return 0
+    | .error (.external msg) =>
+      -- rIC3 (and other HWMCC tools) exit with 0 to signal "unknown/indeterminate"
+      if msg.contains "exit code 0" then
+        if verbose then IO.eprintln "rIC3: unknown result"
+        IO.println "unknown"
+        return 0
+      else
+        IO.eprintln s!"rIC3 error: {msg}"
+        return 1
     | .ok .counterexample =>
       if verbose then IO.eprintln "rIC3: counterexample found"
       IO.println "sat"
-      return 0
+      return 10
     | .ok .proof =>
       if verbose then IO.eprintln "rIC3: proof found"
       IO.println "unsat"
-      return 0
+      return 20
   else
     -- k-induction backend (default)
     if verbose then
@@ -90,12 +100,12 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
         if verbose then
           IO.eprintln s!"Proven by k-induction at iteration {numIters}"
         IO.println "unsat"
-        return 0
+        return 20
       | .safetyFailure iter =>
         if verbose then
-          IO.eprintln s!"Safety failure at iteration {iter}"
-        IO.println "unknown"
-        return 0
+          IO.eprintln s!"Counterexample found at iteration {iter}"
+        IO.println "sat"
+        return 10
       | .exhaustedIterations n =>
         if verbose then
           IO.eprintln s!"Exhausted {n} iterations"

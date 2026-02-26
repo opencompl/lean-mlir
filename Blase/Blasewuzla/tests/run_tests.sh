@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 # Run blasewuzla on all test cases in this directory.
-# Tests under unsat/  expect the solver to output "unsat".
-# Tests under unknown/ expect the solver to output "unknown".
+# Tests under sat/     expect exit code 10  (SAT / counterexample found).
+# Tests under unsat/   expect exit code 20  (UNSAT / proven safe).
+# Tests under unknown/ expect exit code  0  (unknown / exhausted iterations).
+# Exit codes follow the CaDiCaL / HWMCC convention.
 #
 # Usage: ./run_tests.sh [--verbose]
 #   Can be run from any directory inside the repository.
@@ -29,29 +31,35 @@ FAIL=0
 
 run_test() {
   local file="$1"
-  local expected="$2"
+  local expected_exit="$2"
 
-  local result
-  result=$("$BINARY" "$file" 2>/dev/null)
+  local actual_exit=0
+  "$BINARY" "$file" >/dev/null 2>&1 || actual_exit=$?
 
-  if [[ "$result" == "$expected" ]]; then
+  if [[ "$actual_exit" -eq "$expected_exit" ]]; then
     if [[ $VERBOSE -eq 1 ]]; then
-      echo "PASS [$expected]: $(basename "$file")"
+      echo "PASS [exit=$expected_exit]: $(basename "$file")"
     fi
     PASS=$((PASS + 1))
   else
-    echo "FAIL: $(basename "$file")  expected='$expected'  got='$result'"
+    echo "FAIL: $(basename "$file")  expected_exit=$expected_exit  got_exit=$actual_exit"
     FAIL=$((FAIL + 1))
   fi
 }
 
-for f in "$SCRIPT_DIR/unsat"/*.smt2; do
-  run_test "$f" "unsat"
+for f in "$SCRIPT_DIR/sat"/*.smt2; do
+  run_test "$f" 10
 done
 
-for f in "$SCRIPT_DIR/unknown"/*.smt2; do
-  run_test "$f" "unknown"
+for f in "$SCRIPT_DIR/unsat"/*.smt2; do
+  run_test "$f" 20
 done
+
+if [[ -d "$SCRIPT_DIR/unknown" ]]; then
+  for f in "$SCRIPT_DIR/unknown"/*.smt2; do
+    run_test "$f" 0
+  done
+fi
 
 echo ""
 echo "Results: $PASS passed, $FAIL failed"
