@@ -1511,37 +1511,57 @@ theorem SingleWidthTerm.getLsbD_toBV_eq_ofNat_toNat {bcard ncard icard pcard}
       subst monoTerm
       simp
 
-theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV {bcard ncard icard pcard}
+theorem SingleWidthTerm.getLsbD_toBV_eq_ofNat_toNat' {bcard ncard icard pcard}
   {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
-  {w : MultiWidth.WidthExpr wcard}
-  (t : MultiWidth.Term bcard ncard icard pcard tctx (.bv w)) :
-  let monoTerm := (Nondep.Term.ofDepTerm t).toSingleWidthTerm wcard tcard
-  monoTerm.isTranslated →
-  (∀ (wMultiEnv : WidthExpr.Env wcard) (tMultiEnv : tctx.Env wMultiEnv) (benv : Term.BoolEnv bcard)
-    (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (penv : Predicate.Env pcard)
-    (o : Nat)
-    (wSingleEnv : SingleWidthTerm.WidthEnv wcard o)
-    (tSingleEnv: SingleWidthTerm.BVEnv tcard o)
-    -- TODO: have hyp about environments.
-    (hEnvRel : HSingleWidthEnvRelation wMultiEnv tMultiEnv wSingleEnv tSingleEnv),
-    (t.toBV benv nenv ienv penv tMultiEnv).setWidth o =
-    (monoTerm.toBV o wSingleEnv tSingleEnv)) := by
-    cases t <;> try grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
-    case var v =>
-      intros mono hmono wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
-      subst mono
-      simp only [Term.toBV_var, Nondep.Term.ofDep_var, Nondep.Term.toSingleWidthTerm_var,
-        toBV_bvvar, Fin.is_lt, ↓reduceDIte, Fin.eta]
-      grind only [= BitVec.getLsbD_eq_getElem, = BitVec.getElem_setWidth, #d005, #e9c2]
-    case add a b =>
-      intros mono hmono wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
-      subst mono
-      simp only [Term.toBV_add]
-      simp only [Nondep.Term.ofDep_add, Nondep.Term.toSingleWidthTerm_add, toBV_bvand, toBV_bvadd]
-      have ha := SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV a (by sorry) wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
-      have hb := SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV b (by sorry) wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
-      rw [← ha, ← hb]
-      sorry
+  (w : MultiWidth.WidthExpr wcard)
+  {mono : SingleWidthTerm wcard tcard .bv}
+  (hmonoEqW : mono = (Nondep.WidthExpr.ofDep w).toSingleWidthTerm wcard tcard)
+  (hMonoIsTranslated : mono.isTranslated)
+  (wMultiEnv : WidthExpr.Env wcard) (tMultiEnv : tctx.Env wMultiEnv) (_benv : Term.BoolEnv bcard)
+  (_nenv : Term.NatEnv ncard) (_ienv : Term.IntEnv icard) (_penv : Predicate.Env pcard)
+  (o : Nat)
+  (wSingleEnv : SingleWidthTerm.WidthEnv wcard o)
+  (tSingleEnv: SingleWidthTerm.BVEnv tcard o)
+  -- TODO: have hyp about environments.
+  (_hEnvRel : HSingleWidthEnvRelation wMultiEnv tMultiEnv wSingleEnv tSingleEnv) :
+  BitVec.ofNat o (w.toNat wMultiEnv) =
+  (mono.toBV o wSingleEnv tSingleEnv) := by
+  rw [SingleWidthTerm.getLsbD_toBV_eq_ofNat_toNat (wSingleEnv := wSingleEnv) (tSingleEnv := tSingleEnv)] <;>
+    subst mono <;> solve | assumption | grind only
+
+
+
+-- theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV {bcard ncard icard pcard}
+--   {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
+--   {w : MultiWidth.WidthExpr wcard}
+--   (t : MultiWidth.Term bcard ncard icard pcard tctx (.bv w)) :
+--   let monoTerm := (Nondep.Term.ofDepTerm t).toSingleWidthTerm wcard tcard
+--   monoTerm.isTranslated →
+--   (∀ (wMultiEnv : WidthExpr.Env wcard) (tMultiEnv : tctx.Env wMultiEnv) (benv : Term.BoolEnv bcard)
+--     (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (penv : Predicate.Env pcard)
+--     (o : Nat)
+--     (wSingleEnv : SingleWidthTerm.WidthEnv wcard o)
+--     (tSingleEnv: SingleWidthTerm.BVEnv tcard o)
+--     -- TODO: have hyp about environments.
+--     (hEnvRel : HSingleWidthEnvRelation wMultiEnv tMultiEnv wSingleEnv tSingleEnv),
+--     (t.toBV benv nenv ienv penv tMultiEnv).setWidth o =
+--     (monoTerm.toBV o wSingleEnv tSingleEnv)) := by
+--     cases t <;> try grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+--     case var v =>
+--       intros mono hmono wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
+--       subst mono
+--       simp only [Term.toBV_var, Nondep.Term.ofDep_var, Nondep.Term.toSingleWidthTerm_var,
+--         toBV_bvvar, Fin.is_lt, ↓reduceDIte, Fin.eta]
+--       grind only [= BitVec.getLsbD_eq_getElem, = BitVec.getElem_setWidth, #d005, #e9c2]
+--     case add a b =>
+--       intros mono hmono wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
+--       subst mono
+--       simp only [Term.toBV_add]
+--       simp only [Nondep.Term.ofDep_add, Nondep.Term.toSingleWidthTerm_add, toBV_bvand, toBV_bvadd]
+--       have ha := SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV a (by sorry) wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
+--       have hb := SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV b (by sorry) wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
+--       rw [← ha, ← hb]
+--       sorry
       -- now we need a case split, and a lemma about 'w'.
       -- rw [← BitVec.setWidth_add]
       -- sorry
@@ -1579,6 +1599,42 @@ theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV {bcard ncard icard pcard}
     | .bvOfBool b => by
         grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
 -/
+
+theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV' {bcard ncard icard pcard}
+    {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
+    {w : MultiWidth.WidthExpr wcard} (t : MultiWidth.Term bcard ncard icard pcard tctx (.bv w))
+    (mono : SingleWidthTerm wcard tcard .bv)
+    (hmonoEqW : mono = (Nondep.Term.ofDepTerm t).toSingleWidthTerm wcard tcard)
+    (hMonoIsTranslated : mono.isTranslated)
+    (wMultiEnv : WidthExpr.Env wcard) (tMultiEnv : tctx.Env wMultiEnv) (benv : Term.BoolEnv bcard)
+    (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (penv : Predicate.Env pcard)
+    (o : Nat)
+    (wSingleEnv : SingleWidthTerm.WidthEnv wcard o)
+    (tSingleEnv: SingleWidthTerm.BVEnv tcard o)
+    (hEnvRel : HSingleWidthEnvRelation wMultiEnv tMultiEnv wSingleEnv tSingleEnv) :
+    (t.toBV benv nenv ienv penv tMultiEnv).setWidth o =
+    (mono.toBV o wSingleEnv tSingleEnv) := by
+  subst hmonoEqW
+  cases t <;> try grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
+  case var v =>
+    simp only [Term.toBV_var, Nondep.Term.ofDep_var, Nondep.Term.toSingleWidthTerm_var, toBV_bvvar,
+      Fin.is_lt, ↓reduceDIte, Fin.eta]
+    grind only [= BitVec.getLsbD_eq_getElem, = BitVec.getElem_setWidth, #d005, #e9c2]
+  case add a b =>
+    simp only [Term.toBV_add]
+    simp only [Nondep.Term.ofDep_add, Nondep.Term.toSingleWidthTerm_add, toBV_bvand, toBV_bvadd]
+    have ha := SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV' a _
+      (by rfl)
+      (by  sorry)
+      wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnvRel
+    have hb := SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV' b _
+      (by rfl)
+      (by  sorry)
+      wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnvRel
+    rw [← ha, ← hb]
+    have := SingleWidthTerm.getLsbD_toBV_eq_ofNat_toNat' w (by rfl) (by sorry) wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnvRel
+    rw [← this]
+    sorry
 
 theorem SingleWidthTerm.iff
   {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
