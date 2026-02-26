@@ -31,3 +31,16 @@ rev = "main"
 name = "valaig"
 git = "https://github.com/opencompl/valaig"
 rev = "97fc5d8872fdd4ccb4655a7ad97df5852670c1e7"
+
+[[require]]
+scope = "leanprover"
+name = "Cli"
+rev = "nightly-testing"
+
+[[lean_lib]]
+name = "Blasewuzla"
+
+[[lean_exe]]
+name = "blasewuzla"
+root = "BlasewuzlaMain"
+supportInterpreter = true
