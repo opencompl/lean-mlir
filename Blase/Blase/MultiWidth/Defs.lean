@@ -912,6 +912,7 @@ def Term.width (t : Term) : WidthExpr :=
   | binRel _k w _a _b => w
   | or _p1 _p2 => WidthExpr.const 0
   | and _p1 _p2 => WidthExpr.const 0
+  | pTrue => WidthExpr.const 0
   | pvar _v => WidthExpr.const 0
   | boolBinRel _k _a _b => WidthExpr.const 0
 
@@ -948,6 +949,7 @@ def Term.tcard (t : Term) : Nat :=
   | binRel _k _w a b => max (Term.tcard a) (Term.tcard b)
   | or p1 p2 => max (Term.tcard p1) (Term.tcard p2)
   | and p1 p2 => max (Term.tcard p1) (Term.tcard p2)
+  | pTrue => 0
   | pvar _v => 0
   | boolBinRel _k a b => max (a.tcard) (b.tcard)
 
@@ -972,6 +974,7 @@ def Term.bcard (t : Term) : Nat :=
   | binRel _k _w a b => max (Term.bcard a) (Term.bcard b)
   | or p1 p2 => max (Term.bcard p1) (Term.bcard p2)
   | and p1 p2 => max (Term.bcard p1) (Term.bcard p2)
+  | pTrue => 0
   | pvar _v => 0
   | boolBinRel _k a b => max (a.bcard) (b.bcard)
 
@@ -997,6 +1000,7 @@ def Term.isAutomtaDecidable : Term → Bool
 | .binRel _ _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
 | .or p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
 | .and p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
+| .pTrue => true
 | .pvar _ => true
 | .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
 
