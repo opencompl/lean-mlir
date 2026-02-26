@@ -34,6 +34,7 @@ run_test() {
   local expected_exit="$2"
 
   local actual_exit=0
+  echo "Running $file..."
   "$BINARY" "$file" >/dev/null 2>&1 || actual_exit=$?
 
   if [[ "$actual_exit" -eq "$expected_exit" ]]; then
