@@ -1,7 +1,7 @@
 name = "Blase"
 version = "0.1.0"
 testDriver = "BlaseTest"
-defaultTargets = ["Blase"]
+defaultTargets = ["Blase", "Blasewuzla", "blasewuzla"]
 moreLeanArgs = ["--tstack=400000"]
 moreServerArgs = ["--tstack=400000"]
 # precompileModules = true # Ensure that reflective code that uses native_decide runs compiled code, not in the ir_interpreter.
