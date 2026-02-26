@@ -1321,8 +1321,9 @@ This is used to convert the width expressions with multiple widths into a single
 def WidthExpr.toSingleWidthTerm (wcard tcard : Nat) (w : WidthExpr) : SingleWidthTerm wcard tcard .bv :=
   match w with
   | .const c => .wconst c
-  | .var v => .wvar (v + tcard)
+  | .var v => .wvar (v)
   | _ => .unknown
+
 
 /--
 Convert a term to its corresponding single-width term.
@@ -1476,7 +1477,31 @@ theorem HSingleWidthEnvRelation.ofMultiEnvs {wcard tcard : Nat}
   · intro v
     simp
 
-theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV
+theorem SingleWidthTerm.getLsbD_toBV_eq_ofNat_toNat {bcard ncard icard pcard}
+  {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
+  {w : MultiWidth.WidthExpr wcard} :
+  let monoTerm := (Nondep.WidthExpr.ofDep t).toSingleWidthTerm wcard tcard
+  monoTerm.isTranslated →
+  (∀ (wMultiEnv : WidthExpr.Env wcard) (tMultiEnv : tctx.Env wMultiEnv) (benv : Term.BoolEnv bcard)
+    (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (penv : Predicate.Env pcard)
+    (o : Nat)
+    (wSingleEnv : SingleWidthTerm.WidthEnv wcard o)
+    (tSingleEnv: SingleWidthTerm.BVEnv tcard o)
+    -- TODO: have hyp about environments.
+    (hEnvRel : HSingleWidthEnvRelation wMultiEnv tMultiEnv wSingleEnv tSingleEnv),
+    BitVec.ofNat o (w.toNat wMultiEnv) =
+    (monoTerm.toBV o wSingleEnv tSingleEnv)) := by
+    cases t <;> try grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.WidthExpr.ofDep]
+    case var v =>
+      sorry
+    case const c =>
+      sorry
+    case min => sorry
+    case max => sorry
+    case addK => sorry
+    case kadd => sorry
+
+theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV {bcard ncard icard pcard}
   {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
   {w : MultiWidth.WidthExpr wcard}
   (t : MultiWidth.Term bcard ncard icard pcard tctx (.bv w)) :
@@ -1503,9 +1528,13 @@ theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV
       subst mono
       simp only [Term.toBV_add]
       simp only [Nondep.Term.ofDep_add, Nondep.Term.toSingleWidthTerm_add, toBV_bvand, toBV_bvadd]
-      sorry
+      have ha := SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV a (by sorry) wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
+      have hb := SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV b (by sorry) wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
+      rw [← ha, ← hb]
+      -- now we need a case split, and a lemma about 'w'.
+      -- rw [← BitVec.setWidth_add]
+      -- sorry
       -- TODO: now do the case analysis here.
-      -- have := SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV a (by sorry) wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
       -- rw [this]
       -- have := SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV b (by sorry) wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv
   /-
