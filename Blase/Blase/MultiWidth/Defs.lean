@@ -1320,23 +1320,91 @@ def SingleWidthTerm.isTranslated {wcard tcard : Nat} (t : SingleWidthTerm wcard 
   | .unknown => false
   | _ => true
 
+/--
+The relationship between the multi and single width environments.
+-/
+structure HSingleWidthEnvRelation {wcard tcard : Nat}
+    {tctx : MultiWidth.Term.Ctx wcard tcard}
+    (wMultiEnv : WidthExpr.Env wcard)
+    (tMultiEnv : tctx.Env wMultiEnv)
+    --
+    (wSingleEnv : SingleWidthTerm.WidthEnv wcard o)
+    (tSingleEnv : SingleWidthTerm.BVEnv tcard o) where
+  hWidth : ∀ (v : Fin wcard), wSingleEnv v = BitVec.ofNat o (wMultiEnv v)
+  hTerm : ∀ (v : Fin tcard), (tSingleEnv v) = (tMultiEnv v).setWidth o
+
+/--
+Build a single-width width environment from a multi-width environment, such that it
+satisfies 'HSingleWidthEnvRelation'.
+-/
+def SingleWidthTerm.WidthEnv.ofMultiWidth {wcard : Nat} (wMultiEnv : WidthExpr.Env wcard) (o : Nat) :
+    SingleWidthTerm.WidthEnv wcard o :=
+  fun v => BitVec.ofNat o (wMultiEnv v)
+
+@[simp]
+theorem SingleWidthTerm.WidthEnv.ofMultiWidth_ap {wcard : Nat} (wMultiEnv : WidthExpr.Env wcard) (o : Nat) (v : Fin wcard) :
+    (SingleWidthTerm.WidthEnv.ofMultiWidth wMultiEnv o) v = BitVec.ofNat o (wMultiEnv v) := rfl
+/--
+Build a single-width term environment from a multi-width environment, such that it
+satisfies 'HSingleWidthEnvRelation'.
+-/
+def SingleWidthTerm.BVEnv.ofMultiTerm {wcard tcard : Nat}
+    {tctx : MultiWidth.Term.Ctx wcard tcard}
+    (wMultiEnv : WidthExpr.Env wcard)
+    (tMultiEnv : tctx.Env wMultiEnv)
+    (o : Nat) : SingleWidthTerm.BVEnv tcard o :=
+  fun v => (tMultiEnv v).setWidth o
+
+
+@[simp]
+theorem SingleWidthTerm.BVEnv.ofMultiTerm_ap {wcard tcard : Nat}
+    {tctx : MultiWidth.Term.Ctx wcard tcard}
+    (wMultiEnv : WidthExpr.Env wcard)
+    (tMultiEnv : tctx.Env wMultiEnv)
+    (o : Nat) (v : Fin tcard) :
+    (SingleWidthTerm.BVEnv.ofMultiTerm wMultiEnv tMultiEnv o) v = (tMultiEnv v).setWidth o := rfl
+
+/--
+Show that the single-width environments built from the multi-width environments satisfy 'HSingleWidthEnvRelation'.
+-/
+@[simp, grind .]
+theorem HSingleWidthEnvRelation.ofMultiEnvs {wcard tcard : Nat}
+    {tctx : MultiWidth.Term.Ctx wcard tcard}
+    (wMultiEnv : WidthExpr.Env wcard)
+    (tMultiEnv : tctx.Env wMultiEnv)
+    (o : Nat) :
+    HSingleWidthEnvRelation wMultiEnv tMultiEnv
+    (SingleWidthTerm.WidthEnv.ofMultiWidth wMultiEnv o)
+    (SingleWidthTerm.BVEnv.ofMultiTerm wMultiEnv tMultiEnv o) := by
+  constructor
+  · intro v
+    simp
+  · intro v
+    simp
+
 theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV
   {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
   {w : MultiWidth.WidthExpr wcard}
   (t : MultiWidth.Term bcard ncard icard pcard tctx (.bv w)) :
   let monoTerm := (Nondep.Term.ofDepTerm t).toSingleWidthTerm wcard tcard
   monoTerm.isTranslated →
-  (∀ (wenv : WidthExpr.Env wcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard)
+  (∀ (wMultiEnv : WidthExpr.Env wcard) (tMultiEnv : tctx.Env wMultiEnv) (benv : Term.BoolEnv bcard)
     (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (penv : Predicate.Env pcard)
     (o : Nat)
-    (wenv' : SingleWidthTerm.WidthEnv wcard o)
-    (bvenv': SingleWidthTerm.BVEnv tcard o)
+    (wSingleEnv : SingleWidthTerm.WidthEnv wcard o)
+    (tSingleEnv: SingleWidthTerm.BVEnv tcard o)
     -- TODO: have hyp about environments.
+    (hEnvRel : HSingleWidthEnvRelation wMultiEnv tMultiEnv wSingleEnv tSingleEnv)
     (i : Nat) (hi : i < o),
-    (t.toBV benv nenv ienv penv tenv).getLsbD i =
-    (monoTerm.toBV o wenv' bvenv').getLsbD i) := by
+    (t.toBV benv nenv ienv penv tMultiEnv).getLsbD i =
+    (monoTerm.toBV o wSingleEnv tSingleEnv).getLsbD i) := by
     cases t <;> try grind [SingleWidthTerm.isTranslated, Nondep.Term.toSingleWidthTerm, Nondep.Term.ofDepTerm]
-    case var =>
+    case var v =>
+      intros mono hmono wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnv i hi
+      subst mono
+      simp
+      -- TODO: write lemma about (toSingleWidthTerm var)
+      -- TODO: write about toBV (<corresponding single width term>)
       sorry
     case add =>
       sorry
