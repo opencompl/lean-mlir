@@ -1178,7 +1178,7 @@ deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 inductive SingleWidthTerm (wcard tcard : Nat) : SingleWidthTermKind → Type where
 | wvar : Nat → SingleWidthTerm wcard tcard .bv
-| wconst : Nat → SingleWidthTerm wcard tcard .bv
+-- | wconst : Nat → SingleWidthTerm wcard tcard .bv
 -- | wadd (a b : SingleWidthTerm wcard tcard .width) : SingleWidthTerm wcard tcard .width
 | bvvar : Nat → SingleWidthTerm wcard tcard .bv
 | bvconst : Nat → SingleWidthTerm wcard tcard .bv
@@ -1228,7 +1228,7 @@ def SingleWidthTerm.toBV
     if hv : v < wcard
     then wenv ⟨v, hv⟩
     else 0#o -- dummy value
-  | .wconst c => BitVec.ofNat o c
+  -- | .wconst c => BitVec.ofNat o c
   | .bvvar v =>
     if hv : v < tcard
     then bvenv ⟨v, hv⟩
@@ -1248,14 +1248,6 @@ theorem SingleWidthTerm.toBV_wvar {wcard tcard : Nat} {o : Nat}
     {v : Nat} :
     SingleWidthTerm.toBV o (.wvar v) wenv bvenv =
     (if hv : v < wcard then wenv ⟨v, hv⟩ else 0#o) := by grind [toBV]
-
-@[simp]
-theorem SingleWidthTerm.toBV_wconst {wcard tcard : Nat} {o : Nat}
-    (wenv : SingleWidthTerm.WidthEnv wcard o)
-    (bvenv : SingleWidthTerm.BVEnv tcard o)
-    {c : Nat} :
-    SingleWidthTerm.toBV o (.wconst c) wenv bvenv =
-    BitVec.ofNat o c := by grind [toBV]
 
 @[simp]
 theorem SingleWidthTerm.toBV_bvvar {wcard tcard : Nat} {o : Nat}
@@ -1320,13 +1312,13 @@ This is used to convert the width expressions with multiple widths into a single
 -/
 def WidthExpr.toSingleWidthTerm (wcard tcard : Nat) (w : WidthExpr) : SingleWidthTerm wcard tcard .bv :=
   match w with
-  | .const c => .wconst c
-  | .var v => .wvar (v)
+  | .const c => .bvconst (1 <<< c)
+  | .var v => (.wvar (v))
   | _ => .unknown
 
 @[simp]
 theorem WidthExpr.toSingleWidthTerm_const {wcard tcard : Nat} {c : Nat} :
-    WidthExpr.toSingleWidthTerm wcard tcard (WidthExpr.const c) = .wconst c := rfl
+    WidthExpr.toSingleWidthTerm wcard tcard (WidthExpr.const c) = .bvconst (1 <<< c) := rfl
 
 @[simp]
 theorem WidthExpr.toSingleWidthTerm_var {wcard tcard : Nat} {v : Nat} :
@@ -1418,7 +1410,7 @@ structure HSingleWidthEnvRelation {wcard tcard : Nat}
     --
     (wSingleEnv : SingleWidthTerm.WidthEnv wcard o)
     (tSingleEnv : SingleWidthTerm.BVEnv tcard o) where
-  hWidth : ∀ (v : Fin wcard), wSingleEnv v = BitVec.ofNat o (wMultiEnv v)
+  hWidth : ∀ (v : Fin wcard), wSingleEnv v = BitVec.ofNat o (1 <<< wMultiEnv v)
   hTerm : ∀ (v : Fin tcard), (tSingleEnv v) = (tMultiEnv v).setWidth o
 
 
@@ -1441,11 +1433,11 @@ satisfies 'HSingleWidthEnvRelation'.
 -/
 def SingleWidthTerm.WidthEnv.ofMultiWidth {wcard : Nat} (wMultiEnv : WidthExpr.Env wcard) (o : Nat) :
     SingleWidthTerm.WidthEnv wcard o :=
-  fun v => BitVec.ofNat o (wMultiEnv v)
+  fun v => BitVec.ofNat o (1 <<< wMultiEnv v)
 
 @[simp]
 theorem SingleWidthTerm.WidthEnv.ofMultiWidth_ap {wcard : Nat} (wMultiEnv : WidthExpr.Env wcard) (o : Nat) (v : Fin wcard) :
-    (SingleWidthTerm.WidthEnv.ofMultiWidth wMultiEnv o) v = BitVec.ofNat o (wMultiEnv v) := rfl
+    (SingleWidthTerm.WidthEnv.ofMultiWidth wMultiEnv o) v = BitVec.ofNat o (1 <<< wMultiEnv v) := rfl
 /--
 Build a single-width term environment from a multi-width environment, such that it
 satisfies 'HSingleWidthEnvRelation'.
@@ -1496,7 +1488,7 @@ theorem SingleWidthTerm.getLsbD_toBV_eq_ofNat_toNat {bcard ncard icard pcard}
     (tSingleEnv: SingleWidthTerm.BVEnv tcard o)
     -- TODO: have hyp about environments.
     (_hEnvRel : HSingleWidthEnvRelation wMultiEnv tMultiEnv wSingleEnv tSingleEnv),
-    BitVec.ofNat o (w.toNat wMultiEnv) =
+    BitVec.ofNat o (1 <<< w.toNat wMultiEnv) =
     (monoTerm.toBV o wSingleEnv tSingleEnv)) := by
     cases w <;>
       try grind [Nondep.WidthExpr.ofDep, Nondep.WidthExpr.toSingleWidthTerm, SingleWidthTerm.isTranslated]
@@ -1505,7 +1497,7 @@ theorem SingleWidthTerm.getLsbD_toBV_eq_ofNat_toNat {bcard ncard icard pcard}
       subst monoTerm
       simp only [WidthExpr.toNat_var, Nondep.WidthExpr.ofDep_var,
         Nondep.WidthExpr.toSingleWidthTerm_var, toBV_wvar, Fin.is_lt, ↓reduceDIte, Fin.eta]
-      grind only [#d005, #33e8]
+      grind only [#d005, #559e]
     case const c =>
       intros monoTerm hmonoTerm wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnvRel
       subst monoTerm
@@ -1524,7 +1516,7 @@ theorem SingleWidthTerm.getLsbD_toBV_eq_ofNat_toNat' {bcard ncard icard pcard}
   (tSingleEnv: SingleWidthTerm.BVEnv tcard o)
   -- TODO: have hyp about environments.
   (_hEnvRel : HSingleWidthEnvRelation wMultiEnv tMultiEnv wSingleEnv tSingleEnv) :
-  BitVec.ofNat o (w.toNat wMultiEnv) =
+  BitVec.ofNat o (1 <<< w.toNat wMultiEnv) =
   (mono.toBV o wSingleEnv tSingleEnv) := by
   rw [SingleWidthTerm.getLsbD_toBV_eq_ofNat_toNat (wSingleEnv := wSingleEnv) (tSingleEnv := tSingleEnv)] <;>
     subst mono <;> solve | assumption | grind only
