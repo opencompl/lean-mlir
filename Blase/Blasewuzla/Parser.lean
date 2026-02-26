@@ -94,36 +94,11 @@ def expectPred (pt : ParsedTerm) (ctx : String := "") : ParserM Nondep.Term := d
   | .pred t => return t
   | .bv _ _ => ParserM.throwError s!"expected predicate but got bitvector{if ctx.isEmpty then "" else s!" in {ctx}"}"
 
-/-- Negate a predicate term by pushing `not` inward via De Morgan's laws. -/
-partial def negateTerm (t : Nondep.Term) : Nondep.Term :=
-  match t with
-  | .and p q => .or (negateTerm p) (negateTerm q)
-  | .or p q => .and (negateTerm p) (negateTerm q)
-  | .binRel .eq w a b => .binRel .ne w a b
-  | .binRel .ne w a b => .binRel .eq w a b
-  | .binRel .ult w a b => .binRel .ule w b a
-  | .binRel .ule w a b => .binRel .ult w b a
-  | .binRel .slt w a b => .binRel .sle w b a
-  | .binRel .sle w a b => .binRel .slt w b a
-  | .binWidthRel .eq wa wb => .binWidthRel .le wb wa  -- not (a = b) → (b ≤ a is wrong)
-    -- Actually: not (a = b) is not directly expressible with just eq/le.
-    -- Use: not(eq) = or(lt, gt) = or(le ∧ ¬eq ... ) — too complex.
-    -- For now, represent as or(le(b,a-1), le(a, b-1)) — but we can't do arithmetic.
-    -- Simplest: wrap in an explicit structure. But the Term type doesn't have negation.
-    -- Let's just use: we can express ¬(w1 = w2) as (w1 ≤ w2 - 1) ∨ (w2 ≤ w1 - 1)
-    -- but we can't do width arithmetic.
-    -- Actually, looking at the Term type, there's no explicit negation.
-    -- The plan says: not (binWidthRel .eq wa wb) → binWidthRel .ne wa wb
-    -- But WidthBinaryRelationKind only has .eq and .le, no .ne!
-    -- So we can't negate width relations easily.
-    -- For the benchmarks we're targeting, width relations don't appear in assertions.
-    -- Let's just error for now.
-  | .pTrue =>
-    -- not(true) = false. We can encode false as binWidthRel .le (.const 1) (.const 0)
-    -- Actually, just use an always-false: (.binRel .eq (.const 1) (.ofNat (.const 1) 0) (.ofNat (.const 1) 1))
-    -- Simpler: (.binWidthRel .le (.const 1) (.const 0)) which says 1 ≤ 0, always false
-    .binWidthRel .le (.const 1) (.const 0)
-  | other => other  -- For atomic terms or unrecognized patterns, can't push further
+/-- Negate a predicate term, throwing a parser error if negation is not supported. -/
+private def negateTerm (t : Nondep.Term) : ParserM Nondep.Term :=
+  match t.negate with
+  | some t' => return t'
+  | none => ParserM.throwError s!"cannot negate term: {repr t}"
 
 /-- Parse a term from an S-expression. -/
 partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
@@ -141,7 +116,7 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
         -- Check for "true" / "false"
         match name with
         | "true" => return .pred .pTrue
-        | "false" => return .pred (negateTerm .pTrue)
+        | "false" => return .pred (← negateTerm .pTrue)
         | _ => ParserM.throwError s!"unknown term variable: '{name}'"
 
   | .expr [.atom "int_to_pbv", wAtom, nAtom] =>
@@ -231,11 +206,10 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     | .bv at_ aw, .bv bt _bw =>
       return .pred (.binRel .eq aw at_ bt)
     | .pred at_, .pred bt =>
-      -- pred equality: (a ∧ b) ∨ (¬a ∧ ¬b), but simpler to encode as
-      -- and(or(a, not b), or(not a, b))
-      -- Actually, for predicates, = means iff.
       -- (a ↔ b) = (a → b) ∧ (b → a) = (¬a ∨ b) ∧ (¬b ∨ a)
-      return .pred (.and (.or (negateTerm at_) bt) (.or (negateTerm bt) at_))
+      let nat_ ← negateTerm at_
+      let nbt ← negateTerm bt
+      return .pred (.and (.or nat_ bt) (.or nbt at_))
     | _, _ => ParserM.throwError s!"= : mismatched types between arguments"
 
   | .expr [.atom "bvult", a, b] =>
@@ -302,14 +276,14 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
   | .expr [.atom "not", a] =>
     let pa ← parseTerm a
     match pa with
-    | .pred t => return .pred (negateTerm t)
+    | .pred t => return .pred (← negateTerm t)
     | .bv _ _ => ParserM.throwError "'not' applied to bitvector term"
 
   | .expr [.atom "=>", a, b] =>
     -- a => b is equivalent to (not a) or b
     let pa ← expectPred (← parseTerm a) (ctx := "=>")
     let pb ← expectPred (← parseTerm b) (ctx := "=>")
-    return .pred (.or (negateTerm pa) pb)
+    return .pred (.or (← negateTerm pa) pb)
 
   -- let bindings
   | .expr [.atom "let", .expr bindings, body] =>
@@ -378,12 +352,14 @@ def parseSmt2Query (input : String) : Except String ParseResult := do
         | [p] => p
         | p :: ps => ps.foldl (init := p) fun acc q => .and acc q
       -- Negate to match UNSAT semantics
-      let negated := negateTerm conjoined
-      .ok {
-        predicate := negated
-        wcard := st.nextWidthIdx
-        tcard := st.nextTermIdx
-      }
+      match conjoined.negate with
+      | none => .error s!"cannot negate conjoined term: {repr conjoined}"
+      | some negated =>
+        .ok {
+          predicate := negated
+          wcard := st.nextWidthIdx
+          tcard := st.nextTermIdx
+        }
   | .error e _ => .error e
 where
   go (cmds : List Sexp) : ParserM (List Nondep.Term) := do
