@@ -141,13 +141,10 @@ jobs:
         run: |
           lake build BlaseTest
 
-      - name: Build blasewuzla executable
-        run: |
-          pushd Blase && lake build blasewuzla && popd
-
       - name: Run Blasewuzla SMT2 test suite
         run: |
-          pushd Blase && bash Blasewuzla/tests/run_tests.sh --verbose && popd
+          lake build blasewuzla
+          bash Blase/Blasewuzla/tests/run_tests.sh --verbose 
 
 #  test-blasewuzla:
 #    name: Blasewuzla CLI Test
