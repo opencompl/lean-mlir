@@ -15,6 +15,11 @@ open MultiWidth
 open ReflectVerif.BvDecide (DecideIfZerosOutput)
 open Cli
 
+-- Exit codes follow the CaDiCaL / HWMCC convention.
+def EXIT_UNKNOWN : UInt32 := 0
+def EXIT_SAT     : UInt32 := 10
+def EXIT_UNSAT   : UInt32 := 20
+
 set_option compiler.extract_closed false in
 unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let inputPath : String := p.positionalArg! "input" |>.as! String
@@ -53,26 +58,26 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     | .error (.timeout _ _) =>
       if verbose then IO.eprintln "rIC3: timed out"
       IO.println "unknown"
-      return 0
+      return EXIT_UNKNOWN
     | .error (.external msg) =>
       -- rIC3 (and other HWMCC tools) exit with 0 to signal "unknown/indeterminate"
       if msg.contains "exit code 0" then
         if verbose then IO.eprintln "rIC3: unknown result"
         IO.println "unknown"
-        return 0
+        return EXIT_UNKNOWN
       else
         IO.eprintln s!"rIC3 error: {msg}"
         return 1
     | .ok .counterexample =>
       if verbose then IO.eprintln "rIC3: counterexample found"
       IO.println "sat"
-      return 10
+      return EXIT_SAT
     | .ok .proof =>
       if verbose then IO.eprintln "rIC3: proof found"
       IO.println "unsat"
-      return 20
-  else
-    -- k-induction backend (default)
+      return EXIT_UNSAT
+  else if backend == "kinduction" then
+    -- k-induction backend
     if verbose then
       IO.eprintln s!"FSM built. Running k-induction with max {niter} iterations..."
 
@@ -100,17 +105,20 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
         if verbose then
           IO.eprintln s!"Proven by k-induction at iteration {numIters}"
         IO.println "unsat"
-        return 20
+        return EXIT_UNSAT
       | .safetyFailure iter =>
         if verbose then
           IO.eprintln s!"Counterexample found at iteration {iter}"
         IO.println "sat"
-        return 10
+        return EXIT_SAT
       | .exhaustedIterations n =>
         if verbose then
           IO.eprintln s!"Exhausted {n} iterations"
         IO.println "unknown"
-        return 0
+        return EXIT_UNKNOWN
+  else
+    IO.eprintln s!"Error: unknown backend '{backend}'. Valid backends: 'kinduction', 'ric3'."
+    return 1
 
 unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
   blasewuzla VIA runBlasewuzla; ["0.1.0"]
