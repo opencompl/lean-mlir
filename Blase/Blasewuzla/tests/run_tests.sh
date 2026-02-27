@@ -9,7 +9,6 @@
 #   Can be run from any directory inside the repository.
 
 set -euo pipefail
-set -o xtrace
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BLASE_DIR="$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel)/Blase"
@@ -36,7 +35,7 @@ run_test() {
 
   local actual_exit=0
   echo "Running $file..."
-  "$BINARY" "$file" >/dev/null 2>&1 || actual_exit=$?
+  "$BINARY" "$file" 2>&1 || actual_exit=$?
 
   if [[ "$actual_exit" -eq "$expected_exit" ]]; then
     if [[ $VERBOSE -eq 1 ]]; then
