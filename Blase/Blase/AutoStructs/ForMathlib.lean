@@ -389,6 +389,7 @@ lemma reduce_spec (M : NFA α σ) : M.reduce.accepts = M.accepts := by
 
 def closed_set (M : NFA α σ) (S : Set σ) := M.start ⊆ S ∧ ∀ a, M.stepSet S a ⊆ S
 
+set_option linter.deprecated false in
 theorem reachable_sub_closed_set (M : NFA α σ) (S : Set σ) (hcl: M.closed_set S) :
     M.Reachable ⊆ S := by
   rintro q ⟨w, hw⟩
@@ -487,6 +488,7 @@ lemma product_stepSet {M : NFA α σ} {N : NFA α ς} :
   · rintro ⟨⟨q1', h1, hs1⟩, ⟨q2', h2, hs2⟩⟩
     use q1'; constructor; assumption; use q2'
 
+set_option linter.deprecated false in
 @[simp]
 lemma product_eval {M : NFA α σ} {N : NFA α ς} {w} :
   (M.product accept? N).eval w = M.eval w ×ˢ N.eval w := by
@@ -731,7 +733,7 @@ lemma bisimul_eval (hsim : Bisimul R M₁ M₂) w :
     R.set_eq Q₁ Q₂ → R.set_eq (M₁.evalFrom Q₁ w) (M₂.evalFrom Q₂ w) := by
   induction w using List.reverseRecOn generalizing Q₁ Q₂
   case nil => simp
-  case append_singleton w a ih => rintro heq; simp [evalFrom_append_singleton, bisimul_eval_one, *]
+  case append_singleton w a ih => rintro heq; simp [bisimul_eval_one, *]
 
 theorem bisimul_accepts₁ :
     Bisimul R M₁ M₂ → M₁.accepts ≤ M₂.accepts := by

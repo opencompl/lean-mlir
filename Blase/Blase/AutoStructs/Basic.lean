@@ -76,6 +76,7 @@ lemma RawCNFA.Simul.rel_preserved_letter {m : RawCNFA A} {M : NFA A Q} (hsim : m
     obtain ⟨s₂, htr, hR₂⟩ := hsim.trans_match₂ hR₁ hst (by simp) (by simp)
     use s₂, ⟨s₁, by tauto⟩
 
+set_option linter.deprecated false in
 lemma RawCNFA.Simul.rel_preserved_word {m : RawCNFA A} {M : NFA A Q} (hsim : m.Simul M R ⊤ ∅) :
     R.set_eq S₁ Q₁ → ∃ S₂, R.set_eq S₂ (M.evalFrom Q₁ w) := by
   induction w using List.reverseRecOn
