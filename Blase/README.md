@@ -16,7 +16,9 @@ For stable releases, please change the `rev` to the desired version tag.
 
 #### Algorithms Improvements TODO
 
-
+- [ ] Add a Nondep to BVExpr conversion
+- [ ] Use Nondep -> BV to implement naive enumerative bitblasting.
+- [ ] Use SingleWidth -> Nondep -> BV to implement single width bounded bitblasting.
 - [ ] Come up with a constant generalization algorithm that exploits our fragment to 
   be much faster (ie, avoid enumerative synthesis).
   The idea would be to recover relationships the constant needs to satisfy,
