@@ -100,14 +100,6 @@ def proveGoalByBvDecide (gType : Expr) : MetaM Bool := do
       let cfg ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run' { declName? := `lrat }
       let res ← Tactic.BVDecide.Frontend.bvDecide g cfg
       return res.lratCert.isSome
-  -- let .some gnew ← g.withContext do g.byContra?
-  --   | throwError "Was unable to convert goal to 'False'."
-  -- gnew.withContext do
-  --   IO.println (← MessageData.toString m!"Proving {gnew} : {← ppExpr (← gnew.getType'')} by bv_decide...")
-  --   let cfg : BVDecideConfig := {}
-  --   IO.FS.withTempFile fun _ lratFile => do
-  --     let cfg ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run' { declName? := `lrat }
-  --     Tactic.BVDecide.Frontend.bvDecide gnew cfg
 
 set_option compiler.extract_closed false in
 unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
