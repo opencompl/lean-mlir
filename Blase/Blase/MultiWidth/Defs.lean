@@ -796,6 +796,11 @@ def Term.negate : Term → Option Term
   | .binRel .slt w a b => some (.binRel .sle w b a)
   | .binRel .sle w a b => some (.binRel .slt w b a)
   | .pTrue => some (.binWidthRel .le (.const 1) (.const 0))
+  -- ¬(wa ≤ wb) ↔ wb + 1 ≤ wa (i.e., wa > wb, since these are naturals)
+  | .binWidthRel .le wa wb => some (.binWidthRel .le (.addK wb 1) wa)
+  -- ¬(wa = wb) ↔ wa < wb ∨ wb < wa ↔ (wa+1 ≤ wb) ∨ (wb+1 ≤ wa)
+  | .binWidthRel .eq wa wb =>
+    some (.or (.binWidthRel .le (.addK wa 1) wb) (.binWidthRel .le (.addK wb 1) wa))
   | _ => none
 
 def Term.ofDepTerm {wcard tcard bcard : Nat}
