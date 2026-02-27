@@ -259,6 +259,7 @@ def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) : MetaM Bool := do
   | .ok _cert => return true
   | .error _assignment => return false
 
+
 def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
@@ -270,6 +271,8 @@ def naiveBMC : Solver where
       IO.eprintln s!"Running naivebmc at width {config.bound}..."
     for widths in cartesianProductRange config.bound result.wcard do
       let qfbv : Std.Tactic.BVDecide.BVLogicalExpr := negatedPredicate.toBVLogicalExpr widths
+      if config.verbose then
+        IO.eprintln s!"{qfbv.toString}"
       if ← checkBVLogicalExprIsUnsat qfbv then
         if config.verbose then
           IO.eprintln s!"⟨{widths.toList}⟩ ✓"

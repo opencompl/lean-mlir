@@ -71,7 +71,7 @@ def parseWidthExpr (s : Sexp) : ParserM Nondep.WidthExpr := do
       match nStr.toNat? with
       | some k => return .addK wa k
       | none =>
-        let wb ← parseWidthExpr b
+        let _wb ← parseWidthExpr b
         -- a + b where b is a variable: use addK with 0 as a workaround isn't right.
         -- For now, only support constant offsets.
         ParserM.throwError s!"width expression '+': second operand must be a constant, got '{b}'"
