@@ -1225,6 +1225,10 @@ info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 def mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard bcard ncard icard pcard t) :=
   match t with
+  | .pTrue => {
+        toFsmZext := (FSM.repeatForever true).map Fin.elim0,
+        width := NatFSM.mk <| (FSM.repeatForever true).map Fin.elim0,
+  }
   | .bvOfBool b =>
      let fsmB := mkTermFSM wcard tcard bcard ncard icard pcard b
      let fsmW := mkWidthFSM wcard tcard bcard ncard icard pcard (.const 1)
@@ -1435,10 +1439,6 @@ def mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) (t : Nondep.Term) :
     let fsmP := mkTermFSM wcard tcard bcard ncard icard pcard p
     let fsmQ := mkTermFSM wcard tcard bcard ncard icard pcard q
     { toFsmZext := (fsmP.toFsmZext &&& fsmQ.toFsmZext),
-      width := NatFSM.mk ((FSM.negOne).map Fin.elim0)
-    }
-  | .pTrue =>
-    { toFsmZext := (FSM.negOne).map Fin.elim0,
       width := NatFSM.mk ((FSM.negOne).map Fin.elim0)
     }
   | .boolBinRel k a b  =>

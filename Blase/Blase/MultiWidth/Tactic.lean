@@ -1361,6 +1361,5 @@ def evalBvMultiWidth : Tactic := fun
 macro "bv_multi_width_print_smt_lib" : tactic =>
   `(tactic| bv_multi_width (config := { debugPrintSmtLib := true }))
 
-
 end Tactic
 end MultiWidth

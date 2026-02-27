@@ -494,9 +494,6 @@ match t with
   -- | TODO: rename 'toBV' to 'toBool'.
   | .eq => (a.toBV benv nenv ienv penv tenv) = (b.toBV benv nenv ienv penv tenv)
 | .pvar v => penv v
--- | Term.and p1 p2 => p1.toBV benv nenv ienv penv tenv ∧ p2.toBV benv nenv ienv penv tenv
-
-#print Term.toBV
 
 @[simp]
 theorem Term.toBV_ofNat
@@ -666,58 +663,6 @@ theorem Term.toBV_or {wenv : WidthExpr.Env wcard}
   Term.toBV benv nenv ienv penv tenv (.or p1 p2) = (p1.toBV benv nenv ienv penv tenv ∨ p2.toBV benv nenv ienv penv tenv) := rfl
 
 
--- inductive Predicate :
---   (wcard : Nat) →
---   (tcard : Nat) →
---   (bcard : Nat) →
---   (tctx : Term.Ctx wcard tcard) →
---   (pcard : Nat) → Type
--- | binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) :
---     Predicate wcard tcard bcard ncard icard pcard tctx pcard
--- | binRel {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
---     (k : BinaryRelationKind)
---     (w : WidthExpr wcard)
---     (a : Term bcard ncard icard pcard tctx (.bv w))
---     (b : Term bcard ncard icard pcard tctx (.bv w)) :
---     Predicate wcard tcard bcard ncard icard pcard tctx pcard
--- | and (p1 p2 : Predicate wcard tcard bcard ncard icard pcard tctx pcard) : Predicate wcard tcard bcard ncard icard pcard tctx pcard
--- | or (p1 p2 : Predicate wcard tcard bcard ncard icard pcard tctx pcard) : Predicate wcard tcard bcard ncard icard pcard tctx pcard
--- | var (v : Fin pcard) : Predicate wcard tcard bcard ncard icard pcard tctx pcard
--- | boolBinRel  {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
---   (k : BoolBinaryRelationKind)
---   (a b : Term bcard ncard icard pcard tctx .bool) :
---   Predicate wcard tcard bcard ncard icard pcard tctx pcard
-
--- add predicate NOT, <= for bitvectors, < for bitvectors, <=
--- for widths, =, not equals for widths.
-
--- def Predicate.toProp {wcard tcard bcard ncard icard pcard : Nat} {wenv : WidthExpr.Env wcard}
---     {tctx : Term.Ctx wcard tcard}
---     (benv : Term.BoolEnv bcard)
---     (tenv : tctx.Env wenv)
---     (penv : Predicate.Env pcard)
---     (p : Predicate wcard tcard bcard ncard icard pcard tctx pcard) : Prop :=
---   match p with
---   | .var v => penv v
---   | .binWidthRel rel wa wb =>
---     match rel with
---     | .eq => wa.toNat wenv = wb.toNat wenv
---     | .le => wa.toNat wenv ≤ wb.toNat wenv
---   | .binRel rel _w a b =>
---     match rel with
---     | .eq => a.toBV benv nenv ienv penv tenv = b.toBV benv nenv ienv penv tenv
---     | .ne => a.toBV benv nenv ienv penv tenv ≠ b.toBV benv nenv ienv penv tenv
---     | .ult => (a.toBV benv nenv ienv penv tenv).ult (b.toBV benv nenv ienv penv tenv) = true
---     | .ule => (a.toBV benv nenv ienv penv tenv).ule (b.toBV benv nenv ienv penv tenv) = true
---     | .slt => (a.toBV benv nenv ienv penv tenv).slt (b.toBV benv nenv ienv penv tenv) = true
---     | .sle => (a.toBV benv nenv ienv penv tenv).sle (b.toBV benv nenv ienv penv tenv) = true
---   | .and p1 p2 => p1.toProp benv nenv ienv penv tenv penv ∧ p2.toProp benv nenv ienv penv tenv penv
---   | .or p1 p2 => p1.toProp benv nenv ienv penv tenv penv ∨ p2.toProp benv nenv ienv penv tenv penv
---   | .boolBinRel rel a b =>
---     match rel with
---     -- | TODO: rename 'toBV' to 'toBool'.
---     | .eq => (a.toBV benv nenv ienv penv tenv) = (b.toBV benv nenv ienv penv tenv)
-
 namespace Nondep
 
 inductive WidthExpr where
@@ -809,8 +754,8 @@ inductive Term
     (a : Term) (b : Term) : Term
 | or (p1 p2 : Term) : Term
 | and (p1 p2 : Term) : Term
-| pTrue : Term
 | pvar (v : Nat) : Term
+| pTrue : Term
 | boolBinRel (k : BoolBinaryRelationKind)
     (a b : Term) : Term
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
@@ -886,9 +831,18 @@ def Term.ofDepTerm {wcard tcard bcard : Nat}
 
 @[simp]
 def Term.ofDep_var {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pcard : Nat)
-    {v : Fin tcard} {tctx : Term.Ctx wcard tcard} :
+    {tctx : Term.Ctx wcard tcard}
+    {v : Fin tcard} :
     Term.ofDepTerm (wcard := wcard) (tcard := tcard) (bcard := bcard) (ncard := ncard) (icard := icard) (pcard := pcard) (tctx := tctx)
     (MultiWidth.Term.var v) = Term.var v (.ofDep (tctx v)) := rfl
+
+@[simp]
+theorem Term.ofDep_add {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pcard : Nat)
+    {tctx : Term.Ctx wcard tcard}
+    {w : MultiWidth.WidthExpr wcard}
+    {a b : MultiWidth.Term bcard ncard icard pcard tctx (.bv w)}  :
+    Term.ofDepTerm (MultiWidth.Term.add (w := w) a b) =
+      Term.add (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b) := rfl
 
 def Term.width (t : Term) : WidthExpr :=
   match t with
@@ -1180,4 +1134,375 @@ structure HPredFSMToBitStream {pcard : Nat}
         p.toBV benv nenv ienv penv tenv  ↔ (fsm.toFsmZext.eval fsmEnv = .negOne)
 
 end ToFSM
+
+section ToSingleWidth
+
+inductive SingleWidthTermKind
+| prop
+| bv
+deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
+
+
+inductive SingleWidthTerm (wcard tcard : Nat) : SingleWidthTermKind → Type where
+| wvar : Nat → SingleWidthTerm wcard tcard .bv
+| bvvar : Nat → SingleWidthTerm wcard tcard .bv
+| bvconst : Nat → SingleWidthTerm wcard tcard .bv
+| bvmul (a b : SingleWidthTerm wcard tcard .bv)  : SingleWidthTerm wcard tcard .bv
+| bvadd (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+| bvand (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+| bvnot (a : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+| bvule (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| bvult (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| bveq (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| bvne (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| propimp (a b : SingleWidthTerm wcard tcard .prop) : SingleWidthTerm wcard tcard .prop
+| proptrue : SingleWidthTerm wcard tcard .prop
+| unknown : SingleWidthTerm wcard tcard k
+deriving Repr, Hashable, DecidableEq, Lean.ToExpr
+
+
+
+/--
+Environment for single-width terms, mapping width variables to their corresponding width bitvectors.
+-/
+def SingleWidthTerm.WidthEnv (wcard : Nat) (wout : Nat) : Type :=
+  Fin wcard → BitVec wout
+
+/--
+Environment for single-width terms, mapping term variables to bitvectors.
+-/
+def SingleWidthTerm.BVEnv (tcard : Nat) (wout : Nat) : Type :=
+  Fin tcard → BitVec wout
+
+
+def SingleWidthTerm.toBV
+  {wcard tcard : Nat}
+  (o : Nat)
+  (t : SingleWidthTerm wcard tcard .bv)
+  (wenv : SingleWidthTerm.WidthEnv wcard o)
+  (bvenv : SingleWidthTerm.BVEnv tcard o)
+  : BitVec o :=
+  match t with
+  | .wvar v =>
+    if hv : v < wcard
+    then wenv ⟨v, hv⟩
+    else 0#o -- dummy value
+  -- | .wconst c => BitVec.ofNat o c
+  | .bvvar v =>
+    if hv : v < tcard
+    then bvenv ⟨v, hv⟩
+    else 0#o -- dummy value
+  | .bvconst c => BitVec.ofNat o c
+  | .bvnot a => ~~~(a.toBV o wenv bvenv)
+  | .bvmul a b =>
+    (a.toBV o wenv bvenv) * (b.toBV o wenv bvenv)
+  | .bvadd a b => (a.toBV o wenv bvenv) + (b.toBV o wenv bvenv)
+  | .bvand a b => (a.toBV o wenv bvenv) &&& (b.toBV o wenv bvenv)
+  | .unknown => 0#o-- dummy value
+
+@[simp]
+theorem SingleWidthTerm.toBV_wvar {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {v : Nat} :
+    SingleWidthTerm.toBV o (.wvar v) wenv bvenv =
+    (if hv : v < wcard then wenv ⟨v, hv⟩ else 0#o) := by grind [toBV]
+
+@[simp]
+theorem SingleWidthTerm.toBV_bvvar {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {v : Nat} :
+    SingleWidthTerm.toBV o (.bvvar v) wenv bvenv =
+    (if hv : v < tcard then bvenv ⟨v, hv⟩ else 0#o) := by grind [toBV]
+
+@[simp]
+theorem SingleWidthTerm.toBV_bvconst {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {c : Nat} :
+    SingleWidthTerm.toBV o (.bvconst c) wenv bvenv =
+    BitVec.ofNat o c := by grind [toBV]
+
+@[simp]
+theorem SingleWidthTerm.toBV_bvnot {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {a : SingleWidthTerm wcard tcard .bv} :
+    SingleWidthTerm.toBV o (.bvnot a) wenv bvenv =
+    ~~~(a.toBV o wenv bvenv) := by grind [toBV]
+
+@[simp]
+theorem SingleWidthTerm.toBV_bvand {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {a b : SingleWidthTerm wcard tcard .bv} :
+    SingleWidthTerm.toBV o (.bvand a b) wenv bvenv =
+    (a.toBV o wenv bvenv) &&& (b.toBV o wenv bvenv) := by grind [toBV]
+
+@[simp]
+theorem SingleWidthTerm.toBV_bvadd {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {a b : SingleWidthTerm wcard tcard .bv} :
+    SingleWidthTerm.toBV o (.bvadd a b) wenv bvenv =
+    (a.toBV o wenv bvenv) + (b.toBV o wenv bvenv) := by grind [toBV]
+
+def SingleWidthTerm.toProp
+  {wcard tcard : Nat}
+  (o : Nat)
+  (t : SingleWidthTerm wcard tcard .prop)
+  (wenv : SingleWidthTerm.WidthEnv wcard o)
+  (bvenv : SingleWidthTerm.BVEnv tcard o) : Prop :=
+  match t with
+  | .bvule a b => (a.toBV o wenv bvenv).ule (b.toBV o wenv bvenv)
+  | .bvult a b => (a.toBV o wenv bvenv).ult (b.toBV o wenv bvenv)
+  | .bveq a b => (a.toBV o wenv bvenv) = (b.toBV o wenv bvenv)
+  | .bvne a b => (a.toBV o wenv bvenv) ≠ (b.toBV o wenv bvenv)
+  | .propimp a b => (a.toProp o wenv bvenv) → (b.toProp o wenv bvenv)
+  | .proptrue => True
+  | .unknown => False
+
+-- -b = !b + 1
+def SingleWidthTerm.bvneg (t : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd (.bvnot t) (.bvconst 1)
+
+def SingleWidthTerm.bvsub (t1 t2 : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd t1 (SingleWidthTerm.bvneg t2)
+
+-- power of 2 - 1 = unary mask.
+def SingleWidthTerm.maskOfPot (w : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  (SingleWidthTerm.bvsub w (.bvconst 1))
+
+namespace Nondep
+
+/--
+Convert a width expression to its corresponding single-width term.
+This is used to convert the width expressions with multiple widths into a single-width expression.
+-/
+def WidthExpr.toSingleWidthTerm (wcard tcard : Nat) (w : WidthExpr) : SingleWidthTerm wcard tcard .bv :=
+  match w with
+  | .const c => .bvconst (1 <<< c)
+  | .var v => (.wvar (v))
+  | _ => .unknown
+
+@[simp]
+theorem WidthExpr.toSingleWidthTerm_const {wcard tcard : Nat} {c : Nat} :
+    WidthExpr.toSingleWidthTerm wcard tcard (WidthExpr.const c) = .bvconst (1 <<< c) := rfl
+
+@[simp]
+theorem WidthExpr.toSingleWidthTerm_var {wcard tcard : Nat} {v : Nat} :
+    WidthExpr.toSingleWidthTerm wcard tcard (WidthExpr.var v) = .wvar v := rfl
+
+
+/--
+Convert a term to its corresponding single-width term.
+-/
+def Term.toSingleWidthTerm (wcard tcard : Nat)  (t : Term) : SingleWidthTerm wcard tcard .bv :=
+  match t with
+  | .var v _w => .bvvar v
+  | .add w a b =>
+    let aMono := a.toSingleWidthTerm wcard tcard
+    let bMono := b.toSingleWidthTerm wcard tcard
+    let wMono := w.toSingleWidthTerm wcard tcard
+    .bvand (.bvadd aMono bMono) wMono
+  | .band _w a b =>
+    let aMono := a.toSingleWidthTerm wcard tcard
+    let bMono := b.toSingleWidthTerm wcard tcard
+    .bvand aMono bMono
+  | _ => .unknown
+
+@[simp]
+theorem Term.toSingleWidthTerm_var {wcard tcard : Nat}
+    {v : Fin tcard} {tctx : Term.Ctx wcard tcard} :
+    Term.toSingleWidthTerm wcard tcard (Term.var v (.ofDep (tctx v))) = .bvvar v := rfl
+
+@[simp]
+theorem Term.toSingleWidthTerm_add {wcard tcard : Nat}
+    {w : MultiWidth.WidthExpr wcard}
+    {a b : Term} :
+    Term.toSingleWidthTerm wcard tcard (Term.add (.ofDep w) a b) =
+    .bvand (.bvadd (Term.toSingleWidthTerm wcard tcard a) (Term.toSingleWidthTerm wcard tcard b))
+      (WidthExpr.toSingleWidthTerm wcard tcard (.ofDep w)) := rfl
+
+end Nondep
+
+/-- -x = !x + 1 -/
+def SingleWidthTerm.neg {wcard tcard : Nat} (t : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd (.bvnot t) (.bvconst 1)
+
+-- x - y = x + (-y)
+def SingleWidthTerm.sub {wcard tcard : Nat} (t1 t2 : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd t1 (SingleWidthTerm.neg t2)
+
+
+-- v & (v - 1) = 0
+def SingleWidthTerm.monoIsPotPred (wcard tcard : Nat) (w : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop :=
+  .bveq (.bvand w (SingleWidthTerm.sub w (.bvconst 1))) (.bvconst 0)
+
+  -- let var := Term.monoPotVar wcard tcard w
+  -- (.band .monoWidth var (Term.potToMask var))
+
+def SingleWidthTerm.mkPotPreconditions (wcard tcard : Nat) (w : Nat) :
+    SingleWidthTerm wcard tcard .prop :=
+  match w with
+  | 0 => .proptrue
+  | w' + 1 =>
+    .propimp (SingleWidthTerm.monoIsPotPred wcard tcard (.bvconst w)) (SingleWidthTerm.mkPotPreconditions wcard tcard w')
+
+
+namespace Nondep
+def Term.toSingleWidthProp (wcard tcard : Nat) (t : Term) : SingleWidthTerm wcard tcard .prop :=
+  match t with
+  | .boolConst b => if b then .proptrue else .unknown
+  | .binRel k _w a b => -- these are guaranteed to be masked correctly.
+    let aMono := a.toSingleWidthTerm wcard tcard
+    let bMono := b.toSingleWidthTerm wcard tcard
+    match k with
+    | .ule => .bvule aMono bMono
+    | .ult => .bvult aMono bMono
+    | .eq => .bveq aMono bMono
+    | .ne => .bvne aMono bMono
+    | _ => .unknown
+  | _ => .unknown
+
+end Nondep
+def SingleWidthTerm.isTranslated {wcard tcard : Nat} (t : SingleWidthTerm wcard tcard k) : Bool :=
+  match t with
+  | .unknown => false
+  | _ => true
+
+/--
+Build a single-width width environment from a multi-width environment, such that it
+satisfies 'HSingleWidthEnvRelation'.
+-/
+def SingleWidthTerm.WidthEnv.ofMultiWidth {wcard : Nat} (wMultiEnv : WidthExpr.Env wcard) (o : Nat) :
+    SingleWidthTerm.WidthEnv wcard o :=
+  fun v => BitVec.ofNat o (1 <<< wMultiEnv v)
+
+open Lean in
+def Expr.mkBitVecType (n : Expr) : MetaM Expr := do
+  let out := mkApp (mkConst ``BitVec) n
+  Meta.check out
+  return out
+
+open Lean in
+def Expr.mkBitVecInstAdd (w : Expr) : MetaM Expr := do
+  let out := mkApp (mkConst ``BitVec.instAdd) w
+  Meta.check out
+  return out
+open Lean in
+def Expr.mkInstHAdd (w : Expr) : MetaM Expr := do
+  let out := mkAppN (mkConst ``instHAdd [0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecInstAdd w]
+  Meta.check out
+  return out
+
+open Lean in
+def Expr.mkHAddCall (w : Expr) (a b : Expr) : MetaM Expr := do
+  let out := mkAppN (mkConst ``HAdd.hAdd [0, 0, 0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkInstHAdd w, a, b]
+  Meta.check out
+  return out
+
+open Lean in
+def Expr.mkBitVecInstAndOp (w : Expr) : MetaM Expr := do
+  let out := mkApp (mkConst ``BitVec.instAndOp) w
+  Meta.check out
+  return out
+
+open Lean in
+def Expr.mkInstHAndOfAndOp (w : Expr) : MetaM Expr := do
+  let out := mkAppN (mkConst ``instHAndOfAndOp [0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecInstAndOp w]
+  Meta.check out
+  return out
+
+open Lean in
+def Expr.mkHAndCall (w : Expr) (a b : Expr) : MetaM Expr := do
+  let out := mkAppN (mkConst ``HAnd.hAnd [0, 0, 0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkInstHAndOfAndOp w, a, b]
+  Meta.check out
+  return out
+
+
+open Lean Meta in
+/-- Build a Lean `Expr` directly from a `SingleWidthTerm`, using arrays of free variables
+for width and term environments. `.bv` cases produce `Expr` of type `BitVec w`;
+`.prop` cases produce `Expr` of type `Prop`.
+Uses direct `BitVec.*` functions to avoid instance resolution failures in minimal
+`withImportModules` environments (CLI backend). The caller should run `bv_normalize`
+or equivalent simprocs before `bv_decide` to fold these into typeclass form. -/
+def SingleWidthTerm.toLeanExprAux {wcard tcard : Nat}
+    (w : Nat) (wvars tvars : Array Expr)
+    : SingleWidthTerm wcard tcard k → MetaM Expr
+  | .wvar v =>
+    if h : v < wvars.size then pure wvars[v]
+    else pure $ mkApp2 (mkConst ``BitVec.ofNat) (mkNatLit w) (mkNatLit 0)
+  | .bvvar v =>
+    if h : v < tvars.size then pure tvars[v]
+    else pure $ mkApp2 (mkConst ``BitVec.ofNat) (mkNatLit w) (mkNatLit 0)
+  | .bvconst c =>
+    pure $ mkApp2 (mkConst ``BitVec.ofNat) (mkNatLit w) (mkNatLit c)
+  | .bvnot a => do
+    pure $ mkApp2 (mkConst ``BitVec.not) (mkNatLit w)
+      (← a.toLeanExprAux w wvars tvars)
+  | .bvadd a b => do
+    let out ← Expr.mkHAddCall (mkNatLit w)
+      (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
+    Meta.check out
+    pure out
+  | .bvand a b => do
+    let out ← Expr.mkHAndCall (mkNatLit w)
+      (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
+    Meta.check out
+    pure out
+  | .bvmul a b => do
+    pure $ mkApp3 (mkConst ``BitVec.mul) (mkNatLit w)
+      (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
+  | .bveq a b => do
+    let bvType := mkApp (mkConst ``BitVec) (mkNatLit w)
+    pure $ mkApp3 (mkConst ``Eq [.succ .zero]) bvType
+      (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
+  | .bvne a b => do
+    let bvType := mkApp (mkConst ``BitVec) (mkNatLit w)
+    pure $ mkApp3 (mkConst ``Ne [.succ .zero]) bvType
+      (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
+  | .bvule a b => do
+    -- BitVec.ule returns Bool; wrap in `= true` to get Prop
+    let ule := mkApp3 (mkConst ``BitVec.ule) (mkNatLit w)
+      (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
+    pure $ mkApp3 (mkConst ``Eq [.succ .zero]) (mkConst ``Bool) ule (mkConst ``Bool.true)
+  | .bvult a b => do
+    let ult := mkApp3 (mkConst ``BitVec.ult) (mkNatLit w)
+      (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
+    pure $ mkApp3 (mkConst ``Eq [.succ .zero]) (mkConst ``Bool) ult (mkConst ``Bool.true)
+  | .propimp a b => do
+    mkArrow (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
+  | .proptrue => pure (mkConst ``True)
+  | .unknown => pure (mkConst ``False)
+
+open Lean Meta in
+/-- Recursive helper: introduce `n` fresh `BitVec w` variables with given prefix,
+then call `k` with the accumulated variable arrays. -/
+partial def SingleWidthTerm.introVarsThenBuild
+    (bvType : Expr) (total : Nat) (prefix_ : String) (idx : Nat) (acc : Array Expr)
+    (k : Array Expr → MetaM Expr) : MetaM Expr := do
+  if idx ≥ total then k acc
+  else
+    withLocalDecl (Name.mkSimple s!"{prefix_}{idx}") .default bvType fun fvar => do
+      let body ← SingleWidthTerm.introVarsThenBuild bvType total prefix_ (idx + 1) (acc.push fvar) k
+      mkForallFVars #[fvar] body
+
+open Lean Meta in
+/--
+Convert a `SingleWidthTerm` proposition to a QF_BV `Expr` at the given width `w`.
+Builds: ∀ (w0 ... : BitVec w) (x0 ... : BitVec w), <direct proposition>
+where w0..w_{wcard-1} are width variables and x0..x_{tcard-1} are term variables.
+-/
+def SingleWidthTerm.toLeanQFBVExpr {wcard tcard : Nat}
+    (t : SingleWidthTerm wcard tcard .prop) (w : Nat) : MetaM Expr := do
+  let bvType := mkApp (mkConst ``BitVec) (mkNatLit w)
+  SingleWidthTerm.introVarsThenBuild bvType wcard "w" 0 #[] fun wvars =>
+    SingleWidthTerm.introVarsThenBuild bvType tcard "x" 0 #[] fun tvars =>
+      t.toLeanExprAux w wvars tvars
+
+end ToSingleWidth
+
 end MultiWidth
