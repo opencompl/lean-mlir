@@ -9,13 +9,19 @@ import Blase.KInduction.KInduction
 import Blase.Fast.Aiger
 import Cli
 import Lean
+import Std
 
 open Lean Elab Meta
 open MultiWidth
 open ReflectVerif.BvDecide (DecideIfZerosOutput)
 open Cli
 
+ theorem foo :  ∀ (w0 x0 x1 : BitVec 8), Eq ((x0.add x1).and w0) ((x1.add x0).and w0) := by 
+ simp only [BitVec.add_eq, BitVec.and_eq]
+ sorry
+
 namespace Blasewuzla
+
 
 -- Exit codes follow the CaDiCaL / HWMCC convention.
 def EXIT_UNKNOWN : UInt32 := 0
@@ -35,22 +41,23 @@ def getSimpData (simpsetName : Name) : MetaM (SimpTheorems × Simprocs) := do
 
 open Lean Elab Meta
 def runMonoBMCPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
-  g.withContext do
     let mut theorems : Array SimpTheorems := #[]
     let mut simprocs : Array Simprocs := #[]
 
     for name in [`seval, `bv_normalize] do
       let res ← getSimpData name
+      IO.println s!"lemmas: {res.1.lemmaNames.toList.map Origin.key}"
+      IO.println s!"simprocs: {res.2.simprocNames.toList}"
       theorems := theorems.push res.1
       simprocs := simprocs.push res.2
+    IO.println s!"#theorems: {theorems.size}"
+    IO.println s!"#simprocs: {simprocs.size}"
 
-    let config : Simp.Config := { }
+    let config : Simp.Config := { contextual := true }
     let config := { config with failIfUnchanged := false }
     let ctx ← Simp.mkContext (config := config)
       (simpTheorems := theorems)
       (congrTheorems := ← Meta.getSimpCongrTheorems)
-    -- let lctx ← getLCtx
-    -- let fvars := lctx.getFVarIds
     match ← simpTargetStar g ctx (simprocs := simprocs) /- (fvarIdsToSimp := fvars) -/ with
     | (.closed, _stats) => return none
     | (.noChange , _stats) => return some g
@@ -131,7 +138,13 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
 
     -- Set up Lean TermElabM environment for the SAT solver
     initSearchPath (← findSysroot)
-    Lean.withImportModules #[{ module := `Lean.Elab.Tactic.BVDecide }, { module := `Std.Tactic.BVDecide }]
+    Lean.withImportModules #[
+        { module := `Init },
+        { module := `Std },
+        { module := `Init.Data.BitVec.Basic },
+        { module := `Init.Data.BitVec.Lemmas },
+        { module := `Lean.Elab.Tactic.BVDecide },
+        { module := `Std.Tactic.BVDecide }]
         (opts := {}) (trustLevel := 0) fun env => do
       let ctxCore : Core.Context := { fileName := "blasewuzla", fileMap := FileMap.ofString "" }
       let sCore : Core.State := { env }
@@ -176,7 +189,11 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     initSearchPath (← findSysroot)
     Lean.withImportModules
         #[{ module := `Lean.Elab.Tactic.BVDecide },
-          { module := `Std.Tactic.BVDecide }
+          { module := `Std.Tactic.BVDecide },
+          { module := `Std },
+          { module := `Init },
+          { module := `Std.Tactic.BVDecide.Normalize.Canonicalize },
+          { module := `Std.Tactic.BVDecide.Normalize.BitVec },
         ]
           -- { module := `Blasewuzla }]
         (opts := {}) (trustLevel := 0) fun env => do
@@ -189,17 +206,17 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
       let ((proved, _), _, _, _) ← (show Term.TermElabM _ from do
         IO.eprintln "DEBUG: about to call toQFBVExpr"
         let goalExpr ← singleWidthTerm.toQFBVExpr bound
+        IO.println f!"goal type expression: {← ppExpr goalExpr}"
         let goalMVar ← mkFreshExprMVar (type? := .some goalExpr)
-        IO.println (← MessageData.toString m!"goal (before prepcoessing): {goalMVar}")
+        Lean.Elab.Term.synthesizeSyntheticMVarsNoPostponing
         let goalId := goalMVar.mvarId!
-        goalId.withContext do
-          IO.println (← MessageData.toString m!"goal (before prepcoessing): {Expr.mvar goalId}")
+        IO.println (f!"goal (before prepcoessing): {← ppGoal goalId}")
         let some goalId ← runMonoBMCPreprocessing goalId
           | do
               IO.println "unsat: closed goal in preprocessing"
               return (true, ())
-        goalId.withContext do
-          IO.println (← MessageData.toString m!"goal (after preprocessing): {Expr.mvar goalId}")
+        IO.println f!"goal (after preprocessing): {← ppGoal goalId}"
+        Lean.Elab.Term.synthesizeSyntheticMVarsNoPostponing
         let solved : Bool ← try do
           let result ← proveGoalByBvDecide goalId
           pure result.lratCert.isSome
