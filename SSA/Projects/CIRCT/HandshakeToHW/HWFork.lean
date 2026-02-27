@@ -62,6 +62,9 @@ namespace TRY2
 
    Under this assumption, we do not really need the registers, because we will instantly emit a value, and the registers
    will be constant true.
+
+  This spec is not the same as the hw implementation, unless we have a guarantee that
+  a `rdy` signal is received (no deadlock).
  -/
 
 def hw_fork (_in0 : Stream (BitVec 32)) : Stream (BitVec 32) × Stream (BitVec 32) :=
@@ -199,65 +202,139 @@ theorem fork_refines {a x y x' y'} :
   y ~ y' →
   x ~ x' ∧ y ~ y' := by grind
 
-/-- Stream := Stream' (Option α) -/ 
+/-- Stream := Stream' (Option α) -/
 def toStream {α} (rdy : Stream' (BitVec 1)) (vld : Stream' (BitVec 1)) (data : Stream' α) : Stream α := fun i =>
   if rdy i == 1#1 && vld i == 1#1 then
     .some (data i)
   else
     .none
 
-/-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
-theorem hw_fork_refines:
-    /- Given a handshake fork taking `a` as input and returning `(a, a)`, we take
-      its lowering (with input a bisimilar ready-valid wrapped stream) -/
-    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld i) →
-    /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork (`a ~ rdy vld i`), meaning that the two outputs are also bisimilar by transitivity-/
-    /- we want to prove that the outputs of the handshake fork are respectively
-      bisimilar to the ready-valid wrapping of the output of the hardware fork -/
-    (toStream rd1 vld1 o1) ~ (toStream rd2 vld2 o2) := by
-  intros hardware_hw
-  unfold Bisim
-  sorry
-
 /- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
 
-/-- weaker def where we do not assume that rdy is by default 0#1 -/ 
+/-- weaker def where we do not assume that rdy is by default 0#1 -/
 def globallyValidUntilReady (vld rdy : Stream' (BitVec 1)) : Prop :=
     ∀ (i : Nat),
         (vld i = 1#1) →
-      ∃ (k : Nat), 
-        rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧ 
+      ∃ (k : Nat),
+        rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧
         ∀ (j : Nat) (_hj : j < k),
-          vld (i + j) = 1#1 
+          vld (i + j) = 1#1
 
-/-- This def is stronger than the one above -/ 
-def globallyValidUntilReady' (vld rdy : Stream' (BitVec 1)) : Prop := 
-    ∀ (i : Nat), 
-        (vld i = 1#1) → 
-      ∃ (k : Nat), 
-        rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧ 
-        ∀ (j : Nat) (_hj : j < k), 
+/-- This def is stronger than the one above -/
+def globallyValidUntilReady' (vld rdy : Stream' (BitVec 1)) : Prop :=
+    ∀ (i : Nat),
+        (vld i = 1#1) →
+      ∃ (k : Nat),
+        rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧
+        ∀ (j : Nat) (_hj : j < k),
           vld (i + j) = 1#1 ∧ rdy (i + j) = 0#1
           -- we should add sth like vld (i + k + 1) = 0#1?
 
-def globallyValidAndData (vld : Stream' (BitVec 1)) (data : Stream' (BitVec w)) : Prop := 
-    ∀ (i : Nat), 
-        (vld i = 1#1 ∧ vld (i + 1) = 1#1) → 
+def globallyValidAndData (vld : Stream' (BitVec 1)) (data : Stream' (BitVec w)) : Prop :=
+    ∀ (i : Nat),
+        (vld i = 1#1 ∧ vld (i + 1) = 1#1) →
         data i = data (i + 1)
 
+def relation : Stream (BitVec w) → Stream (BitVec w) → Prop := fun x y =>
+    ∃ (rd1 vld1 : Stream' (BitVec 1)) (data1 : Stream' (BitVec w))
+      (rd2 vld2 : Stream' (BitVec 1)) (data2 : Stream' (BitVec w)),
+    x = toStream rd1 vld1 data1 ∧
+    globallyValidUntilReady rd1 vld1 ∧
+    globallyValidAndData vld1 data1 ∧
+    y = toStream rd2 vld2 data2 ∧
+    globallyValidUntilReady rd2 vld2 ∧
+    globallyValidAndData vld2 data2
+    /- we need to say something about `x` and `y`. -/
+
+/-- G(F(val = 1))-/
+def globallyFinallyReady (x : Stream' (BitVec 1)) :=
+  ∀ (i : Nat),
+    ∃ (k : Nat),
+      x (i + k) = 1#1
+
 /-
-theorem globallyValidUntilReady_toStream 
-    (vld rdy : Stream' (BitVec 1)) (data : Stream' (BitVec w)) : 
-    (globallyValidUntilReady vld rdy ∧ toStream vld rdy data) → 
-      _ := by 
-  sorry 
+  our implementation of `fork` should not allow this, assuming that the input is
+  well-formed (including its ready signals!).
+
+  val1 =  1 1 1
+  data1 = 2 3 4
+  rd1 =   1 1 1
+  out1:   2 3 4
+
+  val2 =  1 1 1
+  data2 = 2 3 4
+  rd2 =   0 1 1
+  out2:   - 3 4
+
 -/
 
-def relation (x y : Stream (BitVec w)) :=
-    x = toStream rdy val data ∧ 
-    globallyValidUntilReady rdy val ∧ 
-    globallyValidAndData val data
-    
+
+/-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
+theorem hw_fork_refines1:
+    /- Given a handshake fork taking `a` as input and returning `(a, a)`, we take
+      its lowering (with input a bisimilar ready-valid wrapped stream) -/
+    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld i) →
+    /- We want to make sure that stalling is correctly modeled for `a` (input).
+      We constrain the input and prove that if the input behaves properly,
+      the output will. -/
+    globallyValidUntilReady vld rdy →
+    globallyValidAndData vld data →
+    /- we assume no deadlock -/
+    globallyFinallyReady rd1 →
+    globallyFinallyReady rd2 →
+    /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork (`a ~ rdy vld i`), meaning that the two outputs are also bisimilar by transitivity-/
+    /- we want to prove that the outputs of the handshake fork are respectively
+      bisimilar to the ready-valid wrapping of the output of the hardware fork -/
+    (toStream rd1 vld1 o1) ~ (toStream rdy vld data) := by
+  intros hardware_hw
+  unfold Bisim
+
+  sorry
+
+/-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
+theorem hw_fork_refines2:
+    /- Given a handshake fork taking `a` as input and returning `(a, a)`, we take
+      its lowering (with input a bisimilar ready-valid wrapped stream) -/
+    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld i) →
+    /- We want to make sure that stalling is correctly modeled for `a` (input).
+      We constrain the input and prove that if the input behaves properly,
+      the output will. -/
+    globallyValidUntilReady vld rdy →
+    globallyValidAndData vld data →
+    /- we assume no deadlock -/
+    globallyFinallyReady rd1 →
+    globallyFinallyReady rd2 →
+    /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork (`a ~ rdy vld i`), meaning that the two outputs are also bisimilar by transitivity-/
+    /- we want to prove that the outputs of the handshake fork are respectively
+      bisimilar to the ready-valid wrapping of the output of the hardware fork -/
+    (toStream rd2 vld2 o2) ~ (toStream rdy vld data) := by
+  intros hardware_hw globValReady globValData globFinReady1 globFinReady2
+  unfold Bisim
+  simp
+  unfold globallyValidUntilReady at globValReady
+  unfold globallyValidAndData at globValData
+  unfold globallyFinallyReady at globFinReady1 globFinReady2
+  unfold TRY3.split_stream2 at hardware_hw
+  simp at hardware_hw
+  obtain ⟨hready, hvld1, hvld2, ho1, ho2⟩ := hardware_hw
+  exists 0, 0
+  simp
+  and_intros
+  · apply Bisim.coinduct (pred := Eq)
+    · intros x y hxy
+      rw [hxy]
+      exists 0, 0
+      simp
+    · specialize globFinReady1 0
+
+      sorry
+  ·
+    sorry
+
+theorem trans' {a b : Stream α} : a ~ b → a ~ c → b ~ c := by
+  intros hab hbc
+  sorry
+
 
 theorem hw_fork_refines':
     /- Given a handshake fork -/
@@ -266,49 +343,34 @@ theorem hw_fork_refines':
     (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (a := BitVec 1) (TRY3.hw_fork rd1 rd2 vld data) →
     /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork -/
     a ~ (toStream rdy vld data) →
-    /- we want to make sure that stalling is correctly modeled -/ 
-    globallyValidUntilReady vld2 rd2 → 
-    globallyValidAndData vld2 o2 → 
-    globallyValidUntilReady vld1 rd1 →
-    globallyValidAndData vld1 o1 →
+    /- We want to make sure that stalling is correctly modeled for `a` (input).
+      We constrain the input and prove that if the input behaves properly,
+      the output will. -/
+    globallyValidUntilReady vld rdy →
+    globallyValidAndData vld data →
+    /- we assume no deadlock -/
+    globallyFinallyReady rd1 →
+    globallyFinallyReady rd2 →
     /- we want to prove that the outputs of the handshake fork are respectively
       bisimilar to the ready-valid wrapping of the output of the hardware fork -/
     x ~ (toStream rd1 vld1 o1) ∧ y ~ (toStream rd2 vld2 o2) := by
-  intros handshake_fork hardware_fork inputs_bisim valready2 valdata2 valready1 valdata1
-  and_intros
+  intros handshake_fork hardware_fork inputs_bisim valready_ valdata_a finready1 finready2
   · unfold TRY2.hw_fork at handshake_fork
     have heq : x = a := by
       simp at handshake_fork
       exact handshake_fork.1
-    rw [heq]
-    have := symm inputs_bisim
-    apply HandshakeStream.trans inputs_bisim
-    /- we need to replace `Eq` with something that includes `globallyValidAndData`, 
-      could also be `Eq ∩ globallyValidAndData`. -/
-
-    have p1 := relation a rd1 vld o1 
-    apply Bisim.coinduct (pred := p1)
-    · intros s1 s2 hs1
-      rw [Bisim] at this inputs_bisim
-      obtain ⟨n, m, h1, h2, h3⟩ := this
-      unfold globallyValidUntilReady at valready1 valready2
-      unfold globallyValidAndData at valdata1 valdata2
-      have valready1n := valready1 n 
-      have valready2m := valready2 m
-      have valdata1n := valdata1 n 
-      have valdata2m := valdata2 m
-      exists n 
-      exists m 
-      and_intros 
-      · /- s1 and s2 `none` until a given point -/ 
-        sorry 
-      · /- the first not-none elements in s1 and s2 are equal-/
-        sorry 
-      · /- until that element s1 is none -/
-        sorry 
-      · /- until that element s2 is none -/ 
-        sorry 
-    · sorry
-  · sorry
+    have heq' : y = a := by
+      simp at handshake_fork
+      exact handshake_fork.2
+    rw [heq, heq']
+    and_intros
+    · apply trans'
+      symm; assumption
+      symm; apply hw_fork_refines1
+      all_goals assumption
+    · apply trans'
+      symm; assumption
+      symm; apply hw_fork_refines2
+      all_goals assumption
 
 end HWComponents
