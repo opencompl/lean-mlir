@@ -1404,7 +1404,7 @@ def _root_.Std.Tactic.BVDecide.BVExpr.cast (x : BVExpr w) (hw : w = w') : BVExpr
 `wenv` provides concrete width assignments for width variables. -/
 def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) :=
    match ht : t with
-  | .var v w => (BVExpr.var v)
+  | .var v _ => (BVExpr.var v)
   | .ofNat w n => (.const (BitVec.ofNat (w.eval wenv) n))
   | .add we a b =>
     let a' := a.toBVExpr wenv
@@ -1419,60 +1419,104 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) :
     let a' := a.toBVExpr wenv
     let b' := b.toBVExpr wenv
     let w := we.eval wenv
-    (.bin a' .mul b')
-  | .band _w a b => 
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        .bin (a'.cast ha) .mul (b'.cast hb)
+      else .const (0#_)
+    else .const (0#_)
+  | .band we a b =>
     let a' := a.toBVExpr wenv
     let b' := b.toBVExpr wenv
-    some (.bin a' .and b')
-  | .bor _w a b => 
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        .bin (a'.cast ha) .and (b'.cast hb)
+      else .const (0#_)
+    else .const (0#_)
+  | .bor we a b =>
     let a' := a.toBVExpr wenv
     let b' := b.toBVExpr wenv
-    some (.bin a' .or b')
-  | .bxor _w a b =>
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        .bin (a'.cast ha) .or (b'.cast hb)
+      else .const (0#_)
+    else .const (0#_)
+  | .bxor we a b =>
     let a' := a.toBVExpr wenv
     let b' := b.toBVExpr wenv
-    some (.bin a' .xor b')
-  | .bnot _w a =>
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        .bin (a'.cast ha) .xor (b'.cast hb)
+      else .const (0#_)
+    else .const (0#_)
+  | .bnot we a =>
     let a' := a.toBVExpr wenv
-    some (.un .not a')
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      (.un .not (a'.cast ha))
+    else .const (0#_)
   | .shiftl we a k =>
     let a':= a.toBVExpr wenv
-    let c := we.eval wenv
-    (.bin (.shiftLeft a' (.const (BitVec.ofNat w k))) .and (.const (BitVec.ofNat w (1 <<< c))))
-  | _ => 0#_
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      (.shiftLeft (a'.cast ha) (.const (BitVec.ofNat w k)))
+    else .const (0#_)
+  | _ => .const (0#_)
 
 /-- Convert a predicate-producing `Nondep.Term` to a `BVLogicalExpr`.
 `wenv` provides concrete width assignments for width variables.
 Uses `Term.toBVExpr` for BV subterms within predicates.
 `ule a b` is encoded as `¬(ult b a)`, `ne` as `¬(eq)`. -/
-def Term.toBVLogicalExpr (wenv : Array Nat) : Term → Option BVLogicalExpr
-  | .pTrue => some (.const true)
-  | .boolConst b => some (.const b)
-  | .binRel .eq _w a b => do
-    let a' ← a.toBVExpr wenv
-    let b' ← b.toBVExpr wenv
-    some (.literal (.bin a' .eq b'))
-  | .binRel .ne _w a b => do
-    let a' ← a.toBVExpr wenv
-    let b' ← b.toBVExpr wenv
-    some (.not (.literal (.bin a' .eq b')))
-  | .binRel .ult _w a b => do
-    let a' ← a.toBVExpr wenv
-    let b' ← b.toBVExpr wenv
-    some (.literal (.bin a' .ult b'))
-  | .binRel .ule _w a b => do
-    let a' ← a.toBVExpr wenv
-    let b' ← b.toBVExpr wenv
-    some (.not (.literal (.bin b' .ult a')))
-  | .and p1 p2 => do
-    let p1' ← p1.toBVLogicalExpr wenv
-    let p2' ← p2.toBVLogicalExpr wenv
-    some (.gate .and p1' p2')
-  | .or p1 p2 => do
-    let p1' ← p1.toBVLogicalExpr wenv
-    let p2' ← p2.toBVLogicalExpr wenv
-    some (.gate .or p1' p2')
-  | _ => none
+def Term.toBVLogicalExpr (wenv : Array Nat) : Term → BVLogicalExpr
+  | .pTrue => (.const true)
+  | .boolConst b => (.const b)
+  | .binRel .eq we a b =>
+    let a' := a.toBVExpr wenv
+    let b' := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        (.literal (.bin (a'.cast ha) .eq (b'.cast hb)))
+      else .const false
+    else .const false
+  | .binRel .ne we a b =>
+    let a' := a.toBVExpr wenv
+    let b' := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        (.not (.literal (.bin (a'.cast ha) .eq (b'.cast hb))))
+      else .const false
+    else .const false
+  | .binRel .ult we a b =>
+    let a' := a.toBVExpr wenv
+    let b' := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        (.literal (.bin (a'.cast ha) .ult (b'.cast hb)))
+      else .const false
+    else .const false
+  | .binRel .ule we a b =>
+    let a' := a.toBVExpr wenv
+    let b' := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        (.not (.literal (.bin (b'.cast hb) .ult (a'.cast ha))))
+      else .const false
+    else .const false
+  | .and p1 p2 =>
+    let p1' := p1.toBVLogicalExpr wenv
+    let p2' := p2.toBVLogicalExpr wenv
+    (.gate .and p1' p2')
+  | .or p1 p2 =>
+    let p1' := p1.toBVLogicalExpr wenv
+    let p2' := p2.toBVLogicalExpr wenv
+    (.gate .or p1' p2')
+  | _ => .const false
 
 end Nondep
 
