@@ -118,7 +118,6 @@ structure Config where
   niter : Nat
   bound : Nat
 
-
 structure Solver where
   name : String
   run : Config → ParseResult → MetaM SolverExitCode
