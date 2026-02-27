@@ -223,7 +223,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     let ctxMeta : Meta.Context := {}
     let sMeta : Meta.State := {}
     let ((proved, _), _,) ← (show MetaM _ from do
-      let goalExpr ← singleWidthTerm.toQFBVExpr bound
+      let goalExpr ← singleWidthTerm.toLeanQFBVExpr bound
       IO.println f!"goal: {← ppExpr goalExpr}"
       let solved : Bool ← try do
         let result ← proveGoalByBvDecide goalExpr
