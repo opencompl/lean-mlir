@@ -137,14 +137,16 @@ jobs:
         run: |
           lake -R build
 
+      - name: Run Blasewuzla SMT2 test suite
+        run: |
+          which cadical
+          lake build blasewuzla
+          bash Blase/Blasewuzla/tests/run_tests.sh --verbose
+
       - name: Run Blase Test Suite
         run: |
           lake build BlaseTest
 
-      - name: Run Blasewuzla SMT2 test suite
-        run: |
-          lake build blasewuzla
-          bash Blase/Blasewuzla/tests/run_tests.sh --verbose 
 
 #  test-blasewuzla:
 #    name: Blasewuzla CLI Test
