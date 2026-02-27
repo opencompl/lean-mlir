@@ -808,6 +808,7 @@ inductive Term
     (a : Term) (b : Term) : Term
 | or (p1 p2 : Term) : Term
 | and (p1 p2 : Term) : Term
+| pTrue : Term
 | pvar (v : Nat) : Term
 | pTrue : Term
 | boolBinRel (k : BoolBinaryRelationKind)
@@ -830,6 +831,27 @@ def Term.toSmtLib : Term → SexprPBV.Term
 | .shiftl w a k => .shiftl w.toSmtLib a.toSmtLib k
 | .bvOfBool _b => .junk ("bvOfBool")
 | _ => .junk "predicate"
+
+/-- Negate a predicate term by pushing `not` inward via De Morgan's laws.
+    Returns `none` if the term cannot be negated (e.g., unrecognized atomic terms or
+    width relations whose negations cannot be expressed in the Term language). -/
+def Term.negate : Term → Option Term
+  | .and p q => do
+    let p' ← p.negate
+    let q' ← q.negate
+    return .or p' q'
+  | .or p q => do
+    let p' ← p.negate
+    let q' ← q.negate
+    return .and p' q'
+  | .binRel .eq w a b => some (.binRel .ne w a b)
+  | .binRel .ne w a b => some (.binRel .eq w a b)
+  | .binRel .ult w a b => some (.binRel .ule w b a)
+  | .binRel .ule w a b => some (.binRel .ult w b a)
+  | .binRel .slt w a b => some (.binRel .sle w b a)
+  | .binRel .sle w a b => some (.binRel .slt w b a)
+  | .pTrue => some (.binWidthRel .le (.const 1) (.const 0))
+  | _ => none
 
 def Term.ofDepTerm {wcard tcard bcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -899,6 +921,7 @@ def Term.width (t : Term) : WidthExpr :=
   | binRel _k w _a _b => w
   | or _p1 _p2 => WidthExpr.const 0
   | and _p1 _p2 => WidthExpr.const 0
+  | pTrue => WidthExpr.const 0
   | pvar _v => WidthExpr.const 0
   | boolBinRel _k _a _b => WidthExpr.const 0
   | pTrue => WidthExpr.const 0
@@ -936,6 +959,7 @@ def Term.tcard (t : Term) : Nat :=
   | binRel _k _w a b => max (Term.tcard a) (Term.tcard b)
   | or p1 p2 => max (Term.tcard p1) (Term.tcard p2)
   | and p1 p2 => max (Term.tcard p1) (Term.tcard p2)
+  | pTrue => 0
   | pvar _v => 0
   | boolBinRel _k a b => max (a.tcard) (b.tcard)
   | pTrue => 0
@@ -961,6 +985,7 @@ def Term.bcard (t : Term) : Nat :=
   | binRel _k _w a b => max (Term.bcard a) (Term.bcard b)
   | or p1 p2 => max (Term.bcard p1) (Term.bcard p2)
   | and p1 p2 => max (Term.bcard p1) (Term.bcard p2)
+  | pTrue => 0
   | pvar _v => 0
   | boolBinRel _k a b => max (a.bcard) (b.bcard)
   | pTrue => 0
@@ -987,6 +1012,7 @@ def Term.isAutomtaDecidable : Term → Bool
 | .binRel _ _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
 | .or p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
 | .and p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
+| .pTrue => true
 | .pvar _ => true
 | .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
 | .pTrue => true

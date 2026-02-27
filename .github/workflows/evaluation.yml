@@ -137,10 +137,67 @@ jobs:
         run: |
           lake -R build
 
+#      - name: Install Cadical
+#        run: |
+#          which elan
+#          elan which cadical
+#          sudo apt-get update
+#          sudo apt-get install cadical
+
+      - name: Run Blasewuzla SMT2 test suite
+        run: |
+          lake build blasewuzla
+          bash Blase/Blasewuzla/tests/run_tests.sh --verbose
+
       - name: Run Blase Test Suite
         run: |
           lake build BlaseTest
 
+
+#  test-blasewuzla:
+#    name: Blasewuzla CLI Test
+#    runs-on: ubuntu-latest
+#    needs: eval-build
+#    permissions:
+#      pull-requests: write
+#    steps:
+#      - name: Checkout 🛎️
+#        uses: actions/checkout@v3
+#
+#      - name: Load Lean from Cache
+#        id: cache-lean
+#        uses: actions/cache/restore@v4
+#        with:
+#          path: |
+#            ~/.elan
+#          key: ${{ runner.os }}-elan-${{ hashFiles('lean-toolchain') }}
+#
+#      - name: Load Lean-MLIR from Cache
+#        id: cache-lake
+#        uses: actions/cache/restore@v4
+#        with:
+#          path: |
+#            .lake/packages
+#            .lake/build
+#            */.lake
+#          key: ${{ runner.os }}-lake-packages-${{ hashFiles('lake-manifest.json') }}-${{ github.sha }}
+#
+#      - name: Add Lean to PATH
+#        run: |
+#          echo "$HOME/.elan/bin" >> $GITHUB_PATH
+#
+#      - name: Build Lean-MLIR (should be all in cache)
+#        run: |
+#          lake -R build
+#
+#      - name: Build blasewuzla executable
+#        run: |
+#          pushd Blase && lake build blasewuzla && popd
+#
+#      - name: Run Blasewuzla SMT2 test suite
+#        run: |
+#          pushd Blase && bash Blasewuzla/tests/run_tests.sh --verbose && popd
+#
   evaluation-LLVM:
     name: Evaluate LLVM
     runs-on: ubuntu-latest
@@ -180,7 +237,7 @@ jobs:
       - name: Install Python Modules
         run: |
           sudo apt-get update
-          sudo apt-get install -y python3-matplotlib python3-pandas python3-num2words python3-psutil ripgrep
+          sudo apt-get install -y python3-matplotlib python3-pandas python3-num2words python3-psutil ripgrep cadical
 
       - name: Run LLVM
         continue-on-error: true

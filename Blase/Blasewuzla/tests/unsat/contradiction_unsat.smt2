@@ -1,0 +1,7 @@
+; Prove: (x = y) => (x = y)  (implication tautology)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(declare-const y (_ BitVec k))
+(assert (not (=> (= x y) (= x y))))
+(check-sat)
