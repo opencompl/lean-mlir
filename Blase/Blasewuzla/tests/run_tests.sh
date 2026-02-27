@@ -35,7 +35,7 @@ run_test() {
 
   local actual_exit=0
   echo "Running $file..."
-  "$BINARY" "$file" 2>&1 || actual_exit=$?
+  lake env "$BINARY" "$file" 2>&1 || actual_exit=$?
 
   if [[ "$actual_exit" -eq "$expected_exit" ]]; then
     if [[ $VERBOSE -eq 1 ]]; then

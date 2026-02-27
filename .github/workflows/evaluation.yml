@@ -137,6 +137,13 @@ jobs:
         run: |
           lake -R build
 
+#      - name: Install Cadical
+#        run: |
+#          which elan
+#          elan which cadical
+#          sudo apt-get update
+#          sudo apt-get install cadical
+
       - name: Run Blasewuzla SMT2 test suite
         run: |
           which cadical
