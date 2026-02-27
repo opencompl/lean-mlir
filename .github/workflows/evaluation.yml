@@ -146,7 +146,6 @@ jobs:
 
       - name: Run Blasewuzla SMT2 test suite
         run: |
-          which cadical
           lake build blasewuzla
           bash Blase/Blasewuzla/tests/run_tests.sh --verbose
 
