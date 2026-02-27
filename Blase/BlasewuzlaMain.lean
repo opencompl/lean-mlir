@@ -195,8 +195,10 @@ def kinduction : Solver where
       return .unknown
 
 
-def runMetaMAsIO (m : MetaM α) : IO α := do
-  let env ← importModules #[`Std.Tactic.BVDecide, `Init] {} 0 (loadExts := true)
+unsafe def runMetaMAsIO (m : MetaM α) : IO α := do
+  initSearchPath (← findSysroot)
+  enableInitializersExecution
+  let env ← importModules #[`Std.Tactic.BVDecide, `Init, `Std] {} 0 (loadExts := true)
   let coreContext : Core.Context := { fileName := "blasewuzla", fileMap := default }
   let coreState : Core.State := { env }
   let ctxMeta : Meta.Context := {}
@@ -261,18 +263,21 @@ def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) : MetaM Bool := do
 def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
+
+    let some negatedPredicate := result.predicate.negate
+      | throwError "unable to negate predicate. {repr result.predicate}"
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
       IO.eprintln s!"Running naivebmc at width {config.bound}..."
     for widths in cartesianProductRange config.bound result.wcard do
-      let qfbv : Std.Tactic.BVDecide.BVLogicalExpr := result.predicate.toBVLogicalExpr widths
+      let qfbv : Std.Tactic.BVDecide.BVLogicalExpr := negatedPredicate.toBVLogicalExpr widths
       if ← checkBVLogicalExprIsUnsat qfbv then
         if config.verbose then
-          IO.eprintln s!"{widths} ✓"
+          IO.eprintln s!"⟨{widths.toList}⟩ ✓"
         continue
       else
         if config.verbose then
-          IO.eprintln s!"{widths} ✗"
+          IO.eprintln s!"⟨{widths.toList}⟩ ✗"
         return .sat
     return .unsat
 
@@ -303,8 +308,6 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     niter,
     bound
   }
-
-  IO.eprintln "DEBUG: entered runBlasewuzla"
   -- Read and parse the SMT2 file
   let contents ← IO.FS.readFile inputPath
   let result ← match Blasewuzla.parseSmt2Query contents with
