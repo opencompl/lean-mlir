@@ -495,6 +495,174 @@ match t with
   | .eq => (a.toBV benv nenv ienv penv tenv) = (b.toBV benv nenv ienv penv tenv)
 | .pvar v => penv v
 
+@[simp]
+theorem Term.toBV_ofNat
+    {tctx : Term.Ctx wcard tcard}
+    (tenv : tctx.Env wenv)
+    (benv : Term.BoolEnv bcard)
+    (nnenv : Term.NatEnv ncard)
+    (ienv : Term.IntEnv icard)
+    (w : WidthExpr wcard) (n : Nat) :
+  Term.toBV benv nenv ienv penv tenv (.ofNat w n) = BitVec.ofNat (w.toNat wenv) n := rfl
+
+@[simp]
+theorem Term.toBV_var {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) :
+  Term.toBV benv nenv ienv penv tenv (.var v) = tenv v := rfl
+
+@[simp]
+theorem Term.toBV_zext {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a : Term bcard ncard icard pcard tctx (.bv w)) (v : WidthExpr wcard) :
+  Term.toBV benv nenv ienv penv tenv (.zext a v) = (a.toBV benv nenv ienv penv tenv).zeroExtend (v.toNat wenv) := rfl
+
+@[simp]
+theorem Term.toBV_setWidth {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a : Term bcard ncard icard pcard tctx (.bv w)) (v : WidthExpr wcard) :
+  Term.toBV benv nenv ienv penv tenv (.setWidth a v) = (a.toBV benv nenv ienv penv tenv).zeroExtend (v.toNat wenv) := rfl
+
+@[simp]
+theorem Term.toBV_sext {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a : Term bcard ncard icard pcard tctx (.bv w)) (v : WidthExpr wcard) :
+  Term.toBV benv nenv ienv penv tenv (.sext a v) =
+    (a.toBV benv nenv ienv penv tenv).signExtend (v.toNat wenv) := rfl
+
+@[simp]
+theorem Term.toBV_shiftl {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a : Term bcard ncard icard pcard tctx (.bv w)) (k : Nat):
+  Term.toBV benv nenv ienv penv tenv (.shiftl a k) = (a.toBV benv nenv ienv penv tenv) <<< k := rfl
+
+@[simp]
+theorem Term.toBV_add {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+  Term.toBV benv nenv ienv penv tenv (.add a b) = a.toBV benv nenv ienv penv tenv + b.toBV benv nenv ienv penv tenv := rfl
+
+@[simp]
+theorem Term.toBV_ofBool {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (b : Term bcard ncard icard pcard tctx .bool) :
+  Term.toBV benv nenv ienv penv tenv (.bvOfBool b) = BitVec.ofBool (b.toBV benv nenv ienv penv tenv) := rfl
+
+@[simp]
+theorem Term.toBV_pvar {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (v : Fin pcard) :
+  Term.toBV benv nenv ienv penv tenv (.pvar v) = penv v := rfl
+
+
+@[simp]
+theorem Term.toBV_boolVar {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (v : Fin bcard) :
+  Term.toBV benv nenv ienv penv tenv (.boolVar v) = benv v := rfl
+
+@[simp]
+theorem Term.toBV_boolConst {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (b : Bool) :
+  Term.toBV benv nenv ienv penv tenv (.boolConst b) = b := rfl
+
+@[simp]
+theorem Term.toBV_bor {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+  Term.toBV benv nenv ienv penv tenv (.bor a b) = a.toBV benv nenv ienv penv tenv ||| b.toBV benv nenv ienv penv tenv := rfl
+
+@[simp]
+theorem Term.toBV_band {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+  Term.toBV benv nenv ienv penv tenv (.band a b) = a.toBV benv nenv ienv penv tenv &&& b.toBV benv nenv ienv penv tenv := rfl
+
+@[simp]
+theorem Term.toBV_bxor {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+  Term.toBV benv nenv ienv penv tenv (.bxor a b) = a.toBV benv nenv ienv penv tenv ^^^ b.toBV benv nenv ienv penv tenv := rfl
+
+@[simp]
+theorem Term.toBV_bnot {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv) (a : Term bcard ncard icard pcard tctx (.bv w)) :
+  Term.toBV benv nenv ienv penv tenv (.bnot a) = ~~~ (a.toBV benv nenv ienv penv tenv) := rfl
+
+
+@[simp]
+theorem Term.toBV_boolBinRel {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv)
+    (k : BoolBinaryRelationKind)
+    (a b : Term bcard ncard icard pcard tctx .bool) :
+  Term.toBV benv nenv ienv penv tenv (.boolBinRel k a b) =
+    match k with
+    | .eq => (a.toBV benv nenv ienv penv tenv) = (b.toBV benv nenv ienv penv tenv) := rfl
+
+@[simp]
+theorem Term.toBV_binWidthRel {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv)
+    (k : WidthBinaryRelationKind)
+    (wa wb : WidthExpr wcard) :
+  Term.toBV benv nenv ienv penv tenv (.binWidthRel k wa wb) =
+    match k with
+    | .eq => wa.toNat wenv = wb.toNat wenv
+    | .le => wa.toNat wenv ≤ wb.toNat wenv := rfl
+
+@[simp]
+theorem Term.toBV_binRel {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv)
+    (k : BinaryRelationKind)
+    (w : WidthExpr wcard)
+    (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+  Term.toBV benv nenv ienv penv tenv (.binRel k w a b) =
+    match k with
+    | .eq => a.toBV benv nenv ienv penv tenv = b.toBV benv nenv ienv penv tenv
+    | .ne => a.toBV benv nenv ienv penv tenv ≠ b.toBV benv nenv ienv penv tenv
+    | .ult => (a.toBV benv nenv ienv penv tenv).ult (b.toBV benv nenv ienv penv tenv) = true
+    | .ule => (a.toBV benv nenv ienv penv tenv).ule (b.toBV benv nenv ienv penv tenv) = true
+    | .slt => (a.toBV benv nenv ienv penv tenv).slt (b.toBV benv nenv ienv penv tenv) = true
+    | .sle => (a.toBV benv nenv ienv penv tenv).sle (b.toBV benv nenv ienv penv tenv) = true := rfl
+
+@[simp]
+theorem Term.toBV_and {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv)
+    (p1 p2 : Term bcard ncard icard pcard tctx (.prop)) :
+  Term.toBV benv nenv ienv penv tenv (.and p1 p2) = (p1.toBV benv nenv ienv penv tenv ∧ p2.toBV benv nenv ienv penv tenv) := rfl
+
+@[simp]
+theorem Term.toBV_or {wenv : WidthExpr.Env wcard}
+    {tctx : Term.Ctx wcard tcard}
+    (benv : Term.BoolEnv bcard)
+    (tenv : tctx.Env wenv)
+    (p1 p2 : Term bcard ncard icard pcard tctx (.prop)) :
+  Term.toBV benv nenv ienv penv tenv (.or p1 p2) = (p1.toBV benv nenv ienv penv tenv ∨ p2.toBV benv nenv ienv penv tenv) := rfl
+
+
 namespace Nondep
 
 inductive WidthExpr where
