@@ -1367,6 +1367,92 @@ def Term.toSingleWidthProp (wcard tcard : Nat) (t : Term) : SingleWidthTerm wcar
   | _ => .unknown
 
 end Nondep
+
+namespace Nondep
+open Std.Tactic.BVDecide
+
+/-- Evaluate a width expression to a concrete `Nat` given a width variable assignment. -/
+def WidthExpr.eval (wenv : Array Nat) : WidthExpr → Option Nat
+  | .const c => some c
+  | .var v => wenv[v]?
+  | .max a b => do some (Nat.max (← a.eval wenv) (← b.eval wenv))
+  | .min a b => do some (Nat.min (← a.eval wenv) (← b.eval wenv))
+  | .addK a k => do some ((← a.eval wenv) + k)
+  | .kadd k a => do some (k + (← a.eval wenv))
+
+/-- Convert a BV-producing `Nondep.Term` to a `BVExpr` at monomorphization width `w`.
+`wenv` provides concrete width assignments for width variables.
+Width expressions are evaluated and turned into constant masks (`2^c`).
+Follows the same masking encoding as `Term.toSingleWidthTerm`. -/
+def Term.toBVExpr (w : Nat) (wenv : Array Nat) : Term → Option (BVExpr w)
+  | .var v _w => some (.var v)
+  | .ofNat _w n => some (.const (BitVec.ofNat w n))
+  | .add we a b => do
+    let a' ← a.toBVExpr w wenv
+    let b' ← b.toBVExpr w wenv
+    let c ← we.eval wenv
+    some (.bin (.bin a' .add b') .and (.const (BitVec.ofNat w (1 <<< c))))
+  | .mul we a b => do
+    let a' ← a.toBVExpr w wenv
+    let b' ← b.toBVExpr w wenv
+    let c ← we.eval wenv
+    some (.bin (.bin a' .mul b') .and (.const (BitVec.ofNat w (1 <<< c))))
+  | .band _w a b => do
+    let a' ← a.toBVExpr w wenv
+    let b' ← b.toBVExpr w wenv
+    some (.bin a' .and b')
+  | .bor _w a b => do
+    let a' ← a.toBVExpr w wenv
+    let b' ← b.toBVExpr w wenv
+    some (.bin a' .or b')
+  | .bxor _w a b => do
+    let a' ← a.toBVExpr w wenv
+    let b' ← b.toBVExpr w wenv
+    some (.bin a' .xor b')
+  | .bnot _w a => do
+    let a' ← a.toBVExpr w wenv
+    some (.un .not a')
+  | .shiftl we a k => do
+    let a' ← a.toBVExpr w wenv
+    let c ← we.eval wenv
+    some (.bin (.shiftLeft a' (.const (BitVec.ofNat w k))) .and (.const (BitVec.ofNat w (1 <<< c))))
+  | _ => none
+
+/-- Convert a predicate-producing `Nondep.Term` to a `BVLogicalExpr`.
+`wenv` provides concrete width assignments for width variables.
+Uses `Term.toBVExpr` for BV subterms within predicates.
+`ule a b` is encoded as `¬(ult b a)`, `ne` as `¬(eq)`. -/
+def Term.toBVLogicalExpr (w : Nat) (wenv : Array Nat) : Term → Option BVLogicalExpr
+  | .pTrue => some (.const true)
+  | .boolConst b => some (.const b)
+  | .binRel .eq _w a b => do
+    let a' ← a.toBVExpr w wenv
+    let b' ← b.toBVExpr w wenv
+    some (.literal (.bin a' .eq b'))
+  | .binRel .ne _w a b => do
+    let a' ← a.toBVExpr w wenv
+    let b' ← b.toBVExpr w wenv
+    some (.not (.literal (.bin a' .eq b')))
+  | .binRel .ult _w a b => do
+    let a' ← a.toBVExpr w wenv
+    let b' ← b.toBVExpr w wenv
+    some (.literal (.bin a' .ult b'))
+  | .binRel .ule _w a b => do
+    let a' ← a.toBVExpr w wenv
+    let b' ← b.toBVExpr w wenv
+    some (.not (.literal (.bin b' .ult a')))
+  | .and p1 p2 => do
+    let p1' ← p1.toBVLogicalExpr w wenv
+    let p2' ← p2.toBVLogicalExpr w wenv
+    some (.gate .and p1' p2')
+  | .or p1 p2 => do
+    let p1' ← p1.toBVLogicalExpr w wenv
+    let p2' ← p2.toBVLogicalExpr w wenv
+    some (.gate .or p1' p2')
+  | _ => none
+
+end Nondep
+
 def SingleWidthTerm.isTranslated {wcard tcard : Nat} (t : SingleWidthTerm wcard tcard k) : Bool :=
   match t with
   | .unknown => false
