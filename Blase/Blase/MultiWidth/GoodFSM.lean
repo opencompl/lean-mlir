@@ -1441,10 +1441,6 @@ def mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) (t : Nondep.Term) :
     { toFsmZext := (fsmP.toFsmZext &&& fsmQ.toFsmZext),
       width := NatFSM.mk ((FSM.negOne).map Fin.elim0)
     }
-  | .pTrue =>
-    { toFsmZext := (FSM.negOne).map Fin.elim0,
-      width := NatFSM.mk ((FSM.negOne).map Fin.elim0)
-    }
   | .boolBinRel k a b  =>
     let fsmA := mkTermFSM wcard tcard bcard ncard icard pcard a
     let fsmB := mkTermFSM wcard tcard bcard ncard icard pcard b

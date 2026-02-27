@@ -808,7 +808,6 @@ inductive Term
     (a : Term) (b : Term) : Term
 | or (p1 p2 : Term) : Term
 | and (p1 p2 : Term) : Term
-| pTrue : Term
 | pvar (v : Nat) : Term
 | pTrue : Term
 | boolBinRel (k : BoolBinaryRelationKind)
@@ -924,7 +923,6 @@ def Term.width (t : Term) : WidthExpr :=
   | pTrue => WidthExpr.const 0
   | pvar _v => WidthExpr.const 0
   | boolBinRel _k _a _b => WidthExpr.const 0
-  | pTrue => WidthExpr.const 0
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -962,7 +960,6 @@ def Term.tcard (t : Term) : Nat :=
   | pTrue => 0
   | pvar _v => 0
   | boolBinRel _k a b => max (a.tcard) (b.tcard)
-  | pTrue => 0
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -988,7 +985,6 @@ def Term.bcard (t : Term) : Nat :=
   | pTrue => 0
   | pvar _v => 0
   | boolBinRel _k a b => max (a.bcard) (b.bcard)
-  | pTrue => 0
 
 /-- Returns true if the term can be decided by the automata-based procedure.
 Multiplication is NOT automata decidable. -/
@@ -1015,7 +1011,6 @@ def Term.isAutomtaDecidable : Term → Bool
 | .pTrue => true
 | .pvar _ => true
 | .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
-| .pTrue => true
 
 end Nondep
 
