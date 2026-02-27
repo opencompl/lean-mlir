@@ -500,7 +500,7 @@ theorem Term.toBV_ofNat
     {tctx : Term.Ctx wcard tcard}
     (tenv : tctx.Env wenv)
     (benv : Term.BoolEnv bcard)
-    (nnenv : Term.NatEnv ncard)
+    (_nnenv : Term.NatEnv ncard)
     (ienv : Term.IntEnv icard)
     (w : WidthExpr wcard) (n : Nat) :
   Term.toBV benv nenv ienv penv tenv (.ofNat w n) = BitVec.ofNat (w.toNat wenv) n := rfl
@@ -862,7 +862,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .boolConst _b => WidthExpr.const 1
   | .shiftl w _a _k => w
   | .bvOfBool _b => WidthExpr.const 1
-  | binWidthRel _k wa wb => WidthExpr.const 0
+  | binWidthRel _k _wa _wb => WidthExpr.const 0
   | binRel _k w _a _b => w
   | or _p1 _p2 => WidthExpr.const 0
   | and _p1 _p2 => WidthExpr.const 0
@@ -1403,7 +1403,7 @@ def _root_.Std.Tactic.BVDecide.BVExpr.cast (x : BVExpr w) (hw : w = w') : BVExpr
 /-- Convert a BV-producing `Nondep.Term` to a `BVExpr` at monomorphization width `w`.
 `wenv` provides concrete width assignments for width variables. -/
 def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) :=
-   match ht : t with
+   match _ht : t with
   | .var v _ => (BVExpr.var v)
   | .ofNat w n => (.const (BitVec.ofNat (w.eval wenv) n))
   | .add we a b =>
