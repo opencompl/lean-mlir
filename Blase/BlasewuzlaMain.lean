@@ -62,30 +62,51 @@ def runMonoBMCPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
     | (.noChange , _stats) => return some g
     | (.modified gnew , _stats) => return some gnew
 
+/--
+Introduce only forall binders and preserve names.
+-/
+def _root_.Lean.MVarId.introsP (mvarId : MVarId) : MetaM (Array FVarId × MVarId) := do
+  let type ← mvarId.getType
+  let type ← instantiateMVars type
+  let n := getIntrosSize type
+  if n == 0 then
+    return (#[], mvarId)
+  else
+    mvarId.introNP n
+
+set_option pp.explicit true in
+theorem bar
+  (w0 : BitVec 8)
+  (x0 : BitVec 8)
+  (x1 : BitVec 8)
+  (a : Not (Eq (instHAndOfAndOp.hAnd (instHAdd.hAdd x0 x1) w0) (instHAndOfAndOp.hAnd (instHAdd.hAdd x1 x0) w0))) : False :=  by
+  bv_decide
+
 -- TODO: rename to checkUnsatAux
 open Lean Elab Meta Std Sat AIG Tactic BVDecide Frontend in
-def proveGoalByBvDecide (gType : Expr) : TermElabM Bool := do
-  forallTelescopeReducing gType fun xs target => do
-    let g ← mkFreshExprMVar (type? := target)
-    let some g ← g.mvarId!.byContra?
-      | return true -- closed goal.
-    let (_, g) ← g.intros
-    g.withContext do
-      for hyp in ← getLCtx do
-        IO.println <| ← MessageData.toString <| m!"hyp: {← ppExpr hyp.toExpr} : {← ppExpr hyp.type}"
-      -- IO.println (← MessageData.toString m!"Proving {g} : {← ppExpr (← g.getType'')} by bv_decide...")
-      let cfg : BVDecideConfig := {}
-      IO.FS.withTempFile fun _ lratFile => do
-        let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
-        let res ← Tactic.BVDecide.Frontend.bvDecide g cfg
-        return res.lratCert.isSome
+def proveGoalByBvDecide (gType : Expr) : MetaM Bool := do
+  let mut g := (← mkFreshExprMVar (type? := gType)).mvarId!
+  let (_, g') ← g.introsP
+  g := g'
+  let some g' ← g.falseOrByContra | return true
+  g := g'
+  g ← g.instantiateGoalMVars
+  -- let some g' ← g'.falseOrByContra | return true
+  g.withContext do
+    for hyp in ← getLCtx do
+      IO.println <| ← MessageData.toString <| m!"hyp: {← ppExpr hyp.toExpr} : {hyp.type}"
+    let cfg : BVDecideConfig := {}
+    IO.FS.withTempFile fun _ lratFile => do
+      let cfg ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run' { declName? := `lrat }
+      let res ← Tactic.BVDecide.Frontend.bvDecide g cfg
+      return res.lratCert.isSome
   -- let .some gnew ← g.withContext do g.byContra?
   --   | throwError "Was unable to convert goal to 'False'."
   -- gnew.withContext do
   --   IO.println (← MessageData.toString m!"Proving {gnew} : {← ppExpr (← gnew.getType'')} by bv_decide...")
   --   let cfg : BVDecideConfig := {}
   --   IO.FS.withTempFile fun _ lratFile => do
-  --     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
+  --     let cfg ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run' { declName? := `lrat }
   --     Tactic.BVDecide.Frontend.bvDecide gnew cfg
 
 set_option compiler.extract_closed false in
@@ -153,45 +174,38 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
 
     -- Set up Lean TermElabM environment for the SAT solver
     initSearchPath (← findSysroot)
-    Lean.withImportModules #[
-        { module := `Init },
-        { module := `Std },
-        { module := `Init.Data.BitVec.Basic },
-        { module := `Init.Data.BitVec.Lemmas },
-        { module := `Lean.Elab.Tactic.BVDecide },
-        { module := `Std.Tactic.BVDecide }]
-        (opts := {}) (trustLevel := 0) fun env => do
-      let ctxCore : Core.Context := { fileName := "blasewuzla", fileMap := FileMap.ofString "" }
-      let sCore : Core.State := { env }
-      let ctxMeta : Meta.Context := {}
-      let sMeta : Meta.State := {}
-      let ctxTerm : Term.Context := { declName? := .some (Name.mkSimple "blasewuzla") }
-      let sTerm : Term.State := {}
+    let env ← importModules #[`Std.Tactic.BVDecide, `Init] {} 0 (loadExts := true)
+    let coreContext : Core.Context := { fileName := "blasewuzla", fileMap := FileMap.ofString "" }
+    let coreState : Core.State := { env }
+    let ctxMeta : Meta.Context := {}
+    let sMeta : Meta.State := {}
+    let ctxTerm : Term.Context := { declName? := .some (Name.mkSimple "blasewuzla") }
+    let sTerm : Term.State := {}
 
-      let tStart ← IO.monoMsNow
-      let ((out, _circuitStats), _coreState, _metaState, _termState) ←
-        fsm.decideIfZerosVerified niter |>.toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
-      let tEnd ← IO.monoMsNow
+    let tStart ← IO.monoMsNow
+    let ((out, _circuitStats), _coreState, _metaState, _termState) ←
+      fsm.decideIfZerosVerified niter |>.toIO coreContext coreState ctxMeta sMeta ctxTerm sTerm
+    let tEnd ← IO.monoMsNow
 
+    if verbose then
+      IO.eprintln s!"Completed in {tEnd - tStart}ms"
+
+    match out with
+    | .provenByKIndCycleBreaking numIters _ _ =>
       if verbose then
-        IO.eprintln s!"Completed in {tEnd - tStart}ms"
-
-      match out with
-      | .provenByKIndCycleBreaking numIters _ _ =>
-        if verbose then
-          IO.eprintln s!"Proven by k-induction at iteration {numIters}"
-        IO.println "unsat"
-        return EXIT_UNSAT
-      | .safetyFailure iter =>
-        if verbose then
-          IO.eprintln s!"Counterexample found at iteration {iter}"
-        IO.println "sat"
-        return EXIT_SAT
-      | .exhaustedIterations n =>
-        if verbose then
-          IO.eprintln s!"Exhausted {n} iterations"
-        IO.println "unknown"
-        return EXIT_UNKNOWN
+        IO.eprintln s!"Proven by k-induction at iteration {numIters}"
+      IO.println "unsat"
+      return EXIT_UNSAT
+    | .safetyFailure iter =>
+      if verbose then
+        IO.eprintln s!"Counterexample found at iteration {iter}"
+      IO.println "sat"
+      return EXIT_SAT
+    | .exhaustedIterations n =>
+      if verbose then
+        IO.eprintln s!"Exhausted {n} iterations"
+      IO.println "unknown"
+      return EXIT_UNKNOWN
   else if backend == "mono_bmc" then
     -- mono_bmc backend: translate to single-width and call bv_decide at a fixed width
     if verbose then
@@ -202,39 +216,29 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
       return EXIT_UNKNOWN
     IO.eprintln "DEBUG: about to call withImportModules for mono_bmc"
     initSearchPath (← findSysroot)
-    Lean.withImportModules
-        #[{ module := `Lean.Elab.Tactic.BVDecide },
-          { module := `Std.Tactic.BVDecide },
-          { module := `Std },
-          { module := `Init },
-          { module := `Std.Tactic.BVDecide.Normalize.Canonicalize },
-          { module := `Std.Tactic.BVDecide.Normalize.BitVec },
-        ]
-          -- { module := `Blasewuzla }]
-        (opts := {}) (trustLevel := 0) fun env => do
-      let ctxCore : Core.Context := { fileName := "blasewuzla", fileMap := FileMap.ofString "" }
-      let sCore : Core.State := { env }
-      let ctxMeta : Meta.Context := {}
-      let sMeta : Meta.State := {}
-      let ctxTerm : Term.Context := { declName? := .some `blasewuzla }
-      let sTerm : Term.State := {}
-      let ((proved, _), _, _, _) ← (show Term.TermElabM _ from do
-        let goalExpr ← singleWidthTerm.toQFBVExpr bound
-        IO.println f!"goal: {← ppExpr goalExpr}"
-        let solved : Bool ← try do
-          let result ← proveGoalByBvDecide goalExpr
-          pure result
-        catch e =>
-          IO.eprintln s!"DEBUG: bv_decide runtime error: {← e.toMessageData.toString}"
-          pure false
-        pure (solved, ())
-      ).toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
-      if proved then
-        IO.println "unsat"
-        return EXIT_UNSAT
-      else
-        IO.println "unknown"
-        return EXIT_UNKNOWN
+    enableInitializersExecution
+    let env ← importModules #[`Std.Tactic.BVDecide, `Init] {} 0 (loadExts := true)
+    let coreContext : Core.Context := { fileName := "blasewuzla", fileMap := default }
+    let coreState : Core.State := { env }
+    let ctxMeta : Meta.Context := {}
+    let sMeta : Meta.State := {}
+    let ((proved, _), _,) ← (show MetaM _ from do
+      let goalExpr ← singleWidthTerm.toQFBVExpr bound
+      IO.println f!"goal: {← ppExpr goalExpr}"
+      let solved : Bool ← try do
+        let result ← proveGoalByBvDecide goalExpr
+        pure result
+      catch e =>
+        IO.eprintln s!"DEBUG: bv_decide runtime error: {← e.toMessageData.toString}"
+        pure false
+      pure (solved, ())
+    ).toIO coreContext coreState ctxMeta sMeta
+    if proved then
+      IO.println "unsat"
+      return EXIT_UNSAT
+    else
+      IO.println "unknown"
+      return EXIT_UNKNOWN
   else
     IO.eprintln s!"Error: unknown backend '{backend}'. Valid backends: 'kinduction', 'ric3', 'mono_bmc'."
     return EXIT_ERROR
