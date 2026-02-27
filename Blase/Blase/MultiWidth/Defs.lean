@@ -1304,6 +1304,21 @@ def SingleWidthTerm.toProp
   | .proptrue => True
   | .unknown => False
 
+-- -b = !b + 1
+def SingleWidthTerm.bvneg (t : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd (.bvnot t) (.bvconst 1)
+
+def SingleWidthTerm.bvsub (t1 t2 : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd t1 (SingleWidthTerm.bvneg t2)
+
+-- power of 2 - 1 = unary mask.
+def SingleWidthTerm.maskOfPot (w : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  (SingleWidthTerm.bvsub w (.bvconst 1))
+
+@[simp]
+theorem BitVec.getLsbD_sub_shl_one (x : BitVec w) :
+  ((1#w <<< x) - 1#w).getLsbD i = decide (i < x.toNat) := by sorry
+
 namespace Nondep
 
 /--
@@ -1323,6 +1338,7 @@ theorem WidthExpr.toSingleWidthTerm_const {wcard tcard : Nat} {c : Nat} :
 @[simp]
 theorem WidthExpr.toSingleWidthTerm_var {wcard tcard : Nat} {v : Nat} :
     WidthExpr.toSingleWidthTerm wcard tcard (WidthExpr.var v) = .wvar v := rfl
+
 
 /--
 Convert a term to its corresponding single-width term.
