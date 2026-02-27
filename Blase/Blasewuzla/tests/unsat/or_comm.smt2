@@ -1,0 +1,7 @@
+; Prove: (x | y) = (y | x)  (commutativity of bitwise OR)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(declare-const y (_ BitVec k))
+(assert (not (= (bvor x y) (bvor y x))))
+(check-sat)

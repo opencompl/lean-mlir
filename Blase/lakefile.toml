@@ -1,7 +1,7 @@
 name = "Blase"
 version = "0.1.0"
 testDriver = "BlaseTest"
-defaultTargets = ["Blase"]
+defaultTargets = ["Blase", "Blasewuzla", "blasewuzla"]
 moreLeanArgs = ["--tstack=400000"]
 moreServerArgs = ["--tstack=400000"]
 # precompileModules = true # Ensure that reflective code that uses native_decide runs compiled code, not in the ir_interpreter.
@@ -31,3 +31,16 @@ rev = "main"
 name = "valaig"
 git = "https://github.com/opencompl/valaig"
 rev = "97fc5d8872fdd4ccb4655a7ad97df5852670c1e7"
+
+[[require]]
+scope = "leanprover"
+name = "Cli"
+rev = "nightly-testing"
+
+[[lean_lib]]
+name = "Blasewuzla"
+
+[[lean_exe]]
+name = "blasewuzla"
+root = "BlasewuzlaMain"
+supportInterpreter = true

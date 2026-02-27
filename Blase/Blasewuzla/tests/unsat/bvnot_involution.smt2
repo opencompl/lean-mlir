@@ -1,0 +1,6 @@
+; Prove: ~~x = x  (double bitwise negation)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(assert (not (= (bvnot (bvnot x)) x)))
+(check-sat)

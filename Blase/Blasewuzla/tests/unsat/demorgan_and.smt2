@@ -1,0 +1,7 @@
+; Prove: ~(x & y) = (~x | ~y)  (De Morgan's law for AND)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(declare-const y (_ BitVec k))
+(assert (not (= (bvnot (bvand x y)) (bvor (bvnot x) (bvnot y)))))
+(check-sat)
