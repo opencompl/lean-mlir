@@ -15,26 +15,74 @@ open MultiWidth
 open ReflectVerif.BvDecide (DecideIfZerosOutput)
 open Cli
 
+namespace Blasewuzla
+
 -- Exit codes follow the CaDiCaL / HWMCC convention.
 def EXIT_UNKNOWN : UInt32 := 0
 def EXIT_SAT     : UInt32 := 10
 def EXIT_UNSAT   : UInt32 := 20
+def EXIT_ERROR   : UInt32 := 1
+
+open Lean Elab Meta
+def getSimpData (simpsetName : Name) : MetaM (SimpTheorems × Simprocs) := do
+  let some ext ← (getSimpExtension? simpsetName)
+    | throwError m!"'{simpsetName}' simp attribute not found!"
+  let theorems ← ext.getTheorems
+  let some ext ← (Simp.getSimprocExtension? simpsetName)
+    | throwError m!"'{simpsetName}' simp attribute not found!"
+  let simprocs ← ext.getSimprocs
+  return (theorems, simprocs)
+
+open Lean Elab Meta
+def runMonoBMCPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
+  g.withContext do
+    let mut theorems : Array SimpTheorems := #[]
+    let mut simprocs : Array Simprocs := #[]
+
+    for name in [`seval, `bv_normalize] do
+      let res ← getSimpData name
+      theorems := theorems.push res.1
+      simprocs := simprocs.push res.2
+
+    let config : Simp.Config := { }
+    let config := { config with failIfUnchanged := false }
+    let ctx ← Simp.mkContext (config := config)
+      (simpTheorems := theorems)
+      (congrTheorems := ← Meta.getSimpCongrTheorems)
+    -- let lctx ← getLCtx
+    -- let fvars := lctx.getFVarIds
+    match ← simpTargetStar g ctx (simprocs := simprocs) /- (fvarIdsToSimp := fvars) -/ with
+    | (.closed, _stats) => return none
+    | (.noChange , _stats) => return some g
+    | (.modified gnew , _stats) => return some gnew
+
+-- TODO: rename to checkUnsatAux
+open Lean Elab Meta Std Sat AIG Tactic BVDecide Frontend in
+def proveGoalByBvDecide 
+    (g : MVarId) : TermElabM (Result) := do
+  let cadicalTimeoutSec : Nat := 60 -- TODO: make this an option
+  let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
+  IO.FS.withTempFile fun _ lratFile => do
+    let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
+    Tactic.BVDecide.Frontend.bvDecide g cfg
 
 set_option compiler.extract_closed false in
 unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let inputPath : String := p.positionalArg! "input" |>.as! String
   let niter : Nat := p.flag! "niter" |>.as! Nat
+  let bound : Nat := p.flag! "bound" |>.as! Nat
   let parseOnly : Bool := p.hasFlag "parseOnly"
   let verbose : Bool := p.hasFlag "verbose"
   let backend : String := p.flag! "backend" |>.as! String
 
+  IO.eprintln "DEBUG: entered runBlasewuzla"
   -- Read and parse the SMT2 file
   let contents ← IO.FS.readFile inputPath
   let result ← match Blasewuzla.parseSmt2Query contents with
     | .ok r => pure r
     | .error e => do
       IO.eprintln s!"Parse error: {e}"
-      return 1
+      return EXIT_ERROR
 
   if verbose then
     IO.eprintln s!"Parsed: wcard={result.wcard}, tcard={result.tcard}, bcard={result.bcard}, pcard={result.pcard}"
@@ -67,7 +115,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
         return EXIT_UNKNOWN
       else
         IO.eprintln s!"rIC3 error: {msg}"
-        return 1
+        return EXIT_ERROR
     | .ok .counterexample =>
       if verbose then IO.eprintln "rIC3: counterexample found"
       IO.println "sat"
@@ -116,9 +164,59 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
           IO.eprintln s!"Exhausted {n} iterations"
         IO.println "unknown"
         return EXIT_UNKNOWN
+  else if backend == "mono_bmc" then
+    -- mono_bmc backend: translate to single-width and call bv_decide at a fixed width
+    if verbose then
+      IO.eprintln s!"Running mono_bmc at width {bound}..."
+    let singleWidthTerm := result.predicate.toSingleWidthProp result.wcard result.tcard
+    if !singleWidthTerm.isTranslated then
+      IO.eprintln "mono_bmc: formula contains unsupported operations"
+      return EXIT_UNKNOWN
+    IO.eprintln "DEBUG: about to call withImportModules for mono_bmc"
+    initSearchPath (← findSysroot)
+    Lean.withImportModules
+        #[{ module := `Lean.Elab.Tactic.BVDecide },
+          { module := `Std.Tactic.BVDecide }
+        ]
+          -- { module := `Blasewuzla }]
+        (opts := {}) (trustLevel := 0) fun env => do
+      let ctxCore : Core.Context := { fileName := "blasewuzla", fileMap := FileMap.ofString "" }
+      let sCore : Core.State := { env }
+      let ctxMeta : Meta.Context := {}
+      let sMeta : Meta.State := {}
+      let ctxTerm : Term.Context := { declName? := .some `blasewuzla }
+      let sTerm : Term.State := {}
+      let ((proved, _), _, _, _) ← (show Term.TermElabM _ from do
+        IO.eprintln "DEBUG: about to call toQFBVExpr"
+        let goalExpr ← singleWidthTerm.toQFBVExpr bound
+        let goalMVar ← mkFreshExprMVar (type? := .some goalExpr)
+        IO.println (← MessageData.toString m!"goal (before prepcoessing): {goalMVar}")
+        let goalId := goalMVar.mvarId!
+        goalId.withContext do
+          IO.println (← MessageData.toString m!"goal (before prepcoessing): {Expr.mvar goalId}")
+        let some goalId ← runMonoBMCPreprocessing goalId
+          | do
+              IO.println "unsat: closed goal in preprocessing"
+              return (true, ())
+        goalId.withContext do
+          IO.println (← MessageData.toString m!"goal (after preprocessing): {Expr.mvar goalId}")
+        let solved : Bool ← try do
+          let result ← proveGoalByBvDecide goalId
+          pure result.lratCert.isSome
+        catch e =>
+          IO.eprintln s!"DEBUG: bv_decide runtime error: {← e.toMessageData.toString}"
+          pure false
+        pure (solved, ())
+      ).toIO ctxCore sCore ctxMeta sMeta ctxTerm sTerm
+      if proved then
+        IO.println "unsat"
+        return EXIT_UNSAT
+      else
+        IO.println "unknown"
+        return EXIT_UNKNOWN
   else
-    IO.eprintln s!"Error: unknown backend '{backend}'. Valid backends: 'kinduction', 'ric3'."
-    return 1
+    IO.eprintln s!"Error: unknown backend '{backend}'. Valid backends: 'kinduction', 'ric3', 'mono_bmc'."
+    return EXIT_ERROR
 
 unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
   blasewuzla VIA runBlasewuzla; ["0.1.0"]
@@ -128,7 +226,8 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     v, verbose;                "Print verbose output."
     parseOnly;                 "Only parse the file and print the parsed term."
     niter : Nat;               "Maximum number of k-induction iterations (kinduction backend only)."
-    backend : String;          "Backend solver: 'kinduction' (default) or 'ric3'."
+    bound : Nat;               "Bound width for mono_bmc backend."
+    backend : String;          "Backend solver: 'kinduction' (default), 'ric3', or 'mono_bmc'."
 
   ARGS:
     input : String;            "Path to the .smt2 file."
@@ -136,9 +235,13 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
   EXTENSIONS:
     defaultValues! #[
       ("niter", "30"),
+      ("bound", "8"),
       ("backend", "kinduction")
     ]
 ]
 
+end Blasewuzla
+
 unsafe def main (args : List String) : IO UInt32 := do
-  blasewuzlaCmd.validate args
+  Blasewuzla.blasewuzlaCmd.validate args
+

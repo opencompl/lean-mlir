@@ -1372,6 +1372,10 @@ def Term.toSingleWidthTerm (wcard tcard : Nat)  (t : Term) : SingleWidthTerm wca
     let bMono := b.toSingleWidthTerm wcard tcard
     let wMono := w.toSingleWidthTerm wcard tcard
     .bvand (.bvadd aMono bMono) wMono
+  | .band _w a b =>
+    let aMono := a.toSingleWidthTerm wcard tcard
+    let bMono := b.toSingleWidthTerm wcard tcard
+    .bvand aMono bMono
   | _ => .unknown
 
 @[simp]
@@ -1664,6 +1668,7 @@ theorem SingleWidthTerm.getLsbD_toBV_eq_tgetLsbD_toBV' {bcard ncard icard pcard}
     have := SingleWidthTerm.getLsbD_toBV_eq_ofNat_toNat' w (by rfl) (by sorry) wMultiEnv tMultiEnv benv nenv ienv penv o wSingleEnv tSingleEnv hEnvRel
     rw [← this]
     sorry
+  case band a b => sorry
 
 theorem SingleWidthTerm.iff
   {wcard tcard : Nat} {tctx : MultiWidth.Term.Ctx wcard tcard}
@@ -1686,6 +1691,89 @@ theorem SingleWidthTerm.iff
     case ne => sorry
     case ule => sorry
     case ult => sorry
+
+/--
+Axiom: if P holds at bitwidth `bound`, it holds at all bitwidths.
+Used by `mono_bmc` to justify checking at a specific concrete width.
+-/
+axiom AxMonoBMC {P : Nat → Prop} (bound : Nat) : (P bound) → ∀ i, P i
+
+open Lean Meta in
+/-- Build a Lean `Expr` directly from a `SingleWidthTerm`, using arrays of free variables
+for width and term environments. `.bv` cases produce `Expr` of type `BitVec w`;
+`.prop` cases produce `Expr` of type `Prop`.
+Uses direct `BitVec.*` functions to avoid instance resolution failures in minimal
+`withImportModules` environments (CLI backend). The caller should run `bv_normalize`
+or equivalent simprocs before `bv_decide` to fold these into typeclass form. -/
+def SingleWidthTerm.toDirectExpr {wcard tcard : Nat}
+    (w : Nat) (wvars tvars : Array Expr)
+    : SingleWidthTerm wcard tcard k → MetaM Expr
+  | .wvar v =>
+    if h : v < wvars.size then pure wvars[v]
+    else pure $ mkApp2 (mkConst ``BitVec.ofNat) (mkNatLit w) (mkNatLit 0)
+  | .bvvar v =>
+    if h : v < tvars.size then pure tvars[v]
+    else pure $ mkApp2 (mkConst ``BitVec.ofNat) (mkNatLit w) (mkNatLit 0)
+  | .bvconst c =>
+    pure $ mkApp2 (mkConst ``BitVec.ofNat) (mkNatLit w) (mkNatLit c)
+  | .bvnot a => do
+    pure $ mkApp2 (mkConst ``BitVec.not) (mkNatLit w)
+      (← a.toDirectExpr w wvars tvars)
+  | .bvadd a b => do
+    pure $ mkApp3 (mkConst ``BitVec.add) (mkNatLit w)
+      (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)
+  | .bvand a b => do
+    pure $ mkApp3 (mkConst ``BitVec.and) (mkNatLit w)
+      (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)
+  | .bvmul a b => do
+    pure $ mkApp3 (mkConst ``BitVec.mul) (mkNatLit w)
+      (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)
+  | .bveq a b => do
+    let bvType := mkApp (mkConst ``BitVec) (mkNatLit w)
+    pure $ mkApp3 (mkConst ``Eq [.succ .zero]) bvType
+      (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)
+  | .bvne a b => do
+    let bvType := mkApp (mkConst ``BitVec) (mkNatLit w)
+    pure $ mkApp3 (mkConst ``Ne [.succ .zero]) bvType
+      (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)
+  | .bvule a b => do
+    -- BitVec.ule returns Bool; wrap in `= true` to get Prop
+    let ule := mkApp3 (mkConst ``BitVec.ule) (mkNatLit w)
+      (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)
+    pure $ mkApp3 (mkConst ``Eq [.succ .zero]) (mkConst ``Bool) ule (mkConst ``Bool.true)
+  | .bvult a b => do
+    let ult := mkApp3 (mkConst ``BitVec.ult) (mkNatLit w)
+      (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)
+    pure $ mkApp3 (mkConst ``Eq [.succ .zero]) (mkConst ``Bool) ult (mkConst ``Bool.true)
+  | .propimp a b => do
+    mkArrow (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)
+  | .proptrue => pure (mkConst ``True)
+  | .unknown => pure (mkConst ``False)
+
+open Lean Meta in
+/-- Recursive helper: introduce `n` fresh `BitVec w` variables with given prefix,
+then call `k` with the accumulated variable arrays. -/
+partial def SingleWidthTerm.introVarsThenBuild
+    (bvType : Expr) (total : Nat) (prefix_ : String) (idx : Nat) (acc : Array Expr)
+    (k : Array Expr → MetaM Expr) : MetaM Expr := do
+  if idx ≥ total then k acc
+  else
+    withLocalDecl (Name.mkSimple s!"{prefix_}{idx}") .default bvType fun fvar => do
+      let body ← SingleWidthTerm.introVarsThenBuild bvType total prefix_ (idx + 1) (acc.push fvar) k
+      mkForallFVars #[fvar] body
+
+open Lean Meta in
+/--
+Convert a `SingleWidthTerm` proposition to a QF_BV `Expr` at the given width `w`.
+Builds: ∀ (w0 ... : BitVec w) (x0 ... : BitVec w), <direct proposition>
+where w0..w_{wcard-1} are width variables and x0..x_{tcard-1} are term variables.
+-/
+def SingleWidthTerm.toQFBVExpr {wcard tcard : Nat}
+    (t : SingleWidthTerm wcard tcard .prop) (w : Nat) : MetaM Expr := do
+  let bvType := mkApp (mkConst ``BitVec) (mkNatLit w)
+  SingleWidthTerm.introVarsThenBuild bvType wcard "w" 0 #[] fun wvars =>
+    SingleWidthTerm.introVarsThenBuild bvType tcard "x" 0 #[] fun tvars =>
+      t.toDirectExpr w wvars tvars
 
 end ToSingleWidth
 

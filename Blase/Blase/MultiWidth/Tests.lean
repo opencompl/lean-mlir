@@ -473,3 +473,20 @@ theorem e_1 (x y : BitVec w) :
 theorem egZextMin (u v : Nat) (x : BitVec w) :
     u ≤ v → (x.zeroExtend v).zeroExtend u = x.zeroExtend u := by
   bv_multi_width (config := { widthAbstraction := .never })
+
+section MonoBMCTests
+open MultiWidth
+
+#eval show IO Unit from do
+  let t : Nondep.Term := Nondep.Term.binRel .eq (.var 0)
+    (Nondep.Term.var 0 (.var 0)) (Nondep.Term.var 0 (.var 0))
+  let mono := t.toSingleWidthProp 1 1
+  IO.println s!"isTranslated: {mono.isTranslated}"
+
+set_option warn.sorry true in
+theorem mono_add_comm (w : Nat) (x y : BitVec w) : x + y = y + x := by mono_bmc 8
+
+set_option warn.sorry true in
+theorem mono_and_self (w : Nat) (x : BitVec w) : x &&& x = x := by mono_bmc 8
+
+end MonoBMCTests

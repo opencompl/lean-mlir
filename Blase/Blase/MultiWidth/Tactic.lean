@@ -26,6 +26,7 @@ deriving DecidableEq, Repr
 open Valaig.External in
 inductive SolverKind
 | kinduction
+| monoBMC (bound : Nat := 8)
 | external (solver : SafetyAigerMC := rIC3 (timeoutMs := some 5000))
 
 /-- Tactic options for bv_automata_circuit -/
@@ -1318,6 +1319,24 @@ def solve (gorig : MVarId) : SolverM Unit := do
           for g in gs do
             msg := msg ++ m!"{indentD g}"
           throwError msg
+    | .monoBMC bound =>
+      let singleWidthTerm := p.toSingleWidthProp collect.wcard collect.tcard
+      if !singleWidthTerm.isTranslated then
+        throwError m!"mono_bmc: unsupported operations in formula. Reflected: {repr p}"
+      let goalExpr ← singleWidthTerm.toQFBVExpr bound
+      let goalMVar ← mkFreshExprMVar goalExpr
+      let goalId := goalMVar.mvarId!
+      let solved ← try do
+        let _ ← Lean.Elab.Tactic.run goalId do
+          evalTactic (← `(tactic| bv_decide))
+        pure true
+      catch _ =>
+        pure false
+      if !solved then
+        throwError m!"mono_bmc: bv_decide failed at width {bound}. Try increasing the bound."
+      -- Close the original goal with sorry: the formal connection via SingleWidthTerm.iff still has sorry cases
+      let prf ← mkSorry (← g.getType) (synthetic := true)
+      let _ ← g.apply prf
 
 def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM Unit :=
   let ctx := { toConfig := cfg}
@@ -1361,6 +1380,16 @@ def evalBvMultiWidth : Tactic := fun
 macro "bv_multi_width_print_smt_lib" : tactic =>
   `(tactic| bv_multi_width (config := { debugPrintSmtLib := true }))
 
+syntax (name := monoBMCTactic) "mono_bmc" (num)? : tactic
+@[tactic monoBMCTactic]
+def evalMonoBMC : Tactic := fun
+| `(tactic| mono_bmc $[$bound]?) => do
+  let bound := bound.map (·.getNat) |>.getD 8
+  let cfg : Config := { solver := .monoBMC bound }
+  let g ← getMainGoal
+  g.withContext do
+    solveEntrypoint g cfg
+| _ => throwUnsupportedSyntax
 
 end Tactic
 end MultiWidth
