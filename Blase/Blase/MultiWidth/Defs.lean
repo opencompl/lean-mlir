@@ -1692,6 +1692,64 @@ theorem SingleWidthTerm.iff
     case ule => sorry
     case ult => sorry
 
+theorem foo (a b : BitVec w) : a + b = 0 := by sorry
+
+/--
+info: ∀ (w : Nat) (a : BitVec w),
+  @Eq.{1} (BitVec w)
+    (@HAdd.hAdd.{0, 0, 0} (BitVec w) (BitVec w) (BitVec w) (@instHAdd.{0} (BitVec w) (@BitVec.instAdd w)) a a) a : Prop
+-/
+#guard_msgs in set_option pp.explicit true in set_option pp.universes true in #check ∀ (w : Nat) (a : BitVec w), a + a = a
+/--
+info: ∀ (w : Nat) (a : BitVec w),
+  @Eq.{1} (BitVec w)
+    (@HAnd.hAnd.{0, 0, 0} (BitVec w) (BitVec w) (BitVec w) (@instHAndOfAndOp.{0} (BitVec w) (@BitVec.instAndOp w)) a a)
+    a : Prop
+-/
+#guard_msgs in set_option pp.explicit true in set_option pp.universes true in #check ∀ (w : Nat) (a : BitVec w), a &&& a = a
+
+
+open Lean in
+def Expr.mkBitVecType (n : Expr) : MetaM Expr := do
+  let out := mkApp (mkConst ``BitVec) n
+  Meta.check out
+  return out
+
+open Lean in
+def Expr.mkBitVecInstAdd (w : Expr) : MetaM Expr := do
+  let out := mkApp (mkConst ``BitVec.instAdd) w
+  Meta.check out
+  return out
+open Lean in
+def Expr.mkInstHAdd (w : Expr) : MetaM Expr := do
+  let out := mkAppN (mkConst ``instHAdd [0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecInstAdd w]
+  Meta.check out
+  return out
+
+open Lean in
+def Expr.mkHAddCall (w : Expr) (a b : Expr) : MetaM Expr := do
+  let out := mkAppN (mkConst ``HAdd.hAdd [0, 0, 0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkInstHAdd w, a, b]
+  Meta.check out
+  return out
+
+open Lean in
+def Expr.mkBitVecInstAndOp (w : Expr) : MetaM Expr := do
+  let out := mkApp (mkConst ``BitVec.instAndOp) w
+  Meta.check out
+  return out
+
+open Lean in
+def Expr.mkInstHAndOfAndOp (w : Expr) : MetaM Expr := do
+  let out := mkAppN (mkConst ``instHAndOfAndOp [0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecInstAndOp w]
+  Meta.check out
+  return out
+
+open Lean in
+def Expr.mkHAndCall (w : Expr) (a b : Expr) : MetaM Expr := do
+  let out := mkAppN (mkConst ``HAnd.hAnd [0, 0, 0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkInstHAndOfAndOp w, a, b]
+  Meta.check out
+  return out
+
 /--
 Axiom: if P holds at bitwidth `bound`, it holds at all bitwidths.
 Used by `mono_bmc` to justify checking at a specific concrete width.
@@ -1720,11 +1778,15 @@ def SingleWidthTerm.toDirectExpr {wcard tcard : Nat}
     pure $ mkApp2 (mkConst ``BitVec.not) (mkNatLit w)
       (← a.toDirectExpr w wvars tvars)
   | .bvadd a b => do
-    pure $ mkApp3 (mkConst ``BitVec.add) (mkNatLit w)
+    let out ← Expr.mkHAddCall (mkNatLit w)
       (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)
+    Meta.check out
+    pure out
   | .bvand a b => do
-    pure $ mkApp3 (mkConst ``BitVec.and) (mkNatLit w)
+    let out ← Expr.mkHAndCall (mkNatLit w)
       (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)
+    Meta.check out
+    pure out
   | .bvmul a b => do
     pure $ mkApp3 (mkConst ``BitVec.mul) (mkNatLit w)
       (← a.toDirectExpr w wvars tvars) (← b.toDirectExpr w wvars tvars)

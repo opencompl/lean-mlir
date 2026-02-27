@@ -16,12 +16,11 @@ open MultiWidth
 open ReflectVerif.BvDecide (DecideIfZerosOutput)
 open Cli
 
- theorem foo :  ∀ (w0 x0 x1 : BitVec 8), Eq ((x0.add x1).and w0) ((x1.add x0).and w0) := by 
- simp only [BitVec.add_eq, BitVec.and_eq]
- sorry
-
 namespace Blasewuzla
 
+theorem foo :   ∀ (w0 x0 x1 : BitVec 8),
+    Eq (instHAndOfAndOp.hAnd (instHAdd.hAdd x0 x1) w0) (instHAndOfAndOp.hAnd (instHAdd.hAdd x1 x0) w0) := by
+  bv_decide
 
 -- Exit codes follow the CaDiCaL / HWMCC convention.
 def EXIT_UNKNOWN : UInt32 := 0
@@ -65,13 +64,29 @@ def runMonoBMCPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
 
 -- TODO: rename to checkUnsatAux
 open Lean Elab Meta Std Sat AIG Tactic BVDecide Frontend in
-def proveGoalByBvDecide 
-    (g : MVarId) : TermElabM (Result) := do
-  let cadicalTimeoutSec : Nat := 60 -- TODO: make this an option
-  let cfg : BVDecideConfig := { timeout := cadicalTimeoutSec }
-  IO.FS.withTempFile fun _ lratFile => do
-    let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
-    Tactic.BVDecide.Frontend.bvDecide g cfg
+def proveGoalByBvDecide (gType : Expr) : TermElabM Bool := do
+  forallTelescopeReducing gType fun xs target => do
+    let g ← mkFreshExprMVar (type? := target)
+    let some g ← g.mvarId!.byContra?
+      | return true -- closed goal.
+    let (_, g) ← g.intros
+    g.withContext do
+      for hyp in ← getLCtx do
+        IO.println <| ← MessageData.toString <| m!"hyp: {← ppExpr hyp.toExpr} : {← ppExpr hyp.type}"
+      -- IO.println (← MessageData.toString m!"Proving {g} : {← ppExpr (← g.getType'')} by bv_decide...")
+      let cfg : BVDecideConfig := {}
+      IO.FS.withTempFile fun _ lratFile => do
+        let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
+        let res ← Tactic.BVDecide.Frontend.bvDecide g cfg
+        return res.lratCert.isSome
+  -- let .some gnew ← g.withContext do g.byContra?
+  --   | throwError "Was unable to convert goal to 'False'."
+  -- gnew.withContext do
+  --   IO.println (← MessageData.toString m!"Proving {gnew} : {← ppExpr (← gnew.getType'')} by bv_decide...")
+  --   let cfg : BVDecideConfig := {}
+  --   IO.FS.withTempFile fun _ lratFile => do
+  --     let cfg ← BVDecide.Frontend.TacticContext.new lratFile cfg
+  --     Tactic.BVDecide.Frontend.bvDecide gnew cfg
 
 set_option compiler.extract_closed false in
 unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
@@ -204,22 +219,11 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
       let ctxTerm : Term.Context := { declName? := .some `blasewuzla }
       let sTerm : Term.State := {}
       let ((proved, _), _, _, _) ← (show Term.TermElabM _ from do
-        IO.eprintln "DEBUG: about to call toQFBVExpr"
         let goalExpr ← singleWidthTerm.toQFBVExpr bound
-        IO.println f!"goal type expression: {← ppExpr goalExpr}"
-        let goalMVar ← mkFreshExprMVar (type? := .some goalExpr)
-        Lean.Elab.Term.synthesizeSyntheticMVarsNoPostponing
-        let goalId := goalMVar.mvarId!
-        IO.println (f!"goal (before prepcoessing): {← ppGoal goalId}")
-        let some goalId ← runMonoBMCPreprocessing goalId
-          | do
-              IO.println "unsat: closed goal in preprocessing"
-              return (true, ())
-        IO.println f!"goal (after preprocessing): {← ppGoal goalId}"
-        Lean.Elab.Term.synthesizeSyntheticMVarsNoPostponing
+        IO.println f!"goal: {← ppExpr goalExpr}"
         let solved : Bool ← try do
-          let result ← proveGoalByBvDecide goalId
-          pure result.lratCert.isSome
+          let result ← proveGoalByBvDecide goalExpr
+          pure result
         catch e =>
           IO.eprintln s!"DEBUG: bv_decide runtime error: {← e.toMessageData.toString}"
           pure false
@@ -261,4 +265,3 @@ end Blasewuzla
 
 unsafe def main (args : List String) : IO UInt32 := do
   Blasewuzla.blasewuzlaCmd.validate args
-
