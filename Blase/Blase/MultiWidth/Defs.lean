@@ -1253,11 +1253,6 @@ def Expr.mkHAndCall (w : Expr) (a b : Expr) : MetaM Expr := do
   Meta.check out
   return out
 
-/--
-Axiom: if P holds at bitwidth `bound`, it holds at all bitwidths.
-Used by `mono_bmc` to justify checking at a specific concrete width.
--/
-axiom AxMonoBMC {P : Nat → Prop} (bound : Nat) : (P bound) → ∀ i, P i
 
 open Lean Meta in
 /-- Build a Lean `Expr` directly from a `SingleWidthTerm`, using arrays of free variables
