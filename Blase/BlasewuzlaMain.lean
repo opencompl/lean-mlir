@@ -206,18 +206,19 @@ unsafe def runMetaMAsIO (m : MetaM α) : IO α := do
   return a
 
 unsafe def monoBMC : Solver where
-  name := "mono_bmc"
+  name := "monobmc"
   run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
     -- monobmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
-      IO.eprintln s!"Running monobmc at width {config.bound}..."
+      IO.eprintln s!"Running {monoBMC.name} at width {config.bound}..."
     let singleWidthTerm := result.predicate.toSingleWidthProp result.wcard result.tcard
     if !singleWidthTerm.isTranslated then
-      IO.eprintln "monobmc: formula contains unsupported operations"
+      IO.eprintln s!"{monoBMC.name}: formula contains unsupported operations"
       return .unknown
-    IO.eprintln "DEBUG: about to call withImportModules for monobmc"
+    IO.eprintln s!"DEBUG: about to call withImportModules for {monoBMC.name}"
     initSearchPath (← findSysroot)
     enableInitializersExecution
+    let qfbv := singleWidthTerm
     let goalExpr ← singleWidthTerm.toLeanQFBVExpr config.bound
     IO.println f!"goal: {← ppExpr goalExpr}"
     let solved : Bool ← try do
@@ -263,7 +264,7 @@ def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
 
-    let some negatedPredicate := result.predicate.negate
+    let some negatedPredicate := result.predicate.Term.pnegate
       | throwError "unable to negate predicate. {repr result.predicate}"
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then

@@ -108,7 +108,7 @@ def expectPred (pt : ParsedTerm) (ctx : String := "") : ParserM Nondep.Term := d
 
 /-- Negate a predicate term, throwing a parser error if negation is not supported. -/
 private def negateTerm (t : Nondep.Term) : ParserM Nondep.Term :=
-  match t.negate with
+  match t.Term.pnegate with
   | some t' => return t'
   | none => ParserM.throwError s!"cannot negate term: {repr t}"
 
@@ -387,7 +387,7 @@ def parseSmt2Query (input : String) : Except String ParseResult := do
         | [p] => p
         | p :: ps => ps.foldl (init := p) fun acc q => .and acc q
       -- Negate to match UNSAT semantics
-      match conjoined.negate with
+      match conjoined.Term.pnegate with
       | none => .error s!"cannot negate conjoined term: {repr conjoined}"
       | some negated =>
         .ok {
