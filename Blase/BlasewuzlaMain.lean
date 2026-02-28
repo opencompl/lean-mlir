@@ -259,7 +259,6 @@ def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) : MetaM Bool := do
   | .ok _cert => return true
   | .error _assignment => return false
 
-
 def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
