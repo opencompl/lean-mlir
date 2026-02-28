@@ -1596,26 +1596,6 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
     | .bvOfBool .. | .boolConst .. | .boolVar .. | .setWidth ..
     | .pFalse | .pTrue =>
     (.const (0#_), false) -- these are not BV expressions, so we return a dummy value and false to indicate failure.
-/-
-(boolBinRel BoolBinaryRelationKind.eq _ _)
-(pvar _)
-(and _ _)
-(or _ _)
-(binRel BinaryRelationKind.ult _ _ _)
-(binRel BinaryRelationKind.sle _ _ _)
-(binRel BinaryRelationKind.slt _ _ _)
-(binRel BinaryRelationKind.ule _ _ _)
-(binRel BinaryRelationKind.ne _ _ _)
-(binRel BinaryRelationKind.eq _ _ _)
-(binWidthRel WidthBinaryRelationKind.le _ _)
-(binWidthRel WidthBinaryRelationKind.eq _ _)
-(bvOfBool _)
-(shiftr _ _ _)
-(boolConst true)
-(boolConst false)
-(boolVar _)
-(setWidth _ _)
--/
 
 /-- Convert a predicate-producing `Nondep.Term` to a `BVLogicalExpr`.
 `wenv` provides concrete width assignments for width variables.
@@ -1713,129 +1693,6 @@ satisfies 'HSingleWidthEnvRelation'.
 def SingleWidthTerm.WidthEnv.ofMultiWidth {wcard : Nat} (wMultiEnv : WidthExpr.Env wcard) (o : Nat) :
     SingleWidthTerm.WidthEnv wcard o :=
   fun v => BitVec.ofNat o (1 <<< wMultiEnv v)
-
--- open Lean in
--- def Expr.mkBitVecType (n : Expr) : MetaM Expr := do
---   let out := mkApp (mkConst ``BitVec) n
---   Meta.check out
---   return out
-
--- open Lean in
--- def Expr.mkBitVecInstAdd (w : Expr) : MetaM Expr := do
---   let out := mkApp (mkConst ``BitVec.instAdd) w
---   Meta.check out
---   return out
--- open Lean in
--- def Expr.mkInstHAdd (w : Expr) : MetaM Expr := do
---   let out := mkAppN (mkConst ``instHAdd [0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecInstAdd w]
---   Meta.check out
---   return out
-
--- open Lean in
--- def Expr.mkHAddCall (w : Expr) (a b : Expr) : MetaM Expr := do
---   let out := mkAppN (mkConst ``HAdd.hAdd [0, 0, 0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkInstHAdd w, a, b]
---   Meta.check out
---   return out
-
--- open Lean in
--- def Expr.mkBitVecInstAndOp (w : Expr) : MetaM Expr := do
---   let out := mkApp (mkConst ``BitVec.instAndOp) w
---   Meta.check out
---   return out
-
--- open Lean in
--- def Expr.mkInstHAndOfAndOp (w : Expr) : MetaM Expr := do
---   let out := mkAppN (mkConst ``instHAndOfAndOp [0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecInstAndOp w]
---   Meta.check out
---   return out
-
--- open Lean in
--- def Expr.mkHAndCall (w : Expr) (a b : Expr) : MetaM Expr := do
---   let out := mkAppN (mkConst ``HAnd.hAnd [0, 0, 0]) #[← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkBitVecType w, ← Expr.mkInstHAndOfAndOp w, a, b]
---   Meta.check out
---   return out
-
-
--- open Lean Meta in
--- /-- Build a Lean `Expr` directly from a `SingleWidthTerm`, using arrays of free variables
--- for width and term environments. `.bv` cases produce `Expr` of type `BitVec w`;
--- `.prop` cases produce `Expr` of type `Prop`.
--- Uses direct `BitVec.*` functions to avoid instance resolution failures in minimal
--- `withImportModules` environments (CLI backend). The caller should run `bv_normalize`
--- or equivalent simprocs before `bv_decide` to fold these into typeclass form. -/
--- def SingleWidthTerm.toLeanExprAux {wcard tcard : Nat}
---     (w : Nat) (wvars tvars : Array Expr)
---     : SingleWidthTerm wcard tcard k → MetaM Expr
---   | .wvar v =>
---     if h : v < wvars.size then pure wvars[v]
---     else pure $ mkApp2 (mkConst ``BitVec.ofNat) (mkNatLit w) (mkNatLit 0)
---   | .bvvar v =>
---     if h : v < tvars.size then pure tvars[v]
---     else pure $ mkApp2 (mkConst ``BitVec.ofNat) (mkNatLit w) (mkNatLit 0)
---   | .bvconst c =>
---     pure $ mkApp2 (mkConst ``BitVec.ofNat) (mkNatLit w) (mkNatLit c)
---   | .bvnot a => do
---     pure $ mkApp2 (mkConst ``BitVec.not) (mkNatLit w)
---       (← a.toLeanExprAux w wvars tvars)
---   | .bvadd a b => do
---     let out ← Expr.mkHAddCall (mkNatLit w)
---       (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
---     Meta.check out
---     pure out
---   | .bvand a b => do
---     let out ← Expr.mkHAndCall (mkNatLit w)
---       (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
---     Meta.check out
---     pure out
---   | .bvmul a b => do
---     pure $ mkApp3 (mkConst ``BitVec.mul) (mkNatLit w)
---       (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
---   | .bveq a b => do
---     let bvType := mkApp (mkConst ``BitVec) (mkNatLit w)
---     pure $ mkApp3 (mkConst ``Eq [.succ .zero]) bvType
---       (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
---   | .bvne a b => do
---     let bvType := mkApp (mkConst ``BitVec) (mkNatLit w)
---     pure $ mkApp3 (mkConst ``Ne [.succ .zero]) bvType
---       (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
---   | .bvule a b => do
---     -- BitVec.ule returns Bool; wrap in `= true` to get Prop
---     let ule := mkApp3 (mkConst ``BitVec.ule) (mkNatLit w)
---       (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
---     pure $ mkApp3 (mkConst ``Eq [.succ .zero]) (mkConst ``Bool) ule (mkConst ``Bool.true)
---   | .bvult a b => do
---     let ult := mkApp3 (mkConst ``BitVec.ult) (mkNatLit w)
---       (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
---     pure $ mkApp3 (mkConst ``Eq [.succ .zero]) (mkConst ``Bool) ult (mkConst ``Bool.true)
---   | .propimp a b => do
---     mkArrow (← a.toLeanExprAux w wvars tvars) (← b.toLeanExprAux w wvars tvars)
---   | .proptrue => pure (mkConst ``True)
---   | .unknown => pure (mkConst ``False)
-
--- open Lean Meta in
--- /-- Recursive helper: introduce `n` fresh `BitVec w` variables with given prefix,
--- then call `k` with the accumulated variable arrays. -/
--- partial def SingleWidthTerm.introVarsThenBuild
---     (bvType : Expr) (total : Nat) (prefix_ : String) (idx : Nat) (acc : Array Expr)
---     (k : Array Expr → MetaM Expr) : MetaM Expr := do
---   if idx ≥ total then k acc
---   else
---     withLocalDecl (Name.mkSimple s!"{prefix_}{idx}") .default bvType fun fvar => do
---       let body ← SingleWidthTerm.introVarsThenBuild bvType total prefix_ (idx + 1) (acc.push fvar) k
---       mkForallFVars #[fvar] body
-
--- open Lean Meta in
--- /--
--- Convert a `SingleWidthTerm` proposition to a QF_BV `Expr` at the given width `w`.
--- Builds: ∀ (w0 ... : BitVec w) (x0 ... : BitVec w), <direct proposition>
--- where w0..w_{wcard-1} are width variables and x0..x_{tcard-1} are term variables.
--- -/
--- def SingleWidthTerm.toLeanQFBVExpr {wcard tcard : Nat}
---     (t : SingleWidthTerm wcard tcard .prop) (w : Nat) : MetaM Expr := do
---   let bvType := mkApp (mkConst ``BitVec) (mkNatLit w)
---   SingleWidthTerm.introVarsThenBuild bvType wcard "w" 0 #[] fun wvars =>
---     SingleWidthTerm.introVarsThenBuild bvType tcard "x" 0 #[] fun tvars =>
---       t.toLeanExprAux w wvars tvars
 
 @[simp]
 def Nondep.Term.constOne (w : WidthExpr) : Term :=
@@ -1949,17 +1806,6 @@ s is the sign-bit position of the old width. Since mold = 2^k - 1, we get s = 2^
 The XOR-subtract trick (v ^ s) - s is a well-known identity:
 - If the sign bit is `0`: `v ^ s` sets bit k-1, then `- s` clears it again. Result = v unchanged.
 - If the sign bit is `1`: `v ^ s` clears bit k-1, then `- s` causes a borrow that propagates through all higher bits, filling them with 1s. Result = sign-extended v.
-
-The final `& mnew` clips to the new width.
-
-Worked example: mold = 0xF (4-bit), mnew = 0xFF (8-bit), v = 0b1010 (-6 signed):
-
-```
-s       = 0b1000
-v ^ s   = 0b0010
-- s     = 0b11111010
-& mnew  = 0b11111010   ✓  (-6 in 8-bit)
-```
 
 Positive case, v = 0b0101 (+5):
 
