@@ -16,16 +16,16 @@ For stable releases, please change the `rev` to the desired version tag.
 
 #### Algorithms Improvements TODO
 
-- [ ] Add a Nondep to BVExpr conversion
-- [ ] Use Nondep -> BV to implement naive enumerative bitblasting.
-- [ ] Use SingleWidth -> Nondep -> BV to implement single width bounded bitblasting.
+- [x] Add a Nondep to BVExpr conversion
+- [x] Use Nondep -> BV to implement naive enumerative bitblasting.
+- [x] Use SingleWidth -> Nondep -> BV to implement single width bounded bitblasting.
 - [ ] Come up with a constant generalization algorithm that exploits our fragment to 
   be much faster (ie, avoid enumerative synthesis).
   The idea would be to recover relationships the constant needs to satisfy,
   and then use a regular language learning algorithm to find a regular language that satisfies these relationships.
   We should then be able to "read off" an expression for this constant from this regular language. This "reading off" would need us to develop an algorithm that can take a regular expression for a bitvector and produce a bitvector expression that realises it, which is interesting in its own. I don't know an algorithm off the top of my head, but I think it's doable and maybe not even too difficult, but definitely needs thought.
 - [ ] Add support for `BitVec.cast`, as well as `decide : Prop -> Bool`, as well as `\b. b = true : Bool -> Prop`
-- [ ] Write multi-width as a reduction from single-width, with a variable `v` such that `v & (v - 1) = 0`.
+- [x] Write multi-width as a reduction from single-width, with a variable `v` such that `v & (v - 1) = 0`.
    This makes the multi-width version reducible, with the mask being created as `v - 1`.
 - [x] Add support for a generalization mode that keeps width 1 and geneeralizes all other widths. This is useful for problems
       with boolean substructure.
