@@ -1,0 +1,6 @@
+; Prove: x % 1 = 0 (unsigned remainder by 1 is always 0)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(assert (not (= (bvurem x (int_to_pbv k 1)) (int_to_pbv k 0))))
+(check-sat)

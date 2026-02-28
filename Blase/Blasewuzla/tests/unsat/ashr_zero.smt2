@@ -1,0 +1,6 @@
+; Prove: x >>> 0 = x (arithmetic right shift by 0 is identity)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(assert (not (= (bvashr x (int_to_pbv k 0)) x)))
+(check-sat)
