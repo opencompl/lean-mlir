@@ -1404,6 +1404,22 @@ def _root_.Std.Tactic.BVDecide.BVExpr.cast (x : BVExpr w) (hw : w = w') : BVExpr
   | .arithShiftRight x y => .arithShiftRight (x.cast hw) y
 
 
+def _root_.Std.Tactic.BVDecide.BVExpr.zeroExtend (x : BVExpr w) (wnew : Nat) : BVExpr wnew :=
+   if hw : wnew ≤ w then
+     .extract 0 wnew x
+    else
+      .append (BVExpr.const (BitVec.ofNat (wnew - w) 0)) x (by grind)
+
+def _root_.Std.Tactic.BVDecide.BVExpr.msb (x : BVExpr w) : BVExpr 1 :=
+  .extract (w - 1) 1 x
+
+def _root_.Std.Tactic.BVDecide.BVExpr.signExtend (x : BVExpr w) (wnew : Nat) : BVExpr wnew :=
+  if hw : wnew ≤ w then
+    .extract 0 wnew x
+  else
+    let msb := x.msb
+    let ext : BVExpr (wnew - w) := .replicate (wnew - w) msb (by grind)
+    .append ext x (by grind)
 
 /-- Convert a BV-producing `Nondep.Term` to a `BVExpr` at monomorphization width `w`.
 `wenv` provides concrete width assignments for width variables.
@@ -1483,6 +1499,18 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
       if aresult then
         (.shiftLeft (a'.cast ha) (.const (BitVec.ofNat w k)), true)
       else (.const (0#_), false)
+    else (.const (0#_), false)
+  | .zext x we =>
+    let (x', xresult) := x.toBVExpr wenv
+    let w := we.eval wenv
+    if xresult then
+      (BVExpr.zeroExtend x' w, true)
+    else (.const (0#_), false)
+  | .sext x we =>
+    let (x', xresult) := x.toBVExpr wenv
+    let w := we.eval wenv
+    if xresult then
+      (BVExpr.signExtend x' w, true)
     else (.const (0#_), false)
   | _ => (.const (0#_), false)
 
