@@ -782,7 +782,8 @@ def Term.toSmtLib : Term → SexprPBV.Term
 /-- Negate a predicate term by pushing `not` inward via De Morgan's laws.
     Returns `none` if the term cannot be negated (e.g., unrecognized atomic terms or
     width relations whose negations cannot be expressed in the Term language). -/
-def Term.pnegate : Term → Term × Bool
+def Term.pnegate (t : Term) : Term × Bool :=
+  match t with
   | .and p q =>
     let (p', result) := p.pnegate
     let (q', result') := q.pnegate
@@ -804,7 +805,32 @@ def Term.pnegate : Term → Term × Bool
   | .binWidthRel .eq wa wb =>
     (.or (.binWidthRel .le (.addK wa 1) wb) (.binWidthRel .le (.addK wb 1) wa), true)
   | .pFalse => (.pTrue, true)
-  | _ => (.pTrue, false)
+  | .boolBinRel .. | .pvar .. | .bvOfBool ..
+    | .shiftr .. | .shiftl .. | .boolConst .. | .boolVar ..
+    | .bnot .. | .bxor .. | .band .. | .bor .. | .setWidth .. | .sext .. | .zext ..
+    | .mul .. | .add .. | .var .. | .ofNat .. =>
+    (t, false)
+/-
+(boolBinRel BoolBinaryRelationKind.eq _ _)
+(pvar _)
+(bvOfBool _)
+(shiftr _ _ _)
+(shiftl _ _ _)
+(boolConst true)
+(boolConst false)
+(boolVar _)
+(bnot _ _)
+(bxor _ _ _)
+(band _ _ _)
+(bor _ _ _)
+(sext _ _)
+(setWidth _ _)
+(zext _ _)
+(mul _ _ _)
+(add _ _ _)
+(var _ _)
+(ofNat _ _)
+  -/
 
 def Term.ofDepTerm {wcard tcard bcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -890,7 +916,40 @@ theorem Term.width_ofDep_eq_ofDep {wcard tcard : Nat} (bcard : Nat)
     : (Term.ofDepTerm t).width = (.ofDep w) := by
   cases t <;> simp [Term.ofDepTerm, Term.width]
 
+/--
+the width cardinality of this term's width.
+-/
 def Term.wcard (t : Term) : Nat := t.width.wcard
+
+/--
+The maximum width cardinality of this entire term's subtree.
+-/
+def Term.maxwcard (t : Term) : Nat :=
+  match t with
+  | .ofNat w _ => w.wcard
+  | .var _ w => w.wcard
+  | .add w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .mul w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .zext a wnew => max (Term.maxwcard a) wnew.wcard
+  | .sext a wnew => max (Term.maxwcard a) wnew.wcard
+  | .setWidth a wnew => max (Term.maxwcard a) wnew.wcard
+  | .bor w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .band w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .bxor w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .bnot w a => max w.wcard (Term.maxwcard a)
+  | .boolVar _ => 0
+  | .boolConst _ => 0
+  | .shiftl w a _ => max w.wcard (Term.maxwcard a)
+  | .shiftr w a _ => max w.wcard (Term.maxwcard a)
+  | .bvOfBool _ => 0
+  | binWidthRel _k wa wb => max wa.wcard wb.wcard
+  | binRel _k w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | or p1 p2 => max (Term.maxwcard p1) (Term.maxwcard p2)
+  | and p1 p2 => max (Term.maxwcard p1) (Term.maxwcard p2)
+  | pTrue => 0
+  | pFalse => 0
+  | pvar _ => 0
+  | boolBinRel _k a b => max (Term.maxwcard a) (Term.maxwcard b)
 
 def Term.tcard (t : Term) : Nat :=
   match t with
@@ -1820,16 +1879,18 @@ Also see that `unary mask = power of 2 - 1`.
 This also cleanly handles the case where `u` is `0`, since `u & u + 1 = 0`.
 -/
 def Term.toSingleWidthNondepTerm.mkWidthPrecond (w : Nat) (wo : Nondep.WidthExpr) : Nondep.Term :=
-    let mvar := Nondep.Term.var w wo
-    let maskSuccPow2 := Nondep.Term.band wo mvar.succ mvar
-    maskSuccPow2
+    let m := Nondep.Term.var w wo
+    let mAndMSucc := Nondep.Term.band wo m.succ m
+    let rhs := Nondep.Term.constZero wo
+    let out := Nondep.Term.binRel .eq wo mAndMSucc rhs
+    out
 /--
 Make all the width preconditions of variables of indices [0..w),
 with universe width 'wo'.
 -/
 def Term.toSingleWidthNondepTerm.mkAllWidthPreconds (wo : Nondep.WidthExpr) (w : Nat) : Nondep.Term :=
   match w with
-  | 0 => .boolConst true
+  | 0 => .pTrue
   | w' + 1 =>
     let precond := Term.toSingleWidthNondepTerm.mkWidthPrecond w' wo
     .and precond (Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo w')
@@ -1934,12 +1995,12 @@ TODO: refactor into `SingleWidth → Nondep.Term × Bool`, since it's better typ
 Then this function will be `Nondep.Term → SingleWidth → Nondep.Term × Bool`, and the preconditions can be generated separately.
 For the `Nondep.Term → SingleWidth` translation, change type to `Nondep.Term → SingleWidth × Bool`.
 -/
-def Nondep.Term.toSingleWidthNondepTermGo (t : Nondep.Term) (wo : Nondep.WidthExpr) : Nondep.Term × Bool :=
+def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo : Nondep.WidthExpr) : Nondep.Term × Bool :=
   match t with
   | .var v w =>
     -- bitvector variables become bitvectors,
     -- masked with the width value.
-    let x := Nondep.Term.var (v + t.wcard) wo
+    let x := Nondep.Term.var (v + maxWcard) wo
     let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
     if wresult then
       (.band wo x wmask, true) -- mask the variable to the universe width.
@@ -1951,35 +2012,35 @@ def Nondep.Term.toSingleWidthNondepTermGo (t : Nondep.Term) (wo : Nondep.WidthEx
         (.band wo bv wmask, true) -- mask the constant to the universe width.
       else (.constZero wo, false)
   | .add w a b =>
-    let (a', aresult) := a.toSingleWidthNondepTermGo wo
-    let (b', bresult) := b.toSingleWidthNondepTermGo wo
+    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
     let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
     if aresult && bresult && wresult then
       (.band wo (.add wo a' b') wmask, true) -- mask the result to the universe width.
     else (.constZero wo, false)
   | .band _w a b =>
-    let (a', aresult) := a.toSingleWidthNondepTermGo wo
-    let (b', bresult) := b.toSingleWidthNondepTermGo wo
+    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
     if aresult && bresult then
       -- AND cannot overflow, so we don't need to mask the result to the universe width.
       ((.band wo a' b'), true)
     else (.constZero wo, false)
   | .mul w a b =>
-    let (a', aresult) := a.toSingleWidthNondepTermGo wo
-    let (b', bresult) := b.toSingleWidthNondepTermGo wo
+    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
     let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
     if aresult && bresult && wresult then
       (.band wo (.mul wo a' b') wmask, true) -- mask the result to the universe width.
     else (.constZero wo, false)
   | .shiftl w x k =>
-    let (x', xresult) := x.toSingleWidthNondepTermGo wo
+    let (x', xresult) := x.toSingleWidthNondepTermGo maxWcard wo
     let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
     if xresult && wresult then
       (.band wo (.shiftl wo x' k) wmask, true) -- mask the result to the universe width.
     else (.constZero wo, false)
   | .boolConst _ => (t, true)
   | .zext x wnew =>
-    let (x', xresult) := x.toSingleWidthNondepTermGo wo
+    let (x', xresult) := x.toSingleWidthNondepTermGo maxWcard wo
     let (wmask, wresult) := wnew.toSingleWidthMaskNondepTerm wo
     if xresult && wresult then
       (.band wo x' wmask, true)
@@ -1987,7 +2048,7 @@ def Nondep.Term.toSingleWidthNondepTermGo (t : Nondep.Term) (wo : Nondep.WidthEx
   | .sext x wnew =>
       let w := x.width
       let (wmaskNew, wnewResult) := wnew.toSingleWidthMaskNondepTerm wo
-      let (x', xresult) := x.toSingleWidthNondepTermGo wo
+      let (x', xresult) := x.toSingleWidthNondepTermGo maxWcard wo
       let (msb, msbResult) := x'.toSingleWidthNondepMsb w wo
       -- x' ^ msb - msb
       let y := (Nondep.Term.sub wo (Nondep.Term.bxor wo x' msb) msb)
@@ -1996,22 +2057,22 @@ def Nondep.Term.toSingleWidthNondepTermGo (t : Nondep.Term) (wo : Nondep.WidthEx
         (ymasked, true)
       else (.constZero wo, false)
   | .and p q =>
-    let (p', presult) := p.toSingleWidthNondepTermGo wo
-    let (q', qresult) := q.toSingleWidthNondepTermGo wo
+    let (p', presult) := p.toSingleWidthNondepTermGo maxWcard wo
+    let (q', qresult) := q.toSingleWidthNondepTermGo maxWcard wo
     if presult && qresult then
       (.and p' q', true)
     else (.constZero wo, false)
   | .or p q =>
-    let (p', presult) := p.toSingleWidthNondepTermGo wo
-    let (q', qresult) := q.toSingleWidthNondepTermGo wo
+    let (p', presult) := p.toSingleWidthNondepTermGo maxWcard wo
+    let (q', qresult) := q.toSingleWidthNondepTermGo maxWcard wo
     if presult && qresult then
       (.or p' q', true)
     else (.constZero wo, false)
   | .pTrue => (.pTrue, true)
   | .pFalse => (.pFalse, true)
   | .binRel k w x y =>
-    let (x', xresult) := x.toSingleWidthNondepTermGo wo
-    let (y', yresult) := y.toSingleWidthNondepTermGo wo
+    let (x', xresult) := x.toSingleWidthNondepTermGo maxWcard wo
+    let (y', yresult) := y.toSingleWidthNondepTermGo maxWcard wo
     let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
     if xresult && yresult && wresult then
       let xMasked := .band wo x' wmask
@@ -2032,7 +2093,7 @@ def Nondep.Term.toSingleWidthNondepTermGo (t : Nondep.Term) (wo : Nondep.WidthEx
       | .le => (.binRel .ule wo wa' wb', true)
     else (.constZero wo, false)
   | .shiftr w x k =>
-    let (x', xresult) := x.toSingleWidthNondepTermGo wo
+    let (x', xresult) := x.toSingleWidthNondepTermGo maxWcard wo
     let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
     if xresult && wresult then
       (.band wo (.shiftr wo x' k) wmask, true) -- mask the result to the universe width.
@@ -2046,13 +2107,12 @@ def Nondep.Term.toSingleWidthNondepTermGo (t : Nondep.Term) (wo : Nondep.WidthEx
 Given a term, convert it to a single-width term by converting all width expressions to their corresponding single-width terms,
 -/
 def Nondep.Term.toSingleWidthNondepTerm (t : Nondep.Term) (wo : Nondep.WidthExpr): Nondep.Term × Bool :=
-  let preconds := Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo t.wcard
-  -- let (rhs, rhsResult) : Nondep.Term × Bool := t.toSingleWidthNondepTermGo wo
-  -- let (implies, impliesResult) := Nondep.Term.pimplies preconds rhs
-  -- if rhsResult && impliesResult then
-  --   (implies, true)
-  -- else (.constZero wo, false)
-  (preconds, true)
+  let preconds := Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo t.maxwcard
+  let (rhs, rhsResult) : Nondep.Term × Bool := t.toSingleWidthNondepTermGo t.maxwcard wo
+  let (implies, impliesResult) := Term.pimplies preconds rhs
+  if rhsResult && impliesResult then
+    (implies, true)
+  else (preconds, false)
 
 end ToSingleWidth
 

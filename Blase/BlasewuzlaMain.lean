@@ -202,7 +202,7 @@ unsafe def monoBMC : Solver where
       | return .error s!"formula contains unsupported operation for QF_BV translation.\n{repr negatedPredicate}"
 
     if config.verbose then
-      IO.eprintln s!"{qfbv.toString}"
+      IO.eprintln s!"qfbv formula to be checked for UNSAT:\n{qfbv.toString}"
 
     if ← checkBVLogicalExprIsUnsat qfbv then
       return .unsat
