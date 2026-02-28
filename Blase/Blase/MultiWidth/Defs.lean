@@ -796,6 +796,11 @@ def Term.negate : Term → Option Term
   | .binRel .slt w a b => some (.binRel .sle w b a)
   | .binRel .sle w a b => some (.binRel .slt w b a)
   | .pTrue => some (.binWidthRel .le (.const 1) (.const 0))
+  -- ¬(wa ≤ wb) ↔ wb + 1 ≤ wa (i.e., wa > wb, since these are naturals)
+  | .binWidthRel .le wa wb => some (.binWidthRel .le (.addK wb 1) wa)
+  -- ¬(wa = wb) ↔ wa < wb ∨ wb < wa ↔ (wa+1 ≤ wb) ∨ (wb+1 ≤ wa)
+  | .binWidthRel .eq wa wb =>
+    some (.or (.binWidthRel .le (.addK wa 1) wb) (.binWidthRel .le (.addK wb 1) wa))
   | _ => none
 
 def Term.ofDepTerm {wcard tcard bcard : Nat}
@@ -1399,124 +1404,190 @@ def _root_.Std.Tactic.BVDecide.BVExpr.cast (x : BVExpr w) (hw : w = w') : BVExpr
   | .arithShiftRight x y => .arithShiftRight (x.cast hw) y
 
 
+def _root_.Std.Tactic.BVDecide.BVExpr.zeroExtend (x : BVExpr w) (wnew : Nat) : BVExpr wnew :=
+   if hw : wnew ≤ w then
+     .extract 0 wnew x
+    else
+      .append (BVExpr.const (BitVec.ofNat (wnew - w) 0)) x (by grind)
+
+def _root_.Std.Tactic.BVDecide.BVExpr.msb (x : BVExpr w) : BVExpr 1 :=
+  .extract (w - 1) 1 x
+
+def _root_.Std.Tactic.BVDecide.BVExpr.signExtend (x : BVExpr w) (wnew : Nat) : BVExpr wnew :=
+  if hw : wnew ≤ w then
+    .extract 0 wnew x
+  else
+    let msb := x.msb
+    let ext : BVExpr (wnew - w) := .replicate (wnew - w) msb (by grind)
+    .append ext x (by grind)
 
 /-- Convert a BV-producing `Nondep.Term` to a `BVExpr` at monomorphization width `w`.
-`wenv` provides concrete width assignments for width variables. -/
-def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) :=
+`wenv` provides concrete width assignments for width variables.
+Returns 'true' if the translation succeeded.
+-/
+def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) × Bool :=
    match _ht : t with
-  | .var v _ => (BVExpr.var v)
-  | .ofNat w n => (.const (BitVec.ofNat (w.eval wenv) n))
+  | .var v _ => (BVExpr.var v, true)
+  | .ofNat w n => (.const (BitVec.ofNat (w.eval wenv) n), true)
   | .add we a b =>
-    let a' := a.toBVExpr wenv
-    let b' := b.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
       if hb : b'.width = w then
-        .bin (a'.cast ha) .add (b'.cast hb)
-      else .const (0#_)
-    else .const (0#_)
+         if aresult && bresult then
+          (.bin (a'.cast ha) .add (b'.cast hb), true)
+        else (.const (0#_), false)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
   | .mul we a b =>
-    let a' := a.toBVExpr wenv
-    let b' := b.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
       if hb : b'.width = w then
-        .bin (a'.cast ha) .mul (b'.cast hb)
-      else .const (0#_)
-    else .const (0#_)
+        if aresult && bresult then
+          (.bin (a'.cast ha) .mul (b'.cast hb), true)
+        else (.const (0#_), false)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
   | .band we a b =>
-    let a' := a.toBVExpr wenv
-    let b' := b.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
       if hb : b'.width = w then
-        .bin (a'.cast ha) .and (b'.cast hb)
-      else .const (0#_)
-    else .const (0#_)
+        if aresult && bresult then
+          (.bin (a'.cast ha) .and (b'.cast hb), true)
+        else (.const (0#_), false)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
   | .bor we a b =>
-    let a' := a.toBVExpr wenv
-    let b' := b.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
       if hb : b'.width = w then
-        .bin (a'.cast ha) .or (b'.cast hb)
-      else .const (0#_)
-    else .const (0#_)
+        if aresult && bresult then
+          (.bin (a'.cast ha) .or (b'.cast hb), true)
+        else (.const (0#_), false)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
   | .bxor we a b =>
-    let a' := a.toBVExpr wenv
-    let b' := b.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
       if hb : b'.width = w then
-        .bin (a'.cast ha) .xor (b'.cast hb)
-      else .const (0#_)
-    else .const (0#_)
+        if aresult && bresult then
+          (.bin (a'.cast ha) .xor (b'.cast hb), true)
+        else (.const (0#_), false)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
   | .bnot we a =>
-    let a' := a.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
-      (.un .not (a'.cast ha))
-    else .const (0#_)
+      if aresult then
+        (.un .not (a'.cast ha), true)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
   | .shiftl we a k =>
-    let a':= a.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
-      (.shiftLeft (a'.cast ha) (.const (BitVec.ofNat w k)))
-    else .const (0#_)
-  | _ => .const (0#_)
+      if aresult then
+        (.shiftLeft (a'.cast ha) (.const (BitVec.ofNat w k)), true)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
+  | .zext x we =>
+    let (x', xresult) := x.toBVExpr wenv
+    let w := we.eval wenv
+    if xresult then
+      (BVExpr.zeroExtend x' w, true)
+    else (.const (0#_), false)
+  | .sext x we =>
+    let (x', xresult) := x.toBVExpr wenv
+    let w := we.eval wenv
+    if xresult then
+      (BVExpr.signExtend x' w, true)
+    else (.const (0#_), false)
+  | _ => (.const (0#_), false)
 
 /-- Convert a predicate-producing `Nondep.Term` to a `BVLogicalExpr`.
 `wenv` provides concrete width assignments for width variables.
 Uses `Term.toBVExpr` for BV subterms within predicates.
-`ule a b` is encoded as `¬(ult b a)`, `ne` as `¬(eq)`. -/
-def Term.toBVLogicalExpr (wenv : Array Nat) : Term → BVLogicalExpr
-  | .pTrue => (.const true)
-  | .boolConst b => (.const b)
+`ule a b` is encoded as `¬(ult b a)`, `ne` as `¬(eq)`.
+Returns 'true' if the translation succeeded.
+-/
+def Term.toBVLogicalExpr (wenv : Array Nat) : Term → BVLogicalExpr × Bool
+  | .pTrue => (.const true, true)
+  | .boolConst b => (.const b, true)
   | .binRel .eq we a b =>
-    let a' := a.toBVExpr wenv
-    let b' := b.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
       if hb : b'.width = w then
-        (.literal (.bin (a'.cast ha) .eq (b'.cast hb)))
-      else .const false
-    else .const false
+        if aresult && bresult then
+          (.literal (.bin (a'.cast ha) .eq (b'.cast hb)), true)
+        else (.const false, false)
+      else (.const false, false)
+    else (.const false, false)
   | .binRel .ne we a b =>
-    let a' := a.toBVExpr wenv
-    let b' := b.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
       if hb : b'.width = w then
-        (.not (.literal (.bin (a'.cast ha) .eq (b'.cast hb))))
-      else .const false
-    else .const false
+        if aresult && bresult then
+          (.not (.literal (.bin (a'.cast ha) .eq (b'.cast hb))), true)
+        else (.const false, false)
+      else (.const false, false)
+    else (.const false, false)
   | .binRel .ult we a b =>
-    let a' := a.toBVExpr wenv
-    let b' := b.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
       if hb : b'.width = w then
-        (.literal (.bin (a'.cast ha) .ult (b'.cast hb)))
-      else .const false
-    else .const false
+        if aresult && bresult then
+          (.literal (.bin (a'.cast ha) .ult (b'.cast hb)), true)
+        else (.const false, false)
+      else (.const false, false)
+    else (.const false, false)
   | .binRel .ule we a b =>
-    let a' := a.toBVExpr wenv
-    let b' := b.toBVExpr wenv
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
     let w := we.eval wenv
     if ha : a'.width = w then
       if hb : b'.width = w then
-        (.not (.literal (.bin (b'.cast hb) .ult (a'.cast ha))))
-      else .const false
-    else .const false
+        if aresult && bresult then
+          (.not (.literal (.bin (b'.cast hb) .ult (a'.cast ha))), true)
+        else (.const false, false)
+      else (.const false, false)
+    else (.const false, false)
   | .and p1 p2 =>
-    let p1' := p1.toBVLogicalExpr wenv
-    let p2' := p2.toBVLogicalExpr wenv
-    (.gate .and p1' p2')
+    let (p1', p1result) := p1.toBVLogicalExpr wenv
+    let (p2', p2result) := p2.toBVLogicalExpr wenv
+    if p1result && p2result then
+      (.gate .and p1' p2', true)
+    else (.const false, false)
   | .or p1 p2 =>
-    let p1' := p1.toBVLogicalExpr wenv
-    let p2' := p2.toBVLogicalExpr wenv
-    (.gate .or p1' p2')
-  | _ => .const false
+    let (p1', p1result) := p1.toBVLogicalExpr wenv
+    let (p2', p2result) := p2.toBVLogicalExpr wenv
+    if p1result && p2result then
+      (.gate .or p1' p2', true)
+    else (.const false, false)
+  | .binWidthRel .eq ew1 ew2 =>
+    let w1 := ew1.eval wenv
+    let w2 := ew2.eval wenv
+    (.const (w1 = w2), true)
+  | .binWidthRel .le ew1 ew2 =>
+    let w1 := ew1.eval wenv
+    let w2 := ew2.eval wenv
+    (.const (w1 ≤ w2), true)
+  | _ => (.const false, false)
 
 end Nondep
 

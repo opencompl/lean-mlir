@@ -64,6 +64,18 @@ def parseWidthExpr (s : Sexp) : ParserM Nondep.WidthExpr := do
       match name.toNat? with
       | some n => return .const n
       | none => ParserM.throwError s!"unknown width expression: '{name}'"
+  | .expr [.atom "+", a, b] =>
+    let wa ← parseWidthExpr a
+    match b with
+    | .atom nStr =>
+      match nStr.toNat? with
+      | some k => return .addK wa k
+      | none =>
+        let _wb ← parseWidthExpr b
+        -- a + b where b is a variable: use addK with 0 as a workaround isn't right.
+        -- For now, only support constant offsets.
+        ParserM.throwError s!"width expression '+': second operand must be a constant, got '{b}'"
+    | _ => ParserM.throwError s!"width expression '+': second operand must be a constant, got '{b}'"
   | .expr _ => ParserM.throwError s!"unsupported compound width expression: '{s}'"
 
 /-- Parse a sort to extract a width expression. Handles `(_ BitVec w)`. -/
@@ -197,6 +209,29 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
       | some n => return .bv (.shiftl aw at_ n) aw
       | none => ParserM.throwError s!"bvshl: expected constant shift amount, got '{nStr}'"
     | _ => ParserM.throwError s!"bvshl: only constant shift amounts supported, got '{b}'"
+
+  -- zero_extend: ((_ zero_extend wnew) a)
+  | .expr [.expr [.atom "_", .atom "zero_extend", wnew], a] =>
+    let w ← parseWidthExpr wnew
+    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "zero_extend")
+    return .bv (.zext at_ w) w
+
+  -- sign_extend: ((_ sign_extend wnew) a)
+  | .expr [.expr [.atom "_", .atom "sign_extend", wnew], a] =>
+    let w ← parseWidthExpr wnew
+    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "sign_extend")
+    return .bv (.sext at_ w) w
+
+  -- Width relation predicates
+  | .expr [.atom "width_le", a, b] =>
+    let wa ← parseWidthExpr a
+    let wb ← parseWidthExpr b
+    return .pred (.binWidthRel .le wa wb)
+
+  | .expr [.atom "width_eq", a, b] =>
+    let wa ← parseWidthExpr a
+    let wb ← parseWidthExpr b
+    return .pred (.binWidthRel .eq wa wb)
 
   -- Comparisons (produce predicates)
   | .expr [.atom "=", a, b] =>

@@ -1,0 +1,10 @@
+; Prove: w1 < w2 → w2 ≤ w3 → (x.zeroExtend w2).signExtend w3 = x.zeroExtend w3
+(set-logic QF_BV)
+(declare-const w1 Int)
+(declare-const w2 Int)
+(declare-const w3 Int)
+(declare-const x (_ BitVec w1))
+(assert (width_le (+ w1 1) w2))
+(assert (width_le w2 w3))
+(assert (not (= ((_ sign_extend w3) ((_ zero_extend w2) x)) ((_ zero_extend w3) x))))
+(check-sat)
