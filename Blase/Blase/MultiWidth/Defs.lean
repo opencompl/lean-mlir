@@ -1579,6 +1579,14 @@ def Term.toBVLogicalExpr (wenv : Array Nat) : Term → BVLogicalExpr × Bool
     if p1result && p2result then
       (.gate .or p1' p2', true)
     else (.const false, false)
+  | .binWidthRel .eq ew1 ew2 =>
+    let w1 := ew1.eval wenv
+    let w2 := ew2.eval wenv
+    (.const (w1 = w2), true)
+  | .binWidthRel .le ew1 ew2 =>
+    let w1 := ew1.eval wenv
+    let w2 := ew2.eval wenv
+    (.const (w1 ≤ w2), true)
   | _ => (.const false, false)
 
 end Nondep
