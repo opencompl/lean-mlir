@@ -23,10 +23,6 @@ open Cli
 
 namespace Blasewuzla
 
-theorem foo :   ∀ (w0 x0 x1 : BitVec 8),
-    Eq (instHAndOfAndOp.hAnd (instHAdd.hAdd x0 x1) w0) (instHAndOfAndOp.hAnd (instHAdd.hAdd x1 x0) w0) := by
-  bv_decide
-
 inductive SolverExitCode
 | unknown
 | sat
@@ -46,39 +42,18 @@ def SolverExitCode.toString : SolverExitCode → String
 | .unsat => "unsat"
 | .error errStr => s!"error: {errStr}"
 
-open Lean Elab Meta
-def getSimpData (simpsetName : Name) : MetaM (SimpTheorems × Simprocs) := do
-  let some ext ← (getSimpExtension? simpsetName)
-    | throwError m!"'{simpsetName}' simp attribute not found!"
-  let theorems ← ext.getTheorems
-  let some ext ← (Simp.getSimprocExtension? simpsetName)
-    | throwError m!"'{simpsetName}' simp attribute not found!"
-  let simprocs ← ext.getSimprocs
-  return (theorems, simprocs)
-
-open Lean Elab Meta
-def runMonoBMCPreprocessing (g : MVarId) : MetaM (Option MVarId) := do
-    let mut theorems : Array SimpTheorems := #[]
-    let mut simprocs : Array Simprocs := #[]
-
-    for name in [`seval, `bv_normalize] do
-      let res ← getSimpData name
-      IO.println s!"lemmas: {res.1.lemmaNames.toList.map Origin.key}"
-      IO.println s!"simprocs: {res.2.simprocNames.toList}"
-      theorems := theorems.push res.1
-      simprocs := simprocs.push res.2
-    IO.println s!"#theorems: {theorems.size}"
-    IO.println s!"#simprocs: {simprocs.size}"
-
-    let config : Simp.Config := { contextual := true }
-    let config := { config with failIfUnchanged := false }
-    let ctx ← Simp.mkContext (config := config)
-      (simpTheorems := theorems)
-      (congrTheorems := ← Meta.getSimpCongrTheorems)
-    match ← simpTargetStar g ctx (simprocs := simprocs) /- (fvarIdsToSimp := fvars) -/ with
-    | (.closed, _stats) => return none
-    | (.noChange , _stats) => return some g
-    | (.modified gnew , _stats) => return some gnew
+open Std Tactic Sat AIG BVDecide  Lean Elab Meta Std Sat AIG Tactic BVDecide Frontend in
+def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) : MetaM Bool := do
+  let entry := e.bitblast
+  let (entry, _map) := entry.relabelNat'
+  let cnf := AIG.toCNF entry
+  let cfg : BVDecideConfig := {}
+  IO.FS.withTempFile fun _ lratFile => do
+  let ctx ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run' { declName? := `lrat }
+  let res ← Lean.Elab.Tactic.BVDecide.Frontend.runExternal cnf ctx.solver ctx.lratPath ctx.config.trimProofs ctx.config.timeout ctx.config.binaryProofs
+  match res with
+  | .ok _cert => return true
+  | .error _assignment => return false
 
 /--
 Introduce only forall binders and preserve names.
@@ -211,26 +186,28 @@ unsafe def monoBMC : Solver where
     -- monobmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
       IO.eprintln s!"Running {monoBMC.name} at width {config.bound}..."
-    let singleWidthTerm := result.predicate.toSingleWidthProp result.wcard result.tcard
-    if !singleWidthTerm.isTranslated then
-      IO.eprintln s!"{monoBMC.name}: formula contains unsupported operations"
+
+    let (negatedPredicate, true) := result.predicate.pnegate
+      | throwError "unable to negate predicate. {repr result.predicate}"
+
+    let (singleWidthTerm, success?) := negatedPredicate.toSingleWidthNondepTerm (.const config.bound)
+
+     if ! success? then
+      IO.eprintln s!"{monoBMC.name}: Unable to translate term to single-width.\ninput:\n{repr negatedPredicate}\noutput:\n{repr singleWidthTerm}"
       return .unknown
-    IO.eprintln s!"DEBUG: about to call withImportModules for {monoBMC.name}"
-    initSearchPath (← findSysroot)
-    enableInitializersExecution
-    let qfbv := singleWidthTerm
-    let goalExpr ← singleWidthTerm.toLeanQFBVExpr config.bound
-    IO.println f!"goal: {← ppExpr goalExpr}"
-    let solved : Bool ← try do
-      let result ← proveGoalByBvDecide goalExpr
-      pure result
-    catch e =>
-      IO.eprintln s!"DEBUG: bv_decide runtime error: {← e.toMessageData.toString}"
-      pure false
-    if solved then
+    else
+      IO.eprintln s!"{monoBMC.name}: Successfully translated term to single-width.\ninput:\n{repr negatedPredicate}\noutput:\n{repr singleWidthTerm}"
+
+    let (qfbv, true) := singleWidthTerm.toBVLogicalExpr #[]
+      | return .error s!"formula contains unsupported operation for QF_BV translation.\n{repr negatedPredicate}"
+
+    if config.verbose then
+      IO.eprintln s!"{qfbv.toString}"
+
+    if ← checkBVLogicalExprIsUnsat qfbv then
       return .unsat
     else
-      return .unknown
+      return .sat
 
 /--
 Enumerate all tuples [0..bound] x [0..bound] x ... x [0..bound] (n times).
@@ -247,33 +224,19 @@ def cartesianProductRange (bound : Nat) (n : Nat) : Array (Array Nat) := Id.run 
     out
 
 
-open Std Tactic Sat AIG BVDecide  Lean Elab Meta Std Sat AIG Tactic BVDecide Frontend in
-def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) : MetaM Bool := do
-  let entry := e.bitblast
-  let (entry, _map) := entry.relabelNat'
-  let cnf := AIG.toCNF entry
-  let cfg : BVDecideConfig := {}
-  IO.FS.withTempFile fun _ lratFile => do
-  let ctx ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run' { declName? := `lrat }
-  let res ← Lean.Elab.Tactic.BVDecide.Frontend.runExternal cnf ctx.solver ctx.lratPath ctx.config.trimProofs ctx.config.timeout ctx.config.binaryProofs
-  match res with
-  | .ok _cert => return true
-  | .error _assignment => return false
-
 def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
 
-    let some negatedPredicate := result.predicate.Term.pnegate
+    let (negatedPredicate, true) := result.predicate.pnegate
       | throwError "unable to negate predicate. {repr result.predicate}"
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
       IO.eprintln s!"Running naivebmc at width {config.bound}..."
     for widths in cartesianProductRange config.bound result.wcard do
       let (qfbv, success?) : Std.Tactic.BVDecide.BVLogicalExpr × Bool := negatedPredicate.toBVLogicalExpr widths
-
       if !success? then
-        return .error s!"formula contains unsupported operation, unable to translate into QF_BV.\n{repr negatedPredicate}"
+        return .error s!"formula contains unsupported operation for QF_BV translation.\n{repr negatedPredicate}"
       if config.verbose then
         IO.eprintln s!"{qfbv.toString}"
       if ← checkBVLogicalExprIsUnsat qfbv then
@@ -285,6 +248,7 @@ def naiveBMC : Solver where
           IO.eprintln s!"⟨{widths.toList}⟩ ✗"
         return .sat
     return .unsat
+
 
 def solverErrorUknown : Solver where
   name := "error_unknown"
