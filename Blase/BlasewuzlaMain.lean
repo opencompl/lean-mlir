@@ -237,8 +237,10 @@ def naiveBMC : Solver where
       IO.eprintln s!"Running naivebmc at width {config.bound}..."
     for widths in cartesianProductRange config.bound result.wcard do
       let (qfbv, success?) : Std.Tactic.BVDecide.BVLogicalExpr × Bool := negatedPredicate.toBVLogicalExpr widths
+
       if !success? then
-        return .error s!"formula contains unsupported operation for QF_BV translation.\n{repr negatedPredicate}"
+        return .error s!"formula contains unsupported operation, unable to translate into QF_BV.\n{repr negatedPredicate}"
+
       if config.verbose then
         IO.eprintln s!"{qfbv.toString}"
       if ← checkBVLogicalExprIsUnsat qfbv then

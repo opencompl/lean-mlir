@@ -810,27 +810,6 @@ def Term.pnegate (t : Term) : Term × Bool :=
     | .bnot .. | .bxor .. | .band .. | .bor .. | .setWidth .. | .sext .. | .zext ..
     | .mul .. | .add .. | .var .. | .ofNat .. =>
     (t, false)
-/-
-(boolBinRel BoolBinaryRelationKind.eq _ _)
-(pvar _)
-(bvOfBool _)
-(shiftr _ _ _)
-(shiftl _ _ _)
-(boolConst true)
-(boolConst false)
-(boolVar _)
-(bnot _ _)
-(bxor _ _ _)
-(band _ _ _)
-(bor _ _ _)
-(sext _ _)
-(setWidth _ _)
-(zext _ _)
-(mul _ _ _)
-(add _ _ _)
-(var _ _)
-(ofNat _ _)
-  -/
 
 def Term.ofDepTerm {wcard tcard bcard : Nat}
     {tctx : Term.Ctx wcard tcard}
