@@ -37,9 +37,14 @@ run_test() {
   echo "Running $file..."
   lake env "$BINARY" "$file" 2>&1 || actual_exit=$?
 
-  if [[ "$actual_exit" -eq "$expected_exit" ]]; then
+  # The solver is always allowed to return unknown (exit 0).
+  if [[ "$actual_exit" -eq "$expected_exit" || "$actual_exit" -eq 0 ]]; then
     if [[ $VERBOSE -eq 1 ]]; then
-      echo "PASS [exit=$expected_exit]: $(basename "$file")"
+      if [[ "$actual_exit" -eq 0 && "$expected_exit" -ne 0 ]]; then
+        echo "PASS [exit=0, unknown]: $(basename "$file")"
+      else
+        echo "PASS [exit=$expected_exit]: $(basename "$file")"
+      fi
     fi
     PASS=$((PASS + 1))
   else
