@@ -1,0 +1,6 @@
+; Prove: x >> 0 = x (logical right shift by 0 is identity)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(assert (not (= (bvlshr x (int_to_pbv k 0)) x)))
+(check-sat)

@@ -760,6 +760,11 @@ inductive Term
 | pFalse : Term
 | boolBinRel (k : BoolBinaryRelationKind)
     (a b : Term) : Term
+| udiv (w : WidthExpr) (a b : Term) : Term       -- unsigned division
+| urem (w : WidthExpr) (a b : Term) : Term       -- unsigned remainder
+| vlshr (w : WidthExpr) (a b : Term) : Term      -- variable logical right shift
+| vashr (w : WidthExpr) (a b : Term) : Term      -- variable arithmetic right shift
+| vshl (w : WidthExpr) (a b : Term) : Term       -- variable left shift
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 def Term.toSmtLib : Term → SexprPBV.Term
@@ -777,6 +782,7 @@ def Term.toSmtLib : Term → SexprPBV.Term
 | .boolConst b => .boolConst b
 | .shiftl w a k => .shiftl w.toSmtLib a.toSmtLib k
 | .bvOfBool _b => .junk ("bvOfBool")
+| .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. => .junk "non-automata-bv"
 | _ => .junk "predicate"
 
 /-- Negate a predicate term by pushing `not` inward via De Morgan's laws.
@@ -808,7 +814,8 @@ def Term.pnegate (t : Term) : Term × Bool :=
   | .boolBinRel .. | .pvar .. | .bvOfBool ..
     | .shiftr .. | .shiftl .. | .boolConst .. | .boolVar ..
     | .bnot .. | .bxor .. | .band .. | .bor .. | .setWidth .. | .sext .. | .zext ..
-    | .mul .. | .add .. | .var .. | .ofNat .. =>
+    | .mul .. | .add .. | .var .. | .ofNat ..
+    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. =>
     (t, false)
 
 def Term.ofDepTerm {wcard tcard bcard : Nat}
@@ -884,6 +891,11 @@ def Term.width (t : Term) : WidthExpr :=
   | pFalse => WidthExpr.const 0
   | pvar _v => WidthExpr.const 0
   | boolBinRel _k _a _b => WidthExpr.const 0
+  | udiv w _a _b => w
+  | urem w _a _b => w
+  | vlshr w _a _b => w
+  | vashr w _a _b => w
+  | vshl w _a _b => w
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -929,6 +941,11 @@ def Term.maxwcard (t : Term) : Nat :=
   | pFalse => 0
   | pvar _ => 0
   | boolBinRel _k a b => max (Term.maxwcard a) (Term.maxwcard b)
+  | udiv w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | urem w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | vlshr w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | vashr w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | vshl w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
 
 def Term.tcard (t : Term) : Nat :=
   match t with
@@ -956,6 +973,11 @@ def Term.tcard (t : Term) : Nat :=
   | pFalse => 0
   | pvar _v => 0
   | boolBinRel _k a b => max (a.tcard) (b.tcard)
+  | udiv _w a b => max (Term.tcard a) (Term.tcard b)
+  | urem _w a b => max (Term.tcard a) (Term.tcard b)
+  | vlshr _w a b => max (Term.tcard a) (Term.tcard b)
+  | vashr _w a b => max (Term.tcard a) (Term.tcard b)
+  | vshl _w a b => max (Term.tcard a) (Term.tcard b)
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -983,6 +1005,11 @@ def Term.bcard (t : Term) : Nat :=
   | pFalse => 0
   | pvar _v => 0
   | boolBinRel _k a b => max (a.bcard) (b.bcard)
+  | udiv _w a b => max (Term.bcard a) (Term.bcard b)
+  | urem _w a b => max (Term.bcard a) (Term.bcard b)
+  | vlshr _w a b => max (Term.bcard a) (Term.bcard b)
+  | vashr _w a b => max (Term.bcard a) (Term.bcard b)
+  | vshl _w a b => max (Term.bcard a) (Term.bcard b)
 
 /-- Returns true if the term can be decided by the automata-based procedure.
 Multiplication is NOT automata decidable. -/
@@ -1011,6 +1038,7 @@ def Term.isAutomtaDecidable : Term → Bool
 | .pFalse => false -- Even though theoreitcally it is, we don't implement it right now.
 | .pvar _ => true
 | .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. => false
 
 end Nondep
 
@@ -1571,6 +1599,61 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
     if xresult then
       (BVExpr.signExtend x' w, true)
     else (.const (0#_), false)
+  | .udiv we a b =>
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.bin (a'.cast ha) .udiv (b'.cast hb), true)
+        else (.const (0#_), false)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
+  | .urem we a b =>
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.bin (a'.cast ha) .umod (b'.cast hb), true)
+        else (.const (0#_), false)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
+  | .vlshr we a b =>
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.shiftRight (a'.cast ha) (b'.cast hb), true)
+        else (.const (0#_), false)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
+  | .vashr we a b =>
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.arithShiftRight (a'.cast ha) (b'.cast hb), true)
+        else (.const (0#_), false)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
+  | .vshl we a b =>
+    let (a', aresult) := a.toBVExpr wenv
+    let (b', bresult) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.shiftLeft (a'.cast ha) (b'.cast hb), true)
+        else (.const (0#_), false)
+      else (.const (0#_), false)
+    else (.const (0#_), false)
   | .boolBinRel .. | .pvar .. | .and .. | .or ..| .binRel .. | .binWidthRel ..
     | .bvOfBool .. | .boolConst .. | .boolVar .. | .setWidth ..
     | .pFalse | .pTrue =>
@@ -1652,7 +1735,8 @@ def Term.toBVLogicalExpr (wenv : Array Nat) : Term → BVLogicalExpr × Bool
   | .pFalse => (.const false, true)
   | .pvar .. | .binRel .. | .bvOfBool .. | .shiftr ..
     | .shiftl .. | .boolVar .. | .bnot .. | .bxor .. | .band .. | .bor .. | .sext .. | .setWidth ..
-    | .zext .. | .mul .. | .add .. | .ofNat .. | .var .. | .boolBinRel .. =>
+    | .zext .. | .mul .. | .add .. | .ofNat .. | .var .. | .boolBinRel ..
+    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. =>
     (.const false, false) -- these are not predicate expressions, so we return a dummy value and false to indicate failure.
 
 end Nondep
@@ -1922,6 +2006,38 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
     if xresult && wresult then
       (.band wo (.shiftr wo x' k) wmask, true) -- mask the result to the universe width.
+    else (.constZero wo, false)
+  | .udiv w a b =>
+    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (.udiv wo a' b') wmask, true)
+    else (.constZero wo, false)
+  | .urem w a b =>
+    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (.urem wo a' b') wmask, true)
+    else (.constZero wo, false)
+  | .vlshr w a b =>
+    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (.vlshr wo a' b') wmask, true)
+    else (.constZero wo, false)
+  | .vashr _w _a _b =>
+    -- Arithmetic right shift in single-width encoding is complex (needs sign extension).
+    -- Return unsupported for now.
+    (.constZero wo, false)
+  | .vshl w a b =>
+    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (.vshl wo a' b') wmask, true)
     else (.constZero wo, false)
   | pvar _ | bvOfBool _ | boolVar _ | bnot .. | bxor .. | bor .. | setWidth .. | boolBinRel .. =>
     (.constZero wo, false)

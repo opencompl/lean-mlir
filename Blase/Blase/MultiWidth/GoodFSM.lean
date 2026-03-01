@@ -1451,7 +1451,8 @@ def mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) (t : Nondep.Term) :
       { toFsmZext := composeUnaryAux FSM.scanAnd (fsmEq) ,
         width := NatFSM.mk ((FSM.negOne).map Fin.elim0)
       }
-  | .mul _w _a _b =>
+  | .mul _w _a _b | .udiv _w _a _b | .urem _w _a _b
+  | .vlshr _w _a _b | .vashr _w _a _b | .vshl _w _a _b =>
       {
         toFsmZext := FSM.zero.map Fin.elim0,
         width := NatFSM.mk ((FSM.negOne).map Fin.elim0)

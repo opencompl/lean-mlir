@@ -201,14 +201,50 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     return .bv (.bnot aw (.bxor aw at_ bt)) aw
 
   | .expr [.atom "bvshl", a, b] =>
-    -- Only constant shifts supported
     let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "bvshl")
+    -- Try constant shift first, fall back to variable shift
     match b with
     | .expr [.atom "int_to_pbv", _, .atom nStr] =>
       match nStr.toNat? with
       | some n => return .bv (.shiftl aw at_ n) aw
       | none => ParserM.throwError s!"bvshl: expected constant shift amount, got '{nStr}'"
-    | _ => ParserM.throwError s!"bvshl: only constant shift amounts supported, got '{b}'"
+    | _ =>
+      let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvshl")
+      return .bv (.vshl aw at_ bt) aw
+
+  | .expr [.atom "bvlshr", a, b] =>
+    let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "bvlshr")
+    -- Try constant shift first, fall back to variable shift
+    match b with
+    | .expr [.atom "int_to_pbv", _, .atom nStr] =>
+      match nStr.toNat? with
+      | some n => return .bv (.shiftr aw at_ n) aw
+      | none => ParserM.throwError s!"bvlshr: expected constant shift amount, got '{nStr}'"
+    | _ =>
+      let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvlshr")
+      return .bv (.vlshr aw at_ bt) aw
+
+  | .expr [.atom "bvashr", a, b] =>
+    let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "bvashr")
+    -- Try constant shift first, fall back to variable shift
+    match b with
+    | .expr [.atom "int_to_pbv", _, .atom nStr] =>
+      match nStr.toNat? with
+      | some n => return .bv (.shiftr aw at_ n) aw -- TODO: encode constant ashr properly
+      | none => ParserM.throwError s!"bvashr: expected constant shift amount, got '{nStr}'"
+    | _ =>
+      let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvashr")
+      return .bv (.vashr aw at_ bt) aw
+
+  | .expr [.atom "bvudiv", a, b] =>
+    let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "bvudiv")
+    let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvudiv")
+    return .bv (.udiv aw at_ bt) aw
+
+  | .expr [.atom "bvurem", a, b] =>
+    let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "bvurem")
+    let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvurem")
+    return .bv (.urem aw at_ bt) aw
 
   -- zero_extend: ((_ zero_extend wnew) a)
   | .expr [.expr [.atom "_", .atom "zero_extend", wnew], a] =>
@@ -220,6 +256,18 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
   | .expr [.expr [.atom "_", .atom "sign_extend", wnew], a] =>
     let w ← parseWidthExpr wnew
     let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "sign_extend")
+    return .bv (.sext at_ w) w
+
+  -- pzero_extend: alias for zero_extend
+  | .expr [.expr [.atom "_", .atom "pzero_extend", wnew], a] =>
+    let w ← parseWidthExpr wnew
+    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "pzero_extend")
+    return .bv (.zext at_ w) w
+
+  -- psign_extend: alias for sign_extend
+  | .expr [.expr [.atom "_", .atom "psign_extend", wnew], a] =>
+    let w ← parseWidthExpr wnew
+    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "psign_extend")
     return .bv (.sext at_ w) w
 
   -- Width relation predicates
@@ -246,6 +294,20 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
       let nbt ← negateTerm bt
       return .pred (.and (.or nat_ bt) (.or nbt at_))
     | _, _ => ParserM.throwError s!"= : mismatched types between arguments"
+
+  -- distinct is just (not (= a b))
+  | .expr [.atom "distinct", a, b] =>
+    let pa ← parseTerm a
+    let pb ← parseTerm b
+    match pa, pb with
+    | .bv at_ aw, .bv bt _bw =>
+      return .pred (.binRel .ne aw at_ bt)
+    | .pred at_, .pred bt =>
+      -- distinct a b ↔ ¬(a ↔ b) ↔ (a ∧ ¬b) ∨ (¬a ∧ b)
+      let nat_ ← negateTerm at_
+      let nbt ← negateTerm bt
+      return .pred (.or (.and at_ nbt) (.and nat_ bt))
+    | _, _ => ParserM.throwError s!"distinct: mismatched types between arguments"
 
   | .expr [.atom "bvult", a, b] =>
     let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "bvult")

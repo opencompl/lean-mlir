@@ -97,78 +97,6 @@ structure Solver where
   name : String
   run : Config → ParseResult → MetaM SolverExitCode
 
-def IC3 : Solver where
-  name := "rIC3"
-  run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
-    let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 result.pcard result.predicate
-    let fsm := termFsm.toFsmZext
-
-    if config.verbose then
-      IO.eprintln s!"Running rIC3..."
-    let aig := fsm.toAiger
-    let res ← Valaig.External.checkSafety (Valaig.External.rIC3 (timeoutMs := none)) aig
-    match res with
-    | .error (.timeout _ _) =>
-      if config.verbose then IO.eprintln "rIC3: timed out"
-      return .unknown
-    | .error (.external msg) =>
-      -- rIC3 (and other HWMCC tools) exit with 0 to signal "unknown/indeterminate"
-      if msg.contains "exit code 0" then
-        if config.verbose then IO.eprintln "rIC3: unknown result"
-        return .unknown
-      else
-        IO.eprintln s!"rIC3 error: {msg}"
-        return .error
-    | .ok .counterexample =>
-      if config.verbose then IO.eprintln "rIC3: counterexample found"
-      return .sat
-    | .ok .proof =>
-      if config.verbose then IO.eprintln "rIC3: proof found"
-      return .unsat
-
-def kinduction : Solver where
-  name := "k-induction"
-  run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
-    -- k-induction backend
-    if config.verbose then
-      IO.eprintln s!"FSM built. Running k-induction with max {config.niter} iterations..."
-
-    let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 result.pcard result.predicate
-    let fsm := termFsm.toFsmZext
-
-    -- Set up Lean TermElabM environment for the SAT solver
-    initSearchPath (← findSysroot)
-    let env ← importModules #[`Std.Tactic.BVDecide, `Init] {} 0 (loadExts := true)
-    let coreContext : Core.Context := { fileName := "blasewuzla", fileMap := FileMap.ofString "" }
-    let coreState : Core.State := { env }
-    let ctxMeta : Meta.Context := {}
-    let sMeta : Meta.State := {}
-    let ctxTerm : Term.Context := { declName? := .some (Name.mkSimple "blasewuzla") }
-    let sTerm : Term.State := {}
-
-    let tStart ← IO.monoMsNow
-    let ((out, _circuitStats), _coreState, _metaState, _termState) ←
-      fsm.decideIfZerosVerified config.niter |>.toIO coreContext coreState ctxMeta sMeta ctxTerm sTerm
-    let tEnd ← IO.monoMsNow
-
-    if config.verbose then
-      IO.eprintln s!"Completed in {tEnd - tStart}ms"
-
-    match out with
-    | .provenByKIndCycleBreaking numIters _ _ =>
-      if config.verbose then
-        IO.eprintln s!"Proven by k-induction at iteration {numIters}"
-      return .unsat
-    | .safetyFailure iter =>
-      if config.verbose then
-        IO.eprintln s!"Counterexample found at iteration {iter}"
-      return .sat
-    | .exhaustedIterations n =>
-      if config.verbose then
-        IO.eprintln s!"Exhausted {n} iterations"
-      return .unknown
-
-
 unsafe def runMetaMAsIO (m : MetaM α) : IO α := do
   initSearchPath (← findSysroot)
   enableInitializersExecution
@@ -252,6 +180,83 @@ def naiveBMC : Solver where
           IO.eprintln s!"⟨{widths.toList}⟩ ✗"
         return .sat
     return .unsat
+
+def IC3 : Solver where
+  name := "rIC3"
+  run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
+    let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 result.pcard result.predicate
+    let fsm := termFsm.toFsmZext
+
+    if config.verbose then
+      IO.eprintln s!"Running rIC3..."
+    let aig := fsm.toAiger
+    let res ← Valaig.External.checkSafety (Valaig.External.rIC3 (timeoutMs := none)) aig
+    match res with
+    | .error (.timeout _ _) =>
+      if config.verbose then IO.eprintln "rIC3: timed out"
+      return .unknown
+    | .error (.external msg) =>
+      -- rIC3 (and other HWMCC tools) exit with 0 to signal "unknown/indeterminate"
+      if msg.contains "exit code 0" then
+        if config.verbose then IO.eprintln "rIC3: unknown result"
+        return .unknown
+      else
+        IO.eprintln s!"rIC3 error: {msg}"
+        return .error
+    | .ok .counterexample =>
+      if !result.predicate.isAutomtaDecidable then
+        IO.eprintln "rIC3: potential counterexample found, but formula contains non-automata-decidable operations (overapproximation). Countermodel reconstruction needed to validate."
+        return .unknown
+      if config.verbose then IO.eprintln "rIC3: counterexample found"
+      return .sat
+    | .ok .proof =>
+      if config.verbose then IO.eprintln "rIC3: proof found"
+      return .unsat
+
+def kinduction : Solver where
+  name := "k-induction"
+  run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
+    -- k-induction backend
+    if config.verbose then
+      IO.eprintln s!"FSM built. Running k-induction with max {config.niter} iterations..."
+
+    let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 result.pcard result.predicate
+    let fsm := termFsm.toFsmZext
+
+    -- Set up Lean TermElabM environment for the SAT solver
+    initSearchPath (← findSysroot)
+    let env ← importModules #[`Std.Tactic.BVDecide, `Init] {} 0 (loadExts := true)
+    let coreContext : Core.Context := { fileName := "blasewuzla", fileMap := FileMap.ofString "" }
+    let coreState : Core.State := { env }
+    let ctxMeta : Meta.Context := {}
+    let sMeta : Meta.State := {}
+    let ctxTerm : Term.Context := { declName? := .some (Name.mkSimple "blasewuzla") }
+    let sTerm : Term.State := {}
+
+    let tStart ← IO.monoMsNow
+    let ((out, _circuitStats), _coreState, _metaState, _termState) ←
+      fsm.decideIfZerosVerified config.niter |>.toIO coreContext coreState ctxMeta sMeta ctxTerm sTerm
+    let tEnd ← IO.monoMsNow
+
+    if config.verbose then
+      IO.eprintln s!"Completed in {tEnd - tStart}ms"
+
+    match out with
+    | .provenByKIndCycleBreaking numIters _ _ =>
+      if config.verbose then
+        IO.eprintln s!"Proven by k-induction at iteration {numIters}"
+      return .unsat
+    | .safetyFailure iter =>
+      if !result.predicate.isAutomtaDecidable then
+        IO.eprintln s!"k-induction: potential counterexample at iteration {iter}, but formula contains non-automata-decidable operations (overapproximation). Countermodel reconstruction needed to validate."
+        return .unknown
+      if config.verbose then
+        IO.eprintln s!"Counterexample found at iteration {iter}"
+      return .sat
+    | .exhaustedIterations n =>
+      if config.verbose then
+        IO.eprintln s!"Exhausted {n} iterations"
+      return .unknown
 
 
 def solverErrorUknown : Solver where
