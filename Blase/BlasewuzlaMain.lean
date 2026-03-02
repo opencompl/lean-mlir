@@ -181,29 +181,35 @@ def naiveBMC : Solver where
         return .sat
     return .unsat
 
-def IC3 : Solver where
-  name := "rIC3"
+def External (name : String) (solver : Valaig.External.SafetyAigerMC) : Solver where
+  name := name
   run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
     let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 result.pcard result.predicate
     let fsm := termFsm.toFsmZext
 
     if config.verbose then
-      IO.eprintln s!"Running rIC3..."
+      IO.eprintln s!"Running {name}..."
     let aig := fsm.toAiger
-    let res ← Valaig.External.checkSafety (Valaig.External.rIC3 (timeoutMs := none)) aig
+    let res ← Valaig.External.checkSafety solver aig
     match res with
     | .error msg =>
-        IO.eprintln s!"rIC3 error: {msg}"
+        IO.eprintln s!"{name} error: {msg}"
         return .error
     | .ok .counterexample =>
       if !result.predicate.isAutomtaDecidable then
-        IO.eprintln "rIC3: potential counterexample found, but formula contains non-automata-decidable operations (overapproximation). Countermodel reconstruction needed to validate."
+        IO.eprintln "{name}: potential counterexample found, but formula contains non-automata-decidable operations (overapproximation). Countermodel reconstruction needed to validate."
         return .unknown
-      if config.verbose then IO.eprintln "rIC3: counterexample found"
+      if config.verbose then IO.eprintln "{name}: counterexample found"
       return .sat
     | .ok .proof =>
-      if config.verbose then IO.eprintln "rIC3: proof found"
+      if config.verbose then IO.eprintln "{name}: proof found"
       return .unsat
+
+def rIC3 : Solver :=
+  External "rIC3" (Valaig.External.rIC3 (timeoutMs := none))
+
+def abc : Solver :=
+  External "abc" (Valaig.External.Abc (timeoutMs := none))
 
 def kinduction : Solver where
   name := "k-induction"
@@ -259,7 +265,7 @@ def solverErrorUknown : Solver where
 
 /-- List of all solvers we support. -/
 unsafe def allSolvers : Std.HashMap String Solver :=
-  let solvers := #[kinduction, IC3, monoBMC, naiveBMC]
+  let solvers := #[kinduction, rIC3, abc, monoBMC, naiveBMC]
   solvers.foldl (fun m s => m.insert s.name s) ∅
 
 set_option compiler.extract_closed false in
@@ -313,7 +319,7 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     parseOnly;                 "Only parse the file and print the parsed term."
     niter : Nat;               "Maximum number of k-induction iterations (kinduction backend only)."
     bound : Nat;               "Bound width for monobmc backend."
-    backend : String;          "Backend solver: 'kinduction' (default), 'ric3', 'monobmc', or 'naivebmc'."
+    backend : String;          "Backend solver: 'k-induction' (default), 'rIC3', 'abc', 'monobmc', or 'naivebmc'."
 
   ARGS:
     input : String;            "Path to the .smt2 file."
