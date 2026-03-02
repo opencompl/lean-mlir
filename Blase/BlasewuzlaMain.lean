@@ -192,15 +192,7 @@ def IC3 : Solver where
     let aig := fsm.toAiger
     let res ← Valaig.External.checkSafety (Valaig.External.rIC3 (timeoutMs := none)) aig
     match res with
-    | .error (.timeout _ _) =>
-      if config.verbose then IO.eprintln "rIC3: timed out"
-      return .unknown
-    | .error (.external msg) =>
-      -- rIC3 (and other HWMCC tools) exit with 0 to signal "unknown/indeterminate"
-      if msg.contains "exit code 0" then
-        if config.verbose then IO.eprintln "rIC3: unknown result"
-        return .unknown
-      else
+    | .error msg =>
         IO.eprintln s!"rIC3 error: {msg}"
         return .error
     | .ok .counterexample =>
