@@ -1938,14 +1938,14 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
     let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
     if aresult && bresult then
-      -- AND cannot overflow, so we don't need to mask the result to the universe width.
+      -- OR cannot overflow, so we don't need to mask the result to the universe width.
       ((.bor wo a' b'), true)
     else (.constZero wo, false)
   | .bxor _w a b =>
     let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
     let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
     if aresult && bresult then
-      -- AND cannot overflow, so we don't need to mask the result to the universe width.
+      -- XOR cannot overflow, so we don't need to mask the result to the universe width.
       ((.bxor wo a' b'), true)
     else (.constZero wo, false)
   | .bnot _w a =>
@@ -2061,15 +2061,6 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     else (.constZero wo, false)
   | pvar _ | bvOfBool _ | boolVar _ | boolBinRel .. =>
     (.constZero wo, false)
-  where 
-   goBinop (a b : Nondep.Term) (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr)
-     (binop : Nondep.WidthExpr → Nondep.Term → Nondep.Term → Nondep.Term) : Nondep.Term × Bool :=
-    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
-    let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
-    let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
-    if aresult && bresult && wresult then
-      (.band wo (binop wo a' b') wmask, true)
-    else (.constZero wo, false)
 
   -- | _ => (.constZero wo, false)
 
