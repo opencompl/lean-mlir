@@ -1936,7 +1936,27 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     if aresult && bresult then
       -- AND cannot overflow, so we don't need to mask the result to the universe width.
       ((.band wo a' b'), true)
-    else (.constBad wo, false)
+    else (.constZero wo, false)
+  | .bor _w a b =>
+    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
+    if aresult && bresult then
+      -- OR cannot overflow, so we don't need to mask the result to the universe width.
+      ((.bor wo a' b'), true)
+    else (.constZero wo, false)
+  | .bxor _w a b =>
+    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
+    if aresult && bresult then
+      -- XOR cannot overflow, so we don't need to mask the result to the universe width.
+      ((.bxor wo a' b'), true)
+    else (.constZero wo, false)
+  | .bnot _w a =>
+    let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
+    if aresult then
+      -- NOT cannot overflow, so we don't need to mask the result to the universe width.
+      ((.bnot wo a'), true)
+    else (.constZero wo, false)
   | .mul w a b =>
     let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
     let (b', bresult) := b.toSingleWidthNondepTermGo maxWcard wo
@@ -1951,7 +1971,7 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
       (.band wo (.shiftl wo x' k) wmask, true) -- mask the result to the universe width.
     else (.constBad wo, false)
   | .boolConst _ => (t, true)
-  | .zext x wnew =>
+  | .zext x wnew | .setWidth x wnew =>
     let (x', xresult) := x.toSingleWidthNondepTermGo maxWcard wo
     let (wmask, wresult) := wnew.toSingleWidthMaskNondepTerm wo
     if xresult && wresult then
@@ -2041,9 +2061,9 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
     if aresult && bresult && wresult then
       (.band wo (.vshl wo a' b') wmask, true)
-    else (.constBad wo, false)
-  | pvar _ | bvOfBool _ | boolVar _ | bnot .. | bxor .. | bor .. | setWidth .. | boolBinRel .. =>
-    (.constBad wo, false)
+    else (.constZero wo, false)
+  | pvar _ | bvOfBool _ | boolVar _ | boolBinRel .. =>
+    (.constZero wo, false)
 
   -- | _ => (.constBad wo, false)
 

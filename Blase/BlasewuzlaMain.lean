@@ -181,6 +181,12 @@ def naiveBMC : Solver where
         return .sat
     return .unsat
 
+def dryrun : Solver where
+  name := "dryrun"
+  run (_config : Config) (_result : ParseResult) : MetaM SolverExitCode := do
+    return .unsat
+
+
 def External (name : String) (solver : Valaig.External.SafetyAigerMC) : Solver where
   name := name
   run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
@@ -265,7 +271,7 @@ def solverErrorUknown : Solver where
 
 /-- List of all solvers we support. -/
 unsafe def allSolvers : Std.HashMap String Solver :=
-  let solvers := #[kinduction, rIC3, abc, monoBMC, naiveBMC]
+  let solvers := #[kinduction, rIC3, abc, monoBMC, naiveBMC, dryrun]
   solvers.foldl (fun m s => m.insert s.name s) ∅
 
 set_option compiler.extract_closed false in
@@ -298,7 +304,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
 
   if parseOnly then
     IO.println s!"{repr result.predicate}"
-    return 0
+    return SolverExitCode.toUInt32 .unsat
 
   let solver : Solver :=
     allSolvers.get? backend |>.getD solverErrorUknown
@@ -319,7 +325,7 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     parseOnly;                 "Only parse the file and print the parsed term."
     niter : Nat;               "Maximum number of k-induction iterations (kinduction backend only)."
     bound : Nat;               "Bound width for monobmc backend."
-    backend : String;          "Backend solver: 'k-induction' (default), 'rIC3', 'abc', 'monobmc', or 'naivebmc'."
+    backend : String;          "Backend solver: 'k-induction' (default), 'rIC3', 'abc', 'monobmc', 'naivebmc', or 'dryrun'."
 
   ARGS:
     input : String;            "Path to the .smt2 file."
