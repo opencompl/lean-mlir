@@ -259,13 +259,13 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     return .bv (.sext at_ w) w
 
   -- pzero_extend: alias for zero_extend
-  | .expr [.expr [.atom "_", .atom "pzero_extend", wnew], a] =>
+  | .expr [.atom "pzero_extend", wnew, a] =>
     let w ← parseWidthExpr wnew
     let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "pzero_extend")
     return .bv (.zext at_ w) w
 
   -- psign_extend: alias for sign_extend
-  | .expr [.expr [.atom "_", .atom "psign_extend", wnew], a] =>
+  | .expr [.atom "psign_extend", wnew, a] =>
     let w ← parseWidthExpr wnew
     let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "psign_extend")
     return .bv (.sext at_ w) w
@@ -282,19 +282,24 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     return .pred (.binWidthRel .eq wa wb)
 
   -- Comparisons (produce predicates)
-  | .expr [.atom "=", a, b] =>
-    let pa ← parseTerm a
-    let pb ← parseTerm b
-    match pa, pb with
-    | .bv at_ aw, .bv bt _bw =>
-      return .pred (.binRel .eq aw at_ bt)
-    | .pred at_, .pred bt =>
-      -- (a ↔ b) = (a → b) ∧ (b → a) = (¬a ∨ b) ∧ (¬b ∨ a)
-      let nat_ ← negateTerm at_
-      let nbt ← negateTerm bt
-      return .pred (.and (.or nat_ bt) (.or nbt at_))
-    | _, _ => ParserM.throwError s!"= : mismatched types between arguments"
-
+  | .expr [.atom "=", a, b] => do
+    try
+      let wa ← parseWidthExpr a 
+      let wb ← parseWidthExpr b 
+      return .pred (.binWidthRel .eq wa wb)
+    catch _ =>
+      let pa ← parseTerm a
+      let pb ← parseTerm b
+      match pa, pb with
+      | .bv at_ aw, .bv bt _bw =>
+        return .pred (.binRel .eq aw at_ bt)
+      | .pred at_, .pred bt =>
+        -- (a ↔ b) = (a → b) ∧ (b → a) = (¬a ∨ b) ∧ (¬b ∨ a)
+        let nat_ ← negateTerm at_
+        let nbt ← negateTerm bt
+        return .pred (.and (.or nat_ bt) (.or nbt at_))
+      | _, _ => 
+         ParserM.throwError s!"= : mismatched types between arguments"
   -- distinct is just (not (= a b))
   | .expr [.atom "distinct", a, b] =>
     let pa ← parseTerm a
@@ -348,7 +353,31 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "bvsge")
     let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvsge")
     return .pred (.binRel .sle aw bt at_)  -- swap
-
+  -- width predicate: >
+  | .expr [.atom ">", a, b] =>
+    let (aw) ← parseWidthExpr a
+    let (bw) ← parseWidthExpr b
+    -- | a > b ↔ a ≥ b + 1 ↔ b + 1 ≤ a
+    return .pred (.binWidthRel  .le (Nondep.WidthExpr.addK bw 1) aw)
+  -- | width predicate: <
+  | .expr [.atom "<", a, b] =>
+    let (aw) ← parseWidthExpr a
+    let (bw) ← parseWidthExpr b
+    -- | a < b ↔ a + 1 ≤ b
+    return .pred (.binWidthRel  .le (Nondep.WidthExpr.addK aw 1) bw)
+  -- | width predicate: <=
+  | .expr [.atom "<=", a, b] =>
+    let (aw) ← parseWidthExpr a
+    let (bw) ← parseWidthExpr b
+    -- | a < b ↔ a + 1 ≤ b
+    return .pred (.binWidthRel  .le aw bw)
+  -- | width predicate: >=
+  -- a ≥ b ↔ b ≤ a
+  | .expr [.atom ">=", a, b] =>
+    let (aw) ← parseWidthExpr a
+    let (bw) ← parseWidthExpr b
+    -- | a < b ↔ a + 1 ≤ b
+    return .pred (.binWidthRel  .le bw aw)
   -- Propositional connectives
   | .expr (.atom "and" :: args) =>
     if args.length < 2 then
