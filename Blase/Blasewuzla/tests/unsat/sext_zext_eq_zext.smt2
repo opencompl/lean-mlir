@@ -6,5 +6,5 @@
 (declare-const x (_ BitVec w1))
 (assert (width_le (+ w1 1) w2))
 (assert (width_le w2 w3))
-(assert (not (= ((_ sign_extend w3) ((_ zero_extend w2) x)) ((_ zero_extend w3) x))))
+(assert (not (= (psign_extend w3 (pzero_extend w2 x)) (pzero_extend w3 x))))
 (check-sat)

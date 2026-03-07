@@ -222,6 +222,7 @@ inductive Term {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pc
 | sext (a : Term bcard ncard icard pcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard ncard icard pcard tctx (.bv v)
 /-- convert a bool to a bitvector of width 1 -/
 | bvOfBool (b : Term bcard ncard icard pcard tctx .bool) : Term bcard ncard icard pcard tctx (.bv (.const 1))
+-- | bvOfProp (b : Term bcard ncard icard pcard tctx .prop) : Term bcard ncard icard pcard tctx (.bv (.const 1))
 -- | boolMsb (w : WidthExpr wcard) (x : Term bcard ncard icard pcard tctx (.bv w)) : Term bcard ncard icard pcard tctx .bool
 | boolConst (b : Bool) : Term bcard ncard icard pcard tctx .bool
 | boolVar (v : Fin bcard) : Term bcard ncard icard pcard tctx .bool
