@@ -750,6 +750,7 @@ inductive Term
 | boolConst (b : Bool) : Term
 | shiftl (w : WidthExpr) (a : Term) (k : Nat) : Term
 | shiftr (w : WidthExpr) (a : Term) (k : Nat) : Term
+| iteBV (cond : Term) (w : WidthExpr) (thenVal elseVal : Term) : Term
 | bvOfBool (b : Term) : Term
 | binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr) : Term
 | binRel (k : BinaryRelationKind) (w : WidthExpr)
@@ -816,7 +817,7 @@ def Term.pnegate (t : Term) : Term × Bool :=
     | .shiftr .. | .shiftl .. | .boolConst .. | .boolVar ..
     | .bnot .. | .bxor .. | .band .. | .bor .. | .setWidth .. | .sext .. | .zext ..
     | .mul .. | .add .. | .var .. | .ofNat ..
-    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. =>
+    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .iteBV .. =>
     dbg_trace "ERROR: could not negate term {repr t}"; (t, false)
 
 def Term.ofDepTerm {wcard tcard bcard : Nat}
@@ -897,6 +898,7 @@ def Term.width (t : Term) : WidthExpr :=
   | vlshr w _a _b => w
   | vashr w _a _b => w
   | vshl w _a _b => w
+  | .iteBV _cond w _thenVal _elseVal => w
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -947,6 +949,8 @@ def Term.maxwcard (t : Term) : Nat :=
   | vlshr w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
   | vashr w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
   | vshl w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .iteBV _cond w thenVal elseVal =>
+    max w.wcard (max (Term.maxwcard thenVal) (Term.maxwcard elseVal))
 
 def Term.tcard (t : Term) : Nat :=
   match t with
@@ -979,6 +983,7 @@ def Term.tcard (t : Term) : Nat :=
   | vlshr _w a b => max (Term.tcard a) (Term.tcard b)
   | vashr _w a b => max (Term.tcard a) (Term.tcard b)
   | vshl _w a b => max (Term.tcard a) (Term.tcard b)
+  | .iteBV _cond _w thenVal elseVal => max (Term.tcard thenVal) (Term.tcard elseVal)
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -1011,6 +1016,7 @@ def Term.bcard (t : Term) : Nat :=
   | vlshr _w a b => max (Term.bcard a) (Term.bcard b)
   | vashr _w a b => max (Term.bcard a) (Term.bcard b)
   | vshl _w a b => max (Term.bcard a) (Term.bcard b)
+  | .iteBV _cond _w thenVal elseVal => max (Term.bcard thenVal) (Term.bcard elseVal)
 
 /-- Returns true if the term can be decided by the automata-based procedure.
 Multiplication is NOT automata decidable. -/
@@ -1040,6 +1046,7 @@ def Term.isAutomtaDecidable : Term → Bool
 | .pvar _ => true
 | .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
 | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. => false
+| .iteBV .. => false
 
 end Nondep
 
@@ -1657,7 +1664,7 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
     else (.const (88#_), false)
   | .boolBinRel .. | .pvar .. | .and .. | .or ..| .binRel .. | .binWidthRel ..
     | .bvOfBool .. | .boolConst .. | .boolVar .. | .setWidth ..
-    | .pFalse | .pTrue =>
+    | .pFalse | .pTrue | .iteBV .. =>
     (.const (88#_), false) -- these are not BV expressions, so we return a dummy value and false to indicate failure.
 
 /-- Convert a predicate-producing `Nondep.Term` to a `BVLogicalExpr`.
@@ -1666,9 +1673,11 @@ Uses `Term.toBVExpr` for BV subterms within predicates.
 `ule a b` is encoded as `¬(ult b a)`, `ne` as `¬(eq)`.
 Returns 'true' if the translation succeeded.
 -/
-def Term.toBVLogicalExpr (wenv : Array Nat) : Term → BVLogicalExpr × Bool
+def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term ) : BVLogicalExpr × Bool :=
+  match t with
   | .pTrue => (.const true, true)
-  | .boolConst b => (.const b, true)
+  | .boolConst b =>
+      (.const b, true)
   | .binRel .eq we a b =>
     let (a', aresult) := a.toBVExpr wenv
     let (b', bresult) := b.toBVExpr wenv
@@ -1737,8 +1746,8 @@ def Term.toBVLogicalExpr (wenv : Array Nat) : Term → BVLogicalExpr × Bool
   | .pvar .. | .binRel .. | .bvOfBool .. | .shiftr ..
     | .shiftl .. | .boolVar .. | .bnot .. | .bxor .. | .band .. | .bor .. | .sext .. | .setWidth ..
     | .zext .. | .mul .. | .add .. | .ofNat .. | .var .. | .boolBinRel ..
-    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. =>
-    (dbg_trace "ERROR 15"; .const false, false) -- these are not predicate expressions, so we return a dummy value and false to indicate failure.
+    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .iteBV .. =>
+    (dbg_trace "ERROR 15: unable to translate term {repr t}"; .const false, false) -- these are not predicate expressions, so we return a dummy value and false to indicate failure.
 
 end Nondep
 
@@ -2063,7 +2072,7 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     if aresult && bresult && wresult then
       (.band wo (.vshl wo a' b') wmask, true)
     else (.constZero wo, false)
-  | pvar _ | bvOfBool _ | boolVar _ | boolBinRel .. =>
+  | pvar _ | bvOfBool _ | boolVar _ | boolBinRel .. | .iteBV .. =>
     (.constZero wo, false)
   where 
    goBinop (a b : Nondep.Term) (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr)
