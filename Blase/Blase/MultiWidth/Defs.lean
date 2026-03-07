@@ -1802,12 +1802,8 @@ Also see that `unary mask = power of 2 - 1`.
 `m & (m + 1) = 0`.
 This also cleanly handles the case where `u` is `0`, since `u & u + 1 = 0`.
 -/
-def Term.toSingleWidthNondepTerm.mkWidthPrecond (w : Nat) (wo : Nondep.WidthExpr) : Nondep.Term :=
-    let m := Nondep.Term.var w wo
-    let mAndMSucc := Nondep.Term.band wo m.succ m
-    let rhs := Nondep.Term.constZero wo
-    let out := Nondep.Term.binRel .eq wo mAndMSucc rhs
-    out
+def Term.toSingleWidthNondepTerm.mkWidthPrecond (_w : Nat) (_wo : Nondep.WidthExpr) : Nondep.Term :=
+    .pTrue
 /--
 Make all the width preconditions of variables of indices [0..w),
 with universe width 'wo'.
@@ -1827,7 +1823,12 @@ which encodes a mask of the form (1 << w) - 1, where w is the width variable.
 def Nondep.WidthExpr.toSingleWidthMaskNondepTerm (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr) : Nondep.Term × Bool :=
   match w with
   | .const c => (Nondep.Term.ofNat wo ((1 <<< c) - 1), true) -- 2^0 = 1
-  | .var v => (Nondep.Term.var v wo, true)
+  | .var v =>
+    let widthVal := Nondep.Term.var v wo
+    let one := Nondep.Term.constOne wo
+    -- mask = (1 << widthVar) - 1
+    let pot := Nondep.Term.vshl wo one widthVal  -- 1 << widthVar = 2^widthVar
+    (Nondep.Term.sub wo pot one, true)            -- 2^widthVar - 1 = mask
   | .max a b =>
     let (a', aresult) := a.toSingleWidthMaskNondepTerm wo
     let (b', bresult) := b.toSingleWidthMaskNondepTerm wo
