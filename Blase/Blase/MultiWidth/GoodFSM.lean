@@ -66,6 +66,8 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (bcard : Nat) (ncard icard : Nat) (pc
     { toFsm :=
         composeUnaryAux (FSM.repeatN true k)  (mkWidthFSM wcard tcard bcard ncard icard pcard v).toFsm
     }
+  | .subK _v _k =>
+    { toFsm := (FSM.repeatForever false).map Fin.elim0 }
 
 def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (bcard : Nat) (ncard icard : Nat) (pcard : Nat)  (w : WidthExpr wcard) :
     HNatFSMToBitstream (mkWidthFSM wcard tcard bcard ncard icard pcard (.ofDep w)) where
@@ -1712,8 +1714,7 @@ def IsGoodTermFSM_mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) {tctx : 
     grind only [Term.isLinearBitwise_mul_eq_false]
 
 /--
-info: 'MultiWidth.IsGoodTermFSM_mkTermFSM' depends on axioms:
-[propext, Classical.choice, Quot.sound]
+info: 'MultiWidth.IsGoodTermFSM_mkTermFSM' depends on axioms: [propext, Classical.choice, Quot.sound]
 -/
 #guard_msgs in #print axioms IsGoodTermFSM_mkTermFSM
 

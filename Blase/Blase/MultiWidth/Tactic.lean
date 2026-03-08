@@ -327,6 +327,11 @@ def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
       #[mkNatLit wcard, mkNatLit k, ← mkWidthExpr wcard v]
     debugCheck out
     return out
+  | .subK v k =>
+    let out := mkAppN (mkConst ``MultiWidth.WidthExpr.subK)
+      #[mkNatLit wcard, ← mkWidthExpr wcard v, mkNatLit k]
+    debugCheck out
+    return out
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : Term.Ctx wcard 0 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.empty

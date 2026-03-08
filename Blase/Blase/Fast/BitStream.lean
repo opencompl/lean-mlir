@@ -1597,6 +1597,10 @@ def maxUnary (x y : BitStream) : BitStream :=
 def addKUnary (x : BitStream) (k : Nat) : BitStream :=
   fun i => if i < k then true else x (i - k)
 
+/-- decrement by '-k' (saturating at 0 in unary). -/
+def subKUnary (x : BitStream) (k : Nat) : BitStream :=
+  fun i => x (i + k)
+
 /-- We have the values equal up to 'w + 1'. -/
 theorem ofBitVecZextMsb_EqualUpTo_ofBitVecSext
   (x : BitVec w) :

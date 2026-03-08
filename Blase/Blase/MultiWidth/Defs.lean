@@ -103,6 +103,7 @@ def WidthExpr.toNat_kadd (v : WidthExpr wcard) (k : Nat)
     (env : WidthExpr.Env wcard) :
     WidthExpr.toNat (.kadd k v) env = k + v.toNat env := rfl
 
+
 def WidthExpr.toBitStream (e : WidthExpr wcard)
   (bsEnv : StateSpace wcard tcard bcard ncard icard pcard → BitStream) : BitStream :=
   match e with
@@ -673,6 +674,7 @@ inductive WidthExpr where
 | min : WidthExpr → WidthExpr → WidthExpr
 | addK : WidthExpr → Nat → WidthExpr
 | kadd : Nat → WidthExpr → WidthExpr
+| subK : WidthExpr → Nat → WidthExpr
 deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 open Std Lean in
@@ -684,6 +686,7 @@ def WidthExpr.toSmtLib : WidthExpr → SexprPBV.WidthExpr
 | .min v w => .min v.toSmtLib w.toSmtLib
 | .addK v k => .addK v.toSmtLib k
 | .kadd k v => .kadd k v.toSmtLib
+| .subK v k => .subK v.toSmtLib k
 
 
 def WidthExpr.wcard (w : WidthExpr) : Nat :=
@@ -694,6 +697,7 @@ def WidthExpr.wcard (w : WidthExpr) : Nat :=
   | .min v w => Nat.min (v.wcard) (w.wcard)
   | .addK v k => v.wcard + k
   | .kadd k v => k + v.wcard
+  | .subK v _k => v.wcard
 
 def WidthExpr.ofDep {wcard : Nat}
     (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
@@ -733,6 +737,7 @@ def WidthExpr.ofDep_addK {wcard : Nat} {v : MultiWidth.WidthExpr wcard} {k : Nat
 def WidthExpr.ofDep_kadd {wcard : Nat} {v : MultiWidth.WidthExpr wcard} {k : Nat} :
     (WidthExpr.ofDep (MultiWidth.WidthExpr.kadd k v)) =
     (.kadd k (.ofDep v)) := rfl
+
 
 inductive Term
 | ofNat (w : WidthExpr) (n : Nat) : Term
@@ -1464,6 +1469,7 @@ def WidthExpr.eval (wenv : Array Nat) : WidthExpr → Nat
   | .min a b => (Nat.min (a.eval wenv) (b.eval wenv))
   | .addK a k =>((a.eval wenv) + k)
   | .kadd k a =>(k + (a.eval wenv))
+  | .subK a k =>((a.eval wenv) - k)
 
 def _root_.Std.Tactic.BVDecide.BVExpr.width (_ : BVExpr w) : Nat := w
 
@@ -1852,6 +1858,12 @@ def Nondep.WidthExpr.toSingleWidthMaskNondepTerm (w : Nondep.WidthExpr) (wo : No
     let (amask, aresult) := a.toSingleWidthMaskNondepTerm wo
     if aresult then
       ((amask.succ.shiftl wo k).pred, true)
+    else (.constBad wo, false)
+  | .subK a k =>
+    let (amask, aresult) := a.toSingleWidthMaskNondepTerm wo
+    if aresult then
+      -- mask(w - k) = ((mask(w) + 1) >> k) - 1 = (2^w >> k) - 1 = 2^(w-k) - 1
+      ((amask.succ.shiftr wo k).pred, true)
     else (.constBad wo, false)
 
 /-#
