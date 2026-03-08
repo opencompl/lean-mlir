@@ -293,8 +293,8 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
   -- Comparisons (produce predicates)
   | .expr [.atom "=", a, b] => do
     try
-      let wa ← parseWidthExpr a 
-      let wb ← parseWidthExpr b 
+      let wa ← parseWidthExpr a
+      let wb ← parseWidthExpr b
       return .pred (.binWidthRel .eq wa wb)
     catch _ =>
       let pa ← parseTerm a
@@ -307,7 +307,7 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
         let nat_ ← negateTerm at_
         let nbt ← negateTerm bt
         return .pred (.and (.or nat_ bt) (.or nbt at_))
-      | _, _ => 
+      | _, _ =>
          ParserM.throwError s!"= : mismatched types between arguments"
   -- distinct is just (not (= a b))
   | .expr [.atom "distinct", a, b] =>

@@ -679,16 +679,6 @@ deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 open Std Lean in
 
-def WidthExpr.toSmtLib : WidthExpr → SexprPBV.WidthExpr
-| .const n => .const n
-| .var v => .var v
-| .max v w => .max v.toSmtLib w.toSmtLib
-| .min v w => .min v.toSmtLib w.toSmtLib
-| .addK v k => .addK v.toSmtLib k
-| .kadd k v => .kadd k v.toSmtLib
-| .subK v k => .subK v.toSmtLib k
-
-
 def WidthExpr.wcard (w : WidthExpr) : Nat :=
   match w with
   | .const _ => 0
@@ -772,24 +762,6 @@ inductive Term
 | vashr (w : WidthExpr) (a b : Term) : Term      -- variable arithmetic right shift
 | vshl (w : WidthExpr) (a b : Term) : Term       -- variable left shift
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
-
-def Term.toSmtLib : Term → SexprPBV.Term
-| .ofNat w n => .ofNat w.toSmtLib n
-| .var v w => .var v w.toSmtLib
-| .add w a b => .add w.toSmtLib a.toSmtLib b.toSmtLib
-| .zext a wnew => .zext a.toSmtLib wnew.toSmtLib
-| .sext a wnew => .sext a.toSmtLib wnew.toSmtLib
-| .setWidth a wnew => .setWidth a.toSmtLib wnew.toSmtLib
-| .bor w a b => .bor w.toSmtLib a.toSmtLib b.toSmtLib
-| .band w a b => .band w.toSmtLib a.toSmtLib b.toSmtLib
-| .bxor w a b => .bxor w.toSmtLib a.toSmtLib b.toSmtLib
-| .bnot w a => .bnot w.toSmtLib a.toSmtLib
-| .boolVar v => .boolVar v
-| .boolConst b => .boolConst b
-| .shiftl w a k => .shiftl w.toSmtLib a.toSmtLib k
-| .bvOfBool _b => .junk ("bvOfBool")
-| .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. => .junk "non-automata-bv"
-| _ => .junk "predicate"
 
 /-- Negate a predicate term by pushing `not` inward via De Morgan's laws.
     Returns `none` if the term cannot be negated (e.g., unrecognized atomic terms or
@@ -2078,7 +2050,7 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     else (.constZero wo, false)
   | pvar _ | bvOfBool _ | boolVar _ | boolBinRel .. =>
     (.constZero wo, false)
-  where 
+  where
    goBinop (a b : Nondep.Term) (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr)
      (binop : Nondep.WidthExpr → Nondep.Term → Nondep.Term → Nondep.Term) : Nondep.Term × Bool :=
     let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
