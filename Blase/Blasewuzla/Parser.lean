@@ -411,6 +411,13 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     let pb ← expectPred (← parseTerm b) (ctx := "=>")
     return .pred (.or (← negateTerm pa) pb)
 
+  | .expr [.atom "xor", a, b] =>
+    -- a xor b is equivalent to (or (and a (not b) (and (not a ) b))
+    let pa ← expectPred (← parseTerm a) (ctx := "=>")
+    let pb ← expectPred (← parseTerm b) (ctx := "=>")
+    let pnota ← negateTerm pa
+    let pnotb ← negateTerm pb
+    return .pred (.or (.and pnota pb) (.and pa pnotb))
   -- let bindings
   | .expr [.atom "let", .expr bindings, body] =>
     let st ← get
