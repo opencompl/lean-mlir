@@ -1885,9 +1885,7 @@ def Term.toSingleWidthNondepTerm.mkAllWidthPreconds
     .and precond (Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo w')
 
 /-- create a conjunction of predicates -/
-def Nondep.Term.andPredicates
-   (ps : List Nondep.Term)
-   (default : Nondep.Term := .pTrue) : Nondep.Term :=
+def Nondep.Term.andPredicates (ps : List Nondep.Term) : Nondep.Term :=
   match ps with
   | [] => default
   | [p] => p
@@ -2289,7 +2287,7 @@ def Nondep.Term.toSingleWidthNondepTerm (t : Nondep.Term)
   let preconds := Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo t.maxwcard
   let (implies, impliesResult) :=
     Term.pimplies
-      (preconds.andPredicates iteState.preconditions)
+      (.and preconds (Nondep.Term.andPredicates iteState.preconditions))
       iteElim
   if impliesResult && tSingleResult && iteState.success then
     (implies, true)
