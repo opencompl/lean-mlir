@@ -1847,16 +1847,7 @@ def Nondep.WidthExpr.toTwosComplementNondepTerm (w : Nondep.WidthExpr) (wo : Non
     else (.constBad wo, false)
 
 /--
-Create the width precondition for width variable index 'w',
-where all variables are to have universe width 'wo'.
-This precondition forces the width variable to be a power of 2 minus one.
-Recall that a `power of 2: w & (w - 1) = 0`.
-Also see that `unary mask = power of 2 - 1`.
-`m = p - 1`
-`p = u + 1`
-`p & (p - 1) = 0`
-`m & (m + 1) = 0`.
-This also cleanly handles the case where `u` is `0`, since `u & u + 1 = 0`.
+Create preconditions that say that the width is inbounds.
 -/
 def Term.toSingleWidthNondepTerm.mkWidthPrecond (w : Nat) (wo : Nondep.WidthExpr) : Nondep.Term :=
     -- Width variable must be ≤ bound (wo), otherwise the mask (1 << w) - 1
@@ -1864,12 +1855,19 @@ def Term.toSingleWidthNondepTerm.mkWidthPrecond (w : Nat) (wo : Nondep.WidthExpr
     -- Use `w ≤ bound` (not `w + 1 ≤ bound`) to avoid BV overflow:
     -- after pnegate + toSingleWidthNondepTermGo + pnegate, the `+ 1` becomes
     -- modular BV addition, and `(w_bv + 1) < 9` accepts w=255 due to overflow.
-    Nondep.Term.binWidthRel .le (.var w) (wo.sub (.const 1))
+    let widthVar := Nondep.Term.var w wo
+    -- let (boundVal, _) := wo.toTwosComplementNondepTerm wo
+    let boundVal := match wo with
+      | .const c => Nondep.Term.ofNat wo (c - 1)
+      | _ => Nondep.Term.ofNat wo 0 -- fallback, shouldn't happen in practice
+    Nondep.Term.binRel .ule wo widthVar boundVal
+    -- Nondep.Term.binWidthRel .le (.var w) (wo.sub (.const 1))
 /--
 Make all the width preconditions of variables of indices [0..w),
 with universe width 'wo'.
 -/
-def Term.toSingleWidthNondepTerm.mkAllWidthPreconds (wo : Nondep.WidthExpr) (w : Nat) : Nondep.Term :=
+def Term.toSingleWidthNondepTerm.mkAllWidthPreconds
+  (wo : Nondep.WidthExpr) (w : Nat) : Nondep.Term :=
   match w with
   | 0 => .pTrue
   | w' + 1 =>
@@ -2267,19 +2265,19 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
 /--
 Given a term, convert it to a single-width term by converting all width expressions to their corresponding single-width terms,
 -/
-def Nondep.Term.toSingleWidthNondepTerm (t : Nondep.Term) (wo : Nondep.WidthExpr): Nondep.Term × Bool :=
+def Nondep.Term.toSingleWidthNondepTerm (t : Nondep.Term)
+   (wo : Nondep.WidthExpr): Nondep.Term × Bool :=
+  let (tSingle, tSingleResult) : Nondep.Term × Bool := t.toSingleWidthNondepTermGo t.maxwcard wo
+  let (iteElim, iteState) : Nondep.Term × ElimIteState := tSingle.elimIte
+     (.newState <| tSingle.tcard + 1000)
   let preconds := Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo t.maxwcard
-  let ⟨t', impliesResult⟩ := preconds.pimplies t
-  let (tSingle, tSingleResult) : Nondep.Term × Bool := t'.toSingleWidthNondepTermGo t'.maxwcard wo
-  let (tSingleIteElim, iteState) : Nondep.Term × ElimIteState := tSingle.elimIte
-     (.newState <| tSingle.tcard + 1)
-  -- let (implies, impliesResult) :=
-  --   Term.pimplies
-  --     (preconds.andPredicates iteState.preconditions)
-  --     rhsIteElim
+  let (implies, impliesResult) :=
+    Term.pimplies
+      (preconds.andPredicates iteState.preconditions)
+      iteElim
   if impliesResult && tSingleResult && iteState.success then
-    (tSingleIteElim, true)
-  else (tSingleIteElim, false)
+    (implies, true)
+  else (implies, false)
 
 end ToSingleWidth
 
