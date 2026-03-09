@@ -1230,7 +1230,7 @@ info: 'MultiWidth.eval_fsmTermSle_eq_decide_sle' depends on axioms:
 def mkTermFSM (wcard tcard bcard ncard icard pcard : Nat) (t : Nondep.Term) :
     (TermFSM wcard tcard bcard ncard icard pcard t) :=
   match t with
-  | .shiftr .. | .pTrue | .pFalse | .bvIte .. => {
+  | .shiftr .. | .pTrue | .pFalse | .bvIte .. | .intToPbv .. => {
         toFsmZext := (FSM.repeatForever true).map Fin.elim0,
         width := NatFSM.mk <| (FSM.repeatForever true).map Fin.elim0,
   }
