@@ -2285,6 +2285,7 @@ def Nondep.Term.toSingleWidthNondepTerm (t : Nondep.Term)
   let (tSingle, tSingleResult) : Nondep.Term × Bool := t.toSingleWidthNondepTermGo t.maxwcard wo
   let (iteElim, iteState) : Nondep.Term × ElimIteState := tSingle.elimIte
      (.newState <| tSingle.tcard + 1000)
+  -- | TODO: what about overflow in this representation when we add?
   let preconds := Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo t.maxwcard
   let (implies, impliesResult) :=
     Term.pimplies
