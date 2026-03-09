@@ -766,6 +766,7 @@ inductive Term
 | vlshr (w : WidthExpr) (a b : Term) : Term      -- variable logical right shift
 | vashr (w : WidthExpr) (a b : Term) : Term      -- variable arithmetic right shift
 | vshl (w : WidthExpr) (a b : Term) : Term       -- variable left shift
+| bvIte (cond : Term) (thenBv elseBv: Term) : Term -- if then else on bitvectors
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 /-- Negate a predicate term by pushing `not` inward via De Morgan's laws.
@@ -798,7 +799,7 @@ def Term.pnegate (t : Term) : Term × Bool :=
     | .shiftr .. | .shiftl .. | .boolConst .. | .boolVar ..
     | .bnot .. | .bxor .. | .band .. | .bor .. | .setWidth .. | .sext .. | .zext ..
     | .mul .. | .add .. | .var .. | .ofNat ..
-    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. =>
+    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. =>
     dbg_trace "ERROR: could not negate term {repr t}"; (t, false)
 
 def Term.ofDepTerm {wcard tcard bcard : Nat}
@@ -879,6 +880,7 @@ def Term.width (t : Term) : WidthExpr :=
   | vlshr w _a _b => w
   | vashr w _a _b => w
   | vshl w _a _b => w
+  | .bvIte _cond thenBv _elseBv => thenBv.width
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -929,6 +931,8 @@ def Term.maxwcard (t : Term) : Nat :=
   | vlshr w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
   | vashr w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
   | vshl w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | bvIte cond thenBv elseBv =>
+    max (Term.maxwcard cond) (max (Term.maxwcard thenBv) (Term.maxwcard elseBv))
 
 def Term.tcard (t : Term) : Nat :=
   match t with
@@ -961,6 +965,8 @@ def Term.tcard (t : Term) : Nat :=
   | vlshr _w a b => max (Term.tcard a) (Term.tcard b)
   | vashr _w a b => max (Term.tcard a) (Term.tcard b)
   | vshl _w a b => max (Term.tcard a) (Term.tcard b)
+  | bvIte cond thenBv elseBv =>
+    max (Term.tcard cond) (max (Term.tcard thenBv) (Term.tcard elseBv))
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -993,6 +999,8 @@ def Term.bcard (t : Term) : Nat :=
   | vlshr _w a b => max (Term.bcard a) (Term.bcard b)
   | vashr _w a b => max (Term.bcard a) (Term.bcard b)
   | vshl _w a b => max (Term.bcard a) (Term.bcard b)
+  | bvIte cond thenBv elseBv =>
+    max (Term.bcard cond) (max (Term.bcard thenBv) (Term.bcard elseBv))
 
 /-- Returns true if the term can be decided by the automata-based procedure.
 Multiplication is NOT automata decidable. -/
@@ -1022,6 +1030,7 @@ def Term.isAutomtaDecidable : Term → Bool
 | .pvar _ => true
 | .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
 | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. => false
+| bvIte ..=> false
 
 end Nondep
 
@@ -1644,6 +1653,9 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
     | .bvOfBool .. | .boolConst .. | .boolVar .. | .setWidth ..
     | .pFalse | .pTrue =>
     (.const (88#_), false) -- these are not BV expressions, so we return a dummy value and false to indicate failure.
+  | .bvIte .. =>
+     -- ITE should have been eliminated!
+     (.const (99#_), false)
 
 /-- Convert a predicate-producing `Nondep.Term` to a `BVLogicalExpr`.
 `wenv` provides concrete width assignments for width variables.
@@ -1722,7 +1734,7 @@ def Term.toBVLogicalExpr (wenv : Array Nat) : Term → BVLogicalExpr × Bool
   | .pvar .. | .binRel .. | .bvOfBool .. | .shiftr ..
     | .shiftl .. | .boolVar .. | .bnot .. | .bxor .. | .band .. | .bor .. | .sext .. | .setWidth ..
     | .zext .. | .mul .. | .add .. | .ofNat .. | .var .. | .boolBinRel ..
-    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. =>
+    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. =>
     (dbg_trace "ERROR 15"; .const false, false) -- these are not predicate expressions, so we return a dummy value and false to indicate failure.
 
 end Nondep
@@ -1848,6 +1860,15 @@ def Nondep.WidthExpr.toTwosComplementNondepTerm (w : Nondep.WidthExpr) (wo : Non
       (.sub wo amask kval, true)
     else (.constBad wo, false)
 
+/-- create a conjunction of predicates -/
+def Nondep.Term.andPredicates
+   (ps : List Nondep.Term)
+   (default : Nondep.Term := .pTrue) : Nondep.Term :=
+  match ps with
+  | [] => default
+  | [p] => p
+  | p :: ps => .and p (Term.andPredicates ps)
+
 /--
 Convert a width variable into a bitvector,
 which encodes a mask of the form (1 << w) - 1, where w is the width variable.
@@ -1910,6 +1931,140 @@ def Nondep.Term.toSingleWidthNondepMsb (x : Nondep.Term) (wx : Nondep.WidthExpr)
     let msb := x.band wo msbIx
     (msb, true)
   else (.constBad wo, false)
+
+
+structure ElimIteState where
+  /-- Preconditions added from ite elimination pass. -/
+  preconditions : List Nondep.Term := []
+  /-- Index of fresh variable that will be added for ite-elimination. -/
+  freshTermIndex : Nat
+  /-- Did the pass succeed? -/
+  success : Bool := true
+
+def ElimIteState.newState (freshTermIndex : Nat) : ElimIteState :=
+   { freshTermIndex := freshTermIndex }
+
+/-- Generate a fresh bitvector variable index. -/
+def ElimIteState.freshBV (s : ElimIteState) (w : Nondep.WidthExpr) : Nondep.Term × ElimIteState :=
+   ⟨Nondep.Term.var s.freshTermIndex w, {
+     preconditions := s.preconditions
+     freshTermIndex := s.freshTermIndex + 1
+     success := true
+    }⟩
+
+/-- Add a success into the trail of successes. We only succeed if every step succeeds. -/
+def ElimIteState.addSuccess (s : ElimIteState) (b : Bool) : ElimIteState :=
+  { s with success := s.success && b }
+
+def ElimIteState.addPrecondition (s : ElimIteState) (t : Nondep.Term) : ElimIteState :=
+  { s with preconditions := t :: s.preconditions }
+
+def Nondep.Term.elimIte
+    (t : Nondep.Term)
+    (s : ElimIteState) :  Nondep.Term × ElimIteState :=
+  match t with
+  | .bvIte cond t1 t2 =>
+    let w := t1.width
+    let ⟨result, s⟩ := s.freshBV w -- fresh value of the result
+    let ⟨cond, s⟩ := cond.elimIte s
+    let ⟨t1, s⟩ := t1.elimIte s
+    let ⟨t2, s⟩ := t2.elimIte s
+    -- cond = true → result = t1
+    let ⟨thenPred, success⟩ := Nondep.Term.pimplies cond (.binRel .eq  w result t1)
+    let s := s.addSuccess success
+    let s := s.addPrecondition thenPred
+    let ⟨condNeg, success⟩ := Nondep.Term.pnegate cond
+    let s := s.addSuccess success
+    -- ¬cond → result = t2
+    let ⟨elsePred, success⟩ := Nondep.Term.pimplies  condNeg (.binRel .eq w result t2)
+    let s := s.addSuccess success
+    let s := s.addPrecondition elsePred
+    ⟨result, s⟩
+  | .vshl w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.vshl w a' b', s)
+  | .vlshr w a b=>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.vlshr w a' b', s)
+  | .vashr w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.vashr w a' b', s)
+  | .binRel k w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.binRel k w a' b', s)
+  | .urem w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.urem w a' b', s)
+  | .udiv w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.udiv w a' b', s)
+  | .pFalse => ⟨.pFalse, s⟩
+  | .pTrue => ⟨.pTrue, s⟩
+  | .boolBinRel k a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.boolBinRel k a' b', s)
+  | .pvar p => ⟨.pvar p, s⟩
+  | .and a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.and a' b', s)
+  | .or a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.or a' b', s)
+  | .binWidthRel k u v =>
+    (.binWidthRel k u v, s)
+  | .bvOfBool b => ⟨.bvOfBool b, s⟩
+  | .shiftr w a k =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.shiftr w a' k, s)
+  | .shiftl w a k =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.shiftl w a' k, s)
+  | .boolConst b => ⟨.boolConst b, s⟩
+  | .boolVar b => ⟨.boolVar b, s⟩
+  | .bnot w a =>
+      let ⟨a', s⟩ := a.elimIte s
+      (.bnot w a', s)
+  | .bxor w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.bxor w a' b', s)
+  | .band w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.band w a' b', s)
+  | .bor w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.bor w a' b', s)
+  | .sext a w =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.sext a' w, s)
+  | .setWidth a w =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.setWidth a' w, s)
+  | .zext a w =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.zext a' w, s)
+  | .mul w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.mul w a' b', s)
+  | .add w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.add w a' b', s)
+  | .var v w => ⟨.var v w, s⟩
+  | .ofNat w n => ⟨.ofNat w n, s⟩
+
 
 
 /--
@@ -2072,6 +2227,13 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     if aresult && bresult && wresult then
       (.band wo (.vshl wo a' b') wmask, true)
     else (.constZero wo, false)
+  | .bvIte cond thenBv elseBv =>
+    let (cond', condresult) := cond.toSingleWidthNondepTermGo maxWcard wo
+    let (thenBv', thenBvresult) := thenBv.toSingleWidthNondepTermGo maxWcard wo
+    let (elseBv', elseBvresult) := elseBv.toSingleWidthNondepTermGo maxWcard wo
+    if condresult && thenBvresult && elseBvresult then
+      (.bvIte cond' thenBv' elseBv', true)
+    else (.constBad wo, false)
   | pvar _ | bvOfBool _ | boolVar _ | boolBinRel .. =>
     (.constZero wo, false)
   where
@@ -2092,8 +2254,13 @@ Given a term, convert it to a single-width term by converting all width expressi
 def Nondep.Term.toSingleWidthNondepTerm (t : Nondep.Term) (wo : Nondep.WidthExpr): Nondep.Term × Bool :=
   let preconds := Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo t.maxwcard
   let (rhs, rhsResult) : Nondep.Term × Bool := t.toSingleWidthNondepTermGo t.maxwcard wo
-  let (implies, impliesResult) := Term.pimplies preconds rhs
-  if rhsResult && impliesResult then
+  let (rhsIteElim, iteState) : Nondep.Term × ElimIteState := rhs.elimIte
+     (.newState <| rhs.tcard + 1)
+  let (implies, impliesResult) :=
+    Term.pimplies
+      (preconds.andPredicates iteState.preconditions)
+      rhsIteElim
+  if rhsResult && impliesResult && iteState.success then
     (implies, true)
   else (implies, false)
 

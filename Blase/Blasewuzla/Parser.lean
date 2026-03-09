@@ -423,6 +423,27 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     let pb ← expectPred (← parseTerm b) (ctx := "=>")
     return .pred (.or (← negateTerm pa) pb)
 
+  | .expr [.atom "xor", a, b] =>
+    -- a xor b is equivalent to (or (and a (not b) (and (not a ) b))
+    let pa ← expectPred (← parseTerm a) (ctx := "=>")
+    let pb ← expectPred (← parseTerm b) (ctx := "=>")
+    let pnota ← negateTerm pa
+    let pnotb ← negateTerm pb
+    return .pred (.or (.and pnota pb) (.and pa pnotb))
+  -- ite: (ite cond then else)
+  | .expr [.atom "ite", cond, thenBranch, elseBranch] =>
+    let pcond ← expectPred (← parseTerm cond) (ctx := "ite")
+    let pthen ← parseTerm thenBranch
+    let pelse ← parseTerm elseBranch
+    match pthen, pelse with
+    | .bv thenT thenW, .bv elseT _elseW =>
+      return .bv (.bvIte pcond thenT elseT) thenW
+    | .pred thenP, .pred elseP =>
+      -- (ite c a b) = (c ∧ a) ∨ (¬c ∧ b)
+      let ncond ← negateTerm pcond
+      return .pred (.or (.and pcond thenP) (.and ncond elseP))
+    | _, _ => ParserM.throwError "ite: mismatched types between then/else branches"
+
   -- let bindings
   | .expr [.atom "let", .expr bindings, body] =>
     let st ← get
