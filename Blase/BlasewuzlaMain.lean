@@ -352,6 +352,7 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     parseOnly;                 "Only parse the file and print the parsed term."
     niter : Nat;               "Maximum number of k-induction iterations (kinduction backend only)."
     bound : Nat;               "Bound width for monobmc backend."
+    timeout : Nat;             "SAT solver timeout for SAT based methods."
     backend : String;          "Backend solver: 'k-induction' (default), 'rIC3', 'abc', 'monobmc', 'naivebmc', or 'dryrun'."
 
   ARGS:
