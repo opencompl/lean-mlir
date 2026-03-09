@@ -46,6 +46,11 @@ inductive WidthExpr (wcard : Nat) : Type
 | max : (v w : WidthExpr wcard) → WidthExpr wcard
 | addK : (v : WidthExpr wcard) → (k : Nat) → WidthExpr wcard
 | kadd : (k : Nat) → (v : WidthExpr wcard) → WidthExpr wcard
+-- add two widths.
+| add (v w : WidthExpr wcard) : WidthExpr wcard
+-- subtract two widths.
+| sub (v w : WidthExpr wcard) : WidthExpr wcard
+
 
 
 /-- Cast the width expression along the fact that width is ≤. -/
