@@ -361,7 +361,7 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     defaultValues! #[
       ("niter", "30"),
       ("bound", "8"),
-      ("timeout", "60"),
+      ("timeout", "1800"),
       ("backend", kinduction.name)
     ]
 ]
