@@ -327,6 +327,8 @@ def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
       #[mkNatLit wcard, mkNatLit k, ← mkWidthExpr wcard v]
     debugCheck out
     return out
+  | .subK _v _k | .sub .. | .add .. =>
+    throwError "unhandled width expresion: '{repr ve}'"
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : Term.Ctx wcard 0 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.empty
@@ -1213,7 +1215,7 @@ def solve (gorig : MVarId) : SolverM Unit := do
     let ienv ← collect.mkIenvExpr
     let penv ← collect.mkPenvExpr
     if (← read).debugPrintSmtLib then
-      throwError (p.toSmtLib |>.toSexpr |> format)
+      throwError "unimplemented: toSmtLib" -- (p.toSmtLib |>.toSexpr |> format)
     let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard collect.bcard collect.ncard collect.icard collect.pcard tctx p
     let pNondepExpr := Lean.ToExpr.toExpr p
     let termFsmNondep := mkTermFsmNondep collect.wcard collect.tcard collect.bcard collect.ncard collect.icard collect.pcard p

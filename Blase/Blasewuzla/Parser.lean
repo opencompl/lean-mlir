@@ -71,11 +71,31 @@ def parseWidthExpr (s : Sexp) : ParserM Nondep.WidthExpr := do
       match nStr.toNat? with
       | some k => return .addK wa k
       | none =>
-        let _wb ← parseWidthExpr b
-        -- a + b where b is a variable: use addK with 0 as a workaround isn't right.
-        -- For now, only support constant offsets.
-        ParserM.throwError s!"width expression '+': second operand must be a constant, got '{b}'"
-    | _ => ParserM.throwError s!"width expression '+': second operand must be a constant, got '{b}'"
+        let wb ← parseWidthExpr b
+        return .add wa wb
+    | _ =>
+      let wb ← parseWidthExpr b
+      return .add wa wb
+  | .expr [.atom "-", a, b] =>
+    let wa ← parseWidthExpr a
+    match b with
+    | .atom nStr =>
+      match nStr.toNat? with
+      | some k => return .subK wa k
+      | none =>
+        let wb ← parseWidthExpr b
+        return .sub wa wb
+    | _ =>
+      let wb ← parseWidthExpr b
+      return .sub wa wb
+  | .expr [.atom "max", a, b] =>
+    let wa ← parseWidthExpr a
+    let wb ← parseWidthExpr b
+    return .max wa wb
+  | .expr [.atom "min", a, b] =>
+    let wa ← parseWidthExpr a
+    let wb ← parseWidthExpr b
+    return .min wa wb
   | .expr _ => ParserM.throwError s!"unsupported compound width expression: '{s}'"
 
 /-- Parse a sort to extract a width expression. Handles `(_ BitVec w)`. -/
@@ -284,8 +304,8 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
   -- Comparisons (produce predicates)
   | .expr [.atom "=", a, b] => do
     try
-      let wa ← parseWidthExpr a 
-      let wb ← parseWidthExpr b 
+      let wa ← parseWidthExpr a
+      let wb ← parseWidthExpr b
       return .pred (.binWidthRel .eq wa wb)
     catch _ =>
       let pa ← parseTerm a
@@ -298,7 +318,7 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
         let nat_ ← negateTerm at_
         let nbt ← negateTerm bt
         return .pred (.and (.or nat_ bt) (.or nbt at_))
-      | _, _ => 
+      | _, _ =>
          ParserM.throwError s!"= : mismatched types between arguments"
   -- distinct is just (not (= a b))
   | .expr [.atom "distinct", a, b] =>

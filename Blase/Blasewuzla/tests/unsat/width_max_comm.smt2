@@ -1,0 +1,7 @@
+; Prove: zext(max(p,q), x) = zext(max(q,p), x)  (commutativity of max in width)
+(set-logic QF_BV)
+(declare-const p Int)
+(declare-const q Int)
+(declare-const x (_ BitVec p))
+(assert (not (= (pzero_extend (max p q) x) (pzero_extend (max q p) x))))
+(check-sat)
