@@ -29,28 +29,35 @@ fi
 PASS=0
 FAIL=0
 
+# Default backends (can override: BACKENDS="rIC3 monobmc")
+BACKENDS=(${BACKENDS:-monobmc})
+
 run_test() {
   local file="$1"
   local expected_exit="$2"
 
-  local actual_exit=0
-  echo "Running $file..."
-  lake env "$BINARY" "$file" 2>&1 || actual_exit=$?
+  for backend in "${BACKENDS[@]}"; do
+    local actual_exit=0
 
-  # The solver is always allowed to return unknown (exit 0).
-  if [[ "$actual_exit" -eq "$expected_exit" || "$actual_exit" -eq 0 ]]; then
-    if [[ $VERBOSE -eq 1 ]]; then
-      if [[ "$actual_exit" -eq 0 && "$expected_exit" -ne 0 ]]; then
-        echo "PASS [exit=0, unknown]: $(basename "$file")"
-      else
-        echo "PASS [exit=$expected_exit]: $(basename "$file")"
+    echo "Running $(basename "$file") with backend=$backend..."
+
+    lake env "$BINARY" "$file" --backend "$backend" 2>&1 || actual_exit=$?
+
+    # solver allowed to return unknown (0)
+    if [[ "$actual_exit" -eq "$expected_exit" || "$actual_exit" -eq 0 ]]; then
+      if [[ $VERBOSE -eq 1 ]]; then
+        if [[ "$actual_exit" -eq 0 && "$expected_exit" -ne 0 ]]; then
+          echo "PASS [$backend exit=0 unknown]: $(basename "$file")"
+        else
+          echo "PASS [$backend exit=$expected_exit]: $(basename "$file")"
+        fi
       fi
+      PASS=$((PASS + 1))
+    else
+      echo "FAIL [$backend]: $(basename "$file") expected_exit=$expected_exit got_exit=$actual_exit"
+      FAIL=$((FAIL + 1))
     fi
-    PASS=$((PASS + 1))
-  else
-    echo "FAIL: $(basename "$file")  expected_exit=$expected_exit  got_exit=$actual_exit"
-    FAIL=$((FAIL + 1))
-  fi
+  done
 }
 
 for f in "$SCRIPT_DIR/sat"/*.smt2; do
