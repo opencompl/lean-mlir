@@ -43,11 +43,11 @@ def SolverExitCode.toString : SolverExitCode → String
 | .error errStr => s!"error: {errStr}"
 
 open Std Tactic Sat AIG BVDecide  Lean Elab Meta Std Sat AIG Tactic BVDecide Frontend in
-def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) : MetaM Bool := do
+def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) (satSolverTimeout : Nat) : MetaM Bool := do
   let entry := e.bitblast
   let (entry, _map) := entry.relabelNat'
   let cnf := AIG.toCNF entry
-  let cfg : BVDecideConfig := {}
+  let cfg : BVDecideConfig := { timeout := satSolverTimeout }
   IO.FS.withTempFile fun _ lratFile => do
   let ctx ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run' { declName? := `lrat }
   let res ← Lean.Elab.Tactic.BVDecide.Frontend.runExternal cnf ctx.solver ctx.lratPath ctx.config.trimProofs ctx.config.timeout ctx.config.binaryProofs
@@ -87,11 +87,18 @@ def proveGoalByBvDecide (gType : Expr) : MetaM Bool := do
       return res.lratCert.isSome
 
 structure Config where
+  /-- Solver backend. -/
   backend : String
+  /-- verbosity of output. -/
   verbose : Bool
+  /-- dry run with only parsing. -/
   parseOnly : Bool
+  /-- k-induction iterations. -/
   niter : Nat
+  /-- BMC width bound -/
   bound : Nat
+  /-- SAT solver timeout -/
+  timeout : Nat
 
 structure Solver where
   name : String
@@ -140,7 +147,7 @@ unsafe def monoBMC : Solver where
     if config.verbose then
       IO.eprintln s!"qfbv formula to be checked for UNSAT:\n{qfbv.toString}"
 
-    if ← checkBVLogicalExprIsUnsat qfbv then
+    if ← checkBVLogicalExprIsUnsat qfbv config.timeout then
       return .unsat
     else
       return .sat
@@ -189,7 +196,7 @@ def naiveBMC : Solver where
 
       if config.verbose then
         IO.eprintln s!"{qfbv.toString}"
-      if ← checkBVLogicalExprIsUnsat qfbv then
+      if ← checkBVLogicalExprIsUnsat qfbv config.timeout then
         if config.verbose then
           IO.eprintln s!"⟨{widths.toList}⟩ ✓"
         continue
@@ -300,13 +307,15 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let parseOnly : Bool := p.hasFlag "parseOnly"
   let verbose : Bool := p.hasFlag "verbose"
   let backend : String := p.flag! "backend" |>.as! String
+  let timeout : Nat := p.flag! "timeout" |>.as! Nat
 
   let config : Config := {
     verbose,
     backend,
     parseOnly,
     niter,
-    bound
+    bound,
+    timeout
   }
   -- Read and parse the SMT2 file
   let contents ← IO.FS.readFile inputPath
@@ -352,6 +361,7 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     defaultValues! #[
       ("niter", "30"),
       ("bound", "8"),
+      ("timeout", "60"),
       ("backend", kinduction.name)
     ]
 ]
