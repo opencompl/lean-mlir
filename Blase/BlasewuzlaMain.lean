@@ -118,18 +118,24 @@ unsafe def monoBMC : Solver where
     let (singleWidthTerm, success?) := result.predicate.toSingleWidthNondepTerm (.const config.bound)
 
      if ! success? then
-      IO.eprintln s!"{monoBMC.name}: Unable to translate term to single-width.\ninput:\n{repr result.predicate}\noutput:\n{repr singleWidthTerm}"
+      IO.eprintln s!"{monoBMC.name}: Unable to translate term to single-width."
+      if config.verbose then
+        IO.eprintln "  input:\n{repr result.predicate}\noutput:\n{repr singleWidthTerm}"
       return .unknown
     else
-      IO.eprintln s!"{monoBMC.name}: Successfully translated term to single-width.\ninput:\n{repr result.predicate}\noutput:\n{repr singleWidthTerm}"
+      IO.eprintln s!"{monoBMC.name}: Successfully translated term to single-width."
+      if config.verbose then
+        IO.eprintln "  input:\n{repr result.predicate}\noutput:\n{repr singleWidthTerm}"
 
     let (singleWidthNegated, success?) := singleWidthTerm.pnegate
     if ! success? then
-      IO.eprintln s!"{monoBMC.name}: Unable to negate single-width term.\ninput:\n{repr singleWidthTerm}\nnegation failed."
+      IO.eprintln s!"{monoBMC.name}: Unable to negate single-width term."
+      if config.verbose then
+        IO.eprintln "  input:\n{repr singleWidthTerm}"
       return .unknown
 
     let (qfbv, true) := singleWidthNegated.toBVLogicalExpr #[]
-      | return .error s!"formula contains unsupported operation for QF_BV translation.\n{repr result.predicate}"
+      | return .error (s!"formula contains unsupported operation for QF_BV translation." ++ if config.verbose then "\n{repr result.predicate}" else "")
 
     if config.verbose then
       IO.eprintln s!"qfbv formula to be checked for UNSAT:\n{qfbv.toString}"
