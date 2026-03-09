@@ -71,11 +71,11 @@ def parseWidthExpr (s : Sexp) : ParserM Nondep.WidthExpr := do
       match nStr.toNat? with
       | some k => return .addK wa k
       | none =>
-        let _wb ← parseWidthExpr b
-        -- a + b where b is a variable: use addK with 0 as a workaround isn't right.
-        -- For now, only support constant offsets.
-        ParserM.throwError s!"width expression '+': second operand must be a constant, got '{b}'"
-    | _ => ParserM.throwError s!"width expression '+': second operand must be a constant, got '{b}'"
+        let wb ← parseWidthExpr b
+        return .add wa wb
+    | _ =>
+      let wb ← parseWidthExpr b
+      return .add wa wb
   | .expr [.atom "-", a, b] =>
     let wa ← parseWidthExpr a
     match b with
@@ -83,8 +83,11 @@ def parseWidthExpr (s : Sexp) : ParserM Nondep.WidthExpr := do
       match nStr.toNat? with
       | some k => return .subK wa k
       | none =>
-        ParserM.throwError s!"width expression '-': second operand must be a constant, got '{b}'"
-    | _ => ParserM.throwError s!"width expression '-': second operand must be a constant, got '{b}'"
+        let wb ← parseWidthExpr b
+        return .sub wa wb
+    | _ =>
+      let wb ← parseWidthExpr b
+      return .sub wa wb
   | .expr _ => ParserM.throwError s!"unsupported compound width expression: '{s}'"
 
 /-- Parse a sort to extract a width expression. Handles `(_ BitVec w)`. -/

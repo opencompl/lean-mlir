@@ -46,10 +46,6 @@ inductive WidthExpr (wcard : Nat) : Type
 | max : (v w : WidthExpr wcard) → WidthExpr wcard
 | addK : (v : WidthExpr wcard) → (k : Nat) → WidthExpr wcard
 | kadd : (k : Nat) → (v : WidthExpr wcard) → WidthExpr wcard
--- add two widths.
-| add (v w : WidthExpr wcard) : WidthExpr wcard
--- subtract two widths.
-| sub (v w : WidthExpr wcard) : WidthExpr wcard
 
 
 
@@ -680,6 +676,8 @@ inductive WidthExpr where
 | addK : WidthExpr → Nat → WidthExpr
 | kadd : Nat → WidthExpr → WidthExpr
 | subK : WidthExpr → Nat → WidthExpr
+| add : WidthExpr → WidthExpr → WidthExpr
+| sub : WidthExpr → WidthExpr → WidthExpr
 deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 open Std Lean in
@@ -693,6 +691,8 @@ def WidthExpr.wcard (w : WidthExpr) : Nat :=
   | .addK v k => v.wcard + k
   | .kadd k v => k + v.wcard
   | .subK v _k => v.wcard
+  | .add v w => Nat.max (v.wcard) (w.wcard)
+  | .sub v w => Nat.max (v.wcard) (w.wcard)
 
 def WidthExpr.ofDep {wcard : Nat}
     (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
@@ -1447,6 +1447,8 @@ def WidthExpr.eval (wenv : Array Nat) : WidthExpr → Nat
   | .addK a k =>((a.eval wenv) + k)
   | .kadd k a =>(k + (a.eval wenv))
   | .subK a k =>((a.eval wenv) - k)
+  | .sub a b => ((a.eval wenv) - (b.eval wenv))
+  | .add a b => ((a.eval wenv) + (b.eval wenv))
 
 def _root_.Std.Tactic.BVDecide.BVExpr.width (_ : BVExpr w) : Nat := w
 
@@ -1798,50 +1800,67 @@ def Term.toSingleWidthNondepTerm.mkAllWidthPreconds (wo : Nondep.WidthExpr) (w :
     let precond := Term.toSingleWidthNondepTerm.mkWidthPrecond w' wo
     .and precond (Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo w')
 
+/--
+Convert a width variable into a bitvector,
+which encodes it into a bitvector whose '.toNat' value is the width.
+-/
+def Nondep.WidthExpr.toTwosComplementNondepTerm (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr) :
+    Nondep.Term × Bool :=
+  match w with
+  | .const c => (Nondep.Term.ofNat wo c, true) -- 2^0 = 1
+  | .var v =>
+    let widthVal := Nondep.Term.var v wo
+    (widthVal, true)
+  | .max a b =>
+      -- TODO: I need if-then-else here.
+      (.constBad wo, false)
+  | .min a b =>
+      -- TODO: I need if-then-else here.
+      (.constBad wo, false)
+  | .addK a k =>
+    let (aval, aresult) := a.toTwosComplementNondepTerm wo
+    let kval := Nondep.Term.ofNat wo k
+    if aresult then
+      (.add wo aval kval, true)
+    else (.constBad wo, false)
+  | .kadd k a =>
+    let (aval, aresult) := a.toTwosComplementNondepTerm wo
+    let kval := Nondep.Term.ofNat wo k
+    if aresult then
+      (.add wo kval aval, true)
+    else (.constBad wo, false)
+  | .add a b =>
+    let (a', aresult) := a.toTwosComplementNondepTerm wo
+    let (b', bresult) := b.toTwosComplementNondepTerm wo
+    if aresult && bresult then
+      (.add wo a' b', true) -- mask of add is the or of masks.
+    else (.constBad wo, false)
+  | .sub a b =>
+    let (a', aresult) := a.toTwosComplementNondepTerm wo
+    let (b', bresult) := b.toTwosComplementNondepTerm wo
+    if aresult && bresult then
+      (.sub wo a' b', true) -- mask of sub is the and of masks.
+    else (.constBad wo, false)
+  | .subK a k =>
+    let (amask, aresult) := a.toTwosComplementNondepTerm wo
+    let kval := Nondep.Term.ofNat wo k
+    if aresult then
+      (.sub wo amask kval, true)
+    else (.constBad wo, false)
 
 /--
 Convert a width variable into a bitvector,
 which encodes a mask of the form (1 << w) - 1, where w is the width variable.
 -/
-def Nondep.WidthExpr.toSingleWidthMaskNondepTerm (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr) : Nondep.Term × Bool :=
-  match w with
-  | .const c => (Nondep.Term.ofNat wo ((1 <<< c) - 1), true) -- 2^0 = 1
-  | .var v =>
-    let widthVal := Nondep.Term.var v wo
+def Nondep.WidthExpr.toSingleWidthMaskNondepTerm (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr)
+    : Nondep.Term × Bool :=
+  let (wval, wresult) := w.toTwosComplementNondepTerm wo
+  if wresult then
     let one := Nondep.Term.constOne wo
-    -- mask = (1 << widthVar) - 1
-    let pot := Nondep.Term.vshl wo one widthVal  -- 1 << widthVar = 2^widthVar
-    (Nondep.Term.sub wo pot one, true)            -- 2^widthVar - 1 = mask
-  | .max a b =>
-    let (a', aresult) := a.toSingleWidthMaskNondepTerm wo
-    let (b', bresult) := b.toSingleWidthMaskNondepTerm wo
-    if aresult && bresult then
-      (.bor wo a' b', true) -- mask of max is the and of masks.
-    else (.constBad wo, false)
-  | .min a b =>
-    let (a', aresult) := a.toSingleWidthMaskNondepTerm wo
-    let (b', bresult) := b.toSingleWidthMaskNondepTerm wo
-    if aresult && bresult then
-      (.band wo a' b', true) -- mask of min is the and of masks.
-    else (.constBad wo, false)
-  | .addK a k =>
-    let (amask, aresult) := a.toSingleWidthMaskNondepTerm wo
-    if aresult then
-      -- consider computing the power of two as 'amask ^ (amask <<< 1)`,
-      -- which should be cheaper as it does not need the ripple of the add.
-      ((amask.succ.shiftl wo k).pred, true)
-    else (.constBad wo, false)
-  | .kadd k a =>
-    let (amask, aresult) := a.toSingleWidthMaskNondepTerm wo
-    if aresult then
-      ((amask.succ.shiftl wo k).pred, true)
-    else (.constBad wo, false)
-  | .subK a k =>
-    let (amask, aresult) := a.toSingleWidthMaskNondepTerm wo
-    if aresult then
-      -- mask(w - k) = ((mask(w) + 1) >> k) - 1 = (2^w >> k) - 1 = 2^(w-k) - 1
-      ((amask.succ.shiftr wo k).pred, true)
-    else (.constBad wo, false)
+    let pot := Nondep.Term.vshl wo one wval  -- 1 << widthVar = 2^widthVar
+    let out := Nondep.Term.sub wo pot one-- 2^widthVar - 1 = mask
+    (out, true)
+  else (.constBad wo, false)
 
 /-#
 

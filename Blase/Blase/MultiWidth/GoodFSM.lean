@@ -39,6 +39,9 @@ private theorem decide_or_decide_eq_decide {P Q : Prop}
 def mkWidthFSM (wcard : Nat) (tcard : Nat) (bcard : Nat) (ncard icard : Nat) (pcard : Nat) (w : Nondep.WidthExpr) :
     (NatFSM wcard tcard bcard ncard icard pcard w) :=
   match w with
+  | .sub .. | .add .. => {
+    toFsm := (FSM.repeatForever false).map Fin.elim0
+  }
   | .const nat => {
       toFsm := (FSM.trueUptoExcluding nat).map Fin.elim0
     }
