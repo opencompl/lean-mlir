@@ -1861,12 +1861,10 @@ This also cleanly handles the case where `u` is `0`, since `u & u + 1 = 0`.
 def Term.toSingleWidthNondepTerm.mkWidthPrecond (w : Nat) (wo : Nondep.WidthExpr) : Nondep.Term :=
     -- Width variable must be ≤ bound (wo), otherwise the mask (1 << w) - 1
     -- wraps around in bounded-width arithmetic and produces incorrect results.
-    let widthVar := Nondep.WidthExpr.var w
-    -- | TODO: this should be converted into 'int_to_pbv' as soon as we have it next.
-    -- let boundVal := match wo with
-    --   | .const c => Nondep.Term.ofNat wo c
-    --   | _ => Nondep.Term.ofNat wo 0 -- fallback, shouldn't happen in practice
-    Nondep.Term.binWidthRel .le (Nondep.WidthExpr.addK widthVar 1) wo
+    -- Use `w ≤ bound` (not `w + 1 ≤ bound`) to avoid BV overflow:
+    -- after pnegate + toSingleWidthNondepTermGo + pnegate, the `+ 1` becomes
+    -- modular BV addition, and `(w_bv + 1) < 9` accepts w=255 due to overflow.
+    Nondep.Term.binWidthRel .le (.var w) (wo.sub (.const 1))
 /--
 Make all the width preconditions of variables of indices [0..w),
 with universe width 'wo'.
