@@ -158,7 +158,19 @@ def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
 
-    let (negatedPredicate, true) := result.predicate.pnegate
+    -- Eliminate ite nodes before negation
+    let (predElimIte, iteState) := result.predicate.elimIte
+      (.newState <| result.predicate.tcard + 1)
+    if !iteState.success then
+      return .error s!"ite elimination failed for predicate"
+    -- Conjoin ite preconditions with the predicate
+    let predWithPrec := match iteState.preconditions with
+      | [] => predElimIte
+      | precs =>
+        let precConj := Nondep.Term.andPredicates precs
+        let (implied, _) := Nondep.Term.pimplies precConj predElimIte
+        implied
+    let (negatedPredicate, true) := predWithPrec.pnegate
       | throwError "unable to negate predicate. {repr result.predicate}"
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then

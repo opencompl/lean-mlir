@@ -1960,13 +1960,16 @@ def Nondep.Term.elimIte
     let ⟨cond, s⟩ := cond.elimIte s
     let ⟨t1, s⟩ := t1.elimIte s
     let ⟨t2, s⟩ := t2.elimIte s
-    -- cond = true → foo
+    -- cond = true → result = t1
     let ⟨thenPred, success⟩ := Nondep.Term.pimplies cond (.binRel .eq  w result t1)
     let s := s.addSuccess success
+    let s := s.addPrecondition thenPred
     let ⟨condNeg, success⟩ := Nondep.Term.pnegate cond
     let s := s.addSuccess success
+    -- ¬cond → result = t2
     let ⟨elsePred, success⟩ := Nondep.Term.pimplies  condNeg (.binRel .eq w result t2)
     let s := s.addSuccess success
+    let s := s.addPrecondition elsePred
     ⟨result, s⟩
   | .vshl w a b =>
     let ⟨a', s⟩ := a.elimIte s
