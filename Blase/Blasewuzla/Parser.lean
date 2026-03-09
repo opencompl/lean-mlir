@@ -153,17 +153,20 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
 
   | .expr [.atom "int_to_pbv", wAtom, nAtom] =>
     let w ← parseWidthExpr wAtom
-    match nAtom with
-    | .atom nStr =>
-      match nStr.toInt? with
-      | some n =>
-        -- Handle negative numbers: -n mod 2^w in bitvector is the same as
-        -- just using the natural number representation since the FSM handles modular arithmetic.
-        -- For int_to_pbv, we pass the natural number and let the bitvector modular arithmetic handle it.
-        return .bv (.ofNat w n.toNat) w
-      | none => ParserM.throwError s!"expected integer literal in int_to_pbv, got: '{nStr}'"
-    | _ => ParserM.throwError s!"expected atom in int_to_pbv, got: '{nAtom}'"
-
+    try
+      match nAtom with
+      | .atom nStr =>
+        match nStr.toInt? with
+        | some n =>
+          -- Handle negative numbers: -n mod 2^w in bitvector is the same as
+          -- just using the natural number representation since the FSM handles modular arithmetic.
+          -- For int_to_pbv, we pass the natural number and let the bitvector modular arithmetic handle it.
+          return .bv (.ofNat w n.toNat) w
+        | none => ParserM.throwError s!"expected integer literal in int_to_pbv, got: '{nStr}'"
+      | _ => ParserM.throwError s!"expected atom in int_to_pbv, got: '{nAtom}'"
+    catch _ =>
+      let n ← parseWidthExpr nAtom
+      return .bv (.intToPbv w n) w
   | .expr [.atom "bvadd", a, b] =>
     let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "bvadd")
     let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvadd")

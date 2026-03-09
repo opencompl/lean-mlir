@@ -767,6 +767,7 @@ inductive Term
 | vashr (w : WidthExpr) (a b : Term) : Term      -- variable arithmetic right shift
 | vshl (w : WidthExpr) (a b : Term) : Term       -- variable left shift
 | bvIte (cond : Term) (thenBv elseBv: Term) : Term -- if then else on bitvectors
+| intToPbv (w : WidthExpr) (val : WidthExpr ): Term  -- coerct an integer 'val' into a PBV.
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
 /-- Negate a predicate term by pushing `not` inward via De Morgan's laws.
@@ -799,7 +800,7 @@ def Term.pnegate (t : Term) : Term × Bool :=
     | .shiftr .. | .shiftl .. | .boolConst .. | .boolVar ..
     | .bnot .. | .bxor .. | .band .. | .bor .. | .setWidth .. | .sext .. | .zext ..
     | .mul .. | .add .. | .var .. | .ofNat ..
-    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. =>
+    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. | .intToPbv .. =>
     dbg_trace "ERROR: could not negate term {repr t}"; (t, false)
 
 def Term.ofDepTerm {wcard tcard bcard : Nat}
@@ -880,6 +881,7 @@ def Term.width (t : Term) : WidthExpr :=
   | vlshr w _a _b => w
   | vashr w _a _b => w
   | vshl w _a _b => w
+  | .intToPbv w _v => w
   | .bvIte _cond thenBv _elseBv => thenBv.width
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
@@ -933,6 +935,7 @@ def Term.maxwcard (t : Term) : Nat :=
   | vshl w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
   | bvIte cond thenBv elseBv =>
     max (Term.maxwcard cond) (max (Term.maxwcard thenBv) (Term.maxwcard elseBv))
+  | .intToPbv w v => max w.wcard v.wcard
 
 def Term.tcard (t : Term) : Nat :=
   match t with
@@ -967,6 +970,7 @@ def Term.tcard (t : Term) : Nat :=
   | vshl _w a b => max (Term.tcard a) (Term.tcard b)
   | bvIte cond thenBv elseBv =>
     max (Term.tcard cond) (max (Term.tcard thenBv) (Term.tcard elseBv))
+  | .intToPbv _w _v => 0
 
 def Term.bcard (t : Term) : Nat :=
   match t with
@@ -1001,6 +1005,7 @@ def Term.bcard (t : Term) : Nat :=
   | vshl _w a b => max (Term.bcard a) (Term.bcard b)
   | bvIte cond thenBv elseBv =>
     max (Term.bcard cond) (max (Term.bcard thenBv) (Term.bcard elseBv))
+  | .intToPbv _w _v => 0
 
 /-- Returns true if the term can be decided by the automata-based procedure.
 Multiplication is NOT automata decidable. -/
@@ -1031,6 +1036,7 @@ def Term.isAutomtaDecidable : Term → Bool
 | .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
 | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. => false
 | bvIte ..=> false
+| .intToPbv .. => false
 
 end Nondep
 
@@ -1649,6 +1655,10 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
         else (.const (88#_), false)
       else (.const (88#_), false)
     else (.const (88#_), false)
+  | .intToPbv w v =>
+     let w := w.eval wenv
+     let v := v.eval wenv
+     (.const (BitVec.ofNat w v), true)
   | .boolBinRel .. | .pvar .. | .and .. | .or ..| .binRel .. | .binWidthRel ..
     | .bvOfBool .. | .boolConst .. | .boolVar .. | .setWidth ..
     | .pFalse | .pTrue =>
@@ -1734,7 +1744,7 @@ def Term.toBVLogicalExpr (wenv : Array Nat) : Term → BVLogicalExpr × Bool
   | .pvar .. | .binRel .. | .bvOfBool .. | .shiftr ..
     | .shiftl .. | .boolVar .. | .bnot .. | .bxor .. | .band .. | .bor .. | .sext .. | .setWidth ..
     | .zext .. | .mul .. | .add .. | .ofNat .. | .var .. | .boolBinRel ..
-    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. =>
+    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. | .intToPbv .. =>
     (dbg_trace "ERROR 15"; .const false, false) -- these are not predicate expressions, so we return a dummy value and false to indicate failure.
 
 end Nondep
@@ -1787,30 +1797,6 @@ def Nondep.Term.succ (a : Term) : Term :=
 /-- Compute `a - 1`. -/
 def Nondep.Term.pred (a : Term) : Term :=
   .sub a.width a (Nondep.Term.constOne a.width)
-/--
-Create the width precondition for width variable index 'w',
-where all variables are to have universe width 'wo'.
-This precondition forces the width variable to be a power of 2 minus one.
-Recall that a `power of 2: w & (w - 1) = 0`.
-Also see that `unary mask = power of 2 - 1`.
-`m = p - 1`
-`p = u + 1`
-`p & (p - 1) = 0`
-`m & (m + 1) = 0`.
-This also cleanly handles the case where `u` is `0`, since `u & u + 1 = 0`.
--/
-def Term.toSingleWidthNondepTerm.mkWidthPrecond (_w : Nat) (_wo : Nondep.WidthExpr) : Nondep.Term :=
-    .pTrue
-/--
-Make all the width preconditions of variables of indices [0..w),
-with universe width 'wo'.
--/
-def Term.toSingleWidthNondepTerm.mkAllWidthPreconds (wo : Nondep.WidthExpr) (w : Nat) : Nondep.Term :=
-  match w with
-  | 0 => .pTrue
-  | w' + 1 =>
-    let precond := Term.toSingleWidthNondepTerm.mkWidthPrecond w' wo
-    .and precond (Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo w')
 
 /--
 Convert a width variable into a bitvector,
@@ -1869,6 +1855,34 @@ def Nondep.WidthExpr.toTwosComplementNondepTerm (w : Nondep.WidthExpr) (wo : Non
     if aresult then
       (.sub wo amask kval, true)
     else (.constBad wo, false)
+
+/--
+Create preconditions that say that the width is inbounds.
+-/
+def Term.toSingleWidthNondepTerm.mkWidthPrecond (w : Nat) (wo : Nondep.WidthExpr) : Nondep.Term :=
+    -- Width variable must be ≤ bound (wo), otherwise the mask (1 << w) - 1
+    -- wraps around in bounded-width arithmetic and produces incorrect results.
+    -- Use `w ≤ bound` (not `w + 1 ≤ bound`) to avoid BV overflow:
+    -- after pnegate + toSingleWidthNondepTermGo + pnegate, the `+ 1` becomes
+    -- modular BV addition, and `(w_bv + 1) < 9` accepts w=255 due to overflow.
+    let widthVar := Nondep.Term.var w wo
+    -- let (boundVal, _) := wo.toTwosComplementNondepTerm wo
+    let boundVal := match wo with
+      | .const c => Nondep.Term.ofNat wo (c - 1)
+      | _ => Nondep.Term.ofNat wo 0 -- fallback, shouldn't happen in practice
+    Nondep.Term.binRel .ule wo widthVar boundVal
+    -- Nondep.Term.binWidthRel .le (.var w) (wo.sub (.const 1))
+/--
+Make all the width preconditions of variables of indices [0..w),
+with universe width 'wo'.
+-/
+def Term.toSingleWidthNondepTerm.mkAllWidthPreconds
+  (wo : Nondep.WidthExpr) (w : Nat) : Nondep.Term :=
+  match w with
+  | 0 => .pTrue
+  | w' + 1 =>
+    let precond := Term.toSingleWidthNondepTerm.mkWidthPrecond w' wo
+    .and precond (Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo w')
 
 /-- create a conjunction of predicates -/
 def Nondep.Term.andPredicates
@@ -2074,8 +2088,7 @@ def Nondep.Term.elimIte
     (.add w a' b', s)
   | .var v w => ⟨.var v w, s⟩
   | .ofNat w n => ⟨.ofNat w n, s⟩
-
-
+  | .intToPbv w v => ⟨.intToPbv w v, s⟩
 
 /--
 TODO: refactor into `SingleWidth → Nondep.Term × Bool`, since it's better typed.
@@ -2192,8 +2205,8 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
       | _ => (.constBad wo, false)
     else (.constBad wo, false)
   | .binWidthRel k wa wb =>
-    let (wa', waresult) := wa.toSingleWidthMaskNondepTerm wo
-    let (wb', wbresult) := wb.toSingleWidthMaskNondepTerm wo
+    let (wa', waresult) := wa.toTwosComplementNondepTerm wo
+    let (wb', wbresult) := wb.toTwosComplementNondepTerm wo
     if waresult && wbresult then
       match k with
       | .eq => (.binRel .eq wo wa' wb', true)
@@ -2246,6 +2259,12 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     else (.constBad wo, false)
   | pvar _ | bvOfBool _ | boolVar _ | boolBinRel .. =>
     (.constZero wo, false)
+  | .intToPbv w v =>
+    let (v', vresult) := v.toTwosComplementNondepTerm wo
+    let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
+    if vresult && wresult then
+      (.band wo v' wmask, true)
+    else (.constBad wo, false)
   where
    goBinop (a b : Nondep.Term) (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr)
      (binop : Nondep.WidthExpr → Nondep.Term → Nondep.Term → Nondep.Term) : Nondep.Term × Bool :=
@@ -2261,16 +2280,18 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
 /--
 Given a term, convert it to a single-width term by converting all width expressions to their corresponding single-width terms,
 -/
-def Nondep.Term.toSingleWidthNondepTerm (t : Nondep.Term) (wo : Nondep.WidthExpr): Nondep.Term × Bool :=
+def Nondep.Term.toSingleWidthNondepTerm (t : Nondep.Term)
+   (wo : Nondep.WidthExpr): Nondep.Term × Bool :=
+  let (tSingle, tSingleResult) : Nondep.Term × Bool := t.toSingleWidthNondepTermGo t.maxwcard wo
+  let (iteElim, iteState) : Nondep.Term × ElimIteState := tSingle.elimIte
+     (.newState <| tSingle.tcard + 1000)
+  -- | TODO: what about overflow in this representation when we add?
   let preconds := Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo t.maxwcard
-  let (rhs, rhsResult) : Nondep.Term × Bool := t.toSingleWidthNondepTermGo t.maxwcard wo
-  let (rhsIteElim, iteState) : Nondep.Term × ElimIteState := rhs.elimIte
-     (.newState <| rhs.tcard + 1)
   let (implies, impliesResult) :=
     Term.pimplies
       (preconds.andPredicates iteState.preconditions)
-      rhsIteElim
-  if rhsResult && impliesResult && iteState.success then
+      iteElim
+  if impliesResult && tSingleResult && iteState.success then
     (implies, true)
   else (implies, false)
 
