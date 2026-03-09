@@ -1887,7 +1887,7 @@ def Term.toSingleWidthNondepTerm.mkAllWidthPreconds
 /-- create a conjunction of predicates -/
 def Nondep.Term.andPredicates (ps : List Nondep.Term) : Nondep.Term :=
   match ps with
-  | [] => default
+  | [] => .pTrue
   | [p] => p
   | p :: ps => .and p (Term.andPredicates ps)
 
