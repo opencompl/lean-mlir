@@ -1824,11 +1824,21 @@ def Nondep.WidthExpr.toTwosComplementNondepTerm (w : Nondep.WidthExpr) (wo : Non
     let widthVal := Nondep.Term.var v wo
     (widthVal, true)
   | .max a b =>
-      -- TODO: I need if-then-else here.
-      (.constBad wo, false)
+    let (a', aresult) := a.toTwosComplementNondepTerm wo
+    let (b', bresult) := b.toTwosComplementNondepTerm wo
+    if aresult && bresult then
+      -- max(a, b) = ite(b ≤ a, a, b)
+      let cond := Nondep.Term.binRel .ule wo b' a'
+      (.bvIte cond a' b', true)
+    else (.constBad wo, false)
   | .min a b =>
-      -- TODO: I need if-then-else here.
-      (.constBad wo, false)
+    let (a', aresult) := a.toTwosComplementNondepTerm wo
+    let (b', bresult) := b.toTwosComplementNondepTerm wo
+    if aresult && bresult then
+      -- min(a, b) = ite(a ≤ b, a, b)
+      let cond := Nondep.Term.binRel .ule wo a' b'
+      (.bvIte cond a' b', true)
+    else (.constBad wo, false)
   | .addK a k =>
     let (aval, aresult) := a.toTwosComplementNondepTerm wo
     let kval := Nondep.Term.ofNat wo k
