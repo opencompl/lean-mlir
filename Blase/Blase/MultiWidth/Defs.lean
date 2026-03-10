@@ -1533,13 +1533,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
           (.bin (a'.cast ha) .add (b'.cast hb), true, .nil)
         else
           let errMsg := s!"toBVExpr: failed to translate operands of add\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+          (.const (88#_), false, .text errMsg)
       else
-        let errMsg := s!"toBVExpr: width mismatch in add (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        let errMsg := s!"toBVExpr: width mismatch in add ({repr b}.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
     else
-      let errMsg := s!"toBVExpr: width mismatch in add (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      let errMsg := s!"toBVExpr: width mismatch in add ({repr a}.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
   | .mul we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1550,13 +1550,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
           (.bin (a'.cast ha) .mul (b'.cast hb), true, .nil)
         else
           let errMsg := s!"toBVExpr: failed to translate operands of mul\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+          (.const (88#_), false, .text errMsg)
       else
         let errMsg := s!"toBVExpr: width mismatch in mul (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in mul (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .band we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1567,13 +1567,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
           (.bin (a'.cast ha) .and (b'.cast hb), true, .nil)
         else
           let errMsg := s!"toBVExpr: failed to translate operands of band\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+          (.const (88#_), false, .text errMsg)
       else
         let errMsg := s!"toBVExpr: width mismatch in band (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in band (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .bor we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1584,13 +1584,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
           (.bin (a'.cast ha) .or (b'.cast hb), true, .nil)
         else
           let errMsg := s!"toBVExpr: failed to translate operands of bor\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+          (.const (88#_), false, .text errMsg)
       else
         let errMsg := s!"toBVExpr: width mismatch in bor (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in bor (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .bxor we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1601,13 +1601,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
           (.bin (a'.cast ha) .xor (b'.cast hb), true, .nil)
         else
           let errMsg := s!"toBVExpr: failed to translate operands of bxor\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+          (.const (88#_), false, .text errMsg)
       else
         let errMsg := s!"toBVExpr: width mismatch in bxor (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in bxor (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .bnot we a =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let w := we.eval wenv
@@ -1616,10 +1616,10 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
         (.un .not (a'.cast ha), true, .nil)
       else
         let errMsg := s!"toBVExpr: failed to translate operand of bnot\n{aerr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in bnot (a.width={a'.width} ≠ {w})\n{aerr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .shiftl we a k =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let w := we.eval wenv
@@ -1628,10 +1628,10 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
         (.shiftLeft (a'.cast ha) (.const (BitVec.ofNat w k)), true, .nil)
       else
         let errMsg := s!"toBVExpr: failed to translate operand of shiftl\n{aerr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in shiftl (a.width={a'.width} ≠ {w})\n{aerr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .shiftr w a k =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let w := w.eval wenv
@@ -1640,10 +1640,10 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
         (.shiftRight (a'.cast ha) (.const (BitVec.ofNat w k)), true, .nil)
       else
         let errMsg := s!"toBVExpr: failed to translate operand of shiftr\n{aerr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in shiftr (a.width={a'.width} ≠ {w})\n{aerr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .ashr w a k =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let w := w.eval wenv
@@ -1652,17 +1652,17 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
         (.arithShiftRight (a'.cast ha) (.const (BitVec.ofNat w k)), true, .nil)
       else
         let errMsg := s!"toBVExpr: failed to translate operand of ashr\n{aerr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in ashr (a.width={a'.width} ≠ {w})\n{aerr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .pextract a lo hi =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     if aresult then
       (.extract lo (hi - lo + 1) a', true, .nil)
     else
       let errMsg := s!"toBVExpr: failed to translate operand of pextract\n{aerr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .zext x we =>
     let (x', xresult, xerr) := x.toBVExpr wenv
     let w := we.eval wenv
@@ -1670,7 +1670,7 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
       (BVExpr.zeroExtend x' w, true, .nil)
     else
       let errMsg := s!"toBVExpr: failed to translate operand of zext\n{xerr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .sext x we =>
     let (x', xresult, xerr) := x.toBVExpr wenv
     let w := we.eval wenv
@@ -1678,7 +1678,7 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
       (BVExpr.signExtend x' w, true, .nil)
     else
       let errMsg := s!"toBVExpr: failed to translate operand of sext\n{xerr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .udiv we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1689,13 +1689,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
           (.bin (a'.cast ha) .udiv (b'.cast hb), true, .nil)
         else
           let errMsg := s!"toBVExpr: failed to translate operands of udiv\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+          (.const (88#_), false, .text errMsg)
       else
         let errMsg := s!"toBVExpr: width mismatch in udiv (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in udiv (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .urem we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1706,13 +1706,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
           (.bin (a'.cast ha) .umod (b'.cast hb), true, .nil)
         else
           let errMsg := s!"toBVExpr: failed to translate operands of urem\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+          (.const (88#_), false, .text errMsg)
       else
         let errMsg := s!"toBVExpr: width mismatch in urem (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in urem (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .vlshr we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1723,13 +1723,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
           (.shiftRight (a'.cast ha) (b'.cast hb), true, .nil)
         else
           let errMsg := s!"toBVExpr: failed to translate operands of vlshr\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+          (.const (88#_), false, .text errMsg)
       else
         let errMsg := s!"toBVExpr: width mismatch in vlshr (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in vlshr (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .vashr we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1740,13 +1740,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
           (.arithShiftRight (a'.cast ha) (b'.cast hb), true, .nil)
         else
           let errMsg := s!"toBVExpr: failed to translate operands of vashr\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+          (.const (88#_), false, .text errMsg)
       else
         let errMsg := s!"toBVExpr: width mismatch in vashr (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in vashr (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .vshl we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1757,13 +1757,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
           (.shiftLeft (a'.cast ha) (b'.cast hb), true, .nil)
         else
           let errMsg := s!"toBVExpr: failed to translate operands of vshl\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+          (.const (88#_), false, .text errMsg)
       else
         let errMsg := s!"toBVExpr: width mismatch in vshl (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+        (.const (88#_), false, .text errMsg)
     else
       let errMsg := s!"toBVExpr: width mismatch in vshl (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const (88#_), false, .text errMsg)
+      (.const (88#_), false, .text errMsg)
   | .intToPbv w v =>
      let w := w.eval wenv
      let v := v.eval wenv
@@ -1800,13 +1800,13 @@ def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) : BVLogicalExpr × Bool �
           (.literal (.bin (a'.cast ha) .eq (b'.cast hb)), true, .nil)
         else
           let errMsg := s!"toBVLogicalExpr: failed to translate operands of = relation\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const false, false, .text errMsg)
+          (.const false, false, .text errMsg)
       else
         let errMsg := s!"toBVLogicalExpr: width mismatch in = relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const false, false, .text errMsg)
+        (.const false, false, .text errMsg)
     else
       let errMsg := s!"toBVLogicalExpr: width mismatch in = relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const false, false, .text errMsg)
+      (.const false, false, .text errMsg)
   | .binRel .ne we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1817,13 +1817,13 @@ def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) : BVLogicalExpr × Bool �
           (.not (.literal (.bin (a'.cast ha) .eq (b'.cast hb))), true, .nil)
         else
           let errMsg := s!"toBVLogicalExpr: failed to translate operands of ≠ relation\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const false, false, .text errMsg)
+          (.const false, false, .text errMsg)
       else
         let errMsg := s!"toBVLogicalExpr: width mismatch in ≠ relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const false, false, .text errMsg)
+        (.const false, false, .text errMsg)
     else
       let errMsg := s!"toBVLogicalExpr: width mismatch in ≠ relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const false, false, .text errMsg)
+      (.const false, false, .text errMsg)
   | .binRel .ult we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1834,13 +1834,13 @@ def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) : BVLogicalExpr × Bool �
           (.literal (.bin (a'.cast ha) .ult (b'.cast hb)), true, .nil)
         else
           let errMsg := s!"toBVLogicalExpr: failed to translate operands of ult relation\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const false, false, .text errMsg)
+          (.const false, false, .text errMsg)
       else
         let errMsg := s!"toBVLogicalExpr: width mismatch in ult relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const false, false, .text errMsg)
+        (.const false, false, .text errMsg)
     else
       let errMsg := s!"toBVLogicalExpr: width mismatch in ult relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const false, false, .text errMsg)
+      (.const false, false, .text errMsg)
   | .binRel .ule we a b =>
     let (a', aresult, aerr) := a.toBVExpr wenv
     let (b', bresult, berr) := b.toBVExpr wenv
@@ -1851,13 +1851,13 @@ def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) : BVLogicalExpr × Bool �
           (.not (.literal (.bin (b'.cast hb) .ult (a'.cast ha))), true, .nil)
         else
           let errMsg := s!"toBVLogicalExpr: failed to translate operands of ule relation\n{aerr}\n{berr}"
-          (dbg_trace errMsg; .const false, false, .text errMsg)
+          (.const false, false, .text errMsg)
       else
         let errMsg := s!"toBVLogicalExpr: width mismatch in ule relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
-        (dbg_trace errMsg; .const false, false, .text errMsg)
+        (.const false, false, .text errMsg)
     else
       let errMsg := s!"toBVLogicalExpr: width mismatch in ule relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
-      (dbg_trace errMsg; .const false, false, .text errMsg)
+      (.const false, false, .text errMsg)
   | .and p1 p2 =>
     let (p1', p1result, p1err) := p1.toBVLogicalExpr wenv
     let (p2', p2result, p2err) := p2.toBVLogicalExpr wenv
@@ -1865,7 +1865,7 @@ def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) : BVLogicalExpr × Bool �
       (.gate .and p1' p2', true, .nil)
     else
       let errMsg := s!"toBVLogicalExpr: failed to translate operands of ∧\n{p1err}\n{p2err}"
-      (dbg_trace errMsg; .const false, false, .text errMsg)
+      (.const false, false, .text errMsg)
   | .or p1 p2 =>
     let (p1', p1result, p1err) := p1.toBVLogicalExpr wenv
     let (p2', p2result, p2err) := p2.toBVLogicalExpr wenv
@@ -1873,7 +1873,7 @@ def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) : BVLogicalExpr × Bool �
       (.gate .or p1' p2', true, .nil)
     else
       let errMsg := s!"toBVLogicalExpr: failed to translate operands of ∨\n{p1err}\n{p2err}"
-      (dbg_trace errMsg; .const false, false, .text errMsg)
+      (.const false, false, .text errMsg)
   | .binWidthRel .eq ew1 ew2 =>
     let w1 := ew1.eval wenv
     let w2 := ew2.eval wenv
