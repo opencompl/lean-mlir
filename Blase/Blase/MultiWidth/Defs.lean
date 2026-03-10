@@ -69,7 +69,8 @@ def WidthExpr.Env.cons (env : WidthExpr.Env wcard) (w : Nat) :
   WidthExpr.Env (wcard + 1) :=
   fun v => v.cases w env
 
-def WidthExpr.toNat (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
+def WidthExpr.toNat 
+  (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
   match e with
   | .const n => n
   | .var v => env v
@@ -1780,13 +1781,20 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
      dbg_trace errMsg
      (.const (99#_), false, .text errMsg)
 
+/-
+def Term.satisfiesPreconditoins (wenv : Array Nat) (t : Term) : 
+    BVLogicalExpr × Bool × Lean.Format :=
+  sorry
+-/
+
 /-- Convert a predicate-producing `Nondep.Term` to a `BVLogicalExpr`.
 `wenv` provides concrete width assignments for width variables.
 Uses `Term.toBVExpr` for BV subterms within predicates.
 `ule a b` is encoded as `¬(ult b a)`, `ne` as `¬(eq)`.
 Returns 'true' if the translation succeeded, along with accumulated error messages.
 -/
-def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) : BVLogicalExpr × Bool × Lean.Format :=
+def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) : 
+    BVLogicalExpr × Bool × Lean.Format :=
   match t with
   | .pTrue => (.const true, true, .nil)
   | .boolConst b => (.const b, true, .nil)
@@ -2293,6 +2301,22 @@ a precondition `.binWidthRel .eq (.add k b) a`  (i.e. `k + b = a`).
 def Nondep.WidthExpr.elimSubAux (w : Nondep.WidthExpr) (s : ElimSubState) :
     Nondep.WidthExpr × ElimSubState :=
   match w with
+  | .subK v k =>
+    -- Recurse into v first so nested subtractions are also eliminated.
+    let (v', s) := v.elimSubAux s
+    let (result, s) := s.freshWidth
+    -- Precondition: result + k = v'  ↔  v' - k = result
+    let prec := Nondep.Term.binWidthRel .eq (.addK result k) v'
+    let s := s.addPrecondition prec
+    (result, s)
+  | .sub a b =>
+    let (a', s) := a.elimSubAux s
+    let (b', s) := b.elimSubAux s
+    let (result, s) := s.freshWidth
+    -- Precondition: result = a' - b' ↔  a' = result + b'
+    let prec := Nondep.Term.binWidthRel .eq (.add result b') a'
+    let s := s.addPrecondition prec
+    (result, s)
   | .const n => (.const n, s)
   | .var i   => (.var i, s)
   | .max a b =>
@@ -2313,22 +2337,6 @@ def Nondep.WidthExpr.elimSubAux (w : Nondep.WidthExpr) (s : ElimSubState) :
     let (a', s) := a.elimSubAux s
     let (b', s) := b.elimSubAux s
     (.add a' b', s)
-  | .subK v k =>
-    -- Recurse into v first so nested subtractions are also eliminated.
-    let (v', s) := v.elimSubAux s
-    let (result, s) := s.freshWidth
-    -- Precondition: result + k = v'  ↔  v' = result + k
-    let prec := Nondep.Term.binWidthRel .eq (.addK result k) v'
-    let s := s.addPrecondition prec
-    (result, s)
-  | .sub a b =>
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
-    let (result, s) := s.freshWidth
-    -- Precondition: result + b' = a'  ↔  a' = result + b'
-    let prec := Nondep.Term.binWidthRel .eq (.add result b') a'
-    let s := s.addPrecondition prec
-    (result, s)
 
 /--
 Walk a `Nondep.Term`, eliminating subtraction from every embedded `Nondep.WidthExpr`

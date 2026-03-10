@@ -106,7 +106,7 @@ structure Config where
 
 structure Solver where
   name : String
-  run : Config → ParseResult → MetaM SolverExitCode
+  run : Config → Nondep.Term → MetaM SolverExitCode
 
 unsafe def runMetaMAsIO (m : MetaM α) : IO α := do
   initSearchPath (← findSysroot)
@@ -121,12 +121,12 @@ unsafe def runMetaMAsIO (m : MetaM α) : IO α := do
 
 unsafe def monoBMC : Solver where
   name := "monobmc"
-  run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
+  run (config : Config) (result : Nondep.Term) : MetaM SolverExitCode := do
     -- monobmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
       IO.eprintln s!"Running {monoBMC.name} at width {config.bound}..."
 
-    let (singleWidthTerm, success?, singleWidthErrors) := result.predicate.toSingleWidthNondepTerm (.const config.bound)
+    let (singleWidthTerm, success?, singleWidthErrors) := result.toSingleWidthNondepTerm (.const config.bound)
 
      if ! success? then
       IO.eprintln s!"{monoBMC.name}: Unable to translate term to single-width.\nErrors:\n{singleWidthErrors}"
@@ -172,9 +172,9 @@ def cartesianProductRange (bound : Nat) (n : Nat) : Array (Array Nat) := Id.run 
     out
 
 
-def elimItePreprocessing (result : ParseResult) : Except String Nondep.Term := do
-  let (predElimIte, iteState) := result.predicate.elimIte
-    (.newState <| result.predicate.tcard + 1)
+def elimItePreprocessing (predicate : Nondep.Term) : Except String Nondep.Term := do
+  let (predElimIte, iteState) := predicate.elimIte
+    (.newState <| predicate.tcard + 1)
   if !iteState.success then
     .error s!"ite elimination failed for predicate. Errors:\n{iteState.errors}"
   let (predWithPrec, iteImplSuccess, iteImplErrors) := iteState.toImplication predElimIte
@@ -191,25 +191,10 @@ def elimSubPreprocessing (pred : Nondep.Term) (wcard : Nat) : Except String Nond
 
 def naiveBMC : Solver where
   name := "naivebmc"
-  run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
-
-    let predAfterIte ← do
-      if config.elimIte then
-        match elimItePreprocessing result with
-        | .error e => return .error e
-        | .ok t => pure t
-      else
-        pure result.predicate
-    let predAfterSub ← do
-      if config.elimSub then
-        match elimSubPreprocessing predAfterIte result.wcard with
-        | .error e => return .error e
-        | .ok t => pure t
-      else
-        pure predAfterIte
-    let (negatedPredicate, success?, negateErrors) := predAfterSub.pnegate
+  run (config : Config) (result : Nondep.Term) : MetaM SolverExitCode := do
+    let (negatedPredicate, success?, negateErrors) := result.pnegate
     if !success? then
-      throwError "unable to negate predicate. Errors:\n{negateErrors}\n{repr result.predicate}"
+      throwError "unable to negate predicate. Errors:\n{negateErrors}\n{repr result}"
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
       IO.eprintln s!"Running naivebmc at width {config.bound}..."
@@ -233,14 +218,14 @@ def naiveBMC : Solver where
 
 def dryrun : Solver where
   name := "dryrun"
-  run (_config : Config) (_result : ParseResult) : MetaM SolverExitCode := do
+  run (_config : Config) (_result : Nondep.Term) : MetaM SolverExitCode := do
     return .unsat
 
 
 def External (name : String) (solver : Valaig.External.SafetyAigerMC) : Solver where
   name := name
-  run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
-    let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 result.pcard result.predicate
+  run (config : Config) (result : Nondep.Term) : MetaM SolverExitCode := do
+    let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 0 result
     let fsm := termFsm.toFsmZext
 
     if config.verbose then
@@ -252,7 +237,7 @@ def External (name : String) (solver : Valaig.External.SafetyAigerMC) : Solver w
         IO.eprintln s!"{name} error: {msg}"
         return .error
     | .ok .counterexample =>
-      if !result.predicate.isAutomtaDecidable then
+      if !result.isAutomtaDecidable then
         IO.eprintln "{name}: potential counterexample found, but formula contains non-automata-decidable operations (overapproximation). Countermodel reconstruction needed to validate."
         return .unknown
       if config.verbose then IO.eprintln "{name}: counterexample found"
@@ -269,12 +254,12 @@ def abc : Solver :=
 
 def kinduction : Solver where
   name := "k-induction"
-  run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
+  run (config : Config) (result : Nondep.Term) : MetaM SolverExitCode := do
     -- k-induction backend
     if config.verbose then
       IO.eprintln s!"FSM built. Running k-induction with max {config.niter} iterations..."
 
-    let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 result.pcard result.predicate
+    let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 0 result
     let fsm := termFsm.toFsmZext
 
     -- Set up Lean TermElabM environment for the SAT solver
@@ -301,7 +286,7 @@ def kinduction : Solver where
         IO.eprintln s!"Proven by k-induction at iteration {numIters}"
       return .unsat
     | .safetyFailure iter =>
-      if !result.predicate.isAutomtaDecidable then
+      if !result.isAutomtaDecidable then
         IO.eprintln s!"k-induction: potential counterexample at iteration {iter}, but formula contains non-automata-decidable operations (overapproximation). Countermodel reconstruction needed to validate."
         return .unknown
       if config.verbose then
@@ -315,7 +300,7 @@ def kinduction : Solver where
 
 def solverErrorUknown : Solver where
   name := "error_unknown"
-  run (_config : Config) (_result : ParseResult) : MetaM SolverExitCode := do
+  run (_config : Config) (_result : Nondep.Term) : MetaM SolverExitCode := do
     return .error "Uknown solver backend choice."
 
 
@@ -355,17 +340,37 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
       return SolverExitCode.toUInt32 .error
 
   if verbose then
-    IO.eprintln s!"Parsed: wcard={result.wcard}, tcard={result.tcard}, bcard={result.bcard}, pcard={result.pcard}"
-    IO.eprintln s!"Predicate: {repr result.predicate}"
+    IO.eprintln s!"Parsed Predicate: {repr result.predicate}"
 
   if parseOnly then
     IO.println s!"{repr result.predicate}"
     return SolverExitCode.toUInt32 .unsat
 
+  let predicate := result.predicate
+  let predicate ← do
+    if config.elimIte then
+      match elimItePreprocessing predicate with
+      | .error e => 
+        IO.eprintln e
+        return SolverExitCode.toUInt32 .error
+      | .ok t => pure t
+    else
+      pure predicate
+
+  let predicate ← do
+    if config.elimSub then
+      match elimSubPreprocessing predicate result.wcard with
+      | .error e => 
+        IO.eprintln e
+        return SolverExitCode.toUInt32 .error
+      | .ok t => pure t
+    else
+      pure predicate
+
   let solver : Solver :=
     allSolvers.get? backend |>.getD solverErrorUknown
   let timeStart ← IO.monoMsNow
-  let out ← runMetaMAsIO <| solver.run config result
+  let out ← runMetaMAsIO <| solver.run config predicate
   let timeEnd ← IO.monoMsNow
 
   IO.println s!"Time elapsed: {timeEnd - timeStart} ms"

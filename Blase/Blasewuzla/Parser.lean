@@ -20,8 +20,6 @@ structure ParseResult where
   predicate : Nondep.Term     -- negated conjunction of assertions
   wcard : Nat                 -- number of width variables
   tcard : Nat                 -- number of term variables
-  bcard : Nat := 0            -- number of bool variables
-  pcard : Nat := 0            -- number of predicate variables
 deriving Repr
 
 /-- Parser state. -/
