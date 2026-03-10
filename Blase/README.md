@@ -14,6 +14,80 @@ rev = "main"
 
 For stable releases, please change the `rev` to the desired version tag.
 
+#### Table to Support 
+
+```
+# Integer arithmetic signature  Σ_IA
+
+symbol        | smt-lib     | arity
+--------------+-------------+-------------------
+≈_Int         | =           | Int × Int → Bool
+≉_Int         | distinct    | Int × Int → Bool
+0,1,2,...     | literals    | Int
++             | +           | Int × Int → Int
+-             | -           | Int × Int → Int
+·             | *           | Int × Int → Int
+div           | div         | Int × Int → Int
+mod           | mod         | Int × Int → Int
+≤             | <=          | Int × Int → Bool
+≥             | >=          | Int × Int → Bool
+<             | <           | Int × Int → Bool
+>             | >           | Int × Int → Bool
+
+
+# Bitvector (PBV) operators
+
+symbol        | smt-lib        | arity
+--------------+----------------+-----------------------
+≈_PBV         | =              | PBV × PBV → Bool
+≉_PBV         | distinct       | PBV × PBV → Bool
+
+<u            | bvult          | PBV × PBV → Bool
+>u            | bvugt          | PBV × PBV → Bool
+<s            | bvslt          | PBV × PBV → Bool
+>s            | bvsgt          | PBV × PBV → Bool
+
+≤u            | bvule          | PBV × PBV → Bool
+≥u            | bvuge          | PBV × PBV → Bool
+≤s            | bvsle          | PBV × PBV → Bool
+≥s            | bvsge          | PBV × PBV → Bool
+
+~             | bvnot          | PBV → PBV
+-_B           | bvneg          | PBV → PBV
+
+&             | bvand          | PBV × PBV → PBV
+|             | bvor           | PBV × PBV → PBV
+⊕             | bvxor          | PBV × PBV → PBV
+
+<<            | bvshl          | PBV × PBV → PBV
+>>            | bvlshr         | PBV × PBV → PBV
+>>a           | bvashr         | PBV × PBV → PBV
+
++_B           | bvadd          | PBV × PBV → PBV
+-_B           | bvsub          | PBV × PBV → PBV
+
+·_B           | bvmul          | PBV × PBV → PBV
+mod_B         | bvurem         | PBV × PBV → PBV
+div_B         | bvudiv         | PBV × PBV → PBV
+
+extract       | pextract       | PBV × Int × Int → PBV
+concat        | concat         | PBV × PBV → PBV
+
+ext_z         | pzero_extend   | Int × PBV → PBV
+ext_s         | psign_extend   | Int × PBV → PBV
+
+|·|           | bvsize         | PBV → Int
+to-pbv        | int_to_pbv     | Int × Int → PBV
+
+
+# Extension  Σ_IA(pow2, &^N)
+
+symbol        | smt-lib   | arity
+--------------+-----------+------------------------
+&^N           | piand     | Int × Int × Int → Int
+pow2          | pow2      | Int → Int
+```
+
 #### Algorithms Improvements TODO
 
 - [x] Add a Nondep to BVExpr conversion
