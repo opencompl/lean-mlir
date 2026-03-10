@@ -253,7 +253,7 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     match b with
     | .expr [.atom "int_to_pbv", _, .atom nStr] =>
       match nStr.toNat? with
-      | some n => return .bv (.shiftr aw at_ n) aw -- TODO: encode constant ashr properly
+      | some n => return .bv (.ashr aw at_ n) aw
       | none => ParserM.throwError s!"bvashr: expected constant shift amount, got '{nStr}'"
     | _ =>
       let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvashr")
@@ -268,6 +268,24 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "bvurem")
     let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvurem")
     return .bv (.urem aw at_ bt) aw
+
+  -- extract: ((_ extract hi lo) a) — standard SMT-LIB form
+  | .expr [.expr [.atom "_", .atom "extract", .atom hiStr, .atom loStr], a] =>
+    match hiStr.toNat?, loStr.toNat? with
+    | some hi, some lo =>
+      let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "extract")
+      let resultW := Nondep.WidthExpr.const (hi - lo + 1)
+      return .bv (.pextract at_ lo hi) resultW
+    | _, _ => ParserM.throwError s!"extract: expected numeric indices, got '{hiStr}' and '{loStr}'"
+
+  -- pextract: (pextract a hi lo) — Blase custom form
+  | .expr [.atom "pextract", a, .atom hiStr, .atom loStr] =>
+    match hiStr.toNat?, loStr.toNat? with
+    | some hi, some lo =>
+      let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "pextract")
+      let resultW := Nondep.WidthExpr.const (hi - lo + 1)
+      return .bv (.pextract at_ lo hi) resultW
+    | _, _ => ParserM.throwError s!"pextract: expected numeric indices, got '{hiStr}' and '{loStr}'"
 
   -- zero_extend: ((_ zero_extend wnew) a)
   | .expr [.expr [.atom "_", .atom "zero_extend", wnew], a] =>
