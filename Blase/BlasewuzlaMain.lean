@@ -126,10 +126,10 @@ unsafe def monoBMC : Solver where
     if config.verbose then
       IO.eprintln s!"Running {monoBMC.name} at width {config.bound}..."
 
-    let (singleWidthTerm, success?) := result.predicate.toSingleWidthNondepTerm (.const config.bound)
+    let (singleWidthTerm, success?, singleWidthErrors) := result.predicate.toSingleWidthNondepTerm (.const config.bound)
 
      if ! success? then
-      IO.eprintln s!"{monoBMC.name}: Unable to translate term to single-width."
+      IO.eprintln s!"{monoBMC.name}: Unable to translate term to single-width.\nErrors:\n{singleWidthErrors}"
       if config.verbose then
         IO.eprintln "  input:\n{repr result.predicate}\noutput:\n{repr singleWidthTerm}"
       return .unknown
@@ -138,9 +138,9 @@ unsafe def monoBMC : Solver where
       if config.verbose then
         IO.eprintln "  input:\n{repr result.predicate}\noutput:\n{repr singleWidthTerm}"
 
-    let (singleWidthNegated, success?) := singleWidthTerm.pnegate
+    let (singleWidthNegated, success?, negateErrors) := singleWidthTerm.pnegate
     if ! success? then
-      IO.eprintln s!"{monoBMC.name}: Unable to negate single-width term."
+      IO.eprintln s!"{monoBMC.name}: Unable to negate single-width term.\nErrors:\n{negateErrors}"
       if config.verbose then
         IO.eprintln "  input:\n{repr singleWidthTerm}"
       return .unknown
@@ -176,17 +176,17 @@ def elimItePreprocessing (result : ParseResult) : Except String Nondep.Term := d
   let (predElimIte, iteState) := result.predicate.elimIte
     (.newState <| result.predicate.tcard + 1)
   if !iteState.success then
-    .error "ite elimination failed for predicate"
-  let (predWithPrec, iteImplSuccess) := iteState.toImplication predElimIte
+    .error s!"ite elimination failed for predicate. Errors:\n{iteState.errors}"
+  let (predWithPrec, iteImplSuccess, iteImplErrors) := iteState.toImplication predElimIte
   if !iteImplSuccess then
-    .error "ite implication failed for predicate"
+    .error s!"ite implication failed for predicate. Errors:\n{iteImplErrors}"
   return predWithPrec
 
 def elimSubPreprocessing (pred : Nondep.Term) (wcard : Nat) : Except String Nondep.Term := do
   let subResult := pred.elimSub wcard
-  let (predElimSub, subImplSuccess) := subResult.toImplication
+  let (predElimSub, subImplSuccess, subImplErrors) := subResult.toImplication
   if !subImplSuccess then
-    .error "sub implication failed for predicate"
+    .error s!"sub implication failed for predicate. Errors:\n{subImplErrors}"
   return predElimSub
 
 def naiveBMC : Solver where
@@ -207,8 +207,9 @@ def naiveBMC : Solver where
         | .ok t => pure t
       else
         pure predAfterIte
-    let (negatedPredicate, true) := predAfterSub.pnegate
-      | throwError "unable to negate predicate. {repr result.predicate}"
+    let (negatedPredicate, success?, negateErrors) := predAfterSub.pnegate
+    if !success? then
+      throwError "unable to negate predicate. Errors:\n{negateErrors}\n{repr result.predicate}"
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
       IO.eprintln s!"Running naivebmc at width {config.bound}..."
