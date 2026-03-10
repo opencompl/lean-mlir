@@ -687,9 +687,9 @@ def WidthExpr.wcard (w : WidthExpr) : Nat :=
   | .const _ => 0
   | .var i => i + 1
   | .max v w => Nat.max (v.wcard) (w.wcard)
-  | .min v w => Nat.min (v.wcard) (w.wcard)
-  | .addK v k => v.wcard + k
-  | .kadd k v => k + v.wcard
+  | .min v w => Nat.max (v.wcard) (w.wcard)
+  | .addK v _k => v.wcard
+  | .kadd _k v => v.wcard
   | .subK v _k => v.wcard
   | .add v w => Nat.max (v.wcard) (w.wcard)
   | .sub v w => Nat.max (v.wcard) (w.wcard)
@@ -2410,11 +2410,13 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
       -- XOR cannot overflow, so we don't need to mask the result to the universe width.
       ((.bxor wo a' b'), true)
     else (.constZero wo, false)
-  | .bnot _w a =>
+  | .bnot w a =>
     let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
-    if aresult then
-      -- NOT cannot overflow, so we don't need to mask the result to the universe width.
-      ((.bnot wo a'), true)
+    let (wmask, wresult) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && wresult then
+      -- NOT flips the high bits (w..wo-1) from 0 to 1, violating the single-width
+      -- encoding invariant. We must mask the result back to width w.
+      (.band wo (.bnot wo a') wmask, true)
     else (.constZero wo, false)
   | .mul w a b =>
     let (a', aresult) := a.toSingleWidthNondepTermGo maxWcard wo
