@@ -99,6 +99,10 @@ structure Config where
   bound : Nat
   /-- SAT solver timeout -/
   timeout : Nat
+  /-- Run ite-elimination preprocessing pass. -/
+  elimIte : Bool
+  /-- Run width-subtraction elimination preprocessing pass. -/
+  elimSub : Bool
 
 structure Solver where
   name : String
@@ -167,23 +171,42 @@ def cartesianProductRange (bound : Nat) (n : Nat) : Array (Array Nat) := Id.run 
     out
 
 
+def elimItePreprocessing (result : ParseResult) : Except String Nondep.Term := do
+  let (predElimIte, iteState) := result.predicate.elimIte
+    (.newState <| result.predicate.tcard + 1)
+  if !iteState.success then
+    .error "ite elimination failed for predicate"
+  let (predWithPrec, iteImplSuccess) := iteState.toImplication predElimIte
+  if !iteImplSuccess then
+    .error "ite implication failed for predicate"
+  return predWithPrec
+
+def elimSubPreprocessing (pred : Nondep.Term) (wcard : Nat) : Except String Nondep.Term := do
+  let subResult := pred.elimSub wcard
+  let (predElimSub, subImplSuccess) := subResult.toImplication
+  if !subImplSuccess then
+    .error "sub implication failed for predicate"
+  return predElimSub
+
 def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : ParseResult) : MetaM SolverExitCode := do
 
-    -- Eliminate ite nodes before negation
-    let (predElimIte, iteState) := result.predicate.elimIte
-      (.newState <| result.predicate.tcard + 1)
-    if !iteState.success then
-      return .error s!"ite elimination failed for predicate"
-    -- Conjoin ite preconditions with the predicate
-    let predWithPrec := match iteState.preconditions with
-      | [] => predElimIte
-      | precs =>
-        let precConj := Nondep.Term.andPredicates precs
-        let (implied, _) := Nondep.Term.pimplies precConj predElimIte
-        implied
-    let (negatedPredicate, true) := predWithPrec.pnegate
+    let predAfterIte ← do
+      if config.elimIte then
+        match elimItePreprocessing result with
+        | .error e => return .error e
+        | .ok t => pure t
+      else
+        pure result.predicate
+    let predAfterSub ← do
+      if config.elimSub then
+        match elimSubPreprocessing predAfterIte result.wcard with
+        | .error e => return .error e
+        | .ok t => pure t
+      else
+        pure predAfterIte
+    let (negatedPredicate, true) := predAfterSub.pnegate
       | throwError "unable to negate predicate. {repr result.predicate}"
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
@@ -308,6 +331,8 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let verbose : Bool := p.hasFlag "verbose"
   let backend : String := p.flag! "backend" |>.as! String
   let timeout : Nat := p.flag! "timeout" |>.as! Nat
+  let elimIte : Bool := p.hasFlag "elimIte"
+  let elimSub : Bool := p.hasFlag "elimSub"
 
   let config : Config := {
     verbose,
@@ -315,7 +340,9 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     parseOnly,
     niter,
     bound,
-    timeout
+    timeout,
+    elimIte,
+    elimSub
   }
   -- Read and parse the SMT2 file
   let contents ← IO.FS.readFile inputPath
@@ -354,6 +381,8 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     bound : Nat;               "Bound width for monobmc backend."
     timeout : Nat;             "SAT solver timeout for SAT based methods."
     backend : String;          "Backend solver: 'k-induction' (default), 'rIC3', 'abc', 'monobmc', 'naivebmc', or 'dryrun'."
+    elimIte;                   "Run ite-elimination preprocessing pass (off by default)."
+    elimSub;                   "Run width-subtraction elimination preprocessing pass (off by default)."
 
   ARGS:
     input : String;            "Path to the .smt2 file."

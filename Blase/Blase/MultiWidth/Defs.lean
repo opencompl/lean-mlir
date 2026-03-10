@@ -2006,6 +2006,17 @@ def ElimIteState.addSuccess (s : ElimIteState) (b : Bool) : ElimIteState :=
 def ElimIteState.addPrecondition (s : ElimIteState) (t : Nondep.Term) : ElimIteState :=
   { s with preconditions := t :: s.preconditions }
 
+/--
+Build `preconds → term` from an `ElimIteState`.
+If there are no preconditions, the term is returned unchanged.
+-/
+def ElimIteState.toImplication (s : ElimIteState) (t : Nondep.Term) : Nondep.Term × Bool :=
+  match s.preconditions with
+  | []    => (t, true)
+  | precs =>
+    let precConj := Nondep.Term.andPredicates precs
+    Nondep.Term.pimplies precConj t
+
 def Nondep.Term.elimIte
     (t : Nondep.Term)
     (s : ElimIteState) :  Nondep.Term × ElimIteState :=
@@ -2343,12 +2354,12 @@ def Nondep.Term.elimSub (t : Nondep.Term) (initialFreshWidthIndex : Nat) : ElimS
 Build `preconds → term` from an `ElimSubResult`.
 If there are no preconditions, the term is returned unchanged.
 -/
-def ElimSubResult.toImplication (r : ElimSubResult) : Nondep.Term :=
+def ElimSubResult.toImplication (r : ElimSubResult) : Nondep.Term × Bool :=
   match r.preconds with
-  | []    => r.term
+  | []    => (r.term, true)
   | precs =>
     let precConj := Nondep.Term.andPredicates precs
-    (Nondep.Term.pimplies precConj r.term).1
+    Nondep.Term.pimplies precConj r.term
 
 /--
 TODO: refactor into `SingleWidth → Nondep.Term × Bool`, since it's better typed.
