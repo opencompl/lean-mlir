@@ -145,8 +145,9 @@ unsafe def monoBMC : Solver where
         IO.eprintln "  input:\n{repr singleWidthTerm}"
       return .unknown
 
-    let (qfbv, true) := singleWidthNegated.toBVLogicalExpr #[]
-      | return .error (s!"formula contains unsupported operation for QF_BV translation." ++ if config.verbose then "\n{repr result.predicate}" else "")
+    let (qfbv, success?, translationErrors) := singleWidthNegated.toBVLogicalExpr #[]
+    if !success? then
+      return .error (s!"formula contains unsupported operation for QF_BV translation.\nTranslation errors:\n{translationErrors}" ++ if config.verbose then "\n{repr result.predicate}" else "")
 
     if config.verbose then
       IO.eprintln s!"qfbv formula to be checked for UNSAT:\n{qfbv.toString}"
@@ -212,10 +213,10 @@ def naiveBMC : Solver where
     if config.verbose then
       IO.eprintln s!"Running naivebmc at width {config.bound}..."
     for widths in cartesianProductRange config.bound result.wcard do
-      let (qfbv, success?) : Std.Tactic.BVDecide.BVLogicalExpr × Bool := negatedPredicate.toBVLogicalExpr widths
+      let (qfbv, success?, translationErrors) := negatedPredicate.toBVLogicalExpr widths
 
       if !success? then
-        return .error s!"formula contains unsupported operation, unable to translate into QF_BV.\n{repr negatedPredicate}"
+        return .error s!"formula contains unsupported operation, unable to translate into QF_BV.\nTranslation errors:\n{translationErrors}\nPredicate:\n{repr negatedPredicate}"
 
       if config.verbose then
         IO.eprintln s!"{qfbv.toString}"
