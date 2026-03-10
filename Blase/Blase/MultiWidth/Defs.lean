@@ -1781,12 +1781,6 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
      dbg_trace errMsg
      (.const (99#_), false, .text errMsg)
 
-/-
-def Term.satisfiesPreconditoins (wenv : Array Nat) (t : Term) : 
-    BVLogicalExpr × Bool × Lean.Format :=
-  sorry
--/
-
 /-- Convert a predicate-producing `Nondep.Term` to a `BVLogicalExpr`.
 `wenv` provides concrete width assignments for width variables.
 Uses `Term.toBVExpr` for BV subterms within predicates.
