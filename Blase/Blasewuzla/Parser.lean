@@ -275,7 +275,11 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     | some hi, some lo =>
       let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "extract")
       let resultW := Nondep.WidthExpr.const (hi - lo + 1)
-      return .bv (.pextract at_ lo hi) resultW
+      -- extract down to the LSB (lo = 0) is a truncation, expressible as zext
+      if lo == 0 then
+        return .bv (.zext at_ resultW) resultW
+      else
+        return .bv (.pextract at_ lo hi) resultW
     | _, _ => ParserM.throwError s!"extract: expected numeric indices, got '{hiStr}' and '{loStr}'"
 
   -- pextract: (pextract a hi lo) — Blase custom form
@@ -284,7 +288,11 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     | some hi, some lo =>
       let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "pextract")
       let resultW := Nondep.WidthExpr.const (hi - lo + 1)
-      return .bv (.pextract at_ lo hi) resultW
+      -- pextract down to the LSB (lo = 0) is a truncation, expressible as zext
+      if lo == 0 then
+        return .bv (.zext at_ resultW) resultW
+      else
+        return .bv (.pextract at_ lo hi) resultW
     | _, _ => ParserM.throwError s!"pextract: expected numeric indices, got '{hiStr}' and '{loStr}'"
 
   -- zero_extend: ((_ zero_extend wnew) a)
