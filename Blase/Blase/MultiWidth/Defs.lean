@@ -766,6 +766,7 @@ inductive Term
 | vlshr (w : WidthExpr) (a b : Term) : Term      -- variable logical right shift
 | vashr (w : WidthExpr) (a b : Term) : Term      -- variable arithmetic right shift
 | vshl (w : WidthExpr) (a b : Term) : Term       -- variable left shift
+| ashr (w : WidthExpr) (a : Term) (k : Nat) : Term  -- constant arithmetic right shift
 | bvIte (cond : Term) (thenBv elseBv: Term) : Term -- if then else on bitvectors
 | intToPbv (w : WidthExpr) (val : WidthExpr ): Term  -- coerct an integer 'val' into a PBV.
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
@@ -797,7 +798,7 @@ def Term.pnegate (t : Term) : Term × Bool :=
     (.or (.binWidthRel .le (.addK wa 1) wb) (.binWidthRel .le (.addK wb 1) wa), true)
   | .pFalse => (.pTrue, true)
   | .boolBinRel .. | .pvar .. | .bvOfBool ..
-    | .shiftr .. | .shiftl .. | .boolConst .. | .boolVar ..
+    | .shiftr .. | .shiftl .. | .ashr .. | .boolConst .. | .boolVar ..
     | .bnot .. | .bxor .. | .band .. | .bor .. | .setWidth .. | .sext .. | .zext ..
     | .mul .. | .add .. | .var .. | .ofNat ..
     | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. | .intToPbv .. =>
@@ -867,6 +868,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .boolConst _b => WidthExpr.const 1
   | .shiftl w _a _k => w
   | .shiftr w _a _k => w
+  | .ashr w _a _k => w
   | .bvOfBool _b => WidthExpr.const 1
   | binWidthRel _k _wa _wb => WidthExpr.const 0
   | binRel _k w _a _b => w
@@ -919,6 +921,7 @@ def Term.maxwcard (t : Term) : Nat :=
   | .boolConst _ => 0
   | .shiftl w a _ => max w.wcard (Term.maxwcard a)
   | .shiftr w a _ => max w.wcard (Term.maxwcard a)
+  | .ashr w a _ => max w.wcard (Term.maxwcard a)
   | .bvOfBool _ => 0
   | binWidthRel _k wa wb => max wa.wcard wb.wcard
   | binRel _k w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
@@ -954,6 +957,7 @@ def Term.tcard (t : Term) : Nat :=
   | .boolConst _b => 0
   | .shiftl _w a _k => (Term.tcard a)
   | .shiftr _w a _k => (Term.tcard a)
+  | .ashr _w a _k => (Term.tcard a)
   | bvOfBool b => b.tcard
   | binWidthRel _k _wa _wb => 0
   | binRel _k _w a b => max (Term.tcard a) (Term.tcard b)
@@ -989,6 +993,7 @@ def Term.bcard (t : Term) : Nat :=
   | .boolConst _b => 0
   | .shiftl _w a _k => (Term.bcard a)
   | .shiftr _w a _k => (Term.bcard a)
+  | .ashr _w a _k => (Term.bcard a)
   | bvOfBool b => b.bcard
   | binWidthRel _k _wa _wb => 0
   | binRel _k _w a b => max (Term.bcard a) (Term.bcard b)
@@ -1025,6 +1030,7 @@ def Term.isAutomtaDecidable : Term → Bool
 | .boolConst _ => true
 | .shiftl _ a _ => a.isAutomtaDecidable
 | .shiftr .. => false -- TODO: this is not automata decidable.
+| .ashr .. => false -- TODO: this is not automata decidable.
 | .bvOfBool b => b.isAutomtaDecidable
 | .binWidthRel _ _ _ => true
 | .binRel _ _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
@@ -1588,6 +1594,14 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
         (.shiftRight (a'.cast ha) (.const (BitVec.ofNat w k)), true)
       else (.const (88#_), false)
     else (.const (88#_), false)
+  | .ashr w a k =>
+    let (a', aresult) := a.toBVExpr wenv
+    let w := w.eval wenv
+    if ha : a'.width = w then
+      if aresult then
+        (.arithShiftRight (a'.cast ha) (.const (BitVec.ofNat w k)), true)
+      else (.const (88#_), false)
+    else (.const (88#_), false)
   | .zext x we =>
     let (x', xresult) := x.toBVExpr wenv
     let w := we.eval wenv
@@ -1741,7 +1755,7 @@ def Term.toBVLogicalExpr (wenv : Array Nat) : Term → BVLogicalExpr × Bool
     let w2 := ew2.eval wenv
     (.const (w1 ≤ w2), true)
   | .pFalse => (.const false, true)
-  | .pvar .. | .binRel .. | .bvOfBool .. | .shiftr ..
+  | .pvar .. | .binRel .. | .bvOfBool .. | .shiftr .. | .ashr ..
     | .shiftl .. | .boolVar .. | .bnot .. | .bxor .. | .band .. | .bor .. | .sext .. | .setWidth ..
     | .zext .. | .mul .. | .add .. | .ofNat .. | .var .. | .boolBinRel ..
     | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. | .intToPbv .. =>
@@ -2047,6 +2061,9 @@ def Nondep.Term.elimIte
   | .shiftr w a k =>
     let ⟨a', s⟩ := a.elimIte s
     (.shiftr w a' k, s)
+  | .ashr w a k =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.ashr w a' k, s)
   | .shiftl w a k =>
     let ⟨a', s⟩ := a.elimIte s
     (.shiftl w a' k, s)
@@ -2239,6 +2256,10 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     else (.constBad wo, false)
   | .vashr _w _a _b =>
     -- Arithmetic right shift in single-width encoding is complex (needs sign extension).
+    -- Return unsupported for now.
+    (.constBad wo, false)
+  | .ashr _w _a _k =>
+    -- Constant arithmetic right shift in single-width encoding is complex (needs sign extension).
     -- Return unsupported for now.
     (.constBad wo, false)
   | .vshl w a b =>
