@@ -327,7 +327,7 @@ def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
       #[mkNatLit wcard, mkNatLit k, ← mkWidthExpr wcard v]
     debugCheck out
     return out
-  | .subK _v _k | .sub .. | .add .. =>
+  | .subK _v _k | .sub .. | .add .. | .mul .. =>
     throwError "unhandled width expresion: '{repr ve}'"
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : Term.Ctx wcard 0 -/

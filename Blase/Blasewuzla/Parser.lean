@@ -104,6 +104,10 @@ def parseWidthExpr (s : Sexp) : ParserM Nondep.WidthExpr := do
     let wa ← parseWidthExpr a
     let wb ← parseWidthExpr b
     return .min wa wb
+  | .expr [.atom "*", a, b] =>
+    let wa ← parseWidthExpr a
+    let wb ← parseWidthExpr b
+    return .mul wa wb
   | .expr _ => ParserM.throwError s!"unsupported compound width expression: '{s}'"
 
 /-- Parse a sort to extract a width expression. Handles `(_ BitVec w)`. -/
