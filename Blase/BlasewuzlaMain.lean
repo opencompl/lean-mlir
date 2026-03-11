@@ -167,7 +167,7 @@ def cartesianProductRange (bound : Nat) (n : Nat) : Array (Array Nat) := Id.run 
     let mut out := #[]
     let smaller := cartesianProductRange bound n
     for ws in smaller do
-      for w in [0:bound] do
+      for w in [1:bound+1] do
         out := out.push (ws.push w)
     out
 
@@ -198,7 +198,7 @@ def naiveBMC : Solver where
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
       IO.eprintln s!"Running naivebmc at width {config.bound}..."
-    for widths in cartesianProductRange config.bound result.wcard do
+    for widths in cartesianProductRange config.bound result.maxwcard do
       let (qfbv, success?, translationErrors) := negatedPredicate.toBVLogicalExpr widths
 
       if !success? then
