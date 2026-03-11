@@ -165,6 +165,19 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     catch _ =>
       let n ← parseWidthExpr nAtom
       return .bv (.intToPbv w n) w
+  -- (_ bv<val> <width>): SMT2 indexed bitvector literal, shorthand for int_to_pbv
+  | .expr [.atom "_", .atom name, wAtom] =>
+    if name.startsWith "bv" then
+      let valStr := (name.drop 2).toString
+      let w ← parseWidthExpr wAtom
+      match valStr.toNat? with
+      | some n => return .bv (.ofNat w n) w
+      | none =>
+        let v ← parseWidthExpr (.atom valStr)
+        return .bv (.intToPbv w v) w
+    else
+      ParserM.throwError s!"unsupported indexed identifier: '(_ {name} ...)'"
+
   | .expr [.atom "bvadd", a, b] =>
     let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "bvadd")
     let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvadd")

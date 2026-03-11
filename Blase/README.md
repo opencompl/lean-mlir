@@ -90,6 +90,9 @@ pow2          | pow2      | Int → Int
 
 #### Algorithms Improvements TODO
 
+- [ ] Add an error printer of Term that prints only upto k level and then prints '..' for the rest.
+- [ ] add slt/sle support into QF_BV translation
+- [ ] Finish implementing new cases in 'toSingleWidthNondepTermGo'.
 - [x] Add a Nondep to BVExpr conversion
 - [x] Use Nondep -> BV to implement naive enumerative bitblasting.
 - [x] Use SingleWidth -> Nondep -> BV to implement single width bounded bitblasting.
