@@ -2738,10 +2738,18 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
       | .ne => (.binRel .ne wo xMasked yMasked, true, .nil)
       | .ult => (.binRel .ult wo xMasked yMasked, true, .nil)
       | .ule => (.binRel .ule wo xMasked yMasked, true, .nil)
-      | _ =>
-        let errMsg := s!"toSingleWidthNondepTermGo: unsupported binRel kind {repr k} (only eq/ne/ult/ule supported)"
-        dbg_trace errMsg
-        (.constBad wo, false, .text errMsg)
+      | .slt =>
+        -- slt(x, y) = ult(x XOR signBit, y XOR signBit)
+        let signBit := wmask.succ.shiftr wo 1
+        let xFlipped := .bxor wo xMasked signBit
+        let yFlipped := .bxor wo yMasked signBit
+        (.binRel .ult wo xFlipped yFlipped, true, .nil)
+      | .sle =>
+        -- sle(x, y) = ule(x XOR signBit, y XOR signBit)
+        let signBit := wmask.succ.shiftr wo 1
+        let xFlipped := .bxor wo xMasked signBit
+        let yFlipped := .bxor wo yMasked signBit
+        (.binRel .ule wo xFlipped yFlipped, true, .nil)
     else (.constBad wo, false, xerr ++ yerr ++ werr)
   | .binWidthRel k wa wb =>
     let (wa', waresult, waerr) := wa.toTwosComplementNondepTerm wo
