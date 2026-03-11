@@ -102,7 +102,7 @@ structure Config where
   /-- Run ite-elimination preprocessing pass. -/
   elimIte : Bool
   /-- Run width-subtraction preprocessing that adds subtraction preconditions . -/
-  subPrecondition : Bool
+  preconditionSub : Bool
   /-- Run width-subtraction elimination preprocessing pass. -/
   elimSub : Bool
 
@@ -345,7 +345,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let backend : String := p.flag! "backend" |>.as! String
   let timeout : Nat := p.flag! "timeout" |>.as! Nat
   let elimIte : Bool := p.hasFlag "elimIte"
-  let subPrecondition : Bool := p.hasFlag "subPrecondition"
+  let preconditionSub : Bool := p.hasFlag "preconditionSub"
   let elimSub : Bool := p.hasFlag "elimSub"
 
   let config : Config := {
@@ -356,7 +356,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     bound,
     timeout,
     elimIte,
-    subPrecondition,
+    preconditionSub,
     elimSub
   }
   -- Read and parse the SMT2 file
@@ -387,8 +387,8 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
       pure predicate
 
   let predicate ← do
-    if config.subPrecondition || config.elimSub then
-      match addSubPreconditionPreprocessing predicate (precond? := config.subPrecondition) (eliminate? := config.elimSub) with
+    if config.preconditionSub || config.elimSub then
+      match addSubPreconditionPreprocessing predicate (precond? := config.preconditionSub) (eliminate? := config.elimSub) with
       | .error e =>
         IO.eprintln e
         return SolverExitCode.toUInt32 .error
@@ -418,7 +418,7 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     backend : String;          "Backend solver: 'k-induction' (default), 'rIC3', 'abc', 'monobmc', 'naivebmc', or 'dryrun'."
     elimIte;                   "Run ite-elimination preprocessing pass (off by default)."
     elimSub;                   "Run sub-elimination preprocessing pass (off by default). This adds many variables (one per subtraction), but ensures that no subtractions remain in the formula."
-    subPrecondition;           "Runsubtraction precondition preprocessing pass (off by default). This adds a precondition that the subtraction does not produce a negative number."
+    preconditionSub;           "Runs subtraction precondition preprocessing pass (off by default). This adds a precondition that the subtraction does not produce a negative number."
 
   ARGS:
     input : String;            "Path to the .smt2 file."
