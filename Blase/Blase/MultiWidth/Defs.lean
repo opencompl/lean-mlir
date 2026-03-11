@@ -679,6 +679,7 @@ inductive WidthExpr where
 | subK : WidthExpr → Nat → WidthExpr
 | add : WidthExpr → WidthExpr → WidthExpr
 | sub : WidthExpr → WidthExpr → WidthExpr
+| mul : WidthExpr → WidthExpr → WidthExpr
 deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 open Std Lean in
@@ -694,6 +695,7 @@ def WidthExpr.wcard (w : WidthExpr) : Nat :=
   | .subK v _k => v.wcard
   | .add v w => Nat.max (v.wcard) (w.wcard)
   | .sub v w => Nat.max (v.wcard) (w.wcard)
+  | .mul v w => Nat.max (v.wcard) (w.wcard)
 
 def WidthExpr.ofDep {wcard : Nat}
     (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
@@ -1487,6 +1489,7 @@ def WidthExpr.eval (wenv : Array Nat) : WidthExpr → Nat
   | .subK a k =>((a.eval wenv) - k)
   | .sub a b => ((a.eval wenv) - (b.eval wenv))
   | .add a b => ((a.eval wenv) + (b.eval wenv))
+  | .mul a b => ((a.eval wenv) * (b.eval wenv))
 
 def _root_.Std.Tactic.BVDecide.BVExpr.width (_ : BVExpr w) : Nat := w
 
@@ -2053,6 +2056,12 @@ def Nondep.WidthExpr.toTwosComplementNondepTerm (w : Nondep.WidthExpr) (wo : Non
     if aresult then
       (.sub wo amask kval, true, .nil)
     else (.constBad wo, false, aerr)
+  | .mul a b =>
+    let (a', aresult, aerr) := a.toTwosComplementNondepTerm wo
+    let (b', bresult, berr) := b.toTwosComplementNondepTerm wo
+    if aresult && bresult then
+      (.mul wo a' b', true, .nil)
+    else (.constBad wo, false, aerr ++ berr)
 
 /--
 Create preconditions that say that the width is inbounds.
@@ -2383,6 +2392,10 @@ def Nondep.WidthExpr.elimSubAux (w : Nondep.WidthExpr) (s : ElimSubState) :
     let (a', s) := a.elimSubAux s
     let (b', s) := b.elimSubAux s
     (.add a' b', s)
+  | .mul a b =>
+    let (a', s) := a.elimSubAux s
+    let (b', s) := b.elimSubAux s
+    (.mul a' b', s)
 
 /--
 Walk a `Nondep.Term`, eliminating subtraction from every embedded `Nondep.WidthExpr`

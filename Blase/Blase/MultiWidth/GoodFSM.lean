@@ -71,6 +71,8 @@ def mkWidthFSM (wcard : Nat) (tcard : Nat) (bcard : Nat) (ncard icard : Nat) (pc
     }
   | .subK _v _k =>
     { toFsm := (FSM.repeatForever false).map Fin.elim0 }
+  | .mul .. =>
+    { toFsm := (FSM.repeatForever false).map Fin.elim0 }
 
 def IsGoodNatFSM_mkWidthFSM {wcard : Nat} (tcard : Nat) (bcard : Nat) (ncard icard : Nat) (pcard : Nat)  (w : WidthExpr wcard) :
     HNatFSMToBitstream (mkWidthFSM wcard tcard bcard ncard icard pcard (.ofDep w)) where
