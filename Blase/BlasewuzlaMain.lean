@@ -192,6 +192,7 @@ def elimSubPreprocessing (pred : Nondep.Term) (wcard : Nat) : Except String Nond
 def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : Nondep.Term) : MetaM SolverExitCode := do
+    let widthConstraints := result.toWidthLogicalExpr
     let (negatedPredicate, success?, negateErrors) := result.pnegate
     if !success? then
       throwError "unable to negate predicate. Errors:\n{negateErrors}\n{repr result}"
@@ -199,6 +200,25 @@ def naiveBMC : Solver where
     if config.verbose then
       IO.eprintln s!"Running naivebmc at width {config.bound}..."
     for widths in cartesianProductRange config.bound result.maxwcard do
+      /-
+        First check if the widths lead to a satisfying assignment of the width constraints.
+        If they do, then proceed to create a model. If they do not, then bail out,
+        as we cannot guarantee a legal QF_BV expression being created, as the semantics
+        are a promise-based semantics.
+      -/
+      match widthConstraints.evalWidthLogicalExpr widths with
+      | .ok true =>
+        if config.verbose then
+          IO.eprintln s!"⟨{widths.toList}⟩ succeeded width precondition check."
+
+      | .ok false =>
+        if config.verbose then
+        IO.eprintln s!"⟨{widths.toList}⟩ skipped as width constraints fail."
+      | .error err =>
+        return .error s!"unable to evaluate width constraints '{widths}' for QF_BV formula construction.\n{err}"
+      /-
+      Width constraints succeed, so now continue trying to evaluate.
+      -/
       let (qfbv, success?, translationErrors) := negatedPredicate.toBVLogicalExpr widths
 
       if !success? then
@@ -350,7 +370,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let predicate ← do
     if config.elimIte then
       match elimItePreprocessing predicate with
-      | .error e => 
+      | .error e =>
         IO.eprintln e
         return SolverExitCode.toUInt32 .error
       | .ok t => pure t
@@ -360,7 +380,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let predicate ← do
     if config.elimSub then
       match elimSubPreprocessing predicate result.wcard with
-      | .error e => 
+      | .error e =>
         IO.eprintln e
         return SolverExitCode.toUInt32 .error
       | .ok t => pure t

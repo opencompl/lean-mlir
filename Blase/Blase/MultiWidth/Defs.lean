@@ -69,7 +69,7 @@ def WidthExpr.Env.cons (env : WidthExpr.Env wcard) (w : Nat) :
   WidthExpr.Env (wcard + 1) :=
   fun v => v.cases w env
 
-def WidthExpr.toNat 
+def WidthExpr.toNat
   (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
   match e with
   | .const n => n
@@ -775,10 +775,10 @@ inductive Term
 | intToPbv (w : WidthExpr) (val : WidthExpr ): Term  -- coerct an integer 'val' into a PBV.
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
-/-- Smart constructor for a pextract operation, desugaring a pextract to lo=0 into a zeroExtend, 
+/-- Smart constructor for a pextract operation, desugaring a pextract to lo=0 into a zeroExtend,
 since our zeroExtend also encodes truncates. -/
-def Term.mkPExtract (hi lo : Nondep.WidthExpr) (t : Nondep.Term) : Nondep.Term := 
-    match lo with 
+def Term.mkPExtract (hi lo : Nondep.WidthExpr) (t : Nondep.Term) : Nondep.Term :=
+    match lo with
     | .const 0 => .zext t hi
     | _ => .pextract t lo hi
 
@@ -1669,7 +1669,7 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
       let errMsg := s!"toBVExpr: width mismatch in ashr (a.width={a'.width} ≠ {w})\n{aerr}"
       (.const (88#_), false, .text errMsg)
   | .pextract a wlo whi =>
-    let lo := wlo.eval wenv 
+    let lo := wlo.eval wenv
     let hi := whi.eval wenv
     let (a', aresult, aerr) := a.toBVExpr wenv
     if aresult then
@@ -1794,13 +1794,86 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
      dbg_trace errMsg
      (.const (99#_), false, .text errMsg)
 
+
+-- (bvIte _ _ _)
+-- (pextract _ _ _)
+-- (ashr _ _ _)
+-- (vshl _ _ _)
+-- (vashr _ _ _)
+-- (vlshr _ _ _)
+-- (urem _ _ _)
+-- (udiv _ _ _)
+-- (boolBinRel BoolBinaryRelationKind.eq _ _)
+-- (pvar _)
+-- (bvOfBool _)
+-- (shiftr _ _ _)
+-- (shiftl _ _ _)
+-- (boolConst true)
+-- (boolConst false)
+-- (boolVar _)
+-- (bnot _ _)
+-- (bxor _ _ _)
+-- (band _ _ _)
+-- (bor _ _ _)
+-- (sext _ _)
+-- (setWidth _ _)
+-- (zext _ _)
+-- (mul _ _ _)
+-- (add _ _ _)
+-- (var _ _)
+-- (ofNat _ _)
+
+/--
+Produce a term that has just the width contraints, and no bitvector constraints.
+This allows us to check if a term satisfies its widths constraints before evaluating
+its bitvector constraints.
+If the width constraints fail, then we should skip trying the BV fragment,
+as we may produce ill-typed BV terms otherwise.
+-/
+def Term.toWidthLogicalExpr (t : Term) : Term :=
+  match t with
+  | .binWidthRel .. => t
+  | .and a b => .and (a.toWidthLogicalExpr) (b.toWidthLogicalExpr)
+  | .or a b => .or (a.toWidthLogicalExpr) (b.toWidthLogicalExpr)
+  | .binRel .. => pTrue
+  | .boolBinRel .. => pTrue
+  | .pTrue => .pTrue
+  | .pFalse => .pFalse
+  | .intToPbv .. | .band .. | .bor .. | .bxor .. | .mul .. | .add .. | .zext .. | .setWidth ..
+    | .bvIte .. | pextract .. | .ashr .. | .vshl .. | .vashr .. | .vlshr ..
+    | .urem .. | .udiv .. | .bvOfBool .. | .shiftr .. | .shiftl .. | .boolConst ..
+    | .var .. | .ofNat .. | .sext .. | .bnot .. | .boolVar .. | .pvar .. => t
+
+/--
+Evaluate a logical expression that has been promised to only have width expressions. -/
+def Term.evalWidthLogicalExpr (t : Term) (wenv: Array Nat) : Except String Bool := do
+  match t with
+  | .binWidthRel k a b =>
+    let wa := a.eval wenv
+    let wb := b.eval wenv
+    let out := match k with
+      | .eq =>  wa == wb
+      | .le => wa ≤ wb
+    return out
+  | .and p q => return (← p.evalWidthLogicalExpr wenv)  && (← q.evalWidthLogicalExpr wenv)
+  | .or p q => return (← p.evalWidthLogicalExpr wenv) || (← q.evalWidthLogicalExpr wenv)
+  | .pTrue => return true
+  | .pFalse => return false
+  | .intToPbv .. | .band .. | .bor .. | .bxor .. | .mul .. | .add .. | .zext .. | .setWidth ..
+    | .bvIte .. | pextract .. | .ashr .. | .vshl .. | .vashr .. | .vlshr ..
+    | .urem .. | .udiv .. | .bvOfBool .. | .shiftr .. | .shiftl .. | .boolConst ..
+    | .var .. | .ofNat .. | .sext .. | .bnot .. | .boolVar .. | .binRel .. | .pvar ..
+    | .boolBinRel .. =>
+      .error s!"unexpected term '{repr t}' in a width logical expression evaluation"
+
+
 /-- Convert a predicate-producing `Nondep.Term` to a `BVLogicalExpr`.
 `wenv` provides concrete width assignments for width variables.
 Uses `Term.toBVExpr` for BV subterms within predicates.
 `ule a b` is encoded as `¬(ult b a)`, `ne` as `¬(eq)`.
 Returns 'true' if the translation succeeded, along with accumulated error messages.
 -/
-def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) : 
+def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) :
     BVLogicalExpr × Bool × Lean.Format :=
   match t with
   | .pTrue => (.const true, true, .nil)
