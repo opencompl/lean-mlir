@@ -1870,6 +1870,48 @@ def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) :
     else
       let errMsg := s!"toBVLogicalExpr: width mismatch in ule relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
       (.const false, false, .text errMsg)
+  -- slt(x, y) = ult(x ^ mask, y ^ mask) where mask = 1 <<< (w - 1)
+  | .binRel .slt we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          let mask : BVExpr w := .const (BitVec.ofNat w (1 <<< (w - 1)))
+          let a_xor := BVExpr.bin (a'.cast ha) .xor mask
+          let b_xor := BVExpr.bin (b'.cast hb) .xor mask
+          (.literal (.bin a_xor .ult b_xor), true, .nil)
+        else
+          let errMsg := s!"toBVLogicalExpr: failed to translate operands of slt relation\n{aerr}\n{berr}"
+          (.const false, false, .text errMsg)
+      else
+        let errMsg := s!"toBVLogicalExpr: width mismatch in slt relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const false, false, .text errMsg)
+    else
+      let errMsg := s!"toBVLogicalExpr: width mismatch in slt relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const false, false, .text errMsg)
+  -- sle(x, y) = ¬ult(y ^ mask, x ^ mask) where mask = 1 <<< (w - 1)
+  | .binRel .sle we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          let mask : BVExpr w := .const (BitVec.ofNat w (1 <<< (w - 1)))
+          let a_xor := BVExpr.bin (a'.cast ha) .xor mask
+          let b_xor := BVExpr.bin (b'.cast hb) .xor mask
+          (.not (.literal (.bin b_xor .ult a_xor)), true, .nil)
+        else
+          let errMsg := s!"toBVLogicalExpr: failed to translate operands of sle relation\n{aerr}\n{berr}"
+          (.const false, false, .text errMsg)
+      else
+        let errMsg := s!"toBVLogicalExpr: width mismatch in sle relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const false, false, .text errMsg)
+    else
+      let errMsg := s!"toBVLogicalExpr: width mismatch in sle relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const false, false, .text errMsg)
   | .and p1 p2 =>
     let (p1', p1result, p1err) := p1.toBVLogicalExpr wenv
     let (p2', p2result, p2err) := p2.toBVLogicalExpr wenv
@@ -1895,7 +1937,7 @@ def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) :
     let w2 := ew2.eval wenv
     (.const (w1 ≤ w2), true, .nil)
   | .pFalse => (.const false, true, .nil)
-  | .pvar .. | .binRel .. | .bvOfBool .. | .shiftr .. | .ashr .. | .pextract ..
+  | .pvar .. | .bvOfBool .. | .shiftr .. | .ashr .. | .pextract ..
     | .shiftl .. | .boolVar .. | .bnot .. | .bxor .. | .band .. | .bor .. | .sext .. | .setWidth ..
     | .zext .. | .mul .. | .add .. | .ofNat .. | .var .. | .boolBinRel ..
     | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. | .intToPbv .. =>
