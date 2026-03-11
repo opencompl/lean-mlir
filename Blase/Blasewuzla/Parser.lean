@@ -312,26 +312,34 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
   -- zero_extend: ((_ zero_extend wnew) a)
   | .expr [.expr [.atom "_", .atom "zero_extend", wnew], a] =>
     let w ← parseWidthExpr wnew
-    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "zero_extend")
-    return .bv (.zext at_ w) w
+    let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "zero_extend")
+    let outw := aw.add w
+    return .bv (.zext at_ outw) outw
 
   -- sign_extend: ((_ sign_extend wnew) a)
   | .expr [.expr [.atom "_", .atom "sign_extend", wnew], a] =>
     let w ← parseWidthExpr wnew
-    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "sign_extend")
-    return .bv (.sext at_ w) w
+    let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "sign_extend")
+    let outw := aw.add w
+    return .bv (.sext at_ outw) outw
 
   -- pzero_extend: alias for zero_extend
+  -- Recall that is SMT2, zero/sign extension says how many bits to add,
+  -- not the total number of vits.
   | .expr [.atom "pzero_extend", wnew, a] =>
     let w ← parseWidthExpr wnew
-    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "pzero_extend")
-    return .bv (.zext at_ w) w
+    let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "pzero_extend")
+    let outw := aw.add w
+    return .bv (.zext at_ outw) outw
 
-  -- psign_extend: alias for sign_extend
+  -- psign_extend: alias for sign_extend.
+  -- Recall that is SMT2, zero/sign extension says how many bits to add,
+  -- not the total number of vits.
   | .expr [.atom "psign_extend", wnew, a] =>
     let w ← parseWidthExpr wnew
-    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "psign_extend")
-    return .bv (.sext at_ w) w
+    let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "psign_extend")
+    let outw := aw.add w
+    return .bv (.sext at_ outw) outw
 
   -- Width relation predicates
   | .expr [.atom "width_le", a, b] =>

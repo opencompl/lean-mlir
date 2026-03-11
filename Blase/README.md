@@ -90,6 +90,7 @@ pow2          | pow2      | Int → Int
 
 #### Algorithms Improvements TODO
 
+- [ ] Remove redundancy in parser; Don't need to store bitvector widths, can just compute it if needed.
 - [ ] Add an error printer of Term that prints only upto k level and then prints '..' for the rest.
 - [ ] add slt/sle support into QF_BV translation
 - [ ] Finish implementing new cases in 'toSingleWidthNondepTermGo'.
