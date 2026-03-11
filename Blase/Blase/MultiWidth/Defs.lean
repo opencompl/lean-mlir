@@ -778,8 +778,9 @@ deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 /-- Smart constructor for a pextract operation, desugaring a pextract to lo=0 into a zeroExtend,
 since our zeroExtend also encodes truncates. -/
 def Term.mkPExtract (hi lo : Nondep.WidthExpr) (t : Nondep.Term) : Nondep.Term :=
+  -- .pextract t lo hi
     match lo with
-    | .const 0 => .zext t hi
+    | .const 0 => .zext t (.addK hi 1) -- extract from (w-1) to 0 is the same as zext to w.
     | _ => .pextract t lo hi
 
 
@@ -883,7 +884,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .shiftl w _a _k => w
   | .shiftr w _a _k => w
   | .ashr w _a _k => w
-  | .pextract _a lo hi => (hi.sub lo).add (.const 1) -- hi - lo + 1
+  | .pextract _a lo hi => ((hi.add (.const 1)).sub lo) -- hi - lo + 1
   | .bvOfBool _b => WidthExpr.const 1
   | binWidthRel _k _wa _wb => WidthExpr.const 0
   | binRel _k w _a _b => w
@@ -1673,7 +1674,7 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) �
     let hi := whi.eval wenv
     let (a', aresult, aerr) := a.toBVExpr wenv
     if aresult then
-      (.extract lo (hi - lo + 1) a', true, .nil)
+      (.extract lo (hi + 1 - lo) a', true, .nil)
     else
       let errMsg := s!"toBVExpr: failed to translate operand of pextract\n{aerr}"
       (.const (88#_), false, .text errMsg)
@@ -2432,24 +2433,26 @@ def Nondep.WidthExpr.elimSubAux (w : Nondep.WidthExpr) (s : ElimSubState) :
   | .subK v k =>
     -- Recurse into v first so nested subtractions are also eliminated.
     let (v', s) := v.elimSubAux s
-    let (result, s) := s.freshWidth
+    -- let (result, s) := s.freshWidth
     -- Precondition: v' - k = result ↔ v' = k + result
-    let prec1 := Nondep.Term.binWidthRel .eq (.addK result k) v'
-    let s := s.addPrecondition prec1
+    -- let prec1 := Nondep.Term.binWidthRel .eq (.addK result k) v'
+    -- let s := s.addPrecondition prec1
     -- Precondition 2, that we don't "overflow" and get negative numbers anywhere in the computation.
     let prec2 := Nondep.Term.binWidthRel .le (.const k) v'
     let s := s.addPrecondition prec2
+    let result := .subK v' k
     (result, s)
   | .sub a b =>
     let (a', s) := a.elimSubAux s
     let (b', s) := b.elimSubAux s
-    let (result, s) := s.freshWidth
+    -- let (result, s) := s.freshWidth
     -- Precondition: result = a' - b' ↔ result + b' = a'.
-    let prec1 := Nondep.Term.binWidthRel .eq (.add result b') a'
-    let s := s.addPrecondition prec1
+    -- let prec1 := Nondep.Term.binWidthRel .eq (.add result b') a'
+    -- let s := s.addPrecondition prec1
     -- Precondition 2, that we don't "overflow" and get negative numbers anywhere in the computation.
     let prec2 := Nondep.Term.binWidthRel .le b' a'
     let s := s.addPrecondition prec2
+    let result := .sub a' b'
     (result, s)
   | .const n => (.const n, s)
   | .var i   => (.var i, s)

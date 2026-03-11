@@ -193,7 +193,7 @@ def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : Nondep.Term) : MetaM SolverExitCode := do
     let (negatedPredicate, success?, negateErrors) := result.pnegate
-    let widthConstraints := result.toWidthLogicalExpr
+    let widthConstraints := negatedPredicate.toWidthLogicalExpr
 
     if !success? then
       throwError "unable to negate predicate. Errors:\n{negateErrors}\n{repr result}"
