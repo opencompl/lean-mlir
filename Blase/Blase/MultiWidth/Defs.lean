@@ -2762,12 +2762,39 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
       | .ult => (.binRel .ult wo xMasked yMasked, true, .nil)
       | .ule => (.binRel .ule wo xMasked yMasked, true, .nil)
       | .slt =>
-        -- slt(x, y) = ult(x XOR signBit, y XOR signBit)
+        -- slt(x, y) ↔ ult(x XOR signBit, y XOR signBit)
+        -- where signBit = 1 << (w - 1) = 2^(w-1).
+        --
+        -- Proof of correctness:
+        -- For a w-bit bitvector v, the signed interpretation is:
+        --   toInt(v) = toNat(v) - v[w-1] * 2^w
+        -- XOR with signBit flips the MSB, mapping:
+        --   negative values (MSB=1, unsigned ∈ [2^(w-1), 2^w - 1])
+        --     → MSB becomes 0, unsigned ∈ [0, 2^(w-1) - 1]
+        --   non-negative values (MSB=0, unsigned ∈ [0, 2^(w-1) - 1])
+        --     → MSB becomes 1, unsigned ∈ [2^(w-1), 2^w - 1]
+        --
+        -- This is an order-preserving bijection from signed to unsigned order:
+        -- all negatives map below all non-negatives, and within each group
+        -- the relative order is preserved (XOR with signBit doesn't change
+        -- bits [w-2:0]). Concretely, for w=3:
+        --   signed: -4 -3 -2 -1  0  1  2  3
+        --   binary: 100 101 110 111 000 001 010 011
+        --   XOR'd:  000 001 010 011 100 101 110 111
+        --   unsigned(XOR'd): 0 1 2 3 4 5 6 7
+        -- The unsigned values after XOR are monotonic with signed order. ∎
+        --
+        -- Note on the single-width encoding: xMasked and yMasked are wo-bit
+        -- values with bits [w..wo-1] already zero. XOR with signBit (which
+        -- only sets bit w-1) leaves bits [w..wo-1] zero, so the wo-bit
+        -- unsigned comparison is equivalent to a w-bit comparison.
         let signBit : Nondep.Term := (Nondep.Term.constOne wo).vshl wo (wval.pred)
         let xFlipped := .bxor wo xMasked signBit
         let yFlipped := .bxor wo yMasked signBit
         (.binRel .ult wo xFlipped yFlipped, true, .nil)
       | .sle =>
+        -- sle(x, y) ↔ ule(x XOR signBit, y XOR signBit)
+        -- Same reasoning as slt above, with ≤ instead of <.
         let signBit : Nondep.Term := (Nondep.Term.constOne wo).vshl wo (wval.pred)
         let xFlipped := .bxor wo xMasked signBit
         let yFlipped := .bxor wo yMasked signBit
