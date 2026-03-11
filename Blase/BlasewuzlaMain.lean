@@ -182,8 +182,8 @@ def elimItePreprocessing (predicate : Nondep.Term) : Except String Nondep.Term :
     .error s!"ite implication failed for predicate. Errors:\n{iteImplErrors}"
   return predWithPrec
 
-def elimSubPreprocessing (pred : Nondep.Term) (wcard : Nat) : Except String Nondep.Term := do
-  let subResult := pred.elimSub wcard
+def elimSubPreprocessing (pred : Nondep.Term) : Except String Nondep.Term := do
+  let subResult := pred.elimSub
   let (predElimSub, subImplSuccess, subImplErrors) := subResult.toImplication
   if !subImplSuccess then
     .error s!"sub implication failed for predicate. Errors:\n{subImplErrors}"
@@ -192,14 +192,17 @@ def elimSubPreprocessing (pred : Nondep.Term) (wcard : Nat) : Except String Nond
 def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : Nondep.Term) : MetaM SolverExitCode := do
-    let widthConstraints := result.toWidthLogicalExpr
     let (negatedPredicate, success?, negateErrors) := result.pnegate
+    let widthConstraints := result.toWidthLogicalExpr
+
     if !success? then
       throwError "unable to negate predicate. Errors:\n{negateErrors}\n{repr result}"
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
-      IO.eprintln s!"Running naivebmc at width {config.bound}..."
+      IO.eprintln s!"Running naivebmc at width {config.bound} for #widths {result.maxwcard}..."
     for widths in cartesianProductRange config.bound result.maxwcard do
+      if config.verbose then
+        IO.println s!"width configuration ⟨{widths}⟩"
       /-
         First check if the widths lead to a satisfying assignment of the width constraints.
         If they do, then proceed to create a model. If they do not, then bail out,
@@ -207,22 +210,23 @@ def naiveBMC : Solver where
         are a promise-based semantics.
       -/
       match widthConstraints.evalWidthLogicalExpr widths with
-      | .ok true =>
-        if config.verbose then
-          IO.eprintln s!"⟨{widths.toList}⟩ succeeded width precondition check."
-
       | .ok false =>
         if config.verbose then
-        IO.eprintln s!"⟨{widths.toList}⟩ skipped as width constraints fail."
+          IO.eprintln s!"⟨{widths.toList}⟩ width precondition sufficed to prove UNSAT."
+          continue
+      | .ok true =>
+        if config.verbose then
+          IO.eprintln s!"⟨{widths.toList}⟩ widths not sufficient to prove UNSAT. Width precondition: {repr widthConstraints} querying QF_BV..."
       | .error err =>
         return .error s!"unable to evaluate width constraints '{widths}' for QF_BV formula construction.\n{err}"
+
       /-
       Width constraints succeed, so now continue trying to evaluate.
       -/
       let (qfbv, success?, translationErrors) := negatedPredicate.toBVLogicalExpr widths
 
       if !success? then
-        return .error s!"formula contains unsupported operation, unable to translate into QF_BV.\nTranslation errors:\n{translationErrors}\nPredicate:\n{repr negatedPredicate}"
+        return .error s!"unable to translate into QF_BV at widths '{widths}'.\n{translationErrors}\nPredicate:\n{repr negatedPredicate}"
 
       if config.verbose then
         IO.eprintln s!"{qfbv.toString}"
@@ -352,6 +356,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     elimSub
   }
   -- Read and parse the SMT2 file
+  let timeStart ← IO.monoMsNow
   let contents ← IO.FS.readFile inputPath
   let result ← match Blasewuzla.parseSmt2Query contents with
     | .ok r => pure r
@@ -379,7 +384,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
 
   let predicate ← do
     if config.elimSub then
-      match elimSubPreprocessing predicate result.wcard with
+      match elimSubPreprocessing predicate with
       | .error e =>
         IO.eprintln e
         return SolverExitCode.toUInt32 .error
@@ -389,7 +394,6 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
 
   let solver : Solver :=
     allSolvers.get? backend |>.getD solverErrorUknown
-  let timeStart ← IO.monoMsNow
   let out ← runMetaMAsIO <| solver.run config predicate
   let timeEnd ← IO.monoMsNow
 

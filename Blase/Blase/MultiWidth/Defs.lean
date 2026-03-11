@@ -2433,17 +2433,23 @@ def Nondep.WidthExpr.elimSubAux (w : Nondep.WidthExpr) (s : ElimSubState) :
     -- Recurse into v first so nested subtractions are also eliminated.
     let (v', s) := v.elimSubAux s
     let (result, s) := s.freshWidth
-    -- Precondition: result + k = v'  ↔  v' - k = result
-    let prec := Nondep.Term.binWidthRel .eq (.addK result k) v'
-    let s := s.addPrecondition prec
+    -- Precondition: v' - k = result ↔ v' = k + result
+    let prec1 := Nondep.Term.binWidthRel .eq (.addK result k) v'
+    let s := s.addPrecondition prec1
+    -- Precondition 2, that we don't "overflow" and get negative numbers anywhere in the computation.
+    let prec2 := Nondep.Term.binWidthRel .le (.const k) v'
+    let s := s.addPrecondition prec2
     (result, s)
   | .sub a b =>
     let (a', s) := a.elimSubAux s
     let (b', s) := b.elimSubAux s
     let (result, s) := s.freshWidth
-    -- Precondition: result = a' - b' ↔  a' = result + b'
-    let prec := Nondep.Term.binWidthRel .eq (.add result b') a'
-    let s := s.addPrecondition prec
+    -- Precondition: result = a' - b' ↔ result + b' = a'.
+    let prec1 := Nondep.Term.binWidthRel .eq (.add result b') a'
+    let s := s.addPrecondition prec1
+    -- Precondition 2, that we don't "overflow" and get negative numbers anywhere in the computation.
+    let prec2 := Nondep.Term.binWidthRel .le b' a'
+    let s := s.addPrecondition prec2
     (result, s)
   | .const n => (.const n, s)
   | .var i   => (.var i, s)
@@ -2567,7 +2573,9 @@ partial def Nondep.Term.elimSubAux (t : Nondep.Term) (s : ElimSubState) :
     let (b', s) := b.elimSubAux s
     (.urem w' a' b', s)
   | .pextract a lo hi =>
+    let s := s.addPrecondition (Term.binWidthRel .le lo hi) -- add the precondition for pextract being valid.
     let (a', s) := a.elimSubAux s
+    -- this needs another precondition.
     (.pextract a' lo hi, s)
   | .binRel k w a b =>
     let (w', s) := elW w s
@@ -2606,12 +2614,13 @@ partial def Nondep.Term.elimSubAux (t : Nondep.Term) (s : ElimSubState) :
 Top-level sub elimination.  Runs `elimSubAux` on `t`, then builds the implication
 `preconds → t'`:  if there are no preconditions, returns `t'` unchanged.
 -/
-def Nondep.Term.elimSub (t : Nondep.Term) (initialFreshWidthIndex : Nat) : ElimSubResult :=
-  let s := ElimSubState.newState initialFreshWidthIndex
+def Nondep.Term.elimSub (t : Nondep.Term) : ElimSubResult :=
+  let initNumWidths := t.maxwcard
+  let s := ElimSubState.newState t.maxwcard
   let (t', s') := t.elimSubAux s
   { term             := t'
     preconds         := s'.preconditions
-    freshWidthCount  := s'.freshWidthIndex - initialFreshWidthIndex }
+    freshWidthCount  := s'.freshWidthIndex - initNumWidths }
 
 /--
 Build `preconds → term` from an `ElimSubResult`.
