@@ -417,7 +417,8 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     timeout : Nat;             "SAT solver timeout for SAT based methods."
     backend : String;          "Backend solver: 'k-induction' (default), 'rIC3', 'abc', 'monobmc', 'naivebmc', or 'dryrun'."
     elimIte;                   "Run ite-elimination preprocessing pass (off by default)."
-    subPrecondition;             "Run width-subtraction elimination preprocessing pass (off by default)."
+    elimSub;                   "Run sub-elimination preprocessing pass (off by default). This adds many variables (one per subtraction), but ensures that no subtractions remain in the formula."
+    subPrecondition;           "Runsubtraction precondition preprocessing pass (off by default). This adds a precondition that the subtraction does not produce a negative number."
 
   ARGS:
     input : String;            "Path to the .smt2 file."
