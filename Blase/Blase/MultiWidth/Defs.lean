@@ -1796,34 +1796,6 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) Ã
      (.const (99#_), false, .text errMsg)
 
 
--- (bvIte _ _ _)
--- (pextract _ _ _)
--- (ashr _ _ _)
--- (vshl _ _ _)
--- (vashr _ _ _)
--- (vlshr _ _ _)
--- (urem _ _ _)
--- (udiv _ _ _)
--- (boolBinRel BoolBinaryRelationKind.eq _ _)
--- (pvar _)
--- (bvOfBool _)
--- (shiftr _ _ _)
--- (shiftl _ _ _)
--- (boolConst true)
--- (boolConst false)
--- (boolVar _)
--- (bnot _ _)
--- (bxor _ _ _)
--- (band _ _ _)
--- (bor _ _ _)
--- (sext _ _)
--- (setWidth _ _)
--- (zext _ _)
--- (mul _ _ _)
--- (add _ _ _)
--- (var _ _)
--- (ofNat _ _)
-
 /--
 Produce a term that has just the width contraints, and no bitvector constraints.
 This allows us to check if a term satisfies its widths constraints before evaluating
