@@ -1,5 +1,5 @@
 (set-logic ALL)
 (declare-const k Int)
 (declare-fun %a () (_ BitVec k))
-(assert (not (= (psign_extend k %a) %a)))
+(assert (not (= (psign_extend 0 %a) %a)))
 (check-sat)
