@@ -2730,7 +2730,8 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     let (x', xresult, xerr) := x.toSingleWidthNondepTermGo maxWcard wo
     let (y', yresult, yerr) := y.toSingleWidthNondepTermGo maxWcard wo
     let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
-    if xresult && yresult && wresult then
+    let (wval, wresult', werr') := w.toTwosComplementNondepTerm wo
+    if xresult && yresult && wresult && wresult' then
       let xMasked := .band wo x' wmask
       let yMasked := .band wo y' wmask
       match k with
@@ -2740,17 +2741,16 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
       | .ule => (.binRel .ule wo xMasked yMasked, true, .nil)
       | .slt =>
         -- slt(x, y) = ult(x XOR signBit, y XOR signBit)
-        let signBit := wmask.succ.shiftr wo 1
+        let signBit : Nondep.Term := (Nondep.Term.constOne wo).vshl wo (wval.pred)
         let xFlipped := .bxor wo xMasked signBit
         let yFlipped := .bxor wo yMasked signBit
         (.binRel .ult wo xFlipped yFlipped, true, .nil)
       | .sle =>
-        -- sle(x, y) = ule(x XOR signBit, y XOR signBit)
         let signBit := wmask.succ.shiftr wo 1
         let xFlipped := .bxor wo xMasked signBit
         let yFlipped := .bxor wo yMasked signBit
         (.binRel .ule wo xFlipped yFlipped, true, .nil)
-    else (.constBad wo, false, xerr ++ yerr ++ werr)
+    else (.constBad wo, false, xerr ++ yerr ++ werr ++ werr')
   | .binWidthRel k wa wb =>
     let (wa', waresult, waerr) := wa.toTwosComplementNondepTerm wo
     let (wb', wbresult, wberr) := wb.toTwosComplementNondepTerm wo
