@@ -1674,13 +1674,13 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) Ã
     else
       let errMsg := s!"toBVExpr: failed to translate operand of pextract\n{aerr}"
       (.const (88#_), false, .text errMsg)
-  | .zext x we =>
+  | .zext x we | .setWidth x we =>
     let (x', xresult, xerr) := x.toBVExpr wenv
     let w := we.eval wenv
     if xresult then
       (BVExpr.zeroExtend x' w, true, .nil)
     else
-      let errMsg := s!"toBVExpr: failed to translate operand of zext\n{xerr}"
+      let errMsg := s!"toBVExpr: failed to translate operand of zext/setWidth\n{xerr}"
       (.const (88#_), false, .text errMsg)
   | .sext x we =>
     let (x', xresult, xerr) := x.toBVExpr wenv
@@ -1780,7 +1780,7 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) Ã
      let v := v.eval wenv
      (.const (BitVec.ofNat w v), true, .nil)
   | .boolBinRel .. | .pvar .. | .and .. | .or ..| .binRel .. | .binWidthRel ..
-    | .bvOfBool .. | .boolConst .. | .boolVar .. | .setWidth ..
+    | .bvOfBool .. | .boolConst .. | .boolVar ..
     | .pFalse | .pTrue =>
     let errMsg := s!"toBVExpr: unsupported operation (not a BV expression): {repr t}"
     dbg_trace errMsg
