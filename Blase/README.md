@@ -90,6 +90,7 @@ pow2          | pow2      | Int → Int
 
 #### Algorithms Improvements TODO
 
+- [ ] Finish implementing new cases in 'toSingleWidthNondepTermGo'.
 - [x] Add a Nondep to BVExpr conversion
 - [x] Use Nondep -> BV to implement naive enumerative bitblasting.
 - [x] Use SingleWidth -> Nondep -> BV to implement single width bounded bitblasting.
