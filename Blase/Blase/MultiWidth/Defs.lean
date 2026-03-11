@@ -2207,6 +2207,31 @@ def Nondep.Term.toSingleWidthNondepMsb (x : Nondep.Term) (wx : Nondep.WidthExpr)
     (msb, true, .nil)
   else (.constBad wo, false, maskErr)
 
+/--
+Sign-extend `x` from old width (given by mask `wOldMask`) to new width
+(given by mask `wmaskNew`), in universe width `wo`.
+
+Computes: `((x ^ msb) - msb) & wmaskNew`
+  where `msb = x & signBitPos`
+  and `signBitPos = (wOldMask + 1) >> 1`.
+
+The XOR-subtract trick works as follows:
+- `signBitPos = (wOldMask + 1) >> 1` extracts the sign bit position.
+  E.g. for 4-bit old width: wOldMask = 0b1111, signBitPos = 0b1000.
+- `msb = x & signBitPos`: the sign bit value (either signBitPos or 0).
+- If msb = 0 (positive): `(x ^ 0) - 0 = x` — no extension needed.
+- If msb = 1 << p (negative): XOR clears bit p, then subtracting `1 << p`
+  borrows through all zero bits above p, filling them with 1s.
+  The final AND with wmaskNew trims to the desired output width.
+
+Used by: sext, ashr, vashr.
+-/
+def Nondep.Term.sextByOldMask (x wOldMask wmaskNew : Nondep.Term) (wo : Nondep.WidthExpr) : Nondep.Term :=
+  let signBitPos := wOldMask.succ.shiftr wo 1
+  let msb := Nondep.Term.band wo x signBitPos
+  let y := Nondep.Term.sub wo (.bxor wo x msb) msb
+  Nondep.Term.band wo y wmaskNew
+
 
 structure ElimIteState where
   /-- Preconditions added from ite elimination pass. -/
@@ -2703,15 +2728,12 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     else (.constBad wo, false, xerr ++ werr)
   | .sext x wnew =>
       let w := x.width
+      let (wmaskOld, wOldResult, wOldErr) := w.toSingleWidthMaskNondepTerm wo
       let (wmaskNew, wnewResult, wnewErr) := wnew.toSingleWidthMaskNondepTerm wo
       let (x', xresult, xerr) := x.toSingleWidthNondepTermGo maxWcard wo
-      let (msb, msbResult, msbErr) := x'.toSingleWidthNondepMsb w wo
-      -- x' ^ msb - msb
-      let y := (Nondep.Term.sub wo (Nondep.Term.bxor wo x' msb) msb)
-      let ymasked := Nondep.Term.band wo y wmaskNew
-      if xresult && msbResult && wnewResult then
-        (ymasked, true, .nil)
-      else (.constBad wo, false, xerr ++ msbErr ++ wnewErr)
+      if xresult && wOldResult && wnewResult then
+        (x'.sextByOldMask wmaskOld wmaskNew wo, true, .nil)
+      else (.constBad wo, false, xerr ++ wOldErr ++ wnewErr)
   | .and p q =>
     let (p', presult, perr) := p.toSingleWidthNondepTermGo maxWcard wo
     let (q', qresult, qerr) := q.toSingleWidthNondepTermGo maxWcard wo
@@ -2746,7 +2768,7 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
         let yFlipped := .bxor wo yMasked signBit
         (.binRel .ult wo xFlipped yFlipped, true, .nil)
       | .sle =>
-        let signBit := wmask.succ.shiftr wo 1
+        let signBit : Nondep.Term := (Nondep.Term.constOne wo).vshl wo (wval.pred)
         let xFlipped := .bxor wo xMasked signBit
         let yFlipped := .bxor wo yMasked signBit
         (.binRel .ule wo xFlipped yFlipped, true, .nil)
@@ -2788,70 +2810,34 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
     else (.constBad wo, false, aerr ++ berr ++ werr)
   | .vashr w a b =>
     -- Variable arithmetic right shift: vashr(x, b) at width w.
-    -- Same trick as constant ashr below, but using vlshr instead of shiftr.
-    -- See the .ashr case for a detailed explanation of why this works.
+    -- Decomposed as: vlshr(x, b), then sign-extend from effective width (w - b)
+    -- back to w. The old width mask is vlshr(wmask, b): shifting the w-bit mask
+    -- right by b gives the (w-b)-bit mask, which sextByOldMask uses to find
+    -- the sign bit position and perform the extension.
     let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
     let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
     let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
     if aresult && bresult && wresult then
       let aMasked := Nondep.Term.band wo a' wmask
       let bMasked := Nondep.Term.band wo b' wmask
-      let signBitPos := wmask.succ.shiftr wo 1
-      let signBit := Nondep.Term.band wo aMasked signBitPos
       let shifted := Nondep.Term.vlshr wo aMasked bMasked
-      let m := Nondep.Term.vlshr wo signBit bMasked
-      let result := Nondep.Term.band wo (Nondep.Term.sub wo (.bxor wo shifted m) m) wmask
-      (result, true, .nil)
+      let wOldMask := Nondep.Term.vlshr wo wmask bMasked
+      (shifted.sextByOldMask wOldMask wmask wo, true, .nil)
     else (.constBad wo, false, aerr ++ berr ++ werr)
   | .ashr w a k =>
     -- Arithmetic right shift by constant k at width w.
-    --
-    -- ashr differs from lshr in that the vacated high bits are filled with
-    -- the sign bit (MSB) rather than zeros. We reduce ashr to lshr plus the
-    -- same XOR-subtract sign-extension trick used for sext.
-    --
-    -- Key identity: ashr(x, k) = ((lshr(x, k) XOR m) - m) & wmask
-    --   where m = lshr(x & signBitPos, k)
-    --         signBitPos = (wmask + 1) >> 1   (i.e., 1 << (w-1))
-    --
-    -- Why this works (two cases):
-    --
-    -- Case 1: sign bit = 0 (x is non-negative in signed interpretation)
-    --   signBit = x & signBitPos = 0
-    --   m = lshr(0, k) = 0
-    --   result = (lshr(x, k) XOR 0) - 0 = lshr(x, k)
-    --   This is correct: ashr of a non-negative number equals lshr.
-    --
-    -- Case 2: sign bit = 1 (x is negative in signed interpretation)
-    --   signBit = x & signBitPos = signBitPos = 1 << (w-1)
-    --   m = lshr(signBitPos, k) = 1 << (w-1-k)
-    --   shifted = lshr(x, k) has bits [w-1-k-1:0] from the original value,
-    --     and bits [w-1:w-k] are zero (from logical shift).
-    --   (shifted XOR m): flips bit (w-1-k), the new "sign position" of
-    --     the (w-k)-bit effective value.
-    --   (shifted XOR m) - m: subtracting m = 1 << (w-1-k) causes a borrow
-    --     that propagates through all the zero high bits [w-1:w-k],
-    --     filling them with 1s. This is exactly sign extension from (w-k) bits
-    --     to w bits, which is what ashr should produce.
-    --
-    -- This is the same trick used in sext: sext(x, w_new) = (x ^ msb) - msb
-    -- where msb is the sign bit value. Here we apply it to the lshr result,
-    -- treating it as a (w-k)-bit value that needs sign extension to w bits.
+    -- Decomposed as: lshr(x, k), then sign-extend from effective width (w - k)
+    -- back to w. The old width mask is lshr(wmask, k): e.g. for w=8, k=3,
+    -- wmask = 0xFF, lshr(0xFF, 3) = 0x1F = mask for 5 bits = w-k bits.
+    -- sextByOldMask then derives signBitPos = (0x1F+1)>>1 = 0x10 = 1<<4
+    -- and sign-extends the shifted value from 5 bits to 8 bits.
     let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
     let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
     if aresult && wresult then
       let aMasked := Nondep.Term.band wo a' wmask
-      -- signBitPos = (wmask + 1) >> 1 = 1 << (w-1), e.g. for w=4: 0b1000
-      let signBitPos := wmask.succ.shiftr wo 1
-      -- signBit = aMasked & signBitPos: either signBitPos (if MSB=1) or 0 (if MSB=0)
-      let signBit := Nondep.Term.band wo aMasked signBitPos
-      -- shifted = lshr(aMasked, k): logical right shift, high bits are 0
       let shifted := Nondep.Term.shiftr wo aMasked k
-      -- m = lshr(signBit, k): either 1<<(w-1-k) if MSB=1, or 0 if MSB=0
-      let m := Nondep.Term.shiftr wo signBit k
-      -- result = ((shifted ^ m) - m) & wmask: XOR-subtract sign extends the shifted value
-      let result := Nondep.Term.band wo (Nondep.Term.sub wo (.bxor wo shifted m) m) wmask
-      (result, true, .nil)
+      let wOldMask := Nondep.Term.shiftr wo wmask k
+      (shifted.sextByOldMask wOldMask wmask wo, true, .nil)
     else (.constBad wo, false, aerr ++ werr)
   | .pextract a lo hi =>
     -- pextract(a, lo, hi) extracts bits lo..hi (inclusive) from a.
