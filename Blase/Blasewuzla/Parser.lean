@@ -11,7 +11,7 @@ open MultiWidth
 
 /-- A parsed term, tracking whether it is a bitvector, predicate, or boolean. -/
 inductive ParsedTerm
-| bv (t : Nondep.Term) -- bitvector value.
+| bv (t : Nondep.Term) (w : Nondep.WidthExpr) -- bitvector value.
 | pred (t : Nondep.Term)                          -- proposition/predicate
 deriving Repr
 
@@ -38,10 +38,10 @@ def ParserM.throwError (msg : String) : ParserM α :=
 
 /-- Parse an Sexp as a int literal, throwing an error if not possible. -/
 def Sexp.expectIntLiteral (s : Sexp) (ctx : String := "") : ParserM Int := do
-  let Sexp.atom v := s 
+  let Sexp.atom v := s
     | ParserM.throwError s!"expected in literal, found '{repr s}' in '{ctx}'"
-  match v.toInt? with 
-   | some i => return i 
+  match v.toInt? with
+   | some i => return i
    | none => ParserM.throwError s!"expected int literal, found '{repr v}' in '{ctx}'"
 
 /-- Register a width variable and return its index. -/
@@ -279,18 +279,19 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
 
   -- extract: ((_ extract hi lo) a) — standard SMT-LIB form
   | .expr [.expr [.atom "_", .atom "extract", hi, lo], a] =>
-    let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "extract")
-    let hiw ← parseWidthExpr hi 
+    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "extract")
+    let hiw ← parseWidthExpr hi
     let low ← parseWidthExpr lo
-    let out :=(Nondep.Term.mkPExtract  (hi := hiw) (lo := low) (t := at_))
-    return .bv 
+    let out := (Nondep.Term.mkPExtract (hi := hiw) (lo := low) (t := at_))
+    return .bv out out.width
 
   -- pextract: (pextract hi lo a) — Blase custom form
   | .expr [.atom "pextract", hi, lo, a] =>
-    let (at_, aw) ← (← parseTerm a) |> expectBV (ctx := "pextract")
-    let hiw ← parseWidthExpr hi 
+    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "pextract")
+    let hiw ← parseWidthExpr hi
     let low ← parseWidthExpr lo
-    return .bv (Nondep.Term.mkPExtract (hi := hiw) (lo := low) (t := at_))
+    let out := (Nondep.Term.mkPExtract (hi := hiw) (lo := low) (t := at_))
+    return .bv out out.width
   -- zero_extend: ((_ zero_extend wnew) a)
   | .expr [.expr [.atom "_", .atom "zero_extend", wnew], a] =>
     let w ← parseWidthExpr wnew
