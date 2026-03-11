@@ -213,7 +213,7 @@ def naiveBMC : Solver where
       | .ok false =>
         if config.verbose then
           IO.eprintln s!"⟨{widths.toList}⟩ width precondition sufficed to prove UNSAT."
-          continue
+        continue
       | .ok true =>
         if config.verbose then
           IO.eprintln s!"⟨{widths.toList}⟩ widths not sufficient to prove UNSAT. Width precondition: {repr widthConstraints} querying QF_BV..."
