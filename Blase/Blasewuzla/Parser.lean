@@ -11,7 +11,7 @@ open MultiWidth
 
 /-- A parsed term, tracking whether it is a bitvector, predicate, or boolean. -/
 inductive ParsedTerm
-| bv (t : Nondep.Term) (w : Nondep.WidthExpr)   -- bitvector value with its width
+| bv (t : Nondep.Term) (w : Nondep.WidthExpr) -- bitvector value.
 | pred (t : Nondep.Term)                          -- proposition/predicate
 deriving Repr
 
@@ -32,8 +32,17 @@ structure ParserState where
 
 abbrev ParserM := EStateM String ParserState
 
+
 def ParserM.throwError (msg : String) : ParserM α :=
   EStateM.throw msg
+
+/-- Parse an Sexp as a int literal, throwing an error if not possible. -/
+def Sexp.expectIntLiteral (s : Sexp) (ctx : String := "") : ParserM Int := do
+  let Sexp.atom v := s
+    | ParserM.throwError s!"expected in literal, found '{repr s}' in '{ctx}'"
+  match v.toInt? with
+   | some i => return i
+   | none => ParserM.throwError s!"expected int literal, found '{repr v}' in '{ctx}'"
 
 /-- Register a width variable and return its index. -/
 def registerWidthVar (name : String) : ParserM Nat := do
@@ -48,6 +57,7 @@ def registerTermVar (name : String) (w : Nondep.WidthExpr) : ParserM Nat := do
   let idx := s.nextTermIdx
   set { s with termVars := s.termVars.insert name (idx, w), nextTermIdx := idx + 1 }
   return idx
+
 
 /-- Parse a width expression from an S-expression. -/
 def parseWidthExpr (s : Sexp) : ParserM Nondep.WidthExpr := do
@@ -281,31 +291,20 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     return .bv (.urem aw at_ bt) aw
 
   -- extract: ((_ extract hi lo) a) — standard SMT-LIB form
-  | .expr [.expr [.atom "_", .atom "extract", .atom hiStr, .atom loStr], a] =>
-    match hiStr.toNat?, loStr.toNat? with
-    | some hi, some lo =>
-      let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "extract")
-      let resultW := Nondep.WidthExpr.const (hi - lo + 1)
-      -- extract down to the LSB (lo = 0) is a truncation, expressible as zext
-      if lo == 0 then
-        return .bv (.zext at_ resultW) resultW
-      else
-        return .bv (.pextract at_ lo hi) resultW
-    | _, _ => ParserM.throwError s!"extract: expected numeric indices, got '{hiStr}' and '{loStr}'"
+  | .expr [.expr [.atom "_", .atom "extract", hi, lo], a] =>
+    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "extract")
+    let hiw ← parseWidthExpr hi
+    let low ← parseWidthExpr lo
+    let out := (Nondep.Term.mkPExtract (hi := hiw) (lo := low) (t := at_))
+    return .bv out out.width
 
-  -- pextract: (pextract a hi lo) — Blase custom form
-  | .expr [.atom "pextract", a, .atom hiStr, .atom loStr] =>
-    match hiStr.toNat?, loStr.toNat? with
-    | some hi, some lo =>
-      let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "pextract")
-      let resultW := Nondep.WidthExpr.const (hi - lo + 1)
-      -- pextract down to the LSB (lo = 0) is a truncation, expressible as zext
-      if lo == 0 then
-        return .bv (.zext at_ resultW) resultW
-      else
-        return .bv (.pextract at_ lo hi) resultW
-    | _, _ => ParserM.throwError s!"pextract: expected numeric indices, got '{hiStr}' and '{loStr}'"
-
+  -- pextract: (pextract hi lo a) — Blase custom form
+  | .expr [.atom "pextract", hi, lo, a] =>
+    let (at_, _aw) ← (← parseTerm a) |> expectBV (ctx := "pextract")
+    let hiw ← parseWidthExpr hi
+    let low ← parseWidthExpr lo
+    let out := (Nondep.Term.mkPExtract (hi := hiw) (lo := low) (t := at_))
+    return .bv out out.width
   -- zero_extend: ((_ zero_extend wnew) a)
   | .expr [.expr [.atom "_", .atom "zero_extend", wnew], a] =>
     let w ← parseWidthExpr wnew

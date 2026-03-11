@@ -768,10 +768,18 @@ inductive Term
 | vashr (w : WidthExpr) (a b : Term) : Term      -- variable arithmetic right shift
 | vshl (w : WidthExpr) (a b : Term) : Term       -- variable left shift
 | ashr (w : WidthExpr) (a : Term) (k : Nat) : Term  -- constant arithmetic right shift
-| pextract (a : Term) (lo hi : Nat) : Term           -- extract bits lo..hi (inclusive), result width = hi - lo + 1
+| pextract (a : Term) (lo hi : WidthExpr) : Term           -- extract bits lo..hi (inclusive), result width = hi - lo + 1
 | bvIte (cond : Term) (thenBv elseBv: Term) : Term -- if then else on bitvectors
 | intToPbv (w : WidthExpr) (val : WidthExpr ): Term  -- coerct an integer 'val' into a PBV.
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
+
+/-- Smart constructor for a pextract operation, desugaring a pextract to lo=0 into a zeroExtend, 
+since our zeroExtend also encodes truncates. -/
+def Term.mkPExtract (hi lo : Nondep.WidthExpr) (t : Nondep.Term) : Nondep.Term := 
+    match lo with 
+    | .const 0 => .zext t hi
+    | _ => .pextract t lo hi
+
 
 /-- Negate a predicate term by pushing `not` inward via De Morgan's laws.
     Returns `none` if the term cannot be negated (e.g., unrecognized atomic terms or
@@ -873,7 +881,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .shiftl w _a _k => w
   | .shiftr w _a _k => w
   | .ashr w _a _k => w
-  | .pextract _a lo hi => .const (hi - lo + 1)
+  | .pextract _a lo hi => (hi.sub lo).add (.const 1) -- hi - lo + 1
   | .bvOfBool _b => WidthExpr.const 1
   | binWidthRel _k _wa _wb => WidthExpr.const 0
   | binRel _k w _a _b => w
@@ -1657,7 +1665,9 @@ def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) Ã
     else
       let errMsg := s!"toBVExpr: width mismatch in ashr (a.width={a'.width} â‰  {w})\n{aerr}"
       (.const (88#_), false, .text errMsg)
-  | .pextract a lo hi =>
+  | .pextract a wlo whi =>
+    let lo := wlo.eval wenv 
+    let hi := whi.eval wenv
     let (a', aresult, aerr) := a.toBVExpr wenv
     if aresult then
       (.extract lo (hi - lo + 1) a', true, .nil)
