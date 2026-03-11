@@ -2404,13 +2404,22 @@ structure ElimSubState where
   preconditions : List Nondep.Term := []
   /-- Index of next fresh width variable to introduce. -/
   freshWidthIndex : Nat
+  /-- maps from eliminated subtractions to their corresponding fresh width variables -/
+  eliminiatedSubtractions : Std.HashMap (Nondep.WidthExpr × Nondep.WidthExpr) Nat := ∅
 
 def ElimSubState.newState (freshWidthIndex : Nat) : ElimSubState :=
   { freshWidthIndex := freshWidthIndex }
 
 /-- Allocate a fresh width variable and advance the counter. -/
-def ElimSubState.freshWidth (s : ElimSubState) : Nondep.WidthExpr × ElimSubState :=
-  ⟨.var s.freshWidthIndex, { s with freshWidthIndex := s.freshWidthIndex + 1 }⟩
+def ElimSubState.freshWidth (s : ElimSubState) (a b : Nondep.WidthExpr) : Nondep.WidthExpr × ElimSubState :=
+  if let some k := s.eliminiatedSubtractions.get? (a, b) then
+    -- If we've already eliminated this subtraction, reuse the same variable.
+    (.var k, s)
+  else
+    ⟨.var s.freshWidthIndex, { s with
+      freshWidthIndex := s.freshWidthIndex + 1
+      eliminiatedSubtractions := s.eliminiatedSubtractions.insert (a, b) s.freshWidthIndex
+    }⟩
 
 def ElimSubState.addPrecondition (s : ElimSubState) (t : Nondep.Term) : ElimSubState :=
   { s with preconditions := t :: s.preconditions }
@@ -2427,66 +2436,73 @@ Recursively eliminate `.subK` and `.sub` from a `Nondep.WidthExpr`.
 Each subtraction `a - b` is replaced by a fresh width variable `k` together with
 a precondition `.binWidthRel .eq (.add k b) a`  (i.e. `k + b = a`).
 -/
-def Nondep.WidthExpr.elimSubAux (w : Nondep.WidthExpr) (s : ElimSubState) :
+def Nondep.WidthExpr.elimSubAux (w : Nondep.WidthExpr) (s : ElimSubState) (precond? : Bool) (eliminate? : Bool) :
     Nondep.WidthExpr × ElimSubState :=
   match w with
   | .subK v k =>
     -- Recurse into v first so nested subtractions are also eliminated.
-    let (v', s) := v.elimSubAux s
-    -- let (result, s) := s.freshWidth
-    -- Precondition: v' - k = result ↔ v' = k + result
-    -- let prec1 := Nondep.Term.binWidthRel .eq (.addK result k) v'
-    -- let s := s.addPrecondition prec1
-    -- Precondition 2, that we don't "overflow" and get negative numbers anywhere in the computation.
+    let (v', s) := v.elimSubAux s precond? eliminate?
     let prec2 := Nondep.Term.binWidthRel .le (.const k) v'
-    let s := s.addPrecondition prec2
-    let result := .subK v' k
+    let s := if precond? then s.addPrecondition prec2 else s
+    if eliminate? then
+      let (result, s) := s.freshWidth v' (.const k)
+      -- Precondition: v' - k = result ↔ v' = k + result
+      let prec1 := Nondep.Term.binWidthRel .eq (.addK result k) v'
+      (result, s)
+    else
+      let result := .subK v' k
     (result, s)
   | .sub a b =>
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
-    -- let (result, s) := s.freshWidth
-    -- Precondition: result = a' - b' ↔ result + b' = a'.
-    -- let prec1 := Nondep.Term.binWidthRel .eq (.add result b') a'
-    -- let s := s.addPrecondition prec1
-    -- Precondition 2, that we don't "overflow" and get negative numbers anywhere in the computation.
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     let prec2 := Nondep.Term.binWidthRel .le b' a'
-    let s := s.addPrecondition prec2
-    let result := .sub a' b'
-    (result, s)
+    let s := if precond? then s.addPrecondition prec2 else s
+
+    if eliminate? then
+      let (result, s) := s.freshWidth a' b'
+    -- Precondition: result = a' - b' ↔ result + b' = a'.
+      let prec1 := Nondep.Term.binWidthRel .eq (.add result b') a'
+      let s := if precond? then s.addPrecondition prec1 else s
+      (result, s)
+    else
+      let result := .sub a' b'
+      (result, s)
   | .const n => (.const n, s)
   | .var i   => (.var i, s)
   | .max a b =>
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.max a' b', s)
   | .min a b =>
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.min a' b', s)
   | .addK a k =>
-    let (a', s) := a.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
     (.addK a' k, s)
   | .kadd k a =>
-    let (a', s) := a.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
     (.kadd k a', s)
   | .add a b =>
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.add a' b', s)
   | .mul a b =>
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.mul a' b', s)
 
 /--
 Walk a `Nondep.Term`, eliminating subtraction from every embedded `Nondep.WidthExpr`
 via `WidthExpr.elimSubAux`.
+If 'eliminiate?' is false, the `.sub` and `.subK`
+nodes are left in place, but preconditions are added.
+but their subterms are still rewritten.
 -/
-partial def Nondep.Term.elimSubAux (t : Nondep.Term) (s : ElimSubState) :
+partial def Nondep.Term.elimSubAux (t : Nondep.Term) (s : ElimSubState) (precond? : Bool) (eliminate? : Bool := true) :
     Nondep.Term × ElimSubState :=
   -- Helper to also eliminate sub in a WidthExpr embedded in a term.
-  let elW (w : Nondep.WidthExpr) (s : ElimSubState) := w.elimSubAux s
+  let elW (w : Nondep.WidthExpr) (s : ElimSubState) := w.elimSubAux s precond? eliminate?
   match t with
   | .var v w =>
     let (w', s) := elW w s
@@ -2499,112 +2515,112 @@ partial def Nondep.Term.elimSubAux (t : Nondep.Term) (s : ElimSubState) :
     (.intToPbv w' v, s)
   | .add w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.add w' a' b', s)
   | .mul w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.mul w' a' b', s)
   | .zext a wn =>
-    let (a', s) := a.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
     let (wn', s) := elW wn s
     (.zext a' wn', s)
   | .setWidth a wn =>
-    let (a', s) := a.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
     let (wn', s) := elW wn s
     (.setWidth a' wn', s)
   | .sext a wn =>
-    let (a', s) := a.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
     let (wn', s) := elW wn s
     (.sext a' wn', s)
   | .bor w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.bor w' a' b', s)
   | .band w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.band w' a' b', s)
   | .bxor w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.bxor w' a' b', s)
   | .bnot w a =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
     (.bnot w' a', s)
   | .shiftl w a k =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
     (.shiftl w' a' k, s)
   | .shiftr w a k =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
     (.shiftr w' a' k, s)
   | .ashr w a k =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
     (.ashr w' a' k, s)
   | .vshl w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.vshl w' a' b', s)
   | .vlshr w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.vlshr w' a' b', s)
   | .vashr w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.vashr w' a' b', s)
   | .udiv w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.udiv w' a' b', s)
   | .urem w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.urem w' a' b', s)
   | .pextract a lo hi =>
     let s := s.addPrecondition (Term.binWidthRel .le lo hi) -- add the precondition for pextract being valid.
-    let (a', s) := a.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
     -- this needs another precondition.
     (.pextract a' lo hi, s)
   | .binRel k w a b =>
     let (w', s) := elW w s
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.binRel k w' a' b', s)
   | .binWidthRel k wa wb =>
     let (wa', s) := elW wa s
     let (wb', s) := elW wb s
     (.binWidthRel k wa' wb', s)
   | .and a b =>
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.and a' b', s)
   | .or a b =>
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.or a' b', s)
   | .bvIte cond t1 t2 =>
-    let (cond', s) := cond.elimSubAux s
-    let (t1', s)   := t1.elimSubAux s
-    let (t2', s)   := t2.elimSubAux s
+    let (cond', s) := cond.elimSubAux s precond? eliminate?
+    let (t1', s)   := t1.elimSubAux s precond? eliminate?
+    let (t2', s)   := t2.elimSubAux s precond? eliminate?
     (.bvIte cond' t1' t2', s)
   | .boolBinRel k a b =>
-    let (a', s) := a.elimSubAux s
-    let (b', s) := b.elimSubAux s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
     (.boolBinRel k a' b', s)
   | .pTrue        => (.pTrue, s)
   | .pFalse       => (.pFalse, s)
@@ -2617,10 +2633,10 @@ partial def Nondep.Term.elimSubAux (t : Nondep.Term) (s : ElimSubState) :
 Top-level sub elimination.  Runs `elimSubAux` on `t`, then builds the implication
 `preconds → t'`:  if there are no preconditions, returns `t'` unchanged.
 -/
-def Nondep.Term.elimSub (t : Nondep.Term) : ElimSubResult :=
+def Nondep.Term.elimSub (t : Nondep.Term) (precond? : Bool) (eliminate? : Bool) : ElimSubResult :=
   let initNumWidths := t.maxwcard
   let s := ElimSubState.newState t.maxwcard
-  let (t', s') := t.elimSubAux s
+  let (t', s') := t.elimSubAux s precond? eliminate?
   { term             := t'
     preconds         := s'.preconditions
     freshWidthCount  := s'.freshWidthIndex - initNumWidths }

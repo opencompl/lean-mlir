@@ -101,6 +101,8 @@ structure Config where
   timeout : Nat
   /-- Run ite-elimination preprocessing pass. -/
   elimIte : Bool
+  /-- Run width-subtraction preprocessing that adds subtraction preconditions . -/
+  subPrecondition : Bool
   /-- Run width-subtraction elimination preprocessing pass. -/
   elimSub : Bool
 
@@ -182,12 +184,12 @@ def elimItePreprocessing (predicate : Nondep.Term) : Except String Nondep.Term :
     .error s!"ite implication failed for predicate. Errors:\n{iteImplErrors}"
   return predWithPrec
 
-def elimSubPreprocessing (pred : Nondep.Term) : Except String Nondep.Term := do
-  let subResult := pred.elimSub
-  let (predElimSub, subImplSuccess, subImplErrors) := subResult.toImplication
+def addSubPreconditionPreprocessing (pred : Nondep.Term) (precond? : Bool) (eliminate? : Bool) : Except String Nondep.Term := do
+  let subResult := pred.elimSub (precond? := precond?) (eliminate? := eliminate?)
+  let (predaddSubPrecondition, subImplSuccess, subImplErrors) := subResult.toImplication
   if !subImplSuccess then
     .error s!"sub implication failed for predicate. Errors:\n{subImplErrors}"
-  return predElimSub
+  return predaddSubPrecondition
 
 def naiveBMC : Solver where
   name := "naivebmc"
@@ -343,6 +345,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let backend : String := p.flag! "backend" |>.as! String
   let timeout : Nat := p.flag! "timeout" |>.as! Nat
   let elimIte : Bool := p.hasFlag "elimIte"
+  let subPrecondition : Bool := p.hasFlag "subPrecondition"
   let elimSub : Bool := p.hasFlag "elimSub"
 
   let config : Config := {
@@ -353,6 +356,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     bound,
     timeout,
     elimIte,
+    subPrecondition,
     elimSub
   }
   -- Read and parse the SMT2 file
@@ -383,8 +387,8 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
       pure predicate
 
   let predicate ← do
-    if config.elimSub then
-      match elimSubPreprocessing predicate with
+    if config.subPrecondition || config.elimSub then
+      match addSubPreconditionPreprocessing predicate (precond? := config.subPrecondition) (eliminate? := config.elimSub) with
       | .error e =>
         IO.eprintln e
         return SolverExitCode.toUInt32 .error
@@ -413,7 +417,7 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     timeout : Nat;             "SAT solver timeout for SAT based methods."
     backend : String;          "Backend solver: 'k-induction' (default), 'rIC3', 'abc', 'monobmc', 'naivebmc', or 'dryrun'."
     elimIte;                   "Run ite-elimination preprocessing pass (off by default)."
-    elimSub;                   "Run width-subtraction elimination preprocessing pass (off by default)."
+    subPrecondition;             "Run width-subtraction elimination preprocessing pass (off by default)."
 
   ARGS:
     input : String;            "Path to the .smt2 file."
