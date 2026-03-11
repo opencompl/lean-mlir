@@ -2420,6 +2420,7 @@ def Nondep.WidthExpr.elimSubAux (w : Nondep.WidthExpr) (s : ElimSubState) (preco
       let (result, s) := s.freshWidth v' (.const k)
       -- Precondition: v' - k = result ↔ v' = k + result
       let prec1 := Nondep.Term.binWidthRel .eq (.addK result k) v'
+      let s := s.addPrecondition prec1
       (result, s)
     else
       let result := .subK v' k
@@ -2429,12 +2430,11 @@ def Nondep.WidthExpr.elimSubAux (w : Nondep.WidthExpr) (s : ElimSubState) (preco
     let (b', s) := b.elimSubAux s precond? eliminate?
     let prec2 := Nondep.Term.binWidthRel .le b' a'
     let s := if precond? then s.addPrecondition prec2 else s
-
     if eliminate? then
       let (result, s) := s.freshWidth a' b'
     -- Precondition: result = a' - b' ↔ result + b' = a'.
       let prec1 := Nondep.Term.binWidthRel .eq (.add result b') a'
-      let s := if precond? then s.addPrecondition prec1 else s
+      let s := s.addPrecondition prec1
       (result, s)
     else
       let result := .sub a' b'
