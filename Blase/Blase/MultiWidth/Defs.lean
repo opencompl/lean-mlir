@@ -2853,11 +2853,39 @@ def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo
       let result := Nondep.Term.band wo (Nondep.Term.sub wo (.bxor wo shifted m) m) wmask
       (result, true, .nil)
     else (.constBad wo, false, aerr ++ werr)
-  | .pextract _a _lo _hi =>
-    -- Bit extraction in single-width encoding requires masking and shifting; stub for now.
-    let errMsg := s!"toSingleWidthNondepTermGo: pextract (bit extraction) unsupported: {repr t}"
-    dbg_trace errMsg
-    (.constBad wo, false, .text errMsg)
+  | .pextract a lo hi =>
+    -- pextract(a, lo, hi) extracts bits lo..hi (inclusive) from a.
+    -- Result width = hi - lo + 1.
+    --
+    -- Example: pextract(0b11010110, lo=2, hi=5) extracts bits [2..5]:
+    --   a        = 0b11_0101_10
+    --                   ^^^^      bits [5:2]
+    --   a >> 2   = 0b00_1101_01
+    --                       ^^^^  now in positions [3:0]
+    --   mask(4)  = 0b0000_1111   (hi - lo + 1 = 4 bits)
+    --   result   = 0b0000_0101
+    --
+    -- Why the mask is needed: the logical right shift by `lo` moves the desired
+    -- bits into positions [0..hi-lo], but leaves the original upper bits of `a`
+    -- (above position hi) in positions [hi-lo+1..w-lo-1]. The resultMask
+    -- (= 2^(hi-lo+1) - 1) clears those stale upper bits, isolating exactly
+    -- the extracted bit-field.
+    --
+    -- Note: `a'` from the recursive call is already masked to `a`'s own width,
+    -- so bits above `a.width` are already zero. But bits between positions
+    -- hi+1..a.width-1 in `a` are valid data that would pollute the result
+    -- after shifting; the resultMask handles this.
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let resultWidth := (hi.add (.const 1)).sub lo  -- hi + 1 - lo
+    let (resultMask, rmresult, rmerr) := resultWidth.toSingleWidthMaskNondepTerm wo
+    -- lo is a WidthExpr (potentially symbolic), so we convert it to a bitvector
+    -- term and use variable logical shift right (vlshr) rather than constant shiftr.
+    let (loVal, loresult, loerr) := lo.toTwosComplementNondepTerm wo
+    if aresult && rmresult && loresult then
+      let shifted := Nondep.Term.vlshr wo a' loVal
+      let result := Nondep.Term.band wo shifted resultMask
+      (result, true, .nil)
+    else (.constBad wo, false, aerr ++ rmerr ++ loerr)
   | .vshl w a b =>
     let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
     let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
