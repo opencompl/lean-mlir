@@ -90,7 +90,9 @@ pow2          | pow2      | Int → Int
 
 #### Algorithms Improvements TODO
 
-- [ ] Finish implementing new cases in 'toSingleWidthNondepTermGo'.
+- [ ] Fix the decision procedure, so when we meet problems that are not automata decidable,
+  we generalize these variables appropriately, and not just bail out.
+- [x] Finish implementing new cases in 'toSingleWidthNondepTermGo'.
 - [ ] Fix parameter order in pextract, make it `hi` then `lo` to match SMT-LIB. it's super confusing as-is.
 - [ ] Remove redundancy in parser; Don't need to store bitvector widths, can just compute it if needed.
 - [ ] Add an error printer of Term that prints only upto k level and then prints '..' for the rest.
