@@ -255,7 +255,9 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     | .expr [.atom "int_to_pbv", _, .atom nStr] =>
       match nStr.toNat? with
       | some n => return .bv (.shiftl aw at_ n) aw
-      | none => ParserM.throwError s!"bvshl: expected constant shift amount, got '{nStr}'"
+      | none =>
+        let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvshl")
+        return .bv (.vshl aw at_ bt) aw
     | _ =>
       let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvshl")
       return .bv (.vshl aw at_ bt) aw
@@ -267,7 +269,9 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     | .expr [.atom "int_to_pbv", _, .atom nStr] =>
       match nStr.toNat? with
       | some n => return .bv (.shiftr aw at_ n) aw
-      | none => ParserM.throwError s!"bvlshr: expected constant shift amount, got '{nStr}'"
+      | none =>
+        let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvlshr")
+        return .bv (.vlshr aw at_ bt) aw
     | _ =>
       let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvlshr")
       return .bv (.vlshr aw at_ bt) aw
@@ -279,7 +283,9 @@ partial def parseTerm (s : Sexp) : ParserM ParsedTerm := do
     | .expr [.atom "int_to_pbv", _, .atom nStr] =>
       match nStr.toNat? with
       | some n => return .bv (.ashr aw at_ n) aw
-      | none => ParserM.throwError s!"bvashr: expected constant shift amount, got '{nStr}'"
+      | none =>
+        let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvashr")
+        return .bv (.vashr aw at_ bt) aw
     | _ =>
       let (bt, _bw) ← (← parseTerm b) |> expectBV (ctx := "bvashr")
       return .bv (.vashr aw at_ bt) aw
