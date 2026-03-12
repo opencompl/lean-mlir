@@ -90,13 +90,14 @@ pow2          | pow2      | Int → Int
 
 #### Algorithms Improvements TODO
 
-- [ ] Add two options: one that adds the subtraction preconditions, and one that eliminates the subtraction by introducing 
-      fresh variables plus addition. For naive BMC, we just want to add the preconditions, since it's cheapter to enumerate and check.
-      For k-induction and other solvers, we want to eliminate the subtraction, since our solvers only natively support addition.
 - [ ] Finish implementing new cases in 'toSingleWidthNondepTermGo'.
+- [ ] Fix parameter order in pextract, make it `hi` then `lo` to match SMT-LIB. it's super confusing as-is.
 - [ ] Remove redundancy in parser; Don't need to store bitvector widths, can just compute it if needed.
 - [ ] Add an error printer of Term that prints only upto k level and then prints '..' for the rest.
 - [x] add slt/sle support into QF_BV translation
+- [x] Add two options: one that adds the subtraction preconditions, and one that eliminates the subtraction by introducing 
+      fresh variables plus addition. For naive BMC, we just want to add the preconditions, since it's cheapter to enumerate and check.
+      For k-induction and other solvers, we want to eliminate the subtraction, since our solvers only natively support addition.
 - [x] Add a Nondep to BVExpr conversion
 - [x] Use Nondep -> BV to implement naive enumerative bitblasting.
 - [x] Use SingleWidth -> Nondep -> BV to implement single width bounded bitblasting.

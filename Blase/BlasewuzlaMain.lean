@@ -101,6 +101,8 @@ structure Config where
   timeout : Nat
   /-- Run ite-elimination preprocessing pass. -/
   elimIte : Bool
+  /-- Run width-subtraction preprocessing that adds subtraction preconditions . -/
+  preconditionSub : Bool
   /-- Run width-subtraction elimination preprocessing pass. -/
   elimSub : Bool
 
@@ -182,27 +184,51 @@ def elimItePreprocessing (predicate : Nondep.Term) : Except String Nondep.Term :
     .error s!"ite implication failed for predicate. Errors:\n{iteImplErrors}"
   return predWithPrec
 
-def elimSubPreprocessing (pred : Nondep.Term) (wcard : Nat) : Except String Nondep.Term := do
-  let subResult := pred.elimSub wcard
-  let (predElimSub, subImplSuccess, subImplErrors) := subResult.toImplication
+def addSubPreconditionPreprocessing (pred : Nondep.Term) (precond? : Bool) (eliminate? : Bool) : Except String Nondep.Term := do
+  let subResult := pred.elimSub (precond? := precond?) (eliminate? := eliminate?)
+  let (predaddSubPrecondition, subImplSuccess, subImplErrors) := subResult.toImplication
   if !subImplSuccess then
     .error s!"sub implication failed for predicate. Errors:\n{subImplErrors}"
-  return predElimSub
+  return predaddSubPrecondition
 
 def naiveBMC : Solver where
   name := "naivebmc"
   run (config : Config) (result : Nondep.Term) : MetaM SolverExitCode := do
     let (negatedPredicate, success?, negateErrors) := result.pnegate
+    let widthConstraints := negatedPredicate.toWidthLogicalExpr
+
     if !success? then
       throwError "unable to negate predicate. Errors:\n{negateErrors}\n{repr result}"
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
-      IO.eprintln s!"Running naivebmc at width {config.bound}..."
+      IO.eprintln s!"Running naivebmc at width {config.bound} for #widths {result.maxwcard}..."
     for widths in cartesianProductRange config.bound result.maxwcard do
+      if config.verbose then
+        IO.println s!"width configuration ⟨{widths}⟩"
+      /-
+        First check if the widths lead to a satisfying assignment of the width constraints.
+        If they do, then proceed to create a model. If they do not, then bail out,
+        as we cannot guarantee a legal QF_BV expression being created, as the semantics
+        are a promise-based semantics.
+      -/
+      match widthConstraints.evalWidthLogicalExpr widths with
+      | .ok false =>
+        if config.verbose then
+          IO.eprintln s!"⟨{widths.toList}⟩ width precondition sufficed to prove UNSAT."
+        continue
+      | .ok true =>
+        if config.verbose then
+          IO.eprintln s!"⟨{widths.toList}⟩ widths not sufficient to prove UNSAT. Width precondition: {repr widthConstraints} querying QF_BV..."
+      | .error err =>
+        return .error s!"unable to evaluate width constraints '{widths}' for QF_BV formula construction.\n{err}"
+
+      /-
+      Width constraints succeed, so now continue trying to evaluate.
+      -/
       let (qfbv, success?, translationErrors) := negatedPredicate.toBVLogicalExpr widths
 
       if !success? then
-        return .error s!"formula contains unsupported operation, unable to translate into QF_BV.\nTranslation errors:\n{translationErrors}\nPredicate:\n{repr negatedPredicate}"
+        return .error s!"unable to translate into QF_BV at widths '{widths}'.\n{translationErrors}\nPredicate:\n{repr negatedPredicate}"
 
       if config.verbose then
         IO.eprintln s!"{qfbv.toString}"
@@ -319,6 +345,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let backend : String := p.flag! "backend" |>.as! String
   let timeout : Nat := p.flag! "timeout" |>.as! Nat
   let elimIte : Bool := p.hasFlag "elimIte"
+  let preconditionSub : Bool := p.hasFlag "preconditionSub"
   let elimSub : Bool := p.hasFlag "elimSub"
 
   let config : Config := {
@@ -329,9 +356,11 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     bound,
     timeout,
     elimIte,
+    preconditionSub,
     elimSub
   }
   -- Read and parse the SMT2 file
+  let timeStart ← IO.monoMsNow
   let contents ← IO.FS.readFile inputPath
   let result ← match Blasewuzla.parseSmt2Query contents with
     | .ok r => pure r
@@ -350,7 +379,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let predicate ← do
     if config.elimIte then
       match elimItePreprocessing predicate with
-      | .error e => 
+      | .error e =>
         IO.eprintln e
         return SolverExitCode.toUInt32 .error
       | .ok t => pure t
@@ -358,9 +387,9 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
       pure predicate
 
   let predicate ← do
-    if config.elimSub then
-      match elimSubPreprocessing predicate result.wcard with
-      | .error e => 
+    if config.preconditionSub || config.elimSub then
+      match addSubPreconditionPreprocessing predicate (precond? := config.preconditionSub) (eliminate? := config.elimSub) with
+      | .error e =>
         IO.eprintln e
         return SolverExitCode.toUInt32 .error
       | .ok t => pure t
@@ -369,7 +398,6 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
 
   let solver : Solver :=
     allSolvers.get? backend |>.getD solverErrorUknown
-  let timeStart ← IO.monoMsNow
   let out ← runMetaMAsIO <| solver.run config predicate
   let timeEnd ← IO.monoMsNow
 
@@ -389,7 +417,8 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     timeout : Nat;             "SAT solver timeout for SAT based methods."
     backend : String;          "Backend solver: 'k-induction' (default), 'rIC3', 'abc', 'monobmc', 'naivebmc', or 'dryrun'."
     elimIte;                   "Run ite-elimination preprocessing pass (off by default)."
-    elimSub;                   "Run width-subtraction elimination preprocessing pass (off by default)."
+    elimSub;                   "Run sub-elimination preprocessing pass (off by default). This adds many variables (one per subtraction), but ensures that no subtractions remain in the formula."
+    preconditionSub;           "Runs subtraction precondition preprocessing pass (off by default). This adds a precondition that the subtraction does not produce a negative number."
 
   ARGS:
     input : String;            "Path to the .smt2 file."
