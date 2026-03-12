@@ -251,6 +251,11 @@ def dryrun : Solver where
 def External (name : String) (solver : Valaig.External.SafetyAigerMC) : Solver where
   name := name
   run (config : Config) (result : Nondep.Term) : MetaM SolverExitCode := do
+    -- TODO: instead of erroring, generalize non-automata-decidable operations into
+    -- fresh free bitvector variables to bring the formula into the fragment.
+    if !result.isAutomtaDecidable then
+      IO.eprintln s!"{name}: formula contains non-automata-decidable operations and is outside the supported fragment."
+      return .error s!"formula is outside the automata-decidable fragment"
     let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 0 result
     let fsm := termFsm.toFsmZext
 
@@ -281,6 +286,11 @@ def abc : Solver :=
 def kinduction : Solver where
   name := "k-induction"
   run (config : Config) (result : Nondep.Term) : MetaM SolverExitCode := do
+    -- TODO: instead of erroring, generalize non-automata-decidable operations into
+    -- fresh free bitvector variables to bring the formula into the fragment.
+    if !result.isAutomtaDecidable then
+      IO.eprintln s!"k-induction: formula contains non-automata-decidable operations and is outside the supported fragment."
+      return .error s!"formula is outside the automata-decidable fragment"
     -- k-induction backend
     if config.verbose then
       IO.eprintln s!"FSM built. Running k-induction with max {config.niter} iterations..."
