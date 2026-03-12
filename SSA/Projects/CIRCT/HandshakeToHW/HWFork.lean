@@ -252,6 +252,18 @@ def globallyFinallyReady (x : Stream' (BitVec 1)) :=
     ∃ (k : Nat),
       x (i + k) = 1#1
 
+inductive relation' : Stream (BitVec w) → Stream (BitVec w) → Prop where
+  | intro x y rd vld data rd1 vld1 o1 :  /- same as `∀ x y` -/
+      /- x is the high-level (input), y is the low-level (output) -/
+      x = toStream rd vld data →
+      globallyValidUntilReady rd vld →
+      globallyValidAndData vld data →
+      y = toStream rd1 vld1 o1 →
+      globallyFinallyReady rd1 →
+      sorry →
+      relation' x y /- defining the type of the relation -/
+
+
 /-
   our implementation of `fork` should not allow this, assuming that the input is
   well-formed (including its ready signals!).
@@ -309,7 +321,16 @@ theorem hw_fork_refines2:
       bisimilar to the ready-valid wrapping of the output of the hardware fork -/
     (toStream rd2 vld2 o2) ~ (toStream rdy vld data) := by
   intros hardware_hw globValReady globValData globFinReady1 globFinReady2
-  unfold Bisim
+  /- if 0, 0 works we don't need bisimilarity -/
+  /- the high-level fork will never wait for anything (whenever an input is available),
+    while the low-level one might have to, and depends on the `rd1` signal eventually being true.
+    if we choose `pred := Eq` the relation is too strong, the second goal is not provable.
+  -/
+  apply Bisim.coinduct (pred := Eq)
+  ·
+    sorry
+  ·
+    sorry
   simp
   unfold globallyValidUntilReady at globValReady
   unfold globallyValidAndData at globValData
@@ -317,7 +338,10 @@ theorem hw_fork_refines2:
   unfold TRY3.split_stream2 at hardware_hw
   simp at hardware_hw
   obtain ⟨hready, hvld1, hvld2, ho1, ho2⟩ := hardware_hw
-  exists 0, 0
+
+  specialize globFinReady2 0
+  obtain ⟨i2, h⟩ := globFinReady2
+  exists i2, 0
   simp
   and_intros
   · apply Bisim.coinduct (pred := Eq)
@@ -325,11 +349,12 @@ theorem hw_fork_refines2:
       rw [hxy]
       exists 0, 0
       simp
-    · specialize globFinReady1 0
-
+    · specialize globValReady 0
       sorry
-  ·
+  · specialize globValData 0
+    specialize globValReady 0
     sorry
+#check Bisim.coinduct
 
 theorem trans' {a b : Stream α} : a ~ b → a ~ c → b ~ c := by
   intros hab hbc
