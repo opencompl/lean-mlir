@@ -2123,7 +2123,17 @@ def Term.toSingleWidthNondepTerm.mkWidthPrecond (w : Nat) (wo : Nondep.WidthExpr
     let boundVal := match wo with
       | .const c => Nondep.Term.ofNat wo (c - 1)
       | _ => Nondep.Term.ofNat wo 0 -- fallback, shouldn't happen in practice
-    Nondep.Term.binRel .ule wo widthVar boundVal
+    let upperBound := Nondep.Term.binRel .ule wo widthVar boundVal
+    -- Width variables must be ≥ 1: PBV semantics require positive bit-widths.
+    -- Without this, k=0 is allowed, producing 0-bit bitvectors where:
+    --   wmask(0) = 0, so all values are masked to 0.
+    --   signBit = 1 << (0-1) wraps (e.g. 1 << 63 = 0 in 6-bit), breaking
+    --   signed comparisons (slt/sle) which degenerate to unsigned.
+    -- This causes spurious SAT results for formulas like
+    --   `¬(bvsgt(X, ~0) ↔ (X & signMask) == 0)` which are UNSAT for k ≥ 1
+    --   but SAT for k=0 (slt gives false while the equality gives true).
+    let lowerBound := Nondep.Term.binRel .ule wo (Nondep.Term.ofNat wo 1) widthVar
+    .and lowerBound upperBound
     -- Nondep.Term.binWidthRel .le (.var w) (wo.sub (.const 1))
 /--
 Make all the width preconditions of variables of indices [0..w),
