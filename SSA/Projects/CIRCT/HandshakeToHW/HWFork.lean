@@ -113,6 +113,7 @@ def hw_fork (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVe
     ((_12, _3, _9, _rawOutput, _rawOutput), (i+1, _1, _7))
   ) (0, 0#1, 0#1)
 
+
 /-
  - %0 = comb.and %in0_valid, %in1_valid : i1
  - %1 = comb.and %out0_ready, %0 : i1
@@ -143,7 +144,6 @@ def split_stream2 : Stream' (a × b × c × d × e) → Stream' a × Stream' b �
 
 def combine_stream : Stream' a × Stream' b × Stream' c × Stream' d × Stream' e × Stream' f × Stream' g → Stream' (a × b × c × d × e × f × g) := fun gr i =>
   (gr.1 i, gr.2.1 i, gr.2.2.1 i, gr.2.2.2.1 i, gr.2.2.2.2.1 i, gr.2.2.2.2.2.1 i, gr.2.2.2.2.2.2 i)
-
 
 /--
 We have a working circuit, except that we took out the feedback into and output and an input.
@@ -256,12 +256,23 @@ inductive relation' : Stream (BitVec w) → Stream (BitVec w) → Prop where
   | intro x y rd vld data rd1 vld1 o1 :  /- same as `∀ x y` -/
       /- x is the high-level (input), y is the low-level (output) -/
       x = toStream rd vld data →
-      globallyValidUntilReady rd vld →
-      globallyValidAndData vld data →
       y = toStream rd1 vld1 o1 →
+      globallyValidUntilReady vld rd →
+      globallyValidAndData vld data →
       globallyFinallyReady rd1 →
-      sorry →
+      (∀ n, vld n = 1#1 → data n = o1 n) → /- when the signal is valid, data and output are the same -/
       relation' x y /- defining the type of the relation -/
+
+/-- if we have a set of streams output by `hw_fork`, the output stream is the same as the
+  input stream. -/
+theorem hw_fork_o1_eq_input
+    (h : (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld i)) :
+    ∀ n, o1 n = i n := by
+  intro n
+  simp [TRY3.split_stream2, TRY3.hw_fork, Stream'.corec'] at h
+  obtain ⟨rdy, vld1, vld2, o1, o2⟩ := h
+
+  sorry
 
 
 /-
@@ -280,6 +291,7 @@ inductive relation' : Stream (BitVec w) → Stream (BitVec w) → Prop where
 
 -/
 
+-- The state's first component (the counter) always equals the step number
 
 /-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
 theorem hw_fork_refines1:
@@ -303,11 +315,102 @@ theorem hw_fork_refines1:
 
   sorry
 
+theorem hw_fork_data (rd1 rd2 vld : Stream' (BitVec 1)) (data : Stream' (BitVec 32))
+    (globValData : globallyValidAndData vld data) (globFinReady1 : globallyFinallyReady rd1)
+    (globFinReady2 : globallyFinallyReady rd2) (n : Nat) (hn : vld n = 1#1)
+    (globValReady : globallyValidUntilReady vld fun i => (TRY3.hw_fork rd1 rd2 vld data i).1) :
+    data n = (TRY3.hw_fork rd1 rd2 vld data n).2.2.2.2 := by
+  unfold TRY3.hw_fork
+  induction n
+  · simp [Stream'.corec', Stream'.corec, Stream'.map]
+  · case _ m ihm =>
+    simp at ihm
+    simp
+
+    sorry
+
+def fork_state_iter (rd1 rd2 vld : Stream' (BitVec 1)) :
+    Nat × BitVec 1 × BitVec 1 → Nat × BitVec 1 × BitVec 1 :=
+  fun (i, e0, e1) =>
+    let _2  := comb_xor e0 (hw_constant true)
+    let _3  := comb_and _2 (vld i)
+    let _4  := comb_and (rd1 i) _3
+    let _5  := comb_or _4 e0
+    let _8  := comb_xor e1 (hw_constant true)
+    let _9  := comb_and _8 (vld i)
+    let _10 := comb_and (rd2 i) _9
+    let _11 := comb_or _10 e1
+    let _12 := comb_and _5 _11
+    let _0  := comb_xor _12 (hw_constant true)
+    let _1  := comb_and _5 _0
+    let _6  := comb_xor _12 (hw_constant true)
+    let _7  := comb_and _11 _6
+    (i + 1, _1, _7)
+
+lemma fork_counter_eq_step (rd1 rd2 vld : Stream' (BitVec 1)) :
+    ((fork_state_iter rd1 rd2 vld)^[n] (0, 0#1, 0#1)).1 = n := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [Function.iterate_succ', Function.comp]
+    simp [fork_state_iter, ih]
+
+
+theorem hw_fork_out
+    (h : ⟨rdy_out, vld0_out, vld1_out, data0_out, data1_out⟩ = TRY3.split_stream2 (TRY3.hw_fork rd0_in rd1_in vld_in data_in)) :
+    ∀ n, data_in n = data0_out n := by
+  intro n
+  simp [TRY3.split_stream2] at h
+  simp [h]
+  unfold TRY3.hw_fork
+  induction n
+  · simp [hw_constant, Stream'.corec', Stream'.corec, Stream'.map]
+  · case _ m hm =>
+    simp [hw_constant, Stream'.corec', Stream'.corec, Stream'.map]
+    congr 1
+    suffices key : ∀ n, ((Stream'.iterate (Prod.snd ∘ fun x : ℕ × BitVec 1 × BitVec 1 =>
+            ((comb_and (comb_or (comb_and (rd0_in x.1) (comb_and (comb_xor x.2.1 1#1) (vld_in x.1))) x.2.1)
+                  (comb_or (comb_and (rd1_in x.1) (comb_and (comb_xor x.2.2 1#1) (vld_in x.1))) x.2.2),
+                comb_and (comb_xor x.2.1 1#1) (vld_in x.1), comb_and (comb_xor x.2.2 1#1) (vld_in x.1), data_in x.1,
+                data_in x.1),
+              x.1 + 1,
+              comb_and (comb_or (comb_and (rd0_in x.1) (comb_and (comb_xor x.2.1 1#1) (vld_in x.1))) x.2.1)
+                (comb_xor
+                  (comb_and (comb_or (comb_and (rd0_in x.1) (comb_and (comb_xor x.2.1 1#1) (vld_in x.1))) x.2.1)
+                    (comb_or (comb_and (rd1_in x.1) (comb_and (comb_xor x.2.2 1#1) (vld_in x.1))) x.2.2))
+                  1#1),
+              comb_and (comb_or (comb_and (rd1_in x.1) (comb_and (comb_xor x.2.2 1#1) (vld_in x.1))) x.2.2)
+                (comb_xor
+                  (comb_and (comb_or (comb_and (rd0_in x.1) (comb_and (comb_xor x.2.1 1#1) (vld_in x.1))) x.2.1)
+                    (comb_or (comb_and (rd1_in x.1) (comb_and (comb_xor x.2.2 1#1) (vld_in x.1))) x.2.2))
+                  1#1)))
+        (0, 0#1, 0#1)).get n).1 = n by
+      have := key (m + 1); sorry
+
+    intro n; induction n with
+    | zero => simp [Stream'.iterate]
+    | succ n ih =>
+      simp only [Stream'.get_succ, Stream'.iterate, Function.comp]
+      omega  -- or: rw [ih]; ring
+
+
+lemma hw_fork_rawOutput_eq_data
+    (rd1 rd2 vld : Stream' (BitVec 1))
+    (data : Stream' (BitVec 32)) (n : Nat) :
+    (TRY3.hw_fork rd1 rd2 vld data n).2.2.2.2 = data n := by
+  simp only [TRY3.hw_fork, Stream'.corec']
+  -- goal: data (state_at_n.1) = data n
+  -- suffices to show state_at_n.1 = n
+  have hcount : ((fork_state_iter rd1 rd2 vld )^[n] (0, 0#1, 0#1)).1 = n :=
+    fork_counter_eq_step rd1 rd2 vld
+  -- the corec state at step n is exactly the iterated state function
+  exact Eq.symm (hw_fork_out _root_.rfl n)
+
 /-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
 theorem hw_fork_refines2:
     /- Given a handshake fork taking `a` as input and returning `(a, a)`, we take
       its lowering (with input a bisimilar ready-valid wrapped stream) -/
-    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld i) →
+    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld data) →
     /- We want to make sure that stalling is correctly modeled for `a` (input).
       We constrain the input and prove that if the input behaves properly,
       the output will. -/
@@ -326,35 +429,22 @@ theorem hw_fork_refines2:
     while the low-level one might have to, and depends on the `rd1` signal eventually being true.
     if we choose `pred := Eq` the relation is too strong, the second goal is not provable.
   -/
-  apply Bisim.coinduct (pred := Eq)
-  ·
+  apply Bisim.coinduct (pred := relation')
+  · intros s1 s2 hrel
     sorry
   ·
-    sorry
-  simp
-  unfold globallyValidUntilReady at globValReady
-  unfold globallyValidAndData at globValData
-  unfold globallyFinallyReady at globFinReady1 globFinReady2
-  unfold TRY3.split_stream2 at hardware_hw
-  simp at hardware_hw
-  obtain ⟨hready, hvld1, hvld2, ho1, ho2⟩ := hardware_hw
-
-  specialize globFinReady2 0
-  obtain ⟨i2, h⟩ := globFinReady2
-  exists i2, 0
-  simp
-  and_intros
-  · apply Bisim.coinduct (pred := Eq)
-    · intros x y hxy
-      rw [hxy]
-      exists 0, 0
-      simp
-    · specialize globValReady 0
-      sorry
-  · specialize globValData 0
-    specialize globValReady 0
-    sorry
-#check Bisim.coinduct
+    apply relation'.intro (w := 32) (x := toStream rd2 vld2 o2) (y := toStream rdy vld data) (rd := rdy) (vld := vld) (data := data)
+          (rd1 := rd2) (vld1 := vld2) (o1 := o2)
+    · sorry
+    · sorry
+    · exact globValReady
+    · exact globValData
+    · exact globFinReady2
+    · intro n hn
+      unfold TRY3.split_stream2 at hardware_hw
+      obtain ⟨rdy, vld1, vld2, o1, o2⟩ := hardware_hw
+      apply hw_fork_data
+      <;> assumption
 
 theorem trans' {a b : Stream α} : a ~ b → a ~ c → b ~ c := by
   intros hab hbc
