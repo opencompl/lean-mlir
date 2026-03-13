@@ -5,6 +5,7 @@ import SSA.Projects.CIRCT.Register.Lemmas
 
 namespace HandshakeStream
 
+
 /-
 Handshake program (https://github.com/opencompl/DC-semantics-simulation-evaluation/blob/main/benchmarks/add_naive/handshake.mlir) :
 
