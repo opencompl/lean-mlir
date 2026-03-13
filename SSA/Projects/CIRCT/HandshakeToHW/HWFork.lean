@@ -366,33 +366,7 @@ theorem hw_fork_out
   induction n
   · simp [hw_constant, Stream'.corec', Stream'.corec, Stream'.map]
   · case _ m hm =>
-    simp [hw_constant, Stream'.corec', Stream'.corec, Stream'.map]
-    congr 1
-    suffices key : ∀ n, ((Stream'.iterate (Prod.snd ∘ fun x : ℕ × BitVec 1 × BitVec 1 =>
-            ((comb_and (comb_or (comb_and (rd0_in x.1) (comb_and (comb_xor x.2.1 1#1) (vld_in x.1))) x.2.1)
-                  (comb_or (comb_and (rd1_in x.1) (comb_and (comb_xor x.2.2 1#1) (vld_in x.1))) x.2.2),
-                comb_and (comb_xor x.2.1 1#1) (vld_in x.1), comb_and (comb_xor x.2.2 1#1) (vld_in x.1), data_in x.1,
-                data_in x.1),
-              x.1 + 1,
-              comb_and (comb_or (comb_and (rd0_in x.1) (comb_and (comb_xor x.2.1 1#1) (vld_in x.1))) x.2.1)
-                (comb_xor
-                  (comb_and (comb_or (comb_and (rd0_in x.1) (comb_and (comb_xor x.2.1 1#1) (vld_in x.1))) x.2.1)
-                    (comb_or (comb_and (rd1_in x.1) (comb_and (comb_xor x.2.2 1#1) (vld_in x.1))) x.2.2))
-                  1#1),
-              comb_and (comb_or (comb_and (rd1_in x.1) (comb_and (comb_xor x.2.2 1#1) (vld_in x.1))) x.2.2)
-                (comb_xor
-                  (comb_and (comb_or (comb_and (rd0_in x.1) (comb_and (comb_xor x.2.1 1#1) (vld_in x.1))) x.2.1)
-                    (comb_or (comb_and (rd1_in x.1) (comb_and (comb_xor x.2.2 1#1) (vld_in x.1))) x.2.2))
-                  1#1)))
-        (0, 0#1, 0#1)).get n).1 = n by
-      have := key (m + 1); sorry
-
-    intro n; induction n with
-    | zero => simp [Stream'.iterate]
-    | succ n ih =>
-      simp only [Stream'.get_succ, Stream'.iterate, Function.comp]
-      omega  -- or: rw [ih]; ring
-
+    sorry
 
 lemma hw_fork_rawOutput_eq_data
     (rd1 rd2 vld : Stream' (BitVec 1))
