@@ -194,7 +194,7 @@ def addSubPreconditionPreprocessing (pred : Nondep.Term) (precond? : Bool) (elim
   return predaddSubPrecondition
 
 def elimNonAutomataDecidablePreprocessing (predicate : Nondep.Term) : Nondep.Term :=
-  let s := ElimIteState.newState (predicate.tcard + 1)
+  let s := ElimNonAutomataDecidableState.newState (predicate.tcard + 1)
   let (result, _s) := predicate.elimNonAutomataDecidable s
   result
 

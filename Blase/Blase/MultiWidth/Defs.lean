@@ -2397,6 +2397,18 @@ def Nondep.Term.elimIte
   | .ofNat w n => ⟨.ofNat w n, s⟩
   | .intToPbv w v => ⟨.intToPbv w v, s⟩
 
+structure ElimNonAutomataDecidableState where
+  /-- Index of the next fresh bitvector variable to introduce. -/
+  freshTermIndex : Nat
+
+def ElimNonAutomataDecidableState.newState (freshTermIndex : Nat) : ElimNonAutomataDecidableState :=
+  { freshTermIndex := freshTermIndex }
+
+/-- Generate a fresh bitvector variable and advance the counter. -/
+def ElimNonAutomataDecidableState.freshBV (s : ElimNonAutomataDecidableState) (w : Nondep.WidthExpr) :
+    Nondep.Term × ElimNonAutomataDecidableState :=
+  ⟨Nondep.Term.var s.freshTermIndex w, { freshTermIndex := s.freshTermIndex + 1 }⟩
+
 /--
 Replace non-automata-decidable operations with fresh unconstrained bitvector variables.
 This produces an overapproximation: UNSAT on the result implies UNSAT on the original (sound).
@@ -2408,7 +2420,7 @@ pFalse is encoded as `0 ≠ 0` (always false, but automata-decidable).
 -/
 def Nondep.Term.elimNonAutomataDecidable
     (t : Nondep.Term)
-    (s : ElimIteState) : Nondep.Term × ElimIteState :=
+    (s : ElimNonAutomataDecidableState) : Nondep.Term × ElimNonAutomataDecidableState :=
   match t with
   -- Non-automata-decidable: replace with fresh unconstrained variable
   | .mul w _a _b => s.freshBV w
