@@ -2397,6 +2397,93 @@ def Nondep.Term.elimIte
   | .ofNat w n => ⟨.ofNat w n, s⟩
   | .intToPbv w v => ⟨.intToPbv w v, s⟩
 
+/--
+Replace non-automata-decidable operations with fresh unconstrained bitvector variables.
+This produces an overapproximation: UNSAT on the result implies UNSAT on the original (sound).
+SAT becomes inconclusive.
+
+Non-automata-decidable operations replaced: mul, udiv, urem, vlshr, vashr, vshl,
+shiftr, ashr, pextract, bvIte, intToPbv.
+pFalse is encoded as `0 ≠ 0` (always false, but automata-decidable).
+-/
+def Nondep.Term.elimNonAutomataDecidable
+    (t : Nondep.Term)
+    (s : ElimIteState) : Nondep.Term × ElimIteState :=
+  match t with
+  -- Non-automata-decidable: replace with fresh unconstrained variable
+  | .mul w _a _b => s.freshBV w
+  | .udiv w _a _b => s.freshBV w
+  | .urem w _a _b => s.freshBV w
+  | .vlshr w _a _b => s.freshBV w
+  | .vashr w _a _b => s.freshBV w
+  | .vshl w _a _b => s.freshBV w
+  | .shiftr w _a _k => s.freshBV w
+  | .ashr w _a _k => s.freshBV w
+  | .pextract _a lo hi => s.freshBV ((hi.add (.const 1)).sub lo)
+  | .bvIte _cond t1 _t2 => s.freshBV t1.width
+  | .intToPbv w _v => s.freshBV w
+  -- pFalse: encode as `0 ≠ 0` (always false, automata-decidable)
+  | .pFalse => (.binRel .ne (.const 1) (.ofNat (.const 1) 0) (.ofNat (.const 1) 0), s)
+  -- Automata-decidable with children: recurse
+  | .add w a b =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    let ⟨b', s⟩ := b.elimNonAutomataDecidable s
+    (.add w a' b', s)
+  | .bor w a b =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    let ⟨b', s⟩ := b.elimNonAutomataDecidable s
+    (.bor w a' b', s)
+  | .band w a b =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    let ⟨b', s⟩ := b.elimNonAutomataDecidable s
+    (.band w a' b', s)
+  | .bxor w a b =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    let ⟨b', s⟩ := b.elimNonAutomataDecidable s
+    (.bxor w a' b', s)
+  | .bnot w a =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    (.bnot w a', s)
+  | .shiftl w a k =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    (.shiftl w a' k, s)
+  | .binRel k w a b =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    let ⟨b', s⟩ := b.elimNonAutomataDecidable s
+    (.binRel k w a' b', s)
+  | .and a b =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    let ⟨b', s⟩ := b.elimNonAutomataDecidable s
+    (.and a' b', s)
+  | .or a b =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    let ⟨b', s⟩ := b.elimNonAutomataDecidable s
+    (.or a' b', s)
+  | .boolBinRel k a b =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    let ⟨b', s⟩ := b.elimNonAutomataDecidable s
+    (.boolBinRel k a' b', s)
+  | .zext a w =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    (.zext a' w, s)
+  | .sext a w =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    (.sext a' w, s)
+  | .setWidth a w =>
+    let ⟨a', s⟩ := a.elimNonAutomataDecidable s
+    (.setWidth a' w, s)
+  | .bvOfBool b =>
+    let ⟨b', s⟩ := b.elimNonAutomataDecidable s
+    (.bvOfBool b', s)
+  -- Leaves: return unchanged
+  | .var v w => ⟨.var v w, s⟩
+  | .ofNat w n => ⟨.ofNat w n, s⟩
+  | .pTrue => ⟨.pTrue, s⟩
+  | .pvar p => ⟨.pvar p, s⟩
+  | .boolVar b => ⟨.boolVar b, s⟩
+  | .boolConst b => ⟨.boolConst b, s⟩
+  | .binWidthRel k u v => (.binWidthRel k u v, s)
+
 /-!
 ## Sub Elimination
 

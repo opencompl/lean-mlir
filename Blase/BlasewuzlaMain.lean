@@ -105,6 +105,8 @@ structure Config where
   preconditionSub : Bool
   /-- Run width-subtraction elimination preprocessing pass. -/
   elimSub : Bool
+  /-- Replace non-automata-decidable operations with free variables (overapproximation). -/
+  elimNonAutomataDecidable : Bool
 
 structure Solver where
   name : String
@@ -190,6 +192,11 @@ def addSubPreconditionPreprocessing (pred : Nondep.Term) (precond? : Bool) (elim
   if !subImplSuccess then
     .error s!"sub implication failed for predicate. Errors:\n{subImplErrors}"
   return predaddSubPrecondition
+
+def elimNonAutomataDecidablePreprocessing (predicate : Nondep.Term) : Nondep.Term :=
+  let s := ElimIteState.newState (predicate.tcard + 1)
+  let (result, _s) := predicate.elimNonAutomataDecidable s
+  result
 
 def naiveBMC : Solver where
   name := "naivebmc"
@@ -357,6 +364,7 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let elimIte : Bool := p.hasFlag "elimIte"
   let preconditionSub : Bool := p.hasFlag "preconditionSub"
   let elimSub : Bool := p.hasFlag "elimSub"
+  let elimNonAutomataDecidable : Bool := p.hasFlag "elimNonAutomataDecidable"
 
   let config : Config := {
     verbose,
@@ -367,7 +375,8 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     timeout,
     elimIte,
     preconditionSub,
-    elimSub
+    elimSub,
+    elimNonAutomataDecidable
   }
   -- Read and parse the SMT2 file
   let timeStart ← IO.monoMsNow
@@ -406,6 +415,12 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     else
       pure predicate
 
+  let predicate :=
+    if config.elimNonAutomataDecidable then
+      elimNonAutomataDecidablePreprocessing predicate
+    else
+      predicate
+
   let solver : Solver :=
     allSolvers.get? backend |>.getD solverErrorUknown
   let out ← runMetaMAsIO <| solver.run config predicate
@@ -429,6 +444,7 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     elimIte;                   "Run ite-elimination preprocessing pass (off by default)."
     elimSub;                   "Run sub-elimination preprocessing pass (off by default). This adds many variables (one per subtraction), but ensures that no subtractions remain in the formula."
     preconditionSub;           "Runs subtraction precondition preprocessing pass (off by default). This adds a precondition that the subtraction does not produce a negative number."
+    elimNonAutomataDecidable;  "Replace non-automata-decidable operations with free variables (overapproximation for UNSAT checking)."
 
   ARGS:
     input : String;            "Path to the .smt2 file."
