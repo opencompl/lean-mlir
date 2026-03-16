@@ -257,6 +257,7 @@ inductive relation' : Stream (BitVec w) → Stream (BitVec w) → Prop where
       /- x is the high-level (input), y is the low-level (output) -/
       x = toStream rd vld data →
       y = toStream rd1 vld1 o1 →
+      (∀ j, (rd j = 1#1 ∧ vld j = 1#1) ↔ rd1 j = 1#1 ∧ vld1 j = 1#1) →
       -- (∃ k, rd k = 1#1 ∧ vld k = 1) → /- at least one transition happens frfr -/
       globallyValidUntilReady vld rd →
       globallyValidAndData vld data →
@@ -394,26 +395,77 @@ theorem hw_fork_refines1:
   apply Bisim.coinduct (pred := relation')
   · intros sin sout hrel
     /- `sin` and `sout` exist at the handshake level of the design -/
-    rcases hrel with ⟨rd', vld', data', rd1', vld1', o1', hsin, hsout, hgvr, hgvd, hgfr, hdata⟩
+    rcases hrel with ⟨rd', vld', data', rd1', vld1', o1', hsin, hsout, hsync, hgvr, hgvd, hgfr, hdata⟩
     specialize hgfr 0
     obtain ⟨fst, hfst⟩ := hgfr
     simp at hfst
     exists fst, fst
     and_intros
-    · sorry
-    · unfold toStream at hsout
-      have h := congr_fun hsout fst
-      simp [hfst] at h
-
+    · apply relation'.intro (Stream'.drop (fst + 1) sin) (Stream'.drop (fst + 1) sout)
+      · sorry
+      · sorry
+      · sorry
+      · sorry
+      · sorry
+      · sorry
+      · sorry
+      · sorry
+      · sorry
+      · sorry
+      · sorry
+      · sorry
+      · sorry
+    · unfold toStream at hsout hsin
+      have h1 := congr_fun hsout fst
+      have h2 := congr_fun hsout fst
+      simp [hfst] at h1
+      /- suppose no valid signal ever arrives -/
+      by_cases hnone : ∀ pn, vld' pn= 0#1
+      · simp_all
+        apply congr_fun
+        congr
+        ext l hl
+        constructor
+        · case _ =>
+          intro hh
+          simp [Stream'.get] at hh
+        · case _ =>
+          intro hh
+          simp at hh
+          simp [Stream'.get] at hh
+          sorry
+      · simp at hnone
+        have ⟨fst', hfst'⟩ := hnone
+        apply congr_fun
+        congr
+        rw [hsin, hsout]
+        simp
+        ext l hl
+        simp only [Stream'.get]
+        specialize hsync l
+        simp [hsync]
+        grind
+    · simp [hsin, Stream'.get, toStream]
+      intros i hi hi'
+      specialize hsync i
+      simp_all
+      intros hi''
+      intro hcontra
+      simp [hcontra, hi''] at hsync
+      unfold toStream at hsin
+      have hh := congr_fun hsin i
+      simp [hi', hsync] at hh
 
 
 
       sorry
     · sorry
-    · sorry
   · apply relation'.intro (toStream rd1 vld1 o1) (toStream rdy vld data)
     · rfl
     · rfl
+    ·
+
+      sorry
     · intros j hj1
       specialize globValReady1 j
       simp [hj1] at globValReady1
