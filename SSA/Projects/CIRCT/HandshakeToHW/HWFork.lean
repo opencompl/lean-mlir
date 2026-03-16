@@ -257,6 +257,7 @@ inductive relation' : Stream (BitVec w) → Stream (BitVec w) → Prop where
       /- x is the high-level (input), y is the low-level (output) -/
       x = toStream rd vld data →
       y = toStream rd1 vld1 o1 →
+      -- (∃ k, rd k = 1#1 ∧ vld k = 1) → /- at least one transition happens frfr -/
       globallyValidUntilReady vld rd →
       globallyValidAndData vld data →
       globallyFinallyReady rd1 →
@@ -372,14 +373,19 @@ theorem hw_fork_refines1:
       We constrain the input and prove that if the input behaves properly,
       the output will. -/
     globallyValidUntilReady vld1 rd1 →
+    globallyValidUntilReady vld2 rd2 →
+    globallyValidUntilReady vld rdy →
     globallyValidAndData vld1 o1 →
+    globallyValidAndData vld2 o2 →
     /- we assume no deadlock -/
     globallyFinallyReady rdy →
+    globallyFinallyReady rd1 →
+    globallyFinallyReady rd2 →
     /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork (`a ~ rdy vld i`), meaning that the two outputs are also bisimilar by transitivity-/
     /- we want to prove that the outputs of the handshake fork are respectively
       bisimilar to the ready-valid wrapping of the output of the hardware fork -/
     (toStream rd1 vld1 o1) ~ (toStream rdy vld data) := by
-  intros hardware_hw globValReady1 globValData1 globFinReady
+  intros hardware_hw globValReady1 globValReady2 globValReady globValData1 globValData2 globFinReady globFinReady1 globFinReady2
   /- if 0, 0 works we don't need bisimilarity -/
   /- the high-level fork will never wait for anything (whenever an input is available),
     while the low-level one might have to, and depends on the `rd1` signal eventually being true.
@@ -388,9 +394,23 @@ theorem hw_fork_refines1:
   apply Bisim.coinduct (pred := relation')
   · intros sin sout hrel
     /- `sin` and `sout` exist at the handshake level of the design -/
+    rcases hrel with ⟨rd', vld', data', rd1', vld1', o1', hsin, hsout, hgvr, hgvd, hgfr, hdata⟩
+    specialize hgfr 0
+    obtain ⟨fst, hfst⟩ := hgfr
+    simp at hfst
+    exists fst, fst
+    and_intros
+    · sorry
+    · unfold toStream at hsout
+      have h := congr_fun hsout fst
+      simp [hfst] at h
 
 
-    sorry
+
+
+      sorry
+    · sorry
+    · sorry
   · apply relation'.intro (toStream rd1 vld1 o1) (toStream rdy vld data)
     · rfl
     · rfl
