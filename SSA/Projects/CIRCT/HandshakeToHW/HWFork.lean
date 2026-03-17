@@ -110,7 +110,7 @@ def hw_fork (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVe
     let _1 := comb_and _5 _0
     let _6 := comb_xor _12 _true
     let _7 := comb_and _11 _6
-    ((_12, _3, _9, _rawOutput, _rawOutput), (i+1, _1, _7))
+    ((_12, _3, _9, _rawOutput, _rawOutput), (i + 1, _1, _7))
   ) (0, 0#1, 0#1)
 
 
