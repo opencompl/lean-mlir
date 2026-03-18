@@ -341,6 +341,7 @@ theorem fork_corec1 :
     dsimp [fork_corec]
     grind
 
+
 /-- Prove that (at RTL level) the input and output data at the `n`-th position are the same.
   This is possible because `hw_fork'` does not introduce any delay, and there is no transformation
   happening on the data. -/
@@ -410,11 +411,11 @@ theorem fork_corec1bis :
     dsimp [fork_corec]
     grind
 
-lemma hw_fork_eq : TRY3.hw_fork rd0 rd1 vld data = hw_fork' rd0 rd1 vld data := by
+theorem hw_fork_eq : TRY3.hw_fork rd0 rd1 vld data = hw_fork' rd0 rd1 vld data := by
   unfold TRY3.hw_fork hw_fork'
   congr 1
 
-lemma vldOut1_implies_vldIn
+theorem vldOut1_implies_vldIn
     (h : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
       TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn))
     (hvld : vldOut1 n = 1#1) : vldIn n = 1#1 := by
@@ -439,21 +440,180 @@ lemma vldOut1_implies_vldIn
   have : vldIn a = 0#1 := by grind
   simp [this] at hn
 
--- output fires no later than allDone (consumer 1 accepts before both accept)
-lemma rdOut1_before_allDone :
-  (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-    TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn) →
-  rdOut1 n = 1#1 → vldOut1 n = 1#1 →
-  ∃ k, rdIn (n + k) = 1#1 ∧ vldIn (n + k) = 1#1 := by sorry
+theorem rdOut1_before_allDone
+  (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
+    TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn)) (hvldOut1 : vldOut1 n = 1#1)
+  (hgvurIn : globallyValidUntilReady vldIn rdIn) :
+    ∃ k, rdIn (n + k) = 1#1 ∧ vldIn (n + k) = 1#1 := by
+  have hvldIn := vldOut1_implies_vldIn hfork hvldOut1
+  unfold globallyValidUntilReady at hgvurIn
+  specialize hgvurIn n  hvldIn
+  obtain ⟨k, hk⟩ := hgvurIn
+  exists k
+  simp [hk]
 
--- after allDone, circuit resets: emitted_0 and emitted_1 go back to 0
-lemma fork_resets_after_allDone :
-  (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-    TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn) →
-  rdIn n = 1#1 → vldIn n = 1#1 →
-  -- the circuit state at n+1 has emitted_0 = 0, emitted_1 = 0
-  (Stream'.iterate (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn)
-    (0, 0#1, 0#1) (n+1)).2 = (0#1, 0#1) := by sorry
+lemma iterate_succ_apply (f : α → α) (s : α) (n : ℕ) :
+    Stream'.iterate f s (n + 1) = f (Stream'.iterate f s n) := by
+  induction n generalizing s with
+  | zero => simp [Stream'.iterate]
+  | succ k ih =>
+    rw [Stream'.iterate_eq, Stream'.cons]
+    exact ih _
+
+lemma iterate_back_succ (f : α → α) (s : α) (n : ℕ) :
+    Stream'.iterate f s (n + 1) = f (Stream'.iterate f s n) := by
+  induction n generalizing s with
+  | zero => simp [Stream'.iterate_eq, Stream'.cons]
+  | succ k ih => rw [Stream'.iterate_eq, Stream'.cons, ih]; rfl
+
+theorem emitted0_zero_before_allDone
+    (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
+      TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn))
+    /- nothing is emitted before `n`, as emission occurs if `rdOut1 j ∧ vldOut1 j` -/
+    (hbefore : ∀ j < n, rdOut1 j = 0#1 ∨ vldOut1 j = 0#1) :
+    vldOut1 n = vldIn n := by
+  rw [hw_fork_eq] at hfork
+  simp [TRY3.split_stream2] at hfork
+  obtain ⟨-, hvldout1, -⟩ := hfork
+  have hn := congr_fun hvldout1 n
+  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
+  generalize hst : Stream'.iterate
+    (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) n = s at hn
+  obtain ⟨a, b, c⟩ := s
+  dsimp [fork_corec, comb_and, comb_xor, hw_constant] at hn
+  have hb : b = 0#1 := by
+    apply Classical.byContradiction
+    intro hcontra
+    have : b = 1#1 := by grind
+    subst this
+    simp at hn
+    suffices key : ∀ m, (∀ j < m, rdOut1 j = 0#1 ∨ vldOut1 j = 0#1) →
+      (Stream'.iterate (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) m).2.1 = 0#1 by
+      have := key n hbefore
+      rw [hst] at this
+      simp at this
+    intro m
+    induction m with
+    | zero => simp [Stream'.iterate]
+    | succ k ihk =>
+      intro hbef
+      have hbk := ihk (fun j hj => hbef j (Nat.lt_succ_of_lt hj))
+      generalize hsk : Stream'.iterate
+        (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) k = sk
+      obtain ⟨ak, bk, ck⟩ := sk
+      simp [hsk] at hbk; subst hbk
+      rw [iterate_back_succ, hsk]
+      have hak : ak = k := by
+        have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 k
+        simp [hsk] at this; omega
+      have hk := hbef k (Nat.lt_succ_self k)
+      simp only [Function.comp]
+      have hvldk : vldOut1 k = vldIn ak := by
+        have h := congr_fun hvldout1 k
+        unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at h
+        simp_rw [hsk] at h
+        dsimp [fork_corec, comb_and, comb_xor, hw_constant] at h
+        simp_all
+        ext k hk
+        simp [show k = 0 by omega]
+      dsimp [fork_corec, comb_and, comb_xor, comb_or, hw_constant]
+      subst hak
+      by_cases hrd : rdOut1 ak = 1#1 <;> by_cases hvld : vldIn ak = 1#1 <;> by_cases hck : ck = 1#1 <;> by_cases hrd2 : rdOut2 ak = 1#1
+      · simp [hrd, hvld, hck]
+      · simp [hrd, hvld, hck]
+      · have h0 : ck = 0#1 := by grind
+        simp [hrd, hvld, h0, hrd2]
+      · have h0 : ck = 0#1 := by grind
+        have h1 : rdOut2 ak = 0#1 := by grind
+        simp [hrd] at hk
+        simp_all
+      · have h0 : vldIn ak  = 0#1 := by grind
+        simp [hrd, h0, hrd2]
+      · have h0 : vldIn ak = 0#1 := by grind
+        have h1 : rdOut2 ak = 0#1 := by grind
+        simp [hrd, h0, h1]
+      · have h0 : vldIn ak = 0#1 := by grind
+        simp [hrd, h0]
+      · simp [hrd] at hk
+        simp_all
+      · have h1 : rdOut1 ak = 0#1 := by grind
+        simp [h1, hvld, hck]
+      · have h1 : rdOut1 ak = 0#1 := by grind
+        simp [hvld, hck, h1]
+      · have h1 : rdOut1 ak = 0#1 := by grind
+        simp [hvld, h1]
+      · have h1 : rdOut1 ak = 0#1 := by grind
+        simp [h1, hvld]
+      · have h1 : rdOut1 ak = 0#1 := by grind
+        simp [h1, hck]
+      · have h1 : rdOut1 ak = 0#1 := by grind
+        simp [h1, hck]
+      · have h1 : rdOut1 ak = 0#1 := by grind
+        simp [h1]
+      · have h1 : rdOut1 ak = 0#1 := by grind
+        simp [h1]
+  simp [hb] at hn
+  have heq : a = n := by
+    have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
+    rw [hst] at this
+    simp at this
+    assumption
+  rw [← heq] at ⊢ hn
+  simp [hn]
+  ext k hk
+  simp [show k = 0 by omega]
+
+theorem data_remains_constant_if
+    (h : globallyValidAndData vld data)
+    (h' : globallyValidUntilReady vld rdy) :
+  ∀ i, vld i = 1#1 →
+    ∃ k, rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧
+    ∀ j (_hj : j < k), vld (i + j) = 1#1 ∧
+    ∀ j (_hj : j ≤ k), data (i + j) = data i := by
+  unfold globallyValidAndData at h
+  unfold globallyValidUntilReady at h'
+  intros i
+  specialize h' i
+  by_cases htrue : vld i = 1#1
+  · simp [htrue] at h' ⊢
+    obtain ⟨k, hk⟩ := h'
+    exists k
+    simp [hk]
+    by_cases hk0 : 0 < k
+    · intros j hj
+      and_intros
+      · obtain ⟨h1, h2, h3⟩ := hk
+        apply h3
+        assumption
+      · intros l hl
+        induction l
+        · simp
+        · case _ l' ihl' =>
+          rw [show (i + (l' + 1)) = (i + l') + 1 by omega]
+          obtain ⟨h1, h2, h3⟩ := hk
+          by_cases hle : l' + 1 < k
+          · rw [← ihl' (by omega)]
+            apply Eq.symm
+            apply h
+            simp_all
+            and_intros
+            · apply h3
+              omega
+            · rw [show (i + l') + 1 = (i + (l' + 1)) by omega]
+              apply h3
+              assumption
+          · have : l' + 1 = k := by omega
+            specialize ihl' (by omega)
+            rw [← ihl']
+            apply Eq.symm
+            apply h
+            and_intros
+            · apply h3
+              assumption
+            · rw [show k = l' + 1 by omega, show (i + (l' + 1)) = (i + l') + 1 by omega] at h2
+              assumption
+    · simp [show k = 0 by omega]
+  · simp [show vld i = 0#1 by grind]
 
 /-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
 theorem hw_fork_refines1_with_fork:
@@ -489,7 +649,6 @@ theorem hw_fork_refines1_with_fork:
   · intros sin sout hrel
     /- `sin` and `sout` exist at the handshake level of the design -/
     rcases hrel
-
     rename_i vldOut2' dataOut2' rdOut2' rdIn' vldIn' dataIn' rdOut1' vldOut1' dataOut1' hgvurIn' hgvdIn' hgfrOut1' hhfork hsin hsout
     unfold globallyFinallyReady at hgfrOut1'
     specialize hgfrOut1' 0
@@ -499,68 +658,7 @@ theorem hw_fork_refines1_with_fork:
     exists fst
     simp_all
 
-
-    exists fst
-    and_intros
-    ·
-      sorry
-    · congr
-      rw [hsin, hsout]
-      congr
-      · unfold globallyValidUntilReady at hgvurIn'
-        unfold toStream at hsout
-        have hfst1 := congr_fun hsout fst
-        simp [hfst] at hfst1
-        unfold TRY3.hw_fork TRY3.split_stream2 at hhfork
-        simp at hhfork
-        have hhforkfst := congr_fun hhfork fst
-        sorry
-      ·
-        sorry
-      ·
-        sorry
-      -- unfold toStream at hsout hsin
-      -- have h1 := congr_fun hsout fst
-      -- have h2 := congr_fun hsout fst
-      -- simp [hfst] at h1
-      -- /- suppose no valid signal ever arrives -/
-      -- by_cases hnone : ∀ pn, vld' pn= 0#1
-      -- · simp_all
-      --   apply congr_fun
-      --   congr
-      --   ext l hl
-      --   constructor
-      --   · case _ =>
-      --     intro hh
-      --     simp [Stream'.get] at hh
-      --   · case _ =>
-      --     intro hh
-      --     simp at hh
-      --     simp [Stream'.get] at hh
-      --     sorry
-      -- · simp at hnone
-      --   have ⟨fst', hfst'⟩ := hnone
-      --   apply congr_fun
-      --   congr
-      --   rw [hsin, hsout]
-      --   simp
-      --   ext l hl
-      --   simp only [Stream'.get]
-      --   specialize hsync l
-      --   simp [hsync]
-      --   grind
-    · -- simp [hsin, Stream'.get, toStream]
-      -- intros i hi hi'
-      -- specialize hsync i
-      -- simp_all
-      -- intros hi''
-      -- intro hcontra
-      -- simp [hcontra, hi''] at hsync
-      -- unfold toStream at hsin
-      -- have hh := congr_fun hsin i
-      -- simp [hi', hsync] at hh
-      sorry
-    · sorry
+    sorry
   · /- x y rdIn vldIn dataIn rdOut1 vldOut dataOut -/
     apply relation_fork.intro (toStream rdIn vldIn dataIn) (toStream rdOut1 vldOut1 dataOut1)
     · rfl
