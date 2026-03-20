@@ -747,6 +747,34 @@ theorem exists_first_transmitted_element
     simp [combined] at h0
     grind
 
+theorem exists_first_received_element
+  (hv : ∃ i, rdy i = 1#1 ∧ vld i = 1#1)
+  (hx : x = toStream rdy vld data) :
+    ∃ k, (x k = some (data k) ∧ ∀ j (_ : j < k), x j = none) := by
+  obtain ⟨fst, hfst_fire, hfst_min⟩ := if_exists_first_exists
+    (st := fun n => if ((rdy n == 1#1) && (vld n == 1#1)) then 1#1 else 0#1)
+    (by
+      obtain ⟨k, hk⟩ := hv
+      exists k
+      simp [hk])
+  refine ⟨fst, ?_, ?_⟩
+  · rw [hx, toStream]
+    have : ((rdy fst == 1#1) && (vld fst == 1#1))= true := by
+      by_contra hc; simp [hc] at hfst_fire
+    simp only [Bool.and_eq_true, beq_iff_eq] at this
+    simp [this.1, this.2]
+  · intro j hj
+    rw [hx, toStream]
+    have hj_not := hfst_min j hj
+    by_cases hrdy : rdy j == 1#1 && vld j == 1#1
+    · simp [hrdy] at hj_not
+    · simp only [Bool.and_eq_true, beq_iff_eq, not_and] at hrdy
+      by_cases hr : rdy j = 1#1
+      · have hvj := hrdy (by simpa using hr)
+        simp [show (rdy j == 1#1) = true by simpa, show (vld j == 1#1) = false by simpa]
+      · simp [show (rdy j == 1#1) = false by simpa]
+
+
 theorem exists_transmitted_element
   (h : globallyValidUntilReady vld rdy)
   (hx : x = toStream rdy vld data) :
@@ -847,12 +875,38 @@ theorem hw_fork_refines1_with_fork:
     · have := if_exists_first_exists hvldExists
       obtain ⟨fstVldTrue, hfstVldTrue1, hfstVldTrue2⟩ := this
       /- we need to find the first element that is transmitted -/
-      have hfst := exists_first_transmitted_element
+      have hfstSent := exists_first_transmitted_element
               (data := dataIn') (vld := vldIn') (rdy := rdIn') (x := sin)
               (by grind) (by assumption) (by assumption)
+      unfold globallyFinallyReady at hgfrOut1'
+      have ⟨fstRdyOut, hfstRdyOut⟩ := if_exists_first_exists (hgfrOut1' fstVldTrue)
+
+      have hvldinout := vldIn_and_ready_implies_vldOut1
+              (dataIn := dataIn') (vldIn := vldIn') (rdIn := rdIn')
+              (rdOut1 := rdOut1') (rdOut2 := rdOut2') (vldOut1 := vldOut1') (vldOut2 := vldOut2')
+              (dataOut1 := dataOut1') (dataOut2 := dataOut2') (by grind) (by grind)
+      have hfstRec := exists_first_received_element
+              (data := dataOut1') (vld := vldOut1') (rdy := rdOut1') (x := sout) (hx := hsout)
+              (by
+                exists (fstVldTrue + fstRdyOut)
+                simp [hfstRdyOut]
+                have : vldIn' (fstVldTrue + fstRdyOut) = 1#1 := by
+                  unfold globallyValidUntilReady at hgvurIn'
+                  specialize hgvurIn' fstVldTrue hfstVldTrue1
+                  obtain ⟨kk, h2, h3, h4⟩ := hgvurIn'
+                  by_cases hle : fstRdyOut ≤ kk
+                  · grind
+                  · simp_all
+                    obtain ⟨ h1, h2⟩ := hfstRdyOut
+
+
+                    sorry
+                have := vldOut_eq_vldIn_of_fork_unitl_sent (n := fstVldTrue + fstRdyOut) (hfork := hhfork)
+                  (by sorry)
+                grind)
+
 
       obtain ⟨fstSent, hfst1, hfst2⟩ := hfst
-
       exists fstVldTrue, fstSent
       by_cases hle : fstVldTrue ≤ fstSent
       · let diff := fstSent - fstVldTrue
