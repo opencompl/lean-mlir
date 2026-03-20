@@ -537,7 +537,7 @@ lemma iterate_succ_apply (f : α → α) (s : α) (n : ℕ) :
     rw [Stream'.iterate_eq, Stream'.cons]
     exact ih _
 
-theorem emitted0_zero_before_allDone
+theorem vldOut_eq_vldIn_of_fork_unitl_sent
     (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
       TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn))
     /- nothing is emitted before `n`, as emission occurs if `rdOut1 j ∧ vldOut1 j` -/
@@ -639,7 +639,7 @@ theorem data_remains_constant_if
     (h' : globallyValidUntilReady vld rdy) :
   ∀ i, vld i = 1#1 →
     ∃ k, rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧
-    ∀ j (_hj : j < k), vld (i + j) = 1#1 ∧
+    ∀ j (_hj : j ≤ k), vld (i + j) = 1#1 ∧
     ∀ j (_hj : j ≤ k), data (i + j) = data i := by
   unfold globallyValidAndData at h
   unfold globallyValidUntilReady at h'
@@ -654,8 +654,10 @@ theorem data_remains_constant_if
     · intros j hj
       and_intros
       · obtain ⟨h1, h2, h3⟩ := hk
-        apply h3
-        assumption
+        by_cases hlt : j < k
+        · apply h3
+          exact hlt
+        · simp [show j = k by omega, h2]
       · intros l hl
         induction l
         · simp
@@ -683,7 +685,7 @@ theorem data_remains_constant_if
               assumption
             · rw [show k = l' + 1 by omega, show (i + (l' + 1)) = (i + l') + 1 by omega] at h2
               assumption
-    · simp [show k = 0 by omega]
+    · simp [show k = 0 by omega, htrue]
   · simp [show vld i = 0#1 by grind]
 
 
@@ -698,10 +700,57 @@ theorem not_exists_transmitted_element
   simp [show vld k = 0#1 by grind] at hkx
   simp [hkx]
 
+theorem not_exists_transmitted_element_before
+  (hv : ∀ i (_ : i < limit), vld i = 0#1)
+  (hx : x = toStream rdy vld data) :
+    ∀ k (_ : k < limit), x k  = none := by
+  intros k hk
+  unfold toStream at hx
+  simp at hx
+  have hkx := congr_fun hx k
+  simp [show vld k = 0#1 by grind] at hkx
+  simp [hkx]
+
+theorem if_exists_first_exists {st : Stream' (BitVec 1)} (h : ∃ k , st k = 1#1) :
+    ∃ j, (st j = 1#1 ∧ ∀ n (_ : n < j), st n = 0#1) := by
+  suffices key : ∀ k, st k = 1#1 → ∃ j, st j = 1#1 ∧ ∀ n < j, st n = 0#1 by
+    obtain ⟨k, hk⟩ := h; exact key k hk
+  intro k
+  induction k using Nat.strongRecOn with
+  | _ k ih =>
+    intro hk
+    by_cases h0 : ∃ m < k, st m = 1#1
+    · obtain ⟨m, hm, hms⟩ := h0
+      exact ih m hm hms
+    · refine ⟨k, hk, fun n hn => ?_⟩
+      by_contra hc
+      have hst : st n = 1#1 := by grind
+      exact h0 ⟨n, hn, hst⟩
+
+theorem exists_first_transmitted_element
+  (hv : ∃ i, vld i = 1#1)
+  (hgf : globallyValidUntilReady vld rdy)
+  (hx : x = toStream rdy vld data) :
+    ∃ k, (x k  = some (data k) ∧ ∀ j (_ : j < k), x j = none) := by
+  obtain ⟨i, hi⟩ := hv
+  obtain ⟨k, hkr, hkv, -⟩ := hgf i hi
+  let combined := fun n => if rdy n == 1#1 && vld n == 1#1 then 1#1 else (0#1 : BitVec 1)
+  have hex : ∃ n, combined n = 1#1 := ⟨i + k, by simp [combined, hkr, hkv]⟩
+  obtain ⟨j, hjfire, hjmin⟩ := if_exists_first_exists hex
+  refine ⟨j, ?_, ?_⟩
+  · simp [combined] at hjfire
+    rw [hx, toStream]
+    simp [hjfire.1, hjfire.2]
+  · intro l hl
+    rw [hx, toStream]
+    have h0 := hjmin l hl
+    simp [combined] at h0
+    grind
+
 theorem exists_transmitted_element
   (h : globallyValidUntilReady vld rdy)
   (hx : x = toStream rdy vld data) :
-    ∃ k, x k  = some (data k ) ∨ ∀ k, x k = none := by
+    ∃ k, x k  = some (data k) ∨ ∀ k, x k = none := by
   by_cases hexists : ∃ i, vld i = 1#1
   · unfold toStream at hx
     unfold globallyValidUntilReady at h
@@ -713,6 +762,51 @@ theorem exists_transmitted_element
     simp [hk1, hk2] at hkx
     simp [hkx]
   · simp [not_exists_transmitted_element (x := x) (data := data) (rdy := rdy) (vld := vld) (by grind) hx]
+
+theorem false_of_width_one (b : BitVec 1) (h : ¬ b = 1#1 ) : b = 0#1 := by grind
+
+theorem true_of_width_one (b : BitVec 1) (h : ¬ b = 0#1 ) : b = 1#1 := by grind
+
+theorem vldIn_and_eventually_ready_implies_vldOut1
+  (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) = TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn))
+  (hvldIn : globallyFinallyReady vldIn) :
+    ∃ k, vldOut1 k = 1#1 := by
+  obtain ⟨n, hvldn, hnmin⟩ := if_exists_first_exists (hvldIn 0 |>.imp (fun k hk => by simpa using hk))
+  have hbefore : ∀ j < n, rdOut1 j = 0#1 ∨ vldOut1 j = 0#1 := by
+    intro j hj
+    right
+    have hvldj : vldIn j = 0#1 := hnmin j hj
+    by_contra hc
+    have : vldIn j = 1#1 := vldOut1_implies_vldIn hfork (by grind)
+    rw [this] at hvldj
+    simp at hvldj
+  exact ⟨n, vldOut_eq_vldIn_of_fork_unitl_sent hfork hbefore |>.symm ▸ hvldn⟩
+
+theorem vldIn_and_ready_implies_vldOut1
+  (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) = TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn))
+  (hvldIn : ∃ j, vldIn j = 1#1) :
+    ∃ k, vldOut1 k = 1#1 := by
+  obtain ⟨n, hvldn, hnmin⟩ := if_exists_first_exists (st := vldIn) (by grind)
+  have hbefore : ∀ j < n, rdOut1 j = 0#1 ∨ vldOut1 j = 0#1 := by
+    intro j hj
+    right
+    have hvldj : vldIn j = 0#1 := hnmin j hj
+    by_contra hc
+    have : vldIn j = 1#1 := vldOut1_implies_vldIn hfork (by grind)
+    rw [this] at hvldj
+    simp at hvldj
+  exact ⟨n, vldOut_eq_vldIn_of_fork_unitl_sent hfork hbefore |>.symm ▸ hvldn⟩
+
+lemma fork_globallyValidAndData_out1
+    (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
+      TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn))
+    (hgv : globallyValidAndData vldIn dataIn) :
+    globallyValidAndData vldOut1 dataOut1 := by
+  intro i ⟨hi1, hi2⟩
+  have hdata := hw_fork_out0 hfork
+  rw [← hdata i, ← hdata (i+1)]
+  apply hgv
+  exact ⟨vldOut1_implies_vldIn hfork hi1, vldOut1_implies_vldIn hfork hi2⟩
 
 /-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
 theorem hw_fork_refines1_with_fork:
@@ -750,7 +844,54 @@ theorem hw_fork_refines1_with_fork:
     rcases hrel
     rename_i vldOut2' dataOut2' rdOut2' rdIn' vldIn' dataIn' rdOut1' vldOut1' dataOut1' hgvurIn' hgvdIn' hgfrOut1' hhfork hsin hsout
     by_cases hvldExists : ∃ k, vldIn' k = 1#1
-    · sorry
+    · have := if_exists_first_exists hvldExists
+      obtain ⟨fstVldTrue, hfstVldTrue1, hfstVldTrue2⟩ := this
+      /- we need to find the first element that is transmitted -/
+      have hfst := exists_first_transmitted_element
+              (data := dataIn') (vld := vldIn') (rdy := rdIn') (x := sin)
+              (by grind) (by assumption) (by assumption)
+
+      obtain ⟨fstSent, hfst1, hfst2⟩ := hfst
+
+      exists fstVldTrue, fstSent
+      by_cases hle : fstVldTrue ≤ fstSent
+      · let diff := fstSent - fstVldTrue
+        have : fstSent = fstVldTrue + diff := by omega
+        rw [this] at *
+        and_intros
+        · sorry
+        · simp [Stream'.get]
+          have := hw_fork_out0 hfork
+          simp [hsin, hsout, toStream]
+          simp_all
+          have := hw_fork_out0 hhfork (fstVldTrue + diff)
+          rw [← this]
+          have hconst := data_remains_constant_if (rdy := rdIn') (data := dataIn') (vld := vldIn') (by grind) (by grind)
+
+          sorry
+        · intros j hj
+          exact not_exists_transmitted_element_before hfstVldTrue2 hsin j hj
+        · intros j hj
+          simp [show Stream'.get sout j = sout j by rfl]
+          have hne := not_exists_transmitted_element_before
+                  (data := dataOut1') (vld := vldOut1') (rdy := rdOut1') (x := sout) (limit := fstVldTrue + diff)
+                  (hx := by grind)
+          by_cases hfst3 : ∀ i < fstVldTrue + diff, vldOut1' i = 0#1
+          · apply hne
+            · intros k hk
+              simp_all
+            · exact hj
+          · have hfstVldOut : ∃ j, j < fstVldTrue + diff ∧ vldOut1' j = 1#1 := by grind
+            obtain ⟨fstVldOut, hfstVldOut⟩ := hfstVldOut
+            have := vldOut1_implies_vldIn
+                    (rdIn := rdIn') (vldOut1 := vldOut1') (n := fstVldOut)
+                    (dataIn := dataIn') (vldIn := vldIn') (rdOut2 := rdOut2')
+                    (rdOut1 := rdOut1') (dataOut2 := dataOut2') (dataOut1 := dataOut1')
+                    (vldOut2 := vldOut2') (by grind)
+
+
+            sorry
+      · sorry
     · /- if we never have a valid signal, all streams are empty and the relation holds trivially -/
       have hnonein := not_exists_transmitted_element (x := sin) (data := dataIn') (rdy := rdIn')
                                               (vld := vldIn') (by grind) hsin
@@ -776,7 +917,6 @@ theorem hw_fork_refines1_with_fork:
       have hnevldin : ∀ k, vldIn' k = 0#1 := by grind
       have hnonet := not_exists_transmitted_element (x := sout) (data := dataOut1') (rdy := rdOut1')
                                               (vld := vldOut1') (by grind) hsout
-
       exists 0, 0
       and_intros
       · simp
