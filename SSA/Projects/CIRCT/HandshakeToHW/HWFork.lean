@@ -266,13 +266,15 @@ inductive relation' : Stream (BitVec w) → Stream (BitVec w) → Prop where
       relation' x y /- defining the type of the relation -/
 
 inductive relation_fork : Stream (BitVec w) → Stream (BitVec w) → Prop where
-  | intro x y rdIn vldIn dataIn rdOut1 vldOut1 dataOut1 :  /- same as `∀ x y` -/
+  | intro x y rdIn vldIn dataIn rdOut1 vldOut1 dataOut1 rdOut2 vldOut2 dataOut2 :  /- same as `∀ x y` -/
       /- x is the high-level (input), y is the low-level (output) -/
       x = toStream rdIn vldIn dataIn →
       y = toStream rdOut1 vldOut1 dataOut1 →
       /- if a signal in `x` is valid (`vldIn i = 1#1`), it will remain valid (at least) until a
         ready signal is received (`rdIn (i + k) = 1#1`). A ready signal is eventually definitely received.  -/
       globallyValidUntilReady vldIn rdIn →
+      globallyValidUntilReady vldOut1 rdOut1 →
+      globallyValidUntilReady vldOut2 rdOut2 →
       /- if a signal in `x` is valid for more than one cycle (`vldIn i = 1#1 ∧ vldIn (i + 1) = 1#1`),
         the data does not change (`dataIn i = dataIn (i + 1)`) -/
       globallyValidAndData vldIn dataIn →
@@ -859,104 +861,46 @@ theorem hw_fork_refines1_with_fork:
     /- we want to prove that the outputs of the handshake fork are respectively
       bisimilar to the ready-valid wrapping of the output of the hardware fork -/
     (toStream rdIn vldIn dataIn) ~ (toStream rdOut1 vldOut1 dataOut1) := by
-  intros hfork hgvurOutt1 hvgurOut2 hgvurIn hgvdOut1 hgvdOut2 hgvIn hgfrIn hgfrOUt1 hgfrOut2
+  intros hfork hgvurOutt1 hvgurOut2 hgvurIn hgvdOut1 hgvdOut2 hgvdIn hgfrIn hgfrOut1 hgfrOut2
   /- if 0, 0 works we don't need bisimilarity -/
   /- the high-level fork will never wait for anything (whenever an input is available),
     while the low-level one might have to, and depends on the `rd1` signal eventually being true.
     if we choose `pred := Eq` the relation is too strong, the second goal is not provable.
   -/
-
   apply Bisim.coinduct (pred := relation_fork)
   · intros sin sout hrel
     /- `sin` and `sout` exist at the handshake level of the design -/
     rcases hrel
-    rename_i vldOut2' dataOut2' rdOut2' rdIn' vldIn' dataIn' rdOut1' vldOut1' dataOut1' hgvurIn' hgvdIn' hgfrOut1' hhfork hsin hsout
-    by_cases hvldExists : ∃ k, vldIn' k = 1#1
+    expose_names
+    by_cases hvldExists : ∃ k, vldIn_1 k = 1#1
     · have := if_exists_first_exists hvldExists
       obtain ⟨fstVldTrue, hfstVldTrue1, hfstVldTrue2⟩ := this
       /- we need to find the first element that is transmitted -/
       have hfstSent := exists_first_transmitted_element
-              (data := dataIn') (vld := vldIn') (rdy := rdIn') (x := sin)
+              (data := dataIn_1) (vld := vldIn_1) (rdy := rdIn_1) (x := sin)
               (by grind) (by assumption) (by assumption)
-      unfold globallyFinallyReady at hgfrOut1'
-      have ⟨fstRdyOut, hfstRdyOut⟩ := if_exists_first_exists (hgfrOut1' fstVldTrue)
+      unfold globallyFinallyReady at h_4
+      have ⟨fstRdyOut, hfstRdyOut⟩ := if_exists_first_exists (h_4 fstVldTrue)
 
       have hvldinout := vldIn_and_ready_implies_vldOut1
-              (dataIn := dataIn') (vldIn := vldIn') (rdIn := rdIn')
-              (rdOut1 := rdOut1') (rdOut2 := rdOut2') (vldOut1 := vldOut1') (vldOut2 := vldOut2')
-              (dataOut1 := dataOut1') (dataOut2 := dataOut2') (by grind) (by grind)
+              (dataIn := dataIn_1) (vldIn := vldIn_1) (rdIn := rdIn_1)
+              (rdOut1 := rdOut1_1) (rdOut2 := rdOut2_1) (vldOut1 := vldOut1_1) (vldOut2 := vldOut2_1)
+              (dataOut1 := dataOut1_1) (dataOut2 := dataOut2_1) (by grind) (by grind)
+
       have hfstRec := exists_first_received_element
-              (data := dataOut1') (vld := vldOut1') (rdy := rdOut1') (x := sout) (hx := hsout)
-              (by
-                exists (fstVldTrue + fstRdyOut)
-                simp [hfstRdyOut]
-                have : vldIn' (fstVldTrue + fstRdyOut) = 1#1 := by
-                  unfold globallyValidUntilReady at hgvurIn'
-                  specialize hgvurIn' fstVldTrue hfstVldTrue1
-                  obtain ⟨kk, h2, h3, h4⟩ := hgvurIn'
-                  by_cases hle : fstRdyOut ≤ kk
-                  · grind
-                  · simp_all
-                    obtain ⟨ h1, h2⟩ := hfstRdyOut
-
-
-                    sorry
-                have := vldOut_eq_vldIn_of_fork_unitl_sent (n := fstVldTrue + fstRdyOut) (hfork := hhfork)
-                  (by sorry)
-                grind)
-
-
-      obtain ⟨fstSent, hfst1, hfst2⟩ := hfst
-      exists fstVldTrue, fstSent
-      by_cases hle : fstVldTrue ≤ fstSent
-      · let diff := fstSent - fstVldTrue
-        have : fstSent = fstVldTrue + diff := by omega
-        rw [this] at *
-        and_intros
-        · sorry
-        · simp [Stream'.get]
-          have := hw_fork_out0 hfork
-          simp [hsin, hsout, toStream]
-          simp_all
-          have := hw_fork_out0 hhfork (fstVldTrue + diff)
-          rw [← this]
-          have hconst := data_remains_constant_if (rdy := rdIn') (data := dataIn') (vld := vldIn') (by grind) (by grind)
-
-          sorry
-        · intros j hj
-          exact not_exists_transmitted_element_before hfstVldTrue2 hsin j hj
-        · intros j hj
-          simp [show Stream'.get sout j = sout j by rfl]
-          have hne := not_exists_transmitted_element_before
-                  (data := dataOut1') (vld := vldOut1') (rdy := rdOut1') (x := sout) (limit := fstVldTrue + diff)
-                  (hx := by grind)
-          by_cases hfst3 : ∀ i < fstVldTrue + diff, vldOut1' i = 0#1
-          · apply hne
-            · intros k hk
-              simp_all
-            · exact hj
-          · have hfstVldOut : ∃ j, j < fstVldTrue + diff ∧ vldOut1' j = 1#1 := by grind
-            obtain ⟨fstVldOut, hfstVldOut⟩ := hfstVldOut
-            have := vldOut1_implies_vldIn
-                    (rdIn := rdIn') (vldOut1 := vldOut1') (n := fstVldOut)
-                    (dataIn := dataIn') (vldIn := vldIn') (rdOut2 := rdOut2')
-                    (rdOut1 := rdOut1') (dataOut2 := dataOut2') (dataOut1 := dataOut1')
-                    (vldOut2 := vldOut2') (by grind)
-
-
-            sorry
-      · sorry
+              (data := dataOut1_1) (vld := vldOut1_1) (rdy := rdOut1_1) (x := sout) (hx := h_7)
+      sorry
     · /- if we never have a valid signal, all streams are empty and the relation holds trivially -/
-      have hnonein := not_exists_transmitted_element (x := sin) (data := dataIn') (rdy := rdIn')
-                                              (vld := vldIn') (by grind) hsin
+      have hnonein := not_exists_transmitted_element (x := sin) (data := dataIn_1) (rdy := rdIn_1)
+                                              (vld := vldIn_1) (by grind) h_6
       /- the fork module will never transmit anything meaningful -/
-      rw [hw_fork_eq] at hhfork
-      unfold TRY3.split_stream2 at hhfork
-      simp at hhfork
-      have hhfork1 := hhfork
+      rw [hw_fork_eq] at h_5
+      unfold TRY3.split_stream2 at h_5
+      simp at h_5
+      have hhfork1 := h_5
       obtain ⟨hrd', hvld1', hvld2', hdata1', hdata2'⟩ := hhfork1
-      rw [hsin, hsout]
-      have hnoneout : ∀ k, vldOut1' k = 0#1 := by
+      rw [h_6, h_7]
+      have hnoneout : ∀ k, vldOut1_1 k = 0#1 := by
           unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hvld1'
           intros k
           generalize hst : Stream'.iterate
@@ -965,27 +909,40 @@ theorem hw_fork_refines1_with_fork:
           have hk := congr_fun hvld1' k
           simp [comb_and, hw_constant] at hk
           simp_all
-          have : vldIn' (Stream'.iterate (Prod.snd ∘ fork_corec rdOut1' rdOut2' vldIn' dataIn') (0, 0#1, 0#1) k).1 = 0#1 := by
+
+          have : vldIn_1 (Stream'.iterate (Prod.snd ∘ fork_corec rdOut1_1 rdOut2_1 vldIn_1 dataIn_1) (0, 0#1, 0#1) k).1 = 0#1 := by
             grind
           simp [this]
-      have hnevldin : ∀ k, vldIn' k = 0#1 := by grind
-      have hnonet := not_exists_transmitted_element (x := sout) (data := dataOut1') (rdy := rdOut1')
-                                              (vld := vldOut1') (by grind) hsout
+      have hnoneout2 : ∀ k, vldOut2_1 k = 0#1 := by
+          unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hvld2'
+          intros k
+          generalize hst : Stream'.iterate
+            (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) k = s at hvld2'
+          simp [fork_corec] at hvld2'
+          have hk := congr_fun hvld2' k
+          simp [comb_and, hw_constant] at hk
+          simp_all
+          have : vldIn_1 (Stream'.iterate (Prod.snd ∘ fork_corec rdOut1_1 rdOut2_1 vldIn_1 dataIn_1) (0, 0#1, 0#1) k).1 = 0#1 := by
+            grind
+          simp [this]
+      have hnevldin : ∀ k, vldIn_1 k = 0#1 := by grind
+      have hnonet := not_exists_transmitted_element (x := sout) (data := dataOut1_1) (rdy := rdOut1_1)
+                                              (vld := vldOut1_1) (by grind) h_7
       exists 0, 0
       and_intros
       · simp
-        generalize hxgen : Stream'.drop 1 (toStream rdIn' vldIn' dataIn') = x'
-        generalize hygen : Stream'.drop 1 (toStream rdOut1' vldOut1' dataOut1') = y'
-        apply relation_fork.intro (x := x') (y := y')
-                (dataIn := Stream'.drop 1 dataIn')
-                (rdIn := Stream'.drop 1 rdIn')
-                (vldIn := Stream'.drop 1 vldIn')
-                (vldOut1 := Stream'.drop 1 vldOut1')
-                (vldOut2 := Stream'.drop 1 vldOut2')
-                (dataOut1 := Stream'.drop 1 dataOut1')
-                (dataOut2 := Stream'.drop 1 dataOut2')
-                (rdOut1 := Stream'.drop 1 rdOut1')
-                (rdOut2 := Stream'.drop 1 rdOut2')
+        generalize hxgen : Stream'.drop 1 (toStream rdIn_1 vldIn_1 dataIn_1) = y'
+        generalize hygen : Stream'.drop 1 (toStream rdOut1_1 vldOut1_1 dataOut1_1) = x'
+        apply relation_fork.intro (x := y') (y := x')
+                (dataIn := Stream'.drop 1 dataIn_1)
+                (rdIn := Stream'.drop 1 rdIn_1)
+                (vldIn := Stream'.drop 1 vldIn_1)
+                (vldOut1 := Stream'.drop 1 vldOut1_1)
+                (vldOut2 := Stream'.drop 1 vldOut2_1)
+                (dataOut1 := Stream'.drop 1 dataOut1_1)
+                (dataOut2 := Stream'.drop 1 dataOut2_1)
+                (rdOut1 := Stream'.drop 1 rdOut1_1)
+                (rdOut2 := Stream'.drop 1 rdOut2_1)
         · rw [← hxgen]
           rfl
         · rw [← hygen]
@@ -994,41 +951,55 @@ theorem hw_fork_refines1_with_fork:
           unfold globallyValidUntilReady
           intros j hj
           specialize hnevldin (j + 1)
-          have : Stream'.drop 1 vldIn' j = vldIn' (j + 1) := by rfl
+          have : Stream'.drop 1 vldIn_1 j = vldIn_1 (j + 1) := by rfl
           simp [this, hnevldin] at hj
+        · unfold globallyValidUntilReady
+          intros j hj
+          apply Classical.byContradiction
+          simp [Stream'.drop] at hj
+          have := hnoneout (1 + j)
+          simp [show vldOut1_1.get (j + 1) = vldOut1_1 (j + 1) by rfl] at hj
+          simp [Nat.add_comm (n := j), this] at hj
+        · unfold globallyValidUntilReady
+          intros j hj
+          apply Classical.byContradiction
+          simp [Stream'.drop] at hj
+          have := hnoneout2 (1 + j)
+          simp [show vldOut2_1.get (j + 1) = vldOut2_1 (j + 1) by rfl] at hj
+          simp [Nat.add_comm (n := j), this] at hj
         · /- contra in hj: there is no i such that vldIn' = 1#1 -/
           unfold globallyValidAndData
           intros j hj
-          have : Stream'.drop 1 vldIn' j = vldIn' (j + 1) := by rfl
+          have : Stream'.drop 1 vldIn_1 j = vldIn_1 (j + 1) := by rfl
           specialize hnevldin (j + 1)
           simp [this, hnevldin] at hj
         · /- follows from `hgfrOut1'` -/
-          unfold globallyFinallyReady at hgfrOut1' ⊢
+          unfold globallyFinallyReady at h_4 ⊢
           intros i
-          specialize hgfrOut1' (i + 1)
-          obtain ⟨j, hj⟩ := hgfrOut1'
+          specialize h_4 (i + 1)
+          obtain ⟨j, hj⟩ := h_4
           exists j
-          have : Stream'.drop 1 rdOut1' (i + j) = rdOut1' ((i + j) + 1) := by rfl
+          have : Stream'.drop 1 rdOut1_1 (i + j) = rdOut1_1 ((i + j) + 1) := by rfl
           rw [this, show i + j + 1 = i + 1 + j by omega, hj]
         · /- after dropping one element, all the relations defined by the fork module remain.
             We see this by unfolding the fork hypotheses -/
           unfold TRY3.split_stream2
           simp
           have h1 := hw_fork'_of_all_none
-                    (dataIn := Stream'.drop 1 dataIn')
-                    (vldIn := Stream'.drop 1 vldIn')
-                    (rdOut1 := Stream'.drop 1 rdOut1')
-                    (rdOut2 := Stream'.drop 1 rdOut2')
+                    (dataIn := Stream'.drop 1 dataIn_1)
+                    (vldIn := Stream'.drop 1 vldIn_1)
+                    (rdOut1 := Stream'.drop 1 rdOut1_1)
+                    (rdOut2 := Stream'.drop 1 rdOut2_1)
                     (by
                       intro k
                       specialize hnevldin (k + 1)
-                      simp [show Stream'.drop 1 vldIn' k = vldIn' (k + 1) by rfl, hnevldin]
+                      simp [show Stream'.drop 1 vldIn_1 k = vldIn_1 (k + 1) by rfl, hnevldin]
                       )
           have h2 := hw_fork'_of_all_none
-                    (dataIn := dataIn')
-                    (vldIn := vldIn')
-                    (rdOut1 := rdOut1')
-                    (rdOut2 := rdOut2')
+                    (dataIn := dataIn_1)
+                    (vldIn := vldIn_1)
+                    (rdOut1 := rdOut1_1)
+                    (rdOut2 := rdOut2_1)
                     (by grind)
           rw [hw_fork_eq]
           simp_all
@@ -1036,91 +1007,91 @@ theorem hw_fork_refines1_with_fork:
           · rfl
           · ext l n
             have hlhs := hw_fork_out0
-              (data_in := dataIn')
-              (vld_in := vldIn')
-              (rd0_in := rdOut1')
-              (rd1_in := rdOut2')
-              (rdy_out := fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).1)
-              (vld0_out := fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.1)
-              (vld1_out := fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.2.1)
-              (data0_out := fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.2.2.1)
-              (data1_out := fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.2.2.2)
+              (data_in := dataIn_1)
+              (vld_in := vldIn_1)
+              (rd0_in := rdOut1_1)
+              (rd1_in := rdOut2_1)
+              (rdy_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).1)
+              (vld0_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.1)
+              (vld1_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.1)
+              (data0_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1)
+              (data1_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2)
               (by rw [← hw_fork_eq]; simp [TRY3.split_stream2]) (1 + l)
             have hrhs := hw_fork_out0
               (rdy_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1') (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn') (Stream'.drop 1 dataIn') i).1)
+                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).1)
               (vld0_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1') (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn') (Stream'.drop 1 dataIn') i).2.1)
+                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.1)
               (vld1_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1') (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn') (Stream'.drop 1 dataIn') i).2.2.1)
+                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.1)
               (data0_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1') (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn') (Stream'.drop 1 dataIn') i).2.2.2.1)
+                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.1)
               (data1_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1') (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn') (Stream'.drop 1 dataIn') i).2.2.2.2)
+                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.2)
               (by rw [← hw_fork_eq]; simp [TRY3.split_stream2]) l
             simp [Stream'.drop] at hrhs
-            have h1 : Stream'.get (fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.2.2.1) (1 + l) =
-                  (fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.2.2.1) (1 + l) := by rfl
+            have h1 : Stream'.get (fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1) (1 + l) =
+                  (fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1) (1 + l) := by rfl
             simp [h1]
             have h2 : (Stream'.get (fun i =>
-                        (hw_fork' (Stream'.drop 1 rdOut1')
-                          (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn')
-                          (Stream'.drop 1 dataIn') i).2.2.2.1) l) =
+                        (hw_fork' (Stream'.drop 1 rdOut1_1)
+                          (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1)
+                          (Stream'.drop 1 dataIn_1) i).2.2.2.1) l) =
                       (fun i =>
-                        (hw_fork' (Stream'.drop 1 rdOut1')
-                          (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn')
-                          (Stream'.drop 1 dataIn') i).2.2.2.1) l := by rfl
+                        (hw_fork' (Stream'.drop 1 rdOut1_1)
+                          (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1)
+                          (Stream'.drop 1 dataIn_1) i).2.2.2.1) l := by rfl
             simp [h2]
             simp [← hrhs, ← hlhs]
-            simp [show dataIn'.get (l + 1) = dataIn' (l + 1) by rfl, Nat.add_comm]
+            simp [show dataIn_1.get (l + 1) = dataIn_1 (l + 1) by rfl, Nat.add_comm]
           · ext l n
             have hlhs := hw_fork_out1
-              (data_in := dataIn')
-              (vld_in := vldIn')
-              (rd0_in := rdOut1')
-              (rd1_in := rdOut2')
-              (rdy_out := fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).1)
-              (vld0_out := fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.1)
-              (vld1_out := fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.2.1)
-              (data0_out := fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.2.2.1)
-              (data1_out := fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.2.2.2)
+              (data_in := dataIn_1)
+              (vld_in := vldIn_1)
+              (rd0_in := rdOut1_1)
+              (rd1_in := rdOut2_1)
+              (rdy_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).1)
+              (vld0_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.1)
+              (vld1_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.1)
+              (data0_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1)
+              (data1_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2)
               (by rw [← hw_fork_eq]; simp [TRY3.split_stream2]) (1 + l)
             have hrhs := hw_fork_out1
               (rdy_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1') (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn') (Stream'.drop 1 dataIn') i).1)
+                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).1)
               (vld0_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1') (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn') (Stream'.drop 1 dataIn') i).2.1)
+                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.1)
               (vld1_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1') (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn') (Stream'.drop 1 dataIn') i).2.2.1)
+                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.1)
               (data0_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1') (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn') (Stream'.drop 1 dataIn') i).2.2.2.1)
+                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.1)
               (data1_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1') (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn') (Stream'.drop 1 dataIn') i).2.2.2.2)
+                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.2)
               (by rw [← hw_fork_eq]; simp [TRY3.split_stream2]) l
             simp [Stream'.drop] at hrhs
 
-            have h1 : Stream'.get (fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.2.2.2) (1 + l) =
-                  (fun i => (hw_fork' rdOut1' rdOut2' vldIn' dataIn' i).2.2.2.2) (1 + l) := by rfl
+            have h1 : Stream'.get (fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2) (1 + l) =
+                  (fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2) (1 + l) := by rfl
             simp [h1]
             have h2 : (Stream'.get (fun i =>
-                        (hw_fork' (Stream'.drop 1 rdOut1')
-                          (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn')
-                          (Stream'.drop 1 dataIn') i).2.2.2.2) l) =
+                        (hw_fork' (Stream'.drop 1 rdOut1_1)
+                          (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1)
+                          (Stream'.drop 1 dataIn_1) i).2.2.2.2) l) =
                       (fun i =>
-                        (hw_fork' (Stream'.drop 1 rdOut1')
-                          (Stream'.drop 1 rdOut2') (Stream'.drop 1 vldIn')
-                          (Stream'.drop 1 dataIn') i).2.2.2.2) l := by rfl
+                        (hw_fork' (Stream'.drop 1 rdOut1_1)
+                          (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1)
+                          (Stream'.drop 1 dataIn_1) i).2.2.2.2) l := by rfl
             simp [h2]
             simp [← hrhs, ← hlhs]
-            simp [show dataIn'.get (l + 1) = dataIn' (l + 1) by rfl, Nat.add_comm]
+            simp [show dataIn_1.get (l + 1) = dataIn_1 (l + 1) by rfl, Nat.add_comm]
       · unfold toStream
         congr
-        have : (fun i => if rdIn' i = 1#1 ∧ vldIn' i = 1#1 then some (dataIn' i) else none) =
+        have : (fun i => if rdIn_1 i = 1#1 ∧ vldIn_1 i = 1#1 then some (dataIn_1 i) else none) =
               fun i => none := by
             ext k hk
             grind
         simp [this]
-        have : (fun i => if rdOut1' i = 1#1 ∧ vldOut1' i = 1#1 then some (dataOut1' i) else none) =
+        have : (fun i => if rdOut1_1 i = 1#1 ∧ vldOut1_1 i = 1#1 then some (dataOut1_1 i) else none) =
               fun i => none := by
             ext k hk
             grind
@@ -1128,14 +1099,15 @@ theorem hw_fork_refines1_with_fork:
       · simp
       · simp
   · apply relation_fork.intro (toStream rdIn vldIn dataIn) (toStream rdOut1 vldOut1 dataOut1)
+          (dataOut2 := dataOut2) (vldOut2 := vldOut2)
     · rfl
     · rfl
     · assumption
     · assumption
     · assumption
     · congr
-
-
+    · assumption
+    · assumption
 
 /-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
 theorem hw_fork_refines2:
