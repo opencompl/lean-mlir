@@ -284,6 +284,7 @@ inductive relation_fork : Stream (BitVec w) → Stream (BitVec w) → Prop where
       (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) = TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn) →
       relation_fork x y
 
+
 /-
   our implementation of `fork` should not allow this, assuming that the input is
   well-formed (including its ready signals!).
@@ -1023,9 +1024,13 @@ theorem hw_fork_refines1_with_fork:
       have hfstSent := exists_first_transmitted_element
               (data := dataIn_1) (vld := vldIn_1) (rdy := rdIn_1) (x := sin)
               (by grind) (by assumption) (by assumption)
-      unfold globallyFinallyReady at h_4
       have ⟨fstRdyOut, hfstRdyOut⟩ := if_exists_first_exists (h_4 fstVldTrue)
+      unfold globallyFinallyReady at h_4
       have hvldinout := vldIn_and_ready_implies_vldOut1
+              (dataIn := dataIn_1) (vldIn := vldIn_1) (rdIn := rdIn_1)
+              (rdOut1 := rdOut1_1) (rdOut2 := rdOut2_1) (vldOut1 := vldOut1_1) (vldOut2 := vldOut2_1)
+              (dataOut1 := dataOut1_1) (dataOut2 := dataOut2_1) (by grind) (by grind)
+      have hvldinout2 := vldIn_and_ready_implies_vldOut2
               (dataIn := dataIn_1) (vldIn := vldIn_1) (rdIn := rdIn_1)
               (rdOut1 := rdOut1_1) (rdOut2 := rdOut2_1) (vldOut1 := vldOut1_1) (vldOut2 := vldOut2_1)
               (dataOut1 := dataOut1_1) (dataOut2 := dataOut2_1) (by grind) (by grind)
@@ -1034,8 +1039,7 @@ theorem hw_fork_refines1_with_fork:
       have ⟨fstSentIdx, hfstSentIdx⟩ := hfstSent
       exists fstSentIdx, (fstVldTrue + fstRdyOut)
       and_intros
-      ·
-        apply relation_fork.intro
+      · apply relation_fork.intro
           (Stream'.drop (fstSentIdx + 1) sin)
           (Stream'.drop (fstVldTrue + fstRdyOut + 1) sout)
           (dataIn := Stream'.drop (fstSentIdx + 1) dataIn_1)
@@ -1051,15 +1055,106 @@ theorem hw_fork_refines1_with_fork:
           rfl
         · simp_all
           rfl
-        ·
-
-          sorry
-        · sorry
-        · sorry
-        · sorry
-        · sorry
-        · congr
-          · sorry
+        · unfold globallyValidUntilReady at ⊢ h
+          intro j hj
+          specialize h (j + fstSentIdx + 1) hj
+          obtain ⟨k, hk1, hk2, hk3⟩ := h
+          exists k
+          have hv : Stream'.drop (fstSentIdx + 1) vldIn_1 j = vldIn_1 (j + fstSentIdx + 1) := by rfl
+          rw [hv] at hj
+          have hv : Stream'.drop (fstSentIdx + 1) vldIn_1 (j + k) = vldIn_1 (j + k + fstSentIdx + 1) := by rfl
+          have hr : Stream'.drop (fstSentIdx + 1) rdIn_1 (j + k) = rdIn_1 (j + k + fstSentIdx + 1) := by rfl
+          simp [hv, hr, show j + k + fstSentIdx + 1 = j + fstSentIdx + 1 + k by omega, hk1, hk2]
+          intros n hn
+          have hn : Stream'.drop (fstSentIdx + 1) vldIn_1 (j + n) = vldIn_1 (j + n + fstSentIdx + 1) := by rfl
+          simp [hn]
+          specialize hk3 n (by omega)
+          simp [show j + n + fstSentIdx + 1 = j + fstSentIdx + 1 + n by omega, hk3]
+        · unfold globallyValidUntilReady at ⊢ h_1
+          intro j hj
+          have hj2 : Stream'.drop (fstVldTrue + fstRdyOut + 1) vldOut1_1 j = vldOut1_1 (j + fstVldTrue + fstRdyOut + 1) := by
+            simp [Stream'.drop, Stream'.get]
+            congr 1
+            omega
+          rw [hj2] at hj
+          specialize h_1 (j + fstVldTrue + fstRdyOut + 1) hj
+          obtain ⟨k, hk1, hk2, hk3⟩ := h_1
+          exists k
+          have hv : Stream'.drop (fstVldTrue + fstRdyOut + 1) vldOut1_1 (j + k) = vldOut1_1 (j + k + fstVldTrue + fstRdyOut + 1) := by
+            simp [Stream'.drop, Stream'.get]
+            congr 1
+            omega
+          have hr : Stream'.drop (fstVldTrue + fstRdyOut + 1) rdOut1_1 (j + k) = rdOut1_1 (j + k + fstVldTrue + fstRdyOut + 1) := by
+            simp [Stream'.drop, Stream'.get]
+            congr 1
+            omega
+          simp [hv, hr, show j + k + fstVldTrue + fstRdyOut + 1 = j + fstVldTrue + fstRdyOut + 1 + k by omega, hk1, hk2]
+          intros n hn
+          have hn : Stream'.drop (fstVldTrue + fstRdyOut + 1) vldOut1_1 (j + n) = vldOut1_1 (j + n + fstVldTrue + fstRdyOut + 1) := by
+            simp [Stream'.drop, Stream'.get]
+            congr 1
+            omega
+          simp [hn]
+          specialize hk3 n (by omega)
+          simp [show j + n + fstVldTrue + fstRdyOut + 1 = j + fstVldTrue + fstRdyOut + 1 + n by omega, hk3]
+        · unfold globallyValidUntilReady at ⊢ h_2
+          intro j hj
+          have hj2 : Stream'.drop (fstVldTrue + fstRdyOut + 1) vldOut2_1 j = vldOut2_1 (j + fstVldTrue + fstRdyOut + 1) := by
+            simp [Stream'.drop, Stream'.get]
+            congr 1
+            omega
+          rw [hj2] at hj
+          specialize h_2 (j + fstVldTrue + fstRdyOut + 1) hj
+          obtain ⟨k, hk1, hk2, hk3⟩ := h_2
+          exists k
+          have hv : Stream'.drop (fstVldTrue + fstRdyOut + 1) vldOut2_1 (j + k) = vldOut2_1 (j + k + fstVldTrue + fstRdyOut + 1) := by
+            simp [Stream'.drop, Stream'.get]
+            congr 1
+            omega
+          have hr : Stream'.drop (fstVldTrue + fstRdyOut + 1) rdOut2_1 (j + k) = rdOut2_1 (j + k + fstVldTrue + fstRdyOut + 1) := by
+            simp [Stream'.drop, Stream'.get]
+            congr 1
+            omega
+          simp [hv, hr, show j + k + fstVldTrue + fstRdyOut + 1 = j + fstVldTrue + fstRdyOut + 1 + k by omega, hk1, hk2]
+          intros n hn
+          have hn : Stream'.drop (fstVldTrue + fstRdyOut + 1) vldOut2_1 (j + n) = vldOut2_1 (j + n + fstVldTrue + fstRdyOut + 1) := by
+            simp [Stream'.drop, Stream'.get]
+            congr 1
+            omega
+          simp [hn]
+          specialize hk3 n (by omega)
+          simp [show j + n + fstVldTrue + fstRdyOut + 1 = j + fstVldTrue + fstRdyOut + 1 + n by omega, hk3]
+        · unfold globallyValidAndData at ⊢ h_3
+          intro j
+          specialize h_3 (j + fstSentIdx + 1)
+          have hr : Stream'.drop (fstSentIdx + 1) dataIn_1 j = dataIn_1 (j + fstSentIdx + 1) := by rfl
+          have hr' : Stream'.drop (fstSentIdx + 1) dataIn_1 (j + 1) = dataIn_1 (j + 1 + fstSentIdx + 1) := by rfl
+          simp [hr, hr']
+          simp [show j + 1 + fstSentIdx + 1 = j + fstSentIdx + 1 + 1 by omega]
+          intro h1 h2
+          apply h_3
+          have htmp : Stream'.drop (fstSentIdx + 1) vldIn_1 j = vldIn_1 (j + fstSentIdx + 1) := by rfl
+          rw [htmp] at h1
+          simp [h1]
+          have htmp : Stream'.drop (fstSentIdx + 1) vldIn_1 (j + 1)  = vldIn_1 (j + 1 + fstSentIdx + 1) := by rfl
+          simp [show j + 1 + fstSentIdx + 1 = j + fstSentIdx + 1 + 1 by omega, htmp] at h2
+          simp [h2]
+        · unfold globallyFinallyReady
+          intros i
+          specialize h_4 (i + fstVldTrue + fstRdyOut + 1)
+          obtain ⟨k, hk⟩ := h_4
+          exists k
+          have htmp : Stream'.drop (fstVldTrue + fstRdyOut + 1) rdOut1_1 (i + k) = rdOut1_1 (i + k + fstVldTrue + fstRdyOut + 1) := by
+            simp [Stream'.drop, Stream'.get]
+            congr 1
+            omega
+          simp [htmp, show i + k + fstVldTrue + fstRdyOut + 1 = i + fstVldTrue + fstRdyOut + 1 + k by omega, hk]
+        · unfold TRY3.split_stream2
+          simp [hw_fork_eq]
+          and_intros
+          · ext l hl
+            simp [Stream'.get]
+            sorry
           · sorry
           · sorry
           · sorry
@@ -1206,15 +1301,74 @@ theorem hw_fork_refines1_with_fork:
               simp [hk1, hk2] at this
           subst hkeqdiff
           apply hk4 fstRdyOut
-          apply by_contra
-          intro hcontra
-          simp at hcontra
-          obtain ⟨h1, h2⟩ := hfstRdyOut
-          specialize hfstRec (by exists (fstVldTrue + fstRdyOut))
-          obtain ⟨fstrec, hfstrec⟩ := hfstRec
-          simp [h_7, toStream] at hfstrec
-          simp_all
-          sorry
+          -- fstRdyOut ≤ diff, i.e., fstVldTrue + fstRdyOut ≤ fstSentIdx
+          -- proved by contradiction: if fstSentIdx < fstVldTrue + fstRdyOut,
+          -- allDone fires but rdOut1 hasn't, contradicting the circuit
+          have hrdyOutLe : fstVldTrue + fstRdyOut ≤ fstSentIdx := by
+            by_contra hlt; push_neg at hlt
+            have hh5 := h_5
+            rw [hw_fork_eq] at h_5
+            simp [TRY3.split_stream2] at h_5
+            obtain ⟨hrdin, -⟩ := h_5
+            have hcirc2 := congr_fun hrdin fstSentIdx
+            unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hcirc2
+            generalize hst2 : Stream'.iterate
+              (Prod.snd ∘ fork_corec rdOut1_1 rdOut2_1 vldIn_1 dataIn_1) (0, 0#1, 0#1)
+              fstSentIdx = s2 at hcirc2
+            obtain ⟨a2, b2, c2⟩ := s2
+            dsimp [fork_corec, comb_and, comb_xor, comb_or, hw_constant] at hcirc2
+            have ha2 : a2 = fstSentIdx := by
+              have := @fork_corec1 rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 fstSentIdx
+              simp [hst2] at this; omega
+            have hb02 : b2 = 0#1 := by
+              suffices key2 : ∀ m, (∀ j < m, rdOut1_1 j = 0#1 ∨ vldOut1_1 j = 0#1) →
+                  (Stream'.iterate (Prod.snd ∘ fork_corec rdOut1_1 rdOut2_1 vldIn_1 dataIn_1)
+                    (0, 0#1, 0#1) m).2.1 = 0#1 by
+                have := key2 fstSentIdx (by
+                  intro j hj
+                  by_cases hjlt : j < fstVldTrue
+                  · right; by_contra hc
+                    have : vldOut1_1 j = 1#1 := by grind
+                    have := vldOut1_implies_vldIn hh5 (n := j) this
+                    exact absurd (hfstVldTrue2 j hjlt) (by grind)
+                  · left
+                    have := hfstRdyOut.2 (j - fstVldTrue) (by omega)
+                    rwa [Nat.add_sub_cancel' (by omega)] at this)
+                rw [hst2] at this; simpa using this
+              intro m; induction m with
+              | zero => simp [Stream'.iterate]
+              | succ km ihkm =>
+                intro hbef
+                have hbk := ihkm (fun j hj => hbef j (Nat.lt_succ_of_lt hj))
+                generalize hsk : Stream'.iterate
+                  (Prod.snd ∘ fork_corec rdOut1_1 rdOut2_1 vldIn_1 dataIn_1) (0, 0#1, 0#1) km = sk
+                obtain ⟨ak, bk, ck⟩ := sk
+                simp [hsk] at hbk; subst hbk
+                have hak : ak = km := by
+                  have := @fork_corec1 rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 km
+                  simp [hsk] at this; omega
+                have hvldk2 : vldOut1_1 km = vldIn_1 ak := by
+                  rw [hw_fork_eq] at hh5; simp [TRY3.split_stream2] at hh5
+                  obtain ⟨-, hvldout1, -⟩ := hh5
+                  have hn := congr_fun hvldout1 km
+                  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
+                  simp_rw [hsk] at hn
+                  dsimp [fork_corec, comb_and, comb_xor, hw_constant] at hn
+                  simp [hn]
+                  ext k
+                  simp [show k = 0 by omega]
+                rw [iterate_back_succ, hsk]; simp only [Function.comp]
+                dsimp [fork_corec, comb_and, comb_xor, comb_or, hw_constant]
+                subst hak
+                rcases hbef ak (Nat.lt_succ_self ak) with hh | hh
+                · simp [hh]
+                · rw [hvldk2] at hh; simp [hh]
+            have hrda2 : rdOut1_1 fstSentIdx = 0#1 := by
+              have := hfstRdyOut.2 (fstSentIdx - fstVldTrue) (by omega)
+              rwa [Nat.add_sub_cancel' (by omega)] at this
+            rw [hreadyIn, hb02, ha2, hrda2] at hcirc2
+            simp at hcirc2
+          omega
         · /- contradiction: nothing can be sent before `fstSentIdx`  -/
           simp_all
           intro hcontra
