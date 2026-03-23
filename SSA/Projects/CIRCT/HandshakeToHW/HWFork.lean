@@ -1171,6 +1171,31 @@ theorem hw_fork_refines1_with_fork:
           have hrdout : rdOut1_1 (fstVldTrue + fstRdyOut) = 1#1 := by
             simp [hfstRdyOut]
           simp [hvalidIn, hreadyIn]
+          have hforkdata := hw_fork_out0 (data0_out := dataOut1_1) (data_in := dataIn_1) h_5
+          simp [hforkdata]
+          have : fstVldTrue ≤ fstSentIdx := by
+            apply Classical.byContradiction
+            intro hcontra
+            simp_all
+          have := vldOut_of_vldIn_rdy (j := fstSentIdx) (hfork := h_5)
+            (by
+              intro l hl
+              by_cases hle : fstVldTrue ≤ l
+              · obtain ⟨h1, h2⟩ := hfstRdyOut
+                by_cases hlt : l - fstVldTrue < fstRdyOut
+                · specialize h2 (l - fstVldTrue) (by omega)
+                  simp [← Nat.add_sub_assoc (by omega), Nat.add_comm] at h2
+                  simp [h2]
+                ·
+
+
+                  sorry
+              · sorry
+
+              )
+            (by simp [hreadyIn, hvalidIn])
+          simp [this]
+
           sorry
         · /- contradiction: nothing can be sent before `fstSentIdx`  -/
           simp_all
