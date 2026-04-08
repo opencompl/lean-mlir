@@ -1185,7 +1185,13 @@ theorem hw_fork_refines1_with_fork:
             · /- first receiver before sent -/
               by_cases sndRecBeforeSent : fstVldTrue + fstRdyOut2 ≤ fstSentIdx
               · /- second receiver before sent -/
-                sorry
+                simp [TRY3.split_stream2]
+                and_intros
+                · sorry
+                · sorry
+                · sorry
+                · sorry
+                · sorry
               · /- first receiver after sent -/
                 sorry
             · /- first receiver after sent -/
