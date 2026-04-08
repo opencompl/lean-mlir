@@ -1,5 +1,0 @@
-
-define i50 @main(i64 %0) {
-  %2 = trunc nuw i64 %0 to i50
-  ret i50 %2
-}

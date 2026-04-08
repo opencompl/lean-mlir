@@ -1,5 +1,0 @@
-
-define i5 @main(i18 %0) {
-  %2 = zext i18 %0 to i5
-  ret i5 %2
-}

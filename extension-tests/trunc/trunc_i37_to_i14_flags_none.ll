@@ -1,5 +1,0 @@
-
-define i14 @main(i37 %0) {
-  %2 = trunc i37 %0 to i14
-  ret i14 %2
-}

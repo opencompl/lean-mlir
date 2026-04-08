@@ -1,5 +1,0 @@
-
-define i44 @main(i30 %0) {
-  %2 = zext i30 %0 to i44
-  ret i44 %2
-}
