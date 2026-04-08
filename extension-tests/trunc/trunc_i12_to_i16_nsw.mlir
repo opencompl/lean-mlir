@@ -1,0 +1,5 @@
+{
+^bb0(%arg0: i12):
+  %0 = "llvm.trunc"(%arg0) overflow<nsw> : (i12) -> i16
+  "llvm.return"(%0) : (i16) -> ()
+}

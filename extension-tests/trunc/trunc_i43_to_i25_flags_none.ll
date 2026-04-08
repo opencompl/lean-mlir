@@ -1,0 +1,5 @@
+
+define i25 @main(i43 %0) {
+  %2 = trunc i43 %0 to i25
+  ret i25 %2
+}

@@ -1,0 +1,5 @@
+
+define i45 @main(i4 %0) {
+  %2 = zext i4 %0 to i45
+  ret i45 %2
+}

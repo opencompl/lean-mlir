@@ -1,0 +1,5 @@
+
+define i64 @main(i62 %0) {
+  %2 = zext i62 %0 to i64
+  ret i64 %2
+}

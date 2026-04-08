@@ -1,0 +1,5 @@
+
+define i41 @main(i1 %0) {
+  %2 = zext i1 %0 to i41
+  ret i41 %2
+}

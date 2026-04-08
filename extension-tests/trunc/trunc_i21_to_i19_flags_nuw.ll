@@ -1,0 +1,5 @@
+
+define i19 @main(i21 %0) {
+  %2 = trunc nuw i21 %0 to i19
+  ret i19 %2
+}

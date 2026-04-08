@@ -1,0 +1,5 @@
+
+define i53 @main(i63 %0) {
+  %2 = trunc i63 %0 to i53
+  ret i53 %2
+}

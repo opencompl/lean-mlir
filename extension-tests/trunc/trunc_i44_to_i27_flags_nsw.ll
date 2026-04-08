@@ -1,0 +1,5 @@
+
+define i27 @main(i44 %0) {
+  %2 = trunc nsw i44 %0 to i27
+  ret i27 %2
+}

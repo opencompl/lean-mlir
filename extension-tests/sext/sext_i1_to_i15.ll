@@ -1,0 +1,5 @@
+
+define i15 @main(i1 %0) {
+  %2 = sext i1 %0 to i15
+  ret i15 %2
+}
