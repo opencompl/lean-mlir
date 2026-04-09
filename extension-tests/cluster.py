@@ -44,10 +44,10 @@ output_log_file.write(f"Found {len(clusters)} distinct instruction pattern(s)\n"
 output_log_file.write("=" * 60)
 
 for instrs, files in sorted(clusters.items(), key=lambda x: len(x[1]), reverse=True):
-    output_log_file.write(f"\n[{len(files)} file(s)] Pattern:")
+    output_log_file.write(f"\n[{len(files)} file(s)] Pattern:\n")
     if instrs:
         for instr in instrs:
-            output_log_file.write(f"    {instr}")
+            output_log_file.write(f"    {instr}\n")
     else:
         output_log_file.write("    (no instructions / empty body)")
     output_log_file.write(f"  Files: {', '.join(files)}")
@@ -93,16 +93,21 @@ output_log_file.write(f"Found {len(clusters)} distinct instruction pattern(s)\n"
 output_log_file.write("=" * 60)
 
 for instrs, files in sorted(clusters.items(), key=lambda x: len(x[1]), reverse=True):
-    output_log_file.write(f"\n[{len(files)} file(s)] Pattern:")
+    output_log_file.write(f"\n[{len(files)} file(s)] Pattern:\n")
     if instrs:
         for instr in instrs:
-            output_log_file.write(f"    {instr}")
+            output_log_file.write(f"    {instr}\n")
     else:
         output_log_file.write("    (no instructions / empty body)")
-    output_log_file.write(f"  Files: {', '.join(files)}")
+    output_log_file.write(f"  Files: {',\n '.join(files)}")
     
 
 # trunc
+
+input_dir  = Path("trunc")
+output_dir = Path("trunc_lowered")
+input_dir.mkdir(exist_ok=True)
+output_dir.mkdir(exist_ok=True)
 
 def extract_instructions(asm_path):
     instructions = []
@@ -124,13 +129,13 @@ output_log_file = open("trunc_clusters.txt", "w")
 output_log_file.write(f"\nFound {len(clusters)} distinct instruction pattern(s)\n")
 output_log_file.write("=" * 60)
 for instrs, files in sorted(clusters.items(), key=lambda x: len(x[1]), reverse=True):
-    output_log_file.write(f"\n[{len(files)} file(s)] Pattern:")
+    output_log_file.write(f"\n[{len(files)} file(s)] Pattern:\n")
     for instr in instrs or ["(empty)"]:
-        output_log_file.write(f"    {instr}")
+        output_log_file.write(f"    {instr}\n")
     # group files by flag variant for readability
     by_flag = defaultdict(list)
     for f in files:
         flag = f.split("_flags_")[-1]
         by_flag[flag].append(f)
     for flag, flist in sorted(by_flag.items()):
-        output_log_file.write(f"  [{flag}] {len(flist)} case(s): {', '.join(flist[:5])}{'...' if len(flist) > 5 else ''}")
+        output_log_file.write(f"  [{flag}] {len(flist)} case(s): {', '.join(flist)}{'...' if len(flist) > 5 else ''}")

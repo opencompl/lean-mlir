@@ -34,7 +34,7 @@ define i{to_width} @main(i{from_width} %0) {{
                 "llc",
                 "-march=riscv64",
                 "-mcpu=generic-rv64",
-                "-mattr=+m,+b",
+                "-mattr=+m,+b,+zba,+zbb",
                 "-filetype=asm",
                 "-O0",
                 str(in_path),
@@ -87,7 +87,7 @@ define i{to_width} @main(i{from_width} %0) {{
                 "llc",
                 "-march=riscv64",
                 "-mcpu=generic-rv64",
-                "-mattr=+m,+b",
+                "-mattr=+m,+b,+zba,+zbb",
                 "-filetype=asm",
                 "-O0",
                 str(in_path),
@@ -109,6 +109,8 @@ if errors:
     for name, err in errors:
         print(f"  {name}: {err}")
         
+# trunc
+
 input_dir  = Path("trunc")
 output_dir = Path("trunc_lowered")
 input_dir.mkdir(exist_ok=True)
@@ -125,9 +127,6 @@ errors = []
 
 for from_width in range(1, 65):
     for to_width in range(1, 65):
-        if from_width <= to_width:
-            continue  
-
         for flags in FLAGS:
             flag_str   = flags.replace(" ", "_") if flags else "none"
             name       = f"trunc_i{from_width}_to_i{to_width}_flags_{flag_str}"
@@ -149,7 +148,7 @@ define i{to_width} @main(i{from_width} %0) {{
                     "llc",
                     "-march=riscv64",
                     "-mcpu=generic-rv64",
-                    "-mattr=+m,+zba,+zbb",
+                    "-mattr=+m,+b,+zba,+zbb",
                     "-filetype=asm",
                     "-O0",
                     str(in_path),
