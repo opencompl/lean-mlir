@@ -995,7 +995,6 @@ def readyOut2UntilAllReceiversAre (rdOut1 rdOut2 : Stream' (BitVec 1)) :=
     rdOut2 i = 1#1 →
     ∀ j, rdOut1 (i + j) = 0#1 → rdOut2 (i + j) = 1#1
 
-
 /-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
 theorem hw_fork_refines1_with_fork:
     /- Given a handshake fork taking `a` as input and returning `(a, a)`, we take
@@ -1187,7 +1186,11 @@ theorem hw_fork_refines1_with_fork:
               · /- second receiver before sent -/
                 simp [TRY3.split_stream2]
                 and_intros
-                · sorry
+                · funext i
+                  have := rdOut1_before_allDone (hfork := h_6) (n := i)
+
+                  /- what happens to `rdOut1` after data is dispatched? -/
+                  sorry
                 · sorry
                 · sorry
                 · sorry
