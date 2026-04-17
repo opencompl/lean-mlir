@@ -109,7 +109,7 @@ structure wiresStructStream (nops nsig w : Nat) where
   signals : Vector (Stream' (BitVec 1)) nsig
 
 /-- We define a more general `register_wrapper` that operates on both streams of signals (`BitVec 1`)
-  as well as streams of operands (`BitVec 32`) -/
+  as well as streams of operands (`BitVec w`) -/
 def register_wrapper_generalized
     (inputs : Stream' (wiresStruc inops insigs w))
     (init_regs : wiresStruc regops regsigs w)
@@ -135,6 +135,66 @@ def register_wrapper_generalized
       | none =>  let ⟨_, regs_out⟩  := update_fun (inputs.head, regs)
               ⟨inputs.tail, regs_out, none⟩
   Stream'.corec f g  (inputs, init_regs, none)
+
+/-- We define a weaker `register_wrapper` that operates with `Option` values. -/
+def het_register_wrapper
+    (inputs : Stream' (HVector f lin))
+    (init_regs : HVector f ls)
+    (update_fun : (HVector f lin × HVector f ls) →
+                  (HVector f ls × HVector f lout))
+      : Stream' (HVector f lout) :=
+  let β := Stream' (HVector f lin) × -- inputs
+            HVector f ls × -- feedback signals
+            Bool -- first iteration flag
+  let f : β → HVector f lout :=
+    fun (inputs, regs, start) =>
+      match start with
+      | true => let ⟨_, lout'⟩ := update_fun (inputs.head, init_regs)
+                lout'
+      | false => let ⟨_, lout'⟩  := update_fun (inputs.head, regs)
+                lout'
+  let g : β → β :=
+    fun (inputs, regs, start) =>
+      match start with
+      | true => let ⟨ls', _⟩ := update_fun (inputs.head, init_regs)
+                ⟨inputs.tail, ls', false⟩
+      | false =>  let ⟨ls', _⟩  := update_fun (inputs.head, regs)
+                ⟨inputs.tail, ls', false⟩
+  Stream'.corec f g  (inputs, init_regs, true)
+
+/-- We define a weaker `register_wrapper` that operates with `Option` values. -/
+def het_register_wrapper'
+    (inputs : Stream' (HVector f lin))
+    (init_regs : HVector f ls)
+    (update_fun : (HVector f lin × HVector f ls) →
+                  Option (HVector f ls × HVector f lout))
+      : Stream' (Option (HVector f lout)) :=
+  let β := Stream' (HVector f lin) × -- inputs
+            HVector f ls × -- feedback signals
+            Bool -- first iteration flag
+  let f : β → Option (HVector f lout) :=
+    fun (inputs, regs, start) =>
+      match start with
+      | true =>
+        match update_fun (inputs.head, init_regs) with
+        | .none => .none
+        | .some ⟨_, lout'⟩ => .some lout'
+      | false =>
+        match update_fun (inputs.head, regs) with
+        | .none => .none
+        | .some ⟨_, lout'⟩ => .some lout'
+  let g : β → β :=
+    fun (inputs, regs, start) =>
+      match start with
+      | true =>
+        match update_fun (inputs.head, init_regs) with
+        | .none => (inputs, regs, start)
+        | .some ⟨ls', _⟩ => ⟨inputs.tail, ls', false⟩
+      | false =>
+        match update_fun (inputs.head, regs) with
+        | .none => (inputs, regs, start)
+        | .some ⟨ls', _⟩ => ⟨inputs.tail, ls', false⟩
+  Stream'.corec f g  (inputs, init_regs, true)
 
 /--
   We define an isomorphism from a streams `a` to a stream of their product BitVec 1.
@@ -164,6 +224,13 @@ def iso_binary (a b : Stream' (BitVec 1)) : Stream' (Vector (BitVec 1) 2) :=
 def streams_to_vec' {α : Type u} {n : Nat} (xv : Vector (Stream' α) n) : Stream' (Vector α n) :=
   /- `map` applies `fun (s : Stream' α) => s i` to every element in `xv` -/
   fun (i : Nat) => xv.map (fun (s : Stream' α) => s i)
+
+-- /--
+--   Map the `i`-th element of stream `s` in `xv` to the output heterogeneous vector, using `Stream'`.
+-- -/
+-- def streams'_to_hvec {α : Type u} {n : Nat} (xv : HVector f lin) : Stream' (HVector f lin) :=
+--   /- `map` applies `fun (s : Stream' α) => s i` to every element in `xv` -/
+--   fun (f, lin) => xv.map (fun (s : Stream' α) => s i)
 
 /--
   Map each element at the `k`-th position of `xv` to the `k`-th stream of the output, using `Stream'`.
@@ -215,3 +282,64 @@ def streams_to_wires {nops nsig : Nat} (ws : wiresStructStream nops nsig w) : St
   fun (i : Nat) =>
     { result := ws.result.map (fun s => s i),
       signals := ws.signals.map (fun s => s i) }
+
+/--
+  Executes `f` until all the register values `reg` are defined.
+  reg : initial set of registers
+  f : function to find fp over, takes registers and returns register
+  FP of a function `BitVec w → BitVec w` is easy (?).
+-/
+-- suggestion: use `partial_fixpoint`
+-- parameterized fixed point operator
+-- def calc_fix {f} (fuel : Nat) (reg : HVector f l) (f : HVector f l → HVector f l) : Option (HVector f l) :=
+--   match fuel with
+--   | 0 => .none
+--   | n+1 =>
+--     let freg := f reg
+--     if freg == reg then
+--       return freg
+--     else
+--       calc_fix n (f reg) f
+
+def fix_wrapper (s : Vector (Stream' (Option α)) n) (f : Vector (Option α) n → Vector (Option α) n) : Option (Vector (Stream' α) n) := sorry
+
+
+-- /- 0 = fork(1)
+-- 1 = add(0) -/
+
+-- /--
+
+--   fix_wrapper takes:
+--   · initial state: (#v[.none, .none])
+--   · connections are defined iteratively
+-- -/
+-- -- def protocol (fork add : Stream' (BitVec 1) → Stream' (BitVec 1)) (x y : Stream' (BitVec 1)) : BitVec 1 :=
+-- --   fix_wrapper (α := BitVec 1) (#v[.none, .none]) (fun vals =>
+-- --       let v_0 : Option (BitVec 1) := do
+-- --         --try to get a value if possible
+-- --         let v_1' ← vals[1]
+-- --         return fork(v_1')
+-- --       let v_1 : Option (BitVec 1) := do
+-- --         let v_0' ← vals[0]
+-- --         return add(v_0')
+-- --       #v[v_0, v_1]
+-- --     )
+
+-- /-
+--   Fork
+--   | ^
+--   | |
+--   x y
+--   | |
+--   v |
+--   Add
+-- -/
+-- -- def protocol (fork add : Stream' (BitVec 1) → Stream' (BitVec 1)) (x y : Stream' (BitVec 1)) : BitVec 1 :=
+-- --   let state_space := (Stream' (BitVec 1) → Stream' (BitVec 1)) × (Stream' (BitVec 1) → Stream' (BitVec 1))
+-- --   let output_fun : state_space → BitVec 1 :=
+-- --       fun (fork, add) =>
+-- --         (add x).head
+-- --   let update_fun : state_space → state_space :=
+
+-- --     sorry
+-- --   Stream'.corec state_space output_fun update_state
