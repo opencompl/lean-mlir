@@ -1,0 +1,6 @@
+; Prove: x <=_u x  (unsigned <=  is reflexive)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(assert (not (bvule x x)))
+(check-sat)

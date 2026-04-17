@@ -48,6 +48,7 @@ inductive WidthExpr (wcard : Nat) : Type
 | kadd : (k : Nat) → (v : WidthExpr wcard) → WidthExpr wcard
 
 
+
 /-- Cast the width expression along the fact that width is ≤. -/
 def WidthExpr.castLe {wcard : Nat} (e : WidthExpr wcard) (hw : wcard ≤ wcard') : WidthExpr wcard' :=
   match e with
@@ -68,7 +69,8 @@ def WidthExpr.Env.cons (env : WidthExpr.Env wcard) (w : Nat) :
   WidthExpr.Env (wcard + 1) :=
   fun v => v.cases w env
 
-def WidthExpr.toNat (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
+def WidthExpr.toNat
+  (e : WidthExpr wcard) (env : WidthExpr.Env wcard) : Nat :=
   match e with
   | .const n => n
   | .var v => env v
@@ -102,6 +104,7 @@ def WidthExpr.toNat_addK (v : WidthExpr wcard) (k : Nat)
 def WidthExpr.toNat_kadd (v : WidthExpr wcard) (k : Nat)
     (env : WidthExpr.Env wcard) :
     WidthExpr.toNat (.kadd k v) env = k + v.toNat env := rfl
+
 
 def WidthExpr.toBitStream (e : WidthExpr wcard)
   (bsEnv : StateSpace wcard tcard bcard ncard icard pcard → BitStream) : BitStream :=
@@ -198,6 +201,9 @@ inductive Term {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pc
 | ofNat (w : WidthExpr wcard) (n : Nat) : Term bcard ncard icard pcard tctx (.bv w)
 /-- a variable of a given width -/
 | var (v : Fin tcard) : Term bcard ncard icard pcard tctx (.bv (tctx v))
+/-- multiplication of two terms of the same width -/
+| mul (a : Term bcard ncard icard pcard tctx (.bv w))
+  (b : Term bcard ncard icard pcard tctx (.bv w)) : Term bcard ncard icard pcard tctx (.bv w)
 /-- addition of two terms of the same width -/
 | add (a : Term bcard ncard icard pcard tctx (.bv w))
   (b : Term bcard ncard icard pcard tctx (.bv w)) : Term bcard ncard icard pcard tctx (.bv w)
@@ -219,6 +225,7 @@ inductive Term {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pc
 | sext (a : Term bcard ncard icard pcard tctx (.bv w)) (v : WidthExpr wcard) : Term bcard ncard icard pcard tctx (.bv v)
 /-- convert a bool to a bitvector of width 1 -/
 | bvOfBool (b : Term bcard ncard icard pcard tctx .bool) : Term bcard ncard icard pcard tctx (.bv (.const 1))
+-- | bvOfProp (b : Term bcard ncard icard pcard tctx .prop) : Term bcard ncard icard pcard tctx (.bv (.const 1))
 -- | boolMsb (w : WidthExpr wcard) (x : Term bcard ncard icard pcard tctx (.bv w)) : Term bcard ncard icard pcard tctx .bool
 | boolConst (b : Bool) : Term bcard ncard icard pcard tctx .bool
 | boolVar (v : Fin bcard) : Term bcard ncard icard pcard tctx .bool
@@ -243,6 +250,90 @@ inductive Term {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pc
   (k : BoolBinaryRelationKind)
   (a b : Term bcard ncard icard pcard tctx .bool) :
   Term bcard ncard icard pcard tctx (.prop)
+
+
+/-- Record whether the term is a linear-bitwise term,
+which can be encoded using automata. -/
+def Term.isAutomtaDecidable  :
+    Term bcard ncard icard pcard tctx k → Bool
+| .ofNat _ _ => true
+| .boolConst _ => true
+| .var _ => true
+| .bvOfBool x => x.isAutomtaDecidable
+| .or p q => p.isAutomtaDecidable && q.isAutomtaDecidable
+| .and p q => p.isAutomtaDecidable && q.isAutomtaDecidable
+| .boolVar _ => true
+| .binRel _kind _w a b =>
+  Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .boolBinRel _kind a b =>
+  Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .add a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .zext a _ => Term.isAutomtaDecidable a
+| .sext a _ => Term.isAutomtaDecidable a
+| .setWidth a _ => Term.isAutomtaDecidable a
+| .band a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .bor a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .bxor a b => Term.isAutomtaDecidable a && Term.isAutomtaDecidable b
+| .bnot a => Term.isAutomtaDecidable a
+| .shiftl a _ => Term.isAutomtaDecidable a
+| .mul _ _ => false
+| _ => true
+
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_add_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.add a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_zext_iff
+    (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (Term.zext a v) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_setWidth_iff
+    (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (Term.setWidth a v) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_band_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.band a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_bor_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.bor a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_bxor_iff (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.bxor a b) = true ↔
+    Term.isAutomtaDecidable a = true ∧ Term.isAutomtaDecidable b = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_bnot_iff (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.bnot a) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isAutomataDecidable_shiftl_iff (a : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.shiftl a k) = true ↔
+    Term.isAutomtaDecidable a = true := by
+  grind [Term.isAutomtaDecidable]
+
+@[simp, grind .]
+theorem Term.isLinearBitwise_mul_eq_false
+  (a b : Term bcard ncard icard pcard tctx (.bv w)) :
+    Term.isAutomtaDecidable (.mul a b) = false := rfl
 
 
 def Term.BoolEnv (bcard : Nat) : Type := Fin bcard → Bool
@@ -356,6 +447,10 @@ match t with
 | .ofNat w n => BitVec.ofNat (w.toNat wenv) n
 | .boolConst b => b
 | .var v => tenv.get v.1 v.2
+| .mul (w := w) a b =>
+    let a : BitVec (w.toNat wenv) := (a.toBV benv nenv ienv penv tenv)
+    let b : BitVec (w.toNat wenv) := (b.toBV benv nenv ienv penv tenv)
+    a * b
 | .add (w := w) a b =>
     let a : BitVec (w.toNat wenv) := (a.toBV benv nenv ienv penv tenv)
     let b : BitVec (w.toNat wenv) := (b.toBV benv nenv ienv penv tenv)
@@ -403,16 +498,13 @@ match t with
   -- | TODO: rename 'toBV' to 'toBool'.
   | .eq => (a.toBV benv nenv ienv penv tenv) = (b.toBV benv nenv ienv penv tenv)
 | .pvar v => penv v
--- | Term.and p1 p2 => p1.toBV benv nenv ienv penv tenv ∧ p2.toBV benv nenv ienv penv tenv
-
-#print Term.toBV
 
 @[simp]
 theorem Term.toBV_ofNat
     {tctx : Term.Ctx wcard tcard}
     (tenv : tctx.Env wenv)
     (benv : Term.BoolEnv bcard)
-    (nnenv : Term.NatEnv ncard)
+    (_nnenv : Term.NatEnv ncard)
     (ienv : Term.IntEnv icard)
     (w : WidthExpr wcard) (n : Nat) :
   Term.toBV benv nenv ienv penv tenv (.ofNat w n) = BitVec.ofNat (w.toNat wenv) n := rfl
@@ -575,58 +667,6 @@ theorem Term.toBV_or {wenv : WidthExpr.Env wcard}
   Term.toBV benv nenv ienv penv tenv (.or p1 p2) = (p1.toBV benv nenv ienv penv tenv ∨ p2.toBV benv nenv ienv penv tenv) := rfl
 
 
--- inductive Predicate :
---   (wcard : Nat) →
---   (tcard : Nat) →
---   (bcard : Nat) →
---   (tctx : Term.Ctx wcard tcard) →
---   (pcard : Nat) → Type
--- | binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr wcard) :
---     Predicate wcard tcard bcard ncard icard pcard tctx pcard
--- | binRel {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
---     (k : BinaryRelationKind)
---     (w : WidthExpr wcard)
---     (a : Term bcard ncard icard pcard tctx (.bv w))
---     (b : Term bcard ncard icard pcard tctx (.bv w)) :
---     Predicate wcard tcard bcard ncard icard pcard tctx pcard
--- | and (p1 p2 : Predicate wcard tcard bcard ncard icard pcard tctx pcard) : Predicate wcard tcard bcard ncard icard pcard tctx pcard
--- | or (p1 p2 : Predicate wcard tcard bcard ncard icard pcard tctx pcard) : Predicate wcard tcard bcard ncard icard pcard tctx pcard
--- | var (v : Fin pcard) : Predicate wcard tcard bcard ncard icard pcard tctx pcard
--- | boolBinRel  {wcard tcard bcard : Nat} {tctx : Term.Ctx wcard tcard} {pcard : Nat}
---   (k : BoolBinaryRelationKind)
---   (a b : Term bcard ncard icard pcard tctx .bool) :
---   Predicate wcard tcard bcard ncard icard pcard tctx pcard
-
--- add predicate NOT, <= for bitvectors, < for bitvectors, <=
--- for widths, =, not equals for widths.
-
--- def Predicate.toProp {wcard tcard bcard ncard icard pcard : Nat} {wenv : WidthExpr.Env wcard}
---     {tctx : Term.Ctx wcard tcard}
---     (benv : Term.BoolEnv bcard)
---     (tenv : tctx.Env wenv)
---     (penv : Predicate.Env pcard)
---     (p : Predicate wcard tcard bcard ncard icard pcard tctx pcard) : Prop :=
---   match p with
---   | .var v => penv v
---   | .binWidthRel rel wa wb =>
---     match rel with
---     | .eq => wa.toNat wenv = wb.toNat wenv
---     | .le => wa.toNat wenv ≤ wb.toNat wenv
---   | .binRel rel _w a b =>
---     match rel with
---     | .eq => a.toBV benv nenv ienv penv tenv = b.toBV benv nenv ienv penv tenv
---     | .ne => a.toBV benv nenv ienv penv tenv ≠ b.toBV benv nenv ienv penv tenv
---     | .ult => (a.toBV benv nenv ienv penv tenv).ult (b.toBV benv nenv ienv penv tenv) = true
---     | .ule => (a.toBV benv nenv ienv penv tenv).ule (b.toBV benv nenv ienv penv tenv) = true
---     | .slt => (a.toBV benv nenv ienv penv tenv).slt (b.toBV benv nenv ienv penv tenv) = true
---     | .sle => (a.toBV benv nenv ienv penv tenv).sle (b.toBV benv nenv ienv penv tenv) = true
---   | .and p1 p2 => p1.toProp benv nenv ienv penv tenv penv ∧ p2.toProp benv nenv ienv penv tenv penv
---   | .or p1 p2 => p1.toProp benv nenv ienv penv tenv penv ∨ p2.toProp benv nenv ienv penv tenv penv
---   | .boolBinRel rel a b =>
---     match rel with
---     -- | TODO: rename 'toBV' to 'toBool'.
---     | .eq => (a.toBV benv nenv ienv penv tenv) = (b.toBV benv nenv ienv penv tenv)
-
 namespace Nondep
 
 inductive WidthExpr where
@@ -636,27 +676,26 @@ inductive WidthExpr where
 | min : WidthExpr → WidthExpr → WidthExpr
 | addK : WidthExpr → Nat → WidthExpr
 | kadd : Nat → WidthExpr → WidthExpr
+| subK : WidthExpr → Nat → WidthExpr
+| add : WidthExpr → WidthExpr → WidthExpr
+| sub : WidthExpr → WidthExpr → WidthExpr
+| mul : WidthExpr → WidthExpr → WidthExpr
 deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
 
 open Std Lean in
-
-def WidthExpr.toSmtLib : WidthExpr → SexprPBV.WidthExpr
-| .const n => .const n
-| .var v => .var v
-| .max v w => .max v.toSmtLib w.toSmtLib
-| .min v w => .min v.toSmtLib w.toSmtLib
-| .addK v k => .addK v.toSmtLib k
-| .kadd k v => .kadd k v.toSmtLib
-
 
 def WidthExpr.wcard (w : WidthExpr) : Nat :=
   match w with
   | .const _ => 0
   | .var i => i + 1
   | .max v w => Nat.max (v.wcard) (w.wcard)
-  | .min v w => Nat.min (v.wcard) (w.wcard)
-  | .addK v k => v.wcard + k
-  | .kadd k v => k + v.wcard
+  | .min v w => Nat.max (v.wcard) (w.wcard)
+  | .addK v _k => v.wcard
+  | .kadd _k v => v.wcard
+  | .subK v _k => v.wcard
+  | .add v w => Nat.max (v.wcard) (w.wcard)
+  | .sub v w => Nat.max (v.wcard) (w.wcard)
+  | .mul v w => Nat.max (v.wcard) (w.wcard)
 
 def WidthExpr.ofDep {wcard : Nat}
     (w : MultiWidth.WidthExpr wcard) : WidthExpr :=
@@ -697,10 +736,12 @@ def WidthExpr.ofDep_kadd {wcard : Nat} {v : MultiWidth.WidthExpr wcard} {k : Nat
     (WidthExpr.ofDep (MultiWidth.WidthExpr.kadd k v)) =
     (.kadd k (.ofDep v)) := rfl
 
+
 inductive Term
 | ofNat (w : WidthExpr) (n : Nat) : Term
 | var (v : Nat) (w : WidthExpr) : Term
 | add (w : WidthExpr) (a b : Term) : Term
+| mul (w : WidthExpr) (a b : Term) : Term
 | zext (a : Term) (wnew : WidthExpr) : Term
 | setWidth (a : Term) (wnew : WidthExpr) : Term
 | sext (a : Term) (wnew : WidthExpr) : Term
@@ -711,6 +752,7 @@ inductive Term
 | boolVar (v : Nat) : Term
 | boolConst (b : Bool) : Term
 | shiftl (w : WidthExpr) (a : Term) (k : Nat) : Term
+| shiftr (w : WidthExpr) (a : Term) (k : Nat) : Term
 | bvOfBool (b : Term) : Term
 | binWidthRel (k : WidthBinaryRelationKind) (wa wb : WidthExpr) : Term
 | binRel (k : BinaryRelationKind) (w : WidthExpr)
@@ -718,26 +760,64 @@ inductive Term
 | or (p1 p2 : Term) : Term
 | and (p1 p2 : Term) : Term
 | pvar (v : Nat) : Term
+| pTrue : Term
+| pFalse : Term
 | boolBinRel (k : BoolBinaryRelationKind)
     (a b : Term) : Term
+| udiv (w : WidthExpr) (a b : Term) : Term       -- unsigned division
+| urem (w : WidthExpr) (a b : Term) : Term       -- unsigned remainder
+| vlshr (w : WidthExpr) (a b : Term) : Term      -- variable logical right shift
+| vashr (w : WidthExpr) (a b : Term) : Term      -- variable arithmetic right shift
+| vshl (w : WidthExpr) (a b : Term) : Term       -- variable left shift
+| ashr (w : WidthExpr) (a : Term) (k : Nat) : Term  -- constant arithmetic right shift
+| pextract (a : Term) (lo hi : WidthExpr) : Term           -- extract bits lo..hi (inclusive), result width = hi - lo + 1
+| bvIte (cond : Term) (thenBv elseBv: Term) : Term -- if then else on bitvectors
+| intToPbv (w : WidthExpr) (val : WidthExpr ): Term  -- coerct an integer 'val' into a PBV.
 deriving DecidableEq, Inhabited, Repr, Lean.ToExpr
 
-def Term.toSmtLib : Term → SexprPBV.Term
-| .ofNat w n => .ofNat w.toSmtLib n
-| .var v w => .var v w.toSmtLib
-| .add w a b => .add w.toSmtLib a.toSmtLib b.toSmtLib
-| .zext a wnew => .zext a.toSmtLib wnew.toSmtLib
-| .sext a wnew => .sext a.toSmtLib wnew.toSmtLib
-| .setWidth a wnew => .setWidth a.toSmtLib wnew.toSmtLib
-| .bor w a b => .bor w.toSmtLib a.toSmtLib b.toSmtLib
-| .band w a b => .band w.toSmtLib a.toSmtLib b.toSmtLib
-| .bxor w a b => .bxor w.toSmtLib a.toSmtLib b.toSmtLib
-| .bnot w a => .bnot w.toSmtLib a.toSmtLib
-| .boolVar v => .boolVar v
-| .boolConst b => .boolConst b
-| .shiftl w a k => .shiftl w.toSmtLib a.toSmtLib k
-| .bvOfBool _b => .junk ("bvOfBool")
-| _ => .junk "predicate"
+/-- Smart constructor for a pextract operation, desugaring a pextract to lo=0 into a zeroExtend,
+since our zeroExtend also encodes truncates. -/
+def Term.mkPExtract (hi lo : Nondep.WidthExpr) (t : Nondep.Term) : Nondep.Term :=
+  -- .pextract t lo hi
+    match lo with
+    | .const 0 => .zext t (.addK hi 1) -- extract from (w-1) to 0 is the same as zext to w.
+    | _ => .pextract t lo hi
+
+
+/-- Negate a predicate term by pushing `not` inward via De Morgan's laws.
+    Returns `none` if the term cannot be negated (e.g., unrecognized atomic terms or
+    width relations whose negations cannot be expressed in the Term language). -/
+def Term.pnegate (t : Term) : Term × Bool × Lean.Format :=
+  match t with
+  | .and p q =>
+    let (p', result, perr) := p.pnegate
+    let (q', result', qerr) := q.pnegate
+    (.or p' q', result && result', perr ++ qerr)
+  | .or p q =>
+    let (p', result, perr) := p.pnegate
+    let (q', result', qerr) := q.pnegate
+    (.and p' q', result && result', perr ++ qerr)
+  | .binRel .eq w a b => (.binRel .ne w a b, true, .nil)
+  | .binRel .ne w a b => (.binRel .eq w a b, true, .nil)
+  | .binRel .ult w a b => (.binRel .ule w b a, true, .nil)
+  | .binRel .ule w a b => (.binRel .ult w b a, true, .nil)
+  | .binRel .slt w a b => (.binRel .sle w b a, true, .nil)
+  | .binRel .sle w a b => (.binRel .slt w b a, true, .nil)
+  | .pTrue => (.pFalse, true, .nil)
+  -- ¬(wa ≤ wb) ↔ wb + 1 ≤ wa (i.e., wa > wb, since these are naturals)
+  | .binWidthRel .le wa wb => (.binWidthRel .le (.addK wb 1) wa, true, .nil)
+  -- ¬(wa = wb) ↔ wa < wb ∨ wb < wa ↔ (wa+1 ≤ wb) ∨ (wb+1 ≤ wa)
+  | .binWidthRel .eq wa wb =>
+    (.or (.binWidthRel .le (.addK wa 1) wb) (.binWidthRel .le (.addK wb 1) wa), true, .nil)
+  | .pFalse => (.pTrue, true, .nil)
+  | .boolBinRel .. | .pvar .. | .bvOfBool ..
+    | .shiftr .. | .shiftl .. | .ashr .. | .pextract .. | .boolConst .. | .boolVar ..
+    | .bnot .. | .bxor .. | .band .. | .bor .. | .setWidth .. | .sext .. | .zext ..
+    | .mul .. | .add .. | .var .. | .ofNat ..
+    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. | .intToPbv .. =>
+    let errMsg := s!"pnegate: could not negate term: {repr t}"
+    dbg_trace errMsg
+    (t, false, .text errMsg)
 
 def Term.ofDepTerm {wcard tcard bcard : Nat}
     {tctx : Term.Ctx wcard tcard}
@@ -749,6 +829,7 @@ def Term.ofDepTerm {wcard tcard bcard : Nat}
      match hk : k with
      | .bv w => .var v (.ofDep w)
      | .bool => by contradiction
+  | .mul (w := w) a b => .mul (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
   | .add (w := w) a b => .add (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b)
   | .zext a wnew => .zext (Term.ofDepTerm a) (.ofDep wnew)
   | .sext a wnew => .sext (Term.ofDepTerm a) (.ofDep wnew)
@@ -771,9 +852,18 @@ def Term.ofDepTerm {wcard tcard bcard : Nat}
 
 @[simp]
 def Term.ofDep_var {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pcard : Nat)
-    {v : Fin tcard} {tctx : Term.Ctx wcard tcard} :
+    {tctx : Term.Ctx wcard tcard}
+    {v : Fin tcard} :
     Term.ofDepTerm (wcard := wcard) (tcard := tcard) (bcard := bcard) (ncard := ncard) (icard := icard) (pcard := pcard) (tctx := tctx)
     (MultiWidth.Term.var v) = Term.var v (.ofDep (tctx v)) := rfl
+
+@[simp]
+theorem Term.ofDep_add {wcard tcard : Nat} (bcard : Nat) (ncard : Nat) (icard : Nat) (pcard : Nat)
+    {tctx : Term.Ctx wcard tcard}
+    {w : MultiWidth.WidthExpr wcard}
+    {a b : MultiWidth.Term bcard ncard icard pcard tctx (.bv w)}  :
+    Term.ofDepTerm (MultiWidth.Term.add (w := w) a b) =
+      Term.add (.ofDep w) (Term.ofDepTerm a) (Term.ofDepTerm b) := rfl
 
 def Term.width (t : Term) : WidthExpr :=
   match t with
@@ -781,6 +871,7 @@ def Term.width (t : Term) : WidthExpr :=
   | .ofNat w _n => w
   | .var _v w => w
   | .add w _a _b => w
+  | .mul w _a _b => w
   | .zext _a wnew => wnew
   | .setWidth _a wnew => wnew
   | .sext _a wnew => wnew
@@ -791,13 +882,25 @@ def Term.width (t : Term) : WidthExpr :=
   | .boolVar _v => WidthExpr.const 1 -- dummy width.
   | .boolConst _b => WidthExpr.const 1
   | .shiftl w _a _k => w
+  | .shiftr w _a _k => w
+  | .ashr w _a _k => w
+  | .pextract _a lo hi => ((hi.add (.const 1)).sub lo) -- hi - lo + 1
   | .bvOfBool _b => WidthExpr.const 1
-  | binWidthRel _k wa wb => WidthExpr.const 0
+  | binWidthRel _k _wa _wb => WidthExpr.const 0
   | binRel _k w _a _b => w
   | or _p1 _p2 => WidthExpr.const 0
   | and _p1 _p2 => WidthExpr.const 0
+  | pTrue => WidthExpr.const 0
+  | pFalse => WidthExpr.const 0
   | pvar _v => WidthExpr.const 0
   | boolBinRel _k _a _b => WidthExpr.const 0
+  | udiv w _a _b => w
+  | urem w _a _b => w
+  | vlshr w _a _b => w
+  | vashr w _a _b => w
+  | vshl w _a _b => w
+  | .intToPbv w _v => w
+  | .bvIte _cond thenBv _elseBv => thenBv.width
 
 /-- The width of the non-dependently typed 't' equals the width 'w',
 converting into the non-dependent version. -/
@@ -809,13 +912,57 @@ theorem Term.width_ofDep_eq_ofDep {wcard tcard : Nat} (bcard : Nat)
     : (Term.ofDepTerm t).width = (.ofDep w) := by
   cases t <;> simp [Term.ofDepTerm, Term.width]
 
+/--
+the width cardinality of this term's width.
+-/
 def Term.wcard (t : Term) : Nat := t.width.wcard
+
+/--
+The maximum width cardinality of this entire term's subtree.
+-/
+def Term.maxwcard (t : Term) : Nat :=
+  match t with
+  | .ofNat w _ => w.wcard
+  | .var _ w => w.wcard
+  | .add w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .mul w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .zext a wnew => max (Term.maxwcard a) wnew.wcard
+  | .sext a wnew => max (Term.maxwcard a) wnew.wcard
+  | .setWidth a wnew => max (Term.maxwcard a) wnew.wcard
+  | .bor w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .band w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .bxor w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | .bnot w a => max w.wcard (Term.maxwcard a)
+  | .boolVar _ => 0
+  | .boolConst _ => 0
+  | .shiftl w a _ => max w.wcard (Term.maxwcard a)
+  | .shiftr w a _ => max w.wcard (Term.maxwcard a)
+  | .ashr w a _ => max w.wcard (Term.maxwcard a)
+  | .pextract a _lo _hi => Term.maxwcard a
+  | .bvOfBool _ => 0
+  | binWidthRel _k wa wb => max wa.wcard wb.wcard
+  | binRel _k w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | or p1 p2 => max (Term.maxwcard p1) (Term.maxwcard p2)
+  | and p1 p2 => max (Term.maxwcard p1) (Term.maxwcard p2)
+  | pTrue => 0
+  | pFalse => 0
+  | pvar _ => 0
+  | boolBinRel _k a b => max (Term.maxwcard a) (Term.maxwcard b)
+  | udiv w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | urem w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | vlshr w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | vashr w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | vshl w a b => max w.wcard (max (Term.maxwcard a) (Term.maxwcard b))
+  | bvIte cond thenBv elseBv =>
+    max (Term.maxwcard cond) (max (Term.maxwcard thenBv) (Term.maxwcard elseBv))
+  | .intToPbv w v => max w.wcard v.wcard
 
 def Term.tcard (t : Term) : Nat :=
   match t with
   | .ofNat _w _n => 0
   | .var v _w => v + 1
   | .add _w a b => max (Term.tcard a) (Term.tcard b)
+  | .mul _w a b => max (Term.tcard a) (Term.tcard b)
   | .zext a _wnew => (Term.tcard a)
   | .sext a _wnew => (Term.tcard a)
   | .setWidth a _wnew => (Term.tcard a)
@@ -826,19 +973,33 @@ def Term.tcard (t : Term) : Nat :=
   | .boolVar _v => 0
   | .boolConst _b => 0
   | .shiftl _w a _k => (Term.tcard a)
+  | .shiftr _w a _k => (Term.tcard a)
+  | .ashr _w a _k => (Term.tcard a)
+  | .pextract a _lo _hi => Term.tcard a
   | bvOfBool b => b.tcard
   | binWidthRel _k _wa _wb => 0
   | binRel _k _w a b => max (Term.tcard a) (Term.tcard b)
   | or p1 p2 => max (Term.tcard p1) (Term.tcard p2)
   | and p1 p2 => max (Term.tcard p1) (Term.tcard p2)
+  | pTrue => 0
+  | pFalse => 0
   | pvar _v => 0
   | boolBinRel _k a b => max (a.tcard) (b.tcard)
+  | udiv _w a b => max (Term.tcard a) (Term.tcard b)
+  | urem _w a b => max (Term.tcard a) (Term.tcard b)
+  | vlshr _w a b => max (Term.tcard a) (Term.tcard b)
+  | vashr _w a b => max (Term.tcard a) (Term.tcard b)
+  | vshl _w a b => max (Term.tcard a) (Term.tcard b)
+  | bvIte cond thenBv elseBv =>
+    max (Term.tcard cond) (max (Term.tcard thenBv) (Term.tcard elseBv))
+  | .intToPbv _w _v => 0
 
 def Term.bcard (t : Term) : Nat :=
   match t with
   | .ofNat _w _n => 0
   | .var _v _w => 0
   | .add _w a b => max (Term.bcard a) (Term.bcard b)
+  | .mul _w a b => max (Term.bcard a) (Term.bcard b)
   | .zext a _wnew => (Term.bcard a)
   | .sext a _wnew => (Term.bcard a)
   | .setWidth a _wnew => (Term.bcard a)
@@ -849,13 +1010,59 @@ def Term.bcard (t : Term) : Nat :=
   | .boolVar v => v + 1
   | .boolConst _b => 0
   | .shiftl _w a _k => (Term.bcard a)
+  | .shiftr _w a _k => (Term.bcard a)
+  | .ashr _w a _k => (Term.bcard a)
+  | .pextract a _lo _hi => Term.bcard a
   | bvOfBool b => b.bcard
   | binWidthRel _k _wa _wb => 0
   | binRel _k _w a b => max (Term.bcard a) (Term.bcard b)
   | or p1 p2 => max (Term.bcard p1) (Term.bcard p2)
   | and p1 p2 => max (Term.bcard p1) (Term.bcard p2)
+  | pTrue => 0
+  | pFalse => 0
   | pvar _v => 0
   | boolBinRel _k a b => max (a.bcard) (b.bcard)
+  | udiv _w a b => max (Term.bcard a) (Term.bcard b)
+  | urem _w a b => max (Term.bcard a) (Term.bcard b)
+  | vlshr _w a b => max (Term.bcard a) (Term.bcard b)
+  | vashr _w a b => max (Term.bcard a) (Term.bcard b)
+  | vshl _w a b => max (Term.bcard a) (Term.bcard b)
+  | bvIte cond thenBv elseBv =>
+    max (Term.bcard cond) (max (Term.bcard thenBv) (Term.bcard elseBv))
+  | .intToPbv _w _v => 0
+
+/-- Returns true if the term can be decided by the automata-based procedure.
+Multiplication is NOT automata decidable. -/
+def Term.isAutomtaDecidable : Term → Bool
+| .ofNat _ _ => true
+| .var _ _ => true
+| .add _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .mul _ _ _ => false
+| .zext a _ => a.isAutomtaDecidable
+| .setWidth a _ => a.isAutomtaDecidable
+| .sext a _ => a.isAutomtaDecidable
+| .bor _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .band _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .bxor _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .bnot _ a => a.isAutomtaDecidable
+| .boolVar _ => true
+| .boolConst _ => true
+| .shiftl _ a _ => a.isAutomtaDecidable
+| .shiftr .. => false -- TODO: this is not automata decidable.
+| .ashr .. => false -- TODO: this is not automata decidable.
+| .pextract .. => false -- TODO: this is not automata decidable.
+| .bvOfBool b => b.isAutomtaDecidable
+| .binWidthRel _ _ _ => true
+| .binRel _ _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .or p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
+| .and p1 p2 => p1.isAutomtaDecidable && p2.isAutomtaDecidable
+| .pTrue => true
+| .pFalse => false -- Even though theoreitcally it is, we don't implement it right now.
+| .pvar _ => true
+| .boolBinRel _ a b => a.isAutomtaDecidable && b.isAutomtaDecidable
+| .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. => false
+| bvIte ..=> false
+| .intToPbv .. => false
 
 end Nondep
 
@@ -994,6 +1201,7 @@ structure HTermFSMToBitStream {w : WidthExpr wcard}
       (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard ncard icard pcard → BitStream),
       (henv : HTermEnv fsmEnv tenv benv) →
+      (hautomata : t.isAutomtaDecidable) →
         fsm.toFsmZext.eval fsmEnv =
         BitStream.ofBitVecZext (t.toBV benv nenv ienv penv tenv)
 
@@ -1009,6 +1217,7 @@ structure HTermBoolFSMToBitStream
       (penv : Predicate.Env pcard) (tenv : tctx.Env wenv)
       (fsmEnv : StateSpace wcard tcard bcard ncard icard pcard → BitStream),
       (henv : HTermEnv fsmEnv tenv benv) →
+      (hautomata : t.isAutomtaDecidable) →
         fsm.toFsmZext.eval fsmEnv =
         BitStream.ofBool (t.toBV benv nenv ienv penv tenv) -- TODO: make this exactly the same as predicate?
 
@@ -1027,7 +1236,1734 @@ structure HPredFSMToBitStream {pcard : Nat}
       (fsmEnv : StateSpace wcard tcard bcard ncard icard pcard → BitStream),
       (htenv : HTermEnv fsmEnv tenv benv) →
       (hpenv : HPredicateEnv fsmEnv penv) →
+      (hautomata : p.isAutomtaDecidable) →
         p.toBV benv nenv ienv penv tenv  ↔ (fsm.toFsmZext.eval fsmEnv = .negOne)
 
 end ToFSM
+
+section ToSingleWidth
+
+inductive SingleWidthTermKind
+| prop
+| bv
+deriving Inhabited, Repr, Hashable, DecidableEq, Lean.ToExpr
+
+
+inductive SingleWidthTerm (wcard tcard : Nat) : SingleWidthTermKind → Type where
+| wvar : Nat → SingleWidthTerm wcard tcard .bv
+| bvvar : Nat → SingleWidthTerm wcard tcard .bv
+| bvconst : Nat → SingleWidthTerm wcard tcard .bv
+| bvmul (a b : SingleWidthTerm wcard tcard .bv)  : SingleWidthTerm wcard tcard .bv
+| bvadd (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+| bvand (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+| bvnot (a : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv
+| bvule (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| bvult (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| bveq (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| bvne (a b : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop
+| propimp (a b : SingleWidthTerm wcard tcard .prop) : SingleWidthTerm wcard tcard .prop
+| proptrue : SingleWidthTerm wcard tcard .prop
+| unknown : SingleWidthTerm wcard tcard k
+deriving Repr, Hashable, DecidableEq, Lean.ToExpr
+
+
+
+/--
+Environment for single-width terms, mapping width variables to their corresponding width bitvectors.
+-/
+def SingleWidthTerm.WidthEnv (wcard : Nat) (wout : Nat) : Type :=
+  Fin wcard → BitVec wout
+
+/--
+Environment for single-width terms, mapping term variables to bitvectors.
+-/
+def SingleWidthTerm.BVEnv (tcard : Nat) (wout : Nat) : Type :=
+  Fin tcard → BitVec wout
+
+
+def SingleWidthTerm.toBV
+  {wcard tcard : Nat}
+  (o : Nat)
+  (t : SingleWidthTerm wcard tcard .bv)
+  (wenv : SingleWidthTerm.WidthEnv wcard o)
+  (bvenv : SingleWidthTerm.BVEnv tcard o)
+  : BitVec o :=
+  match t with
+  | .wvar v =>
+    if hv : v < wcard
+    then wenv ⟨v, hv⟩
+    else 0#o -- dummy value
+  -- | .wconst c => BitVec.ofNat o c
+  | .bvvar v =>
+    if hv : v < tcard
+    then bvenv ⟨v, hv⟩
+    else 0#o -- dummy value
+  | .bvconst c => BitVec.ofNat o c
+  | .bvnot a => ~~~(a.toBV o wenv bvenv)
+  | .bvmul a b =>
+    (a.toBV o wenv bvenv) * (b.toBV o wenv bvenv)
+  | .bvadd a b => (a.toBV o wenv bvenv) + (b.toBV o wenv bvenv)
+  | .bvand a b => (a.toBV o wenv bvenv) &&& (b.toBV o wenv bvenv)
+  | .unknown => 0#o-- dummy value
+
+@[simp]
+theorem SingleWidthTerm.toBV_wvar {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {v : Nat} :
+    SingleWidthTerm.toBV o (.wvar v) wenv bvenv =
+    (if hv : v < wcard then wenv ⟨v, hv⟩ else 0#o) := by grind [toBV]
+
+@[simp]
+theorem SingleWidthTerm.toBV_bvvar {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {v : Nat} :
+    SingleWidthTerm.toBV o (.bvvar v) wenv bvenv =
+    (if hv : v < tcard then bvenv ⟨v, hv⟩ else 0#o) := by grind [toBV]
+
+@[simp]
+theorem SingleWidthTerm.toBV_bvconst {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {c : Nat} :
+    SingleWidthTerm.toBV o (.bvconst c) wenv bvenv =
+    BitVec.ofNat o c := by grind [toBV]
+
+@[simp]
+theorem SingleWidthTerm.toBV_bvnot {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {a : SingleWidthTerm wcard tcard .bv} :
+    SingleWidthTerm.toBV o (.bvnot a) wenv bvenv =
+    ~~~(a.toBV o wenv bvenv) := by grind [toBV]
+
+@[simp]
+theorem SingleWidthTerm.toBV_bvand {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {a b : SingleWidthTerm wcard tcard .bv} :
+    SingleWidthTerm.toBV o (.bvand a b) wenv bvenv =
+    (a.toBV o wenv bvenv) &&& (b.toBV o wenv bvenv) := by grind [toBV]
+
+@[simp]
+theorem SingleWidthTerm.toBV_bvadd {wcard tcard : Nat} {o : Nat}
+    (wenv : SingleWidthTerm.WidthEnv wcard o)
+    (bvenv : SingleWidthTerm.BVEnv tcard o)
+    {a b : SingleWidthTerm wcard tcard .bv} :
+    SingleWidthTerm.toBV o (.bvadd a b) wenv bvenv =
+    (a.toBV o wenv bvenv) + (b.toBV o wenv bvenv) := by grind [toBV]
+
+def SingleWidthTerm.toProp
+  {wcard tcard : Nat}
+  (o : Nat)
+  (t : SingleWidthTerm wcard tcard .prop)
+  (wenv : SingleWidthTerm.WidthEnv wcard o)
+  (bvenv : SingleWidthTerm.BVEnv tcard o) : Prop :=
+  match t with
+  | .bvule a b => (a.toBV o wenv bvenv).ule (b.toBV o wenv bvenv)
+  | .bvult a b => (a.toBV o wenv bvenv).ult (b.toBV o wenv bvenv)
+  | .bveq a b => (a.toBV o wenv bvenv) = (b.toBV o wenv bvenv)
+  | .bvne a b => (a.toBV o wenv bvenv) ≠ (b.toBV o wenv bvenv)
+  | .propimp a b => (a.toProp o wenv bvenv) → (b.toProp o wenv bvenv)
+  | .proptrue => True
+  | .unknown => False
+
+-- -b = !b + 1
+def SingleWidthTerm.bvneg (t : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd (.bvnot t) (.bvconst 1)
+
+def SingleWidthTerm.bvsub (t1 t2 : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd t1 (SingleWidthTerm.bvneg t2)
+
+-- power of 2 - 1 = unary mask.
+def SingleWidthTerm.maskOfPot (w : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  (SingleWidthTerm.bvsub w (.bvconst 1))
+
+namespace Nondep
+
+/--
+Convert a width expression to its corresponding single-width term.
+This is used to convert the width expressions with multiple widths into a single-width expression.
+-/
+def WidthExpr.toSingleWidthTerm (wcard tcard : Nat) (w : WidthExpr) : SingleWidthTerm wcard tcard .bv :=
+  match w with
+  | .const c => .bvconst (1 <<< c)
+  | .var v => (.wvar (v))
+  | _ => .unknown
+
+@[simp]
+theorem WidthExpr.toSingleWidthTerm_const {wcard tcard : Nat} {c : Nat} :
+    WidthExpr.toSingleWidthTerm wcard tcard (WidthExpr.const c) = .bvconst (1 <<< c) := rfl
+
+@[simp]
+theorem WidthExpr.toSingleWidthTerm_var {wcard tcard : Nat} {v : Nat} :
+    WidthExpr.toSingleWidthTerm wcard tcard (WidthExpr.var v) = .wvar v := rfl
+
+
+/--
+Convert a term to its corresponding single-width term.
+TODO: Change the type to `SingleWidthTerm × Bool`, and drop `.unknown : SingleWidthTerm`.
+This will cleanup the implementation, and we don't need `isTranslated` or whaetver.
+-/
+def Term.toSingleWidthTerm (wcard tcard : Nat)  (t : Term) : SingleWidthTerm wcard tcard .bv :=
+  match t with
+  | .var v _w => .bvvar v
+  | .add w a b =>
+    let aMono := a.toSingleWidthTerm wcard tcard
+    let bMono := b.toSingleWidthTerm wcard tcard
+    let wMono := w.toSingleWidthTerm wcard tcard
+    .bvand (.bvadd aMono bMono) wMono
+  | .band _w a b =>
+    let aMono := a.toSingleWidthTerm wcard tcard
+    let bMono := b.toSingleWidthTerm wcard tcard
+    .bvand aMono bMono
+  | _ => .unknown
+
+@[simp]
+theorem Term.toSingleWidthTerm_var {wcard tcard : Nat}
+    {v : Fin tcard} {tctx : Term.Ctx wcard tcard} :
+    Term.toSingleWidthTerm wcard tcard (Term.var v (.ofDep (tctx v))) = .bvvar v := rfl
+
+@[simp]
+theorem Term.toSingleWidthTerm_add {wcard tcard : Nat}
+    {w : MultiWidth.WidthExpr wcard}
+    {a b : Term} :
+    Term.toSingleWidthTerm wcard tcard (Term.add (.ofDep w) a b) =
+    .bvand (.bvadd (Term.toSingleWidthTerm wcard tcard a) (Term.toSingleWidthTerm wcard tcard b))
+      (WidthExpr.toSingleWidthTerm wcard tcard (.ofDep w)) := rfl
+
+end Nondep
+
+/-- -x = !x + 1 -/
+def SingleWidthTerm.neg {wcard tcard : Nat} (t : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd (.bvnot t) (.bvconst 1)
+
+-- x - y = x + (-y)
+def SingleWidthTerm.sub {wcard tcard : Nat} (t1 t2 : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .bv :=
+  .bvadd t1 (SingleWidthTerm.neg t2)
+
+
+-- v & (v - 1) = 0
+def SingleWidthTerm.monoIsPotPred (wcard tcard : Nat) (w : SingleWidthTerm wcard tcard .bv) : SingleWidthTerm wcard tcard .prop :=
+  .bveq (.bvand w (SingleWidthTerm.sub w (.bvconst 1))) (.bvconst 0)
+
+  -- let var := Term.monoPotVar wcard tcard w
+  -- (.band .monoWidth var (Term.potToMask var))
+
+def SingleWidthTerm.mkPotPreconditions (wcard tcard : Nat) (w : Nat) :
+    SingleWidthTerm wcard tcard .prop :=
+  match w with
+  | 0 => .proptrue
+  | w' + 1 =>
+    .propimp (SingleWidthTerm.monoIsPotPred wcard tcard (.bvconst w)) (SingleWidthTerm.mkPotPreconditions wcard tcard w')
+
+
+namespace Nondep
+def Term.toSingleWidthProp (wcard tcard : Nat) (t : Term) : SingleWidthTerm wcard tcard .prop :=
+  match t with
+  | .boolConst b => if b then .proptrue else .unknown
+  | .binRel k _w a b => -- these are guaranteed to be masked correctly.
+    let aMono := a.toSingleWidthTerm wcard tcard
+    let bMono := b.toSingleWidthTerm wcard tcard
+    match k with
+    | .ule => .bvule aMono bMono
+    | .ult => .bvult aMono bMono
+    | .eq => .bveq aMono bMono
+    | .ne => .bvne aMono bMono
+    | _ => .unknown
+  | _ => .unknown
+
+end Nondep
+
+namespace Nondep
+open Std.Tactic.BVDecide
+
+/-- Evaluate a width expression to a concrete `Nat` given a width variable assignment. -/
+def WidthExpr.eval (wenv : Array Nat) : WidthExpr → Nat
+  | .const c => c
+  | .var v => wenv[v]?.getD 0
+  | .max a b => (Nat.max (a.eval wenv) (b.eval wenv))
+  | .min a b => (Nat.min (a.eval wenv) (b.eval wenv))
+  | .addK a k =>((a.eval wenv) + k)
+  | .kadd k a =>(k + (a.eval wenv))
+  | .subK a k =>((a.eval wenv) - k)
+  | .sub a b => ((a.eval wenv) - (b.eval wenv))
+  | .add a b => ((a.eval wenv) + (b.eval wenv))
+  | .mul a b => ((a.eval wenv) * (b.eval wenv))
+
+def _root_.Std.Tactic.BVDecide.BVExpr.width (_ : BVExpr w) : Nat := w
+
+def _root_.Std.Tactic.BVDecide.BVExpr.castAux (x : BVExpr w) (hw : w = w') : BVExpr w' := hw ▸ x
+
+@[implemented_by _root_.Std.Tactic.BVDecide.BVExpr.castAux]
+def _root_.Std.Tactic.BVDecide.BVExpr.cast (x : BVExpr w) (hw : w = w') : BVExpr w' :=
+  match x with
+  | .var v => .var v
+  | .const b => .const <| b.cast hw
+  | .extract start len x (w := wx) => .extract start w' x
+  | .bin a k b => .bin (a.cast hw) k (b.cast hw)
+  | .un k x => .un k (x.cast hw)
+  | .append x y h => .append x y (by grind)
+  | .replicate n x h => .replicate n x (by grind)
+  | .shiftLeft x y => .shiftLeft (x.cast hw) y
+  | .shiftRight x y => .shiftRight (x.cast hw) y
+  | .arithShiftRight x y => .arithShiftRight (x.cast hw) y
+
+
+def _root_.Std.Tactic.BVDecide.BVExpr.zeroExtend (x : BVExpr w) (wnew : Nat) : BVExpr wnew :=
+   if hw : wnew ≤ w then
+     .extract 0 wnew x
+    else
+      .append (BVExpr.const (BitVec.ofNat (wnew - w) 0)) x (by grind)
+
+def _root_.Std.Tactic.BVDecide.BVExpr.msb (x : BVExpr w) : BVExpr 1 :=
+  .extract (w - 1) 1 x
+
+def _root_.Std.Tactic.BVDecide.BVExpr.signExtend (x : BVExpr w) (wnew : Nat) : BVExpr wnew :=
+  if hw : wnew ≤ w then
+    .extract 0 wnew x
+  else
+    let msb := x.msb
+    let ext : BVExpr (wnew - w) := .replicate (wnew - w) msb (by grind)
+    .append ext x (by grind)
+
+/-- Convert a BV-producing `Nondep.Term` to a `BVExpr` at monomorphization width `w`.
+`wenv` provides concrete width assignments for width variables.
+Returns 'true' if the translation succeeded, along with accumulated error messages.
+-/
+def Term.toBVExpr (wenv : Array Nat) (t : Term) : (BVExpr (t.width.eval wenv)) × Bool × Lean.Format :=
+   match _ht : t with
+  | .var v _ => (BVExpr.var v, true, .nil)
+  | .ofNat w n => (.const (BitVec.ofNat (w.eval wenv) n), true, .nil)
+  | .add we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+         if aresult && bresult then
+          (.bin (a'.cast ha) .add (b'.cast hb), true, .nil)
+        else
+          let errMsg := s!"toBVExpr: failed to translate operands of add\n{aerr}\n{berr}"
+          (.const (88#_), false, .text errMsg)
+      else
+        let errMsg := s!"toBVExpr: width mismatch in add ({repr b}.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in add ({repr a}.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
+  | .mul we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.bin (a'.cast ha) .mul (b'.cast hb), true, .nil)
+        else
+          let errMsg := s!"toBVExpr: failed to translate operands of mul\n{aerr}\n{berr}"
+          (.const (88#_), false, .text errMsg)
+      else
+        let errMsg := s!"toBVExpr: width mismatch in mul (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in mul (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
+  | .band we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.bin (a'.cast ha) .and (b'.cast hb), true, .nil)
+        else
+          let errMsg := s!"toBVExpr: failed to translate operands of band\n{aerr}\n{berr}"
+          (.const (88#_), false, .text errMsg)
+      else
+        let errMsg := s!"toBVExpr: width mismatch in band (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in band (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
+  | .bor we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.bin (a'.cast ha) .or (b'.cast hb), true, .nil)
+        else
+          let errMsg := s!"toBVExpr: failed to translate operands of bor\n{aerr}\n{berr}"
+          (.const (88#_), false, .text errMsg)
+      else
+        let errMsg := s!"toBVExpr: width mismatch in bor (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in bor (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
+  | .bxor we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.bin (a'.cast ha) .xor (b'.cast hb), true, .nil)
+        else
+          let errMsg := s!"toBVExpr: failed to translate operands of bxor\n{aerr}\n{berr}"
+          (.const (88#_), false, .text errMsg)
+      else
+        let errMsg := s!"toBVExpr: width mismatch in bxor (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in bxor (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
+  | .bnot we a =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if aresult then
+        (.un .not (a'.cast ha), true, .nil)
+      else
+        let errMsg := s!"toBVExpr: failed to translate operand of bnot\n{aerr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in bnot (a.width={a'.width} ≠ {w})\n{aerr}"
+      (.const (88#_), false, .text errMsg)
+  | .shiftl we a k =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if aresult then
+        (.shiftLeft (a'.cast ha) (.const (BitVec.ofNat w k)), true, .nil)
+      else
+        let errMsg := s!"toBVExpr: failed to translate operand of shiftl\n{aerr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in shiftl (a.width={a'.width} ≠ {w})\n{aerr}"
+      (.const (88#_), false, .text errMsg)
+  | .shiftr w a k =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let w := w.eval wenv
+    if ha : a'.width = w then
+      if aresult then
+        (.shiftRight (a'.cast ha) (.const (BitVec.ofNat w k)), true, .nil)
+      else
+        let errMsg := s!"toBVExpr: failed to translate operand of shiftr\n{aerr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in shiftr (a.width={a'.width} ≠ {w})\n{aerr}"
+      (.const (88#_), false, .text errMsg)
+  | .ashr w a k =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let w := w.eval wenv
+    if ha : a'.width = w then
+      if aresult then
+        (.arithShiftRight (a'.cast ha) (.const (BitVec.ofNat w k)), true, .nil)
+      else
+        let errMsg := s!"toBVExpr: failed to translate operand of ashr\n{aerr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in ashr (a.width={a'.width} ≠ {w})\n{aerr}"
+      (.const (88#_), false, .text errMsg)
+  | .pextract a wlo whi =>
+    let lo := wlo.eval wenv
+    let hi := whi.eval wenv
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    if aresult then
+      (.extract lo (hi + 1 - lo) a', true, .nil)
+    else
+      let errMsg := s!"toBVExpr: failed to translate operand of pextract\n{aerr}"
+      (.const (88#_), false, .text errMsg)
+  | .zext x we | .setWidth x we =>
+    let (x', xresult, xerr) := x.toBVExpr wenv
+    let w := we.eval wenv
+    if xresult then
+      (BVExpr.zeroExtend x' w, true, .nil)
+    else
+      let errMsg := s!"toBVExpr: failed to translate operand of zext/setWidth\n{xerr}"
+      (.const (88#_), false, .text errMsg)
+  | .sext x we =>
+    let (x', xresult, xerr) := x.toBVExpr wenv
+    let w := we.eval wenv
+    if xresult then
+      (BVExpr.signExtend x' w, true, .nil)
+    else
+      let errMsg := s!"toBVExpr: failed to translate operand of sext\n{xerr}"
+      (.const (88#_), false, .text errMsg)
+  | .udiv we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.bin (a'.cast ha) .udiv (b'.cast hb), true, .nil)
+        else
+          let errMsg := s!"toBVExpr: failed to translate operands of udiv\n{aerr}\n{berr}"
+          (.const (88#_), false, .text errMsg)
+      else
+        let errMsg := s!"toBVExpr: width mismatch in udiv (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in udiv (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
+  | .urem we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.bin (a'.cast ha) .umod (b'.cast hb), true, .nil)
+        else
+          let errMsg := s!"toBVExpr: failed to translate operands of urem\n{aerr}\n{berr}"
+          (.const (88#_), false, .text errMsg)
+      else
+        let errMsg := s!"toBVExpr: width mismatch in urem (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in urem (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
+  | .vlshr we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.shiftRight (a'.cast ha) (b'.cast hb), true, .nil)
+        else
+          let errMsg := s!"toBVExpr: failed to translate operands of vlshr\n{aerr}\n{berr}"
+          (.const (88#_), false, .text errMsg)
+      else
+        let errMsg := s!"toBVExpr: width mismatch in vlshr (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in vlshr (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
+  | .vashr we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.arithShiftRight (a'.cast ha) (b'.cast hb), true, .nil)
+        else
+          let errMsg := s!"toBVExpr: failed to translate operands of vashr\n{aerr}\n{berr}"
+          (.const (88#_), false, .text errMsg)
+      else
+        let errMsg := s!"toBVExpr: width mismatch in vashr (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in vashr (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
+  | .vshl we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.shiftLeft (a'.cast ha) (b'.cast hb), true, .nil)
+        else
+          let errMsg := s!"toBVExpr: failed to translate operands of vshl\n{aerr}\n{berr}"
+          (.const (88#_), false, .text errMsg)
+      else
+        let errMsg := s!"toBVExpr: width mismatch in vshl (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const (88#_), false, .text errMsg)
+    else
+      let errMsg := s!"toBVExpr: width mismatch in vshl (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const (88#_), false, .text errMsg)
+  | .intToPbv w v =>
+     let w := w.eval wenv
+     let v := v.eval wenv
+     (.const (BitVec.ofNat w v), true, .nil)
+  | .boolBinRel .. | .pvar .. | .and .. | .or ..| .binRel .. | .binWidthRel ..
+    | .bvOfBool .. | .boolConst .. | .boolVar ..
+    | .pFalse | .pTrue =>
+    let errMsg := s!"toBVExpr: unsupported operation (not a BV expression): {repr t}"
+    dbg_trace errMsg
+    (.const (88#_), false, .text errMsg)
+  | .bvIte .. =>
+     -- ITE should have been eliminated!
+     let errMsg := s!"toBVExpr: bvIte should have been eliminated before QF_BV translation, got: {repr t}"
+     dbg_trace errMsg
+     (.const (99#_), false, .text errMsg)
+
+
+/--
+Produce a term that has just the width contraints, and no bitvector constraints.
+This allows us to check if a term satisfies its widths constraints before evaluating
+its bitvector constraints.
+If the width constraints fail, then we should skip trying the BV fragment,
+as we may produce ill-typed BV terms otherwise.
+-/
+def Term.toWidthLogicalExpr (t : Term) : Term :=
+  match t with
+  | .binWidthRel .. => t
+  | .and a b => .and (a.toWidthLogicalExpr) (b.toWidthLogicalExpr)
+  | .or a b => .or (a.toWidthLogicalExpr) (b.toWidthLogicalExpr)
+  | .binRel .. => pTrue
+  | .boolBinRel .. => pTrue
+  | .pTrue => .pTrue
+  | .pFalse => .pFalse
+  | .intToPbv .. | .band .. | .bor .. | .bxor .. | .mul .. | .add .. | .zext .. | .setWidth ..
+    | .bvIte .. | pextract .. | .ashr .. | .vshl .. | .vashr .. | .vlshr ..
+    | .urem .. | .udiv .. | .bvOfBool .. | .shiftr .. | .shiftl .. | .boolConst ..
+    | .var .. | .ofNat .. | .sext .. | .bnot .. | .boolVar .. | .pvar .. => t
+
+/--
+Evaluate a logical expression that has been promised to only have width expressions. -/
+def Term.evalWidthLogicalExpr (t : Term) (wenv: Array Nat) : Except String Bool := do
+  match t with
+  | .binWidthRel k a b =>
+    let wa := a.eval wenv
+    let wb := b.eval wenv
+    let out := match k with
+      | .eq =>  wa == wb
+      | .le => wa ≤ wb
+    return out
+  | .and p q => return (← p.evalWidthLogicalExpr wenv)  && (← q.evalWidthLogicalExpr wenv)
+  | .or p q => return (← p.evalWidthLogicalExpr wenv) || (← q.evalWidthLogicalExpr wenv)
+  | .pTrue => return true
+  | .pFalse => return false
+  | .intToPbv .. | .band .. | .bor .. | .bxor .. | .mul .. | .add .. | .zext .. | .setWidth ..
+    | .bvIte .. | pextract .. | .ashr .. | .vshl .. | .vashr .. | .vlshr ..
+    | .urem .. | .udiv .. | .bvOfBool .. | .shiftr .. | .shiftl .. | .boolConst ..
+    | .var .. | .ofNat .. | .sext .. | .bnot .. | .boolVar .. | .binRel .. | .pvar ..
+    | .boolBinRel .. =>
+      .error s!"unexpected term '{repr t}' in a width logical expression evaluation"
+
+
+/-- Convert a predicate-producing `Nondep.Term` to a `BVLogicalExpr`.
+`wenv` provides concrete width assignments for width variables.
+Uses `Term.toBVExpr` for BV subterms within predicates.
+`ule a b` is encoded as `¬(ult b a)`, `ne` as `¬(eq)`.
+Returns 'true' if the translation succeeded, along with accumulated error messages.
+-/
+def Term.toBVLogicalExpr (wenv : Array Nat) (t : Term) :
+    BVLogicalExpr × Bool × Lean.Format :=
+  match t with
+  | .pTrue => (.const true, true, .nil)
+  | .boolConst b => (.const b, true, .nil)
+  | .binRel .eq we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.literal (.bin (a'.cast ha) .eq (b'.cast hb)), true, .nil)
+        else
+          let errMsg := s!"toBVLogicalExpr: failed to translate operands of = relation\n{aerr}\n{berr}"
+          (.const false, false, .text errMsg)
+      else
+        let errMsg := s!"toBVLogicalExpr: width mismatch in = relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const false, false, .text errMsg)
+    else
+      let errMsg := s!"toBVLogicalExpr: width mismatch in = relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const false, false, .text errMsg)
+  | .binRel .ne we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.not (.literal (.bin (a'.cast ha) .eq (b'.cast hb))), true, .nil)
+        else
+          let errMsg := s!"toBVLogicalExpr: failed to translate operands of ≠ relation\n{aerr}\n{berr}"
+          (.const false, false, .text errMsg)
+      else
+        let errMsg := s!"toBVLogicalExpr: width mismatch in ≠ relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const false, false, .text errMsg)
+    else
+      let errMsg := s!"toBVLogicalExpr: width mismatch in ≠ relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const false, false, .text errMsg)
+  | .binRel .ult we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.literal (.bin (a'.cast ha) .ult (b'.cast hb)), true, .nil)
+        else
+          let errMsg := s!"toBVLogicalExpr: failed to translate operands of ult relation\n{aerr}\n{berr}"
+          (.const false, false, .text errMsg)
+      else
+        let errMsg := s!"toBVLogicalExpr: width mismatch in ult relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const false, false, .text errMsg)
+    else
+      let errMsg := s!"toBVLogicalExpr: width mismatch in ult relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const false, false, .text errMsg)
+  | .binRel .ule we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          (.not (.literal (.bin (b'.cast hb) .ult (a'.cast ha))), true, .nil)
+        else
+          let errMsg := s!"toBVLogicalExpr: failed to translate operands of ule relation\n{aerr}\n{berr}"
+          (.const false, false, .text errMsg)
+      else
+        let errMsg := s!"toBVLogicalExpr: width mismatch in ule relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const false, false, .text errMsg)
+    else
+      let errMsg := s!"toBVLogicalExpr: width mismatch in ule relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const false, false, .text errMsg)
+  -- slt(x, y) = ult(x ^ mask, y ^ mask) where mask = 1 <<< (w - 1)
+  | .binRel .slt we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          let mask : BVExpr w := .const (BitVec.ofNat w (1 <<< (w - 1)))
+          let a_xor := BVExpr.bin (a'.cast ha) .xor mask
+          let b_xor := BVExpr.bin (b'.cast hb) .xor mask
+          (.literal (.bin a_xor .ult b_xor), true, .nil)
+        else
+          let errMsg := s!"toBVLogicalExpr: failed to translate operands of slt relation\n{aerr}\n{berr}"
+          (.const false, false, .text errMsg)
+      else
+        let errMsg := s!"toBVLogicalExpr: width mismatch in slt relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const false, false, .text errMsg)
+    else
+      let errMsg := s!"toBVLogicalExpr: width mismatch in slt relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const false, false, .text errMsg)
+  -- sle(x, y) = ¬ult(y ^ mask, x ^ mask) where mask = 1 <<< (w - 1)
+  | .binRel .sle we a b =>
+    let (a', aresult, aerr) := a.toBVExpr wenv
+    let (b', bresult, berr) := b.toBVExpr wenv
+    let w := we.eval wenv
+    if ha : a'.width = w then
+      if hb : b'.width = w then
+        if aresult && bresult then
+          let mask : BVExpr w := .const (BitVec.ofNat w (1 <<< (w - 1)))
+          let a_xor := BVExpr.bin (a'.cast ha) .xor mask
+          let b_xor := BVExpr.bin (b'.cast hb) .xor mask
+          (.not (.literal (.bin b_xor .ult a_xor)), true, .nil)
+        else
+          let errMsg := s!"toBVLogicalExpr: failed to translate operands of sle relation\n{aerr}\n{berr}"
+          (.const false, false, .text errMsg)
+      else
+        let errMsg := s!"toBVLogicalExpr: width mismatch in sle relation (b.width={b'.width} ≠ {w})\n{aerr}\n{berr}"
+        (.const false, false, .text errMsg)
+    else
+      let errMsg := s!"toBVLogicalExpr: width mismatch in sle relation (a.width={a'.width} ≠ {w})\n{aerr}\n{berr}"
+      (.const false, false, .text errMsg)
+  | .and p1 p2 =>
+    let (p1', p1result, p1err) := p1.toBVLogicalExpr wenv
+    let (p2', p2result, p2err) := p2.toBVLogicalExpr wenv
+    if p1result && p2result then
+      (.gate .and p1' p2', true, .nil)
+    else
+      let errMsg := s!"toBVLogicalExpr: failed to translate operands of ∧\n{p1err}\n{p2err}"
+      (.const false, false, .text errMsg)
+  | .or p1 p2 =>
+    let (p1', p1result, p1err) := p1.toBVLogicalExpr wenv
+    let (p2', p2result, p2err) := p2.toBVLogicalExpr wenv
+    if p1result && p2result then
+      (.gate .or p1' p2', true, .nil)
+    else
+      let errMsg := s!"toBVLogicalExpr: failed to translate operands of ∨\n{p1err}\n{p2err}"
+      (.const false, false, .text errMsg)
+  | .binWidthRel .eq ew1 ew2 =>
+    let w1 := ew1.eval wenv
+    let w2 := ew2.eval wenv
+    (.const (w1 = w2), true, .nil)
+  | .binWidthRel .le ew1 ew2 =>
+    let w1 := ew1.eval wenv
+    let w2 := ew2.eval wenv
+    (.const (w1 ≤ w2), true, .nil)
+  | .pFalse => (.const false, true, .nil)
+  | .pvar .. | .bvOfBool .. | .shiftr .. | .ashr .. | .pextract ..
+    | .shiftl .. | .boolVar .. | .bnot .. | .bxor .. | .band .. | .bor .. | .sext .. | .setWidth ..
+    | .zext .. | .mul .. | .add .. | .ofNat .. | .var .. | .boolBinRel ..
+    | .udiv .. | .urem .. | .vlshr .. | .vashr .. | .vshl .. | .bvIte .. | .intToPbv .. =>
+    let errMsg := s!"toBVLogicalExpr: unsupported operation, unable to translate into QF_BV: {repr t}"
+    dbg_trace errMsg
+    (.const false, false, .text errMsg)
+
+end Nondep
+
+/--
+Drop this entirely, and rely on the `Bool` in the return type of `Nondep.Term.toSingleWidthTerm` instead.
+-/
+def SingleWidthTerm.isTranslated {wcard tcard : Nat} (t : SingleWidthTerm wcard tcard k) : Bool :=
+  match t with
+  | .unknown => false
+  | _ => true
+
+/--
+Build a single-width width environment from a multi-width environment, such that it
+satisfies 'HSingleWidthEnvRelation'.
+-/
+def SingleWidthTerm.WidthEnv.ofMultiWidth {wcard : Nat} (wMultiEnv : WidthExpr.Env wcard) (o : Nat) :
+    SingleWidthTerm.WidthEnv wcard o :=
+  fun v => BitVec.ofNat o (1 <<< wMultiEnv v)
+
+@[simp]
+def Nondep.Term.constOne (w : WidthExpr) : Term :=
+  .ofNat w 1
+
+@[simp]
+def Nondep.Term.constZero (w : WidthExpr) : Term :=
+  .ofNat w 0
+
+def Nondep.Term.constBad (w : WidthExpr) : Term :=
+  .ofNat w 77
+
+/-- Compute `-a`. -/
+def Nondep.Term.neg (a : Term) : Term :=
+  .add a.width (.constOne a.width) (a.bnot a.width)
+
+/-- Compute `a - b`. -/
+def Nondep.Term.sub (w : WidthExpr) (a b : Term) : Term :=
+  .add w a (b.neg)
+
+/-- p1 → p2 iff ¬p1 ∨ p2.-/
+def Nondep.Term.pimplies (p1 p2 : Nondep.Term) : Nondep.Term × Bool × Lean.Format :=
+  let (p1, success, err) := p1.pnegate
+  (Nondep.Term.or p1 p2, success, err)
+
+
+/-- Compute `a + 1`. -/
+def Nondep.Term.succ (a : Term) : Term :=
+  .add a.width a (Nondep.Term.constOne a.width)
+
+/-- Compute `a - 1`. -/
+def Nondep.Term.pred (a : Term) : Term :=
+  .sub a.width a (Nondep.Term.constOne a.width)
+
+/--
+Convert a width variable into a bitvector,
+which encodes it into a bitvector whose '.toNat' value is the width.
+-/
+def Nondep.WidthExpr.toTwosComplementNondepTerm (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr) :
+    Nondep.Term × Bool × Lean.Format :=
+  match w with
+  | .const c => (Nondep.Term.ofNat wo c, true, .nil)
+  | .var v =>
+    let widthVal := Nondep.Term.var v wo
+    (widthVal, true, .nil)
+  | .max a b =>
+    let (a', aresult, aerr) := a.toTwosComplementNondepTerm wo
+    let (b', bresult, berr) := b.toTwosComplementNondepTerm wo
+    if aresult && bresult then
+      -- max(a, b) = ite(b ≤ a, a, b)
+      let cond := Nondep.Term.binRel .ule wo b' a'
+      (.bvIte cond a' b', true, .nil)
+    else (.constBad wo, false, aerr ++ berr)
+  | .min a b =>
+    let (a', aresult, aerr) := a.toTwosComplementNondepTerm wo
+    let (b', bresult, berr) := b.toTwosComplementNondepTerm wo
+    if aresult && bresult then
+      -- min(a, b) = ite(a ≤ b, a, b)
+      let cond := Nondep.Term.binRel .ule wo a' b'
+      (.bvIte cond a' b', true, .nil)
+    else (.constBad wo, false, aerr ++ berr)
+  | .addK a k =>
+    let (aval, aresult, aerr) := a.toTwosComplementNondepTerm wo
+    let kval := Nondep.Term.ofNat wo k
+    if aresult then
+      (.add wo aval kval, true, .nil)
+    else (.constBad wo, false, aerr)
+  | .kadd k a =>
+    let (aval, aresult, aerr) := a.toTwosComplementNondepTerm wo
+    let kval := Nondep.Term.ofNat wo k
+    if aresult then
+      (.add wo kval aval, true, .nil)
+    else (.constBad wo, false, aerr)
+  | .add a b =>
+    let (a', aresult, aerr) := a.toTwosComplementNondepTerm wo
+    let (b', bresult, berr) := b.toTwosComplementNondepTerm wo
+    if aresult && bresult then
+      (.add wo a' b', true, .nil)
+    else (.constBad wo, false, aerr ++ berr)
+  | .sub a b =>
+    let (a', aresult, aerr) := a.toTwosComplementNondepTerm wo
+    let (b', bresult, berr) := b.toTwosComplementNondepTerm wo
+    if aresult && bresult then
+      (.sub wo a' b', true, .nil)
+    else (.constBad wo, false, aerr ++ berr)
+  | .subK a k =>
+    let (amask, aresult, aerr) := a.toTwosComplementNondepTerm wo
+    let kval := Nondep.Term.ofNat wo k
+    if aresult then
+      (.sub wo amask kval, true, .nil)
+    else (.constBad wo, false, aerr)
+  | .mul a b =>
+    let (a', aresult, aerr) := a.toTwosComplementNondepTerm wo
+    let (b', bresult, berr) := b.toTwosComplementNondepTerm wo
+    if aresult && bresult then
+      (.mul wo a' b', true, .nil)
+    else (.constBad wo, false, aerr ++ berr)
+
+/--
+Create preconditions that say that the width is inbounds.
+-/
+def Term.toSingleWidthNondepTerm.mkWidthPrecond (w : Nat) (wo : Nondep.WidthExpr) : Nondep.Term :=
+    -- Width variable must be ≤ bound (wo), otherwise the mask (1 << w) - 1
+    -- wraps around in bounded-width arithmetic and produces incorrect results.
+    -- Use `w ≤ bound` (not `w + 1 ≤ bound`) to avoid BV overflow:
+    -- after pnegate + toSingleWidthNondepTermGo + pnegate, the `+ 1` becomes
+    -- modular BV addition, and `(w_bv + 1) < 9` accepts w=255 due to overflow.
+    let widthVar := Nondep.Term.var w wo
+    -- let (boundVal, _) := wo.toTwosComplementNondepTerm wo
+    let boundVal := match wo with
+      | .const c => Nondep.Term.ofNat wo (c - 1)
+      | _ => Nondep.Term.ofNat wo 0 -- fallback, shouldn't happen in practice
+    let upperBound := Nondep.Term.binRel .ule wo widthVar boundVal
+    -- Width variables must be ≥ 1: PBV semantics require positive bit-widths.
+    -- Without this, k=0 is allowed, producing 0-bit bitvectors where:
+    --   wmask(0) = 0, so all values are masked to 0.
+    --   signBit = 1 << (0-1) wraps (e.g. 1 << 63 = 0 in 6-bit), breaking
+    --   signed comparisons (slt/sle) which degenerate to unsigned.
+    -- This causes spurious SAT results for formulas like
+    --   `¬(bvsgt(X, ~0) ↔ (X & signMask) == 0)` which are UNSAT for k ≥ 1
+    --   but SAT for k=0 (slt gives false while the equality gives true).
+    let lowerBound := Nondep.Term.binRel .ule wo (Nondep.Term.ofNat wo 1) widthVar
+    .and lowerBound upperBound
+    -- Nondep.Term.binWidthRel .le (.var w) (wo.sub (.const 1))
+/--
+Make all the width preconditions of variables of indices [0..w),
+with universe width 'wo'.
+-/
+def Term.toSingleWidthNondepTerm.mkAllWidthPreconds
+  (wo : Nondep.WidthExpr) (w : Nat) : Nondep.Term :=
+  match w with
+  | 0 => .pTrue
+  | w' + 1 =>
+    let precond := Term.toSingleWidthNondepTerm.mkWidthPrecond w' wo
+    .and precond (Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo w')
+
+/-- create a conjunction of predicates -/
+def Nondep.Term.andPredicates (ps : List Nondep.Term) : Nondep.Term :=
+  match ps with
+  | [] => .pTrue
+  | [p] => p
+  | p :: ps => .and p (Term.andPredicates ps)
+
+/--
+Convert a width variable into a bitvector,
+which encodes a mask of the form (1 << w) - 1, where w is the width variable.
+-/
+def Nondep.WidthExpr.toSingleWidthMaskNondepTerm (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr)
+    : Nondep.Term × Bool × Lean.Format :=
+  let (wval, wresult, werr) := w.toTwosComplementNondepTerm wo
+  if wresult then
+    let one := Nondep.Term.constOne wo
+    let pot := Nondep.Term.vshl wo one wval  -- 1 << widthVar = 2^widthVar
+    let out := Nondep.Term.sub wo pot one-- 2^widthVar - 1 = mask
+    (out, true, .nil)
+  else (.constBad wo, false, werr)
+
+/-#
+
+## Notes on sign-extension implementation:
+
+
+#### The classic branchless sign-extension trick:
+
+```
+  s = (mold + 1) >> 1          -- sign bit mask (MSB of the old width)
+  v = x & mold                 -- isolate the value bits
+  y = ((v ^ s) - s) & mnew     -- sign-extend and mask to new width
+```
+
+### Why it works:
+
+s is the sign-bit position of the old width. Since mold = 2^k - 1, we get s = 2^(k-1).
+
+The XOR-subtract trick (v ^ s) - s is a well-known identity:
+- If the sign bit is `0`: `v ^ s` sets bit k-1, then `- s` clears it again. Result = v unchanged.
+- If the sign bit is `1`: `v ^ s` clears bit k-1, then `- s` causes a borrow that propagates through all higher bits, filling them with 1s. Result = sign-extended v.
+
+Positive case, v = 0b0101 (+5):
+
+```
+s       = 0b1000
+v ^ s   = 0b1101
+- s     = 0b0101
+& mnew  = 0b0101       ✓  (5 unchanged)
+```
+
+Alternative for s:
+if you don't like (mold + 1) >> 1,
+you can also write s = mold ^ (mold >> 1),
+which extracts just the top bit of a unary mask
+-/
+
+/--
+Compute MSB of `x` at width mask `mask`.
+-/
+def Nondep.Term.toSingleWidthNondepMsb (x : Nondep.Term) (wx : Nondep.WidthExpr) (wo : Nondep.WidthExpr) :
+    Nondep.Term × Bool × Lean.Format :=
+  let (mask, maskResult, maskErr) := wx.toSingleWidthMaskNondepTerm wo
+  if maskResult then
+    let maskSucc := mask.succ -- mask + 1 = 100000
+    let msbIx := maskSucc.shiftr wo 1 -- (mask + 1) >>> 1 = 010000
+    let msb := x.band wo msbIx
+    (msb, true, .nil)
+  else (.constBad wo, false, maskErr)
+
+/--
+Sign-extend `x` from old width (given by mask `wOldMask`) to new width
+(given by mask `wmaskNew`), in universe width `wo`.
+
+Computes: `((x ^ msb) - msb) & wmaskNew`
+  where `msb = x & signBitPos`
+  and `signBitPos = (wOldMask + 1) >> 1`.
+
+The XOR-subtract trick works as follows:
+- `signBitPos = (wOldMask + 1) >> 1` extracts the sign bit position.
+  E.g. for 4-bit old width: wOldMask = 0b1111, signBitPos = 0b1000.
+- `msb = x & signBitPos`: the sign bit value (either signBitPos or 0).
+- If msb = 0 (positive): `(x ^ 0) - 0 = x` — no extension needed.
+- If msb = 1 << p (negative): XOR clears bit p, then subtracting `1 << p`
+  borrows through all zero bits above p, filling them with 1s.
+  The final AND with wmaskNew trims to the desired output width.
+
+Used by: sext, ashr, vashr.
+-/
+def Nondep.Term.sextByOldMask (x wOldMask wmaskNew : Nondep.Term) (wo : Nondep.WidthExpr) : Nondep.Term :=
+  let signBitPos := wOldMask.succ.shiftr wo 1
+  let msb := Nondep.Term.band wo x signBitPos
+  let y := Nondep.Term.sub wo (.bxor wo x msb) msb
+  Nondep.Term.band wo y wmaskNew
+
+
+structure ElimIteState where
+  /-- Preconditions added from ite elimination pass. -/
+  preconditions : List Nondep.Term := []
+  /-- Index of fresh variable that will be added for ite-elimination. -/
+  freshTermIndex : Nat
+  /-- Did the pass succeed? -/
+  success : Bool := true
+  /-- Accumulated error messages from failed sub-steps. -/
+  errors : Lean.Format := .nil
+
+def ElimIteState.newState (freshTermIndex : Nat) : ElimIteState :=
+   { freshTermIndex := freshTermIndex }
+
+/-- Generate a fresh bitvector variable index. -/
+def ElimIteState.freshBV (s : ElimIteState) (w : Nondep.WidthExpr) : Nondep.Term × ElimIteState :=
+   ⟨Nondep.Term.var s.freshTermIndex w, {
+     preconditions := s.preconditions
+     freshTermIndex := s.freshTermIndex + 1
+     success := true
+     errors := s.errors
+    }⟩
+
+/-- Add a success/failure into the trail, merging in the associated error messages. -/
+def ElimIteState.addSuccess (s : ElimIteState) (b : Bool) (err : Lean.Format) : ElimIteState :=
+  { s with success := s.success && b, errors := s.errors ++ err }
+
+def ElimIteState.addPrecondition (s : ElimIteState) (t : Nondep.Term) : ElimIteState :=
+  { s with preconditions := t :: s.preconditions }
+
+/--
+Build `preconds → term` from an `ElimIteState`.
+If there are no preconditions, the term is returned unchanged.
+-/
+def ElimIteState.toImplication (s : ElimIteState) (t : Nondep.Term) : Nondep.Term × Bool × Lean.Format :=
+  match s.preconditions with
+  | []    => (t, true, s.errors)
+  | precs =>
+    let precConj := Nondep.Term.andPredicates precs
+    let (result, success, err) := Nondep.Term.pimplies precConj t
+    (result, success, s.errors ++ err)
+
+def Nondep.Term.elimIte
+    (t : Nondep.Term)
+    (s : ElimIteState) :  Nondep.Term × ElimIteState :=
+  match t with
+  | .bvIte cond t1 t2 =>
+    let w := t1.width
+    let ⟨result, s⟩ := s.freshBV w -- fresh value of the result
+    let ⟨cond, s⟩ := cond.elimIte s
+    let ⟨t1, s⟩ := t1.elimIte s
+    let ⟨t2, s⟩ := t2.elimIte s
+    -- cond = true → result = t1
+    let ⟨thenPred, success, err⟩ := Nondep.Term.pimplies cond (.binRel .eq w result t1)
+    let s := s.addSuccess success err
+    let s := s.addPrecondition thenPred
+    let ⟨condNeg, success, err⟩ := Nondep.Term.pnegate cond
+    let s := s.addSuccess success err
+    -- ¬cond → result = t2
+    let ⟨elsePred, success, err⟩ := Nondep.Term.pimplies condNeg (.binRel .eq w result t2)
+    let s := s.addSuccess success err
+    let s := s.addPrecondition elsePred
+    ⟨result, s⟩
+  | .vshl w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.vshl w a' b', s)
+  | .vlshr w a b=>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.vlshr w a' b', s)
+  | .vashr w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.vashr w a' b', s)
+  | .binRel k w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.binRel k w a' b', s)
+  | .urem w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.urem w a' b', s)
+  | .udiv w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.udiv w a' b', s)
+  | .pFalse => ⟨.pFalse, s⟩
+  | .pTrue => ⟨.pTrue, s⟩
+  | .boolBinRel k a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.boolBinRel k a' b', s)
+  | .pvar p => ⟨.pvar p, s⟩
+  | .and a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.and a' b', s)
+  | .or a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.or a' b', s)
+  | .binWidthRel k u v =>
+    (.binWidthRel k u v, s)
+  | .bvOfBool b => ⟨.bvOfBool b, s⟩
+  | .shiftr w a k =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.shiftr w a' k, s)
+  | .ashr w a k =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.ashr w a' k, s)
+  | .pextract a lo hi =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.pextract a' lo hi, s)
+  | .shiftl w a k =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.shiftl w a' k, s)
+  | .boolConst b => ⟨.boolConst b, s⟩
+  | .boolVar b => ⟨.boolVar b, s⟩
+  | .bnot w a =>
+      let ⟨a', s⟩ := a.elimIte s
+      (.bnot w a', s)
+  | .bxor w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.bxor w a' b', s)
+  | .band w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.band w a' b', s)
+  | .bor w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.bor w a' b', s)
+  | .sext a w =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.sext a' w, s)
+  | .setWidth a w =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.setWidth a' w, s)
+  | .zext a w =>
+    let ⟨a', s⟩ := a.elimIte s
+    (.zext a' w, s)
+  | .mul w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.mul w a' b', s)
+  | .add w a b =>
+    let ⟨a', s⟩ := a.elimIte s
+    let ⟨b', s⟩ := b.elimIte s
+    (.add w a' b', s)
+  | .var v w => ⟨.var v w, s⟩
+  | .ofNat w n => ⟨.ofNat w n, s⟩
+  | .intToPbv w v => ⟨.intToPbv w v, s⟩
+
+/-!
+## Sub Elimination
+
+Solvers have difficulty with subtraction in width expressions (`.subK` and `.sub`).
+`elimSubAux` replaces each occurrence of `a - b` in a `Nondep.WidthExpr` with a fresh
+width variable `k`, and records the precondition `k + b = a` (i.e., `a = k + b`).
+`elimSub` then wraps the result in `preconds → term`.
+-/
+
+structure ElimSubState where
+  /-- Preconditions added from sub elimination pass. -/
+  preconditions : List Nondep.Term := []
+  /-- Index of next fresh width variable to introduce. -/
+  freshWidthIndex : Nat
+  /-- maps from eliminated subtractions to their corresponding fresh width variables -/
+  eliminiatedSubtractions : Std.HashMap (Nondep.WidthExpr × Nondep.WidthExpr) Nat := ∅
+
+def ElimSubState.newState (freshWidthIndex : Nat) : ElimSubState :=
+  { freshWidthIndex := freshWidthIndex }
+
+/-- Allocate a fresh width variable and advance the counter. -/
+def ElimSubState.freshWidth (s : ElimSubState) (a b : Nondep.WidthExpr) : Nondep.WidthExpr × ElimSubState :=
+  if let some k := s.eliminiatedSubtractions.get? (a, b) then
+    -- If we've already eliminated this subtraction, reuse the same variable.
+    (.var k, s)
+  else
+    ⟨.var s.freshWidthIndex, { s with
+      freshWidthIndex := s.freshWidthIndex + 1
+      eliminiatedSubtractions := s.eliminiatedSubtractions.insert (a, b) s.freshWidthIndex
+    }⟩
+
+def ElimSubState.addPrecondition (s : ElimSubState) (t : Nondep.Term) : ElimSubState :=
+  { s with preconditions := t :: s.preconditions }
+
+/-- Result of sub elimination: the rewritten term and accumulated preconditions. -/
+structure ElimSubResult where
+  term      : Nondep.Term
+  preconds  : List Nondep.Term
+  /-- Number of fresh width variables introduced (so callers can update wcard). -/
+  freshWidthCount : Nat
+
+/--
+Recursively eliminate `.subK` and `.sub` from a `Nondep.WidthExpr`.
+Each subtraction `a - b` is replaced by a fresh width variable `k` together with
+a precondition `.binWidthRel .eq (.add k b) a`  (i.e. `k + b = a`).
+-/
+def Nondep.WidthExpr.elimSubAux (w : Nondep.WidthExpr) (s : ElimSubState) (precond? : Bool) (eliminate? : Bool) :
+    Nondep.WidthExpr × ElimSubState :=
+  match w with
+  | .subK v k =>
+    -- Recurse into v first so nested subtractions are also eliminated.
+    let (v', s) := v.elimSubAux s precond? eliminate?
+    let prec2 := Nondep.Term.binWidthRel .le (.const k) v'
+    let s := if precond? then s.addPrecondition prec2 else s
+    if eliminate? then
+      let (result, s) := s.freshWidth v' (.const k)
+      -- Precondition: v' - k = result ↔ v' = k + result
+      let prec1 := Nondep.Term.binWidthRel .eq (.addK result k) v'
+      let s := s.addPrecondition prec1
+      (result, s)
+    else
+      let result := .subK v' k
+    (result, s)
+  | .sub a b =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    let prec2 := Nondep.Term.binWidthRel .le b' a'
+    let s := if precond? then s.addPrecondition prec2 else s
+    if eliminate? then
+      let (result, s) := s.freshWidth a' b'
+    -- Precondition: result = a' - b' ↔ result + b' = a'.
+      let prec1 := Nondep.Term.binWidthRel .eq (.add result b') a'
+      let s := s.addPrecondition prec1
+      (result, s)
+    else
+      let result := .sub a' b'
+      (result, s)
+  | .const n => (.const n, s)
+  | .var i   => (.var i, s)
+  | .max a b =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.max a' b', s)
+  | .min a b =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.min a' b', s)
+  | .addK a k =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    (.addK a' k, s)
+  | .kadd k a =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    (.kadd k a', s)
+  | .add a b =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.add a' b', s)
+  | .mul a b =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.mul a' b', s)
+
+/--
+Walk a `Nondep.Term`, eliminating subtraction from every embedded `Nondep.WidthExpr`
+via `WidthExpr.elimSubAux`.
+If 'eliminiate?' is false, the `.sub` and `.subK`
+nodes are left in place, but preconditions are added.
+but their subterms are still rewritten.
+-/
+partial def Nondep.Term.elimSubAux (t : Nondep.Term) (s : ElimSubState) (precond? : Bool) (eliminate? : Bool := true) :
+    Nondep.Term × ElimSubState :=
+  -- Helper to also eliminate sub in a WidthExpr embedded in a term.
+  let elW (w : Nondep.WidthExpr) (s : ElimSubState) := w.elimSubAux s precond? eliminate?
+  match t with
+  | .var v w =>
+    let (w', s) := elW w s
+    (.var v w', s)
+  | .ofNat w n =>
+    let (w', s) := elW w s
+    (.ofNat w' n, s)
+  | .intToPbv w v =>
+    let (w', s) := elW w s
+    (.intToPbv w' v, s)
+  | .add w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.add w' a' b', s)
+  | .mul w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.mul w' a' b', s)
+  | .zext a wn =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (wn', s) := elW wn s
+    (.zext a' wn', s)
+  | .setWidth a wn =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (wn', s) := elW wn s
+    (.setWidth a' wn', s)
+  | .sext a wn =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (wn', s) := elW wn s
+    (.sext a' wn', s)
+  | .bor w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.bor w' a' b', s)
+  | .band w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.band w' a' b', s)
+  | .bxor w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.bxor w' a' b', s)
+  | .bnot w a =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    (.bnot w' a', s)
+  | .shiftl w a k =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    (.shiftl w' a' k, s)
+  | .shiftr w a k =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    (.shiftr w' a' k, s)
+  | .ashr w a k =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    (.ashr w' a' k, s)
+  | .vshl w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.vshl w' a' b', s)
+  | .vlshr w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.vlshr w' a' b', s)
+  | .vashr w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.vashr w' a' b', s)
+  | .udiv w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.udiv w' a' b', s)
+  | .urem w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.urem w' a' b', s)
+  | .pextract a lo hi =>
+    let s := s.addPrecondition (Term.binWidthRel .le lo hi) -- add the precondition for pextract being valid.
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    -- this needs another precondition.
+    (.pextract a' lo hi, s)
+  | .binRel k w a b =>
+    let (w', s) := elW w s
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.binRel k w' a' b', s)
+  | .binWidthRel k wa wb =>
+    let (wa', s) := elW wa s
+    let (wb', s) := elW wb s
+    (.binWidthRel k wa' wb', s)
+  | .and a b =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.and a' b', s)
+  | .or a b =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.or a' b', s)
+  | .bvIte cond t1 t2 =>
+    let (cond', s) := cond.elimSubAux s precond? eliminate?
+    let (t1', s)   := t1.elimSubAux s precond? eliminate?
+    let (t2', s)   := t2.elimSubAux s precond? eliminate?
+    (.bvIte cond' t1' t2', s)
+  | .boolBinRel k a b =>
+    let (a', s) := a.elimSubAux s precond? eliminate?
+    let (b', s) := b.elimSubAux s precond? eliminate?
+    (.boolBinRel k a' b', s)
+  | .pTrue        => (.pTrue, s)
+  | .pFalse       => (.pFalse, s)
+  | .pvar p       => (.pvar p, s)
+  | .boolConst b  => (.boolConst b, s)
+  | .boolVar b    => (.boolVar b, s)
+  | .bvOfBool b   => (.bvOfBool b, s)
+
+/--
+Top-level sub elimination.  Runs `elimSubAux` on `t`, then builds the implication
+`preconds → t'`:  if there are no preconditions, returns `t'` unchanged.
+-/
+def Nondep.Term.elimSub (t : Nondep.Term) (precond? : Bool) (eliminate? : Bool) : ElimSubResult :=
+  let initNumWidths := t.maxwcard
+  let s := ElimSubState.newState t.maxwcard
+  let (t', s') := t.elimSubAux s precond? eliminate?
+  { term             := t'
+    preconds         := s'.preconditions
+    freshWidthCount  := s'.freshWidthIndex - initNumWidths }
+
+/--
+Build `preconds → term` from an `ElimSubResult`.
+If there are no preconditions, the term is returned unchanged.
+-/
+def ElimSubResult.toImplication (r : ElimSubResult) : Nondep.Term × Bool × Lean.Format :=
+  match r.preconds with
+  | []    => (r.term, true, .nil)
+  | precs =>
+    let precConj := Nondep.Term.andPredicates precs
+    Nondep.Term.pimplies precConj r.term
+
+/--
+TODO: refactor into `SingleWidth → Nondep.Term × Bool`, since it's better typed.
+Then this function will be `Nondep.Term → SingleWidth → Nondep.Term × Bool`, and the preconditions can be generated separately.
+For the `Nondep.Term → SingleWidth` translation, change type to `Nondep.Term → SingleWidth × Bool`.
+-/
+def Nondep.Term.toSingleWidthNondepTermGo (maxWcard : Nat) (t : Nondep.Term) (wo : Nondep.WidthExpr) : Nondep.Term × Bool × Lean.Format :=
+  match t with
+  | .var v w =>
+    -- bitvector variables become bitvectors,
+    -- masked with the width value.
+    let x := Nondep.Term.var (v + maxWcard) wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if wresult then
+      (.band wo x wmask, true, .nil)
+    else (.constBad wo, false, werr)
+  | .ofNat w n =>
+      let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+      let bv := Nondep.Term.ofNat wo n
+      if wresult then
+        (.band wo bv wmask, true, .nil)
+      else (.constBad wo, false, werr)
+  | .add w a b =>
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (.add wo a' b') wmask, true, .nil)
+    else (.constBad wo, false, aerr ++ berr ++ werr)
+  | .band _w a b =>
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    if aresult && bresult then
+      -- AND cannot overflow, so we don't need to mask the result to the universe width.
+      (.band wo a' b', true, .nil)
+    else (.constZero wo, false, aerr ++ berr)
+  | .bor _w a b =>
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    if aresult && bresult then
+      -- OR cannot overflow, so we don't need to mask the result to the universe width.
+      (.bor wo a' b', true, .nil)
+    else (.constZero wo, false, aerr ++ berr)
+  | .bxor _w a b =>
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    if aresult && bresult then
+      -- XOR cannot overflow, so we don't need to mask the result to the universe width.
+      (.bxor wo a' b', true, .nil)
+    else (.constZero wo, false, aerr ++ berr)
+  | .bnot w a =>
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && wresult then
+      -- NOT flips the high bits (w..wo-1) from 0 to 1, violating the single-width
+      -- encoding invariant. We must mask the result back to width w.
+      (.band wo (.bnot wo a') wmask, true, .nil)
+    else (.constZero wo, false, aerr ++ werr)
+  | .mul w a b =>
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (.mul wo a' b') wmask, true, .nil)
+    else (.constBad wo, false, aerr ++ berr ++ werr)
+  | .shiftl w x k =>
+    let (x', xresult, xerr) := x.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if xresult && wresult then
+      (.band wo (.shiftl wo x' k) wmask, true, .nil)
+    else (.constBad wo, false, xerr ++ werr)
+  | .boolConst _ => (t, true, .nil)
+  | .zext x wnew | .setWidth x wnew =>
+    let (x', xresult, xerr) := x.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := wnew.toSingleWidthMaskNondepTerm wo
+    if xresult && wresult then
+      (.band wo x' wmask, true, .nil)
+    else (.constBad wo, false, xerr ++ werr)
+  | .sext x wnew =>
+      let w := x.width
+      let (wmaskOld, wOldResult, wOldErr) := w.toSingleWidthMaskNondepTerm wo
+      let (wmaskNew, wnewResult, wnewErr) := wnew.toSingleWidthMaskNondepTerm wo
+      let (x', xresult, xerr) := x.toSingleWidthNondepTermGo maxWcard wo
+      if xresult && wOldResult && wnewResult then
+        (x'.sextByOldMask wmaskOld wmaskNew wo, true, .nil)
+      else (.constBad wo, false, xerr ++ wOldErr ++ wnewErr)
+  | .and p q =>
+    let (p', presult, perr) := p.toSingleWidthNondepTermGo maxWcard wo
+    let (q', qresult, qerr) := q.toSingleWidthNondepTermGo maxWcard wo
+    if presult && qresult then
+      (.and p' q', true, .nil)
+    else (.constBad wo, false, perr ++ qerr)
+  | .or p q =>
+    let (p', presult, perr) := p.toSingleWidthNondepTermGo maxWcard wo
+    let (q', qresult, qerr) := q.toSingleWidthNondepTermGo maxWcard wo
+    if presult && qresult then
+      (.or p' q', true, .nil)
+    else (.constBad wo, false, perr ++ qerr)
+  | .pTrue => (.pTrue, true, .nil)
+  | .pFalse => (.pFalse, true, .nil)
+  | .binRel k w x y =>
+    let (x', xresult, xerr) := x.toSingleWidthNondepTermGo maxWcard wo
+    let (y', yresult, yerr) := y.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    let (wval, wresult', werr') := w.toTwosComplementNondepTerm wo
+    if xresult && yresult && wresult && wresult' then
+      let xMasked := .band wo x' wmask
+      let yMasked := .band wo y' wmask
+      match k with
+      | .eq => (.binRel .eq wo xMasked yMasked, true, .nil)
+      | .ne => (.binRel .ne wo xMasked yMasked, true, .nil)
+      | .ult => (.binRel .ult wo xMasked yMasked, true, .nil)
+      | .ule => (.binRel .ule wo xMasked yMasked, true, .nil)
+      | .slt =>
+        -- slt(x, y) ↔ ult(x XOR signBit, y XOR signBit)
+        -- where signBit = 1 << (w - 1) = 2^(w-1).
+        --
+        -- Proof of correctness:
+        -- For a w-bit bitvector v, the signed interpretation is:
+        --   toInt(v) = toNat(v) - v[w-1] * 2^w
+        -- XOR with signBit flips the MSB, mapping:
+        --   negative values (MSB=1, unsigned ∈ [2^(w-1), 2^w - 1])
+        --     → MSB becomes 0, unsigned ∈ [0, 2^(w-1) - 1]
+        --   non-negative values (MSB=0, unsigned ∈ [0, 2^(w-1) - 1])
+        --     → MSB becomes 1, unsigned ∈ [2^(w-1), 2^w - 1]
+        --
+        -- This is an order-preserving bijection from signed to unsigned order:
+        -- all negatives map below all non-negatives, and within each group
+        -- the relative order is preserved (XOR with signBit doesn't change
+        -- bits [w-2:0]). Concretely, for w=3:
+        --   signed: -4 -3 -2 -1  0  1  2  3
+        --   binary: 100 101 110 111 000 001 010 011
+        --   XOR'd:  000 001 010 011 100 101 110 111
+        --   unsigned(XOR'd): 0 1 2 3 4 5 6 7
+        -- The unsigned values after XOR are monotonic with signed order. ∎
+        --
+        -- Note on the single-width encoding: xMasked and yMasked are wo-bit
+        -- values with bits [w..wo-1] already zero. XOR with signBit (which
+        -- only sets bit w-1) leaves bits [w..wo-1] zero, so the wo-bit
+        -- unsigned comparison is equivalent to a w-bit comparison.
+        let signBit : Nondep.Term := (Nondep.Term.constOne wo).vshl wo (wval.pred)
+        let xFlipped := .bxor wo xMasked signBit
+        let yFlipped := .bxor wo yMasked signBit
+        (.binRel .ult wo xFlipped yFlipped, true, .nil)
+      | .sle =>
+        -- sle(x, y) ↔ ule(x XOR signBit, y XOR signBit)
+        -- Same reasoning as slt above, with ≤ instead of <.
+        let signBit : Nondep.Term := (Nondep.Term.constOne wo).vshl wo (wval.pred)
+        let xFlipped := .bxor wo xMasked signBit
+        let yFlipped := .bxor wo yMasked signBit
+        (.binRel .ule wo xFlipped yFlipped, true, .nil)
+    else (.constBad wo, false, xerr ++ yerr ++ werr ++ werr')
+  | .binWidthRel k wa wb =>
+    let (wa', waresult, waerr) := wa.toTwosComplementNondepTerm wo
+    let (wb', wbresult, wberr) := wb.toTwosComplementNondepTerm wo
+    if waresult && wbresult then
+      match k with
+      | .eq => (.binRel .eq wo wa' wb', true, .nil)
+      | .le => (.binRel .ule wo wa' wb', true, .nil)
+    else (.constBad wo, false, waerr ++ wberr)
+  | .shiftr w x k =>
+    let (x', xresult, xerr) := x.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if xresult && wresult then
+      (.band wo (.shiftr wo x' k) wmask, true, .nil)
+    else (.constBad wo, false, xerr ++ werr)
+  | .udiv w a b =>
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (.udiv wo a' b') wmask, true, .nil)
+    else (.constBad wo, false, aerr ++ berr ++ werr)
+  | .urem w a b =>
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (.urem wo a' b') wmask, true, .nil)
+    else (.constBad wo, false, aerr ++ berr ++ werr)
+  | .vlshr w a b =>
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (.vlshr wo a' b') wmask, true, .nil)
+    else (.constBad wo, false, aerr ++ berr ++ werr)
+  | .vashr w a b =>
+    -- Variable arithmetic right shift: vashr(x, b) at width w.
+    -- Decomposed as: vlshr(x, b), then sign-extend from effective width (w - b)
+    -- back to w. The old width mask is vlshr(wmask, b): shifting the w-bit mask
+    -- right by b gives the (w-b)-bit mask, which sextByOldMask uses to find
+    -- the sign bit position and perform the extension.
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      let aMasked := Nondep.Term.band wo a' wmask
+      let bMasked := Nondep.Term.band wo b' wmask
+      let shifted := Nondep.Term.vlshr wo aMasked bMasked
+      let wOldMask := Nondep.Term.vlshr wo wmask bMasked
+      (shifted.sextByOldMask wOldMask wmask wo, true, .nil)
+    else (.constBad wo, false, aerr ++ berr ++ werr)
+  | .ashr w a k =>
+    -- Arithmetic right shift by constant k at width w.
+    -- Decomposed as: lshr(x, k), then sign-extend from effective width (w - k)
+    -- back to w. The old width mask is lshr(wmask, k): e.g. for w=8, k=3,
+    -- wmask = 0xFF, lshr(0xFF, 3) = 0x1F = mask for 5 bits = w-k bits.
+    -- sextByOldMask then derives signBitPos = (0x1F+1)>>1 = 0x10 = 1<<4
+    -- and sign-extends the shifted value from 5 bits to 8 bits.
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && wresult then
+      let aMasked := Nondep.Term.band wo a' wmask
+      let shifted := Nondep.Term.shiftr wo aMasked k
+      let wOldMask := Nondep.Term.shiftr wo wmask k
+      (shifted.sextByOldMask wOldMask wmask wo, true, .nil)
+    else (.constBad wo, false, aerr ++ werr)
+  | .pextract a lo hi =>
+    -- pextract(a, lo, hi) extracts bits lo..hi (inclusive) from a.
+    -- Result width = hi - lo + 1.
+    --
+    -- Example: pextract(0b11010110, lo=2, hi=5) extracts bits [2..5]:
+    --   a        = 0b11_0101_10
+    --                   ^^^^      bits [5:2]
+    --   a >> 2   = 0b00_1101_01
+    --                       ^^^^  now in positions [3:0]
+    --   mask(4)  = 0b0000_1111   (hi - lo + 1 = 4 bits)
+    --   result   = 0b0000_0101
+    --
+    -- Why the mask is needed: the logical right shift by `lo` moves the desired
+    -- bits into positions [0..hi-lo], but leaves the original upper bits of `a`
+    -- (above position hi) in positions [hi-lo+1..w-lo-1]. The resultMask
+    -- (= 2^(hi-lo+1) - 1) clears those stale upper bits, isolating exactly
+    -- the extracted bit-field.
+    --
+    -- Note: `a'` from the recursive call is already masked to `a`'s own width,
+    -- so bits above `a.width` are already zero. But bits between positions
+    -- hi+1..a.width-1 in `a` are valid data that would pollute the result
+    -- after shifting; the resultMask handles this.
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let resultWidth := (hi.add (.const 1)).sub lo  -- hi + 1 - lo
+    let (resultMask, rmresult, rmerr) := resultWidth.toSingleWidthMaskNondepTerm wo
+    -- lo is a WidthExpr (potentially symbolic), so we convert it to a bitvector
+    -- term and use variable logical shift right (vlshr) rather than constant shiftr.
+    let (loVal, loresult, loerr) := lo.toTwosComplementNondepTerm wo
+    if aresult && rmresult && loresult then
+      let shifted := Nondep.Term.vlshr wo a' loVal
+      let result := Nondep.Term.band wo shifted resultMask
+      (result, true, .nil)
+    else (.constBad wo, false, aerr ++ rmerr ++ loerr)
+  | .vshl w a b =>
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (.vshl wo a' b') wmask, true, .nil)
+    else (.constZero wo, false, aerr ++ berr ++ werr)
+  | .bvIte cond thenBv elseBv =>
+    let (cond', condresult, conderr) := cond.toSingleWidthNondepTermGo maxWcard wo
+    let (thenBv', thenBvresult, thenErr) := thenBv.toSingleWidthNondepTermGo maxWcard wo
+    let (elseBv', elseBvresult, elseErr) := elseBv.toSingleWidthNondepTermGo maxWcard wo
+    if condresult && thenBvresult && elseBvresult then
+      (.bvIte cond' thenBv' elseBv', true, .nil)
+    else (.constBad wo, false, conderr ++ thenErr ++ elseErr)
+  | pvar _ | bvOfBool _ | boolVar _ | boolBinRel .. =>
+    let errMsg := s!"toSingleWidthNondepTermGo: unsupported operation in single-width translation: {repr t}"
+    dbg_trace errMsg
+    (.constZero wo, false, .text errMsg)
+  | .intToPbv w v =>
+    let (v', vresult, verr) := v.toTwosComplementNondepTerm wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if vresult && wresult then
+      (.band wo v' wmask, true, .nil)
+    else (.constBad wo, false, verr ++ werr)
+  where
+   goBinop (a b : Nondep.Term) (w : Nondep.WidthExpr) (wo : Nondep.WidthExpr)
+     (binop : Nondep.WidthExpr → Nondep.Term → Nondep.Term → Nondep.Term) : Nondep.Term × Bool × Lean.Format :=
+    let (a', aresult, aerr) := a.toSingleWidthNondepTermGo maxWcard wo
+    let (b', bresult, berr) := b.toSingleWidthNondepTermGo maxWcard wo
+    let (wmask, wresult, werr) := w.toSingleWidthMaskNondepTerm wo
+    if aresult && bresult && wresult then
+      (.band wo (binop wo a' b') wmask, true, .nil)
+    else (.constZero wo, false, aerr ++ berr ++ werr)
+
+  -- | _ => (.constBad wo, false)
+
+/--
+Given a term, convert it to a single-width term by converting all width expressions to their corresponding single-width terms,
+-/
+def Nondep.Term.toSingleWidthNondepTerm (t : Nondep.Term)
+   (wo : Nondep.WidthExpr): Nondep.Term × Bool × Lean.Format :=
+  let (tSingle, tSingleResult, tSingleErr) := t.toSingleWidthNondepTermGo t.maxwcard wo
+  let (iteElim, iteState) : Nondep.Term × ElimIteState := tSingle.elimIte
+     (.newState <| tSingle.tcard + 1000)
+  -- | TODO: what about overflow in this representation when we add?
+  let preconds := Term.toSingleWidthNondepTerm.mkAllWidthPreconds wo t.maxwcard
+  let (implies, impliesResult, impliesErr) :=
+    Term.pimplies
+      (.and preconds (Nondep.Term.andPredicates iteState.preconditions))
+      iteElim
+  let allErrors := tSingleErr ++ iteState.errors ++ impliesErr
+  if impliesResult && tSingleResult && iteState.success then
+    (implies, true, allErrors)
+  else (implies, false, allErrors)
+
+end ToSingleWidth
+
 end MultiWidth

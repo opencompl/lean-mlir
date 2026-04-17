@@ -176,19 +176,22 @@ axiom specializeAxiom : ∀ P, P
 
 def specializeGoal (g : MVarId) (lengthCount : Nat) : TacticM Unit := do
   let t ← g.getType
-  let newT ← forallTelescope t fun xs t => do
-    let mut t := t
-    let mut substs := FVarSubst.empty
-    for i in [0:lengthCount] do
-      let n := 2 * i + 5
-      substs := substs.insert xs[i]!.fvarId! (mkNatLit n)
-    let ys := xs.drop lengthCount
-    let newT ← mkForallFVars ys t (binderInfoForMVars := .default)
-    pure <| substs.apply newT
-  let newGoal ← mkFreshExprMVar (some newT)
+  let numbers : List Nat := (List.range lengthCount).map fun n =>
+    (n + 1) * 2 + 1
+  let goals ← numbers.permutations.mapM fun ns => do
+    let newT ← forallTelescope t fun xs t => do
+      let mut t := t
+      let mut substs := FVarSubst.empty
+      for (n, i) in ns.zipIdx do
+        substs := substs.insert xs[i]!.fvarId! (mkNatLit n)
+      let ys := xs.drop lengthCount
+      let newT ← mkForallFVars ys t (binderInfoForMVars := .default)
+      pure <| substs.apply newT
+    let newGoal ← mkFreshExprMVar (some newT)
+    pure newGoal.mvarId!
   let sorryExpr ← mkAppM ``specializeAxiom #[t]
   g.assign sorryExpr
-  replaceMainGoal [newGoal.mvarId!]
+  replaceMainGoal goals
 
 structure GenConfig where
   specialize : Bool := false
@@ -233,11 +236,16 @@ trace: ⊢ ∀ (w w_1 : ℕ) (x y : BitVec w) (zs : List (BitVec w_1)), x = x
   bv_generalize
   trace_state
 
-/-- trace: ⊢ ∀ (x y : BitVec 5) (zs : List (BitVec 7)), x = x -/
+/--
+error: unsolved goals
+⊢ ∀ (x y : BitVec 5) (zs : List (BitVec 3)), x = x
+---
+trace: ⊢ ∀ (x y : BitVec 3) (zs : List (BitVec 5)), x = x
+⊢ ∀ (x y : BitVec 5) (zs : List (BitVec 3)), x = x
+-/
 #guard_msgs in theorem test_bv_generalize_simple_spec (x y : BitVec 32) (zs : List (BitVec 44)) :
     x = x := by
-  bv_generalize +specialize
-  trace_state
+  bv_generalize +specialize <;> trace_state
   bv_decide
 
 /--
@@ -269,12 +277,18 @@ warning: declaration uses 'sorry'
 
 open BitVec
 
-/-- trace: ⊢ ∀ (x : BitVec 7), zeroExtend 7 (truncate 5 x) = x &&& 4294967295#7 -/
-#guard_msgs in theorem test_thm.extracted_1._1 : ∀ (x : BitVec 64),
+/--
+error: unsolved goals
+⊢ ∀ (x : BitVec 3), zeroExtend 3 (truncate 5 x) = x &&& 4294967295#3
+---
+trace: ⊢ ∀ (x : BitVec 5), zeroExtend 5 (truncate 3 x) = x &&& 4294967295#5
+⊢ ∀ (x : BitVec 3), zeroExtend 3 (truncate 5 x) = x &&& 4294967295#3
+-/
+#guard_msgs in 
+theorem test_thm.extracted_1._1 : ∀ (x : BitVec 64),
   zeroExtend 64 (truncate 32 x) = x &&& 4294967295#64 := by
     intros
-    bv_generalize +specialize
-    trace_state
+    bv_generalize +specialize <;> trace_state
     sorry
 
 /--

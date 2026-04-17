@@ -1,0 +1,7 @@
+; Prove: x / 1 = x when width >= 1 (so 1 is nonzero)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(assert (width_le 1 k))
+(assert (not (= (bvudiv x (int_to_pbv k 1)) x)))
+(check-sat)

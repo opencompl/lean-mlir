@@ -37,6 +37,9 @@ LLVMIR_DIR_PATH = (
 MLIR_bb0_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_bb0/"
 )
+MLIR_bb0_veIR_DIR_PATH = (
+    f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_bb0_veIR/"
+)
 MLIR_single_DIR_PATH = (
     f"{ROOT_DIR_PATH}/SSA/Projects/LLVMRiscV/Evaluation/benchmarks/MLIR_single/"
 )
@@ -73,6 +76,7 @@ AUTOGEN_DIR_PATHS = [
     LLVM_DIR_PATH,
     LLVMIR_DIR_PATH,
     MLIR_bb0_DIR_PATH,
+    MLIR_bb0_veIR_DIR_PATH,
     MLIR_single_DIR_PATH,
     LLC_ASM_selectiondag_DIR_PATH,
     LLC_ASM_globalisel_DIR_PATH,
@@ -252,6 +256,32 @@ def extract_bb0(input_file, output_file, log_file):
                     o_f.write(line + "\n")
                     if '"llvm.return"' in line:
                         o_f.write("}" + "\n")
+                        o_f.close()
+                        return
+
+    except FileNotFoundError:
+        print(f"Error: The file '{input_file}' was not found.", file=log_file)
+        sys.exit(1)
+
+def extract_bb0_veIR(input_file, output_file, log_file):
+    """
+    Extract the first basic block from the MLIR file, print it in a `buildin.module`. 
+    """
+    o_f = open(output_file, "w")
+    o_f.write("\"builtin.module\"() ({\n")
+    in_block = False
+    try:
+        with open(input_file, "r") as f:
+            for line in f:
+                line = line.strip()
+                if "^bb0(" in line:
+                    in_block = True
+                    o_f.write("\t" + line + "\n")
+                    continue
+                if in_block:
+                    o_f.write("\t" + line + "\n")
+                    if '"llvm.return"' in line:
+                        o_f.write("}) : () -> ()\n")
                         o_f.close()
                         return
 
@@ -478,8 +508,11 @@ def generate_benchmarks(num, jobs, llvm_opt, compare_lowering_patterns=False):
         input_file = os.path.join(LLVM_DIR_PATH, filename)
         basename, _ = os.path.splitext(filename)
         output_file = os.path.join(MLIR_bb0_DIR_PATH, basename + ".mlir")
+        output_file_veIR = os.path.join(MLIR_bb0_veIR_DIR_PATH, basename + ".mlir")
         log_file = open(os.path.join(LOGS_DIR_PATH, basename + "_bb0_extract.log"), "w")
+        log_file_veIR = open(os.path.join(LOGS_DIR_PATH, basename + "_bb0_extract_veIR.log"), "w")
         extract_bb0(input_file, output_file, log_file)
+        extract_bb0_veIR(input_file, output_file_veIR, log_file_veIR)
         idx += 1
         percentage = (float(idx) / float(len(os.listdir(LLVM_DIR_PATH)))) * 100
         print(f"extracting the first basic block: {percentage:.2f}%")

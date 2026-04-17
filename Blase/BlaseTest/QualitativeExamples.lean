@@ -1,5 +1,6 @@
 import Blase
 open BitVec
+set_option warn.sorry false
 
 -- Qualitative examples for testing generalization capabilities.
 
@@ -9,7 +10,7 @@ theorem fixed : ∀ (x : BitVec 4) (y : BitVec 7),
   (signExtend 25 y = signExtend 25 x) ↔ (y = signExtend 7 x) := by
     intros; bv_decide
 
-theorem generic (p q r : Nat) (hpq : p ≤ q) (hpr : p ≤ r) (hqr : q ≤ r) : 
+theorem generic (p q r : Nat) (hpq : p ≤ q) (hpr : p ≤ r) (hqr : q ≤ r) :
     ∀ (x : BitVec p) (y : BitVec q),
   (signExtend r y = signExtend r x) ↔ (y = signExtend q x) := by
     sorry -- intros; bv_multi_width
@@ -17,21 +18,21 @@ end one
 
 
 namespace two
-theorem fixed (x : BitVec 32) : 
+theorem fixed (x : BitVec 32) :
     BitVec.signExtend 34 (BitVec.zeroExtend 33 x) = BitVec.zeroExtend 34 x := by
   bv_decide
 
 theorem generic (x : BitVec w) (w2 w3 : Nat) (h1 : w  < w2) (h2 : w2 ≤ w3) :
-   BitVec.signExtend w3 (BitVec.zeroExtend w2 x) = BitVec.zeroExtend w3 x  := by 
+   BitVec.signExtend w3 (BitVec.zeroExtend w2 x) = BitVec.zeroExtend w3 x  := by
   bv_multi_width
 end two
 
 namespace three
-theorem fixed (x : BitVec 4) (y : BitVec 7) : 
+theorem fixed (x : BitVec 4) (y : BitVec 7) :
     (BitVec.signExtend 32 x < BitVec.signExtend 32 y) ↔ (BitVec.signExtend 7 x < y) := by
   bv_decide
 
-theorem generic (p q r : Nat)  (hpq : p ≤ q) (hpr : p ≤ r) (hqr : q ≤ r) 
+theorem generic (p q r : Nat)  (hpq : p ≤ q) (hpr : p ≤ r) (hqr : q ≤ r)
     (x : BitVec p) (y : BitVec q):
    (BitVec.signExtend r x < BitVec.signExtend r y) ↔ BitVec.signExtend q x < y := by
   sorry --bv_multi_width
@@ -65,4 +66,3 @@ theorem generic : ∀ (x : BitVec w5) (x_1 : BitVec w17),
   sorry
   -- bv_multi_width
 end five
-

@@ -1,0 +1,6 @@
+; Prove: (x & x) = x  (idempotency of bitwise AND)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(assert (not (= (bvand x x) x)))
+(check-sat)

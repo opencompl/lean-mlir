@@ -1,0 +1,7 @@
+; Prove: (x & y) = (y & x)  (commutativity of bitwise AND)
+(set-logic QF_BV)
+(declare-const k Int)
+(declare-const x (_ BitVec k))
+(declare-const y (_ BitVec k))
+(assert (not (= (bvand x y) (bvand y x))))
+(check-sat)

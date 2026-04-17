@@ -14,16 +14,102 @@ rev = "main"
 
 For stable releases, please change the `rev` to the desired version tag.
 
+#### Table to Support 
+
+```
+# Integer arithmetic signature  Σ_IA
+
+symbol        | smt-lib     | arity
+--------------+-------------+-------------------
+≈_Int         | =           | Int × Int → Bool
+≉_Int         | distinct    | Int × Int → Bool
+0,1,2,...     | literals    | Int
++             | +           | Int × Int → Int
+-             | -           | Int × Int → Int
+·             | *           | Int × Int → Int
+div           | div         | Int × Int → Int
+mod           | mod         | Int × Int → Int
+≤             | <=          | Int × Int → Bool
+≥             | >=          | Int × Int → Bool
+<             | <           | Int × Int → Bool
+>             | >           | Int × Int → Bool
+
+
+# Bitvector (PBV) operators
+
+symbol        | smt-lib        | arity
+--------------+----------------+-----------------------
+≈_PBV         | =              | PBV × PBV → Bool
+≉_PBV         | distinct       | PBV × PBV → Bool
+
+<u            | bvult          | PBV × PBV → Bool
+>u            | bvugt          | PBV × PBV → Bool
+<s            | bvslt          | PBV × PBV → Bool
+>s            | bvsgt          | PBV × PBV → Bool
+
+≤u            | bvule          | PBV × PBV → Bool
+≥u            | bvuge          | PBV × PBV → Bool
+≤s            | bvsle          | PBV × PBV → Bool
+≥s            | bvsge          | PBV × PBV → Bool
+
+~             | bvnot          | PBV → PBV
+-_B           | bvneg          | PBV → PBV
+
+&             | bvand          | PBV × PBV → PBV
+|             | bvor           | PBV × PBV → PBV
+⊕             | bvxor          | PBV × PBV → PBV
+
+<<            | bvshl          | PBV × PBV → PBV
+>>            | bvlshr         | PBV × PBV → PBV
+>>a           | bvashr         | PBV × PBV → PBV
+
++_B           | bvadd          | PBV × PBV → PBV
+-_B           | bvsub          | PBV × PBV → PBV
+
+·_B           | bvmul          | PBV × PBV → PBV
+mod_B         | bvurem         | PBV × PBV → PBV
+div_B         | bvudiv         | PBV × PBV → PBV
+
+extract       | pextract       | PBV × Int × Int → PBV
+concat        | concat         | PBV × PBV → PBV
+
+ext_z         | pzero_extend   | Int × PBV → PBV
+ext_s         | psign_extend   | Int × PBV → PBV
+
+|·|           | bvsize         | PBV → Int
+to-pbv        | int_to_pbv     | Int × Int → PBV
+
+
+# Extension  Σ_IA(pow2, &^N)
+
+symbol        | smt-lib   | arity
+--------------+-----------+------------------------
+&^N           | piand     | Int × Int × Int → Int
+pow2          | pow2      | Int → Int
+```
+
 #### Algorithms Improvements TODO
 
-
+- [ ] Fix the decision procedure, so when we meet problems that are not automata decidable,
+  we generalize these variables appropriately, and not just bail out.
+- [x] Finish implementing new cases in 'toSingleWidthNondepTermGo'.
+- [ ] Fix parameter order in pextract, make it `hi` then `lo` to match SMT-LIB. it's super confusing as-is.
+- [ ] Remove redundancy in parser; Don't need to store bitvector widths, can just compute it if needed.
+- [ ] Add an error printer of Term that prints only upto k level and then prints '..' for the rest.
+- [x] add slt/sle support into QF_BV translation
+- [x] Add two options: one that adds the subtraction preconditions, and one that eliminates the subtraction by introducing 
+      fresh variables plus addition. For naive BMC, we just want to add the preconditions, since it's cheapter to enumerate and check.
+      For k-induction and other solvers, we want to eliminate the subtraction, since our solvers only natively support addition.
+- [x] Add a Nondep to BVExpr conversion
+- [x] Use Nondep -> BV to implement naive enumerative bitblasting.
+- [x] Use SingleWidth -> Nondep -> BV to implement single width bounded bitblasting.
 - [ ] Come up with a constant generalization algorithm that exploits our fragment to 
   be much faster (ie, avoid enumerative synthesis).
   The idea would be to recover relationships the constant needs to satisfy,
   and then use a regular language learning algorithm to find a regular language that satisfies these relationships.
   We should then be able to "read off" an expression for this constant from this regular language. This "reading off" would need us to develop an algorithm that can take a regular expression for a bitvector and produce a bitvector expression that realises it, which is interesting in its own. I don't know an algorithm off the top of my head, but I think it's doable and maybe not even too difficult, but definitely needs thought.
 - [ ] Add support for `BitVec.cast`, as well as `decide : Prop -> Bool`, as well as `\b. b = true : Bool -> Prop`
-- [ ] Write multi-width as a reduction from single-width, with a variable `v` such that `v & (v - 1) = 0`.
+- [x] Write multi-width as a reduction from single-width, with a variable `v` such that `v & (v - 1) = 0`.
    This makes the multi-width version reducible, with the mask being created as `v - 1`.
 - [x] Add support for a generalization mode that keeps width 1 and geneeralizes all other widths. This is useful for problems
       with boolean substructure.

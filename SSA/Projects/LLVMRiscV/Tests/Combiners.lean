@@ -76,7 +76,7 @@ info: {
 }
 -/
 #guard_msgs in
-#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusA.lhs)).val
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusB.lhs)).val
 
 /--
 info: {
@@ -115,7 +115,7 @@ info: {
 }
 -/
 #guard_msgs in
-#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusAPlusC.lhs)).val
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner APlusBMinusAplusC.lhs)).val
 
 /--
 info: {
@@ -751,7 +751,7 @@ info: {
 }
 -/
 #guard_msgs in
-#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner idempotent_prop_freeze.lhs)).val
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner idempotent_prop.lhs)).val
 
 /--
 info: {
@@ -959,3 +959,25 @@ info: {
 -/
 #guard_msgs in
 #eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner select_to_iminmax_sle.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.shl"(%1, %2)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    %4 = "llvm.sub"(%0, %3)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner add_shift.lhs)).val
+
+/--
+info: {
+  ^bb0(%0 : i64, %1 : i64, %2 : i64):
+    %3 = "llvm.shl"(%1, %2)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    %4 = "llvm.sub"(%0, %3)<{overflowFlags = #llvm.overflow<none>}> : (i64, i64) -> (i64)
+    "llvm.return"(%4) : (i64) -> ()
+}
+-/
+#guard_msgs in
+#eval! Com.print (DCE.repeatDce (multiRewritePeephole 100 GLobalISelPostLegalizerCombiner add_shift_commute.lhs)).val

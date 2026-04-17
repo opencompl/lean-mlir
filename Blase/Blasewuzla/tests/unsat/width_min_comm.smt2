@@ -1,0 +1,7 @@
+; Prove: zext(min(p,q), x) = zext(min(q,p), x)  (commutativity of min in width)
+(set-logic QF_BV)
+(declare-const p Int)
+(declare-const q Int)
+(declare-const x (_ BitVec p))
+(assert (not (= (pzero_extend (min p q) x) (pzero_extend (min q p) x))))
+(check-sat)

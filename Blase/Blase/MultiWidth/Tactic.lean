@@ -23,8 +23,14 @@ inductive WidthAbstractionKind
 | never
 deriving DecidableEq, Repr
 
+open Valaig.External in
+inductive SolverKind
+| kinduction
+| external (solver : SafetyAigerMC := rIC3 (timeoutMs := some 5000))
+
 /-- Tactic options for bv_automata_circuit -/
 structure Config where
+  solver : SolverKind := .kinduction
   check? : Bool := true
   -- number of k-induction iterations.
   niter : Nat := 30
@@ -38,9 +44,8 @@ structure Config where
   debugFillFinalReflectionProofWithSorry : Bool := false
   /-- Debug print the SMT-LIB version -/
   debugPrintSmtLib : Bool := false
-  /-- Dump the FSM to an Aiger file. -/
-  debugDumpAiger: Option String := none
-deriving DecidableEq, Repr
+  /-- Fail if reflection needs to abstract a non-variable -/
+  failIfSuspectAbstraction := false
 
 /-- Default user configuration -/
 def Config.default : Config := {}
@@ -322,6 +327,8 @@ def mkWidthExpr (wcard : Nat) (ve : MultiWidth.Nondep.WidthExpr) :
       #[mkNatLit wcard, mkNatLit k, ← mkWidthExpr wcard v]
     debugCheck out
     return out
+  | .subK _v _k | .sub .. | .add .. | .mul .. =>
+    throwError "unhandled width expresion: '{repr ve}'"
 
 /-- info: MultiWidth.Term.Ctx.empty (wcard : ℕ) : Term.Ctx wcard 0 -/
 #guard_msgs in #check MultiWidth.Term.Ctx.empty
@@ -549,6 +556,9 @@ def collectBoolTerm (state : CollectState)
     let (t, state) ← collectBoolAtom state e
     return (t, state)
 
+def maybeFailIfSuspectAbstraction (e : Expr) : SolverM Unit := do
+  if (← read).failIfSuspectAbstraction ∧ ¬ e.isFVar then
+    throwError m!"SUSPECT ABSTRACTION: tried to abstract {e}"
 
 /-- Visit a raw BV expr, and collect information about it. -/
 def collectBVAtom (state : CollectState)
@@ -557,6 +567,7 @@ def collectBVAtom (state : CollectState)
   let_expr BitVec w := t
     | throwError m!"expected type 'BitVec w', found: {indentD t} (expression: {indentD e})"
   let (wexpr, state) ← collectWidthExpr state w
+  maybeFailIfSuspectAbstraction e
   let (bvix, bvToIx) := state.bvToIx.findOrInsertVal (e, wexpr)
   return (.var bvix wexpr, { state with bvToIx })
 
@@ -579,6 +590,14 @@ partial def collectTerm (state : CollectState) (e : Expr) :
       let (ta, state) ← collectTerm state a
       let (tb, state) ← collectTerm state b
       return (.add w ta tb, state)
+    | _ => mkAtom
+  | HMul.hMul _bv _bv _bv _inst a b =>
+    match_expr _bv with
+    | BitVec w =>
+      let (w, state) ← collectWidthExpr state w
+      let (ta, state) ← collectTerm state a
+      let (tb, state) ← collectTerm state b
+      return (.mul w ta tb, state)
     | _ => mkAtom
   | BitVec.zeroExtend _w v x =>
       let (v, state) ← collectWidthExpr state v
@@ -1000,13 +1019,18 @@ def mkEqReflBoolNativeDecideProof (name : Name) (lhsExpr : Expr) (rhs : Bool) (d
   let proof := mkApp3 (mkConst ``Lean.ofReduceBool []) lhsDef (toExpr rhs) rflProof
   return if debugSorry? then sorryProof else proof
 
-def mkEqReflNativeDecideProof (name : Name) (tyExpr : Expr)
+/--
+Make an equality proof for an equality of the form `a = b` of type `sortExpr`,
+where `a` and `b` are
+expressions that can be decided by `native_decide`.
+-/
+def mkEqReflNativeDecideProof (name : Name) (sortExpr : Expr)
     (lhsSmallExpr : Expr) (rhsLargeExpr : Expr)
     (debugSorry? : Bool := false) : SolverM Expr := do
     -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
   let name := name ++ `eqProof
   let auxDeclName ← Term.mkAuxName name
-  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) tyExpr lhsSmallExpr rhsLargeExpr
+  let rflTy := mkApp3 (mkConst ``Eq [Level.ofNat 1]) sortExpr lhsSmallExpr rhsLargeExpr
   let rflProof ← mkEqRefl rhsLargeExpr
   let sorryProof ← mkSorry (type := rflTy) (synthetic := true)
   let proof := if debugSorry? then sorryProof else rflProof
@@ -1020,6 +1044,16 @@ def mkEqReflNativeDecideProof (name : Name) (tyExpr : Expr)
   }
   addAndCompile decl
   return (mkConst auxDeclName)
+/--
+Make a proof for an equality of the form `a = true` where `a` is a small boolean expression.
+-/
+def mkEqReflBoolTrueNativeDecideProof (name : Name)
+    (lhsSmallExpr : Expr)
+    (debugSorry? : Bool := false) : SolverM Expr := do
+    -- hoist a₁ into a top-level definition of 'Lean.ofReduceBool' to succeed.
+  let boolTy := mkConst ``Bool
+  let trueExpr := mkConst ``Bool.true
+  mkEqReflNativeDecideProof name boolTy lhsSmallExpr trueExpr debugSorry?
 
 def mkDecideTy : SolverM Expr := do
   let ty ← mkEq (mkNatLit 1) (mkNatLit 1)
@@ -1118,6 +1152,18 @@ def Expr.mkTermFsmNondep (wcard tcard bcard ncard icard pcard : Nat) (pNondep : 
   return out
 
 /--
+info: MultiWidth.Term.isAutomtaDecidable {bcard ncard icard pcard wcard✝ tcard✝ : ℕ} {tctx : Term.Ctx wcard✝ tcard✝}
+  {k : TermKind wcard✝} : Term bcard ncard icard pcard tctx k → Bool
+-/
+#guard_msgs in #check MultiWidth.Term.isAutomtaDecidable
+
+def Expr.mkIsAutomataDecidable
+  (bcard ncard icard pcard wcard tcard : Nat) (tctx : Expr) (k : Expr) (p : Expr) : SolverM Expr := do
+  let out := mkAppN (mkConst ``MultiWidth.Term.isAutomtaDecidable) #[toExpr bcard, toExpr ncard, toExpr icard, toExpr pcard, toExpr wcard, toExpr tcard, tctx, k, p]
+  debugCheck out
+  return out
+
+/--
 info: MultiWidth.Term.toBV_of_KInductionCircuits {wcard tcard bcard ncard icard pcard : ℕ} (tctx : Term.Ctx wcard tcard)
   (p : Term bcard ncard icard pcard tctx TermKind.prop) (pNondep : Nondep.Term)
   (_hpNondep : pNondep = Nondep.Term.ofDepTerm p) (fsm : TermFSM wcard tcard bcard ncard icard pcard pNondep)
@@ -1126,9 +1172,16 @@ info: MultiWidth.Term.toBV_of_KInductionCircuits {wcard tcard bcard ncard icard 
   (sCert : BVDecide.Frontend.LratCert) (hs : circs.mkSafetyCircuit.verifyCircuit sCert = true)
   (indCert : BVDecide.Frontend.LratCert) (hind : circs.mkIndHypCycleBreaking.verifyCircuit indCert = true)
   (wenv : WidthExpr.Env wcard) (penv : Predicate.Env pcard) (tenv : tctx.Env wenv) (benv : Term.BoolEnv bcard)
-  (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) : Term.toBV benv nenv ienv penv tenv p
+  (nenv : Term.NatEnv ncard) (ienv : Term.IntEnv icard) (hautomata : p.isAutomtaDecidable = true) :
+  Term.toBV benv nenv ienv penv tenv p
 -/
 #guard_msgs in #check MultiWidth.Term.toBV_of_KInductionCircuits
+
+/-- info: MultiWidth.TermKind.prop {wcard : ℕ} : TermKind wcard -/
+#guard_msgs in #check MultiWidth.TermKind.prop
+
+def mkTermKindProp (wcard : Nat) : Expr := mkApp
+  (mkConst ``MultiWidth.TermKind.prop) (mkNatLit wcard)
 
 /--
 Revert all prop-valued hyps.
@@ -1152,6 +1205,8 @@ def solve (gorig : MVarId) : SolverM Unit := do
     debugLog m!"collecting raw expr '{pRawExpr}'."
     let (p, collect) ← collectBVPredicateAux collect pRawExpr
     debugLog m!"collected predicate: '{repr p}' for raw expr."
+    if !p.isAutomtaDecidable then
+      throwError m!"bv_automata does not know how to decide this formula: it contains operations (such as 'mul') that are not automata-decidable. Reflected formula: {repr p}"
     let tctx ← collect.mkTctxExpr
     let wenv ← collect.mkWenvExpr
     let tenv ← collect.mkTenvExpr (wenv := wenv) (_tctx := tctx)
@@ -1160,7 +1215,7 @@ def solve (gorig : MVarId) : SolverM Unit := do
     let ienv ← collect.mkIenvExpr
     let penv ← collect.mkPenvExpr
     if (← read).debugPrintSmtLib then
-      throwError (p.toSmtLib |>.toSexpr |> format)
+      throwError "unimplemented: toSmtLib" -- (p.toSmtLib |>.toSexpr |> format)
     let pExpr ← Expr.mkPredicateExpr collect.wcard collect.tcard collect.bcard collect.ncard collect.icard collect.pcard tctx p
     let pNondepExpr := Lean.ToExpr.toExpr p
     let termFsmNondep := mkTermFsmNondep collect.wcard collect.tcard collect.bcard collect.ncard collect.icard collect.pcard p
@@ -1168,92 +1223,103 @@ def solve (gorig : MVarId) : SolverM Unit := do
     debugLog m!"fsm circuit size: {termFsmNondep.toFsmZext.circuitSize}"
     if ! (← isDefEq pRawExpr (← mkAppM ``Term.toBV #[benv, nenv, ienv, penv, tenv, pExpr])) then
       throwError m!"internal error: collected predicate expression does not match original predicate. Collected: {indentD pExpr}, original: {indentD pRawExpr}"
-    let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
-    if let some filename := (← read).debugDumpAiger then
-      let fn := System.mkFilePath [filename]
-      let handle ← IO.FS.Handle.mk fn IO.FS.Mode.write
-      let stream := IO.FS.Stream.ofHandle handle
-      termFsmNondep.toFsmZext.toAiger.toAagFile stream
 
-    let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
-    match stats with
-    | .safetyFailure i =>
-      let suspiciousVars ← collect.logSuspiciousFvars
-      -- | Found precise counter-example to claimed predicate.
-      if suspiciousVars.isEmpty then
-          throwError m!"CEX: Found exact counter-example at iteration {i} for predicate '{pRawExpr}'"
-        else
-          throwError m!"MAYCEX: Found possible counter-example at iteration {i} for predicate '{pRawExpr}'"
-    | .exhaustedIterations _ =>
-      let _ ← collect.logSuspiciousFvars
-      throwError m!"PROOFNOTFOUND: exhausted iterations for predicate '{pRawExpr}'"
-    | .provenByKIndCycleBreaking niters safetyCert indCert =>
-      if (← read).verbose? then
-        let _ ← collect.logSuspiciousFvars
-      debugLog m!"PROVE: proven {pRawExpr}"
-      let prf ← g.withContext <| do
-        let termNondepFsmExpr ← Expr.mkTermFsmNondep collect.wcard collect.tcard collect.bcard collect.ncard collect.icard collect.pcard pNondepExpr
-        debugCheck termNondepFsmExpr
-        -- let fsmExpr := termNondepFsmExpr
-        -- | TODO: refactor into fn.
-        let fsmExpr ← mkAppM (``MultiWidth.TermFSM.toFsmZext) #[termNondepFsmExpr]
-        -- debugCheck fsmExpr
-        let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
-        let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niters)
-        debugLog "making safety certs..."
-        -- | verifyCircuit (mkSafetyCircuit circs)
-        let verifyCircuitMkSafetyCircuitExpr ← Expr.mkVerifyCircuit
-          (← Expr.KInductionCircuits.mkMkSafetyCircuit circsExpr)
-          (toExpr safetyCert)
-        -- debugLog m!"made safety cert expr: {verifyCircuitMkSafetyCircuitExpr}"
-        debugLog "making safety cert = true proof..."
-        let safetyCertProof ←
-          mkEqReflBoolNativeDecideProof `safetyCert verifyCircuitMkSafetyCircuitExpr true
-        -- debugLog m!"made safety cert proof: {safetyCertProof}"
-        let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
-            (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
-            (toExpr indCert)
-        -- debugLog m!"made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
-        let indCertProof ←
-          mkEqReflBoolNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
-        debugLog m!"made induction cert = true proof..."
-        let prf ← mkAppM ``MultiWidth.Term.toBV_of_KInductionCircuits'
-          #[pRawExpr, -- P : Prop
-            tctx,
-            pExpr, -- p
-            pNondepExpr, -- pNondep
-            ← mkEqRefl pNondepExpr, -- pNondep = .ofDepTerm p
-            termNondepFsmExpr, -- TermFSM ...
-            ← mkEqRefl termNondepFsmExpr,
-            toExpr niters,
-            circsExpr,
-            circsLawfulExpr,
-            toExpr safetyCert,
-            safetyCertProof,
-            toExpr indCert,
-            indCertProof,
-            wenv,
-            tenv,
-            benv,
-            nenv,
-            ienv,
-            penv,
-            ← mkEqRefl pRawExpr]
-        debugCheck prf
-        let prf ←
-          if (← read).debugFillFinalReflectionProofWithSorry then
-            mkSorry (synthetic := true) (← g.getType)
+    match (← read).solver with
+    | .external config =>
+      let aig := termFsmNondep.toFsmZext.toAiger
+      let res ← Valaig.External.checkSafety config aig
+
+      match res with
+      | .error err => throwError s!"UNKNOWN: {err}"
+      | .ok .counterexample=> throwError "CEX: external solver found a counter-example"
+      | .ok .proof =>
+        let type ← g.getType
+        let prf := mkApp (mkConst ``valaigExternalSolverAx [←getLevel type]) type
+        let _ ← g.apply prf
+        return
+    | .kinduction =>
+      let (stats, _log) ← FSM.decideIfZerosVerified termFsmNondep.toFsmZext (maxIter := (← read).niter) (startVerifyAtIter := (← read).startVerifyAtIter)
+      match stats with
+      | .safetyFailure i =>
+        let suspiciousVars ← collect.logSuspiciousFvars
+        -- | Found precise counter-example to claimed predicate.
+        if suspiciousVars.isEmpty then
+            throwError m!"CEX: Found exact counter-example at iteration {i} for predicate '{pRawExpr}'"
           else
-            instantiateMVars prf
-        pure prf
-      let gs ← g.apply prf
-      if gs.isEmpty then
-        debugLog m!"unified goal with proof."
-      else
-        let mut msg := m!"Expected proof cerificate to close goal, but failed. Leftover goals:"
-        for g in gs do
-          msg := msg ++ m!"{indentD g}"
-        throwError msg
+            throwError m!"MAYCEX: Found possible counter-example at iteration {i} for predicate '{pRawExpr}'"
+      | .exhaustedIterations _ =>
+        let _ ← collect.logSuspiciousFvars
+        throwError m!"PROOFNOTFOUND: exhausted iterations for predicate '{pRawExpr}'"
+      | .provenByKIndCycleBreaking niters safetyCert indCert =>
+        if (← read).verbose? then
+          let _ ← collect.logSuspiciousFvars
+        debugLog m!"PROVE: proven {pRawExpr}"
+        let prf ← g.withContext <| do
+          let termNondepFsmExpr ← Expr.mkTermFsmNondep collect.wcard collect.tcard collect.bcard collect.ncard collect.icard collect.pcard pNondepExpr
+          debugCheck termNondepFsmExpr
+          -- let fsmExpr := termNondepFsmExpr
+          -- | TODO: refactor into fn.
+          let fsmExpr ← mkAppM (``MultiWidth.TermFSM.toFsmZext) #[termNondepFsmExpr]
+          -- debugCheck fsmExpr
+          let circsExpr ← Expr.KInductionCircuits.mkN fsmExpr (toExpr niters)
+          let circsLawfulExpr ← Expr.KInductionCircuits.mkIsLawful_mkN fsmExpr (toExpr niters)
+          debugLog "making safety certs..."
+          -- | verifyCircuit (mkSafetyCircuit circs)
+          let verifyCircuitMkSafetyCircuitExpr ← Expr.mkVerifyCircuit
+            (← Expr.KInductionCircuits.mkMkSafetyCircuit circsExpr)
+            (toExpr safetyCert)
+          -- debugLog m!"made safety cert expr: {verifyCircuitMkSafetyCircuitExpr}"
+          debugLog "making safety cert = true proof..."
+          let safetyCertProof ←
+            mkEqReflBoolNativeDecideProof `safetyCert verifyCircuitMkSafetyCircuitExpr true
+          -- debugLog m!"made safety cert proof: {safetyCertProof}"
+          let verifyCircuitMkIndHypCircuitExpr ← Expr.mkVerifyCircuit
+              (← Expr.KInductionCircuits.mkIndHypCycleBreaking circsExpr)
+              (toExpr indCert)
+          -- debugLog m!"made verifyCircuit expr: {verifyCircuitMkIndHypCircuitExpr}"
+          let indCertProof ←
+            mkEqReflBoolNativeDecideProof `indCert verifyCircuitMkIndHypCircuitExpr true
+          debugLog m!"made induction cert = true proof..."
+          let termKindProp := mkTermKindProp collect.wcard
+          let pIsAutomataDecidableExpr ← Expr.mkIsAutomataDecidable collect.bcard collect.ncard collect.icard collect.pcard collect.wcard collect.tcard tctx termKindProp pExpr
+          let prf ← mkAppM ``MultiWidth.Term.toBV_of_KInductionCircuits'
+            #[pRawExpr, -- P : Prop
+              tctx,
+              pExpr, -- p
+              pNondepExpr, -- pNondep
+              ← mkEqRefl pNondepExpr, -- pNondep = .ofDepTerm p
+              termNondepFsmExpr, -- TermFSM ...
+              ← mkEqRefl termNondepFsmExpr,
+              toExpr niters,
+              circsExpr,
+              circsLawfulExpr,
+              toExpr safetyCert,
+              safetyCertProof,
+              toExpr indCert,
+              indCertProof,
+              wenv,
+              tenv,
+              benv,
+              nenv,
+              ienv,
+              penv,
+              ← mkEqRefl pRawExpr,
+              ← mkEqReflBoolTrueNativeDecideProof `isAutomataDecidable pIsAutomataDecidableExpr]
+          debugCheck prf
+          let prf ←
+            if (← read).debugFillFinalReflectionProofWithSorry then
+              mkSorry (synthetic := true) (← g.getType)
+            else
+              instantiateMVars prf
+          pure prf
+        let gs ← g.apply prf
+        if gs.isEmpty then
+          debugLog m!"unified goal with proof."
+        else
+          let mut msg := m!"Expected proof cerificate to close goal, but failed. Leftover goals:"
+          for g in gs do
+            msg := msg ++ m!"{indentD g}"
+          throwError msg
 
 def solveEntrypoint (g : MVarId) (cfg : Config) : TermElabM Unit :=
   let ctx := { toConfig := cfg}
@@ -1296,7 +1362,6 @@ def evalBvMultiWidth : Tactic := fun
 
 macro "bv_multi_width_print_smt_lib" : tactic =>
   `(tactic| bv_multi_width (config := { debugPrintSmtLib := true }))
-
 
 end Tactic
 end MultiWidth
