@@ -282,6 +282,7 @@ inductive relation_fork : Stream (BitVec w) → Stream (BitVec w) → Prop where
       globallyFinallyReady rdOut1 →
       globallyFinallyReady rdOut2 →
       /- input/output relationship around the `fork` module -/
+
       (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) = TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn) →
       relation_fork x y
 
@@ -1188,8 +1189,8 @@ theorem hw_fork_refines1_with_fork:
                 and_intros
                 · funext i
                   have := rdOut1_before_allDone (hfork := h_6) (n := i)
-
                   /- what happens to `rdOut1` after data is dispatched? -/
+
                   sorry
                 · sorry
                 · sorry
@@ -1676,97 +1677,6 @@ theorem hw_fork_refines1_with_fork:
     · assumption
     · assumption
 
-#print axioms hw_fork_refines1_with_fork
-
-/-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
-theorem hw_fork_refines2:
-    /- Given a handshake fork taking `a` as input and returning `(a, a)`, we take
-      its lowering (with input a bisimilar ready-valid wrapped stream) -/
-    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld data) →
-    /- We want to make sure that stalling is correctly modeled for `a` (input).
-      We constrain the input and prove that if the input behaves properly,
-      the output will. -/
-    globallyValidUntilReady vld rdy →
-    globallyValidUntilReady vld1 rd1 →
-    globallyValidUntilReady vld2 rd2 →
-    globallyValidAndData vld data →
-    /- we assume no deadlock -/
-    globallyFinallyReady rd1 →
-    globallyFinallyReady rd2 →
-    /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork (`a ~ rdy vld i`), meaning that the two outputs are also bisimilar by transitivity-/
-    /- we want to prove that the outputs of the handshake fork are respectively
-      bisimilar to the ready-valid wrapping of the output of the hardware fork -/
-    (toStream rd2 vld2 o2) ~ (toStream rdy vld data) := by
-  intros hardware_hw globValReady globValReady1 globValReady2 globValData globFinReady1 globFinReady2
-  /- if 0, 0 works we don't need bisimilarity -/
-  /- the high-level fork will never wait for anything (whenever an input is available),
-    while the low-level one might have to, and depends on the `rd1` signal eventually being true.
-    if we choose `pred := Eq` the relation is too strong, the second goal is not provable.
-  -/
-  apply Bisim.coinduct (pred := relation_fork)
-  · intros s1 s2 hrel
-
-    sorry
-  · apply relation_fork.intro (toStream rd2 vld2 o2) (toStream rdy vld data)
-    · rfl
-    · rfl
-    · unfold globallyValidUntilReady
-      intros j hj1
-      unfold globallyValidUntilReady at globValReady2
-      specialize globValReady2 j
-      simp [hj1] at globValReady2
-      obtain ⟨k', hk'⟩ := globValReady2
-      exists k'
-    · unfold globallyValidAndData
-      intros j hj
-      unfold globallyValidAndData at globValData
-      unfold globallyValidUntilReady at globValReady2
-      specialize globValReady2 j (by simp [hj])
-      have := fork_corec rdy rd1 vld o2
-      sorry
-    ·
-      sorry
-    · unfold TRY3.split_stream2 TRY3.hw_fork
-      simp
-      sorry
-    ·
-      sorry
-    ·
-      sorry
-    ·
-      sorry
-
-
-/-- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
-theorem hw_fork_refines1:
-    /- Given a handshake fork taking `a` as input and returning `(a, a)`, we take
-      its lowering (with input a bisimilar ready-valid wrapped stream) -/
-    (rdy, vld1, vld2, o1, o2) = TRY3.split_stream2 (TRY3.hw_fork rd1 rd2 vld data) →
-    /- We want to make sure that stalling is correctly modeled for `a` (input).
-      We constrain the input and prove that if the input behaves properly,
-      the output will. -/
-    globallyValidUntilReady vld1 rd1 →
-    globallyValidUntilReady vld2 rd2 →
-    globallyValidUntilReady vld rdy →
-    globallyValidAndData vld1 o1 →
-    globallyValidAndData vld2 o2 →
-    /- we assume no deadlock -/
-    globallyFinallyReady rdy →
-    globallyFinallyReady rd1 →
-    globallyFinallyReady rd2 →
-    /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork (`a ~ rdy vld i`), meaning that the two outputs are also bisimilar by transitivity-/
-    /- we want to prove that the outputs of the handshake fork are respectively
-      bisimilar to the ready-valid wrapping of the output of the hardware fork -/
-    (toStream rd1 vld1 o1) ~ (toStream rdy vld data) := by
-  intros hardware_hw globValReady1 globValReady2 globValReady globValData1 globValData2 globFinReady globFinReady1 globFinReady2
-  /- if 0, 0 works we don't need bisimilarity -/
-  /- the high-level fork will never wait for anything (whenever an input is available),
-    while the low-level one might have to, and depends on the `rd1` signal eventually being true.
-    if we choose `pred := Eq` the relation is too strong, the second goal is not provable.
-  -/
-  sorry
-
-
 
 theorem hw_fork_refines':
     /- Given a handshake fork -/
@@ -1796,13 +1706,7 @@ theorem hw_fork_refines':
       exact handshake_fork.2
     rw [heq, heq']
     and_intros
-    · apply trans'
-      symm; assumption
-      symm; apply hw_fork_refines1
-      all_goals assumption
-    · apply trans'
-      symm; assumption
-      symm; apply hw_fork_refines2
-      all_goals assumption
+    · sorry
+    · sorry
 
 end HWComponents
