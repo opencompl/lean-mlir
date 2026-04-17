@@ -1178,7 +1178,7 @@ theorem hw_fork_refines1_with_fork:
             intro hcontra
             specialize hfstVldTrue2 fstSentIdx (by omega)
             simp [toStream, hfstVldTrue2] at hfstSentIdx
-          by_cases fstRecfst : fstRdyOut ≤ fstRdyOut2
+          by_cases fstRecfst  : fstRdyOut ≤ fstRdyOut2
           · /- first receiver comes first -/
             by_cases fstRecBeforeSent : fstVldTrue + fstRdyOut ≤ fstSentIdx
             · /- first receiver before sent -/
