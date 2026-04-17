@@ -1179,7 +1179,7 @@ theorem hw_fork_refines1_with_fork:
             intro hcontra
             specialize hfstVldTrue2 fstSentIdx (by omega)
             simp [toStream, hfstVldTrue2] at hfstSentIdx
-          by_cases fstRecfst  : fstRdyOut ≤ fstRdyOut2
+          by_cases fstRecfst : fstRdyOut ≤ fstRdyOut2
           · /- first receiver comes first -/
             by_cases fstRecBeforeSent : fstVldTrue + fstRdyOut ≤ fstSentIdx
             · /- first receiver before sent -/
@@ -1190,6 +1190,11 @@ theorem hw_fork_refines1_with_fork:
                 · funext i
                   have := rdOut1_before_allDone (hfork := h_6) (n := i)
                   /- what happens to `rdOut1` after data is dispatched? -/
+                  have heq : Stream'.drop (fstSentIdx + 1) rdIn_1 i = rdIn_1 (fstSentIdx + 1 + i) := by
+                    simp [Stream'.drop]
+                    congr 1
+                    grind
+                  rw [heq]
 
                   sorry
                 · sorry
@@ -1198,20 +1203,14 @@ theorem hw_fork_refines1_with_fork:
                 · sorry
               · /- first receiver after sent -/
                 sorry
-            · /- first receiver after sent -/
-              by_cases sndRecBeforeSent : fstVldTrue + fstRdyOut2 ≤ fstSentIdx
-              · /- second receiver before sent -/
-                sorry
-              · /- first receiver after sent -/
-                sorry
+            · /- first receiver after sent, implies second receiver after sent -/
+              have : fstSentIdx ≤ fstVldTrue + fstRdyOut2 := by omega
+              sorry
           · /- second receiver comes first -/
             by_cases fstRecBeforeSent : fstVldTrue + fstRdyOut ≤ fstSentIdx
-            · /- first receiver before sent -/
-              by_cases sndRecBeforeSent : fstVldTrue + fstRdyOut2 ≤ fstSentIdx
-              · /- second receiver before sent -/
-                sorry
-              · /- first receiver after sent -/
-                sorry
+            · /- first receiver before sent, implies second receiver before sent -/
+              have : fstVldTrue + fstRdyOut2 ≤ fstSentIdx := by omega
+              sorry
             · /- first receiver after sent -/
               by_cases sndRecBeforeSent : fstVldTrue + fstRdyOut2 ≤ fstSentIdx
               · /- second receiver before sent -/
