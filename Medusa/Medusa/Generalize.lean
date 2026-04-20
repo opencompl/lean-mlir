@@ -555,6 +555,12 @@ def reduceWidth [H : HydrableReduceWidth parsedExpr genPred genExpr]
 
   return constantAssignments
 
+
+class HydrableGetWidthRelations (parsedExpr : Type) (genPred : Type) (genExpr : Nat → Type) extends
+    HydrableInstances genPred
+    where
+  getWidthRelations : GeneralizerStateM parsedExpr genPred (Option (BoolExpr genPred))
+
 /--
 Main generalization workflow. It works as follows at a high level:
 - Invokes the `existsForAll` function to synthesize new constants in a lower bitwidth.
@@ -567,10 +573,9 @@ class HydrableGeneralize (parsedExpr : Type) (genPred : outParam Type) (genExpr 
   HydrableChangePredWidth genPred,
   HydrableReduceWidth parsedExpr genPred genExpr,
   HydrableSynthesizeWithNoPrecondition parsedExpr genPred genExpr,
+  HydrableGetWidthRelations parsedExpr genPred genExpr,
   HydrableCheckForPreconditions parsedExpr genPred genExpr
   where
-
-
 
 def generalize [H : HydrableGeneralize parsedExpr genPred genExpr]
                   : GeneralizerStateM parsedExpr genPred (Option (BoolExpr genPred)) := do
@@ -594,7 +599,11 @@ def generalize [H : HydrableGeneralize parsedExpr genPred genExpr]
     let maxConjunctions : Nat := 1
 
     match exprWithNoPrecondition with
-    | some generalized => return some generalized
+    | some generalized =>
+              let widthRelations ← H.getWidthRelations
+              match widthRelations with
+              | some rel => return BoolExpr.ite rel generalized (BoolExpr.const False)
+              | none => return some generalized
     | none =>
               let state ← get
               if state.needsPreconditionsExprs.isEmpty then
