@@ -24,7 +24,7 @@ def handshake.fork (in0 : Stream (BitVec 32)) : Stream (BitVec 32) × Stream (Bi
   (in0, in0)
 
 
-/-
+/-!
   RTL-level definitions of circuit components
 -/
 def hw_constant (b : Bool) : BitVec 1 := if b then 1#1 else 0#1
@@ -70,7 +70,11 @@ def rtl.fork (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitV
     ((_12, _3, _9, _rawOutput, _rawOutput), (i + 1, _1, _7))
   ) (0, 0#1, 0#1)
 
-def split_stream2 :
+/--
+  Split a stream containing the product of 5 objects into a product of 5 streams,
+  each representing a stream of single objects.
+-/
+def project_stream :
     Stream' (a × b × c × d × e) → Stream' a × Stream' b × Stream' c × Stream' d × Stream' e :=
   fun g =>
       (fun i => (g i).1,
@@ -79,118 +83,81 @@ def split_stream2 :
             fun i => (g i).2.2.2.1,
               fun i => (g i).2.2.2.2)
 
-
-/-- At the handshake level: (manual) delayed fork ~ normal fork: the outputs of the fork are bisimilar
-  for any delay (up to any numbers of `none` inserted, anywhere). -/
-theorem fork_refines {a x y x' y'} :
-  (x, y) = handshake.fork a →
-  x ~ x' →
-  y ~ y' →
-  x ~ x' ∧ y ~ y' := by grind
-
-/-- Stream := Stream' (Option α) -/
+/--
+  Define the relation between a latency-insensitive `Stream := Stream' (Option α)`
+  and three concrete `Stream'` (representingready, valid, data signal).
+-/
 def toStream {α} (rdy : Stream' (BitVec 1)) (vld : Stream' (BitVec 1)) (data : Stream' α) : Stream α := fun i =>
   if rdy i == 1#1 && vld i == 1#1 then
     .some (data i)
   else
     .none
 
-/- the standard implementation of the fork refines the handshake fork (`TRY2.hw_fork`) -/
 
-/-- weaker def where we do not assume that rdy is by default 0#1 -/
+/--
+  For every valid signal at any point in time `vld i = 1#1`,
+  there is a later point in time `i + k` where the ready signal is true (`rdy (i + k) = 1#1`),
+  and the valid signal remains constantly true until then.
+-/
 def globallyValidUntilReady (vld rdy : Stream' (BitVec 1)) : Prop :=
-    ∀ (i : Nat),
-        (vld i = 1#1) →
-      ∃ (k : Nat),
-        rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧
-        ∀ (j : Nat) (_hj : j < k),
-          vld (i + j) = 1#1
+    ∀ (i : Nat), (vld i = 1#1) →
+      ∃ (k : Nat), rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧
+        ∀ (j : Nat) (_hj : j < k), vld (i + j) = 1#1
 
-/-- This def is stronger than the one above -/
-def globallyValidUntilReady' (vld rdy : Stream' (BitVec 1)) : Prop :=
-    ∀ (i : Nat),
-        (vld i = 1#1) →
-      ∃ (k : Nat),
-        rdy (i + k) = 1#1 ∧ vld (i + k) = 1#1 ∧
-        ∀ (j : Nat) (_hj : j < k),
-          vld (i + j) = 1#1 ∧ rdy (i + j) = 0#1
-          -- we should add sth like vld (i + k + 1) = 0#1?
-
+/--
+  Given a couple of consecutive valid signals (`vld i = 1#1 ∧ vld (i + 1) = 1#1`),
+  the `data` stream at both points in time remains constant.
+-/
 def globallyValidAndData (vld : Stream' (BitVec 1)) (data : Stream' (BitVec w)) : Prop :=
-    ∀ (i : Nat),
-        (vld i = 1#1 ∧ vld (i + 1) = 1#1) →
-        data i = data (i + 1)
+    ∀ (i : Nat), (vld i = 1#1 ∧ vld (i + 1) = 1#1) → data i = data (i + 1)
 
-def relation : Stream (BitVec w) → Stream (BitVec w) → Prop := fun x y =>
-    ∃ (rd1 vld1 : Stream' (BitVec 1)) (data1 : Stream' (BitVec w))
-      (rd2 vld2 : Stream' (BitVec 1)) (data2 : Stream' (BitVec w)),
-    x = toStream rd1 vld1 data1 ∧
-    globallyValidUntilReady rd1 vld1 ∧
-    globallyValidAndData vld1 data1 ∧
-    y = toStream rd2 vld2 data2 ∧
-    globallyValidUntilReady rd2 vld2 ∧
-    globallyValidAndData vld2 data2
-    /- we need to say something about `x` and `y`. -/
+/--
+  For every point in time `i` of the ready signal, there exists a later (or simultaneous)
+  point in time `i + k` where the signal is true.
+-/
+def globallyFinallyReady (rdy : Stream' (BitVec 1)) :=
+  ∀ (i : Nat), ∃ (k : Nat), rdy (i + k) = 1#1
 
-/-- G(F(val = 1))-/
-def globallyFinallyReady (x : Stream' (BitVec 1)) :=
-  ∀ (i : Nat),
-    ∃ (k : Nat),
-      x (i + k) = 1#1
-
-inductive relation' : Stream (BitVec w) → Stream (BitVec w) → Prop where
-  | intro x y rd vld data rd1 vld1 o1 :  /- same as `∀ x y` -/
-      /- x is the high-level (input), y is the low-level (output) -/
-      x = toStream rd vld data →
-      y = toStream rd1 vld1 o1 →
-      (∀ j, (rd j = 1#1 ∧ vld j = 1#1) ↔ rd1 j = 1#1 ∧ vld1 j = 1#1) →
-      -- (∃ k, rd k = 1#1 ∧ vld k = 1) → /- at least one transition happens frfr -/
-      globallyValidUntilReady vld rd →
-      globallyValidAndData vld data →
-      globallyFinallyReady rd1 →
-      (∀ n, vld n = 1#1 → data n = o1 n) → /- when the signal is valid, data and output are the same -/
-      relation' x y /- defining the type of the relation -/
-
+/--
+  We propose a bisimilarity relation between latency-insensitive streams at the input and
+  output of a `fork` circuit.
+-/
 inductive relation_fork : Stream (BitVec w) → Stream (BitVec w) → Prop where
   | intro x y rdIn vldIn dataIn rdOut1 vldOut1 dataOut1 rdOut2 vldOut2 dataOut2 :  /- same as `∀ x y` -/
-      /- x is the high-level (input), y is the low-level (output) -/
+      /- *If* x is the input stream, encoded via 3-way-handshake of streams rdIn, vldIn, dataIn -/
       x = toStream rdIn vldIn dataIn →
+      /- *If* y is either of output streams of the fork,
+        encoded via 3-way-handshake of streams rdOut1, vldOut1, dataOut1 -/
       y = toStream rdOut1 vldOut1 dataOut1 →
-      /- if a signal in `x` is valid (`vldIn i = 1#1`), it will remain valid (at least) until a
-        ready signal is received (`rdIn (i + k) = 1#1`). A ready signal is eventually definitely received.  -/
+      /- *If* when a signal in `x` is valid (`vldIn i = 1#1`), it will remain valid (at least) until a
+        ready signal is received (`rdIn (i + k) = 1#1`).
+        A ready signal is eventually definitely received.  -/
       globallyValidUntilReady vldIn rdIn →
+      /- *If* when a signal in `y` is valid (`vldOut1 i = 1#1`), it will remain valid (at least) until a
+        ready signal is received (`rdOut1 (i + k) = 1#1`).
+        A ready signal is eventually definitely received.  -/
       globallyValidUntilReady vldOut1 rdOut1 →
+      /- *If* when a signal in `y` is valid (`vldOut2 i = 1#1`), it will remain valid (at least) until a
+        ready signal is received (`rdOut2 (i + k) = 1#1`).
+        A ready signal is eventually definitely received.  -/
       globallyValidUntilReady vldOut2 rdOut2 →
-      /- if a signal in `x` is valid for more than one cycle (`vldIn i = 1#1 ∧ vldIn (i + 1) = 1#1`),
-        the data does not change (`dataIn i = dataIn (i + 1)`) -/
+      /- *If* when a signal in `x` is valid for more than one cycle (`vldIn i = 1#1 ∧ vldIn (i + 1) = 1#1`),
+        the data stream at those points in time remains constant (`dataIn i = dataIn (i + 1)`). -/
       globallyValidAndData vldIn dataIn →
-      /- eventually a ready signal arrives from both receivers (`rdOut1 i = 1#1`), (`rdOut2 i = 1#1`) -/
+      /- *If* eventually,
+        a ready signal arrives from both receivers (`rdOut1 i = 1#1`), (`rdOut2 i = 1#1`). -/
       globallyFinallyReady rdOut1 →
       globallyFinallyReady rdOut2 →
-      /- input/output relationship around the `fork` module -/
-
-      (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) = split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn) →
+      /- *If* the relations between the input and output ready, valid, data signals
+        are given by the `rtl.fork` component. -/
+      (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) = project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn) →
+      /- The relation holds. -/
       relation_fork x y
 
 
-/-
-  our implementation of `fork` should not allow this, assuming that the input is
-  well-formed (including its ready signals!).
-
-  val1 =  1 1 1
-  data1 = 2 3 4
-  rd1 =   1 1 1
-  out1:   2 3 4
-
-  val2 =  1 1 1
-  data2 = 2 3 4
-  rd2 =   0 1 1
-  out2:   - 3 4
-
+/--
+  Define the unfolding of one step of the corecursive definition of `fork`.
 -/
-
-
-/-- We unfold one step of the corecursive definition of `fork` -/
 def fork_corec (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec 32)) :=
   fun (i, _emitted_0, _emitted_1) =>
     let _true := hw_constant true
@@ -211,8 +178,10 @@ def fork_corec (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (Bi
     let _7 := comb_and _11 _6
     ((_12, _3, _9, _rawOutput, _rawOutput), (i+1, _1, _7))
 
-/-- We re-define the fork circuit in terms of `fork_corec` -/
-def hw_fork' (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec 32))
+/--
+  Define the fork circuit in terms of `fork_corec`.
+-/
+def rtl.fork' (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec 32))
     : Stream' ( BitVec 1  -- ready (_12)
               × BitVec 1  -- valid_0 (_3)
               × BitVec 1  -- valid_1 (_9)
@@ -221,11 +190,11 @@ def hw_fork' (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitV
       )
   := Stream'.corec' (α := Nat × BitVec 1 × BitVec 1) (fork_corec _ready _ready_1 _valid _in0) (0, 0#1, 0#1)
 
-
-
-
-/-- Prove that iterating `n` times starting from the `m`-th index of the stream yields the `n + m`-th index-/
-theorem fork_corec1 :
+/--
+  Prove that iterating `n` times starting from the `m`-th index of the stream
+  yields the `n + m`-th index.
+-/
+theorem fork_corec_iter :
   (Stream'.iterate (Prod.snd ∘ fork_corec rd0_in rd1_in vld_in data_in) (m, x, y) n).1 = n + m := by
   induction n generalizing m x y with
   | zero => grind [Stream'.iterate]
@@ -235,9 +204,13 @@ theorem fork_corec1 :
     dsimp [fork_corec]
     grind
 
-theorem hw_fork'_vldOut1_of_none (h : ∀ k, vldIn k = 0#1) :
-    ((hw_fork' rdOut1 rdOut2 vldIn dataIn) k).2.1 = 0#1 := by
-  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get
+/--
+  If the valid input stream is false at all points in time (`vldIn k = 0#1`),
+  the first valid output stream of the fork component is also false at all times.
+-/
+theorem fork'_vldOut1_of_none (h : ∀ k, vldIn k = 0#1) :
+    ((rtl.fork' rdOut1 rdOut2 vldIn dataIn) k).2.1 = 0#1 := by
+  unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get
   generalize hst : Stream'.iterate
     (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) k = s
   obtain ⟨a, b, c⟩ := s
@@ -245,9 +218,13 @@ theorem hw_fork'_vldOut1_of_none (h : ∀ k, vldIn k = 0#1) :
   specialize h a
   simp [h]
 
-theorem hw_fork'_vldOut2_of_none (h : ∀ k, vldIn k = 0#1) :
-    ((hw_fork' rdOut1 rdOut2 vldIn dataIn) k).2.2.1 = 0#1 := by
-  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get
+/--
+  If the valid input stream is false at all points in time (`vldIn k = 0#1`),
+  the second valid output stream of the fork component is also false at all times.
+-/
+theorem fork'_vldOut2_of_none (h : ∀ k, vldIn k = 0#1) :
+    ((rtl.fork' rdOut1 rdOut2 vldIn dataIn) k).2.2.1 = 0#1 := by
+  unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get
   generalize hst : Stream'.iterate
     (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) k = s
   obtain ⟨a, b, c⟩ := s
@@ -255,6 +232,9 @@ theorem hw_fork'_vldOut2_of_none (h : ∀ k, vldIn k = 0#1) :
   specialize h a
   simp [h]
 
+/--
+  Applying a function `f` to
+-/
 lemma iterate_back_succ (f : α → α) (s : α) (n : ℕ) :
     Stream'.iterate f s (n + 1) = f (Stream'.iterate f s n) := by
   induction n generalizing s with
@@ -279,11 +259,11 @@ lemma fork_emitted_zero_of_all_none (h : ∀ k, vldIn k = 0#1) :
     simp [h a]
 
 -- when vld is always 0, all signal outputs (not data) are 0
-theorem hw_fork'_of_all_none (h : ∀ k, vldIn k = 0#1) :
-    ∀ k, ((hw_fork' rdOut1 rdOut2 vldIn dataIn) k).1 = 0#1 ∧
-         ((hw_fork' rdOut1 rdOut2 vldIn dataIn) k).2.1 = 0#1 ∧
-         ((hw_fork' rdOut1 rdOut2 vldIn dataIn) k).2.2.1 = 0#1 := by
-  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get
+theorem rtl.fork'_of_all_none (h : ∀ k, vldIn k = 0#1) :
+    ∀ k, ((rtl.fork' rdOut1 rdOut2 vldIn dataIn) k).1 = 0#1 ∧
+         ((rtl.fork' rdOut1 rdOut2 vldIn dataIn) k).2.1 = 0#1 ∧
+         ((rtl.fork' rdOut1 rdOut2 vldIn dataIn) k).2.2.1 = 0#1 := by
+  unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get
   intro k
   and_intros
   · generalize hst : Stream'.iterate
@@ -310,15 +290,15 @@ theorem hw_fork'_of_all_none (h : ∀ k, vldIn k = 0#1) :
     simp [h]
 
 /-- Prove that (at RTL level) the input and output data at the `n`-th position are the same.
-  This is possible because `hw_fork'` does not introduce any delay, and there is no transformation
+  This is possible because `rtl.fork'` does not introduce any delay, and there is no transformation
   happening on the data. -/
 theorem hw_fork_out0
-    (h : ⟨rdy_out, vld0_out, vld1_out, data0_out, data1_out⟩ = split_stream2 (hw_fork' rd0_in rd1_in vld_in data_in)) :
+    (h : ⟨rdy_out, vld0_out, vld1_out, data0_out, data1_out⟩ = project_stream (rtl.fork' rd0_in rd1_in vld_in data_in)) :
     (∀ n, data_in n = data0_out n) := by
   intro n
-  simp [split_stream2] at h
+  simp [project_stream] at h
   simp [h]
-  unfold hw_fork'; clear h
+  unfold rtl.fork'; clear h
   unfold Stream'.corec' Stream'.corec Stream'.map Stream'.get
   generalize h: (Stream'.iterate (Prod.snd ∘ fork_corec rd0_in rd1_in vld_in data_in) (0, 0#1, 0#1) n) = y
   obtain ⟨a, b, c⟩ := y
@@ -327,12 +307,12 @@ theorem hw_fork_out0
 
 theorem hw_fork_out1
     (h : ⟨rdy_out, vld0_out, vld1_out, data0_out, data1_out⟩ =
-      split_stream2 (hw_fork' rd0_in rd1_in vld_in data_in)) :
+      project_stream (rtl.fork' rd0_in rd1_in vld_in data_in)) :
     (∀ n, data_in n = data1_out n) := by
   intro n
-  simp [split_stream2] at h
+  simp [project_stream] at h
   simp [h]
-  unfold hw_fork'; clear h
+  unfold rtl.fork'; clear h
   unfold Stream'.corec' Stream'.corec Stream'.map Stream'.get
   generalize h: (Stream'.iterate (Prod.snd ∘ fork_corec rd0_in rd1_in vld_in data_in) (0, 0#1, 0#1) n) = y
   obtain ⟨a, b, c⟩ := y
@@ -352,20 +332,20 @@ theorem fork_corec1bis :
     dsimp [fork_corec]
     grind
 
-theorem hw_fork_eq : rtl.fork rd0 rd1 vld data = hw_fork' rd0 rd1 vld data := by
-  unfold rtl.fork hw_fork'
+theorem hw_fork_eq : rtl.fork rd0 rd1 vld data = rtl.fork' rd0 rd1 vld data := by
+  unfold rtl.fork rtl.fork'
   congr 1
 
 theorem vldOut1_implies_vldIn
     (h : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-      split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn))
+      project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
     (hvld : vldOut1 n = 1#1) : vldIn n = 1#1 := by
   rw [hw_fork_eq] at h
-  simp [split_stream2] at h
+  simp [project_stream] at h
   obtain ⟨-, hvldout1, -⟩ := h
   have hn := congr_fun hvldout1 n
   rw [hvld] at hn
-  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
+  unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
   generalize hst : Stream'.iterate
     (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) n = s at hn
   obtain ⟨a, b, c⟩ := s
@@ -383,14 +363,14 @@ theorem vldOut1_implies_vldIn
 
 theorem vldOut2_implies_vldIn
     (h : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-      split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn))
+      project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
     (hvld : vldOut2 n = 1#1) : vldIn n = 1#1 := by
   rw [hw_fork_eq] at h
-  simp [split_stream2] at h
+  simp [project_stream] at h
   obtain ⟨-, -, hvldout2, -⟩ := h
   have hn := congr_fun hvldout2 n
   rw [hvld] at hn
-  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
+  unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
   generalize hst : Stream'.iterate
     (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) n = s at hn
   obtain ⟨a, b, c⟩ := s
@@ -408,7 +388,7 @@ theorem vldOut2_implies_vldIn
 
 theorem rdOut1_before_allDone
   (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-    split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn)) (hvldOut1 : vldOut1 n = 1#1)
+    project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn)) (hvldOut1 : vldOut1 n = 1#1)
   (hgvurIn : globallyValidUntilReady vldIn rdIn) :
     ∃ k, rdIn (n + k) = 1#1 ∧ vldIn (n + k) = 1#1 := by
   have hvldIn := vldOut1_implies_vldIn hfork hvldOut1
@@ -430,15 +410,15 @@ lemma iterate_succ_apply (f : α → α) (s : α) (n : ℕ) :
 
 theorem vldOut_eq_vldIn_of_fork_unitl_sent
     (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-      split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn))
+      project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
     /- nothing is emitted before `n`, as emission occurs if `rdOut1 j ∧ vldOut1 j` -/
     (hbefore : ∀ j < n, rdOut1 j = 0#1 ∨ vldOut1 j = 0#1) :
     vldOut1 n = vldIn n := by
   rw [hw_fork_eq] at hfork
-  simp [split_stream2] at hfork
+  simp [project_stream] at hfork
   obtain ⟨-, hvldout1, -⟩ := hfork
   have hn := congr_fun hvldout1 n
-  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
+  unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
   generalize hst : Stream'.iterate
     (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) n = s at hn
   obtain ⟨a, b, c⟩ := s
@@ -472,7 +452,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent
       simp only [Function.comp]
       have hvldk : vldOut1 k = vldIn ak := by
         have h := congr_fun hvldout1 k
-        unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at h
+        unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at h
         simp_rw [hsk] at h
         dsimp [fork_corec, comb_and, comb_xor, hw_constant] at h
         simp_all
@@ -527,7 +507,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent
 
 theorem vldOut_of_vldIn_rdy
     (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-      split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn))
+      project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
     /- nothing has been accepted so far -/
     (hbefore : ∀ l < j, rdOut1 l = 0#1 ∨ vldOut1 l = 0#1)
     (hin : vldIn j = 1#1 ∧ rdIn j = 1#1) :
@@ -537,15 +517,15 @@ theorem vldOut_of_vldIn_rdy
 
 theorem vldOut_eq_vldIn_of_fork_unitl_sent2
     (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-      split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn))
+      project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
     /- nothing is emitted before `n`, as emission occurs if `rdOut1 j ∧ vldOut1 j` -/
     (hbefore : ∀ j < n, rdOut2 j = 0#1 ∨ vldOut2 j = 0#1) :
     vldOut2 n = vldIn n := by
   rw [hw_fork_eq] at hfork
-  simp [split_stream2] at hfork
+  simp [project_stream] at hfork
   obtain ⟨-, -, hvldout2, -⟩ := hfork
   have hn := congr_fun hvldout2 n
-  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
+  unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
   generalize hst : Stream'.iterate
     (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) n = s at hn
   obtain ⟨a, b, c⟩ := s
@@ -571,7 +551,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent2
           grind
         have hvldk : vldOut2 k = vldIn ak := by
           have h := congr_fun hvldout2 k
-          unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at h
+          unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at h
           simp_rw [hsk] at h
           dsimp [fork_corec, comb_and, comb_xor, hw_constant] at h
           simp_all
@@ -763,7 +743,7 @@ theorem true_of_width_one (b : BitVec 1) (h : ¬ b = 0#1 ) : b = 1#1 := by grind
 
 theorem vldIn_and_eventually_ready_implies_vldOut1
   (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-    split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn))
+    project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
   (hvldIn : globallyFinallyReady vldIn) :
     ∃ k, vldOut1 k = 1#1 := by
   obtain ⟨n, hvldn, hnmin⟩ := if_exists_first_exists (hvldIn 0 |>.imp (fun k hk => by simpa using hk))
@@ -779,7 +759,7 @@ theorem vldIn_and_eventually_ready_implies_vldOut1
 
 theorem vldIn_and_ready_implies_vldOut1
   (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-    split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn))
+    project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
   (hvldIn : ∃ j, vldIn j = 1#1) :
     ∃ k, vldOut1 k = 1#1 := by
   obtain ⟨n, hvldn, hnmin⟩ := if_exists_first_exists (st := vldIn) (by grind)
@@ -795,7 +775,7 @@ theorem vldIn_and_ready_implies_vldOut1
 
 theorem vldIn_and_ready_implies_vldOut2
   (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-    split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn))
+    project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
   (hvldIn : ∃ j, vldIn j = 1#1) :
     ∃ k, vldOut2 k = 1#1 := by
   obtain ⟨n, hvldn, hnmin⟩ := if_exists_first_exists (st := vldIn) (by grind)
@@ -811,7 +791,7 @@ theorem vldIn_and_ready_implies_vldOut2
 
 lemma fork_globallyValidAndData_out1
     (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
-      split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn))
+      project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
     (hgv : globallyValidAndData vldIn dataIn) :
     globallyValidAndData vldOut1 dataOut1 := by
   intro i ⟨hi1, hi2⟩
@@ -890,7 +870,7 @@ def readyOut2UntilAllReceiversAre (rdOut1 rdOut2 : Stream' (BitVec 1)) :=
 theorem hw_fork_refines1_with_fork:
     /- Given a handshake fork taking `a` as input and returning `(a, a)`, we take
       its lowering (with input a bisimilar ready-valid wrapped stream) -/
-    (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) = split_stream2 (rtl.fork rdOut1 rdOut2 vldIn dataIn) →
+    (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) = project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn) →
     /- We want to make sure that stalling is correctly modeled for `a` (input).
       We constrain the input and prove that if the input behaves properly,
       the output will. -/
@@ -1075,7 +1055,7 @@ theorem hw_fork_refines1_with_fork:
             · /- first receiver before sent -/
               by_cases sndRecBeforeSent : fstVldTrue + fstRdyOut2 ≤ fstSentIdx
               · /- second receiver before sent -/
-                simp [split_stream2]
+                simp [project_stream]
                 and_intros
                 · funext i
                   have := rdOut1_before_allDone (hfork := h_6) (n := i)
@@ -1094,7 +1074,7 @@ theorem hw_fork_refines1_with_fork:
                     have : ∀ k, ∀ i, Stream'.drop k rdOut1_1 i =  rdOut1_1 (i + k) := by
                       intros
                       simp [Stream'.drop, Stream'.get]
-                    simp [hw_fork', Stream'.corec']
+                    simp [rtl.fork', Stream'.corec']
                     unfold fork_corec
                     simp [comb_and, comb_xor, comb_or, hw_constant]
 
@@ -1156,10 +1136,10 @@ theorem hw_fork_refines1_with_fork:
             -- rdIn fires at fstVldTrue + k with k < fstRdyOut, but rdOut1 hasn't fired
             have hh5 := h_6
             rw [hw_fork_eq] at h_6
-            simp [split_stream2] at h_6
+            simp [project_stream] at h_6
             obtain ⟨hrdin, -⟩ := h_6
             have hcirc := congr_fun hrdin (fstVldTrue + k)
-            unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hcirc
+            unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hcirc
             generalize hst : Stream'.iterate
               (Prod.snd ∘ fork_corec rdOut1_1 rdOut2_1 vldIn_1 dataIn_1) (0, 0#1, 0#1)
               (fstVldTrue + k) = s at hcirc
@@ -1207,10 +1187,10 @@ theorem hw_fork_refines1_with_fork:
                   have := @fork_corec1 rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 km
                   simp [hsk] at this; omega
                 have hvldk : vldOut1_1 km = vldIn_1 ak := by
-                  rw [hw_fork_eq] at hh5; simp [split_stream2] at hh5
+                  rw [hw_fork_eq] at hh5; simp [project_stream] at hh5
                   obtain ⟨-, hvldout1, -⟩ := hh5
                   have hn := congr_fun hvldout1 km
-                  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
+                  unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
                   simp_rw [hsk] at hn
                   dsimp [fork_corec, comb_and, comb_xor, hw_constant] at hn
                   simp [hn]
@@ -1269,10 +1249,10 @@ theorem hw_fork_refines1_with_fork:
             by_contra hlt; push_neg at hlt
             have hh5 := h_6
             rw [hw_fork_eq] at h_6
-            simp [split_stream2] at h_6
+            simp [project_stream] at h_6
             obtain ⟨hrdin, -⟩ := h_6
             have hcirc2 := congr_fun hrdin fstSentIdx
-            unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hcirc2
+            unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hcirc2
             generalize hst2 : Stream'.iterate
               (Prod.snd ∘ fork_corec rdOut1_1 rdOut2_1 vldIn_1 dataIn_1) (0, 0#1, 0#1)
               fstSentIdx = s2 at hcirc2
@@ -1309,10 +1289,10 @@ theorem hw_fork_refines1_with_fork:
                   have := @fork_corec1 rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 km
                   simp [hsk] at this; omega
                 have hvldk2 : vldOut1_1 km = vldIn_1 ak := by
-                  rw [hw_fork_eq] at hh5; simp [split_stream2] at hh5
+                  rw [hw_fork_eq] at hh5; simp [project_stream] at hh5
                   obtain ⟨-, hvldout1, -⟩ := hh5
                   have hn := congr_fun hvldout1 km
-                  unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
+                  unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hn
                   simp_rw [hsk] at hn
                   dsimp [fork_corec, comb_and, comb_xor, hw_constant] at hn
                   simp [hn]
@@ -1357,13 +1337,13 @@ theorem hw_fork_refines1_with_fork:
                                               (vld := vldIn_1) (by grind) h_7
       /- the fork module will never transmit anything meaningful -/
       rw [hw_fork_eq] at h_6
-      unfold split_stream2 at h_6
+      unfold project_stream at h_6
       simp at h_6
       have hhfork1 := h_6
       obtain ⟨hrd', hvld1', hvld2', hdata1', hdata2'⟩ := hhfork1
       rw [h_7, h_8]
       have hnoneout : ∀ k, vldOut1_1 k = 0#1 := by
-          unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hvld1'
+          unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hvld1'
           intros k
           generalize hst : Stream'.iterate
             (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) k = s at hvld1'
@@ -1376,7 +1356,7 @@ theorem hw_fork_refines1_with_fork:
             grind
           simp [this]
       have hnoneout2 : ∀ k, vldOut2_1 k = 0#1 := by
-          unfold hw_fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hvld2'
+          unfold rtl.fork' Stream'.corec' Stream'.corec Stream'.map Stream'.get at hvld2'
           intros k
           generalize hst : Stream'.iterate
             (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn) (0, 0#1, 0#1) k = s at hvld2'
@@ -1452,9 +1432,9 @@ theorem hw_fork_refines1_with_fork:
           rw [this, show i + j + 1 = i + 1 + j by omega, hj]
         · /- after dropping one element, all the relations defined by the fork module remain.
             We see this by unfolding the fork hypotheses -/
-          unfold split_stream2
+          unfold project_stream
           simp
-          have h1 := hw_fork'_of_all_none
+          have h1 := rtl.fork'_of_all_none
                     (dataIn := Stream'.drop 1 dataIn_1)
                     (vldIn := Stream'.drop 1 vldIn_1)
                     (rdOut1 := Stream'.drop 1 rdOut1_1)
@@ -1464,7 +1444,7 @@ theorem hw_fork_refines1_with_fork:
                       specialize hnevldin (k + 1)
                       simp [show Stream'.drop 1 vldIn_1 k = vldIn_1 (k + 1) by rfl, hnevldin]
                       )
-          have h2 := hw_fork'_of_all_none
+          have h2 := rtl.fork'_of_all_none
                     (dataIn := dataIn_1)
                     (vldIn := vldIn_1)
                     (rdOut1 := rdOut1_1)
@@ -1480,34 +1460,34 @@ theorem hw_fork_refines1_with_fork:
               (vld_in := vldIn_1)
               (rd0_in := rdOut1_1)
               (rd1_in := rdOut2_1)
-              (rdy_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).1)
-              (vld0_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.1)
-              (vld1_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.1)
-              (data0_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1)
-              (data1_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2)
-              (by rw [← hw_fork_eq]; simp [split_stream2]) (1 + l)
+              (rdy_out := fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).1)
+              (vld0_out := fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.1)
+              (vld1_out := fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.1)
+              (data0_out := fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1)
+              (data1_out := fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2)
+              (by rw [← hw_fork_eq]; simp [project_stream]) (1 + l)
             have hrhs := hw_fork_out0
               (rdy_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).1)
+                (rtl.fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).1)
               (vld0_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.1)
+                (rtl.fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.1)
               (vld1_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.1)
+                (rtl.fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.1)
               (data0_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.1)
+                (rtl.fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.1)
               (data1_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.2)
-              (by rw [← hw_fork_eq]; simp [split_stream2]) l
+                (rtl.fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.2)
+              (by rw [← hw_fork_eq]; simp [project_stream]) l
             simp [Stream'.drop] at hrhs
-            have h1 : Stream'.get (fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1) (1 + l) =
-                  (fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1) (1 + l) := by rfl
+            have h1 : Stream'.get (fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1) (1 + l) =
+                  (fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1) (1 + l) := by rfl
             simp [h1]
             have h2 : (Stream'.get (fun i =>
-                        (hw_fork' (Stream'.drop 1 rdOut1_1)
+                        (rtl.fork' (Stream'.drop 1 rdOut1_1)
                           (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1)
                           (Stream'.drop 1 dataIn_1) i).2.2.2.1) l) =
                       (fun i =>
-                        (hw_fork' (Stream'.drop 1 rdOut1_1)
+                        (rtl.fork' (Stream'.drop 1 rdOut1_1)
                           (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1)
                           (Stream'.drop 1 dataIn_1) i).2.2.2.1) l := by rfl
             simp [h2]
@@ -1519,35 +1499,35 @@ theorem hw_fork_refines1_with_fork:
               (vld_in := vldIn_1)
               (rd0_in := rdOut1_1)
               (rd1_in := rdOut2_1)
-              (rdy_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).1)
-              (vld0_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.1)
-              (vld1_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.1)
-              (data0_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1)
-              (data1_out := fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2)
-              (by rw [← hw_fork_eq]; simp [split_stream2]) (1 + l)
+              (rdy_out := fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).1)
+              (vld0_out := fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.1)
+              (vld1_out := fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.1)
+              (data0_out := fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.1)
+              (data1_out := fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2)
+              (by rw [← hw_fork_eq]; simp [project_stream]) (1 + l)
             have hrhs := hw_fork_out1
               (rdy_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).1)
+                (rtl.fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).1)
               (vld0_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.1)
+                (rtl.fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.1)
               (vld1_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.1)
+                (rtl.fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.1)
               (data0_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.1)
+                (rtl.fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.1)
               (data1_out := fun i =>
-                (hw_fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.2)
-              (by rw [← hw_fork_eq]; simp [split_stream2]) l
+                (rtl.fork' (Stream'.drop 1 rdOut1_1) (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1) (Stream'.drop 1 dataIn_1) i).2.2.2.2)
+              (by rw [← hw_fork_eq]; simp [project_stream]) l
             simp [Stream'.drop] at hrhs
 
-            have h1 : Stream'.get (fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2) (1 + l) =
-                  (fun i => (hw_fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2) (1 + l) := by rfl
+            have h1 : Stream'.get (fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2) (1 + l) =
+                  (fun i => (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 i).2.2.2.2) (1 + l) := by rfl
             simp [h1]
             have h2 : (Stream'.get (fun i =>
-                        (hw_fork' (Stream'.drop 1 rdOut1_1)
+                        (rtl.fork' (Stream'.drop 1 rdOut1_1)
                           (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1)
                           (Stream'.drop 1 dataIn_1) i).2.2.2.2) l) =
                       (fun i =>
-                        (hw_fork' (Stream'.drop 1 rdOut1_1)
+                        (rtl.fork' (Stream'.drop 1 rdOut1_1)
                           (Stream'.drop 1 rdOut2_1) (Stream'.drop 1 vldIn_1)
                           (Stream'.drop 1 dataIn_1) i).2.2.2.2) l := by rfl
             simp [h2]
@@ -1582,9 +1562,9 @@ theorem hw_fork_refines1_with_fork:
 
 theorem hw_fork_refines':
     /- Given a handshake fork -/
-    (x, y) = TRY2.hw_fork a →
+    (x, y) = handshake.fork a →
     /- we get the output of the corresponding lowered fork -/
-    (rdy, vld1, vld2, o1, o2) = split_stream2 (a := BitVec 1) (rtl.fork rd1 rd2 vld data) →
+    (rdy, vld1, vld2, o1, o2) = project_stream (a := BitVec 1) (rtl.fork rd1 rd2 vld data) →
     /- if we know that the hshake input stream is bisimilar to the ready-valid input of the hw fork -/
     a ~ (toStream rdy vld data) →
     /- We want to make sure that stalling is correctly modeled for `a` (input).
