@@ -398,6 +398,11 @@ theorem vldOut2_implies_vldIn
   have : vldIn a = 0#1 := by grind
   simp [this] at hn
 
+/--
+  In a fork component with no-deadlock guarantees, there always exists a point in time
+  when both the ready and the valid input signals are true, and therefore a valid input
+  data signal arrives.
+-/
 theorem rdOut1_before_allDone
   (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
     project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn)) (hvldOut1 : vldOut1 n = 1#1)
@@ -410,16 +415,10 @@ theorem rdOut1_before_allDone
   exists k
   simp [hk]
 
-lemma iterate_succ_apply (f : α → α) (s : α) (n : ℕ) :
-    Stream'.iterate f s (n + 1) = f (Stream'.iterate f s n) := by
-  induction n generalizing s with
-  | zero => simp [Stream'.iterate]
-  | succ k ih =>
-    rw [Stream'.iterate_eq, Stream'.cons]
-    exact ih _
-
-
-
+/--
+  In a fork circuit, at all points in time that come before the first element is transmitted,
+  the input and output valid signal have the same value.
+-/
 theorem vldOut_eq_vldIn_of_fork_unitl_sent
     (hfork : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
       project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
@@ -458,7 +457,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent
       simp [hsk] at hbk; subst hbk
       rw [iterate_back_succ, hsk]
       have hak : ak = k := by
-        have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 k
+        have := @fork_corec_iter rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 k
         simp [hsk] at this; omega
       have hk := hbef k (Nat.lt_succ_self k)
       simp only [Function.comp]
@@ -508,7 +507,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent
         simp [h1]
   simp [hb] at hn
   have heq : a = n := by
-    have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
+    have := @fork_corec_iter rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
     rw [hst] at this
     simp at this
     assumption
