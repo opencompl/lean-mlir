@@ -7,13 +7,18 @@ namespace HWComponents
 
 open HandshakeStream
 
-def hw_constant (b : Bool) : BitVec 1 :=
-  if b then 1#1 else 0#1
+/-
+  RTL-level definitions of circuit components
+-/
+def hw_constant (b : Bool) : BitVec 1 := if b then 1#1 else 0#1
 
-def comb_xor : BitVec 1 → BitVec 1 → BitVec 1 := BitVec.xor
-def comb_and : BitVec 1 → BitVec 1 → BitVec 1 := BitVec.and
-def comb_add : BitVec 32 → BitVec 32 → BitVec 32 := BitVec.add
-def comb_or : BitVec 1 → BitVec 1 → BitVec 1 := BitVec.or
+def comb_xor (x y : BitVec 1) : BitVec 1 := BitVec.xor x y
+
+def comb_and (x y : BitVec 1) : BitVec 1 := BitVec.and x y
+
+def comb_add (x y : BitVec 32) : BitVec 32 := BitVec.add x y
+
+def comb_or (x y : BitVec 1) : BitVec 1 := BitVec.or x y
 
 namespace TRY1
 
@@ -1195,8 +1200,21 @@ theorem hw_fork_refines1_with_fork:
                     congr 1
                     grind
                   rw [heq]
+                  by_cases hfalse : rdIn_1 (fstSentIdx + 1 + i) = 0#1
+                  · have := congr_fun h_7 (fstSentIdx + 1 + i)
+                    unfold toStream at this
+                    simp [hfalse] at *
+                    rw [hw_fork_eq]
 
-                  sorry
+                    have : ∀ k, ∀ i, Stream'.drop k rdOut1_1 i =  rdOut1_1 (i + k) := by
+                      intros
+                      simp [Stream'.drop, Stream'.get]
+                    simp [hw_fork', Stream'.corec']
+                    unfold fork_corec
+                    simp [comb_and, comb_xor, comb_or, hw_constant]
+
+                    sorry
+                  · sorry
                 · sorry
                 · sorry
                 · sorry
