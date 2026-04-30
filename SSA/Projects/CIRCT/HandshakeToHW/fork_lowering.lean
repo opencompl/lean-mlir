@@ -233,7 +233,7 @@ theorem fork'_vldOut2_of_none (h : ∀ k, vldIn k = 0#1) :
   simp [h]
 
 /--
-  Applying a function `f` to
+  TODO: Luisa does not understand what the gist of this lemma is.
 -/
 lemma iterate_back_succ (f : α → α) (s : α) (n : ℕ) :
     Stream'.iterate f s (n + 1) = f (Stream'.iterate f s n) := by
@@ -241,8 +241,11 @@ lemma iterate_back_succ (f : α → α) (s : α) (n : ℕ) :
   | zero => simp [Stream'.iterate_eq, Stream'.cons]
   | succ k ih => rw [Stream'.iterate_eq, Stream'.cons, ih]; rfl
 
+/--
+  TODO: Luisa does not understand what the gist of this lemma is.
+-/
 lemma fork_emitted_zero_of_all_none (h : ∀ k, vldIn k = 0#1) :
-    ∀ k, (Stream'.iterate (Prod.snd ∘ fork_corec rdOut1 rdOut2 vldIn dataIn)
+    ∀ k, (Stream'.iterate (Prod.snd ∘ (fork_corec rdOut1 rdOut2 vldIn dataIn))
           (0, 0#1, 0#1) k).2 = (0#1, 0#1) := by
   intro k
   induction k with
@@ -258,8 +261,12 @@ lemma fork_emitted_zero_of_all_none (h : ∀ k, vldIn k = 0#1) :
     dsimp [fork_corec, comb_and, comb_xor, comb_or, hw_constant]
     simp [h a]
 
--- when vld is always 0, all signal outputs (not data) are 0
-theorem rtl.fork'_of_all_none (h : ∀ k, vldIn k = 0#1) :
+/--
+  If the input's valid signal is always false,
+  for every point in time `k` the ready signal of the input and valid signals of the outputs of
+  a fork circuit are false as well.
+-/
+theorem fork'_of_all_none (h : ∀ k, vldIn k = 0#1) :
     ∀ k, ((rtl.fork' rdOut1 rdOut2 vldIn dataIn) k).1 = 0#1 ∧
          ((rtl.fork' rdOut1 rdOut2 vldIn dataIn) k).2.1 = 0#1 ∧
          ((rtl.fork' rdOut1 rdOut2 vldIn dataIn) k).2.2.1 = 0#1 := by
@@ -289,10 +296,12 @@ theorem rtl.fork'_of_all_none (h : ∀ k, vldIn k = 0#1) :
     specialize h a
     simp [h]
 
-/-- Prove that (at RTL level) the input and output data at the `n`-th position are the same.
-  This is possible because `rtl.fork'` does not introduce any delay, and there is no transformation
-  happening on the data. -/
-theorem hw_fork_out0
+/--
+  We prove that, at RTL level, the input and first output data stream at the `n`-th position are the same.
+  This is possible because `rtl.fork'` does not introduce any delay nor buffering,
+  and there is no transformation happening on the data.
+-/
+theorem fork_dataIn_eq_dataOut1
     (h : ⟨rdy_out, vld0_out, vld1_out, data0_out, data1_out⟩ = project_stream (rtl.fork' rd0_in rd1_in vld_in data_in)) :
     (∀ n, data_in n = data0_out n) := by
   intro n
@@ -303,9 +312,14 @@ theorem hw_fork_out0
   generalize h: (Stream'.iterate (Prod.snd ∘ fork_corec rd0_in rd1_in vld_in data_in) (0, 0#1, 0#1) n) = y
   obtain ⟨a, b, c⟩ := y
   dsimp [fork_corec]
-  rw [show a = (a, b, c).1 by rfl, ←h, fork_corec1]; rfl
+  rw [show a = (a, b, c).1 by rfl, ← h, fork_corec_iter]; rfl
 
-theorem hw_fork_out1
+/--
+  We prove that, at RTL level, the input and second output data stream at the `n`-th position are the same.
+  This is possible because `rtl.fork'` does not introduce any delay nor buffering,
+  and there is no transformation happening on the data.
+-/
+theorem fork_dataIn_eq_dataOut2
     (h : ⟨rdy_out, vld0_out, vld1_out, data0_out, data1_out⟩ =
       project_stream (rtl.fork' rd0_in rd1_in vld_in data_in)) :
     (∀ n, data_in n = data1_out n) := by
@@ -317,25 +331,19 @@ theorem hw_fork_out1
   generalize h: (Stream'.iterate (Prod.snd ∘ fork_corec rd0_in rd1_in vld_in data_in) (0, 0#1, 0#1) n) = y
   obtain ⟨a, b, c⟩ := y
   dsimp [fork_corec]
-  rw [show a = (a, b, c).1 by rfl, ←h, fork_corec1]; rfl
+  rw [show a = (a, b, c).1 by rfl, ← h, fork_corec_iter]; rfl
 
-
-
-
-theorem fork_corec1bis :
-  (Stream'.iterate (Prod.snd ∘ fork_corec rd0_in rd1_in vld_in data_in) (m, x, y) n).1 = n + m := by
-  induction n generalizing m x y with
-  | zero => grind [Stream'.iterate]
-  | succ x h =>
-    rw [Stream'.iterate_eq]
-    dsimp [Stream'.cons]
-    dsimp [fork_corec]
-    grind
-
+/--
+  Prove the equivalence of the two definitions of `rtl.fork`.
+-/
 theorem hw_fork_eq : rtl.fork rd0 rd1 vld data = rtl.fork' rd0 rd1 vld data := by
   unfold rtl.fork rtl.fork'
   congr 1
 
+/--
+  If at a certain point in time `n` the first output valid signal is true,
+  then the input valid signal at that point in time is also true.
+-/
 theorem vldOut1_implies_vldIn
     (h : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
       project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
@@ -351,7 +359,7 @@ theorem vldOut1_implies_vldIn
   obtain ⟨a, b, c⟩ := s
   dsimp [fork_corec, comb_and, comb_xor, hw_constant] at hn
   have heq : a = n := by
-    have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
+    have := @fork_corec_iter rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
     rw [hst] at this
     simp at this
     assumption
@@ -361,6 +369,10 @@ theorem vldOut1_implies_vldIn
   have : vldIn a = 0#1 := by grind
   simp [this] at hn
 
+/--
+  If at a certain point in time `n` the second output valid signal is true,
+  then the input valid signal at that point in time is also true.
+-/
 theorem vldOut2_implies_vldIn
     (h : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
       project_stream (rtl.fork rdOut1 rdOut2 vldIn dataIn))
@@ -376,7 +388,7 @@ theorem vldOut2_implies_vldIn
   obtain ⟨a, b, c⟩ := s
   dsimp [fork_corec, comb_and, comb_xor, hw_constant] at hn
   have heq : a = n := by
-    have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
+    have := @fork_corec_iter rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
     rw [hst] at this
     simp at this
     assumption
