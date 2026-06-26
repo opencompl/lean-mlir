@@ -388,6 +388,7 @@ def solverErrorUknown : Solver where
     return .error "Uknown solver backend choice."
 
 
+open Std.Tactic.BVDecide in
 /--
 Compute and print, to stdout, the sizes of the SAT/automaton problems built from
 `predicate`, independently of the selected backend:
@@ -401,36 +402,30 @@ Out-of-fragment / non-translatable cases print `N/A`.
 -/
 def printStats (config : Config) (predicate : Nondep.Term) : IO Unit := do
   -- input-qfbv: direct multi-width -> QF_BV
-  let (inStruct?, inAig?) : Option Nat × Option Nat :=
-    let (neg, ok, _) := predicate.pnegate
-    if !ok then (none, none)
-    else
-      let (qfbv, ok2, _) := neg.toBVLogicalExpr (Array.replicate predicate.maxwcard config.bound)
-      if !ok2 then (none, none)
-      else (some (bvLogicalExprSize qfbv), some (bvLogicalExprAigSize qfbv))
+  let inputQfbv? : Option BVLogicalExpr := do
+    let neg ← resultValue? predicate.pnegate
+    resultValue? (neg.toBVLogicalExpr (Array.replicate predicate.maxwcard config.bound))
   -- mono-qfbv: single-width lowering -> QF_BV
-  let (monoStruct?, monoAig?) : Option Nat × Option Nat :=
-    let (sw, ok, _) := predicate.toSingleWidthNondepTerm (.const config.bound)
-    if !ok then (none, none)
-    else
-      let (swn, ok2, _) := sw.pnegate
-      if !ok2 then (none, none)
-      else
-        let (qfbv, ok3, _) := swn.toBVLogicalExpr #[]
-        if !ok3 then (none, none)
-        else (some (bvLogicalExprSize qfbv), some (bvLogicalExprAigSize qfbv))
+  let monoQfbv? : Option BVLogicalExpr := do
+    let sw  ← resultValue? (predicate.toSingleWidthNondepTerm (.const config.bound))
+    let swn ← resultValue? sw.pnegate
+    resultValue? (swn.toBVLogicalExpr #[])
   -- automaton: parametric FSM
-  let (autStruct?, autAig?) : Option Nat × Option Nat :=
-    if !predicate.isAutomtaDecidable then (none, none)
-    else
-      let fsm := (mkTermFsmNondep predicate.wcard predicate.tcard predicate.bcard 0 0 0 predicate).toFsmZext
-      (some fsm.circuitSize, some fsm.toAiger.aig.aig.decls.size)
-  IO.println s!"input-qfbv-structural-size: {fmtSize inStruct?}"
-  IO.println s!"input-qfbv-aig-size: {fmtSize inAig?}"
-  IO.println s!"mono-qfbv-structural-size: {fmtSize monoStruct?}"
-  IO.println s!"mono-qfbv-aig-size: {fmtSize monoAig?}"
-  IO.println s!"automaton-structural-size: {fmtSize autStruct?}"
-  IO.println s!"automaton-aig-size: {fmtSize autAig?}"
+  let fsm? :=
+    if predicate.isAutomtaDecidable then
+      some (mkTermFsmNondep predicate.wcard predicate.tcard predicate.bcard 0 0 0 predicate).toFsmZext
+    else none
+  IO.println s!"input-qfbv-structural-size: {fmtSize <| inputQfbv?.map bvLogicalExprSize}"
+  IO.println s!"input-qfbv-aig-size: {fmtSize <| inputQfbv?.map bvLogicalExprAigSize}"
+  IO.println s!"mono-qfbv-structural-size: {fmtSize <| monoQfbv?.map bvLogicalExprSize}"
+  IO.println s!"mono-qfbv-aig-size: {fmtSize <| monoQfbv?.map bvLogicalExprAigSize}"
+  IO.println s!"automaton-structural-size: {fmtSize <| fsm?.map (·.circuitSize)}"
+  IO.println s!"automaton-aig-size: {fmtSize <| fsm?.map (·.toAiger.aig.aig.decls.size)}"
+where
+  /-- Adapt the codebase's `(value, success?, errors)` result convention to `Option value`. -/
+  resultValue? {α : Type} (r : α × Bool × Lean.Format) : Option α :=
+    let (a, ok, _) := r
+    if ok then some a else none
 
 /-- List of all solvers we support. -/
 unsafe def allSolvers : Std.HashMap String Solver :=
