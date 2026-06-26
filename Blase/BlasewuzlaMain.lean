@@ -42,6 +42,52 @@ def SolverExitCode.toString : SolverExitCode → String
 | .unsat => "unsat"
 | .error errStr => s!"error: {errStr}"
 
+/-!
+## Size statistics helpers
+
+Structural node counts for QF_BV formulas (`BVLogicalExpr`), and a post-bitblast
+AIG node count. These let us report the size of the generated SAT problems.
+-/
+
+open Std.Tactic.BVDecide in
+/-- Structural node count of a `BVExpr`. -/
+def bvExprSize : {w : Nat} → BVExpr w → Nat
+  | _, .var _ => 1
+  | _, .const _ => 1
+  | _, .extract _ _ e => 1 + bvExprSize e
+  | _, .bin l _ r => 1 + bvExprSize l + bvExprSize r
+  | _, .un _ e => 1 + bvExprSize e
+  | _, .append l r _ => 1 + bvExprSize l + bvExprSize r
+  | _, .replicate _ e _ => 1 + bvExprSize e
+  | _, .shiftLeft l r => 1 + bvExprSize l + bvExprSize r
+  | _, .shiftRight l r => 1 + bvExprSize l + bvExprSize r
+  | _, .arithShiftRight l r => 1 + bvExprSize l + bvExprSize r
+
+open Std.Tactic.BVDecide in
+/-- Structural node count of a `BVPred`. -/
+def bvPredSize : BVPred → Nat
+  | .bin l _ r => 1 + bvExprSize l + bvExprSize r
+  | .getLsbD e _ => 1 + bvExprSize e
+
+open Std.Tactic.BVDecide in
+/-- Structural node count of a `BVLogicalExpr` (a `BoolExpr BVPred`). -/
+def bvLogicalExprSize : BVLogicalExpr → Nat
+  | .literal p => bvPredSize p
+  | .const _ => 1
+  | .not x => 1 + bvLogicalExprSize x
+  | .gate _ a b => 1 + bvLogicalExprSize a + bvLogicalExprSize b
+  | .ite c a b => 1 + bvLogicalExprSize c + bvLogicalExprSize a + bvLogicalExprSize b
+
+open Std.Tactic.BVDecide in
+/-- Number of AIG nodes after bitblasting a `BVLogicalExpr` (no SAT call). -/
+def bvLogicalExprAigSize (e : BVLogicalExpr) : Nat :=
+  e.bitblast.aig.decls.size
+
+/-- Format an optional size: a number, or `N/A` when the formula is out of fragment. -/
+def fmtSize : Option Nat → String
+  | some n => toString n
+  | none => "N/A"
+
 open Std Tactic Sat AIG BVDecide  Lean Elab Meta Std Sat AIG Tactic BVDecide Frontend in
 def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) (satSolverTimeout : Nat) : MetaM Bool := do
   let entry := e.bitblast
@@ -105,6 +151,8 @@ structure Config where
   preconditionSub : Bool
   /-- Run width-subtraction elimination preprocessing pass. -/
   elimSub : Bool
+  /-- Print QF_BV / automaton size statistics (implied by the `dryrun` backend). -/
+  stats : Bool
 
 structure Solver where
   name : String
@@ -340,6 +388,50 @@ def solverErrorUknown : Solver where
     return .error "Uknown solver backend choice."
 
 
+/--
+Compute and print, to stdout, the sizes of the SAT/automaton problems built from
+`predicate`, independently of the selected backend:
+- `input-qfbv`: the (negated) multi-width predicate translated directly to QF_BV.
+- `mono-qfbv`: the predicate lowered to single width then translated to QF_BV.
+- `automaton`: the parametric FSM built for the k-induction/external backends.
+
+Each formula reports a structural node count and a post-bitblast AIG node count.
+QF_BV sizes are computed at width `config.bound`; the automaton is width-independent.
+Out-of-fragment / non-translatable cases print `N/A`.
+-/
+def printStats (config : Config) (predicate : Nondep.Term) : IO Unit := do
+  -- input-qfbv: direct multi-width -> QF_BV
+  let (inStruct?, inAig?) : Option Nat × Option Nat :=
+    let (neg, ok, _) := predicate.pnegate
+    if !ok then (none, none)
+    else
+      let (qfbv, ok2, _) := neg.toBVLogicalExpr (Array.replicate predicate.maxwcard config.bound)
+      if !ok2 then (none, none)
+      else (some (bvLogicalExprSize qfbv), some (bvLogicalExprAigSize qfbv))
+  -- mono-qfbv: single-width lowering -> QF_BV
+  let (monoStruct?, monoAig?) : Option Nat × Option Nat :=
+    let (sw, ok, _) := predicate.toSingleWidthNondepTerm (.const config.bound)
+    if !ok then (none, none)
+    else
+      let (swn, ok2, _) := sw.pnegate
+      if !ok2 then (none, none)
+      else
+        let (qfbv, ok3, _) := swn.toBVLogicalExpr #[]
+        if !ok3 then (none, none)
+        else (some (bvLogicalExprSize qfbv), some (bvLogicalExprAigSize qfbv))
+  -- automaton: parametric FSM
+  let (autStruct?, autAig?) : Option Nat × Option Nat :=
+    if !predicate.isAutomtaDecidable then (none, none)
+    else
+      let fsm := (mkTermFsmNondep predicate.wcard predicate.tcard predicate.bcard 0 0 0 predicate).toFsmZext
+      (some fsm.circuitSize, some fsm.toAiger.aig.aig.decls.size)
+  IO.println s!"input-qfbv-structural-size: {fmtSize inStruct?}"
+  IO.println s!"input-qfbv-aig-size: {fmtSize inAig?}"
+  IO.println s!"mono-qfbv-structural-size: {fmtSize monoStruct?}"
+  IO.println s!"mono-qfbv-aig-size: {fmtSize monoAig?}"
+  IO.println s!"automaton-structural-size: {fmtSize autStruct?}"
+  IO.println s!"automaton-aig-size: {fmtSize autAig?}"
+
 /-- List of all solvers we support. -/
 unsafe def allSolvers : Std.HashMap String Solver :=
   let solvers := #[kinduction, rIC3, abc, monoBMC, naiveBMC, dryrun]
@@ -357,6 +449,8 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let elimIte : Bool := p.hasFlag "elimIte"
   let preconditionSub : Bool := p.hasFlag "preconditionSub"
   let elimSub : Bool := p.hasFlag "elimSub"
+  -- The `dryrun` backend exists to inspect the generated problems, so it implies `--stats`.
+  let stats : Bool := p.hasFlag "stats" || backend == dryrun.name
 
   let config : Config := {
     verbose,
@@ -367,7 +461,8 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     timeout,
     elimIte,
     preconditionSub,
-    elimSub
+    elimSub,
+    stats
   }
   -- Read and parse the SMT2 file
   let timeStart ← IO.monoMsNow
@@ -406,11 +501,18 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     else
       pure predicate
 
+  if config.stats then
+    printStats config predicate
+
   let solver : Solver :=
     allSolvers.get? backend |>.getD solverErrorUknown
+  let solveStart ← IO.monoMsNow
   let out ← runMetaMAsIO <| solver.run config predicate
+  let solveEnd ← IO.monoMsNow
   let timeEnd ← IO.monoMsNow
 
+  if config.stats then
+    IO.println s!"solver-time: {solveEnd - solveStart} ms"
   IO.println s!"Time elapsed: {timeEnd - timeStart} ms"
   IO.println s!"Result: {out.toString}"
   return out.toUInt32
@@ -429,6 +531,7 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     elimIte;                   "Run ite-elimination preprocessing pass (off by default)."
     elimSub;                   "Run sub-elimination preprocessing pass (off by default). This adds many variables (one per subtraction), but ensures that no subtractions remain in the formula."
     preconditionSub;           "Runs subtraction precondition preprocessing pass (off by default). This adds a precondition that the subtraction does not produce a negative number."
+    stats;                     "Print QF_BV / automaton size statistics and solver time to stdout (off by default; implied by the 'dryrun' backend). This bitblasts both QF_BV formulas and builds the FSM, so it adds work comparable to building (not solving) the problems."
 
   ARGS:
     input : String;            "Path to the .smt2 file."
