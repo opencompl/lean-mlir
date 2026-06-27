@@ -173,9 +173,15 @@ end
 abbrev Expr.outContext (_ : Expr d Γ eff ts) : Ctxt d.Ty :=
   ts ++ Γ
 
+theorem Expr.outContext_eq : ∀ expr : Expr d Γ eff tys, expr.outContext = tys ++ Γ :=
+  fun _ => rfl
+
 /-! ### Regions -/
+abbrev Region (regSigElem : Ctxt d.Ty × List d.Ty) : Type :=
+  Com d regSigElem.1 .impure regSigElem.2
+
 abbrev Regions (regSig : RegionSignature d.Ty) : Type :=
-  HVector (fun t => Com d t.1 .impure t.2) regSig
+  HVector (Region d) regSig
 
 /-! ### Lets -/
 
@@ -1057,8 +1063,11 @@ We can map between different dialects
 
 section Map
 
+abbrev RegionSignature.mapElem (f : Ty → Ty') : Ctxt Ty × List Ty → Ctxt Ty' × List Ty' :=
+  fun ⟨Γ, ty⟩ => (Γ.map f, ty.map f)
+
 def RegionSignature.map (f : Ty → Ty') : RegionSignature Ty → RegionSignature Ty' :=
-  List.map fun ⟨Γ, ty⟩ => (Γ.map f, ty.map f)
+  List.map (mapElem f)
 
 instance : Functor RegionSignature where
   map := RegionSignature.map
