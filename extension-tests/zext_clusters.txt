@@ -1,0 +1,366 @@
+Found 63 distinct instruction pattern(s)
+============================================================
+[63 file(s)] Pattern:
+    main:
+    andi	a0, a0, 1
+    ret
+  Files: zext_i1_to_i10, zext_i1_to_i11, zext_i1_to_i12, zext_i1_to_i13, zext_i1_to_i14, zext_i1_to_i15, zext_i1_to_i16, zext_i1_to_i17, zext_i1_to_i18, zext_i1_to_i19, zext_i1_to_i2, zext_i1_to_i20, zext_i1_to_i21, zext_i1_to_i22, zext_i1_to_i23, zext_i1_to_i24, zext_i1_to_i25, zext_i1_to_i26, zext_i1_to_i27, zext_i1_to_i28, zext_i1_to_i29, zext_i1_to_i3, zext_i1_to_i30, zext_i1_to_i31, zext_i1_to_i32, zext_i1_to_i33, zext_i1_to_i34, zext_i1_to_i35, zext_i1_to_i36, zext_i1_to_i37, zext_i1_to_i38, zext_i1_to_i39, zext_i1_to_i4, zext_i1_to_i40, zext_i1_to_i41, zext_i1_to_i42, zext_i1_to_i43, zext_i1_to_i44, zext_i1_to_i45, zext_i1_to_i46, zext_i1_to_i47, zext_i1_to_i48, zext_i1_to_i49, zext_i1_to_i5, zext_i1_to_i50, zext_i1_to_i51, zext_i1_to_i52, zext_i1_to_i53, zext_i1_to_i54, zext_i1_to_i55, zext_i1_to_i56, zext_i1_to_i57, zext_i1_to_i58, zext_i1_to_i59, zext_i1_to_i6, zext_i1_to_i60, zext_i1_to_i61, zext_i1_to_i62, zext_i1_to_i63, zext_i1_to_i64, zext_i1_to_i7, zext_i1_to_i8, zext_i1_to_i9
+[62 file(s)] Pattern:
+    main:
+    andi	a0, a0, 3
+    ret
+  Files: zext_i2_to_i10, zext_i2_to_i11, zext_i2_to_i12, zext_i2_to_i13, zext_i2_to_i14, zext_i2_to_i15, zext_i2_to_i16, zext_i2_to_i17, zext_i2_to_i18, zext_i2_to_i19, zext_i2_to_i20, zext_i2_to_i21, zext_i2_to_i22, zext_i2_to_i23, zext_i2_to_i24, zext_i2_to_i25, zext_i2_to_i26, zext_i2_to_i27, zext_i2_to_i28, zext_i2_to_i29, zext_i2_to_i3, zext_i2_to_i30, zext_i2_to_i31, zext_i2_to_i32, zext_i2_to_i33, zext_i2_to_i34, zext_i2_to_i35, zext_i2_to_i36, zext_i2_to_i37, zext_i2_to_i38, zext_i2_to_i39, zext_i2_to_i4, zext_i2_to_i40, zext_i2_to_i41, zext_i2_to_i42, zext_i2_to_i43, zext_i2_to_i44, zext_i2_to_i45, zext_i2_to_i46, zext_i2_to_i47, zext_i2_to_i48, zext_i2_to_i49, zext_i2_to_i5, zext_i2_to_i50, zext_i2_to_i51, zext_i2_to_i52, zext_i2_to_i53, zext_i2_to_i54, zext_i2_to_i55, zext_i2_to_i56, zext_i2_to_i57, zext_i2_to_i58, zext_i2_to_i59, zext_i2_to_i6, zext_i2_to_i60, zext_i2_to_i61, zext_i2_to_i62, zext_i2_to_i63, zext_i2_to_i64, zext_i2_to_i7, zext_i2_to_i8, zext_i2_to_i9
+[61 file(s)] Pattern:
+    main:
+    andi	a0, a0, 7
+    ret
+  Files: zext_i3_to_i10, zext_i3_to_i11, zext_i3_to_i12, zext_i3_to_i13, zext_i3_to_i14, zext_i3_to_i15, zext_i3_to_i16, zext_i3_to_i17, zext_i3_to_i18, zext_i3_to_i19, zext_i3_to_i20, zext_i3_to_i21, zext_i3_to_i22, zext_i3_to_i23, zext_i3_to_i24, zext_i3_to_i25, zext_i3_to_i26, zext_i3_to_i27, zext_i3_to_i28, zext_i3_to_i29, zext_i3_to_i30, zext_i3_to_i31, zext_i3_to_i32, zext_i3_to_i33, zext_i3_to_i34, zext_i3_to_i35, zext_i3_to_i36, zext_i3_to_i37, zext_i3_to_i38, zext_i3_to_i39, zext_i3_to_i4, zext_i3_to_i40, zext_i3_to_i41, zext_i3_to_i42, zext_i3_to_i43, zext_i3_to_i44, zext_i3_to_i45, zext_i3_to_i46, zext_i3_to_i47, zext_i3_to_i48, zext_i3_to_i49, zext_i3_to_i5, zext_i3_to_i50, zext_i3_to_i51, zext_i3_to_i52, zext_i3_to_i53, zext_i3_to_i54, zext_i3_to_i55, zext_i3_to_i56, zext_i3_to_i57, zext_i3_to_i58, zext_i3_to_i59, zext_i3_to_i6, zext_i3_to_i60, zext_i3_to_i61, zext_i3_to_i62, zext_i3_to_i63, zext_i3_to_i64, zext_i3_to_i7, zext_i3_to_i8, zext_i3_to_i9
+[60 file(s)] Pattern:
+    main:
+    andi	a0, a0, 15
+    ret
+  Files: zext_i4_to_i10, zext_i4_to_i11, zext_i4_to_i12, zext_i4_to_i13, zext_i4_to_i14, zext_i4_to_i15, zext_i4_to_i16, zext_i4_to_i17, zext_i4_to_i18, zext_i4_to_i19, zext_i4_to_i20, zext_i4_to_i21, zext_i4_to_i22, zext_i4_to_i23, zext_i4_to_i24, zext_i4_to_i25, zext_i4_to_i26, zext_i4_to_i27, zext_i4_to_i28, zext_i4_to_i29, zext_i4_to_i30, zext_i4_to_i31, zext_i4_to_i32, zext_i4_to_i33, zext_i4_to_i34, zext_i4_to_i35, zext_i4_to_i36, zext_i4_to_i37, zext_i4_to_i38, zext_i4_to_i39, zext_i4_to_i40, zext_i4_to_i41, zext_i4_to_i42, zext_i4_to_i43, zext_i4_to_i44, zext_i4_to_i45, zext_i4_to_i46, zext_i4_to_i47, zext_i4_to_i48, zext_i4_to_i49, zext_i4_to_i5, zext_i4_to_i50, zext_i4_to_i51, zext_i4_to_i52, zext_i4_to_i53, zext_i4_to_i54, zext_i4_to_i55, zext_i4_to_i56, zext_i4_to_i57, zext_i4_to_i58, zext_i4_to_i59, zext_i4_to_i6, zext_i4_to_i60, zext_i4_to_i61, zext_i4_to_i62, zext_i4_to_i63, zext_i4_to_i64, zext_i4_to_i7, zext_i4_to_i8, zext_i4_to_i9
+[59 file(s)] Pattern:
+    main:
+    andi	a0, a0, 31
+    ret
+  Files: zext_i5_to_i10, zext_i5_to_i11, zext_i5_to_i12, zext_i5_to_i13, zext_i5_to_i14, zext_i5_to_i15, zext_i5_to_i16, zext_i5_to_i17, zext_i5_to_i18, zext_i5_to_i19, zext_i5_to_i20, zext_i5_to_i21, zext_i5_to_i22, zext_i5_to_i23, zext_i5_to_i24, zext_i5_to_i25, zext_i5_to_i26, zext_i5_to_i27, zext_i5_to_i28, zext_i5_to_i29, zext_i5_to_i30, zext_i5_to_i31, zext_i5_to_i32, zext_i5_to_i33, zext_i5_to_i34, zext_i5_to_i35, zext_i5_to_i36, zext_i5_to_i37, zext_i5_to_i38, zext_i5_to_i39, zext_i5_to_i40, zext_i5_to_i41, zext_i5_to_i42, zext_i5_to_i43, zext_i5_to_i44, zext_i5_to_i45, zext_i5_to_i46, zext_i5_to_i47, zext_i5_to_i48, zext_i5_to_i49, zext_i5_to_i50, zext_i5_to_i51, zext_i5_to_i52, zext_i5_to_i53, zext_i5_to_i54, zext_i5_to_i55, zext_i5_to_i56, zext_i5_to_i57, zext_i5_to_i58, zext_i5_to_i59, zext_i5_to_i6, zext_i5_to_i60, zext_i5_to_i61, zext_i5_to_i62, zext_i5_to_i63, zext_i5_to_i64, zext_i5_to_i7, zext_i5_to_i8, zext_i5_to_i9
+[58 file(s)] Pattern:
+    main:
+    andi	a0, a0, 63
+    ret
+  Files: zext_i6_to_i10, zext_i6_to_i11, zext_i6_to_i12, zext_i6_to_i13, zext_i6_to_i14, zext_i6_to_i15, zext_i6_to_i16, zext_i6_to_i17, zext_i6_to_i18, zext_i6_to_i19, zext_i6_to_i20, zext_i6_to_i21, zext_i6_to_i22, zext_i6_to_i23, zext_i6_to_i24, zext_i6_to_i25, zext_i6_to_i26, zext_i6_to_i27, zext_i6_to_i28, zext_i6_to_i29, zext_i6_to_i30, zext_i6_to_i31, zext_i6_to_i32, zext_i6_to_i33, zext_i6_to_i34, zext_i6_to_i35, zext_i6_to_i36, zext_i6_to_i37, zext_i6_to_i38, zext_i6_to_i39, zext_i6_to_i40, zext_i6_to_i41, zext_i6_to_i42, zext_i6_to_i43, zext_i6_to_i44, zext_i6_to_i45, zext_i6_to_i46, zext_i6_to_i47, zext_i6_to_i48, zext_i6_to_i49, zext_i6_to_i50, zext_i6_to_i51, zext_i6_to_i52, zext_i6_to_i53, zext_i6_to_i54, zext_i6_to_i55, zext_i6_to_i56, zext_i6_to_i57, zext_i6_to_i58, zext_i6_to_i59, zext_i6_to_i60, zext_i6_to_i61, zext_i6_to_i62, zext_i6_to_i63, zext_i6_to_i64, zext_i6_to_i7, zext_i6_to_i8, zext_i6_to_i9
+[57 file(s)] Pattern:
+    main:
+    andi	a0, a0, 127
+    ret
+  Files: zext_i7_to_i10, zext_i7_to_i11, zext_i7_to_i12, zext_i7_to_i13, zext_i7_to_i14, zext_i7_to_i15, zext_i7_to_i16, zext_i7_to_i17, zext_i7_to_i18, zext_i7_to_i19, zext_i7_to_i20, zext_i7_to_i21, zext_i7_to_i22, zext_i7_to_i23, zext_i7_to_i24, zext_i7_to_i25, zext_i7_to_i26, zext_i7_to_i27, zext_i7_to_i28, zext_i7_to_i29, zext_i7_to_i30, zext_i7_to_i31, zext_i7_to_i32, zext_i7_to_i33, zext_i7_to_i34, zext_i7_to_i35, zext_i7_to_i36, zext_i7_to_i37, zext_i7_to_i38, zext_i7_to_i39, zext_i7_to_i40, zext_i7_to_i41, zext_i7_to_i42, zext_i7_to_i43, zext_i7_to_i44, zext_i7_to_i45, zext_i7_to_i46, zext_i7_to_i47, zext_i7_to_i48, zext_i7_to_i49, zext_i7_to_i50, zext_i7_to_i51, zext_i7_to_i52, zext_i7_to_i53, zext_i7_to_i54, zext_i7_to_i55, zext_i7_to_i56, zext_i7_to_i57, zext_i7_to_i58, zext_i7_to_i59, zext_i7_to_i60, zext_i7_to_i61, zext_i7_to_i62, zext_i7_to_i63, zext_i7_to_i64, zext_i7_to_i8, zext_i7_to_i9
+[56 file(s)] Pattern:
+    main:
+    zext.b	a0, a0
+    ret
+  Files: zext_i8_to_i10, zext_i8_to_i11, zext_i8_to_i12, zext_i8_to_i13, zext_i8_to_i14, zext_i8_to_i15, zext_i8_to_i16, zext_i8_to_i17, zext_i8_to_i18, zext_i8_to_i19, zext_i8_to_i20, zext_i8_to_i21, zext_i8_to_i22, zext_i8_to_i23, zext_i8_to_i24, zext_i8_to_i25, zext_i8_to_i26, zext_i8_to_i27, zext_i8_to_i28, zext_i8_to_i29, zext_i8_to_i30, zext_i8_to_i31, zext_i8_to_i32, zext_i8_to_i33, zext_i8_to_i34, zext_i8_to_i35, zext_i8_to_i36, zext_i8_to_i37, zext_i8_to_i38, zext_i8_to_i39, zext_i8_to_i40, zext_i8_to_i41, zext_i8_to_i42, zext_i8_to_i43, zext_i8_to_i44, zext_i8_to_i45, zext_i8_to_i46, zext_i8_to_i47, zext_i8_to_i48, zext_i8_to_i49, zext_i8_to_i50, zext_i8_to_i51, zext_i8_to_i52, zext_i8_to_i53, zext_i8_to_i54, zext_i8_to_i55, zext_i8_to_i56, zext_i8_to_i57, zext_i8_to_i58, zext_i8_to_i59, zext_i8_to_i60, zext_i8_to_i61, zext_i8_to_i62, zext_i8_to_i63, zext_i8_to_i64, zext_i8_to_i9
+[55 file(s)] Pattern:
+    main:
+    andi	a0, a0, 511
+    ret
+  Files: zext_i9_to_i10, zext_i9_to_i11, zext_i9_to_i12, zext_i9_to_i13, zext_i9_to_i14, zext_i9_to_i15, zext_i9_to_i16, zext_i9_to_i17, zext_i9_to_i18, zext_i9_to_i19, zext_i9_to_i20, zext_i9_to_i21, zext_i9_to_i22, zext_i9_to_i23, zext_i9_to_i24, zext_i9_to_i25, zext_i9_to_i26, zext_i9_to_i27, zext_i9_to_i28, zext_i9_to_i29, zext_i9_to_i30, zext_i9_to_i31, zext_i9_to_i32, zext_i9_to_i33, zext_i9_to_i34, zext_i9_to_i35, zext_i9_to_i36, zext_i9_to_i37, zext_i9_to_i38, zext_i9_to_i39, zext_i9_to_i40, zext_i9_to_i41, zext_i9_to_i42, zext_i9_to_i43, zext_i9_to_i44, zext_i9_to_i45, zext_i9_to_i46, zext_i9_to_i47, zext_i9_to_i48, zext_i9_to_i49, zext_i9_to_i50, zext_i9_to_i51, zext_i9_to_i52, zext_i9_to_i53, zext_i9_to_i54, zext_i9_to_i55, zext_i9_to_i56, zext_i9_to_i57, zext_i9_to_i58, zext_i9_to_i59, zext_i9_to_i60, zext_i9_to_i61, zext_i9_to_i62, zext_i9_to_i63, zext_i9_to_i64
+[54 file(s)] Pattern:
+    main:
+    andi	a0, a0, 1023
+    ret
+  Files: zext_i10_to_i11, zext_i10_to_i12, zext_i10_to_i13, zext_i10_to_i14, zext_i10_to_i15, zext_i10_to_i16, zext_i10_to_i17, zext_i10_to_i18, zext_i10_to_i19, zext_i10_to_i20, zext_i10_to_i21, zext_i10_to_i22, zext_i10_to_i23, zext_i10_to_i24, zext_i10_to_i25, zext_i10_to_i26, zext_i10_to_i27, zext_i10_to_i28, zext_i10_to_i29, zext_i10_to_i30, zext_i10_to_i31, zext_i10_to_i32, zext_i10_to_i33, zext_i10_to_i34, zext_i10_to_i35, zext_i10_to_i36, zext_i10_to_i37, zext_i10_to_i38, zext_i10_to_i39, zext_i10_to_i40, zext_i10_to_i41, zext_i10_to_i42, zext_i10_to_i43, zext_i10_to_i44, zext_i10_to_i45, zext_i10_to_i46, zext_i10_to_i47, zext_i10_to_i48, zext_i10_to_i49, zext_i10_to_i50, zext_i10_to_i51, zext_i10_to_i52, zext_i10_to_i53, zext_i10_to_i54, zext_i10_to_i55, zext_i10_to_i56, zext_i10_to_i57, zext_i10_to_i58, zext_i10_to_i59, zext_i10_to_i60, zext_i10_to_i61, zext_i10_to_i62, zext_i10_to_i63, zext_i10_to_i64
+[53 file(s)] Pattern:
+    main:
+    andi	a0, a0, 2047
+    ret
+  Files: zext_i11_to_i12, zext_i11_to_i13, zext_i11_to_i14, zext_i11_to_i15, zext_i11_to_i16, zext_i11_to_i17, zext_i11_to_i18, zext_i11_to_i19, zext_i11_to_i20, zext_i11_to_i21, zext_i11_to_i22, zext_i11_to_i23, zext_i11_to_i24, zext_i11_to_i25, zext_i11_to_i26, zext_i11_to_i27, zext_i11_to_i28, zext_i11_to_i29, zext_i11_to_i30, zext_i11_to_i31, zext_i11_to_i32, zext_i11_to_i33, zext_i11_to_i34, zext_i11_to_i35, zext_i11_to_i36, zext_i11_to_i37, zext_i11_to_i38, zext_i11_to_i39, zext_i11_to_i40, zext_i11_to_i41, zext_i11_to_i42, zext_i11_to_i43, zext_i11_to_i44, zext_i11_to_i45, zext_i11_to_i46, zext_i11_to_i47, zext_i11_to_i48, zext_i11_to_i49, zext_i11_to_i50, zext_i11_to_i51, zext_i11_to_i52, zext_i11_to_i53, zext_i11_to_i54, zext_i11_to_i55, zext_i11_to_i56, zext_i11_to_i57, zext_i11_to_i58, zext_i11_to_i59, zext_i11_to_i60, zext_i11_to_i61, zext_i11_to_i62, zext_i11_to_i63, zext_i11_to_i64
+[52 file(s)] Pattern:
+    main:
+    slli	a0, a0, 52
+    srli	a0, a0, 52
+    ret
+  Files: zext_i12_to_i13, zext_i12_to_i14, zext_i12_to_i15, zext_i12_to_i16, zext_i12_to_i17, zext_i12_to_i18, zext_i12_to_i19, zext_i12_to_i20, zext_i12_to_i21, zext_i12_to_i22, zext_i12_to_i23, zext_i12_to_i24, zext_i12_to_i25, zext_i12_to_i26, zext_i12_to_i27, zext_i12_to_i28, zext_i12_to_i29, zext_i12_to_i30, zext_i12_to_i31, zext_i12_to_i32, zext_i12_to_i33, zext_i12_to_i34, zext_i12_to_i35, zext_i12_to_i36, zext_i12_to_i37, zext_i12_to_i38, zext_i12_to_i39, zext_i12_to_i40, zext_i12_to_i41, zext_i12_to_i42, zext_i12_to_i43, zext_i12_to_i44, zext_i12_to_i45, zext_i12_to_i46, zext_i12_to_i47, zext_i12_to_i48, zext_i12_to_i49, zext_i12_to_i50, zext_i12_to_i51, zext_i12_to_i52, zext_i12_to_i53, zext_i12_to_i54, zext_i12_to_i55, zext_i12_to_i56, zext_i12_to_i57, zext_i12_to_i58, zext_i12_to_i59, zext_i12_to_i60, zext_i12_to_i61, zext_i12_to_i62, zext_i12_to_i63, zext_i12_to_i64
+[51 file(s)] Pattern:
+    main:
+    slli	a0, a0, 51
+    srli	a0, a0, 51
+    ret
+  Files: zext_i13_to_i14, zext_i13_to_i15, zext_i13_to_i16, zext_i13_to_i17, zext_i13_to_i18, zext_i13_to_i19, zext_i13_to_i20, zext_i13_to_i21, zext_i13_to_i22, zext_i13_to_i23, zext_i13_to_i24, zext_i13_to_i25, zext_i13_to_i26, zext_i13_to_i27, zext_i13_to_i28, zext_i13_to_i29, zext_i13_to_i30, zext_i13_to_i31, zext_i13_to_i32, zext_i13_to_i33, zext_i13_to_i34, zext_i13_to_i35, zext_i13_to_i36, zext_i13_to_i37, zext_i13_to_i38, zext_i13_to_i39, zext_i13_to_i40, zext_i13_to_i41, zext_i13_to_i42, zext_i13_to_i43, zext_i13_to_i44, zext_i13_to_i45, zext_i13_to_i46, zext_i13_to_i47, zext_i13_to_i48, zext_i13_to_i49, zext_i13_to_i50, zext_i13_to_i51, zext_i13_to_i52, zext_i13_to_i53, zext_i13_to_i54, zext_i13_to_i55, zext_i13_to_i56, zext_i13_to_i57, zext_i13_to_i58, zext_i13_to_i59, zext_i13_to_i60, zext_i13_to_i61, zext_i13_to_i62, zext_i13_to_i63, zext_i13_to_i64
+[50 file(s)] Pattern:
+    main:
+    slli	a0, a0, 50
+    srli	a0, a0, 50
+    ret
+  Files: zext_i14_to_i15, zext_i14_to_i16, zext_i14_to_i17, zext_i14_to_i18, zext_i14_to_i19, zext_i14_to_i20, zext_i14_to_i21, zext_i14_to_i22, zext_i14_to_i23, zext_i14_to_i24, zext_i14_to_i25, zext_i14_to_i26, zext_i14_to_i27, zext_i14_to_i28, zext_i14_to_i29, zext_i14_to_i30, zext_i14_to_i31, zext_i14_to_i32, zext_i14_to_i33, zext_i14_to_i34, zext_i14_to_i35, zext_i14_to_i36, zext_i14_to_i37, zext_i14_to_i38, zext_i14_to_i39, zext_i14_to_i40, zext_i14_to_i41, zext_i14_to_i42, zext_i14_to_i43, zext_i14_to_i44, zext_i14_to_i45, zext_i14_to_i46, zext_i14_to_i47, zext_i14_to_i48, zext_i14_to_i49, zext_i14_to_i50, zext_i14_to_i51, zext_i14_to_i52, zext_i14_to_i53, zext_i14_to_i54, zext_i14_to_i55, zext_i14_to_i56, zext_i14_to_i57, zext_i14_to_i58, zext_i14_to_i59, zext_i14_to_i60, zext_i14_to_i61, zext_i14_to_i62, zext_i14_to_i63, zext_i14_to_i64
+[49 file(s)] Pattern:
+    main:
+    slli	a0, a0, 49
+    srli	a0, a0, 49
+    ret
+  Files: zext_i15_to_i16, zext_i15_to_i17, zext_i15_to_i18, zext_i15_to_i19, zext_i15_to_i20, zext_i15_to_i21, zext_i15_to_i22, zext_i15_to_i23, zext_i15_to_i24, zext_i15_to_i25, zext_i15_to_i26, zext_i15_to_i27, zext_i15_to_i28, zext_i15_to_i29, zext_i15_to_i30, zext_i15_to_i31, zext_i15_to_i32, zext_i15_to_i33, zext_i15_to_i34, zext_i15_to_i35, zext_i15_to_i36, zext_i15_to_i37, zext_i15_to_i38, zext_i15_to_i39, zext_i15_to_i40, zext_i15_to_i41, zext_i15_to_i42, zext_i15_to_i43, zext_i15_to_i44, zext_i15_to_i45, zext_i15_to_i46, zext_i15_to_i47, zext_i15_to_i48, zext_i15_to_i49, zext_i15_to_i50, zext_i15_to_i51, zext_i15_to_i52, zext_i15_to_i53, zext_i15_to_i54, zext_i15_to_i55, zext_i15_to_i56, zext_i15_to_i57, zext_i15_to_i58, zext_i15_to_i59, zext_i15_to_i60, zext_i15_to_i61, zext_i15_to_i62, zext_i15_to_i63, zext_i15_to_i64
+[48 file(s)] Pattern:
+    main:
+    zext.h	a0, a0
+    ret
+  Files: zext_i16_to_i17, zext_i16_to_i18, zext_i16_to_i19, zext_i16_to_i20, zext_i16_to_i21, zext_i16_to_i22, zext_i16_to_i23, zext_i16_to_i24, zext_i16_to_i25, zext_i16_to_i26, zext_i16_to_i27, zext_i16_to_i28, zext_i16_to_i29, zext_i16_to_i30, zext_i16_to_i31, zext_i16_to_i32, zext_i16_to_i33, zext_i16_to_i34, zext_i16_to_i35, zext_i16_to_i36, zext_i16_to_i37, zext_i16_to_i38, zext_i16_to_i39, zext_i16_to_i40, zext_i16_to_i41, zext_i16_to_i42, zext_i16_to_i43, zext_i16_to_i44, zext_i16_to_i45, zext_i16_to_i46, zext_i16_to_i47, zext_i16_to_i48, zext_i16_to_i49, zext_i16_to_i50, zext_i16_to_i51, zext_i16_to_i52, zext_i16_to_i53, zext_i16_to_i54, zext_i16_to_i55, zext_i16_to_i56, zext_i16_to_i57, zext_i16_to_i58, zext_i16_to_i59, zext_i16_to_i60, zext_i16_to_i61, zext_i16_to_i62, zext_i16_to_i63, zext_i16_to_i64
+[47 file(s)] Pattern:
+    main:
+    slli	a0, a0, 47
+    srli	a0, a0, 47
+    ret
+  Files: zext_i17_to_i18, zext_i17_to_i19, zext_i17_to_i20, zext_i17_to_i21, zext_i17_to_i22, zext_i17_to_i23, zext_i17_to_i24, zext_i17_to_i25, zext_i17_to_i26, zext_i17_to_i27, zext_i17_to_i28, zext_i17_to_i29, zext_i17_to_i30, zext_i17_to_i31, zext_i17_to_i32, zext_i17_to_i33, zext_i17_to_i34, zext_i17_to_i35, zext_i17_to_i36, zext_i17_to_i37, zext_i17_to_i38, zext_i17_to_i39, zext_i17_to_i40, zext_i17_to_i41, zext_i17_to_i42, zext_i17_to_i43, zext_i17_to_i44, zext_i17_to_i45, zext_i17_to_i46, zext_i17_to_i47, zext_i17_to_i48, zext_i17_to_i49, zext_i17_to_i50, zext_i17_to_i51, zext_i17_to_i52, zext_i17_to_i53, zext_i17_to_i54, zext_i17_to_i55, zext_i17_to_i56, zext_i17_to_i57, zext_i17_to_i58, zext_i17_to_i59, zext_i17_to_i60, zext_i17_to_i61, zext_i17_to_i62, zext_i17_to_i63, zext_i17_to_i64
+[46 file(s)] Pattern:
+    main:
+    slli	a0, a0, 46
+    srli	a0, a0, 46
+    ret
+  Files: zext_i18_to_i19, zext_i18_to_i20, zext_i18_to_i21, zext_i18_to_i22, zext_i18_to_i23, zext_i18_to_i24, zext_i18_to_i25, zext_i18_to_i26, zext_i18_to_i27, zext_i18_to_i28, zext_i18_to_i29, zext_i18_to_i30, zext_i18_to_i31, zext_i18_to_i32, zext_i18_to_i33, zext_i18_to_i34, zext_i18_to_i35, zext_i18_to_i36, zext_i18_to_i37, zext_i18_to_i38, zext_i18_to_i39, zext_i18_to_i40, zext_i18_to_i41, zext_i18_to_i42, zext_i18_to_i43, zext_i18_to_i44, zext_i18_to_i45, zext_i18_to_i46, zext_i18_to_i47, zext_i18_to_i48, zext_i18_to_i49, zext_i18_to_i50, zext_i18_to_i51, zext_i18_to_i52, zext_i18_to_i53, zext_i18_to_i54, zext_i18_to_i55, zext_i18_to_i56, zext_i18_to_i57, zext_i18_to_i58, zext_i18_to_i59, zext_i18_to_i60, zext_i18_to_i61, zext_i18_to_i62, zext_i18_to_i63, zext_i18_to_i64
+[45 file(s)] Pattern:
+    main:
+    slli	a0, a0, 45
+    srli	a0, a0, 45
+    ret
+  Files: zext_i19_to_i20, zext_i19_to_i21, zext_i19_to_i22, zext_i19_to_i23, zext_i19_to_i24, zext_i19_to_i25, zext_i19_to_i26, zext_i19_to_i27, zext_i19_to_i28, zext_i19_to_i29, zext_i19_to_i30, zext_i19_to_i31, zext_i19_to_i32, zext_i19_to_i33, zext_i19_to_i34, zext_i19_to_i35, zext_i19_to_i36, zext_i19_to_i37, zext_i19_to_i38, zext_i19_to_i39, zext_i19_to_i40, zext_i19_to_i41, zext_i19_to_i42, zext_i19_to_i43, zext_i19_to_i44, zext_i19_to_i45, zext_i19_to_i46, zext_i19_to_i47, zext_i19_to_i48, zext_i19_to_i49, zext_i19_to_i50, zext_i19_to_i51, zext_i19_to_i52, zext_i19_to_i53, zext_i19_to_i54, zext_i19_to_i55, zext_i19_to_i56, zext_i19_to_i57, zext_i19_to_i58, zext_i19_to_i59, zext_i19_to_i60, zext_i19_to_i61, zext_i19_to_i62, zext_i19_to_i63, zext_i19_to_i64
+[44 file(s)] Pattern:
+    main:
+    slli	a0, a0, 44
+    srli	a0, a0, 44
+    ret
+  Files: zext_i20_to_i21, zext_i20_to_i22, zext_i20_to_i23, zext_i20_to_i24, zext_i20_to_i25, zext_i20_to_i26, zext_i20_to_i27, zext_i20_to_i28, zext_i20_to_i29, zext_i20_to_i30, zext_i20_to_i31, zext_i20_to_i32, zext_i20_to_i33, zext_i20_to_i34, zext_i20_to_i35, zext_i20_to_i36, zext_i20_to_i37, zext_i20_to_i38, zext_i20_to_i39, zext_i20_to_i40, zext_i20_to_i41, zext_i20_to_i42, zext_i20_to_i43, zext_i20_to_i44, zext_i20_to_i45, zext_i20_to_i46, zext_i20_to_i47, zext_i20_to_i48, zext_i20_to_i49, zext_i20_to_i50, zext_i20_to_i51, zext_i20_to_i52, zext_i20_to_i53, zext_i20_to_i54, zext_i20_to_i55, zext_i20_to_i56, zext_i20_to_i57, zext_i20_to_i58, zext_i20_to_i59, zext_i20_to_i60, zext_i20_to_i61, zext_i20_to_i62, zext_i20_to_i63, zext_i20_to_i64
+[43 file(s)] Pattern:
+    main:
+    slli	a0, a0, 43
+    srli	a0, a0, 43
+    ret
+  Files: zext_i21_to_i22, zext_i21_to_i23, zext_i21_to_i24, zext_i21_to_i25, zext_i21_to_i26, zext_i21_to_i27, zext_i21_to_i28, zext_i21_to_i29, zext_i21_to_i30, zext_i21_to_i31, zext_i21_to_i32, zext_i21_to_i33, zext_i21_to_i34, zext_i21_to_i35, zext_i21_to_i36, zext_i21_to_i37, zext_i21_to_i38, zext_i21_to_i39, zext_i21_to_i40, zext_i21_to_i41, zext_i21_to_i42, zext_i21_to_i43, zext_i21_to_i44, zext_i21_to_i45, zext_i21_to_i46, zext_i21_to_i47, zext_i21_to_i48, zext_i21_to_i49, zext_i21_to_i50, zext_i21_to_i51, zext_i21_to_i52, zext_i21_to_i53, zext_i21_to_i54, zext_i21_to_i55, zext_i21_to_i56, zext_i21_to_i57, zext_i21_to_i58, zext_i21_to_i59, zext_i21_to_i60, zext_i21_to_i61, zext_i21_to_i62, zext_i21_to_i63, zext_i21_to_i64
+[42 file(s)] Pattern:
+    main:
+    slli	a0, a0, 42
+    srli	a0, a0, 42
+    ret
+  Files: zext_i22_to_i23, zext_i22_to_i24, zext_i22_to_i25, zext_i22_to_i26, zext_i22_to_i27, zext_i22_to_i28, zext_i22_to_i29, zext_i22_to_i30, zext_i22_to_i31, zext_i22_to_i32, zext_i22_to_i33, zext_i22_to_i34, zext_i22_to_i35, zext_i22_to_i36, zext_i22_to_i37, zext_i22_to_i38, zext_i22_to_i39, zext_i22_to_i40, zext_i22_to_i41, zext_i22_to_i42, zext_i22_to_i43, zext_i22_to_i44, zext_i22_to_i45, zext_i22_to_i46, zext_i22_to_i47, zext_i22_to_i48, zext_i22_to_i49, zext_i22_to_i50, zext_i22_to_i51, zext_i22_to_i52, zext_i22_to_i53, zext_i22_to_i54, zext_i22_to_i55, zext_i22_to_i56, zext_i22_to_i57, zext_i22_to_i58, zext_i22_to_i59, zext_i22_to_i60, zext_i22_to_i61, zext_i22_to_i62, zext_i22_to_i63, zext_i22_to_i64
+[41 file(s)] Pattern:
+    main:
+    slli	a0, a0, 41
+    srli	a0, a0, 41
+    ret
+  Files: zext_i23_to_i24, zext_i23_to_i25, zext_i23_to_i26, zext_i23_to_i27, zext_i23_to_i28, zext_i23_to_i29, zext_i23_to_i30, zext_i23_to_i31, zext_i23_to_i32, zext_i23_to_i33, zext_i23_to_i34, zext_i23_to_i35, zext_i23_to_i36, zext_i23_to_i37, zext_i23_to_i38, zext_i23_to_i39, zext_i23_to_i40, zext_i23_to_i41, zext_i23_to_i42, zext_i23_to_i43, zext_i23_to_i44, zext_i23_to_i45, zext_i23_to_i46, zext_i23_to_i47, zext_i23_to_i48, zext_i23_to_i49, zext_i23_to_i50, zext_i23_to_i51, zext_i23_to_i52, zext_i23_to_i53, zext_i23_to_i54, zext_i23_to_i55, zext_i23_to_i56, zext_i23_to_i57, zext_i23_to_i58, zext_i23_to_i59, zext_i23_to_i60, zext_i23_to_i61, zext_i23_to_i62, zext_i23_to_i63, zext_i23_to_i64
+[40 file(s)] Pattern:
+    main:
+    slli	a0, a0, 40
+    srli	a0, a0, 40
+    ret
+  Files: zext_i24_to_i25, zext_i24_to_i26, zext_i24_to_i27, zext_i24_to_i28, zext_i24_to_i29, zext_i24_to_i30, zext_i24_to_i31, zext_i24_to_i32, zext_i24_to_i33, zext_i24_to_i34, zext_i24_to_i35, zext_i24_to_i36, zext_i24_to_i37, zext_i24_to_i38, zext_i24_to_i39, zext_i24_to_i40, zext_i24_to_i41, zext_i24_to_i42, zext_i24_to_i43, zext_i24_to_i44, zext_i24_to_i45, zext_i24_to_i46, zext_i24_to_i47, zext_i24_to_i48, zext_i24_to_i49, zext_i24_to_i50, zext_i24_to_i51, zext_i24_to_i52, zext_i24_to_i53, zext_i24_to_i54, zext_i24_to_i55, zext_i24_to_i56, zext_i24_to_i57, zext_i24_to_i58, zext_i24_to_i59, zext_i24_to_i60, zext_i24_to_i61, zext_i24_to_i62, zext_i24_to_i63, zext_i24_to_i64
+[39 file(s)] Pattern:
+    main:
+    slli	a0, a0, 39
+    srli	a0, a0, 39
+    ret
+  Files: zext_i25_to_i26, zext_i25_to_i27, zext_i25_to_i28, zext_i25_to_i29, zext_i25_to_i30, zext_i25_to_i31, zext_i25_to_i32, zext_i25_to_i33, zext_i25_to_i34, zext_i25_to_i35, zext_i25_to_i36, zext_i25_to_i37, zext_i25_to_i38, zext_i25_to_i39, zext_i25_to_i40, zext_i25_to_i41, zext_i25_to_i42, zext_i25_to_i43, zext_i25_to_i44, zext_i25_to_i45, zext_i25_to_i46, zext_i25_to_i47, zext_i25_to_i48, zext_i25_to_i49, zext_i25_to_i50, zext_i25_to_i51, zext_i25_to_i52, zext_i25_to_i53, zext_i25_to_i54, zext_i25_to_i55, zext_i25_to_i56, zext_i25_to_i57, zext_i25_to_i58, zext_i25_to_i59, zext_i25_to_i60, zext_i25_to_i61, zext_i25_to_i62, zext_i25_to_i63, zext_i25_to_i64
+[38 file(s)] Pattern:
+    main:
+    slli	a0, a0, 38
+    srli	a0, a0, 38
+    ret
+  Files: zext_i26_to_i27, zext_i26_to_i28, zext_i26_to_i29, zext_i26_to_i30, zext_i26_to_i31, zext_i26_to_i32, zext_i26_to_i33, zext_i26_to_i34, zext_i26_to_i35, zext_i26_to_i36, zext_i26_to_i37, zext_i26_to_i38, zext_i26_to_i39, zext_i26_to_i40, zext_i26_to_i41, zext_i26_to_i42, zext_i26_to_i43, zext_i26_to_i44, zext_i26_to_i45, zext_i26_to_i46, zext_i26_to_i47, zext_i26_to_i48, zext_i26_to_i49, zext_i26_to_i50, zext_i26_to_i51, zext_i26_to_i52, zext_i26_to_i53, zext_i26_to_i54, zext_i26_to_i55, zext_i26_to_i56, zext_i26_to_i57, zext_i26_to_i58, zext_i26_to_i59, zext_i26_to_i60, zext_i26_to_i61, zext_i26_to_i62, zext_i26_to_i63, zext_i26_to_i64
+[37 file(s)] Pattern:
+    main:
+    slli	a0, a0, 37
+    srli	a0, a0, 37
+    ret
+  Files: zext_i27_to_i28, zext_i27_to_i29, zext_i27_to_i30, zext_i27_to_i31, zext_i27_to_i32, zext_i27_to_i33, zext_i27_to_i34, zext_i27_to_i35, zext_i27_to_i36, zext_i27_to_i37, zext_i27_to_i38, zext_i27_to_i39, zext_i27_to_i40, zext_i27_to_i41, zext_i27_to_i42, zext_i27_to_i43, zext_i27_to_i44, zext_i27_to_i45, zext_i27_to_i46, zext_i27_to_i47, zext_i27_to_i48, zext_i27_to_i49, zext_i27_to_i50, zext_i27_to_i51, zext_i27_to_i52, zext_i27_to_i53, zext_i27_to_i54, zext_i27_to_i55, zext_i27_to_i56, zext_i27_to_i57, zext_i27_to_i58, zext_i27_to_i59, zext_i27_to_i60, zext_i27_to_i61, zext_i27_to_i62, zext_i27_to_i63, zext_i27_to_i64
+[36 file(s)] Pattern:
+    main:
+    slli	a0, a0, 36
+    srli	a0, a0, 36
+    ret
+  Files: zext_i28_to_i29, zext_i28_to_i30, zext_i28_to_i31, zext_i28_to_i32, zext_i28_to_i33, zext_i28_to_i34, zext_i28_to_i35, zext_i28_to_i36, zext_i28_to_i37, zext_i28_to_i38, zext_i28_to_i39, zext_i28_to_i40, zext_i28_to_i41, zext_i28_to_i42, zext_i28_to_i43, zext_i28_to_i44, zext_i28_to_i45, zext_i28_to_i46, zext_i28_to_i47, zext_i28_to_i48, zext_i28_to_i49, zext_i28_to_i50, zext_i28_to_i51, zext_i28_to_i52, zext_i28_to_i53, zext_i28_to_i54, zext_i28_to_i55, zext_i28_to_i56, zext_i28_to_i57, zext_i28_to_i58, zext_i28_to_i59, zext_i28_to_i60, zext_i28_to_i61, zext_i28_to_i62, zext_i28_to_i63, zext_i28_to_i64
+[35 file(s)] Pattern:
+    main:
+    slli	a0, a0, 35
+    srli	a0, a0, 35
+    ret
+  Files: zext_i29_to_i30, zext_i29_to_i31, zext_i29_to_i32, zext_i29_to_i33, zext_i29_to_i34, zext_i29_to_i35, zext_i29_to_i36, zext_i29_to_i37, zext_i29_to_i38, zext_i29_to_i39, zext_i29_to_i40, zext_i29_to_i41, zext_i29_to_i42, zext_i29_to_i43, zext_i29_to_i44, zext_i29_to_i45, zext_i29_to_i46, zext_i29_to_i47, zext_i29_to_i48, zext_i29_to_i49, zext_i29_to_i50, zext_i29_to_i51, zext_i29_to_i52, zext_i29_to_i53, zext_i29_to_i54, zext_i29_to_i55, zext_i29_to_i56, zext_i29_to_i57, zext_i29_to_i58, zext_i29_to_i59, zext_i29_to_i60, zext_i29_to_i61, zext_i29_to_i62, zext_i29_to_i63, zext_i29_to_i64
+[34 file(s)] Pattern:
+    main:
+    slli	a0, a0, 34
+    srli	a0, a0, 34
+    ret
+  Files: zext_i30_to_i31, zext_i30_to_i32, zext_i30_to_i33, zext_i30_to_i34, zext_i30_to_i35, zext_i30_to_i36, zext_i30_to_i37, zext_i30_to_i38, zext_i30_to_i39, zext_i30_to_i40, zext_i30_to_i41, zext_i30_to_i42, zext_i30_to_i43, zext_i30_to_i44, zext_i30_to_i45, zext_i30_to_i46, zext_i30_to_i47, zext_i30_to_i48, zext_i30_to_i49, zext_i30_to_i50, zext_i30_to_i51, zext_i30_to_i52, zext_i30_to_i53, zext_i30_to_i54, zext_i30_to_i55, zext_i30_to_i56, zext_i30_to_i57, zext_i30_to_i58, zext_i30_to_i59, zext_i30_to_i60, zext_i30_to_i61, zext_i30_to_i62, zext_i30_to_i63, zext_i30_to_i64
+[33 file(s)] Pattern:
+    main:
+    slli	a0, a0, 33
+    srli	a0, a0, 33
+    ret
+  Files: zext_i31_to_i32, zext_i31_to_i33, zext_i31_to_i34, zext_i31_to_i35, zext_i31_to_i36, zext_i31_to_i37, zext_i31_to_i38, zext_i31_to_i39, zext_i31_to_i40, zext_i31_to_i41, zext_i31_to_i42, zext_i31_to_i43, zext_i31_to_i44, zext_i31_to_i45, zext_i31_to_i46, zext_i31_to_i47, zext_i31_to_i48, zext_i31_to_i49, zext_i31_to_i50, zext_i31_to_i51, zext_i31_to_i52, zext_i31_to_i53, zext_i31_to_i54, zext_i31_to_i55, zext_i31_to_i56, zext_i31_to_i57, zext_i31_to_i58, zext_i31_to_i59, zext_i31_to_i60, zext_i31_to_i61, zext_i31_to_i62, zext_i31_to_i63, zext_i31_to_i64
+[32 file(s)] Pattern:
+    main:
+    zext.w	a0, a0
+    ret
+  Files: zext_i32_to_i33, zext_i32_to_i34, zext_i32_to_i35, zext_i32_to_i36, zext_i32_to_i37, zext_i32_to_i38, zext_i32_to_i39, zext_i32_to_i40, zext_i32_to_i41, zext_i32_to_i42, zext_i32_to_i43, zext_i32_to_i44, zext_i32_to_i45, zext_i32_to_i46, zext_i32_to_i47, zext_i32_to_i48, zext_i32_to_i49, zext_i32_to_i50, zext_i32_to_i51, zext_i32_to_i52, zext_i32_to_i53, zext_i32_to_i54, zext_i32_to_i55, zext_i32_to_i56, zext_i32_to_i57, zext_i32_to_i58, zext_i32_to_i59, zext_i32_to_i60, zext_i32_to_i61, zext_i32_to_i62, zext_i32_to_i63, zext_i32_to_i64
+[31 file(s)] Pattern:
+    main:
+    slli	a0, a0, 31
+    srli	a0, a0, 31
+    ret
+  Files: zext_i33_to_i34, zext_i33_to_i35, zext_i33_to_i36, zext_i33_to_i37, zext_i33_to_i38, zext_i33_to_i39, zext_i33_to_i40, zext_i33_to_i41, zext_i33_to_i42, zext_i33_to_i43, zext_i33_to_i44, zext_i33_to_i45, zext_i33_to_i46, zext_i33_to_i47, zext_i33_to_i48, zext_i33_to_i49, zext_i33_to_i50, zext_i33_to_i51, zext_i33_to_i52, zext_i33_to_i53, zext_i33_to_i54, zext_i33_to_i55, zext_i33_to_i56, zext_i33_to_i57, zext_i33_to_i58, zext_i33_to_i59, zext_i33_to_i60, zext_i33_to_i61, zext_i33_to_i62, zext_i33_to_i63, zext_i33_to_i64
+[30 file(s)] Pattern:
+    main:
+    slli	a0, a0, 30
+    srli	a0, a0, 30
+    ret
+  Files: zext_i34_to_i35, zext_i34_to_i36, zext_i34_to_i37, zext_i34_to_i38, zext_i34_to_i39, zext_i34_to_i40, zext_i34_to_i41, zext_i34_to_i42, zext_i34_to_i43, zext_i34_to_i44, zext_i34_to_i45, zext_i34_to_i46, zext_i34_to_i47, zext_i34_to_i48, zext_i34_to_i49, zext_i34_to_i50, zext_i34_to_i51, zext_i34_to_i52, zext_i34_to_i53, zext_i34_to_i54, zext_i34_to_i55, zext_i34_to_i56, zext_i34_to_i57, zext_i34_to_i58, zext_i34_to_i59, zext_i34_to_i60, zext_i34_to_i61, zext_i34_to_i62, zext_i34_to_i63, zext_i34_to_i64
+[29 file(s)] Pattern:
+    main:
+    slli	a0, a0, 29
+    srli	a0, a0, 29
+    ret
+  Files: zext_i35_to_i36, zext_i35_to_i37, zext_i35_to_i38, zext_i35_to_i39, zext_i35_to_i40, zext_i35_to_i41, zext_i35_to_i42, zext_i35_to_i43, zext_i35_to_i44, zext_i35_to_i45, zext_i35_to_i46, zext_i35_to_i47, zext_i35_to_i48, zext_i35_to_i49, zext_i35_to_i50, zext_i35_to_i51, zext_i35_to_i52, zext_i35_to_i53, zext_i35_to_i54, zext_i35_to_i55, zext_i35_to_i56, zext_i35_to_i57, zext_i35_to_i58, zext_i35_to_i59, zext_i35_to_i60, zext_i35_to_i61, zext_i35_to_i62, zext_i35_to_i63, zext_i35_to_i64
+[28 file(s)] Pattern:
+    main:
+    slli	a0, a0, 28
+    srli	a0, a0, 28
+    ret
+  Files: zext_i36_to_i37, zext_i36_to_i38, zext_i36_to_i39, zext_i36_to_i40, zext_i36_to_i41, zext_i36_to_i42, zext_i36_to_i43, zext_i36_to_i44, zext_i36_to_i45, zext_i36_to_i46, zext_i36_to_i47, zext_i36_to_i48, zext_i36_to_i49, zext_i36_to_i50, zext_i36_to_i51, zext_i36_to_i52, zext_i36_to_i53, zext_i36_to_i54, zext_i36_to_i55, zext_i36_to_i56, zext_i36_to_i57, zext_i36_to_i58, zext_i36_to_i59, zext_i36_to_i60, zext_i36_to_i61, zext_i36_to_i62, zext_i36_to_i63, zext_i36_to_i64
+[27 file(s)] Pattern:
+    main:
+    slli	a0, a0, 27
+    srli	a0, a0, 27
+    ret
+  Files: zext_i37_to_i38, zext_i37_to_i39, zext_i37_to_i40, zext_i37_to_i41, zext_i37_to_i42, zext_i37_to_i43, zext_i37_to_i44, zext_i37_to_i45, zext_i37_to_i46, zext_i37_to_i47, zext_i37_to_i48, zext_i37_to_i49, zext_i37_to_i50, zext_i37_to_i51, zext_i37_to_i52, zext_i37_to_i53, zext_i37_to_i54, zext_i37_to_i55, zext_i37_to_i56, zext_i37_to_i57, zext_i37_to_i58, zext_i37_to_i59, zext_i37_to_i60, zext_i37_to_i61, zext_i37_to_i62, zext_i37_to_i63, zext_i37_to_i64
+[26 file(s)] Pattern:
+    main:
+    slli	a0, a0, 26
+    srli	a0, a0, 26
+    ret
+  Files: zext_i38_to_i39, zext_i38_to_i40, zext_i38_to_i41, zext_i38_to_i42, zext_i38_to_i43, zext_i38_to_i44, zext_i38_to_i45, zext_i38_to_i46, zext_i38_to_i47, zext_i38_to_i48, zext_i38_to_i49, zext_i38_to_i50, zext_i38_to_i51, zext_i38_to_i52, zext_i38_to_i53, zext_i38_to_i54, zext_i38_to_i55, zext_i38_to_i56, zext_i38_to_i57, zext_i38_to_i58, zext_i38_to_i59, zext_i38_to_i60, zext_i38_to_i61, zext_i38_to_i62, zext_i38_to_i63, zext_i38_to_i64
+[25 file(s)] Pattern:
+    main:
+    slli	a0, a0, 25
+    srli	a0, a0, 25
+    ret
+  Files: zext_i39_to_i40, zext_i39_to_i41, zext_i39_to_i42, zext_i39_to_i43, zext_i39_to_i44, zext_i39_to_i45, zext_i39_to_i46, zext_i39_to_i47, zext_i39_to_i48, zext_i39_to_i49, zext_i39_to_i50, zext_i39_to_i51, zext_i39_to_i52, zext_i39_to_i53, zext_i39_to_i54, zext_i39_to_i55, zext_i39_to_i56, zext_i39_to_i57, zext_i39_to_i58, zext_i39_to_i59, zext_i39_to_i60, zext_i39_to_i61, zext_i39_to_i62, zext_i39_to_i63, zext_i39_to_i64
+[24 file(s)] Pattern:
+    main:
+    slli	a0, a0, 24
+    srli	a0, a0, 24
+    ret
+  Files: zext_i40_to_i41, zext_i40_to_i42, zext_i40_to_i43, zext_i40_to_i44, zext_i40_to_i45, zext_i40_to_i46, zext_i40_to_i47, zext_i40_to_i48, zext_i40_to_i49, zext_i40_to_i50, zext_i40_to_i51, zext_i40_to_i52, zext_i40_to_i53, zext_i40_to_i54, zext_i40_to_i55, zext_i40_to_i56, zext_i40_to_i57, zext_i40_to_i58, zext_i40_to_i59, zext_i40_to_i60, zext_i40_to_i61, zext_i40_to_i62, zext_i40_to_i63, zext_i40_to_i64
+[23 file(s)] Pattern:
+    main:
+    slli	a0, a0, 23
+    srli	a0, a0, 23
+    ret
+  Files: zext_i41_to_i42, zext_i41_to_i43, zext_i41_to_i44, zext_i41_to_i45, zext_i41_to_i46, zext_i41_to_i47, zext_i41_to_i48, zext_i41_to_i49, zext_i41_to_i50, zext_i41_to_i51, zext_i41_to_i52, zext_i41_to_i53, zext_i41_to_i54, zext_i41_to_i55, zext_i41_to_i56, zext_i41_to_i57, zext_i41_to_i58, zext_i41_to_i59, zext_i41_to_i60, zext_i41_to_i61, zext_i41_to_i62, zext_i41_to_i63, zext_i41_to_i64
+[22 file(s)] Pattern:
+    main:
+    slli	a0, a0, 22
+    srli	a0, a0, 22
+    ret
+  Files: zext_i42_to_i43, zext_i42_to_i44, zext_i42_to_i45, zext_i42_to_i46, zext_i42_to_i47, zext_i42_to_i48, zext_i42_to_i49, zext_i42_to_i50, zext_i42_to_i51, zext_i42_to_i52, zext_i42_to_i53, zext_i42_to_i54, zext_i42_to_i55, zext_i42_to_i56, zext_i42_to_i57, zext_i42_to_i58, zext_i42_to_i59, zext_i42_to_i60, zext_i42_to_i61, zext_i42_to_i62, zext_i42_to_i63, zext_i42_to_i64
+[21 file(s)] Pattern:
+    main:
+    slli	a0, a0, 21
+    srli	a0, a0, 21
+    ret
+  Files: zext_i43_to_i44, zext_i43_to_i45, zext_i43_to_i46, zext_i43_to_i47, zext_i43_to_i48, zext_i43_to_i49, zext_i43_to_i50, zext_i43_to_i51, zext_i43_to_i52, zext_i43_to_i53, zext_i43_to_i54, zext_i43_to_i55, zext_i43_to_i56, zext_i43_to_i57, zext_i43_to_i58, zext_i43_to_i59, zext_i43_to_i60, zext_i43_to_i61, zext_i43_to_i62, zext_i43_to_i63, zext_i43_to_i64
+[20 file(s)] Pattern:
+    main:
+    slli	a0, a0, 20
+    srli	a0, a0, 20
+    ret
+  Files: zext_i44_to_i45, zext_i44_to_i46, zext_i44_to_i47, zext_i44_to_i48, zext_i44_to_i49, zext_i44_to_i50, zext_i44_to_i51, zext_i44_to_i52, zext_i44_to_i53, zext_i44_to_i54, zext_i44_to_i55, zext_i44_to_i56, zext_i44_to_i57, zext_i44_to_i58, zext_i44_to_i59, zext_i44_to_i60, zext_i44_to_i61, zext_i44_to_i62, zext_i44_to_i63, zext_i44_to_i64
+[19 file(s)] Pattern:
+    main:
+    slli	a0, a0, 19
+    srli	a0, a0, 19
+    ret
+  Files: zext_i45_to_i46, zext_i45_to_i47, zext_i45_to_i48, zext_i45_to_i49, zext_i45_to_i50, zext_i45_to_i51, zext_i45_to_i52, zext_i45_to_i53, zext_i45_to_i54, zext_i45_to_i55, zext_i45_to_i56, zext_i45_to_i57, zext_i45_to_i58, zext_i45_to_i59, zext_i45_to_i60, zext_i45_to_i61, zext_i45_to_i62, zext_i45_to_i63, zext_i45_to_i64
+[18 file(s)] Pattern:
+    main:
+    slli	a0, a0, 18
+    srli	a0, a0, 18
+    ret
+  Files: zext_i46_to_i47, zext_i46_to_i48, zext_i46_to_i49, zext_i46_to_i50, zext_i46_to_i51, zext_i46_to_i52, zext_i46_to_i53, zext_i46_to_i54, zext_i46_to_i55, zext_i46_to_i56, zext_i46_to_i57, zext_i46_to_i58, zext_i46_to_i59, zext_i46_to_i60, zext_i46_to_i61, zext_i46_to_i62, zext_i46_to_i63, zext_i46_to_i64
+[17 file(s)] Pattern:
+    main:
+    slli	a0, a0, 17
+    srli	a0, a0, 17
+    ret
+  Files: zext_i47_to_i48, zext_i47_to_i49, zext_i47_to_i50, zext_i47_to_i51, zext_i47_to_i52, zext_i47_to_i53, zext_i47_to_i54, zext_i47_to_i55, zext_i47_to_i56, zext_i47_to_i57, zext_i47_to_i58, zext_i47_to_i59, zext_i47_to_i60, zext_i47_to_i61, zext_i47_to_i62, zext_i47_to_i63, zext_i47_to_i64
+[16 file(s)] Pattern:
+    main:
+    slli	a0, a0, 16
+    srli	a0, a0, 16
+    ret
+  Files: zext_i48_to_i49, zext_i48_to_i50, zext_i48_to_i51, zext_i48_to_i52, zext_i48_to_i53, zext_i48_to_i54, zext_i48_to_i55, zext_i48_to_i56, zext_i48_to_i57, zext_i48_to_i58, zext_i48_to_i59, zext_i48_to_i60, zext_i48_to_i61, zext_i48_to_i62, zext_i48_to_i63, zext_i48_to_i64
+[15 file(s)] Pattern:
+    main:
+    slli	a0, a0, 15
+    srli	a0, a0, 15
+    ret
+  Files: zext_i49_to_i50, zext_i49_to_i51, zext_i49_to_i52, zext_i49_to_i53, zext_i49_to_i54, zext_i49_to_i55, zext_i49_to_i56, zext_i49_to_i57, zext_i49_to_i58, zext_i49_to_i59, zext_i49_to_i60, zext_i49_to_i61, zext_i49_to_i62, zext_i49_to_i63, zext_i49_to_i64
+[14 file(s)] Pattern:
+    main:
+    slli	a0, a0, 14
+    srli	a0, a0, 14
+    ret
+  Files: zext_i50_to_i51, zext_i50_to_i52, zext_i50_to_i53, zext_i50_to_i54, zext_i50_to_i55, zext_i50_to_i56, zext_i50_to_i57, zext_i50_to_i58, zext_i50_to_i59, zext_i50_to_i60, zext_i50_to_i61, zext_i50_to_i62, zext_i50_to_i63, zext_i50_to_i64
+[13 file(s)] Pattern:
+    main:
+    slli	a0, a0, 13
+    srli	a0, a0, 13
+    ret
+  Files: zext_i51_to_i52, zext_i51_to_i53, zext_i51_to_i54, zext_i51_to_i55, zext_i51_to_i56, zext_i51_to_i57, zext_i51_to_i58, zext_i51_to_i59, zext_i51_to_i60, zext_i51_to_i61, zext_i51_to_i62, zext_i51_to_i63, zext_i51_to_i64
+[12 file(s)] Pattern:
+    main:
+    slli	a0, a0, 12
+    srli	a0, a0, 12
+    ret
+  Files: zext_i52_to_i53, zext_i52_to_i54, zext_i52_to_i55, zext_i52_to_i56, zext_i52_to_i57, zext_i52_to_i58, zext_i52_to_i59, zext_i52_to_i60, zext_i52_to_i61, zext_i52_to_i62, zext_i52_to_i63, zext_i52_to_i64
+[11 file(s)] Pattern:
+    main:
+    slli	a0, a0, 11
+    srli	a0, a0, 11
+    ret
+  Files: zext_i53_to_i54, zext_i53_to_i55, zext_i53_to_i56, zext_i53_to_i57, zext_i53_to_i58, zext_i53_to_i59, zext_i53_to_i60, zext_i53_to_i61, zext_i53_to_i62, zext_i53_to_i63, zext_i53_to_i64
+[10 file(s)] Pattern:
+    main:
+    slli	a0, a0, 10
+    srli	a0, a0, 10
+    ret
+  Files: zext_i54_to_i55, zext_i54_to_i56, zext_i54_to_i57, zext_i54_to_i58, zext_i54_to_i59, zext_i54_to_i60, zext_i54_to_i61, zext_i54_to_i62, zext_i54_to_i63, zext_i54_to_i64
+[9 file(s)] Pattern:
+    main:
+    slli	a0, a0, 9
+    srli	a0, a0, 9
+    ret
+  Files: zext_i55_to_i56, zext_i55_to_i57, zext_i55_to_i58, zext_i55_to_i59, zext_i55_to_i60, zext_i55_to_i61, zext_i55_to_i62, zext_i55_to_i63, zext_i55_to_i64
+[8 file(s)] Pattern:
+    main:
+    slli	a0, a0, 8
+    srli	a0, a0, 8
+    ret
+  Files: zext_i56_to_i57, zext_i56_to_i58, zext_i56_to_i59, zext_i56_to_i60, zext_i56_to_i61, zext_i56_to_i62, zext_i56_to_i63, zext_i56_to_i64
+[7 file(s)] Pattern:
+    main:
+    slli	a0, a0, 7
+    srli	a0, a0, 7
+    ret
+  Files: zext_i57_to_i58, zext_i57_to_i59, zext_i57_to_i60, zext_i57_to_i61, zext_i57_to_i62, zext_i57_to_i63, zext_i57_to_i64
+[6 file(s)] Pattern:
+    main:
+    slli	a0, a0, 6
+    srli	a0, a0, 6
+    ret
+  Files: zext_i58_to_i59, zext_i58_to_i60, zext_i58_to_i61, zext_i58_to_i62, zext_i58_to_i63, zext_i58_to_i64
+[5 file(s)] Pattern:
+    main:
+    slli	a0, a0, 5
+    srli	a0, a0, 5
+    ret
+  Files: zext_i59_to_i60, zext_i59_to_i61, zext_i59_to_i62, zext_i59_to_i63, zext_i59_to_i64
+[4 file(s)] Pattern:
+    main:
+    slli	a0, a0, 4
+    srli	a0, a0, 4
+    ret
+  Files: zext_i60_to_i61, zext_i60_to_i62, zext_i60_to_i63, zext_i60_to_i64
+[3 file(s)] Pattern:
+    main:
+    slli	a0, a0, 3
+    srli	a0, a0, 3
+    ret
+  Files: zext_i61_to_i62, zext_i61_to_i63, zext_i61_to_i64
+[2 file(s)] Pattern:
+    main:
+    slli	a0, a0, 2
+    srli	a0, a0, 2
+    ret
+  Files: zext_i62_to_i63, zext_i62_to_i64
+[1 file(s)] Pattern:
+    main:
+    bclri	a0, a0, 63
+    ret
+  Files: zext_i63_to_i64
