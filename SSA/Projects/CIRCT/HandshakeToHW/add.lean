@@ -3,6 +3,7 @@ import SSA.Projects.CIRCT.Stream.Lemmas
 import SSA.Projects.CIRCT.Register.Basic
 import SSA.Projects.CIRCT.Register.Lemmas
 import SSA.Projects.CIRCT.Handshake.Handshake
+import SSA.Projects.CIRCT.HandshakeToHW.HWForkSampling
 namespace HandshakeStream
 
 /-!
@@ -14,6 +15,14 @@ namespace HandshakeStream
   which does not contain `Option` values, because at this level
   of abstractions the content of streams has been concretized.
   We ignore buffers.
+
+  The `register_wrapper_generalized` definitions below are kept in one-to-one
+  correspondence with the compiler output (see the MLIR listings). The
+  *reasoning layer* (`Add` namespace at the end of this file) re-expresses the
+  composed circuit in the style of `HWForkSampling.lean` — every signal as a
+  pure function of the cycle index, the fork's `emitted` pair as the only
+  state — and connects the two via pointwise bridge lemmas, so that the `Fork`
+  library applies to the fork instance inside this composition.
 
   See: https://github.com/opencompl/DC-semantics-simulation-evaluation/commit/bf86f7247a767d97516a05a29e313634e5172398
 
@@ -177,19 +186,257 @@ def arith_addi_in_ui64_ui64_out_ui64
     --           signals := #v[arg0_valid, out0_ready, out1_ready]}
     -- sorry
 
+/--
+  The composed `@add` module, in the same `register_wrapper_generalized`
+  encoding as the instantiated modules above.
 
-theorem lowering_correctness
-  (a b : Stream (BitVec 64)) -- handshake level
-  (a_readyvalid b_readyvalid : wiresStructStream 1 2 64) -- rtl level
-  (sig_readyValid : Vector (Stream' (BitVec 1)) 3) -- extra input signal
-  (hsig : ReadyValid sig_readyValid sig)
-  (hsig_a : ReadyValidStruc a_readyvalid a) (hsig_b : ReadyValidStruc b_readyvalid b) :
-    let inp : wiresStructStream 2 6 64 := {
-      result := #v[a_readyvalid.result[0], b_readyvalid.result[0]]
-      signals := #v[a_readyvalid.signals[1], b_readyvalid.signals[1],
-                    sig_readyValid[0], sig_readyValid[2],
-                    a_readyvalid.signals[0], b_readyvalid.signals[0]]}
-    let inp' := streams_to_wires inp
-    let rtl' := add_rtl inp'
-    let rtl := wires_to_streams rtl'
-    (add_handshake a b) ~ rtl.result[0] := by sorry
+  Contrary to what the sketch above suggests, **no fixed-point iteration is
+  needed** to wire the instances together: valids flow forward (they depend on
+  registers and input valids only) and readies flow backward (they depend on
+  the external `%out0_ready` and on valids only), so the instance graph is
+  combinationally acyclic. The composed `update_fun` is obtained by inlining
+  the two adders' ready/valid equations into the fork's; the only registers
+  are the fork's `emitted_0`/`emitted_1`.
+
+  Input `signals` layout (as in the sketch above):
+  `#v[arg0_valid, arg1_valid, arg2, arg2_valid, out0_ready, out1_ready]`.
+  Output layout (as in `hw.output`): `result = #v[out0]`,
+  `signals = #v[arg0_ready, arg1_ready, arg2_ready, out0_valid, out1, out1_valid]`.
+-/
+def add_rtl (inp : Stream' (wiresStruc 2 6 64)) : Stream' (wiresStruc 1 6 64) :=
+  register_wrapper_generalized
+    (inputs := inp)
+    (init_regs := {result := #v[], signals := #v[0#1, 0#1]})
+    (outops := 1)
+    (outsigs := 6)
+    (update_fun := fun (inp, regs) =>
+      let a0v := inp.signals[0]   -- arg0_valid
+      let a1v := inp.signals[1]   -- arg1_valid
+      let arg2 := inp.signals[2]
+      let arg2v := inp.signals[3]
+      let or0 := inp.signals[4]   -- out0_ready
+      let or1 := inp.signals[5]   -- out1_ready
+      -- fork output valids (%3, %9 of the fork instance)
+      let f0v := (regs.signals[0] ^^^ 1#1) &&& a0v
+      let f1v := (regs.signals[1] ^^^ 1#1) &&& a0v
+      -- joins, forward (%0 of each addi instance)
+      let j0 := f0v &&& f1v       -- arith_addi0.out0_valid
+      let j1 := j0 &&& a1v        -- arith_addi1.out0_valid = out0_valid
+      -- readies, backward from %out0_ready (%1 of each addi instance)
+      let addi1_in_rdy := or0 &&& j1        -- arith_addi1.in0_ready = .in1_ready
+      let addi0_in_rdy := addi1_in_rdy &&& j0 -- arith_addi0.in{0,1}_ready = fork out readies
+      -- fork completion logic (%4, %5, %10, %11, %12 of the fork instance)
+      let done0 := (addi0_in_rdy &&& f0v) ||| regs.signals[0]
+      let done1 := (addi0_in_rdy &&& f1v) ||| regs.signals[1]
+      let allDone := done0 &&& done1        -- arg0_ready
+      let e0' := done0 &&& (allDone ^^^ 1#1)
+      let e1' := done1 &&& (allDone ^^^ 1#1)
+      -- data path
+      let out0 := (inp.result[0] + inp.result[0]) + inp.result[1]
+      ⟨{result := #v[out0],
+        signals := #v[allDone, addi1_in_rdy, or1, j1, arg2, arg2v]},
+       {result := #v[], signals := #v[e0', e1']}⟩)
+
+/-!
+  ## Reasoning layer
+
+  The composed circuit in the style of `HWForkSampling.lean`: every signal a
+  pure function of the cycle index, the fork's `emitted` pair as the only
+  state, and the `Fork` library reused through instantiation.
+-/
+namespace Add
+
+open HWComponents
+
+variable (arg0Vld arg1Vld out0Rdy : Stream' (BitVec 1))
+
+/-- The ready signal presented to *each* fork output by the adder chain, as a
+pure function of the fork's register state `e` and the current inputs: the
+external `out0_ready`, gated backward through `addi1`'s and `addi0`'s joins.
+Both fork outputs receive this same signal. -/
+def readyThroughAdders (a0v a1v or0 : BitVec 1) (e : BitVec 1 × BitVec 1) :
+    BitVec 1 :=
+  let f0v := comb_and (comb_xor e.1 (hw_constant true)) a0v  -- fork.out0_valid
+  let f1v := comb_and (comb_xor e.2 (hw_constant true)) a0v  -- fork.out1_valid
+  let j0 := comb_and f0v f1v      -- addi0.out0_valid
+  let j1 := comb_and j0 a1v       -- addi1.out0_valid
+  comb_and (comb_and or0 j1) j0
+
+/-- Trajectory of the composed module's only registers — the fork's `emitted`
+pair — under the readies computed by the adder chain. -/
+def regs : Nat → BitVec 1 × BitVec 1
+  | 0 => (0#1, 0#1)
+  | n + 1 =>
+    let rd := readyThroughAdders (arg0Vld n) (arg1Vld n) (out0Rdy n) (regs n)
+    Fork.stepRegs rd rd (arg0Vld n) (regs n)
+
+@[simp] theorem regs_zero : regs arg0Vld arg1Vld out0Rdy 0 = (0#1, 0#1) := rfl
+
+/-- The ready signal seen by both fork outputs, as a stream. -/
+def forkRdy (n : Nat) : BitVec 1 :=
+  readyThroughAdders (arg0Vld n) (arg1Vld n) (out0Rdy n)
+    (regs arg0Vld arg1Vld out0Rdy n)
+
+theorem regs_succ (n : Nat) :
+    regs arg0Vld arg1Vld out0Rdy (n + 1)
+      = Fork.stepRegs (forkRdy arg0Vld arg1Vld out0Rdy n)
+          (forkRdy arg0Vld arg1Vld out0Rdy n) (arg0Vld n)
+          (regs arg0Vld arg1Vld out0Rdy n) := rfl
+
+/-- **Instantiation lemma**: the composed module's registers are exactly the
+abstract fork's registers run against the environment `forkRdy` — the
+fork-in-context is the abstract fork of `HWForkSampling.lean` applied to the
+(self-consistent) readies computed by the adders, so the whole `Fork` library
+applies to it. (Induction on `n`; both recursions step by `Fork.stepRegs` from
+`(0#1, 0#1)`, and `forkRdy n` depends only on `regs n`, so the induction
+hypothesis closes the loop.) -/
+theorem regs_eq_emitted (n : Nat) :
+    regs arg0Vld arg1Vld out0Rdy n
+      = Fork.emitted (forkRdy arg0Vld arg1Vld out0Rdy)
+          (forkRdy arg0Vld arg1Vld out0Rdy) arg0Vld n := by
+  sorry
+
+/-! Named signals of the composed module, defined through the `Fork`
+instantiation so that the `Fork` library applies definitionally. -/
+
+/-- Fork `out0_valid` inside the composition. -/
+def fork0Vld (n : Nat) : BitVec 1 :=
+  Fork.vldOut1 (forkRdy arg0Vld arg1Vld out0Rdy)
+    (forkRdy arg0Vld arg1Vld out0Rdy) arg0Vld n
+
+/-- Fork `out1_valid` inside the composition. -/
+def fork1Vld (n : Nat) : BitVec 1 :=
+  Fork.vldOut2 (forkRdy arg0Vld arg1Vld out0Rdy)
+    (forkRdy arg0Vld arg1Vld out0Rdy) arg0Vld n
+
+/-- Ready returned to the `arg0` producer (the fork's `in0_ready = allDone`). -/
+def arg0Rdy (n : Nat) : BitVec 1 :=
+  Fork.allDone (forkRdy arg0Vld arg1Vld out0Rdy)
+    (forkRdy arg0Vld arg1Vld out0Rdy) arg0Vld n
+
+/-- `arith_addi0.out0_valid`: the join of the two fork outputs. -/
+def join0Vld (n : Nat) : BitVec 1 :=
+  comb_and (fork0Vld arg0Vld arg1Vld out0Rdy n)
+    (fork1Vld arg0Vld arg1Vld out0Rdy n)
+
+/-- `arith_addi1.out0_valid = out0_valid` of the composed module. -/
+def out0Vld (n : Nat) : BitVec 1 :=
+  comb_and (join0Vld arg0Vld arg1Vld out0Rdy n) (arg1Vld n)
+
+/-- Ready returned to the `arg1` producer (`arith_addi1.in1_ready`). -/
+def arg1Rdy (n : Nat) : BitVec 1 :=
+  comb_and (out0Rdy n) (out0Vld arg0Vld arg1Vld out0Rdy n)
+
+variable (arg0 arg1 : Stream' (BitVec 64))
+
+/-- Data path of the composed module: combinational, `out0 = (arg0 + arg0) + arg1`. -/
+def out0Data (n : Nat) : BitVec 64 := (arg0 n + arg0 n) + arg1 n
+
+/-! ### Bridge lemmas: compiler-output modules vs. named signals
+
+Pointwise characterizations of the `register_wrapper_generalized` definitions,
+playing the role `hw_fork'_get` plays in `HWForkSampling.lean`. These are the
+only lemmas that need to unfold `register_wrapper_generalized`. -/
+
+/-- The fork module of the compiler output computes the `Fork` signals: with
+`signals = #v[in0_valid, out0_ready, out1_ready]` in, it returns
+`#v[allDone, vldOut1, vldOut2]` (and copies the data wire to both outputs). -/
+theorem handshake_fork_get (instruc : Stream' (wiresStruc 1 3 64)) (n : Nat) :
+    handshake_fork_in_ui64_out_ui64_ui64 instruc n
+      = { result := #v[(instruc n).result[0], (instruc n).result[0]],
+          signals := #v[
+            Fork.allDone (fun k => (instruc k).signals[1])
+              (fun k => (instruc k).signals[2])
+              (fun k => (instruc k).signals[0]) n,
+            Fork.vldOut1 (fun k => (instruc k).signals[1])
+              (fun k => (instruc k).signals[2])
+              (fun k => (instruc k).signals[0]) n,
+            Fork.vldOut2 (fun k => (instruc k).signals[1])
+              (fun k => (instruc k).signals[2])
+              (fun k => (instruc k).signals[0]) n] } := by
+  sorry
+
+/-- The adder module of the compiler output is combinational join-and-add. -/
+theorem arith_addi_get (xst : Stream' (wiresStruc 2 3 64)) (n : Nat) :
+    arith_addi_in_ui64_ui64_out_ui64 xst n
+      = { result := #v[(xst n).result[0] + (xst n).result[1]],
+          signals := #v[
+            comb_and ((xst n).signals[2])
+              (comb_and ((xst n).signals[0]) ((xst n).signals[1])),
+            comb_and ((xst n).signals[2])
+              (comb_and ((xst n).signals[0]) ((xst n).signals[1])),
+            comb_and ((xst n).signals[0]) ((xst n).signals[1])] } := by
+  sorry
+
+/-- The composed module of the compiler output computes the named signals of
+this section (input `signals = #v[arg0_valid, arg1_valid, arg2, arg2_valid,
+out0_ready, out1_ready]`). -/
+theorem add_rtl_get (inp : Stream' (wiresStruc 2 6 64)) (n : Nat) :
+    add_rtl inp n
+      = { result := #v[out0Data (fun k => (inp k).result[0])
+                        (fun k => (inp k).result[1]) n],
+          signals := #v[
+            arg0Rdy (fun k => (inp k).signals[0]) (fun k => (inp k).signals[1])
+              (fun k => (inp k).signals[4]) n,
+            arg1Rdy (fun k => (inp k).signals[0]) (fun k => (inp k).signals[1])
+              (fun k => (inp k).signals[4]) n,
+            (inp n).signals[5],
+            out0Vld (fun k => (inp k).signals[0]) (fun k => (inp k).signals[1])
+              (fun k => (inp k).signals[4]) n,
+            (inp n).signals[2],
+            (inp n).signals[3]] } := by
+  sorry
+
+/-! ### Composition facts -/
+
+/-- **The fork never stalls inside this composition**: both fork outputs see
+the same ready (`forkRdy`), and from clear registers both outputs are valid
+together, so both receivers always accept in the same cycle — `allDone` fires
+in the same cycle as the accepts and the registers never latch. (Induction on
+`n`; the step is pointwise: `regs_succ`, `Fork.stepRegs`, `bv_decide`.) -/
+theorem regs_eq_zero (n : Nat) :
+    regs arg0Vld arg1Vld out0Rdy n = (0#1, 0#1) := by
+  sorry
+
+/-- With the registers identically clear the fork is transparent: `out0_valid`
+is the conjunction of the input valids. (Pointwise from `regs_eq_zero`.) -/
+theorem out0Vld_eq (n : Nat) :
+    out0Vld arg0Vld arg1Vld out0Rdy n
+      = comb_and (arg0Vld n) (arg1Vld n) := by
+  sorry
+
+/-- With the registers identically clear, the ready returned to `arg0` is the
+external ready gated by both valids: the composed module behaves as one
+combinational join. (Pointwise from `regs_eq_zero`.) -/
+theorem arg0Rdy_eq (n : Nat) :
+    arg0Rdy arg0Vld arg1Vld out0Rdy n
+      = comb_and (out0Rdy n) (comb_and (arg0Vld n) (arg1Vld n)) := by
+  sorry
+
+/-! ### Correctness -/
+
+/-- **Lowering correctness for the composed `add` module**: the handshake-level
+program applied to the token streams of the two inputs is bisimilar to the
+token stream of the RTL output.
+
+Proof plan: by `regs_eq_zero` and its corollaries the RTL side is a single
+combinational join (`out0Vld_eq`, `arg0Rdy_eq`, data path `out0Data`); the
+fork contributes no further proof obligations. What remains is the handshake
+side: a sampling development for `syncMap₂`/`HandshakeOp.fork` (mirroring
+`out1_sampling_bisim`) showing that the token stream of `syncMap₂ f xs ys` is
+the `f`-image of the joined token streams. That join library is the next
+reusable component. -/
+theorem add_lowering_correctness
+    (hvr0 : globallyValidUntilReady arg0Vld (arg0Rdy arg0Vld arg1Vld out0Rdy))
+    (hvd0 : globallyValidAndData arg0Vld arg0)
+    (hvr1 : globallyValidUntilReady arg1Vld (arg1Rdy arg0Vld arg1Vld out0Rdy))
+    (hvd1 : globallyValidAndData arg1Vld arg1) :
+    add_handshake
+        (toStream (arg0Rdy arg0Vld arg1Vld out0Rdy) arg0Vld arg0)
+        (toStream (arg1Rdy arg0Vld arg1Vld out0Rdy) arg1Vld arg1)
+      ~ toStream out0Rdy (out0Vld arg0Vld arg1Vld out0Rdy)
+          (out0Data arg0 arg1) := by
+  sorry
+
+end Add
+end HandshakeStream
