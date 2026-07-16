@@ -728,5 +728,93 @@ theorem hw_fork_refines_out1 {dataIn : Stream' (BitVec 32)}
   · exact hvr
   · exact hvd
 
+theorem emitted_swap (n : Nat) : emitted rdOut1 rdOut2 vldIn n = (emitted rdOut2 rdOut1 vldIn n).swap := by
+  induction n
+  · simp [emitted]
+  · case _ m ihm =>
+    simp [emitted, ihm, stepRegs]
+    bv_decide
+
+/-! Transport of the signals along the swap (mechanical consequences of
+`emitted_swap`): each out2 signal of this run is the corresponding out1 signal
+of the run with the receivers' readies swapped, and `allDone` is invariant. -/
+
+theorem e0_swap (n : Nat) :
+    e0 rdOut1 rdOut2 vldIn n = e1 rdOut2 rdOut1 vldIn n := by
+  unfold e0 e1
+  rw [emitted_swap rdOut1 rdOut2 vldIn n]
+  simp
+
+theorem e1_swap (n : Nat) :
+    e1 rdOut1 rdOut2 vldIn n = e0 rdOut2 rdOut1 vldIn n := by
+  unfold e0 e1
+  rw [emitted_swap rdOut1 rdOut2 vldIn n]
+  simp
+
+theorem vldOut2_swap :
+    vldOut2 rdOut1 rdOut2 vldIn = vldOut1 rdOut2 rdOut1 vldIn := by
+  funext n
+  rw [vldOut2_def, vldOut1_def, e1_swap rdOut1 rdOut2 vldIn n]
+
+theorem allDone_swap :
+    allDone rdOut1 rdOut2 vldIn = allDone rdOut2 rdOut1 vldIn := by
+  funext n
+  simp only [allDone_def, done0_def, done1_def, fire1_def, fire2_def,
+             vldOut1_def, vldOut2_def,
+             e0_swap rdOut1 rdOut2 vldIn, e1_swap rdOut1 rdOut2 vldIn]
+  bv_decide
+
+/-- Mirror of `hw_fork_refines_out1` for output 2. Provable without a second
+coinduction: `stepRegs` is symmetric under swapping `(rd1, e.1) ↔ (rd2, e.2)`,
+so `emitted rdOut1 rdOut2 vldIn n = (emitted rdOut2 rdOut1 vldIn n).swap` (one
+induction over time), hence `vldOut2/fire2/e1` of this run are `vldOut1/fire1/e0`
+of the swapped run and `allDone` is invariant under the swap (`comb_and` is
+commutative). Transport `hw_fork_refines_out1 rdOut2 rdOut1` along these. -/
+theorem hw_fork_refines_out2 {dataIn : Stream' (BitVec 32)}
+    {rdIn vld1 vld2 : Stream' (BitVec 1)} {data1 data2 : Stream' (BitVec 32)}
+    (hfork : (rdIn, vld1, vld2, data1, data2)
+      = TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn))
+    (hvr : globallyValidUntilReady vldIn rdIn)
+    (hvd : globallyValidAndData vldIn dataIn) :
+    toStream rdIn vldIn dataIn ~ toStream rdOut2 vld2 data2 := by
+  obtain ⟨h1, -, h3, -, h5⟩ := hw_fork_components rdOut1 rdOut2 vldIn hfork
+  subst h1 h3 h5
+  rw [allDone_swap rdOut1 rdOut2 vldIn] at hvr ⊢
+  rw [vldOut2_swap rdOut1 rdOut2 vldIn]
+  apply HandshakeStream.symm
+  apply out1_sampling_bisim
+  · exact hvr
+  · exact hvd
+
+
+/-- **The RTL fork refines the handshake fork** (`TRY2.hw_fork`), on both
+outputs — the original goal of `HWComponents.hw_fork_refines'`, restated.
+
+Differences from the original statement, on purpose:
+* the input is identified with the ready/valid-wrapped stream by *equality*
+  (`ha`), not by bisimilarity — composing through a `~`-hypothesis needs
+  transitivity of `~`, which is still `sorry` in `Stream/Basic.lean`; once
+  `Bisim.trans` is proven, the `a ~ toStream rdIn vldIn dataIn` version follows
+  immediately from this one;
+* `globallyFinallyReady rd1/rd2` are gone: eventual readiness of the receivers
+  is subsumed by the no-deadlock contract `hvr` on the input channel, through
+  the circuit equation (`rdIn = allDone` only fires once both receivers have
+  received). -/
+theorem hw_fork_refines' {dataIn : Stream' (BitVec 32)}
+    {rdIn vld1 vld2 : Stream' (BitVec 1)} {data1 data2 : Stream' (BitVec 32)}
+    {x y a : Stream (BitVec 32)}
+    (hspec : (x, y) = TRY2.hw_fork a)
+    (hfork : (rdIn, vld1, vld2, data1, data2)
+      = TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn))
+    (ha : a = toStream rdIn vldIn dataIn)
+    (hvr : globallyValidUntilReady vldIn rdIn)
+    (hvd : globallyValidAndData vldIn dataIn) :
+    x ~ toStream rdOut1 vld1 data1 ∧ y ~ toStream rdOut2 vld2 data2 := by
+  simp only [TRY2.hw_fork, Prod.mk.injEq] at hspec
+  simp [hspec, ha]
+  and_intros
+  · apply hw_fork_refines_out1 (hfork := hfork) (hvr := hvr) (hvd := hvd)
+  · apply hw_fork_refines_out2 (hfork := hfork) (hvr := hvr) (hvd := hvd)
+
 end Fork
 end HWComponents
