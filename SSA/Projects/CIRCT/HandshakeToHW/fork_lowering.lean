@@ -340,6 +340,20 @@ theorem hw_fork_eq : rtl.fork rd0 rd1 vld data = rtl.fork' rd0 rd1 vld data := b
   unfold rtl.fork rtl.fork'
   congr 1
 
+/-- Data passes unchanged through the fork's first output channel. -/
+private theorem hw_fork_out0
+    (h : (rdy_out, vld0_out, vld1_out, data0_out, data1_out) =
+      project_stream (rtl.fork' rd0_in rd1_in vld_in data_in)) :
+    ∀ n, data_in n = data0_out n :=
+  fork_dataIn_eq_dataOut1 h
+
+/-- Data passes unchanged through the fork's second output channel. -/
+private theorem hw_fork_out1
+    (h : (rdy_out, vld0_out, vld1_out, data0_out, data1_out) =
+      project_stream (rtl.fork' rd0_in rd1_in vld_in data_in)) :
+    ∀ n, data_in n = data1_out n :=
+  fork_dataIn_eq_dataOut2 h
+
 /--
   If at a certain point in time `n` the first output valid signal is true,
   then the input valid signal at that point in time is also true.
@@ -558,7 +572,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent2
         obtain ⟨ak, bk, ck⟩ := sk
         simp [hsk] at hck; subst hck
         have hak : ak = k := by
-          have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 k
+          have := @fork_corec_iter rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 k
           grind
         have hvldk : vldOut2 k = vldIn ak := by
           have h := congr_fun hvldout2 k
@@ -579,7 +593,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent2
           have hvldInA : vldIn ak = 0#1 := by grind
           simp [hvldInA];
   have heq : a = n := by
-    have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
+    have := @fork_corec_iter rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
     rw [hst] at this
     simp at this
     assumption
@@ -806,7 +820,9 @@ lemma fork_globallyValidAndData_out1
     (hgv : globallyValidAndData vldIn dataIn) :
     globallyValidAndData vldOut1 dataOut1 := by
   intro i ⟨hi1, hi2⟩
-  have hdata := hw_fork_out0 hfork
+  have hfork' : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
+      project_stream (rtl.fork' rdOut1 rdOut2 vldIn dataIn) := by rw [← hw_fork_eq]; exact hfork
+  have hdata := hw_fork_out0 hfork'
   rw [← hdata i, ← hdata (i+1)]
   apply hgv
   exact ⟨vldOut1_implies_vldIn hfork hi1, vldOut1_implies_vldIn hfork hi2⟩
@@ -1112,7 +1128,10 @@ theorem hw_fork_refines1_with_fork:
               · /- first receiver after sent -/
                 sorry
       · simp [Stream'.get, h_8, h_7, toStream]
-        have hdataeq := hw_fork_out0 (h := h_6)
+        have h_6' : (rdIn_1, vldOut1_1, vldOut2_1, dataOut1_1, dataOut2_1) =
+            project_stream (rtl.fork' rdOut1_1 rdOut2_1 vldIn_1 dataIn_1) := by
+          rw [← hw_fork_eq]; exact h_6
+        have hdataeq := hw_fork_out0 (h := h_6')
         by_cases hle : fstVldTrue ≤ fstSentIdx
         · have hreadyIn : rdIn_1 fstSentIdx = 1#1 := by
             unfold toStream at h_7
@@ -1157,7 +1176,7 @@ theorem hw_fork_refines1_with_fork:
             obtain ⟨a, b, c⟩ := s
             dsimp [fork_corec, comb_and, comb_xor, comb_or, hw_constant] at hcirc
             have ha : a = fstVldTrue + k := by
-              have := @fork_corec1 rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 (fstVldTrue + k)
+              have := @fork_corec_iter rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 (fstVldTrue + k)
               simp [hst] at this
               simp [this]
             have hb0 : b = 0#1 := by
@@ -1195,7 +1214,7 @@ theorem hw_fork_refines1_with_fork:
                 obtain ⟨ak, bk, ck⟩ := sk
                 simp [hsk] at hbk; subst hbk
                 have hak : ak = km := by
-                  have := @fork_corec1 rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 km
+                  have := @fork_corec_iter rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 km
                   simp [hsk] at this; omega
                 have hvldk : vldOut1_1 km = vldIn_1 ak := by
                   rw [hw_fork_eq] at hh5; simp [project_stream] at hh5
@@ -1270,7 +1289,7 @@ theorem hw_fork_refines1_with_fork:
             obtain ⟨a2, b2, c2⟩ := s2
             dsimp [fork_corec, comb_and, comb_xor, comb_or, hw_constant] at hcirc2
             have ha2 : a2 = fstSentIdx := by
-              have := @fork_corec1 rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 fstSentIdx
+              have := @fork_corec_iter rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 fstSentIdx
               simp [hst2] at this; omega
             have hb02 : b2 = 0#1 := by
               suffices key2 : ∀ m, (∀ j < m, rdOut1_1 j = 0#1 ∨ vldOut1_1 j = 0#1) →
@@ -1297,7 +1316,7 @@ theorem hw_fork_refines1_with_fork:
                 obtain ⟨ak, bk, ck⟩ := sk
                 simp [hsk] at hbk; subst hbk
                 have hak : ak = km := by
-                  have := @fork_corec1 rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 km
+                  have := @fork_corec_iter rdOut1_1 rdOut2_1 vldIn_1 dataIn_1 0 0#1 0#1 km
                   simp [hsk] at this; omega
                 have hvldk2 : vldOut1_1 km = vldIn_1 ak := by
                   rw [hw_fork_eq] at hh5; simp [project_stream] at hh5
@@ -1445,7 +1464,7 @@ theorem hw_fork_refines1_with_fork:
             We see this by unfolding the fork hypotheses -/
           unfold project_stream
           simp
-          have h1 := rtl.fork'_of_all_none
+          have h1 := fork'_of_all_none
                     (dataIn := Stream'.drop 1 dataIn_1)
                     (vldIn := Stream'.drop 1 vldIn_1)
                     (rdOut1 := Stream'.drop 1 rdOut1_1)
@@ -1455,7 +1474,7 @@ theorem hw_fork_refines1_with_fork:
                       specialize hnevldin (k + 1)
                       simp [show Stream'.drop 1 vldIn_1 k = vldIn_1 (k + 1) by rfl, hnevldin]
                       )
-          have h2 := rtl.fork'_of_all_none
+          have h2 := fork'_of_all_none
                     (dataIn := dataIn_1)
                     (vldIn := vldIn_1)
                     (rdOut1 := rdOut1_1)

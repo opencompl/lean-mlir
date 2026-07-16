@@ -10,14 +10,19 @@ open HandshakeStream
 /-
   RTL-level definitions of circuit components
 -/
+@[bv_normalize, grind]
 def hw_constant (b : Bool) : BitVec 1 := if b then 1#1 else 0#1
 
+@[bv_normalize, grind]
 def comb_xor (x y : BitVec 1) : BitVec 1 := BitVec.xor x y
 
+@[bv_normalize, grind]
 def comb_and (x y : BitVec 1) : BitVec 1 := BitVec.and x y
 
+@[bv_normalize, grind]
 def comb_add (x y : BitVec 32) : BitVec 32 := BitVec.add x y
 
+@[bv_normalize, grind]
 def comb_or (x y : BitVec 1) : BitVec 1 := BitVec.or x y
 
 namespace TRY1
@@ -270,6 +275,11 @@ inductive relation' : Stream (BitVec w) → Stream (BitVec w) → Prop where
       (∀ n, vld n = 1#1 → data n = o1 n) → /- when the signal is valid, data and output are the same -/
       relation' x y /- defining the type of the relation -/
 
+
+/-
+  `(rdIn, vldOut1, ...) = TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn)`
+  and `TRY3.hw_fork` starts from `(0, 0#1, 0#1)`. In the coinductive step you must re-establish relation_fork for the dropped streams — which requires the dropped streams to again satisfy the fork equation from registers (0,0). That only holds if you cut at an instant where both emitted registers are actually 0, i.e. right after allDone fired. But the proof cuts at fstVldTrue + fstRdyOut + 1 — the instant out1 fired — and out2 may not have fired yet, so _emitted_0 = 1 at the cut and the restarted equation is false. The fix is to generalize the relation over register state: parameterize it by (e₀, e₁) (or quantify over a start state) and make hw_fork' take an initial state argument. Alternatively cut at the first allDone instant instead of the first out1 firing
+-/
 inductive relation_fork : Stream (BitVec w) → Stream (BitVec w) → Prop where
   | intro x y rdIn vldIn dataIn rdOut1 vldOut1 dataOut1 rdOut2 vldOut2 dataOut2 :  /- same as `∀ x y` -/
       /- x is the high-level (input), y is the low-level (output) -/
