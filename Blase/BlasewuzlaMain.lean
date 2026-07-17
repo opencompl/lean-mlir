@@ -88,18 +88,43 @@ def fmtSize : Option Nat → String
   | some n => toString n
   | none => "N/A"
 
+/--
+Print the per-backend translation/solve time breakdown to stdout:
+- `translation-time`: wall time spent building the encoding (lowering to QF_BV / building the
+  parametric FSM+AIG), i.e. everything up to the SAT / model-checking call.
+- `solve-time`: wall time spent inside the actual SAT / model-checking solve.
+
+Emitted unconditionally on the success path (both phases ran), so the evaluation harness can
+report the split from ordinary solver runs without paying the size-statistics (`--stats`) cost.
+Backends that bail out before building (e.g. out of the automata-decidable fragment) print
+nothing, and the corresponding run is not counted. -/
+def printTimingSplit (translationMs solveMs : Nat) : IO Unit := do
+  IO.println s!"translation-time: {translationMs} ms"
+  IO.println s!"solve-time: {solveMs} ms"
+
 open Std Tactic Sat AIG BVDecide  Lean Elab Meta Std Sat AIG Tactic BVDecide Frontend in
-def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) (satSolverTimeout : Nat) : MetaM Bool := do
+/--
+Check whether a QF_BV formula is unsatisfiable, returning `(isUnsat, bitblastMs, satMs)`.
+
+`bitblastMs` is the time spent bitblasting the formula to an AIG and lowering it to CNF (the
+"translation" work for QF_BV backends); `satMs` is the time spent in the external SAT solver
+(the "solve" work). Separating these lets the harness report a translation/solve split even
+though bitblasting happens as part of the check. -/
+def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) (satSolverTimeout : Nat) : MetaM (Bool × Nat × Nat) := do
+  let tStart ← IO.monoMsNow
   let entry := e.bitblast
   let (entry, _map) := entry.relabelNat'
   let cnf := AIG.toCNF entry
+  let tBlasted ← IO.monoMsNow
   let cfg : BVDecideConfig := { timeout := satSolverTimeout }
   IO.FS.withTempFile fun _ lratFile => do
   let ctx ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run' { declName? := `lrat }
   let res ← Lean.Elab.Tactic.BVDecide.Frontend.runExternal cnf ctx.solver ctx.lratPath ctx.config.trimProofs ctx.config.timeout ctx.config.binaryProofs
-  match res with
-  | .ok _cert => return true
-  | .error _assignment => return false
+  let tSolved ← IO.monoMsNow
+  let isUnsat := match res with
+    | .ok _cert => true
+    | .error _assignment => false
+  return (isUnsat, tBlasted - tStart, tSolved - tBlasted)
 
 /--
 Introduce only forall binders and preserve names.
@@ -176,6 +201,7 @@ unsafe def monoBMC : Solver where
     if config.verbose then
       IO.eprintln s!"Running {monoBMC.name} at width {config.bound}..."
 
+    let tBuildStart ← IO.monoMsNow
     let (singleWidthTerm, success?, singleWidthErrors) := result.toSingleWidthNondepTerm (.const config.bound)
 
      if ! success? then
@@ -202,7 +228,11 @@ unsafe def monoBMC : Solver where
     if config.verbose then
       IO.eprintln s!"qfbv formula to be checked for UNSAT:\n{qfbv.toString}"
 
-    if ← checkBVLogicalExprIsUnsat qfbv config.timeout then
+    let tQfbvBuilt ← IO.monoMsNow
+    let (isUnsat, blastMs, satMs) ← checkBVLogicalExprIsUnsat qfbv config.timeout
+    -- translation = single-width lowering + QF_BV construction + bitblast to CNF; solve = SAT.
+    printTimingSplit ((tQfbvBuilt - tBuildStart) + blastMs) satMs
+    if isUnsat then
       return .unsat
     else
       return .sat
@@ -250,6 +280,10 @@ def naiveBMC : Solver where
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
       IO.eprintln s!"Running naivebmc at width {config.bound} for #widths {result.maxwcard}..."
+    -- Accumulate translation (QF_BV construction) and solve (SAT) time across every
+    -- enumerated width so we can report a single per-problem split.
+    let mut transMs : Nat := 0
+    let mut solveMs : Nat := 0
     for widths in cartesianProductRange config.bound result.maxwcard do
       if config.verbose then
         IO.println s!"width configuration ⟨{widths}⟩"
@@ -259,10 +293,13 @@ def naiveBMC : Solver where
         as we cannot guarantee a legal QF_BV expression being created, as the semantics
         are a promise-based semantics.
       -/
+      let tIterStart ← IO.monoMsNow
       match widthConstraints.evalWidthLogicalExpr widths with
       | .ok false =>
         if config.verbose then
           IO.eprintln s!"⟨{widths.toList}⟩ width precondition sufficed to prove UNSAT."
+        let tSkip ← IO.monoMsNow
+        transMs := transMs + (tSkip - tIterStart)
         continue
       | .ok true =>
         if config.verbose then
@@ -280,14 +317,21 @@ def naiveBMC : Solver where
 
       if config.verbose then
         IO.eprintln s!"{qfbv.toString}"
-      if ← checkBVLogicalExprIsUnsat qfbv config.timeout then
+      let tQfbvBuilt ← IO.monoMsNow
+      let (isUnsat, blastMs, satMs) ← checkBVLogicalExprIsUnsat qfbv config.timeout
+      -- translation = QF_BV construction at this width + bitblast; solve = SAT.
+      transMs := transMs + (tQfbvBuilt - tIterStart) + blastMs
+      solveMs := solveMs + satMs
+      if isUnsat then
         if config.verbose then
           IO.eprintln s!"⟨{widths.toList}⟩ ✓"
         continue
       else
         if config.verbose then
           IO.eprintln s!"⟨{widths.toList}⟩ ✗"
+        printTimingSplit transMs solveMs
         return .sat
+    printTimingSplit transMs solveMs
     return .unsat
 
 def dryrun : Solver where
@@ -304,13 +348,17 @@ def External (name : String) (solver : Valaig.External.SafetyAigerMC) : Solver w
     if !result.isAutomtaDecidable then
       IO.eprintln s!"{name}: formula contains non-automata-decidable operations and is outside the supported fragment."
       return .error s!"formula is outside the automata-decidable fragment"
+    let tBuildStart ← IO.monoMsNow
     let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 0 result
     let fsm := termFsm.toFsmZext
 
     if config.verbose then
       IO.eprintln s!"Running {name}..."
     let aig := fsm.toAiger
+    let tBuilt ← IO.monoMsNow
     let res ← Valaig.External.checkSafety solver aig
+    let tSolved ← IO.monoMsNow
+    printTimingSplit (tBuilt - tBuildStart) (tSolved - tBuilt)
     match res with
     | .error msg =>
         IO.eprintln s!"{name} error: {msg}"
@@ -343,8 +391,10 @@ def kinduction : Solver where
     if config.verbose then
       IO.eprintln s!"FSM built. Running k-induction with max {config.niter} iterations..."
 
+    let tBuildStart ← IO.monoMsNow
     let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 0 result
     let fsm := termFsm.toFsmZext
+    let tBuilt ← IO.monoMsNow
 
     -- Set up Lean TermElabM environment for the SAT solver
     initSearchPath (← findSysroot)
@@ -360,6 +410,7 @@ def kinduction : Solver where
     let ((out, _circuitStats), _coreState, _metaState, _termState) ←
       fsm.decideIfZerosVerified config.niter |>.toIO coreContext coreState ctxMeta sMeta ctxTerm sTerm
     let tEnd ← IO.monoMsNow
+    printTimingSplit (tBuilt - tBuildStart) (tEnd - tStart)
 
     if config.verbose then
       IO.eprintln s!"Completed in {tEnd - tStart}ms"
