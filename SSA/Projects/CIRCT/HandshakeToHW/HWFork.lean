@@ -20,15 +20,15 @@ def comb_xor (x y : BitVec 1) : BitVec 1 := BitVec.xor x y
 def comb_and (x y : BitVec 1) : BitVec 1 := BitVec.and x y
 
 @[bv_normalize, grind]
-def comb_add (x y : BitVec 32) : BitVec 32 := BitVec.add x y
+def comb_add (x y : BitVec w) : BitVec w := BitVec.add x y
 
 @[bv_normalize, grind]
 def comb_or (x y : BitVec 1) : BitVec 1 := BitVec.or x y
 
 namespace TRY1
 
-axiom esi_unwrap_vr : Stream (BitVec 32) → BitVec 1 → Stream (BitVec 32) × BitVec 1
-axiom esi_wrap_vr : Stream (BitVec 32) → BitVec 1 → Stream (BitVec 32) × BitVec 1
+axiom esi_unwrap_vr : Stream (BitVec w) → BitVec 1 → Stream (BitVec w) × BitVec 1
+axiom esi_wrap_vr : Stream (BitVec w) → BitVec 1 → Stream (BitVec w) × BitVec 1
 
 /-
    This first implementation with all the "correct" types does not work because of the feedback between ready, valid and
@@ -38,7 +38,7 @@ axiom esi_wrap_vr : Stream (BitVec 32) → BitVec 1 → Stream (BitVec 32) × Bi
  -/
 
 #guard_msgs (drop error) in
-def hw_fork_fails (_in0 : Stream (BitVec 32)) : Stream (BitVec 32) × Stream (BitVec 32) :=
+def hw_fork_fails (_in0 : Stream (BitVec w)) : Stream (BitVec w) × Stream (BitVec w) :=
   let _true := hw_constant true
   let _false := hw_constant false
   let _2 := comb_xor _emitted_0 _true
@@ -77,7 +77,7 @@ namespace TRY2
   a `rdy` signal is received (no deadlock).
  -/
 
-def hw_fork (_in0 : Stream (BitVec 32)) : Stream (BitVec 32) × Stream (BitVec 32) :=
+def hw_fork (_in0 : Stream (BitVec w)) : Stream (BitVec w) × Stream (BitVec w) :=
   (_in0, _in0)
 
 end TRY2
@@ -95,12 +95,12 @@ namespace TRY3
    2. How do we model the nondeterministic signals (...some time later: we don't have to, we just expose them as streams)
  -/
 
-def hw_fork (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec 32))
+def hw_fork (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec w))
     : Stream' ( BitVec 1  -- ready (_12)
               × BitVec 1  -- valid_0 (_3)
               × BitVec 1  -- valid_1 (_9)
-              × BitVec 32 -- rawOutput
-              × BitVec 32 -- rawOutput
+              × BitVec w -- rawOutput
+              × BitVec w -- rawOutput
       )
   :=
   Stream'.corec' (α := Nat × BitVec 1 × BitVec 1) (fun (i, _emitted_0, _emitted_1) =>
@@ -132,11 +132,11 @@ def hw_fork (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVe
  -/
 def hw_add
     (_in0_valid _in1_valid _out0_ready : Stream' (BitVec 1))
-    (_in0 _in1 : Stream' (BitVec 32))
+    (_in0 _in1 : Stream' (BitVec w))
     : Stream' ( BitVec 1  -- %in0_ready
               × BitVec 1  -- %in1_ready
               × BitVec 1  -- %out0_valid
-              × BitVec 32 -- %out0
+              × BitVec w -- %out0
       )
   :=
   Stream'.corec' (α := Nat) (fun i =>
@@ -155,31 +155,31 @@ def split_stream2 : Stream' (a × b × c × d × e) → Stream' a × Stream' b �
 def combine_stream : Stream' a × Stream' b × Stream' c × Stream' d × Stream' e × Stream' f × Stream' g → Stream' (a × b × c × d × e × f × g) := fun gr i =>
   (gr.1 i, gr.2.1 i, gr.2.2.1 i, gr.2.2.2.1 i, gr.2.2.2.2.1 i, gr.2.2.2.2.2.1 i, gr.2.2.2.2.2.2 i)
 
-/--
+/-
 We have a working circuit, except that we took out the feedback into and output and an input.
 
 `fork_i_rdy -> add_out_rdy`
 -/
-def hw_add_fork af_a_valid af_b_valid af_a af_b af_o_rdy af_p_rdy add_out_rdy :=
-  let add_a_valid := af_a_valid
-  let add_b_valid := af_b_valid
-  let add_a := af_a
-  let add_b := af_b
-  let (add_a_rdy, add_b_rdy, add_out_valid, add_out) := split_stream <| hw_add add_a_valid add_b_valid add_out_rdy add_a add_b
-  let fork_i_valid := add_out_valid
-  let fork_i := add_out
-  let fork_o_rdy := af_o_rdy
-  let fork_p_rdy := af_p_rdy
-  let (fork_i_rdy, fork_o_valid, fork_p_valid, fork_o, fork_p) := split_stream2 <| hw_fork fork_o_rdy fork_p_rdy fork_i_valid fork_i
-  combine_stream <| (fork_o_valid, fork_p_valid, fork_o, fork_p, add_a_rdy, add_b_rdy, fork_i_rdy)
+-- def hw_add_fork af_a_valid af_b_valid af_a af_b af_o_rdy af_p_rdy add_out_rdy :=
+--   let add_a_valid := af_a_valid
+--   let add_b_valid := af_b_valid
+--   let add_a := af_a
+--   let add_b := af_b
+--   let (add_a_rdy, add_b_rdy, add_out_valid, add_out) := split_stream <| hw_add add_a_valid add_b_valid add_out_rdy add_a add_b
+--   let fork_i_valid := add_out_valid
+--   let fork_i := add_out
+--   let fork_o_rdy := af_o_rdy
+--   let fork_p_rdy := af_p_rdy
+--   let (fork_i_rdy, fork_o_valid, fork_p_valid, fork_o, fork_p) := split_stream2 <| hw_fork fork_o_rdy fork_p_rdy fork_i_valid fork_i
+--   combine_stream <| (fork_o_valid, fork_p_valid, fork_o, fork_p, add_a_rdy, add_b_rdy, fork_i_rdy)
 
 /--
 The assumption is that you always converge in 2 steps, so this should faithfully implement add -> fork
 -/
-def hw_add_fork_fix af_a_valid af_b_valid af_a af_b af_o_rdy af_p_rdy :=
-  let x := hw_add_fork af_a_valid af_b_valid af_a af_b af_o_rdy af_p_rdy (Stream'.const 0)
-  let x := hw_add_fork af_a_valid af_b_valid af_a af_b af_o_rdy af_p_rdy (fun i => (x i).2.2.2.2.2.2)
-  fun i => ((x i).1, (x i).2.1, (x i).2.2.1, (x i).2.2.2.1, (x i).2.2.2.2.1, (x i).2.2.2.2.2.1, (x i).2.2.2.2.2.2.1)
+-- def hw_add_fork_fix af_a_valid af_b_valid af_a af_b af_o_rdy af_p_rdy :=
+--   let x := hw_add_fork af_a_valid af_b_valid af_a af_b af_o_rdy af_p_rdy (Stream'.const 0)
+--   let x := hw_add_fork af_a_valid af_b_valid af_a af_b af_o_rdy af_p_rdy (fun i => (x i).2.2.2.2.2.2)
+--   fun i => ((x i).1, (x i).2.1, (x i).2.2.1, (x i).2.2.2.1, (x i).2.2.2.2.1, (x i).2.2.2.2.2.1, (x i).2.2.2.2.2.2.1)
 
 def cyc {α} (l : List α) (h := by simp) := Stream'.cycle l h
 
@@ -191,8 +191,8 @@ We can stabilise with two iterations:
 + We set `add_out_rdy` to that value, and check if `add_out_rdy` now equals `fork_i_rdy`.
 -/
 
-#eval Stream'.take 3 <| hw_add_fork_fix (cyc [0, 0, 1]) (cyc [0, 1, 1]) (cyc [11, 12, 13]) (cyc [21, 22, 23]) (cyc [1]) (cyc [1])
-#eval Stream'.take 3 <| hw_add_fork_fix (cyc [0, 0, 1]) (cyc [0, 1, 1]) (cyc [11, 12, 13]) (cyc [21, 22, 23]) (cyc [0, 0, 1]) (cyc [0, 0, 1])
+-- #eval Stream'.take 3 <| hw_add_fork_fix (cyc [0, 0, 1]) (cyc [0, 1, 1]) (cyc [11, 12, 13]) (cyc [21, 22, 23]) (cyc [1]) (cyc [1])
+-- #eval Stream'.take 3 <| hw_add_fork_fix (cyc [0, 0, 1]) (cyc [0, 1, 1]) (cyc [11, 12, 13]) (cyc [21, 22, 23]) (cyc [0, 0, 1]) (cyc [0, 0, 1])
 /- #eval Stream'.take 1 <| hw_add_fork_fix (cyc [1]) (cyc [1]) (cyc [10]) (cyc [20]) (cyc [1]) (cyc [1])
  - #eval Stream'.take 1 <| hw_add_fork_fix (cyc [1]) (cyc [1]) (cyc [10]) (cyc [20]) (cyc [1]) (cyc [1])
  - #eval Stream'.take 1 <| hw_add_fork_fix (cyc [1]) (cyc [1]) (cyc [10]) (cyc [20]) (cyc [1]) (cyc [1]) -/
@@ -204,13 +204,13 @@ end TRY3
   · delayed fork ~ normal fork
 -/
 
-/-- At the handshake level: (manual) delayed fork ~ normal fork: the outputs of the fork are bisimilar
+/- At the handshake level: (manual) delayed fork ~ normal fork: the outputs of the fork are bisimilar
   for any delay (up to any numbers of `none` inserted, anywhere). -/
-theorem fork_refines {a x y x' y'} :
-  (x, y) = TRY2.hw_fork a →
-  x ~ x' →
-  y ~ y' →
-  x ~ x' ∧ y ~ y' := by grind
+-- theorem fork_refines {a x y x' y'} :
+--   (x, y) = TRY2.hw_fork a →
+--   x ~ x' →
+--   y ~ y' →
+--   x ~ x' ∧ y ~ y' := by grind
 
 /-- Stream := Stream' (Option α) -/
 def toStream {α} (rdy : Stream' (BitVec 1)) (vld : Stream' (BitVec 1)) (data : Stream' α) : Stream α := fun i =>
@@ -320,7 +320,7 @@ inductive relation_fork : Stream (BitVec w) → Stream (BitVec w) → Prop where
 
 
 /-- We unfold one step of the corecursive definition of `fork` -/
-def fork_corec (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec 32)) :=
+def fork_corec (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec w)) :=
   fun (i, _emitted_0, _emitted_1) =>
     let _true := hw_constant true
     let _false := hw_constant false
@@ -341,12 +341,12 @@ def fork_corec (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (Bi
     ((_12, _3, _9, _rawOutput, _rawOutput), (i+1, _1, _7))
 
 /-- We re-define the fork circuit in terms of `fork_corec` -/
-def hw_fork' (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec 32))
+def hw_fork' (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVec w))
     : Stream' ( BitVec 1  -- ready (_12)
               × BitVec 1  -- valid_0 (_3)
               × BitVec 1  -- valid_1 (_9)
-              × BitVec 32 -- rawOutput
-              × BitVec 32 -- rawOutput
+              × BitVec w -- rawOutput
+              × BitVec w -- rawOutput
       )
   := Stream'.corec' (α := Nat × BitVec 1 × BitVec 1) (fork_corec _ready _ready_1 _valid _in0) (0, 0#1, 0#1)
 
@@ -354,7 +354,10 @@ def hw_fork' (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitV
 
 
 /-- Prove that iterating `n` times starting from the `m`-th index of the stream yields the `n + m`-th index-/
-theorem fork_corec1 :
+theorem fork_corec1 {w : Nat}
+    {rd0_in rd1_in vld_in : Stream' (BitVec 1)}
+    {data_in : Stream' (BitVec w)}
+    {m n : Nat} {x y : BitVec 1} :
   (Stream'.iterate (Prod.snd ∘ fork_corec rd0_in rd1_in vld_in data_in) (m, x, y) n).1 = n + m := by
   induction n generalizing m x y with
   | zero => grind [Stream'.iterate]
@@ -484,7 +487,9 @@ theorem hw_fork_eq : TRY3.hw_fork rd0 rd1 vld data = hw_fork' rd0 rd1 vld data :
   unfold TRY3.hw_fork hw_fork'
   congr 1
 
-theorem vldOut1_implies_vldIn
+theorem vldOut1_implies_vldIn {w : Nat}
+    {rdIn rdOut1 rdOut2 vldIn vldOut1 vldOut2 : Stream' (BitVec 1)}
+    {dataIn dataOut1 dataOut2 : Stream' (BitVec w)} {n : Nat}
     (h : (rdIn, vldOut1, vldOut2, dataOut1, dataOut2) =
       TRY3.split_stream2 (TRY3.hw_fork rdOut1 rdOut2 vldIn dataIn))
     (hvld : vldOut1 n = 1#1) : vldIn n = 1#1 := by
@@ -499,7 +504,7 @@ theorem vldOut1_implies_vldIn
   obtain ⟨a, b, c⟩ := s
   dsimp [fork_corec, comb_and, comb_xor, hw_constant] at hn
   have heq : a = n := by
-    have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
+    have := fork_corec1 (rd0_in := rdOut1) (rd1_in := rdOut2) (vld_in := vldIn) (data_in := dataIn) (m := 0) (x := 0#1) (y := 0#1) (n := n)
     rw [hst] at this
     simp at this
     assumption
@@ -524,7 +529,7 @@ theorem vldOut2_implies_vldIn
   obtain ⟨a, b, c⟩ := s
   dsimp [fork_corec, comb_and, comb_xor, hw_constant] at hn
   have heq : a = n := by
-    have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
+    have := fork_corec1 (rd0_in := rdOut1) (rd1_in := rdOut2) (vld_in := vldIn) (data_in := dataIn) (m := 0) (x := 0#1) (y := 0#1) (n := n)
     rw [hst] at this
     simp at this
     assumption
@@ -594,7 +599,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent
       simp [hsk] at hbk; subst hbk
       rw [iterate_back_succ, hsk]
       have hak : ak = k := by
-        have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 k
+        have := fork_corec1 (rd0_in := rdOut1) (rd1_in := rdOut2) (vld_in := vldIn) (data_in := dataIn) (m := 0) (x := 0#1) (y := 0#1) (n := k)
         simp [hsk] at this; omega
       have hk := hbef k (Nat.lt_succ_self k)
       simp only [Function.comp]
@@ -644,7 +649,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent
         simp [h1]
   simp [hb] at hn
   have heq : a = n := by
-    have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
+    have := fork_corec1 (rd0_in := rdOut1) (rd1_in := rdOut2) (vld_in := vldIn) (data_in := dataIn) (m := 0) (x := 0#1) (y := 0#1) (n := n)
     rw [hst] at this
     simp at this
     assumption
@@ -695,7 +700,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent2
         obtain ⟨ak, bk, ck⟩ := sk
         simp [hsk] at hck; subst hck
         have hak : ak = k := by
-          have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 k
+          have := fork_corec1 (rd0_in := rdOut1) (rd1_in := rdOut2) (vld_in := vldIn) (data_in := dataIn) (m := 0) (x := 0#1) (y := 0#1) (n := k)
           grind
         have hvldk : vldOut2 k = vldIn ak := by
           have h := congr_fun hvldout2 k
@@ -716,7 +721,7 @@ theorem vldOut_eq_vldIn_of_fork_unitl_sent2
           have hvldInA : vldIn ak = 0#1 := by grind
           simp [hvldInA];
   have heq : a = n := by
-    have := @fork_corec1 rdOut1 rdOut2 vldIn dataIn 0 0#1 0#1 n
+    have := fork_corec1 (rd0_in := rdOut1) (rd1_in := rdOut2) (vld_in := vldIn) (data_in := dataIn) (m := 0) (x := 0#1) (y := 0#1) (n := n)
     rw [hst] at this
     simp at this
     assumption
