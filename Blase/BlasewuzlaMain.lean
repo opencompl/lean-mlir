@@ -184,9 +184,13 @@ structure Solver where
   run : Config → Nondep.Term → MetaM SolverExitCode
 
 unsafe def runMetaMAsIO (m : MetaM α) : IO α := do
+  -- Loading the Lean environment (bit-blasting / SAT-solving modules) is a fixed per-invocation
+  -- cost of ~150-200ms, paid before any translation or solving. Time it so we can benchmark it.
+  let tInitStart ← IO.monoMsNow
   initSearchPath (← findSysroot)
   enableInitializersExecution
   let env ← importModules #[`Std.Tactic.BVDecide, `Init, `Std] {} 0 (loadExts := true)
+  IO.println s!"initialization-time: {(← IO.monoMsNow) - tInitStart} ms"
   let coreContext : Core.Context := { fileName := "blasewuzla", fileMap := default }
   let coreState : Core.State := { env }
   let ctxMeta : Meta.Context := {}
@@ -396,9 +400,13 @@ def kinduction : Solver where
     let fsm := termFsm.toFsmZext
     let tBuilt ← IO.monoMsNow
 
-    -- Set up Lean TermElabM environment for the SAT solver
+    -- Set up Lean TermElabM environment for the SAT solver. NOTE: this re-imports the environment
+    -- that runMetaMAsIO already loaded, so k-induction pays the initialization cost twice; both are
+    -- timed (a k-induction run emits two 'initialization-time' lines that sum to its total).
+    let tInitStart ← IO.monoMsNow
     initSearchPath (← findSysroot)
     let env ← importModules #[`Std.Tactic.BVDecide, `Init] {} 0 (loadExts := true)
+    IO.println s!"initialization-time: {(← IO.monoMsNow) - tInitStart} ms"
     let coreContext : Core.Context := { fileName := "blasewuzla", fileMap := FileMap.ofString "" }
     let coreState : Core.State := { env }
     let ctxMeta : Meta.Context := {}
