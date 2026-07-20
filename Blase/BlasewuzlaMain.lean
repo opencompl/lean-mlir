@@ -455,7 +455,9 @@ Compute and print, to stdout, the sizes of the SAT/automaton problems built from
 - `mono-qfbv`: the predicate lowered to single width then translated to QF_BV.
 - `automaton`: the parametric FSM built for the k-induction/external backends.
 
-Each formula reports a structural node count and a post-bitblast AIG node count.
+Each QF_BV formula reports a structural node count and a post-bitblast AIG node count.
+For the automaton we report its state-space size in bits (number of registers/latches),
+its transition-circuit gate count, and its post-bitblast AIG node count.
 QF_BV sizes are computed at width `config.bound`; the automaton is width-independent.
 Out-of-fragment / non-translatable cases print `N/A`.
 -/
@@ -478,7 +480,8 @@ def printStats (config : Config) (predicate : Nondep.Term) : IO Unit := do
   IO.println s!"input-qfbv-aig-size: {fmtSize <| inputQfbv?.map bvLogicalExprAigSize}"
   IO.println s!"mono-qfbv-structural-size: {fmtSize <| monoQfbv?.map bvLogicalExprSize}"
   IO.println s!"mono-qfbv-aig-size: {fmtSize <| monoQfbv?.map bvLogicalExprAigSize}"
-  IO.println s!"automaton-structural-size: {fmtSize <| fsm?.map (·.circuitSize)}"
+  IO.println s!"automaton-state-bits: {fmtSize <| fsm?.map (·.numStateBits)}"
+  IO.println s!"automaton-circuit-size: {fmtSize <| fsm?.map (·.circuitSize)}"
   IO.println s!"automaton-aig-size: {fmtSize <| fsm?.map (·.toAiger.aig.aig.decls.size)}"
 where
   /-- Adapt the codebase's `(value, success?, errors)` result convention to `Option value`. -/
