@@ -84,6 +84,13 @@ instance : Std.Associative Nat.add where
 def stateSpaceSize : Nat := Nat.pow 2 (FinEnum.card p.α)
 
 /--
+The number of state bits of the finite state machine, i.e. the number of
+registers/latches. This is the log-base-2 of `stateSpaceSize`, and is the
+honest, width-independent notion of "how large is the automaton's state space",
+as opposed to `circuitSize`, which counts the gates of the transition circuit. -/
+def numStateBits : Nat := FinEnum.card p.α
+
+/--
 Return the total size of the FSM as a function of all of its circuits.
 Note that this implicitly counts the size of the state space of the FSM,
 and consequently, is the natural notion of complexity of the FSM.
