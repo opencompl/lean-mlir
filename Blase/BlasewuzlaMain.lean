@@ -42,18 +42,89 @@ def SolverExitCode.toString : SolverExitCode → String
 | .unsat => "unsat"
 | .error errStr => s!"error: {errStr}"
 
+/-!
+## Size statistics helpers
+
+Structural node counts for QF_BV formulas (`BVLogicalExpr`), and a post-bitblast
+AIG node count. These let us report the size of the generated SAT problems.
+-/
+
+open Std.Tactic.BVDecide in
+/-- Structural node count of a `BVExpr`. -/
+def bvExprSize : {w : Nat} → BVExpr w → Nat
+  | _, .var _ => 1
+  | _, .const _ => 1
+  | _, .extract _ _ e => 1 + bvExprSize e
+  | _, .bin l _ r => 1 + bvExprSize l + bvExprSize r
+  | _, .un _ e => 1 + bvExprSize e
+  | _, .append l r _ => 1 + bvExprSize l + bvExprSize r
+  | _, .replicate _ e _ => 1 + bvExprSize e
+  | _, .shiftLeft l r => 1 + bvExprSize l + bvExprSize r
+  | _, .shiftRight l r => 1 + bvExprSize l + bvExprSize r
+  | _, .arithShiftRight l r => 1 + bvExprSize l + bvExprSize r
+
+open Std.Tactic.BVDecide in
+/-- Structural node count of a `BVPred`. -/
+def bvPredSize : BVPred → Nat
+  | .bin l _ r => 1 + bvExprSize l + bvExprSize r
+  | .getLsbD e _ => 1 + bvExprSize e
+
+open Std.Tactic.BVDecide in
+/-- Structural node count of a `BVLogicalExpr` (a `BoolExpr BVPred`). -/
+def bvLogicalExprSize : BVLogicalExpr → Nat
+  | .literal p => bvPredSize p
+  | .const _ => 1
+  | .not x => 1 + bvLogicalExprSize x
+  | .gate _ a b => 1 + bvLogicalExprSize a + bvLogicalExprSize b
+  | .ite c a b => 1 + bvLogicalExprSize c + bvLogicalExprSize a + bvLogicalExprSize b
+
+open Std.Tactic.BVDecide in
+/-- Number of AIG nodes after bitblasting a `BVLogicalExpr` (no SAT call). -/
+def bvLogicalExprAigSize (e : BVLogicalExpr) : Nat :=
+  e.bitblast.aig.decls.size
+
+/-- Format an optional size: a number, or `N/A` when the formula is out of fragment. -/
+def fmtSize : Option Nat → String
+  | some n => toString n
+  | none => "N/A"
+
+/--
+Print the per-backend translation/solve time breakdown to stdout:
+- `translation-time`: wall time spent building the encoding (lowering to QF_BV / building the
+  parametric FSM+AIG), i.e. everything up to the SAT / model-checking call.
+- `solve-time`: wall time spent inside the actual SAT / model-checking solve.
+
+Emitted unconditionally on the success path (both phases ran), so the evaluation harness can
+report the split from ordinary solver runs without paying the size-statistics (`--stats`) cost.
+Backends that bail out before building (e.g. out of the automata-decidable fragment) print
+nothing, and the corresponding run is not counted. -/
+def printTimingSplit (translationMs solveMs : Nat) : IO Unit := do
+  IO.println s!"translation-time: {translationMs} ms"
+  IO.println s!"solve-time: {solveMs} ms"
+
 open Std Tactic Sat AIG BVDecide  Lean Elab Meta Std Sat AIG Tactic BVDecide Frontend in
-def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) (satSolverTimeout : Nat) : MetaM Bool := do
+/--
+Check whether a QF_BV formula is unsatisfiable, returning `(isUnsat, bitblastMs, satMs)`.
+
+`bitblastMs` is the time spent bitblasting the formula to an AIG and lowering it to CNF (the
+"translation" work for QF_BV backends); `satMs` is the time spent in the external SAT solver
+(the "solve" work). Separating these lets the harness report a translation/solve split even
+though bitblasting happens as part of the check. -/
+def checkBVLogicalExprIsUnsat (e : BVLogicalExpr) (satSolverTimeout : Nat) : MetaM (Bool × Nat × Nat) := do
+  let tStart ← IO.monoMsNow
   let entry := e.bitblast
   let (entry, _map) := entry.relabelNat'
   let cnf := AIG.toCNF entry
+  let tBlasted ← IO.monoMsNow
   let cfg : BVDecideConfig := { timeout := satSolverTimeout }
   IO.FS.withTempFile fun _ lratFile => do
   let ctx ← (BVDecide.Frontend.TacticContext.new lratFile cfg).run' { declName? := `lrat }
   let res ← Lean.Elab.Tactic.BVDecide.Frontend.runExternal cnf ctx.solver ctx.lratPath ctx.config.trimProofs ctx.config.timeout ctx.config.binaryProofs
-  match res with
-  | .ok _cert => return true
-  | .error _assignment => return false
+  let tSolved ← IO.monoMsNow
+  let isUnsat := match res with
+    | .ok _cert => true
+    | .error _assignment => false
+  return (isUnsat, tBlasted - tStart, tSolved - tBlasted)
 
 /--
 Introduce only forall binders and preserve names.
@@ -105,15 +176,21 @@ structure Config where
   preconditionSub : Bool
   /-- Run width-subtraction elimination preprocessing pass. -/
   elimSub : Bool
+  /-- Print QF_BV / automaton size statistics (implied by the `dryrun` backend). -/
+  stats : Bool
 
 structure Solver where
   name : String
   run : Config → Nondep.Term → MetaM SolverExitCode
 
 unsafe def runMetaMAsIO (m : MetaM α) : IO α := do
+  -- Loading the Lean environment (bit-blasting / SAT-solving modules) is a fixed per-invocation
+  -- cost of ~150-200ms, paid before any translation or solving. Time it so we can benchmark it.
+  let tInitStart ← IO.monoMsNow
   initSearchPath (← findSysroot)
   enableInitializersExecution
   let env ← importModules #[`Std.Tactic.BVDecide, `Init, `Std] {} 0 (loadExts := true)
+  IO.println s!"initialization-time: {(← IO.monoMsNow) - tInitStart} ms"
   let coreContext : Core.Context := { fileName := "blasewuzla", fileMap := default }
   let coreState : Core.State := { env }
   let ctxMeta : Meta.Context := {}
@@ -128,6 +205,7 @@ unsafe def monoBMC : Solver where
     if config.verbose then
       IO.eprintln s!"Running {monoBMC.name} at width {config.bound}..."
 
+    let tBuildStart ← IO.monoMsNow
     let (singleWidthTerm, success?, singleWidthErrors) := result.toSingleWidthNondepTerm (.const config.bound)
 
      if ! success? then
@@ -154,7 +232,11 @@ unsafe def monoBMC : Solver where
     if config.verbose then
       IO.eprintln s!"qfbv formula to be checked for UNSAT:\n{qfbv.toString}"
 
-    if ← checkBVLogicalExprIsUnsat qfbv config.timeout then
+    let tQfbvBuilt ← IO.monoMsNow
+    let (isUnsat, blastMs, satMs) ← checkBVLogicalExprIsUnsat qfbv config.timeout
+    -- translation = single-width lowering + QF_BV construction + bitblast to CNF; solve = SAT.
+    printTimingSplit ((tQfbvBuilt - tBuildStart) + blastMs) satMs
+    if isUnsat then
       return .unsat
     else
       return .sat
@@ -202,6 +284,10 @@ def naiveBMC : Solver where
     -- naivebmc backend: translate to single-width and call bv_decide at a fixed width
     if config.verbose then
       IO.eprintln s!"Running naivebmc at width {config.bound} for #widths {result.maxwcard}..."
+    -- Accumulate translation (QF_BV construction) and solve (SAT) time across every
+    -- enumerated width so we can report a single per-problem split.
+    let mut transMs : Nat := 0
+    let mut solveMs : Nat := 0
     for widths in cartesianProductRange config.bound result.maxwcard do
       if config.verbose then
         IO.println s!"width configuration ⟨{widths}⟩"
@@ -211,10 +297,13 @@ def naiveBMC : Solver where
         as we cannot guarantee a legal QF_BV expression being created, as the semantics
         are a promise-based semantics.
       -/
+      let tIterStart ← IO.monoMsNow
       match widthConstraints.evalWidthLogicalExpr widths with
       | .ok false =>
         if config.verbose then
           IO.eprintln s!"⟨{widths.toList}⟩ width precondition sufficed to prove UNSAT."
+        let tSkip ← IO.monoMsNow
+        transMs := transMs + (tSkip - tIterStart)
         continue
       | .ok true =>
         if config.verbose then
@@ -232,14 +321,21 @@ def naiveBMC : Solver where
 
       if config.verbose then
         IO.eprintln s!"{qfbv.toString}"
-      if ← checkBVLogicalExprIsUnsat qfbv config.timeout then
+      let tQfbvBuilt ← IO.monoMsNow
+      let (isUnsat, blastMs, satMs) ← checkBVLogicalExprIsUnsat qfbv config.timeout
+      -- translation = QF_BV construction at this width + bitblast; solve = SAT.
+      transMs := transMs + (tQfbvBuilt - tIterStart) + blastMs
+      solveMs := solveMs + satMs
+      if isUnsat then
         if config.verbose then
           IO.eprintln s!"⟨{widths.toList}⟩ ✓"
         continue
       else
         if config.verbose then
           IO.eprintln s!"⟨{widths.toList}⟩ ✗"
+        printTimingSplit transMs solveMs
         return .sat
+    printTimingSplit transMs solveMs
     return .unsat
 
 def dryrun : Solver where
@@ -256,13 +352,17 @@ def External (name : String) (solver : Valaig.External.SafetyAigerMC) : Solver w
     if !result.isAutomtaDecidable then
       IO.eprintln s!"{name}: formula contains non-automata-decidable operations and is outside the supported fragment."
       return .error s!"formula is outside the automata-decidable fragment"
+    let tBuildStart ← IO.monoMsNow
     let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 0 result
     let fsm := termFsm.toFsmZext
 
     if config.verbose then
       IO.eprintln s!"Running {name}..."
     let aig := fsm.toAiger
+    let tBuilt ← IO.monoMsNow
     let res ← Valaig.External.checkSafety solver aig
+    let tSolved ← IO.monoMsNow
+    printTimingSplit (tBuilt - tBuildStart) (tSolved - tBuilt)
     match res with
     | .error msg =>
         IO.eprintln s!"{name} error: {msg}"
@@ -295,12 +395,18 @@ def kinduction : Solver where
     if config.verbose then
       IO.eprintln s!"FSM built. Running k-induction with max {config.niter} iterations..."
 
+    let tBuildStart ← IO.monoMsNow
     let termFsm := mkTermFsmNondep result.wcard result.tcard result.bcard 0 0 0 result
     let fsm := termFsm.toFsmZext
+    let tBuilt ← IO.monoMsNow
 
-    -- Set up Lean TermElabM environment for the SAT solver
+    -- Set up Lean TermElabM environment for the SAT solver. NOTE: this re-imports the environment
+    -- that runMetaMAsIO already loaded, so k-induction pays the initialization cost twice; both are
+    -- timed (a k-induction run emits two 'initialization-time' lines that sum to its total).
+    let tInitStart ← IO.monoMsNow
     initSearchPath (← findSysroot)
     let env ← importModules #[`Std.Tactic.BVDecide, `Init] {} 0 (loadExts := true)
+    IO.println s!"initialization-time: {(← IO.monoMsNow) - tInitStart} ms"
     let coreContext : Core.Context := { fileName := "blasewuzla", fileMap := FileMap.ofString "" }
     let coreState : Core.State := { env }
     let ctxMeta : Meta.Context := {}
@@ -312,6 +418,7 @@ def kinduction : Solver where
     let ((out, _circuitStats), _coreState, _metaState, _termState) ←
       fsm.decideIfZerosVerified config.niter |>.toIO coreContext coreState ctxMeta sMeta ctxTerm sTerm
     let tEnd ← IO.monoMsNow
+    printTimingSplit (tBuilt - tBuildStart) (tEnd - tStart)
 
     if config.verbose then
       IO.eprintln s!"Completed in {tEnd - tStart}ms"
@@ -340,6 +447,45 @@ def solverErrorUknown : Solver where
     return .error "Uknown solver backend choice."
 
 
+open Std.Tactic.BVDecide in
+/--
+Compute and print, to stdout, the sizes of the SAT/automaton problems built from
+`predicate`, independently of the selected backend:
+- `input-qfbv`: the (negated) multi-width predicate translated directly to QF_BV.
+- `mono-qfbv`: the predicate lowered to single width then translated to QF_BV.
+- `automaton`: the parametric FSM built for the k-induction/external backends.
+
+Each formula reports a structural node count and a post-bitblast AIG node count.
+QF_BV sizes are computed at width `config.bound`; the automaton is width-independent.
+Out-of-fragment / non-translatable cases print `N/A`.
+-/
+def printStats (config : Config) (predicate : Nondep.Term) : IO Unit := do
+  -- input-qfbv: direct multi-width -> QF_BV
+  let inputQfbv? : Option BVLogicalExpr := do
+    let neg ← resultValue? predicate.pnegate
+    resultValue? (neg.toBVLogicalExpr (Array.replicate predicate.maxwcard config.bound))
+  -- mono-qfbv: single-width lowering -> QF_BV
+  let monoQfbv? : Option BVLogicalExpr := do
+    let sw  ← resultValue? (predicate.toSingleWidthNondepTerm (.const config.bound))
+    let swn ← resultValue? sw.pnegate
+    resultValue? (swn.toBVLogicalExpr #[])
+  -- automaton: parametric FSM
+  let fsm? :=
+    if predicate.isAutomtaDecidable then
+      some (mkTermFsmNondep predicate.wcard predicate.tcard predicate.bcard 0 0 0 predicate).toFsmZext
+    else none
+  IO.println s!"input-qfbv-structural-size: {fmtSize <| inputQfbv?.map bvLogicalExprSize}"
+  IO.println s!"input-qfbv-aig-size: {fmtSize <| inputQfbv?.map bvLogicalExprAigSize}"
+  IO.println s!"mono-qfbv-structural-size: {fmtSize <| monoQfbv?.map bvLogicalExprSize}"
+  IO.println s!"mono-qfbv-aig-size: {fmtSize <| monoQfbv?.map bvLogicalExprAigSize}"
+  IO.println s!"automaton-structural-size: {fmtSize <| fsm?.map (·.circuitSize)}"
+  IO.println s!"automaton-aig-size: {fmtSize <| fsm?.map (·.toAiger.aig.aig.decls.size)}"
+where
+  /-- Adapt the codebase's `(value, success?, errors)` result convention to `Option value`. -/
+  resultValue? {α : Type} (r : α × Bool × Lean.Format) : Option α :=
+    let (a, ok, _) := r
+    if ok then some a else none
+
 /-- List of all solvers we support. -/
 unsafe def allSolvers : Std.HashMap String Solver :=
   let solvers := #[kinduction, rIC3, abc, monoBMC, naiveBMC, dryrun]
@@ -357,6 +503,8 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
   let elimIte : Bool := p.hasFlag "elimIte"
   let preconditionSub : Bool := p.hasFlag "preconditionSub"
   let elimSub : Bool := p.hasFlag "elimSub"
+  -- The `dryrun` backend exists to inspect the generated problems, so it implies `--stats`.
+  let stats : Bool := p.hasFlag "stats" || backend == dryrun.name
 
   let config : Config := {
     verbose,
@@ -367,7 +515,8 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     timeout,
     elimIte,
     preconditionSub,
-    elimSub
+    elimSub,
+    stats
   }
   -- Read and parse the SMT2 file
   let timeStart ← IO.monoMsNow
@@ -406,11 +555,18 @@ unsafe def runBlasewuzla (p : Cli.Parsed) : IO UInt32 := do
     else
       pure predicate
 
+  if config.stats then
+    printStats config predicate
+
   let solver : Solver :=
     allSolvers.get? backend |>.getD solverErrorUknown
+  let solveStart ← IO.monoMsNow
   let out ← runMetaMAsIO <| solver.run config predicate
+  let solveEnd ← IO.monoMsNow
   let timeEnd ← IO.monoMsNow
 
+  if config.stats then
+    IO.println s!"solver-time: {solveEnd - solveStart} ms"
   IO.println s!"Time elapsed: {timeEnd - timeStart} ms"
   IO.println s!"Result: {out.toString}"
   return out.toUInt32
@@ -429,6 +585,7 @@ unsafe def blasewuzlaCmd : Cli.Cmd := `[Cli|
     elimIte;                   "Run ite-elimination preprocessing pass (off by default)."
     elimSub;                   "Run sub-elimination preprocessing pass (off by default). This adds many variables (one per subtraction), but ensures that no subtractions remain in the formula."
     preconditionSub;           "Runs subtraction precondition preprocessing pass (off by default). This adds a precondition that the subtraction does not produce a negative number."
+    stats;                     "Print QF_BV / automaton size statistics and solver time to stdout (off by default; implied by the 'dryrun' backend). This bitblasts both QF_BV formulas and builds the FSM, so it adds work comparable to building (not solving) the problems."
 
   ARGS:
     input : String;            "Path to the .smt2 file."
