@@ -1,4 +1,5 @@
 import SSA.Projects.CIRCT.HandshakeToHW.HWFork
+import SSA.Projects.CIRCT.Comb.CombDecide
 
 /-!
 # Transaction-level sampling of the `fork` circuit — definitions
@@ -32,31 +33,23 @@ namespace Fork
 
 open HandshakeStream
 
-/-! ## Boolean infrastructure on `BitVec 1` -/
+/-! ## Comb/HW infrastructure -/
 
-theorem comb_and_eq_one_iff (a b : BitVec 1) :
-    comb_and a b = 1#1 ↔ a = 1#1 ∧ b = 1#1 := by
-  bv_decide
+@[bv_normalize, comb_decide]
+theorem comb_and_eq (a b : BitVec 1) :
+  comb_and a b = a &&& b := by rfl
 
-theorem comb_and_eq_zero_iff (a b : BitVec 1) :
-    comb_and a b = 0#1 ↔ a = 0#1 ∨ b = 0#1 := by
-  bv_decide
+@[bv_normalize, comb_decide]
+theorem comb_or_eq (a b : BitVec 1) :
+  comb_or a b = a ||| b := by rfl
 
-theorem comb_or_eq_one_iff (a b : BitVec 1) :
-    comb_or a b = 1#1 ↔ a = 1#1 ∨ b = 1#1 := by
-  bv_decide
+@[bv_normalize, comb_decide]
+theorem comb_xor_eq (a b : BitVec 1) :
+  comb_xor a b = a ^^^ b := by rfl
 
-theorem comb_or_eq_zero_iff (a b : BitVec 1) :
-    comb_or a b = 0#1 ↔ a = 0#1 ∧ b = 0#1 := by
-  bv_decide
-
-theorem comb_not_eq_one_iff (a : BitVec 1) :
-    comb_xor a (hw_constant true) = 1#1 ↔ a = 0#1 := by
-  bv_decide
-
-theorem comb_not_eq_zero_iff (a : BitVec 1) :
-    comb_xor a (hw_constant true) = 0#1 ↔ a = 1#1 := by
-  bv_decide
+@[bv_normalize, comb_decide]
+theorem hw_constant_eq (a : Bool) :
+  hw_constant a = BitVec.ofBool a := by cases a <;> rfl
 
 /-! ## The register trajectory, as a plain recursion over time
 
@@ -67,12 +60,12 @@ the circuit then becomes a pure function of the current cycle. -/
 /-- One clock cycle of the fork's register update. `e.1`/`e.2` are the
 `emitted` registers of output 1/output 2. This is (definitionally) the state
 update performed by `fork_corec`. -/
-def stepRegs (rd1 rd2 vld : BitVec 1) (e : BitVec 1 × BitVec 1) :
+def stepRegs (rd1 rd2 vld : BitVec 1) (e1 e2 : BitVec 1) :
     BitVec 1 × BitVec 1 :=
-  let fire1 := comb_and rd1 (comb_and (comb_xor e.1 (hw_constant true)) vld)
-  let fire2 := comb_and rd2 (comb_and (comb_xor e.2 (hw_constant true)) vld)
-  let done0 := comb_or fire1 e.1
-  let done1 := comb_or fire2 e.2
+  let fire1 := comb_and rd1 (comb_and (comb_xor e1 (hw_constant true)) vld) -- `_4` in `hw_fork`
+  let fire2 := comb_and rd2 (comb_and (comb_xor e2 (hw_constant true)) vld) -- `_10` in `hw_fork`
+  let done0 := comb_or fire1 e1 -- `_5` in `hw_fork`
+  let done1 := comb_or fire2 e2 -- `_11` in `hw_fork`
   let allDone := comb_and done0 done1 -- `_12` in `hw_fork`
   (comb_and done0 (comb_xor allDone (hw_constant true)),
    comb_and done1 (comb_xor allDone (hw_constant true)))
@@ -429,7 +422,7 @@ its observation instants (`fire1` resp. `allDone`). -/
 theorem out1View_get_none {dataIn : Stream' (BitVec 32)} {t : Nat}
     (h : fire1 rdOut1 rdOut2 vldIn t = 0#1) :
     Stream'.get (out1View rdOut1 rdOut2 vldIn dataIn) t = none := by
-  rw [fire1_def, comb_and_eq_zero_iff] at h
+  rw [fire1_def] at h
   rcases h with h | h <;> simp [out1View, toStream, Stream'.get, h]
 
 theorem out1View_get_some {dataIn : Stream' (BitVec 32)} {t : Nat}

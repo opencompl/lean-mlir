@@ -103,24 +103,24 @@ def hw_fork (_ready _ready_1 _valid : Stream' (BitVec 1)) (_in0 : Stream' (BitVe
               × BitVec w -- rawOutput
       )
   :=
-  Stream'.corec' (α := Nat × BitVec 1 × BitVec 1) (fun (i, _emitted_0, _emitted_1) =>
+  Stream'.corec' (α := Nat × BitVec 1 × BitVec 1) (fun (i, e1, e2) =>
     let _true := hw_constant true
     let _false := hw_constant false
-    let _2 := comb_xor _emitted_0 _true
-    let _3 := comb_and _2 (_valid i)
-    let _4 := comb_and (_ready i) _3
-    let _5 := comb_or _4 _emitted_0   -- done0
-    let _8 := comb_xor _emitted_1 _true
-    let _9 := comb_and _8 (_valid i)
-    let _10 := comb_and (_ready_1 i) _9
-    let _11 := comb_or _10 _emitted_1 -- done1
-    let _12 := comb_and _5 _11        -- allDone
-    let _rawOutput := _in0 i
-    let _0 := comb_xor _12 _true
-    let _1 := comb_and _5 _0
-    let _6 := comb_xor _12 _true
-    let _7 := comb_and _11 _6
-    ((_12, _3, _9, _rawOutput, _rawOutput), (i + 1, _1, _7))
+    let _2 := comb_xor e1 _true
+    let val1 := comb_and _2 (_valid i)
+    let fire1 := comb_and (_ready i) val1
+    let done1 := comb_or fire1 e1   -- done0
+    let _8 := comb_xor e2 _true
+    let val2 := comb_and _8 (_valid i)
+    let fire2 := comb_and (_ready_1 i) val2
+    let done2 := comb_or fire2 e2 -- done1
+    let allDone := comb_and done1 done2        -- allDone
+    let out := _in0 i
+    let _0 := comb_xor allDone _true
+    let e1Next := comb_and done1 _0
+    let _6 := comb_xor allDone _true
+    let e2Next := comb_and done2 _6
+    ((allDone, val1, val2, out, out), (i + 1, e1Next, e2Next))
   ) (0, 0#1, 0#1)
 
 
