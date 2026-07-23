@@ -19,7 +19,7 @@ Refactoring of the fork refinement around the *`allDone` sampling* idea:
 
 Layout:
 1. register trajectory (`emitted`) as a plain recursion over time, and named
-   combinational signals (`fire1`, `done0`, `allDone`, ...);
+   combinational signals (`fire1`, `done1`, `allDone`, ...);
 2. pointwise characterization of `hw_fork'` (`hw_fork'_get`) — the only place
    `Stream'.corec'` ever needs to be unfolded;
 3. statements for the library of circuit facts (the intermediate predicates,
@@ -51,118 +51,142 @@ theorem comb_xor_eq (a b : BitVec 1) :
 theorem hw_constant_eq (a : Bool) :
   hw_constant a = BitVec.ofBool a := by cases a <;> rfl
 
-/-! ## The register trajectory, as a plain recursion over time
+/-! # Intermediate definitions
+  Describing what happens in the fork circuit, for every logic gate.
+-/
 
-Instead of reasoning through `Stream'.corec'`/`Stream'.iterate`, we define the
-`emitted` registers as a recursive function of the cycle index. Every signal of
-the circuit then becomes a pure function of the current cycle. -/
+def emittedStep (rd1 rd2 vld e1 e2 : BitVec 1) : BitVec 1 × BitVec 1:=
+    let _true := hw_constant true
+    let _2 := comb_xor e1 _true
+    let _8 := comb_xor e2 _true
+    let val1 := comb_and _2 vld
+    let fire1 := comb_and rd1 val1
+    let done1 := comb_or fire1 e1
+    let val2 := comb_and _8 vld
+    let fire2 := comb_and rd2 val2
+    let done2 := comb_or fire2 e2
+    let allDone := comb_and done1 done2
+    let _6 := comb_xor allDone _true
+    let _0 := comb_xor allDone _true
+    let e1Next := comb_and done1 _0
+    let e2Next := comb_and done2 _6
+    (e1Next, e2Next)
 
-/-- One clock cycle of the fork's register update. `e.1`/`e.2` are the
-`emitted` registers of output 1/output 2. This is (definitionally) the state
-update performed by `fork_corec`. -/
-def stepRegs (rd1 rd2 vld : BitVec 1) (e1 e2 : BitVec 1) :
-    BitVec 1 × BitVec 1 :=
-  let fire1 := comb_and rd1 (comb_and (comb_xor e1 (hw_constant true)) vld) -- `_4` in `hw_fork`
-  let fire2 := comb_and rd2 (comb_and (comb_xor e2 (hw_constant true)) vld) -- `_10` in `hw_fork`
-  let done0 := comb_or fire1 e1 -- `_5` in `hw_fork`
-  let done1 := comb_or fire2 e2 -- `_11` in `hw_fork`
-  let allDone := comb_and done0 done1 -- `_12` in `hw_fork`
-  (comb_and done0 (comb_xor allDone (hw_constant true)),
-   comb_and done1 (comb_xor allDone (hw_constant true)))
-
-variable (rdOut1 rdOut2 vldIn : Stream' (BitVec 1))
-
-/-- The trajectory of the fork's `emitted` registers over time. -/
-def emitted : Nat → BitVec 1 × BitVec 1
+def emitted (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) : Nat → BitVec 1 × BitVec 1
   | 0 => (0#1, 0#1)
-  | n + 1 => stepRegs (rdOut1 n) (rdOut2 n) (vldIn n) (emitted n)
+  | n + 1 => emittedStep (rdOut1 n) (rdOut2 n) (vldIn n) (emitted rdOut1 rdOut2 vldIn n).1 (emitted rdOut1 rdOut2 vldIn n).2
 
-/-- `e0 n = 1` iff receiver 1 has already accepted the token of the transaction
-that is still open at cycle `n`. -/
-def e0 (n : Nat) : BitVec 1 := (emitted rdOut1 rdOut2 vldIn n).1
+/-- `emitted1 n = 1` iff receiver1 has already accepted the token of the transaction
+  that is still open at cycle `n`. -/
+@[bv_normalize, comb_decide]
+def emitted1 (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) : BitVec 1 := (emitted rdOut1 rdOut2 vldIn n).1
 
-/-- `e1 n = 1` iff receiver 2 has already accepted the token of the transaction
-that is still open at cycle `n`. -/
-def e1 (n : Nat) : BitVec 1 := (emitted rdOut1 rdOut2 vldIn n).2
+/-- `emitted2 n = 1` iff receiver 2 has already accepted the token of the transaction
+  that is still open at cycle `n`. -/
+@[bv_normalize, comb_decide]
+def emitted2 (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) : BitVec 1 := (emitted rdOut1 rdOut2 vldIn n).2
 
 /-- The fork's `valid` signal on output 1 (`_3` in the MLIR output). -/
-def vldOut1 (n : Nat) : BitVec 1 :=
-  comb_and (comb_xor (e0 rdOut1 rdOut2 vldIn n) (hw_constant true)) (vldIn n)
+@[bv_normalize, comb_decide]
+def vldOut1 (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) : BitVec 1 :=
+  comb_and (comb_xor (emitted1 rdOut1 rdOut2 vldIn n) (hw_constant true)) (vldIn n)
 
 /-- The fork's `valid` signal on output 2 (`_9` in the MLIR output). -/
-def vldOut2 (n : Nat) : BitVec 1 :=
-  comb_and (comb_xor (e1 rdOut1 rdOut2 vldIn n) (hw_constant true)) (vldIn n)
+@[bv_normalize, comb_decide]
+def vldOut2 (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) : BitVec 1 :=
+  comb_and (comb_xor (emitted2 rdOut1 rdOut2 vldIn n) (hw_constant true)) (vldIn n)
 
 /-- Receiver 1 accepts a token at cycle `n` (`_4` in the MLIR output). -/
-def fire1 (n : Nat) : BitVec 1 :=
+@[bv_normalize, comb_decide]
+def fire1 (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) : BitVec 1 :=
   comb_and (rdOut1 n) (vldOut1 rdOut1 rdOut2 vldIn n)
 
 /-- Receiver 2 accepts a token at cycle `n` (`_10` in the MLIR output). -/
-def fire2 (n : Nat) : BitVec 1 :=
+@[bv_normalize, comb_decide]
+def fire2 (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) : BitVec 1 :=
   comb_and (rdOut2 n) (vldOut2 rdOut1 rdOut2 vldIn n)
 
-/-- Receiver 1 has received the current token, now or earlier (`done0`, `_5`). -/
-def done0 (n : Nat) : BitVec 1 :=
-  comb_or (fire1 rdOut1 rdOut2 vldIn n) (e0 rdOut1 rdOut2 vldIn n)
+/-- Receiver 1 has received the current token, now or earlier (`done1`, `_5`). -/
+@[bv_normalize, comb_decide]
+def done1 (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) : BitVec 1 :=
+  comb_or (fire1 rdOut1 rdOut2 vldIn n) (emitted1 rdOut1 rdOut2 vldIn n)
 
-/-- Receiver 2 has received the current token, now or earlier (`done1`, `_11`). -/
-def done1 (n : Nat) : BitVec 1 :=
-  comb_or (fire2 rdOut1 rdOut2 vldIn n) (e1 rdOut1 rdOut2 vldIn n)
+/-- Receiver 2 has received the current token, now or earlier (`done2`, `_11`). -/
+@[bv_normalize, comb_decide]
+def done2 (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) : BitVec 1 :=
+  comb_or (fire2 rdOut1 rdOut2 vldIn n) (emitted2 rdOut1 rdOut2 vldIn n)
 
 /-- All receivers have received the current token; this is also the fork's
 `ready` signal towards the producer (`allDone`, `_12`). -/
-def allDone (n : Nat) : BitVec 1 :=
-  comb_and (done0 rdOut1 rdOut2 vldIn n) (done1 rdOut1 rdOut2 vldIn n)
+@[bv_normalize, comb_decide]
+def allDone (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) : BitVec 1 :=
+  comb_and (done1 rdOut1 rdOut2 vldIn n) (done2 rdOut1 rdOut2 vldIn n)
 
-/-! Definitional equations for the registers (all `rfl`). -/
 
-@[simp] theorem e0_zero : e0 rdOut1 rdOut2 vldIn 0 = 0#1 := rfl
-@[simp] theorem e1_zero : e1 rdOut1 rdOut2 vldIn 0 = 0#1 := rfl
+/-! # Equational lemmas
+  Unfolding the intermediate definitions
+-/
 
-theorem e0_succ (n : Nat) :
-    e0 rdOut1 rdOut2 vldIn (n + 1)
-      = comb_and (done0 rdOut1 rdOut2 vldIn n)
+@[bv_normalize, comb_decide]
+theorem emitted1_zero (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) :
+  emitted1 rdOut1 rdOut2 vldIn 0 = 0#1 := rfl
+
+@[bv_normalize, comb_decide]
+theorem emitted2_zero (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) :
+  emitted2 rdOut1 rdOut2 vldIn 0 = 0#1 := rfl
+
+@[bv_normalize, comb_decide]
+theorem emitted1_succ (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) :
+    emitted1 rdOut1 rdOut2 vldIn (n + 1)
+      = comb_and (done1 rdOut1 rdOut2 vldIn n)
           (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true)) := rfl
 
-theorem e1_succ (n : Nat) :
-    e1 rdOut1 rdOut2 vldIn (n + 1)
-      = comb_and (done1 rdOut1 rdOut2 vldIn n)
+@[bv_normalize, comb_decide]
+theorem emitted2_succ (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (n : Nat) :
+    emitted2 rdOut1 rdOut2 vldIn (n + 1)
+      = comb_and (done2 rdOut1 rdOut2 vldIn n)
           (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true)) := rfl
 
 /-! Unfolding equations for the combinational signals (all `rfl`). These
 signals have no state of their own, so their `_def` equations hold at *every*
 cycle; use them with `rw`/`simp` instead of `unfold`. -/
-
-theorem vldOut1_def (n : Nat) :
+@[bv_normalize, comb_decide]
+theorem vldOut1_eq (n : Nat) :
     vldOut1 rdOut1 rdOut2 vldIn n
-      = comb_and (comb_xor (e0 rdOut1 rdOut2 vldIn n) (hw_constant true))
+      = comb_and (comb_xor (emitted1 rdOut1 rdOut2 vldIn n) (hw_constant true))
           (vldIn n) := rfl
 
-theorem vldOut2_def (n : Nat) :
+@[bv_normalize, comb_decide]
+theorem vldOut2_eq (n : Nat) :
     vldOut2 rdOut1 rdOut2 vldIn n
-      = comb_and (comb_xor (e1 rdOut1 rdOut2 vldIn n) (hw_constant true))
+      = comb_and (comb_xor (emitted2 rdOut1 rdOut2 vldIn n) (hw_constant true))
           (vldIn n) := rfl
 
-theorem fire1_def (n : Nat) :
+@[bv_normalize, comb_decide]
+theorem fire1_eq (n : Nat) :
     fire1 rdOut1 rdOut2 vldIn n
       = comb_and (rdOut1 n) (vldOut1 rdOut1 rdOut2 vldIn n) := rfl
 
-theorem fire2_def (n : Nat) :
+@[bv_normalize, comb_decide]
+theorem fire2_eq (n : Nat) :
     fire2 rdOut1 rdOut2 vldIn n
       = comb_and (rdOut2 n) (vldOut2 rdOut1 rdOut2 vldIn n) := rfl
 
-theorem done0_def (n : Nat) :
-    done0 rdOut1 rdOut2 vldIn n
-      = comb_or (fire1 rdOut1 rdOut2 vldIn n) (e0 rdOut1 rdOut2 vldIn n) := rfl
-
-theorem done1_def (n : Nat) :
+@[bv_normalize, comb_decide]
+theorem done1_eq (n : Nat) :
     done1 rdOut1 rdOut2 vldIn n
-      = comb_or (fire2 rdOut1 rdOut2 vldIn n) (e1 rdOut1 rdOut2 vldIn n) := rfl
+      = comb_or (fire1 rdOut1 rdOut2 vldIn n) (emitted1 rdOut1 rdOut2 vldIn n) := rfl
 
-theorem allDone_def (n : Nat) :
+@[bv_normalize, comb_decide]
+theorem done2_eq (n : Nat) :
+    done2 rdOut1 rdOut2 vldIn n
+      = comb_or (fire2 rdOut1 rdOut2 vldIn n) (emitted2 rdOut1 rdOut2 vldIn n) := rfl
+
+@[bv_normalize, comb_decide]
+theorem allDone_eq (n : Nat) :
     allDone rdOut1 rdOut2 vldIn n
-      = comb_and (done0 rdOut1 rdOut2 vldIn n)
-          (done1 rdOut1 rdOut2 vldIn n) := rfl
+      = comb_and (done1 rdOut1 rdOut2 vldIn n)
+          (done2 rdOut1 rdOut2 vldIn n) := rfl
 
 /-! `_succ` forms (all `rfl`): the cycle-`n + 1` value of each signal with the
 register occurrence expanded one step, i.e. in terms of cycle-`n` signals and
@@ -171,17 +195,9 @@ cycle-`n + 1` inputs. The combinational signals are stateless, so all the
 pre-compose that register step with the `_def` equations, which is the shape an
 `induction n` proof consumes. -/
 
+@[bv_normalize, comb_decide]
 theorem vldOut1_succ (n : Nat) :
     vldOut1 rdOut1 rdOut2 vldIn (n + 1)
-      = comb_and
-          (comb_xor
-            (comb_and (done0 rdOut1 rdOut2 vldIn n)
-              (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true)))
-            (hw_constant true))
-          (vldIn (n + 1)) := rfl
-
-theorem vldOut2_succ (n : Nat) :
-    vldOut2 rdOut1 rdOut2 vldIn (n + 1)
       = comb_and
           (comb_xor
             (comb_and (done1 rdOut1 rdOut2 vldIn n)
@@ -189,19 +205,20 @@ theorem vldOut2_succ (n : Nat) :
             (hw_constant true))
           (vldIn (n + 1)) := rfl
 
+@[bv_normalize, comb_decide]
+theorem vldOut2_succ (n : Nat) :
+    vldOut2 rdOut1 rdOut2 vldIn (n + 1)
+      = comb_and
+          (comb_xor
+            (comb_and (done2 rdOut1 rdOut2 vldIn n)
+              (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true)))
+            (hw_constant true))
+          (vldIn (n + 1)) := rfl
+
+@[bv_normalize, comb_decide]
 theorem fire1_succ (n : Nat) :
     fire1 rdOut1 rdOut2 vldIn (n + 1)
       = comb_and (rdOut1 (n + 1))
-          (comb_and
-            (comb_xor
-              (comb_and (done0 rdOut1 rdOut2 vldIn n)
-                (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true)))
-              (hw_constant true))
-            (vldIn (n + 1))) := rfl
-
-theorem fire2_succ (n : Nat) :
-    fire2 rdOut1 rdOut2 vldIn (n + 1)
-      = comb_and (rdOut2 (n + 1))
           (comb_and
             (comb_xor
               (comb_and (done1 rdOut1 rdOut2 vldIn n)
@@ -209,26 +226,40 @@ theorem fire2_succ (n : Nat) :
               (hw_constant true))
             (vldIn (n + 1))) := rfl
 
-theorem done0_succ (n : Nat) :
-    done0 rdOut1 rdOut2 vldIn (n + 1)
-      = comb_or (fire1 rdOut1 rdOut2 vldIn (n + 1))
-          (comb_and (done0 rdOut1 rdOut2 vldIn n)
-            (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true))) := rfl
+@[bv_normalize, comb_decide]
+theorem fire2_succ (n : Nat) :
+    fire2 rdOut1 rdOut2 vldIn (n + 1)
+      = comb_and (rdOut2 (n + 1))
+          (comb_and
+            (comb_xor
+              (comb_and (done2 rdOut1 rdOut2 vldIn n)
+                (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true)))
+              (hw_constant true))
+            (vldIn (n + 1))) := rfl
 
+@[bv_normalize, comb_decide]
 theorem done1_succ (n : Nat) :
     done1 rdOut1 rdOut2 vldIn (n + 1)
-      = comb_or (fire2 rdOut1 rdOut2 vldIn (n + 1))
+      = comb_or (fire1 rdOut1 rdOut2 vldIn (n + 1))
           (comb_and (done1 rdOut1 rdOut2 vldIn n)
             (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true))) := rfl
 
+@[bv_normalize, comb_decide]
+theorem done2_succ (n : Nat) :
+    done2 rdOut1 rdOut2 vldIn (n + 1)
+      = comb_or (fire2 rdOut1 rdOut2 vldIn (n + 1))
+          (comb_and (done2 rdOut1 rdOut2 vldIn n)
+            (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true))) := rfl
+
+@[bv_normalize, comb_decide]
 theorem allDone_succ (n : Nat) :
     allDone rdOut1 rdOut2 vldIn (n + 1)
       = comb_and
           (comb_or (fire1 rdOut1 rdOut2 vldIn (n + 1))
-            (comb_and (done0 rdOut1 rdOut2 vldIn n)
+            (comb_and (done1 rdOut1 rdOut2 vldIn n)
               (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true))))
           (comb_or (fire2 rdOut1 rdOut2 vldIn (n + 1))
-            (comb_and (done1 rdOut1 rdOut2 vldIn n)
+            (comb_and (done2 rdOut1 rdOut2 vldIn n)
               (comb_xor (allDone rdOut1 rdOut2 vldIn n) (hw_constant true)))) := rfl
 
 /-! ## `hw_fork'`, pointwise -/
@@ -244,7 +275,7 @@ theorem iterate_eq_emitted (dataIn : Stream' (BitVec 32)) (n : Nat) :
   · case _ m ihm =>
     simp [Stream'.iterate, ihm]
     unfold fork_corec
-    simp [emitted, stepRegs]
+    simp [emitted, emittedStep]
 
 /-- Pointwise characterization of the fork circuit: at each cycle the outputs
 are the combinational signals computed from the current register state and the
@@ -271,9 +302,9 @@ token — accepting it this cycle (`fireᵢ`) or having accepted it earlier
 receivers have received". -/
 theorem allDone_iff_all_received (n : Nat) :
     allDone rdOut1 rdOut2 vldIn n = 1#1
-      ↔ (fire1 rdOut1 rdOut2 vldIn n = 1#1 ∨ e0 rdOut1 rdOut2 vldIn n = 1#1)
-        ∧ (fire2 rdOut1 rdOut2 vldIn n = 1#1 ∨ e1 rdOut1 rdOut2 vldIn n = 1#1) := by
-  rw [allDone_def, done0_def, done1_def]
+      ↔ (fire1 rdOut1 rdOut2 vldIn n = 1#1 ∨ emitted1 rdOut1 rdOut2 vldIn n = 1#1)
+        ∧ (fire2 rdOut1 rdOut2 vldIn n = 1#1 ∨ emitted2 rdOut1 rdOut2 vldIn n = 1#1) := by
+  rw [allDone_eq, done1_eq, done2_eq]
   bv_decide
 
 /-- If receiver 1 accepts at cycle `n`, then the receiver is ready, output 1 is
@@ -281,44 +312,44 @@ valid, a token is being presented, and the receiver had not accepted the
 current token before. -/
 theorem fire1_spec {n : Nat} (h : fire1 rdOut1 rdOut2 vldIn n = 1#1) :
     rdOut1 n = 1#1 ∧ vldOut1 rdOut1 rdOut2 vldIn n = 1#1
-      ∧ vldIn n = 1#1 ∧ e0 rdOut1 rdOut2 vldIn n = 0#1 := by
-  rw [fire1_def, vldOut1_def] at h
-  rw [vldOut1_def]
+      ∧ vldIn n = 1#1 ∧ emitted1 rdOut1 rdOut2 vldIn n = 0#1 := by
+  rw [fire1_eq, vldOut1_eq] at h
+  rw [vldOut1_eq]
   bv_decide
 
 /-- The fork does not offer the same token twice: output 1 is not valid while
 its receiver has already accepted the current token. -/
 theorem vldOut1_zero_of_e0_one {n : Nat}
-    (h : e0 rdOut1 rdOut2 vldIn n = 1#1) :
+    (h : emitted1 rdOut1 rdOut2 vldIn n = 1#1) :
     vldOut1 rdOut1 rdOut2 vldIn n = 0#1 := by
-  rw [vldOut1_def]
+  rw [vldOut1_eq]
   bv_decide
 
 /-- Receiver 1 cannot accept while it has already accepted the current token. -/
-theorem fire1_zero_of_e0_one {n : Nat} (h : e0 rdOut1 rdOut2 vldIn n = 1#1) :
+theorem fire1_zero_of_e0_one {n : Nat} (h : emitted1 rdOut1 rdOut2 vldIn n = 1#1) :
     fire1 rdOut1 rdOut2 vldIn n = 0#1 := by
-  rw [fire1_def, vldOut1_def]
+  rw [fire1_eq, vldOut1_eq]
   bv_decide
 
 /-- If output 1 is quiet (register clear, no accept), the transaction cannot
 complete this cycle. -/
 theorem allDone_zero_of_quiet {n : Nat}
-    (he : e0 rdOut1 rdOut2 vldIn n = 0#1)
+    (he : emitted1 rdOut1 rdOut2 vldIn n = 0#1)
     (hf : fire1 rdOut1 rdOut2 vldIn n = 0#1) :
     allDone rdOut1 rdOut2 vldIn n = 0#1 := by
-  rw [allDone_def]
-  rw [fire1_def] at hf
-  rw [done0_def, fire1_def]
+  rw [allDone_eq]
+  rw [fire1_eq] at hf
+  rw [done1_eq, fire1_eq]
   bv_decide
 
 /-- The `emitted` registers are mutually exclusive: at most one output can be
 waiting for the other to catch up. (Case on `n`; for `n + 1` both registers
 being set would require `allDone n = 1` and `allDone n = 0` at once.) -/
 theorem e0_e1_not_both {n : Nat} :
-    ¬(e0 rdOut1 rdOut2 vldIn n = 1#1 ∧ e1 rdOut1 rdOut2 vldIn n = 1#1) := by
+    ¬(emitted1 rdOut1 rdOut2 vldIn n = 1#1 ∧ emitted2 rdOut1 rdOut2 vldIn n = 1#1) := by
   induction n
-  · simp [e0_zero, e1_zero]
-  · simp [e0_succ, e1_succ, allDone_def]
+  · simp [emitted1_zero, emitted2_zero]
+  · simp [emitted1_succ, emitted2_succ, allDone_eq]
     bv_decide
 
 /-- `allDone` only fires while a token is actually being presented.
@@ -326,36 +357,35 @@ theorem e0_e1_not_both {n : Nat} :
 theorem vldIn_of_allDone {n : Nat}
     (h : allDone rdOut1 rdOut2 vldIn n = 1#1) : vldIn n = 1#1 := by
   induction n
-  · simp [allDone_def, done0_def, done1_def, fire1_def, fire2_def, vldOut1_def] at h
+  · simp [allDone_eq, done1_eq, done2_eq, fire1_eq, fire2_eq, vldOut1_eq, emitted2_zero] at h
     bv_decide
-  · simp [allDone_succ, fire1_succ, fire2_succ, allDone_def] at h
+  · simp [allDone_succ, fire1_succ, fire2_succ, allDone_eq] at h
     bv_decide
 
 /-- Once the transaction completes, the register of output 1 is cleared. -/
 theorem e0_zero_of_allDone {n : Nat}
     (h : allDone rdOut1 rdOut2 vldIn n = 1#1) :
-    e0 rdOut1 rdOut2 vldIn (n + 1) = 0#1 := by
-  simp [allDone_def, done0_def, done1_def, fire1_def, fire2_def, vldOut1_def, vldOut2_def] at h
-  simp [e0_succ, done0_def, allDone_def, fire1_def, vldOut1_def, done1_def, fire2_def, vldOut2_def]
+    emitted1 rdOut1 rdOut2 vldIn (n + 1) = 0#1 := by
+  simp [allDone_eq, done1_eq, done2_eq, fire1_eq, fire2_eq, vldOut1_eq, vldOut2_eq] at h
+  simp [emitted1_succ, done1_eq, allDone_eq, fire1_eq, vldOut1_eq, done2_eq, fire2_eq, vldOut2_eq]
   bv_decide
 
 /-- While receiver 1 does not accept, its register stays clear.
 (Induction via `Nat.le_induction`.) -/
 theorem e0_zero_of_no_fire {m n : Nat} (hmn : m ≤ n)
-    (h0 : e0 rdOut1 rdOut2 vldIn m = 0#1)
+    (h0 : emitted1 rdOut1 rdOut2 vldIn m = 0#1)
     (hf : ∀ t, m ≤ t → t < n → fire1 rdOut1 rdOut2 vldIn t = 0#1) :
-    e0 rdOut1 rdOut2 vldIn n = 0#1 := by
+    emitted1 rdOut1 rdOut2 vldIn n = 0#1 := by
   induction n
-  · simp
+  · simp [emitted1_zero]
   · case _ t iht =>
     by_cases hle : m ≤ t
     · specialize iht (by omega) (by intros; apply hf <;> omega)
       specialize hf t
       specialize hf hle (by omega)
-      simp [e0_succ, allDone_def, done0_def, done1_def]
+      simp [emitted1_succ, allDone_eq, done1_eq, done2_eq]
       simp [hf]
       simp [comb_and, comb_or, comb_xor, hw_constant]
-      simp [fire2_def, comb_and, vldOut2, comb_xor, hw_constant]
       simp [iht]
     · have : m = t + 1 := by omega
       subst this
@@ -367,22 +397,22 @@ transaction completes: `e0` is 1 on the whole window `(F, n]` as long as
 theorem e0_one_of_window {F n : Nat} (hFn : F < n)
     (hF : fire1 rdOut1 rdOut2 vldIn F = 1#1)
     (hAD : ∀ t, F ≤ t → t < n → allDone rdOut1 rdOut2 vldIn t = 0#1) :
-    e0 rdOut1 rdOut2 vldIn n = 1#1 := by
+    emitted1 rdOut1 rdOut2 vldIn n = 1#1 := by
   induction n
   · omega -- contra
   · case _ m ihm =>
-    simp [e0_succ]
+    simp [emitted1_succ]
     by_cases hlt : F < m
     · specialize ihm hlt (by intros; apply hAD <;> omega)
       specialize hAD m (by omega) (by omega)
       simp [hAD]
-      simp [fire1, vldOut1_def, comb_and, comb_xor, hw_constant] at hF
-      simp [done0_def, fire1_def, vldOut1_def, ihm,
+      simp [fire1, vldOut1_eq, comb_and, comb_xor, hw_constant] at hF
+      simp [done1_eq, fire1_eq, vldOut1_eq, ihm,
         comb_and, comb_or, comb_xor, hw_constant]
     · simp [show F = m by omega] at *
       specialize hAD m (by omega) (by omega)
       simp [hAD]
-      simp [done0, hF]
+      simp [done1, hF]
       bv_decide
 
 /-- **Data is constant until all receivers have received.** Whenever a token is
@@ -405,7 +435,7 @@ theorem dataIn_constant_until_allDone {dataIn : Stream' (BitVec 32)}
 /-- The *receiver-1 view* of output 1: a token is observed at the cycle where
 receiver 1 accepts it (`fire1`). This is what receiver 1 actually sees on the
 wires, waiting (`none`) included. -/
-def out1View (dataIn : Stream' (BitVec 32)) : Stream (BitVec 32) :=
+def out1View (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (dataIn : Stream' (BitVec 32)) : Stream (BitVec 32) :=
   toStream rdOut1 (vldOut1 rdOut1 rdOut2 vldIn) dataIn
 
 /-- The *transaction-level view* of output 1: a token is observed only at the
@@ -413,22 +443,23 @@ cycle where the whole transaction completes (`allDone`), i.e. after **all**
 receivers have received it. Note that, pointwise, this is exactly
 `toStream rdIn vldIn dataIn` — the input stream — since `rdIn = allDone` and
 `dataOut1 = dataIn` in the circuit (`hw_fork'_get`). -/
-def sampledView (dataIn : Stream' (BitVec 32)) : Stream (BitVec 32) :=
+def sampledView (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) (dataIn : Stream' (BitVec 32)) : Stream (BitVec 32) :=
   toStream (allDone rdOut1 rdOut2 vldIn) vldIn dataIn
 
 /-! `get`-characterizations of the two views: each view is `some` exactly at
 its observation instants (`fire1` resp. `allDone`). -/
 
-theorem out1View_get_none {dataIn : Stream' (BitVec 32)} {t : Nat}
+theorem out1View_get_none (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) {dataIn : Stream' (BitVec 32)} {t : Nat}
     (h : fire1 rdOut1 rdOut2 vldIn t = 0#1) :
     Stream'.get (out1View rdOut1 rdOut2 vldIn dataIn) t = none := by
-  rw [fire1_def] at h
-  rcases h with h | h <;> simp [out1View, toStream, Stream'.get, h]
+  rw [fire1_eq] at h
+  have h' : rdOut1 t = 0#1 ∨ vldOut1 rdOut1 rdOut2 vldIn t = 0#1 := by bv_decide
+  rcases h' with h' | h' <;> simp [out1View, toStream, Stream'.get, h']
 
-theorem out1View_get_some {dataIn : Stream' (BitVec 32)} {t : Nat}
+theorem out1View_get_some (rdOut1 rdOut2 vldIn : Stream' (BitVec 1)) {dataIn : Stream' (BitVec 32)} {t : Nat}
     (h : fire1 rdOut1 rdOut2 vldIn t = 1#1) :
     Stream'.get (out1View rdOut1 rdOut2 vldIn dataIn) t = some (dataIn t) := by
-  obtain ⟨h1, h2, -, -⟩ := fire1_spec rdOut1 rdOut2 vldIn h
+  obtain ⟨h1, h2, _, _⟩ := fire1_spec (h := h)
   simp [out1View, toStream, Stream'.get, h1, h2]
 
 theorem sampledView_get_none {dataIn : Stream' (BitVec 32)} {t : Nat}
@@ -440,7 +471,7 @@ theorem sampledView_get_some {dataIn : Stream' (BitVec 32)} {t : Nat}
     (h : allDone rdOut1 rdOut2 vldIn t = 1#1) :
     Stream'.get (sampledView rdOut1 rdOut2 vldIn dataIn) t = some (dataIn t) := by
   simp [sampledView, toStream, Stream'.get, h,
-        vldIn_of_allDone rdOut1 rdOut2 vldIn h]
+        vldIn_of_allDone h]
 
 /-- If receiver 1 never accepts from cycle `m` on, the receiver-1 view is
 silent from `m` on. -/
@@ -454,13 +485,13 @@ at `m`), then no transaction ever completes from `m` on: the handshake-level
 (transaction-sampled) stream is silent forever. This is the "one stalled
 receiver blocks the whole fork" behaviour. -/
 theorem sampledView_none_of_no_fire {dataIn : Stream' (BitVec 32)} {m : Nat}
-    (he : e0 rdOut1 rdOut2 vldIn m = 0#1)
+    (he : emitted1 rdOut1 rdOut2 vldIn m = 0#1)
     (hf : ∀ t, m ≤ t → fire1 rdOut1 rdOut2 vldIn t = 0#1) :
     ∀ t, m ≤ t → Stream'.get (sampledView rdOut1 rdOut2 vldIn dataIn) t = none := by
   intro t ht
-  refine sampledView_get_none rdOut1 rdOut2 vldIn ?_
-  refine allDone_zero_of_quiet rdOut1 rdOut2 vldIn ?_ (hf t ht)
-  exact e0_zero_of_no_fire rdOut1 rdOut2 vldIn ht he
+  refine sampledView_get_none ?_
+  refine allDone_zero_of_quiet ?_ (hf t ht)
+  exact e0_zero_of_no_fire ht he
     (fun s hs1 _ => hf s hs1)
 
 
@@ -490,8 +521,8 @@ inductive SampleRel (rdOut1 rdOut2 vldIn : Stream' (BitVec 1))
       (ha : a = Stream'.drop tA (out1View rdOut1 rdOut2 vldIn dataIn))
       (hb : b = Stream'.drop tB (sampledView rdOut1 rdOut2 vldIn dataIn))
       (htAB : tA ≤ tB)
-      (hwin : ∀ t, tA ≤ t → t < tB → e0 rdOut1 rdOut2 vldIn t = 1#1)
-      (he0 : e0 rdOut1 rdOut2 vldIn tB = 0#1) :
+      (hwin : ∀ t, tA ≤ t → t < tB → emitted1 rdOut1 rdOut2 vldIn t = 1#1)
+      (he0 : emitted1 rdOut1 rdOut2 vldIn tB = 0#1) :
       SampleRel rdOut1 rdOut2 vldIn dataIn a b
 
 
@@ -548,7 +579,7 @@ theorem out1_sampling_bisim (dataIn : Stream' (BitVec 32))
           by_contra hcon
           push_neg at hcon
           have h1 := hwin (tA + tdiff) (by omega) hcon
-          simp [fire1, vldOut1_def, h1] at htfst
+          simp [fire1, vldOut1_eq, h1] at htfst
           bv_decide
         /-
           out1 | tA  | ... | tA + tdiff | ... |       |                    |
@@ -556,7 +587,7 @@ theorem out1_sampling_bisim (dataIn : Stream' (BitVec 32))
         -/
         simp [globallyValidUntilReady] at hvr
         specialize hvr (tA + tdiff)
-          (by simp [fire1, vldOut1_def] at htfst; bv_decide)
+          (by simp [fire1, vldOut1_eq] at htfst; bv_decide)
         have hexists : ∃ k, allDone rdOut1 rdOut2 vldIn (tA + tdiff + k) = 1#1 := by grind
         have ⟨tbfst, hbfst1, hbfst2⟩ := if_exists_first_exists hexists
         exists tdiff, (tA + tdiff + tbfst - tB)
@@ -569,12 +600,12 @@ theorem out1_sampling_bisim (dataIn : Stream' (BitVec 32))
             omega
           · omega
           · intro j hj hj2
-            apply e0_one_of_window rdOut1 rdOut2 vldIn (by omega) htfst
+            apply e0_one_of_window (by omega) htfst
             intro jj hjj1 hjj2
             have := hbfst2 (jj - (tA + tdiff)) (by omega)
             simp [show tA + tdiff + (jj - (tA + tdiff)) = jj by omega] at this
             simp [this]
-          · exact e0_zero_of_allDone rdOut1 rdOut2 vldIn hbfst1
+          · exact e0_zero_of_allDone hbfst1
         · simp [ha, hb, Stream'.drop, show tA + tdiff + tbfst - tB + tB = tA + tdiff + tbfst by omega, Stream'.get]
           simp [out1View, sampledView]
           simp [fire1] at htfst
@@ -612,10 +643,10 @@ theorem out1_sampling_bisim (dataIn : Stream' (BitVec 32))
               have := htmin (s - tA) (by omega)
               simp [show tA + (s - tA) = s by omega] at this
               exact this
-            have he0' : e0 rdOut1 rdOut2 vldIn (tB + i) = 0#1 :=
-              e0_zero_of_no_fire rdOut1 rdOut2 vldIn (by omega) he0 (fun s h1 h2 => hfire0 s h1 (by omega))
-            exact sampledView_get_none rdOut1 rdOut2 vldIn
-              (allDone_zero_of_quiet rdOut1 rdOut2 vldIn he0' (hfire0 _ (by omega) (by omega)))
+            have he0' : emitted1 rdOut1 rdOut2 vldIn (tB + i) = 0#1 :=
+              e0_zero_of_no_fire (by omega) he0 (fun s h1 h2 => hfire0 s h1 (by omega))
+            exact sampledView_get_none
+              (allDone_zero_of_quiet he0' (hfire0 _ (by omega) (by omega)))
           · let jj := tB + i - tA - tdiff
             simp [show tB + i = tA + tdiff + jj by omega]
             specialize hbfst2 jj (by omega)
@@ -623,14 +654,18 @@ theorem out1_sampling_bisim (dataIn : Stream' (BitVec 32))
       · /- no fire ever again -/
         exists tA, tB
         simp at hfire
-        have ha1 := out1View_none_of_no_fire rdOut1 rdOut2 vldIn
+        have ha1 := out1View_none_of_no_fire
+                (rdOut1 := rdOut1) (rdOut2 := rdOut2)
+                (vldIn := vldIn)
                 (m := tB) (dataIn := dataIn)
                 (by
                   intro t' ht'
                   specialize hfire (t' - tA)
                   simp [show tA + (t' - tA) = t' by omega] at hfire
                   bv_decide)
-        have ha2 := out1View_none_of_no_fire rdOut1 rdOut2 vldIn
+        have ha2 := out1View_none_of_no_fire
+                (rdOut1 := rdOut1) (rdOut2 := rdOut2)
+                (vldIn := vldIn)
                 (m := tA) (dataIn := dataIn)
                 (by
                   intro t' ht'
@@ -638,7 +673,7 @@ theorem out1_sampling_bisim (dataIn : Stream' (BitVec 32))
                   simp [show tA + (t' - tA) = t' by omega] at hfire
                   bv_decide)
         simp [out1View] at ha2
-        have hb2 := sampledView_none_of_no_fire rdOut1 rdOut2 vldIn (dataIn := dataIn)
+        have hb2 := sampledView_none_of_no_fire (dataIn := dataIn)
                 (m := tB) he0
                 (by
                   intro t' ht'
@@ -676,7 +711,7 @@ theorem out1_sampling_bisim (dataIn : Stream' (BitVec 32))
     · omega
     · intros
       simp at *
-    · simp [e0_zero]
+    · simp [emitted1_zero]
 
 /-! ## Refinement of the handshake fork -/
 
@@ -694,7 +729,7 @@ theorem hw_fork_components {dataIn : Stream' (BitVec 32)}
   simp only [TRY3.split_stream2, Prod.mk.injEq] at hfork
   obtain ⟨hrdIn, hvld1, hvld2, hdata1, hdata2⟩ := hfork
   and_intros
-  · simp [hrdIn, hw_fork'_get, vldOut2_def]
+  · simp [hrdIn, hw_fork'_get, vldOut2_eq]
   · simp [hvld1, hw_fork'_get]
   · simp [hvld2, hw_fork'_get]
   · simp [hdata1, hw_fork'_get]
@@ -714,7 +749,7 @@ theorem hw_fork_refines_out1 {dataIn : Stream' (BitVec 32)}
     (hvr : globallyValidUntilReady vldIn rdIn)
     (hvd : globallyValidAndData vldIn dataIn) :
     toStream rdIn vldIn dataIn ~ toStream rdOut1 vld1 data1 := by
-  obtain ⟨h1, h2, -, h4, -⟩ := hw_fork_components rdOut1 rdOut2 vldIn hfork
+  obtain ⟨h1, h2, -, h4, -⟩ := hw_fork_components hfork
   subst h1 h2 h4
   apply HandshakeStream.symm
   apply out1_sampling_bisim
@@ -725,7 +760,7 @@ theorem emitted_swap (n : Nat) : emitted rdOut1 rdOut2 vldIn n = (emitted rdOut2
   induction n
   · simp [emitted]
   · case _ m ihm =>
-    simp [emitted, ihm, stepRegs]
+    simp [emitted, ihm, emittedStep]
     bv_decide
 
 /-! Transport of the signals along the swap (mechanical consequences of
@@ -733,28 +768,28 @@ theorem emitted_swap (n : Nat) : emitted rdOut1 rdOut2 vldIn n = (emitted rdOut2
 of the run with the receivers' readies swapped, and `allDone` is invariant. -/
 
 theorem e0_swap (n : Nat) :
-    e0 rdOut1 rdOut2 vldIn n = e1 rdOut2 rdOut1 vldIn n := by
-  unfold e0 e1
-  rw [emitted_swap rdOut1 rdOut2 vldIn n]
+    emitted1 rdOut1 rdOut2 vldIn n = emitted2 rdOut2 rdOut1 vldIn n := by
+  unfold emitted1 emitted2
+  rw [emitted_swap n]
   simp
 
 theorem e1_swap (n : Nat) :
-    e1 rdOut1 rdOut2 vldIn n = e0 rdOut2 rdOut1 vldIn n := by
-  unfold e0 e1
-  rw [emitted_swap rdOut1 rdOut2 vldIn n]
+    emitted2 rdOut1 rdOut2 vldIn n = emitted1 rdOut2 rdOut1 vldIn n := by
+  unfold emitted1 emitted2
+  rw [emitted_swap n]
   simp
 
 theorem vldOut2_swap :
     vldOut2 rdOut1 rdOut2 vldIn = vldOut1 rdOut2 rdOut1 vldIn := by
   funext n
-  rw [vldOut2_def, vldOut1_def, e1_swap rdOut1 rdOut2 vldIn n]
+  rw [vldOut2_eq, vldOut1_eq, e1_swap n]
 
 theorem allDone_swap :
     allDone rdOut1 rdOut2 vldIn = allDone rdOut2 rdOut1 vldIn := by
   funext n
-  simp only [allDone_def, done0_def, done1_def, fire1_def, fire2_def,
-             vldOut1_def, vldOut2_def,
-             e0_swap rdOut1 rdOut2 vldIn, e1_swap rdOut1 rdOut2 vldIn]
+  simp only [allDone_eq, done1_eq, done2_eq, fire1_eq, fire2_eq,
+             vldOut1_eq, vldOut2_eq,
+             e0_swap (rdOut1 := rdOut1) (n := n), e1_swap (rdOut1 := rdOut1) (n := n)]
   bv_decide
 
 /-- Mirror of `hw_fork_refines_out1` for output 2. Provable without a second
@@ -770,10 +805,10 @@ theorem hw_fork_refines_out2 {dataIn : Stream' (BitVec 32)}
     (hvr : globallyValidUntilReady vldIn rdIn)
     (hvd : globallyValidAndData vldIn dataIn) :
     toStream rdIn vldIn dataIn ~ toStream rdOut2 vld2 data2 := by
-  obtain ⟨h1, -, h3, -, h5⟩ := hw_fork_components rdOut1 rdOut2 vldIn hfork
+  obtain ⟨h1, -, h3, -, h5⟩ := hw_fork_components hfork
   subst h1 h3 h5
-  rw [allDone_swap rdOut1 rdOut2 vldIn] at hvr ⊢
-  rw [vldOut2_swap rdOut1 rdOut2 vldIn]
+  rw [allDone_swap] at hvr ⊢
+  rw [vldOut2_swap]
   apply HandshakeStream.symm
   apply out1_sampling_bisim
   · exact hvr
