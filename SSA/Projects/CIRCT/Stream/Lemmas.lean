@@ -337,3 +337,104 @@ theorem syncMap2_syncMap2_eq_syncMap3 (f : α → β → γ) (g : γ → ε → 
 --     (h : ∀ a b c, f a b c = g a b c) :
 --     syncMap₂ f xs ys = syncMap₂ g xs ys := by
 --   sorry
+
+/-! ### `syncMap₂` on aligned streams
+
+When the two argument streams carry their `some`s at identical positions, the
+synchronizer never has to buffer: each step consumes one position of *both*
+streams, and the output is the pointwise zip. `syncMap₂Step` names the update
+function of `syncMap₂` (verbatim) so that its corec state can be
+characterized, following the `fork_corec`/`add_rtl_corec` pattern. -/
+
+/-- The update function of `syncMap₂`, extracted verbatim. -/
+def syncMap₂Step (f : α → β → γ) :
+    Stream α × Stream β → Option γ × (Stream α × Stream β) := fun ⟨xs, ys⟩ =>
+  match xs 0, ys 0 with
+  | some x, some y => ⟨some <| f x y, xs.tail, ys.tail⟩
+  | _, _ =>
+    let xs := if (xs 0).isNone then xs.tail else xs
+    let ys := if (ys 0).isNone then ys.tail else ys
+    ⟨none, xs, ys⟩
+
+theorem syncMap₂_eq_step {f : α → β → γ} {xs : Stream α} {ys : Stream β} :
+    syncMap₂ f xs ys = HandshakeStream.corec (xs, ys) (syncMap₂Step f) := _root_.rfl
+
+/-- On aligned streams, the corec state of `syncMap₂` after `n` steps is the
+pair of `n`-fold tails: whether the heads are both `some` or (by alignment)
+both `none`, the step advances both streams. -/
+theorem syncMap₂_aligned_iterate {f : α → β → γ} {xs : Stream α} {ys : Stream β}
+    (h : ∀ n, (xs n).isSome ↔ (ys n).isSome) (n : Nat) :
+    Stream'.iterate (fun s => (syncMap₂Step f s).2) (xs, ys) n
+      = (Stream'.drop n xs, Stream'.drop n ys) := by
+  induction n with
+  | zero => rfl
+  | succ k ih =>
+    show (syncMap₂Step f
+        (Stream'.iterate (fun s => (syncMap₂Step f s).2) (xs, ys) k)).2 = _
+    rw [ih]
+    have hx0 : (Stream'.drop k xs) 0 = xs k := by
+      show xs.get (0 + k) = xs.get k
+      rw [Nat.zero_add]
+    have hy0 : (Stream'.drop k ys) 0 = ys k := by
+      show ys.get (0 + k) = ys.get k
+      rw [Nat.zero_add]
+    unfold syncMap₂Step
+    dsimp only []
+    rw [hx0, hy0]
+    rcases hxk : xs k with _ | x
+    · rcases hyk : ys k with _ | y
+      · simp
+      · exfalso
+        have hc := h k
+        rw [hxk, hyk] at hc
+        simp at hc
+    · rcases hyk : ys k with _ | y
+      · exfalso
+        have hc := h k
+        rw [hxk, hyk] at hc
+        simp at hc
+      · simp
+
+/-- The pointwise zip of two option streams: fires exactly where both fire.
+Named (rather than inlined as a `match`-lambda) so that statements about it
+share one `match` auxiliary and remain `rw`-compatible. -/
+def alignedZip (f : α → β → γ) (xs : Stream α) (ys : Stream β) : Stream γ :=
+  fun n =>
+    match xs n, ys n with
+    | some a, some b => some (f a b)
+    | _, _ => none
+
+/-- **`syncMap₂` on aligned streams is the pointwise zip**: if the two
+argument streams carry their `some`s at identical positions, the synchronizer
+fires exactly at those positions, with the `f`-image of the two values. -/
+theorem syncMap₂_aligned {f : α → β → γ} {xs : Stream α} {ys : Stream β}
+    (h : ∀ n, (xs n).isSome ↔ (ys n).isSome) :
+    syncMap₂ f xs ys = alignedZip f xs ys := by
+  funext n
+  unfold alignedZip
+  rw [syncMap₂_eq_step]
+  show (syncMap₂Step f
+      (Stream'.iterate (fun s => (syncMap₂Step f s).2) (xs, ys) n)).1 = _
+  rw [syncMap₂_aligned_iterate h]
+  have hx0 : (Stream'.drop n xs) 0 = xs n := by
+    show xs.get (0 + n) = xs.get n
+    rw [Nat.zero_add]
+  have hy0 : (Stream'.drop n ys) 0 = ys n := by
+    show ys.get (0 + n) = ys.get n
+    rw [Nat.zero_add]
+  unfold syncMap₂Step
+  dsimp only []
+  rw [hx0, hy0]
+  rcases hxk : xs n with _ | x
+  · rcases hyk : ys n with _ | y
+    · simp
+    · exfalso
+      have hc := h n
+      rw [hxk, hyk] at hc
+      simp at hc
+  · rcases hyk : ys n with _ | y
+    · exfalso
+      have hc := h n
+      rw [hxk, hyk] at hc
+      simp at hc
+    · simp

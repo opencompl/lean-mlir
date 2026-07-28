@@ -120,6 +120,26 @@ def fork (x : Stream α) : Stream α × Stream α :=
       let x' := x.tail
       (x0, x0, x')
 
+/-- The handshake fork duplicates its input stream: both outputs are `x`
+itself. (Its `corec_prod` emits the current head twice and advances by
+`tail`, so the corec state after `n` steps is `x.drop n` and the output at
+position `n` is `x n` on both sides.) -/
+theorem fork_eq (x : Stream α) : fork x = (x, x) := by
+  have hiter : ∀ (n : Nat),
+      Stream'.iterate Stream'.tail x n = Stream'.drop n x := by
+    intro n
+    induction n with
+    | zero => rfl
+    | succ k ih =>
+      show Stream'.tail (Stream'.iterate Stream'.tail x k) = _
+      rw [ih]
+      exact Stream'.tail_drop'
+  refine Prod.ext ?_ ?_ <;> funext n <;>
+    · show ((Stream'.iterate Stream'.tail x n) 0 : Option α) = x n
+      rw [hiter]
+      show x.get (0 + n) = x.get n
+      rw [Nat.zero_add]
+
 -- not entirely nondeterministic (still picks left first)
 def controlMerge (x y : Stream α) : Stream α × Stream (BitVec 1) :=
   corec_prod (β := Stream α × Stream α) (x, y) fun ⟨x, y⟩ =>
