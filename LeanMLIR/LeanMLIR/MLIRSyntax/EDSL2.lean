@@ -67,7 +67,7 @@ partial def evalExprOfTypeRegion (φ : Nat) : Q(Region $φ) → MetaM (Region φ
   default
 
 def elabIntoComObj (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
-    [DialectSignature d] [Repr d.Ty]
+    [DialectSignature d] [Repr d.Ty] [DecidableEq d.Ty] [ToString d.Ty]
     [TransformTy d φ] [TransformExpr d φ] [TransformReturn d φ] :
     TermElabM (Σ Γ eff ty, Com d Γ eff ty) := withRef region <| do
   withTraceNode `LeanMLIR.Elab (return m!"{exceptEmoji ·} elaborating MLIR DSL") <| do
@@ -92,7 +92,7 @@ def elabIntoComObj (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
 
 def elabIntoCom' (region : TSyntax `mlir_region) (d : Dialect) {φ : Nat}
     [ToExpr d.Op] [ToExpr d.Ty] [DialectToExpr d]
-    [DialectSignature d] [Repr d.Ty]
+    [DialectSignature d] [Repr d.Ty] [DecidableEq d.Ty] [ToString d.Ty]
     [TransformTy d φ] [TransformExpr d φ] [TransformReturn d φ] :
     TermElabM Expr := withRef region <| do
   let ⟨_Γ, _eff, _ty, com⟩ ← elabIntoComObj region d
