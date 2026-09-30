@@ -146,7 +146,8 @@ def parseRegionFromFile (fileName : String)
 
 open MLIR.AST in
 def Com.parseFromFile (d : Dialect)
-    [DialectSignature d] [TransformTy d 0] [TransformExpr d 0] [TransformReturn d 0]
+    [DialectSignature d] [DecidableEq d.Ty] [ToString d.Ty]
+    [TransformTy d 0] [TransformExpr d 0] [TransformReturn d 0]
     (fileName : String) :
     IO (Option (Σ (Γ' : Ctxt d.Ty) (eff : EffectKind) (ty : List d.Ty), Com d Γ' eff ty)) := do
   parseRegionFromFile fileName fun region =>

@@ -185,8 +185,15 @@ private def mkComHelper
       throw <| .generic
         s!"Expected {numExpectedReturns} return variables, but found {var.res.length}"
     else
-      let _ ← (var.res.zip ty₁).foldlM (init:=Γ) fun Γ ⟨var, ty⟩ => do
-        let ⟨Γ', _⟩ ← addValToMapping Γ (SSAValToString var.1) ty
+      let _ ← (var.res.zip ty₁).foldlM (init:=Γ) fun Γ ⟨res, ty⟩ => do
+        -- Check that the annotated result type agrees with the type of the operation
+        let annotatedTy ← TypedSSAVal.mkTy res
+        if annotatedTy ≠ ty then
+          throw <| .generic
+            s!"Type mismatch in result '{SSAValToString res.1}' of '{var.name}': \
+              the operation returns '{ty}', but the result is annotated with type \
+              '{annotatedTy}'"
+        let ⟨Γ', _⟩ ← addValToMapping Γ (SSAValToString res.1) ty
         return Γ'
       let ⟨_eff₂, ty₂, body⟩ ← mkComHelper (ty₁ ++ Γ) rest
       return ⟨_, ty₂, Com.letSup expr body⟩
